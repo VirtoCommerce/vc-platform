@@ -1,0 +1,188 @@
+{
+  "platform": {
+    "commands": {
+      "add": "添加",
+      "activate": "激活",
+      "assign": "分配",
+      "cancel": "取消",
+      "clear": "清除",
+      "clear-all": "清除所有",
+      "clone": "克隆",
+      "close": "关闭",
+      "confirm": "确认",
+      "copy-link": "复制链接",
+      "copy": "复制",
+      "create": "创建",
+      "cut": "剪切",
+      "delete": "删除",
+      "add-all": "添加所有",
+      "remove-all": "删除所有",
+      "download": "下载",
+      "edit": "编辑",
+      "export": "导出",
+      "generate": "生成",
+      "import": "导入",
+      "import-sample-data": "导入示例数据",
+      "install": "安装",
+      "manage": "管理",
+      "more": "更多",
+      "no": "否",
+      "new-folder": "新建文件夹",
+      "new-license": "续订许可证",
+      "ok": "确定",
+      "paste": "粘贴",
+      "pick-selected": "选择所选",
+      "preview": "预览",
+      "open-browser": "在浏览器中打开",
+      "redo": "重做",
+      "refresh": "刷新",
+      "remove": "移除",
+      "reset": "重置",
+      "restart": "重启",
+      "save": "保存",
+      "send": "发送",
+      "select-all": "全选",
+      "set-to-default": "设为默认",
+      "start-export": "开始导出",
+      "settings": "设置",
+      "sign-out": "退出",
+      "undo": "撤销",
+      "uninstall": "卸载",
+      "unselect-all": "取消全选",
+      "update": "更新",
+      "upload": "上传",
+      "yes": "是",
+      "add-new-property": "添加新属性",
+      "manage-type-properties": "属性类型",
+      "manage-profile": "管理个人资料",
+      "minimize": "最小化",
+      "maximize": "最大化",
+      "stop-sending": "停止发送",
+      "set-active": "设为活动",
+      "reject-user": "拒绝用户",
+      "change-password": "更改密码",
+      "unlock-account": "解锁账户",
+      "lock-account": "锁定账户",
+      "today": "今天",
+      "time": "时间",
+      "now": "现在",
+      "date": "日期",
+      "see-details": "查看详情",
+      "dismiss": "忽略",
+      "hide-empty-property-values": "隐藏空值",
+      "show-empty-property-values": "显示空值",
+      "titles": {
+        "refresh": "刷新",
+        "new-folder": "新建文件夹",
+        "upload": "上传"
+      }
+    },
+    "list": {
+      "no-data": "无数据",
+      "count": "计数",
+      "loading": "加载中...",
+      "item-not-found": "错误：未找到"
+    },
+    "placeholders": {
+      "n-a": "不适用",
+      "no-file": "选择文件",
+      "search-keyword": "搜索关键词...",
+      "select-value": "选择值",
+      "select-values": "选择值"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "删除确认",
+        "message": "您确定要删除所选条目吗？"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "短文本",
+        "description": "1024个字符以内的文本值"
+      },
+      "long-text": {
+        "title": "长文本",
+        "description": "无大小限制的无限文本"
+      },
+      "integer": {
+        "title": "整数",
+        "description": "整数"
+      },
+      "decimal": {
+        "title": "小数",
+        "description": "精度为18，小数位数为4的小数"
+      },
+      "date-time": {
+        "title": "日期时间",
+        "description": "选择日期"
+      },
+      "boolean": {
+        "title": "布尔值",
+        "description": "开关类型"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "HTML标记"
+      },
+      "undefined": {
+        "title": "未定义"
+      },
+      "image": {
+        "title": "图片",
+        "description": "图片类型"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "输入短文本",
+        "secure-string": "输入密文",
+        "email": "输入电子邮件",
+        "url": "输入URL",
+        "long-text": "输入长文本",
+        "integer": "输入整数",
+        "number": "输入小数",
+        "date-time": "选择日期",
+        "short-text-multivalue": "添加值",
+        "integer-multivalue": "添加整数",
+        "number-multivalue": "添加小数",
+        "short-text-dictionary": "选择值",
+        "short-text-dictionary-multivalue": "选择值",
+        "short-text-multilang": "输入值",
+        "long-text-multilang": "输入值",
+        "short-text-multivalue-multilang": "添加值",
+        "short-text-dictionary-multilang": "选择值",
+        "short-text-dictionary-multivalue-multilang": "选择值",
+        "long-text-dictionary-multivalue-multilang": "选择值"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "输入值",
+      "required": "此字段为必填项",
+      "maxLength": "此字段不能超过{{number}}个字符"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "URI格式无效。请确保URI没有查询参数"
+      }
+    },
+    "errors": {
+      "generic-error": "错误",
+      "400": "错误请求",
+      "401": "未授权",
+      "403": "禁止访问",
+      "404": "未找到",
+      "405": "方法不允许",
+      "406": "不可接受",
+      "407": "需要代理认证",
+      "408": "请求超时",
+      "409": "冲突",
+      "429": "请求过多",
+      "500": "内部服务器错误",
+      "501": "未实现",
+      "502": "网关错误",
+      "503": "服务不可用",
+      "504": "网关超时"
+    }
+  }
+}

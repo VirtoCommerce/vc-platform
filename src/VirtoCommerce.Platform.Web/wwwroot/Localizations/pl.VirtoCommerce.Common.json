@@ -1,0 +1,188 @@
+{
+  "platform": {
+    "commands": {
+      "add": "Dodaj",
+      "activate": "Aktywuj",
+      "assign": "Przypisz",
+      "cancel": "Anuluj",
+      "clear": "Wyczyść",
+      "clear-all": "Wyczyść wszystko",
+      "clone": "Klonuj",
+      "close": "Zamknij",
+      "confirm": "Potwierdź",
+      "copy-link": "Kopiuj link",
+      "copy": "Kopiuj",
+      "create": "Utwórz",
+      "cut": "Wytnij",
+      "delete": "Usuń",
+      "add-all": "Dodaj wszystko",
+      "remove-all": "Usuń wszystko",
+      "download": "Pobierz",
+      "edit": "Edytuj",
+      "export": "Eksportuj",
+      "generate": "Generuj",
+      "import": "Importuj",
+      "import-sample-data": "Importuj przykładowe dane",
+      "install": "Zainstaluj",
+      "manage": "Zarządzaj",
+      "more": "Więcej",
+      "no": "Nie",
+      "new-folder": "Nowy folder",
+      "new-license": "Odnów licencję",
+      "ok": "OK",
+      "paste": "Wklej",
+      "pick-selected": "Wybierz zaznaczone",
+      "preview": "Podgląd",
+      "open-browser": "Otwórz w przeglądarce",
+      "redo": "Ponów",
+      "refresh": "Odśwież",
+      "remove": "Usuń",
+      "reset": "Resetuj",
+      "restart": "Uruchom ponownie",
+      "save": "Zapisz",
+      "send": "Wyślij",
+      "select-all": "Zaznacz wszystko",
+      "set-to-default": "Ustaw domyślne",
+      "start-export": "Rozpocznij eksport",
+      "settings": "Ustawienia",
+      "sign-out": "Wyloguj",
+      "undo": "Cofnij",
+      "uninstall": "Odinstaluj",
+      "unselect-all": "Odznacz wszystko",
+      "update": "Aktualizuj",
+      "upload": "Prześlij",
+      "yes": "Tak",
+      "add-new-property": "Dodaj nową właściwość",
+      "manage-type-properties": "Typy właściwości",
+      "manage-profile": "Zarządzaj profilem",
+      "minimize": "Minimalizuj",
+      "maximize": "Maksymalizuj",
+      "stop-sending": "Zatrzymaj wysyłanie",
+      "set-active": "Ustaw jako aktywne",
+      "reject-user": "Odrzuć użytkownika",
+      "change-password": "Zmień hasło",
+      "unlock-account": "Odblokuj konto",
+      "lock-account": "Zablokuj konto",
+      "today": "Dzisiaj",
+      "time": "Czas",
+      "now": "Teraz",
+      "date": "Data",
+      "see-details": "Zobacz szczegóły",
+      "dismiss": "Odrzuć",
+      "hide-empty-property-values": "Ukryj puste wartości",
+      "show-empty-property-values": "Pokaż puste wartości",
+      "titles": {
+        "refresh": "Odśwież",
+        "new-folder": "Nowy folder",
+        "upload": "Prześlij"
+      }
+    },
+    "list": {
+      "no-data": "Brak danych",
+      "count": "Liczba",
+      "loading": "Ładowanie...",
+      "item-not-found": "Błąd: Nie znaleziono"
+    },
+    "placeholders": {
+      "n-a": "Nie dotyczy",
+      "no-file": "Wybierz plik",
+      "search-keyword": "Szukaj...",
+      "select-value": "Wybierz wartość",
+      "select-values": "Wybierz wartości"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Potwierdzenie usunięcia",
+        "message": "Czy na pewno chcesz usunąć wybrane elementy?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Krótki tekst",
+        "description": "Wartości tekstowe poniżej 1024 znaków"
+      },
+      "long-text": {
+        "title": "Długi tekst",
+        "description": "Nieograniczony tekst bez limitu rozmiaru"
+      },
+      "integer": {
+        "title": "Liczba całkowita",
+        "description": "Liczba całkowita"
+      },
+      "decimal": {
+        "title": "Liczba dziesiętna",
+        "description": "Liczba dziesiętna z precyzją 18 i skalą 4"
+      },
+      "date-time": {
+        "title": "Data i czas",
+        "description": "Wybierz datę"
+      },
+      "boolean": {
+        "title": "Wartość logiczna",
+        "description": "Typ przełącznika"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "Znaczniki HTML"
+      },
+      "undefined": {
+        "title": "Niezdefiniowane"
+      },
+      "image": {
+        "title": "Obraz",
+        "description": "Typ obrazu"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "Wprowadź krótki tekst",
+        "secure-string": "Wprowadź tekst tajny",
+        "email": "Wprowadź email",
+        "url": "Wprowadź URL",
+        "long-text": "Wprowadź długi tekst",
+        "integer": "Wprowadź liczbę całkowitą",
+        "number": "Wprowadź liczbę dziesiętną",
+        "date-time": "Wybierz datę",
+        "short-text-multivalue": "Dodaj wartość",
+        "integer-multivalue": "Dodaj liczbę całkowitą",
+        "number-multivalue": "Dodaj liczbę dziesiętną",
+        "short-text-dictionary": "Wybierz wartość",
+        "short-text-dictionary-multivalue": "Wybierz wartość",
+        "short-text-multilang": "Wprowadź wartość",
+        "long-text-multilang": "Wprowadź wartość",
+        "short-text-multivalue-multilang": "Dodaj wartość",
+        "short-text-dictionary-multilang": "Wybierz wartość",
+        "short-text-dictionary-multivalue-multilang": "Wybierz wartość",
+        "long-text-dictionary-multivalue-multilang": "Wybierz wartość"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "Wprowadź wartość",
+      "required": "To pole jest wymagane",
+      "maxLength": "To pole nie może zawierać więcej niż {{number}} znaków"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Nieprawidłowy format URI. Upewnij się, że URI nie zawiera parametrów zapytania"
+      }
+    },
+    "errors": {
+      "generic-error": "Błąd",
+      "400": "Nieprawidłowe żądanie",
+      "401": "Brak autoryzacji",
+      "403": "Zabronione",
+      "404": "Nie znaleziono",
+      "405": "Metoda niedozwolona",
+      "406": "Nie do przyjęcia",
+      "407": "Wymagane uwierzytelnienie proxy",
+      "408": "Przekroczony czas żądania",
+      "409": "Konflikt",
+      "429": "Zbyt wiele żądań",
+      "500": "Wewnętrzny błąd serwera",
+      "501": "Nie zaimplementowano",
+      "502": "Błąd bramy",
+      "503": "Usługa niedostępna",
+      "504": "Przekroczony czas bramy"
+    }
+  }
+}
