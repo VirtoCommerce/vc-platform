@@ -104,7 +104,8 @@
                     </ul>
                   </li>
                   <div class="form-group" ng-if="blade.mode">
-                    <label class="form-label">{{ 'platform.blades.module-detail.labels.install-version' | translate }}</label>
+                    <label ng-if="blade.mode === 'install'" class="form-label">{{ 'platform.blades.module-detail.labels.install-version' | translate }}</label>
+                    <label ng-if="blade.mode === 'update'" class="form-label">{{ 'platform.blades.module-detail.labels.update-version' | translate: blade.currentEntity }}</label>
                     <div class="form-input">
                       <ui-select ng-model="blade.currentEntity">
                         <ui-select-match>{{$select.selected.version}}</ui-select-match>

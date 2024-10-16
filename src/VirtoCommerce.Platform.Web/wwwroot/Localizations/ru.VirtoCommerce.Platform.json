@@ -343,17 +343,18 @@
           "dependencies": "Зависимости",
           "tags": "Теги",
           "install-version": "Установленная версия",
-          "errors": "Ошибки"
+          "errors": "Ошибки",
+          "update-version": "Обновить {{id}} до"
         }
       },
       "modules-main": {
         "title": "Модули",
         "labels": {
           "updates": "Обновления",
-          "available": "Доступный",
-          "installed": "Установленный",
+          "browse": "Обзор",
+          "installed": "Установленные",
           "withErrors": "Ошибки",
-          "advanced": "Усовершенствованный"
+          "advanced": "Дополнительно"
         }
       },
       "modules-list": {
@@ -362,7 +363,7 @@
           "grouping": "Показать связки Модулей",
           "ungrouped": "Другие",
           "no-updates": "Обновления не найдены.",
-          "no-modules-part1": "Нет новых Модулей для установки.",
+          "no-modules": "Нет Модулей для установки.",
           "no-installed-modules": "Установленные Модули не найдены.",
           "icon": "Иконка",
           "up-to-date": "Модуль обновлен",
