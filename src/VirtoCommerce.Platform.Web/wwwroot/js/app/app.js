@@ -61,7 +61,14 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + "<br/>" + x.validationErrors.join("<br/>");
                             $scope.platformError.detail += moduleErrors;
                         });
-                        $state.go('workspace.modularity');
+                        var query = new URLSearchParams(window.location.search);
+                        var returnUrl = query.get('ReturnUrl');
+                        if (returnUrl) {
+                            window.location.href = returnUrl;
+                        }
+                        else {
+                            $state.go('workspace.modularity');
+                        }
                     }
                 });
 
@@ -440,7 +447,14 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     } else if (!authContext.isAdministrator && !authContext.permissions?.length) {
                         $state.go('contact-admin');
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
-                        $state.go('workspace');
+                        var query = new URLSearchParams(window.location.search);
+                        var returnUrl = query.get('ReturnUrl');
+                        if (returnUrl) {
+                            window.location.href = returnUrl;
+                        }
+                        else {
+                            $state.go('workspace');
+                        }
                     }
                 }, 500);
             });

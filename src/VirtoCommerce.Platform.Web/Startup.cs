@@ -3,14 +3,11 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -33,7 +30,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using OpenIddict.Abstractions;
+using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -76,8 +73,8 @@ using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
-using MsTokens = Microsoft.IdentityModel.Tokens;
 
 
 namespace VirtoCommerce.Platform.Web
@@ -250,7 +247,7 @@ namespace VirtoCommerce.Platform.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            var authBuilder = services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
                 //Add the second ApiKey auth schema to handle api_key in query string
                 .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                 //Add the third BasicAuth auth schema
@@ -271,9 +268,10 @@ namespace VirtoCommerce.Platform.Web
             // which saves you from doing the mapping in your authorization controller.
             services.Configure<IdentityOptions>(options =>
             {
-                options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Subject;
-                options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Name;
-                options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
+                options.ClaimsIdentity.UserNameClaimType = Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = Claims.Role;
+                options.ClaimsIdentity.EmailClaimType = Claims.Email;
             });
 
             services.ConfigureOptions<ConfigureSecurityStampValidatorOptions>();
@@ -310,31 +308,31 @@ namespace VirtoCommerce.Platform.Web
             // register it as a singleton to use in external login providers
             services.AddSingleton(defaultTokenHandler);
 
-            authBuilder.AddJwtBearer(options =>
-            {
-                options.Authority = Configuration["Auth:Authority"];
-                options.Audience = Configuration["Auth:Audience"];
+            //authBuilder.AddJwtBearer(options =>
+            //{
+            //    options.Authority = Configuration["Auth:Authority"];
+            //    options.Audience = Configuration["Auth:Audience"];
 
-                if (WebHostEnvironment.IsDevelopment())
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.IncludeErrorDetails = true;
-                }
+            //    if (WebHostEnvironment.IsDevelopment())
+            //    {
+            //        options.RequireHttpsMetadata = false;
+            //        options.IncludeErrorDetails = true;
+            //    }
 
-                MsTokens.X509SecurityKey publicKey = null;
+            //    MsTokens.X509SecurityKey publicKey = null;
 
-                var publicCert = ServerCertificate.X509Certificate;
-                publicKey = new MsTokens.X509SecurityKey(publicCert);
-                options.MapInboundClaims = false;
-                options.TokenValidationParameters = new MsTokens.TokenValidationParameters
-                {
-                    NameClaimType = OpenIddictConstants.Claims.Subject,
-                    RoleClaimType = OpenIddictConstants.Claims.Role,
-                    ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = publicKey
-                };
-            });
+            //    var publicCert = ServerCertificate.X509Certificate;
+            //    publicKey = new MsTokens.X509SecurityKey(publicCert);
+            //    options.MapInboundClaims = false;
+            //    options.TokenValidationParameters = new MsTokens.TokenValidationParameters
+            //    {
+            //        NameClaimType = OpenIddictConstants.Claims.Subject,
+            //        RoleClaimType = OpenIddictConstants.Claims.Role,
+            //        ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = publicKey
+            //    };
+            //});
 
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
@@ -352,19 +350,25 @@ namespace VirtoCommerce.Platform.Web
                     // Register the ASP.NET Core MVC binder used by OpenIddict.
                     // Note: if you don't call this method, you won't be able to
                     // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                    var builder = options.UseAspNetCore().
-                        EnableTokenEndpointPassthrough().
-                        EnableAuthorizationEndpointPassthrough();
-
+                    var builder = options.UseAspNetCore()
+                        .EnableAuthorizationEndpointPassthrough()
+                        .EnableLogoutEndpointPassthrough()
+                        .EnableTokenEndpointPassthrough()
+                        .EnableUserinfoEndpointPassthrough()
+                        .EnableStatusCodePagesIntegration();
                     // Enable the authorization, logout, token and userinfo endpoints.
-                    options.SetTokenEndpointUris("connect/token");
-                    options.SetUserinfoEndpointUris("api/security/userinfo");
+                    options.SetTokenEndpointUris("/connect/token")
+                        .SetUserinfoEndpointUris("/connect/userinfo")
+                        .SetAuthorizationEndpointUris("/connect/authorize")
+                        .SetLogoutEndpointUris("/connect/logout");
 
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.
-                    options.AllowPasswordFlow()
+                    options
+                        .AllowPasswordFlow()
                         .AllowRefreshTokenFlow()
                         .AllowClientCredentialsFlow()
+                        .AllowAuthorizationCodeFlow()
                         .AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate)
                         .AllowCustomFlow(PlatformConstants.Security.GrantTypes.ExternalSignIn);
 
@@ -412,8 +416,16 @@ namespace VirtoCommerce.Platform.Web
                     {
                         privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
+
                     options.AddSigningCertificate(privateKey);
                     options.AddEncryptionCertificate(privateKey);
+                })
+                .AddValidation(options =>
+                {
+                    // Import the configuration from the local OpenIddict server instance.
+                    options.UseLocalServer();
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
                 });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
@@ -427,30 +439,33 @@ namespace VirtoCommerce.Platform.Web
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
             {
-                options.Cookie.Name = ".VirtoCommerce.Identity.Application";
-
-                options.Events.OnRedirectToLogin = context =>
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    return Task.CompletedTask;
-                };
-                options.Events.OnRedirectToAccessDenied = context =>
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                    return Task.CompletedTask;
-                };
+                options.LoginPath = "/";
+                //TODO: Temporary comment return status codes instead of redirection. It is required for
+                //normal authorization code flow. We should implement  login form as server side view.
+                //This logic is used to handle 401 errors when token is expired to force redirect to angular login form
+                //in case we have server side login form, this logic is no longer needed and can be removed. 
+                //options.Events.OnRedirectToLogin = context =>
+                //{
+                //    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                //    return Task.CompletedTask;
+                //};
+                //options.Events.OnRedirectToAccessDenied = context =>
+                //{
+                //    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                //    return Task.CompletedTask;
+                //};
             });
 
             services.AddAuthorization(options =>
             {
                 //We need this policy because it is a single way to implicitly use the three schemas (JwtBearer, ApiKey and Basic) authentication for resource based authorization.
                 var multipleSchemaAuthPolicy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme, BasicAuthenticationOptions.DefaultScheme)
+                    .AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme, BasicAuthenticationOptions.DefaultScheme)
                     .RequireAuthenticatedUser()
                     // Customer user can get token, but can't use any API where auth is needed
                     .RequireAssertion(context =>
                         authorizationOptions.AllowApiAccessForCustomers ||
-                        !context.User.HasClaim(OpenIddictConstants.Claims.Role, PlatformConstants.Security.SystemRoles.Customer))
+                        !context.User.HasClaim(Claims.Role, PlatformConstants.Security.SystemRoles.Customer))
                     .Build();
                 //The good article is described the meaning DefaultPolicy and FallbackPolicy
                 //https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
