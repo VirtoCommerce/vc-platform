@@ -30,6 +30,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
@@ -73,7 +74,6 @@ using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 
@@ -268,10 +268,10 @@ namespace VirtoCommerce.Platform.Web
             // which saves you from doing the mapping in your authorization controller.
             services.Configure<IdentityOptions>(options =>
             {
-                options.ClaimsIdentity.UserNameClaimType = Claims.Name;
-                options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
-                options.ClaimsIdentity.RoleClaimType = Claims.Role;
-                options.ClaimsIdentity.EmailClaimType = Claims.Email;
+                options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
+                options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
             });
 
             services.ConfigureOptions<ConfigureSecurityStampValidatorOptions>();
@@ -465,7 +465,7 @@ namespace VirtoCommerce.Platform.Web
                     // Customer user can get token, but can't use any API where auth is needed
                     .RequireAssertion(context =>
                         authorizationOptions.AllowApiAccessForCustomers ||
-                        !context.User.HasClaim(Claims.Role, PlatformConstants.Security.SystemRoles.Customer))
+                        !context.User.HasClaim(OpenIddictConstants.Claims.Role, PlatformConstants.Security.SystemRoles.Customer))
                     .Build();
                 //The good article is described the meaning DefaultPolicy and FallbackPolicy
                 //https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
