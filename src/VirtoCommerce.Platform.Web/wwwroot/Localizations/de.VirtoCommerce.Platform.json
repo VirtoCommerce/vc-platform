@@ -340,7 +340,7 @@
       },
       "account-changePassword": {
         "labels": {
-          "title": "Bitte geben Sie ein neues Passwort ein",
+          "title": "Neues Passwort eingeben",
           "login": "Anmelden",
           "force-change-info": "Ihr Passwort ist abgelaufen. Sie müssen <b>das Passwort ändern, um fortzufahren</b> und den Manager zu nutzen",
           "current-password": "Aktuelles Passwort",
@@ -679,7 +679,7 @@
           "regional-format-description": "Regionales Format für Zahlen, Währung, Datum und Uhrzeit. Leer lassen, um Browser- oder Fallback-Regionalformat zu verwenden",
           "time-zone": "Zeitzone",
           "time-zone-description": "Aktuelle Benutzer-Zeitzone im IANA-Format (tz-Datenbank). Wählen Sie die nächstgelegene Stadt in Ihrer Zeitzone. Leer lassen, um Browser- oder Fallback-Zeitzone zu verwenden",
-          "use-time-ago": "Zeit-Ago-Format verwenden, wenn möglich",
+          "use-time-ago": "Zeitpunkt in 'vor X Zeit'-Format angeben, wenn möglich",
           "full-date-threshold-group": "Vollständiges Datumsformat für Daten verwenden, die älter sind als...",
           "full-date-threshold-description": "Numerischer Wert der Zeiteinheiten",
           "full-date-threshold-unit-description": "Zeiteinheit (z.B. Stunden oder Jahre)"
