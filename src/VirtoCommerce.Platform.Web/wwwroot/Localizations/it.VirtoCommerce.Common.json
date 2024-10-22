@@ -1,0 +1,188 @@
+{
+  "platform": {
+    "commands": {
+      "add": "Aggiungi",
+      "activate": "Attiva",
+      "assign": "Assegna",
+      "cancel": "Annulla",
+      "clear": "Cancella",
+      "clear-all": "Cancella tutto",
+      "clone": "Clona",
+      "close": "Chiudi",
+      "confirm": "Conferma",
+      "copy-link": "Copia link",
+      "copy": "Copia",
+      "create": "Crea",
+      "cut": "Taglia",
+      "delete": "Elimina",
+      "add-all": "Aggiungi tutto",
+      "remove-all": "Elimina tutto",
+      "download": "Scarica",
+      "edit": "Modifica",
+      "export": "Esporta",
+      "generate": "Genera",
+      "import": "Importa",
+      "import-sample-data": "Importa dati di esempio",
+      "install": "Installa",
+      "manage": "Gestisci",
+      "more": "Altro",
+      "no": "No",
+      "new-folder": "Nuova cartella",
+      "new-license": "Rinnova licenza",
+      "ok": "OK",
+      "paste": "Incolla",
+      "pick-selected": "Seleziona selezionati",
+      "preview": "Anteprima",
+      "open-browser": "Apri nel browser",
+      "redo": "Ripeti",
+      "refresh": "Aggiorna",
+      "remove": "Rimuovi",
+      "reset": "Reimposta",
+      "restart": "Riavvia",
+      "save": "Salva",
+      "send": "Invia",
+      "select-all": "Seleziona tutto",
+      "set-to-default": "Imposta predefinito",
+      "start-export": "Avvia esportazione",
+      "settings": "Impostazioni",
+      "sign-out": "Esci",
+      "undo": "Annulla",
+      "uninstall": "Disinstalla",
+      "unselect-all": "Deseleziona tutto",
+      "update": "Aggiorna",
+      "upload": "Carica",
+      "yes": "Sì",
+      "add-new-property": "Aggiungi nuova proprietà",
+      "manage-type-properties": "Tipi di proprietà",
+      "manage-profile": "Gestisci profilo",
+      "minimize": "Minimizza",
+      "maximize": "Massimizza",
+      "stop-sending": "Interrompi invio",
+      "set-active": "Imposta attivo",
+      "reject-user": "Rifiuta utente",
+      "change-password": "Cambia password",
+      "unlock-account": "Sblocca account",
+      "lock-account": "Blocca account",
+      "today": "Oggi",
+      "time": "Ora",
+      "now": "Adesso",
+      "date": "Data",
+      "see-details": "Visualizza dettagli",
+      "dismiss": "Chiudi",
+      "hide-empty-property-values": "Nascondi valori vuoti",
+      "show-empty-property-values": "Mostra valori vuoti",
+      "titles": {
+        "refresh": "Aggiorna",
+        "new-folder": "Nuova cartella",
+        "upload": "Carica"
+      }
+    },
+    "list": {
+      "no-data": "Nessun dato",
+      "count": "Conteggio",
+      "loading": "Caricamento...",
+      "item-not-found": "Errore: Non trovato"
+    },
+    "placeholders": {
+      "n-a": "N/D",
+      "no-file": "Scegli file",
+      "search-keyword": "Cerca parola chiave...",
+      "select-value": "Seleziona valore",
+      "select-values": "Seleziona valori"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Conferma eliminazione",
+        "message": "Sei sicuro di voler eliminare le voci selezionate?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Testo breve",
+        "description": "Valori di testo sotto i 1024 caratteri"
+      },
+      "long-text": {
+        "title": "Testo lungo",
+        "description": "Testo illimitato senza restrizioni di dimensione"
+      },
+      "integer": {
+        "title": "Intero",
+        "description": "Numero intero"
+      },
+      "decimal": {
+        "title": "Numero decimale",
+        "description": "Numero decimale con precisione di 18 e scala di 4"
+      },
+      "date-time": {
+        "title": "Data e ora",
+        "description": "Seleziona data"
+      },
+      "boolean": {
+        "title": "Booleano",
+        "description": "Tipo interruttore"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "Markup HTML"
+      },
+      "undefined": {
+        "title": "Non definito"
+      },
+      "image": {
+        "title": "Immagine",
+        "description": "Tipo immagine"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "Inserisci testo breve",
+        "secure-string": "Inserisci testo segreto",
+        "email": "Inserisci email",
+        "url": "Inserisci URL",
+        "long-text": "Inserisci testo lungo",
+        "integer": "Inserisci numero intero",
+        "number": "Inserisci numero decimale",
+        "date-time": "Scegli data",
+        "short-text-multivalue": "Aggiungi valore",
+        "integer-multivalue": "Aggiungi intero",
+        "number-multivalue": "Aggiungi decimale",
+        "short-text-dictionary": "Seleziona valore",
+        "short-text-dictionary-multivalue": "Seleziona valore",
+        "short-text-multilang": "Inserisci valore",
+        "long-text-multilang": "Inserisci valore",
+        "short-text-multivalue-multilang": "Aggiungi valore",
+        "short-text-dictionary-multilang": "Seleziona valore",
+        "short-text-dictionary-multivalue-multilang": "Seleziona valore",
+        "long-text-dictionary-multivalue-multilang": "Seleziona valore"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "Inserisci valore",
+      "required": "Questo campo è obbligatorio",
+      "maxLength": "Questo campo non deve contenere più di {{number}} caratteri"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Formato URI non valido. Assicurati che l'URI non abbia parametri di query"
+      }
+    },
+    "errors": {
+      "generic-error": "Errore",
+      "400": "Richiesta non valida",
+      "401": "Non autorizzato",
+      "403": "Vietato",
+      "404": "Non trovato",
+      "405": "Metodo non consentito",
+      "406": "Non accettabile",
+      "407": "Autenticazione proxy richiesta",
+      "408": "Timeout della richiesta",
+      "409": "Conflitto",
+      "429": "Troppe richieste",
+      "500": "Errore interno del server",
+      "501": "Non implementato",
+      "502": "Gateway non valido",
+      "503": "Servizio non disponibile",
+      "504": "Timeout del gateway"
+    }
+  }
+}

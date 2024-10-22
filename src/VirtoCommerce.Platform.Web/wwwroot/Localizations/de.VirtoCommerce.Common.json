@@ -5,121 +5,147 @@
       "activate": "Aktivieren",
       "assign": "Zuweisen",
       "cancel": "Abbrechen",
-      "clear": " Löschen",
-      "clear-all": "Alle löschen",
+      "clear": "Löschen",
+      "clear-all": "Alles löschen",
       "clone": "Klonen",
       "close": "Schließen",
       "confirm": "Bestätigen",
       "copy-link": "Link kopieren",
+      "copy": "Kopieren",
       "create": "Erstellen",
       "cut": "Ausschneiden",
       "delete": "Löschen",
+      "add-all": "Alle hinzufügen",
+      "remove-all": "Alle löschen",
       "download": "Herunterladen",
       "edit": "Bearbeiten",
       "export": "Exportieren",
       "generate": "Generieren",
       "import": "Importieren",
+      "import-sample-data": "Beispieldaten importieren",
       "install": "Installieren",
       "manage": "Verwalten",
       "more": "Mehr",
       "no": "Nein",
       "new-folder": "Neuer Ordner",
       "new-license": "Lizenz erneuern",
-      "ok": "Ok",
+      "ok": "OK",
       "paste": "Einfügen",
-      "pick-selected": "Abholung ausgewählt",
+      "pick-selected": "Ausgewählte auswählen",
       "preview": "Vorschau",
-      "open-browser": "In Browser öffnen",
+      "open-browser": "Im Browser öffnen",
       "redo": "Wiederholen",
       "refresh": "Aktualisieren",
       "remove": "Entfernen",
       "reset": "Zurücksetzen",
-      "restart": "Neu starten",
+      "restart": "Neustart",
       "save": "Speichern",
       "send": "Senden",
       "select-all": "Alle auswählen",
+      "set-to-default": "Auf Standard setzen",
       "start-export": "Export starten",
       "settings": "Einstellungen",
       "sign-out": "Abmelden",
-      "undo": "Rückgängig machen",
+      "undo": "Rückgängig",
       "uninstall": "Deinstallieren",
-      "unselect-all": "Markierung aufheben",
+      "unselect-all": "Alle abwählen",
       "update": "Aktualisieren",
       "upload": "Hochladen",
       "yes": "Ja",
-      "add-new-property": "Neue Eigenschaft",
-      "manage-type-properties": "Typen verwalten",
+      "add-new-property": "Neue Eigenschaft hinzufügen",
+      "manage-type-properties": "Eigenschaftstypen",
       "manage-profile": "Profil verwalten",
       "minimize": "Minimieren",
       "maximize": "Maximieren",
-      "stop-sending": "Senden",
+      "stop-sending": "Senden stoppen",
       "set-active": "Aktiv setzen",
       "reject-user": "Benutzer ablehnen",
       "change-password": "Passwort ändern",
+      "unlock-account": "Konto entsperren",
+      "lock-account": "Konto sperren",
       "today": "Heute",
-      "see-details": "Siehe Einzelheiten",
-      "dismiss": "Weggetreten"
+      "time": "Zeit",
+      "now": "Jetzt",
+      "date": "Datum",
+      "see-details": "Details anzeigen",
+      "dismiss": "Verwerfen",
+      "hide-empty-property-values": "Leere Werte ausblenden",
+      "show-empty-property-values": "Leere Werte anzeigen",
+      "titles": {
+        "refresh": "Aktualisieren",
+        "new-folder": "Neuer Ordner",
+        "upload": "Hochladen"
+      }
     },
     "list": {
       "no-data": "Keine Daten",
-      "count": "Anzahl"
+      "count": "Anzahl",
+      "loading": "Wird geladen...",
+      "item-not-found": "Fehler: Nicht gefunden"
     },
     "placeholders": {
-      "n-a": "N/A",
-      "no-file": "Datei wählen",
-      "search-keyword": "Durchsuchen..."
+      "n-a": "N/V",
+      "no-file": "Datei auswählen",
+      "search-keyword": "Suchbegriff eingeben...",
+      "select-value": "Wert auswählen",
+      "select-values": "Werte auswählen"
     },
     "dialogs": {
       "delete": {
-        "title": "Bestätigung löschen",
-        "message": "Möchten Sie die ausgewählten Einträge löschen?"
+        "title": "Löschbestätigung",
+        "message": "Sind Sie sicher, dass Sie die ausgewählten Einträge löschen möchten?"
       }
     },
     "properties": {
       "short-text": {
-        "title": "Kurztext",
-        "description": "Texte kürzer als 1024 Zeichen."
+        "title": "Kurzer Text",
+        "description": "Textwerte unter 1024 Zeichen"
       },
       "long-text": {
         "title": "Langer Text",
-        "description": "Text ohne Längenbeschränkung."
+        "description": "Unbegrenzter Text ohne Größenbeschränkung"
       },
       "integer": {
         "title": "Ganzzahl",
-        "description": "Ganzzahl."
+        "description": "Ganze Zahl"
       },
       "decimal": {
-        "title": "Anzahl",
-        "description": "Zahl mit ."
+        "title": "Dezimalzahl",
+        "description": "Dezimalzahl mit einer Genauigkeit von 18 und einer Skalierung von 4"
       },
       "date-time": {
         "title": "Datum und Uhrzeit",
-        "description": "Datum auswählen."
+        "description": "Datum auswählen"
       },
       "boolean": {
-        "title": "boolean",
-        "description": "Ja oder Nein"
+        "title": "Boolesch",
+        "description": "Schaltertyp"
       },
       "html": {
         "title": "HTML",
-        "description": "HTML-Markup."
+        "description": "HTML-Markup"
       },
       "undefined": {
-        "title": "Nicht definiert"
+        "title": "Undefiniert"
+      },
+      "image": {
+        "title": "Bild",
+        "description": "Bildtyp"
       }
     },
     "genericValueInput": {
       "placeholders": {
-        "short-text": "Kurztext eingeben",
+        "short-text": "Kurzen Text eingeben",
         "secure-string": "Geheimen Text eingeben",
-        "url": " URL eingeben",
+        "email": "E-Mail eingeben",
+        "url": "URL eingeben",
         "long-text": "Langen Text eingeben",
-        "integer": "Ganzzahl eingeben",
+        "integer": "Ganze Zahl eingeben",
         "number": "Dezimalzahl eingeben",
         "date-time": "Datum auswählen",
         "short-text-multivalue": "Wert hinzufügen",
-        "integer-multivalue": "Integer hinzufügen",
-        "number-multivalue": "Dezimal hinzufügen",
+        "integer-multivalue": "Ganzzahl hinzufügen",
+        "number-multivalue": "Dezimalzahl hinzufügen",
         "short-text-dictionary": "Wert auswählen",
         "short-text-dictionary-multivalue": "Wert auswählen",
         "short-text-multilang": "Wert eingeben",
@@ -128,12 +154,35 @@
         "short-text-dictionary-multilang": "Wert auswählen",
         "short-text-dictionary-multivalue-multilang": "Wert auswählen",
         "long-text-dictionary-multivalue-multilang": "Wert auswählen"
-      },
-      "short-text-input": {
-        "placeholder": "Wert eingeben",
-        "required": "Erforderlich",
-        "maxLength": "Dieses Feld darf nicht mehr als {{number}} Zeichen enthalten"
       }
+    },
+    "short-text-input": {
+      "placeholder": "Wert eingeben",
+      "required": "Dieses Feld ist erforderlich",
+      "maxLength": "Dieses Feld darf nicht mehr als {{number}} Zeichen enthalten"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Ungültiges URI-Format. Stellen Sie sicher, dass die URI keine Abfrageparameter enthält"
+      }
+    },
+    "errors": {
+      "generic-error": "Fehler",
+      "400": "Ungültige Anfrage",
+      "401": "Nicht autorisiert",
+      "403": "Verboten",
+      "404": "Nicht gefunden",
+      "405": "Methode nicht erlaubt",
+      "406": "Nicht akzeptabel",
+      "407": "Proxy-Authentifizierung erforderlich",
+      "408": "Zeitüberschreitung der Anfrage",
+      "409": "Konflikt",
+      "429": "Zu viele Anfragen",
+      "500": "Interner Serverfehler",
+      "501": "Nicht implementiert",
+      "502": "Schlechtes Gateway",
+      "503": "Dienst nicht verfügbar",
+      "504": "Gateway-Zeitüberschreitung"
     }
   }
 }
