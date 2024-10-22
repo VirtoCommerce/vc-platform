@@ -50,13 +50,13 @@
             <div class="table-wrapper" ng-if="blade.currentEntities.length">
                 <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-grouping ui-grid-height></div>
                 <ul class="menu __context" role="menu" id="mdl_menu">
-                    <li class="menu-item" ng-click="confirmActionInDialog('update', [contextMenuEntity])" ng-if="blade.mode!=='advanced' && contextMenuEntity.isInstalled && contextMenuEntity.$alternativeVersion" va-permission="platform:module:manage">
+                    <li class="menu-item" ng-click="confirmActionInDialog('update', [contextMenuEntity])" ng-if="allowInstallModules && blade.mode!=='advanced' && contextMenuEntity.isInstalled && contextMenuEntity.$alternativeVersion" va-permission="platform:module:manage">
                         <i class="menu-ico fa fa-arrow-up"></i>{{'platform.commands.update' | translate}}
                     </li>
-                    <li class="menu-item" ng-click="confirmActionInDialog('install', [contextMenuEntity])" ng-if="blade.mode==='browse' && !contextMenuEntity.isInstalled" va-permission="platform:module:manage">
+                    <li class="menu-item" ng-click="confirmActionInDialog('install', [contextMenuEntity])" ng-if="allowInstallModules && blade.mode==='browse' && !contextMenuEntity.isInstalled" va-permission="platform:module:manage">
                         <i class="menu-ico fas fa-plus"></i>{{'platform.commands.install' | translate}}
                     </li>
-                    <li class="menu-item" ng-click="confirmActionInDialog('uninstall', [contextMenuEntity])" ng-if="blade.mode!=='advanced' && contextMenuEntity.isInstalled" va-permission="platform:module:manage">
+                    <li class="menu-item" ng-click="confirmActionInDialog('uninstall', [contextMenuEntity])" ng-if="allowInstallModules && blade.mode!=='advanced' && contextMenuEntity.isInstalled" va-permission="platform:module:manage">
                         <i class="menu-ico fas fa-trash-alt"></i> {{'platform.commands.uninstall' | translate}}
                     </li>
                 </ul>

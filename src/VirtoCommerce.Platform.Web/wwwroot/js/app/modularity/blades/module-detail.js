@@ -4,7 +4,7 @@ angular.module('platformWebApp')
 
     function initializeBlade() {
         if (blade.currentEntity.isInstalled) {
-            var canUpdate = _.any(moduleHelper.allmodules, function (x) {
+            var canUpdate = $scope.allowInstallModules && _.any(moduleHelper.allmodules, function (x) {
                 return x.id === blade.currentEntity.id && !x.isInstalled;
             });
 
@@ -23,7 +23,7 @@ angular.module('platformWebApp')
                     executeMethod: function () {
                         $scope.confirmActionInDialog('uninstall');
                     },
-                    canExecuteMethod: function () { return true; },
+                    canExecuteMethod: function () { return $scope.allowInstallModules; },
                     permission: 'platform:module:manage'
                 }
             ];

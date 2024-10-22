@@ -1,4 +1,4 @@
-<div class="blade-static __bottom __expanded" ng-if="blade.mode">
+<div class="blade-static __bottom __expanded" ng-if="allowInstallModules && blade.mode">
     <div class="form-input" ng-if="blade.currentEntity.requireLicenseAcceptance">
         <div class="form-control __checkbox">
             <label class="form-label">
@@ -17,9 +17,9 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div ng-if="!allowInstallModules" class="form-group form-error inner-block">
-	        {{ 'platform.blades.modules-list.labels.manual-install-warning' | translate }}
-	    </div>
+          <div ng-if="!allowInstallModules" class="form-group form-error inner-block">
+            {{ 'platform.blades.modules-list.labels.manual-install-warning' | translate }}
+          </div>
             <div ng-if="blade.mode === 'advanced'" va-permission="platform:module:manage">
                 <div class="t __divider">{{ 'platform.blades.module-detail.labels.install-from-file' | translate }}</div>
                 <div class="form-group" ng-if="!blade.isLoading">
@@ -103,7 +103,7 @@
                       </li>
                     </ul>
                   </li>
-                  <div class="form-group" ng-if="blade.mode">
+                  <div class="form-group" ng-if="allowInstallModules && blade.mode">
                     <label ng-if="blade.mode === 'install'" class="form-label">{{ 'platform.blades.module-detail.labels.install-version' | translate }}</label>
                     <label ng-if="blade.mode === 'update'" class="form-label">{{ 'platform.blades.module-detail.labels.update-version' | translate: blade.currentEntity }}</label>
                     <div class="form-input">
