@@ -1,0 +1,188 @@
+{
+  "platform": {
+    "commands": {
+      "add": "追加",
+      "activate": "有効化",
+      "assign": "割り当て",
+      "cancel": "キャンセル",
+      "clear": "クリア",
+      "clear-all": "すべてクリア",
+      "clone": "複製",
+      "close": "閉じる",
+      "confirm": "確認",
+      "copy-link": "リンクをコピー",
+      "copy": "コピー",
+      "create": "作成",
+      "cut": "切り取り",
+      "delete": "削除",
+      "add-all": "すべて追加",
+      "remove-all": "すべて削除",
+      "download": "ダウンロード",
+      "edit": "編集",
+      "export": "エクスポート",
+      "generate": "生成",
+      "import": "インポート",
+      "import-sample-data": "サンプルデータをインポート",
+      "install": "インストール",
+      "manage": "管理",
+      "more": "その他",
+      "no": "いいえ",
+      "new-folder": "新しいフォルダ",
+      "new-license": "ライセンス更新",
+      "ok": "OK",
+      "paste": "貼り付け",
+      "pick-selected": "選択したものを選ぶ",
+      "preview": "プレビュー",
+      "open-browser": "ブラウザで開く",
+      "redo": "やり直し",
+      "refresh": "更新",
+      "remove": "削除",
+      "reset": "リセット",
+      "restart": "再起動",
+      "save": "保存",
+      "send": "送信",
+      "select-all": "すべて選択",
+      "set-to-default": "デフォルトに設定",
+      "start-export": "エクスポート開始",
+      "settings": "設定",
+      "sign-out": "サインアウト",
+      "undo": "元に戻す",
+      "uninstall": "アンインストール",
+      "unselect-all": "すべての選択を解除",
+      "update": "更新",
+      "upload": "アップロード",
+      "yes": "はい",
+      "add-new-property": "新しいプロパティを追加",
+      "manage-type-properties": "プロパティの種類",
+      "manage-profile": "プロフィール管理",
+      "minimize": "最小化",
+      "maximize": "最大化",
+      "stop-sending": "送信停止",
+      "set-active": "アクティブに設定",
+      "reject-user": "ユーザーを拒否",
+      "change-password": "パスワード変更",
+      "unlock-account": "アカウントのロック解除",
+      "lock-account": "アカウントをロック",
+      "today": "今日",
+      "time": "時間",
+      "now": "現在",
+      "date": "日付",
+      "see-details": "詳細を表示",
+      "dismiss": "閉じる",
+      "hide-empty-property-values": "空の値を非表示",
+      "show-empty-property-values": "空の値を表示",
+      "titles": {
+        "refresh": "更新",
+        "new-folder": "新しいフォルダ",
+        "upload": "アップロード"
+      }
+    },
+    "list": {
+      "no-data": "データなし",
+      "count": "件数",
+      "loading": "読み込み中...",
+      "item-not-found": "エラー：見つかりません"
+    },
+    "placeholders": {
+      "n-a": "該当なし",
+      "no-file": "ファイルを選択",
+      "search-keyword": "キーワードを検索...",
+      "select-value": "値を選択",
+      "select-values": "値を選択"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "削除の確認",
+        "message": "選択したエントリを削除してもよろしいですか？"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "短いテキスト",
+        "description": "1024文字以下のテキスト値"
+      },
+      "long-text": {
+        "title": "長いテキスト",
+        "description": "サイズ制限のない無制限のテキスト"
+      },
+      "integer": {
+        "title": "整数",
+        "description": "整数"
+      },
+      "decimal": {
+        "title": "小数",
+        "description": "精度18、スケール4の小数"
+      },
+      "date-time": {
+        "title": "日時",
+        "description": "日付を選択"
+      },
+      "boolean": {
+        "title": "ブール値",
+        "description": "スイッチタイプ"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "HTMLマークアップ"
+      },
+      "undefined": {
+        "title": "未定義"
+      },
+      "image": {
+        "title": "画像",
+        "description": "画像タイプ"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "短いテキストを入力",
+        "secure-string": "秘密のテキストを入力",
+        "email": "メールアドレスを入力",
+        "url": "URLを入力",
+        "long-text": "長いテキストを入力",
+        "integer": "整数を入力",
+        "number": "小数を入力",
+        "date-time": "日付を選択",
+        "short-text-multivalue": "値を追加",
+        "integer-multivalue": "整数を追加",
+        "number-multivalue": "小数を追加",
+        "short-text-dictionary": "値を選択",
+        "short-text-dictionary-multivalue": "値を選択",
+        "short-text-multilang": "値を入力",
+        "long-text-multilang": "値を入力",
+        "short-text-multivalue-multilang": "値を追加",
+        "short-text-dictionary-multilang": "値を選択",
+        "short-text-dictionary-multivalue-multilang": "値を選択",
+        "long-text-dictionary-multivalue-multilang": "値を選択"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "値を入力",
+      "required": "このフィールドは必須です",
+      "maxLength": "このフィールドは{{number}}文字以内である必要があります"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "無効なURI形式です。URIにクエリパラメータがないことを確認してください"
+      }
+    },
+    "errors": {
+      "generic-error": "エラー",
+      "400": "不正なリクエスト",
+      "401": "認証されていません",
+      "403": "アクセス禁止",
+      "404": "見つかりません",
+      "405": "許可されていないメソッド",
+      "406": "受け入れられません",
+      "407": "プロキシ認証が必要です",
+      "408": "リクエストタイムアウト",
+      "409": "競合",
+      "429": "リクエストが多すぎます",
+      "500": "内部サーバーエラー",
+      "501": "実装されていません",
+      "502": "不正なゲートウェイ",
+      "503": "サービス利用不可",
+      "504": "ゲートウェイタイムアウト"
+    }
+  }
+}
