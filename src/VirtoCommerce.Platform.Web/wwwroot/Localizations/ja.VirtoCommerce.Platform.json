@@ -1,0 +1,1044 @@
+{
+  "platform": {
+    "menu": {
+      "home": "ホーム",
+      "browse": "ブラウズ",
+      "configuration": "設定",
+      "notifications": "通知",
+      "more": "その他",
+      "settings": "設定",
+      "dynamic-properties": "動的プロパティ",
+      "security": "セキュリティ",
+      "modules": "モジュール",
+      "export-import": "エクスポート＆インポート",
+      "user-profile": "ユーザープロフィール",
+      "assets": "リソース",
+      "toggle-favorites": "Shift + スペースでお気に入りを切り替え",
+      "help": "ヘルプ"
+    },
+    "navigation": {
+      "back": "戻る"
+    },
+    "blades": {
+      "system-info": {
+        "title": "プラットフォーム情報",
+        "labels": {
+          "clr-version": "CLRバージョン",
+          "environment-name": "環境モード",
+          "is-64-bit-os": "64ビットオペレーティングシステム",
+          "is-64-bit-process": "64ビットプロセス",
+          "database-provider": "データベースプロバイダー"
+        }
+      },
+      "asset-list": {
+        "title": "リソース管理",
+        "bread-crumb-top": "すべてのリソース",
+        "labels": {
+          "picture": "画像",
+          "name": "名前",
+          "size": "サイズ",
+          "modified": "変更日時",
+          "actions": "アクション",
+          "group": "グループ",
+          "language": "言語"
+        }
+      },
+      "asset-upload": {
+        "title": "リソースアップロード",
+        "labels": {
+          "select-files": "ファイルを選択",
+          "drag-note": "ファイルをここにドラッグ＆ドロップ",
+          "progress": "進行状況",
+          "asset-uploaded": "リソースがアップロードされました"
+        },
+        "placeholders": {
+          "image-url": "ファイルURLをここに貼り付け"
+        }
+      },
+      "operation-list": {
+        "labels": {
+          "login": "ログイン",
+          "details": "詳細",
+          "time": "時間"
+        }
+      },
+      "dynamicObject-list": {
+        "title": "動的オブジェクトタイプ",
+        "subtitle": "動的プロパティを管理するオブジェクトタイプを選択",
+        "labels": {
+          "no-objects": "動的プロパティをサポートするオブジェクトはまだありません"
+        }
+      },
+      "dynamicProperty-detail": {
+        "title": "プロパティ管理",
+        "subtitle": "プロパティ管理",
+        "subtitle-new": "新しいプロパティ",
+        "labels": {
+          "property-name": "プロパティ名",
+          "required": "必須",
+          "multivalue": "複数値",
+          "multilingual": "多言語",
+          "dictionary": "辞書",
+          "description": "説明",
+          "display-order": "表示順",
+          "display-name": "表示名",
+          "value-type": "値タイプ",
+          "dictionary-values": "辞書の値",
+          "manage-dictionary": "辞書を管理"
+        },
+        "placeholders": {
+          "description": "プロパティの説明を入力",
+          "display-name": "表示名を入力...",
+          "display-order": "表示順"
+        },
+        "validations": {
+          "multivalue": "複数値プロパティは、ShortText、Integer、またはDecimal値タイプのみ可能です",
+          "multilingual": "テキストまたはHTML値のみ多言語対応可能です",
+          "dictionary": "ShortText値タイプの辞書のみサポートされています"
+        }
+      },
+      "dynamicProperty-list": {
+        "subtitle": "動的プロパティの管理",
+        "labels": {
+          "no-properties": "動的プロパティはまだありません"
+        }
+      },
+      "notifications-menu": {
+        "subtitle": "通知システムの操作"
+      },
+      "property-dictionary": {
+        "title": "辞書の値",
+        "subtitle": "辞書の値を管理",
+        "labels": {
+          "edit-value": "値を編集",
+          "new-value": "新しい値",
+          "dictionary-name": "辞書エントリー名",
+          "localized-values": "ローカライズされた値",
+          "current-values": "現在の値",
+          "name": "名前",
+          "values": "値"
+        },
+        "validations": {
+          "dictionary-name-required": "必須",
+          "dictionary-name": "重複する名前が見つかりました",
+          "localized-values-required": "必須",
+          "localized-values": "重複する名前が見つかりました",
+          "dictionary": "ShortText値タイプの辞書のみサポートされています"
+        },
+        "placeholders": {
+          "dictionary-name": "名前を入力",
+          "localized-values": "値を入力"
+        }
+      },
+      "propertyValue-list": {
+        "title": "動的プロパティ",
+        "subtitle": "",
+        "labels": {
+          "header": "プロパティ値",
+          "no-properties": "このエンティティにはまだ動的プロパティがありません。'プロパティのタイプ'をクリックしてプロパティを作成してください。現在のエンティティビューを閉じて再度開くと、動的プロパティがロードされます"
+        }
+      },
+      "edit-array": {
+        "validations": {
+          "new-value-required": "必須"
+        },
+        "labels": {
+          "new-value": "新しい値",
+          "current-values": "現在の値",
+          "values": "値"
+        },
+        "placeholders": {
+          "value": "値を入力"
+        }
+      },
+      "export-main": {
+        "title": "データエクスポート",
+        "labels": {
+          "platform-entries": "プラットフォームエントリー",
+          "choose-modules": "エクスポートするモジュールを選択",
+          "download-url": "ダウンロードURL",
+          "errors": "エラー",
+          "start": "開始",
+          "end": "終了"
+        },
+        "menu": {
+          "security": {
+            "title": "セキュリティ",
+            "description": "アカウントとロール"
+          },
+          "binary": {
+            "title": "バイナリ",
+            "description": "バイナリデータ"
+          },
+          "settings": {
+            "title": "設定",
+            "description": "プラットフォーム設定"
+          },
+          "dynamic-props": {
+            "title": "動的プロパティ",
+            "description": "プラットフォームの動的プロパティ"
+          }
+        }
+      },
+      "import-main": {
+        "title": "データインポート",
+        "labels": {
+          "start-import": "インポート開始",
+          "select-file": "インポートする.zipファイルを選択してください。ファイルはCommerce Managerのデータエクスポートで作成されたものである必要があります",
+          "drag-note": "インポートする.zipファイルをドラッグ＆ドロップしてください。ファイルはCommerce Managerのデータエクスポートで作成されたものである必要があります",
+          "upload-failed": "アップロード失敗",
+          "upload-progress": "アップロード進行状況",
+          "import-progress": "インポート進行状況",
+          "import-finished": "インポート完了",
+          "import-data-information": "インポートデータ情報",
+          "author": "作成者",
+          "data-file-created": "データファイル作成日時",
+          "created-platform-version": "作成されたプラットフォームバージョン",
+          "platform-entries": "プラットフォームエントリー",
+          "choose-modules": "インポートするモジュールを選択",
+          "no-data": "データなし",
+          "errors": "エラー",
+          "start": "開始",
+          "end": "終了"
+        },
+        "menu": {
+          "security": {
+            "title": "セキュリティ",
+            "description": "アカウントとロール"
+          },
+          "binary": {
+            "title": "バイナリ",
+            "description": "バイナリデータ"
+          },
+          "settings": {
+            "title": "設定",
+            "description": "プラットフォーム設定"
+          },
+          "dynamic-props": {
+            "title": "動的プロパティ",
+            "description": "プラットフォームの動的プロパティ"
+          }
+        }
+      },
+      "exportImport-main": {
+        "title": "データエクスポートとインポート",
+        "menu": {
+          "export": {
+            "title": "エクスポート",
+            "description": "データはファイルに保存され、後でインポートできます"
+          },
+          "import": {
+            "title": "インポート",
+            "description": "エクスポートされたファイルからデータをインポート"
+          }
+        }
+      },
+      "resolve-result": {
+        "title": "プレビュー結果",
+        "labels": {
+          "subject": "件名",
+          "body": "本文"
+        }
+      },
+      "module-settings-detail": {
+        "title": "モジュール設定"
+      },
+      "module-wizard-progress-step": {
+        "title-install": "モジュールインストール",
+        "title-update": "モジュール更新",
+        "title-uninstall": "モジュールアンインストール",
+        "labels": {
+          "start": "開始",
+          "end": "終了",
+          "progress-messages": "進行メッセージ",
+          "process-completed": "モジュールインストールプロセスが完了しました",
+          "restart-application": "アプリケーションを今すぐ再起動するか、後で再起動してください"
+        }
+      },
+      "module-detail": {
+        "title": "モジュール情報",
+        "labels": {
+          "i-accept-the": "私は",
+          "license-link": "ライセンス",
+          "license": "ライセンス",
+          "agreement": "契約に同意します",
+          "install-from-file": "ファイルからモジュールをインストール/更新",
+          "select-module-file": "中央モジュールリポジトリ以外の外部ソースからモジュール（.zip）ファイルをアップロード",
+          "upload-progress": "アップロード進行状況",
+          "module-info": "モジュール情報",
+          "title": "タイトル",
+          "official": "{{$owner}}の公式モジュール",
+          "owners": "{{$owner}}によって開発",
+          "author": "作成者",
+          "authors": "作成者",
+          "id": "ID",
+          "version": "バージョン",
+          "project-information": "プロジェクト情報",
+          "description": "説明",
+          "platform-version": "プラットフォームバージョン",
+          "dependencies": "依存関係",
+          "optional-dependencies": "オプションの依存関係",
+          "tags": "タグ",
+          "install-version": "インストールバージョン",
+          "errors": "エラー"
+        }
+      },
+      "modules-main": {
+        "title": "モジュール",
+        "labels": {
+          "updates": "アップデート",
+          "available": "利用可能",
+          "installed": "インストール済み",
+          "withErrors": "エラー",
+          "advanced": "詳細設定"
+        }
+      },
+      "modules-list": {
+        "subtitle": "モジュール管理",
+        "labels": {
+          "grouping": "モジュールバンドルを表示",
+          "ungrouped": "その他",
+          "no-updates": "アップデートが見つかりません",
+          "no-modules-part1": "インストールする新しいモジュールはありません",
+          "no-installed-modules": "インストール済みのモジュールが見つかりません",
+          "icon": "アイコン",
+          "up-to-date": "モジュールは最新です",
+          "update-available": "このモジュールの更新が利用可能です",
+          "module": "モジュール",
+          "version": "バージョン",
+          "author": "作成者",
+          "installed": "インストール済みモジュール",
+          "manual-install-warning": "警告！RefreshProbingFolderOnStartがfalseに設定されているため、手動でインストールされたモジュールは起動しません"
+        }
+      },
+      "history": {
+        "title": "システムイベント",
+        "subtitle": "イベント履歴",
+        "labels": {
+          "type": "タイプ",
+          "title": "タイトル",
+          "created": "作成日時",
+          "description": "説明"
+        }
+      },
+      "historyDetailDefault": {
+        "title": "イベント詳細",
+        "subtitle": "イベント詳細",
+        "labels": {
+          "start": "開始",
+          "end": "終了",
+          "elapsed": "経過時間",
+          "errors": "エラー",
+          "stats": "{{ totalCount }}件中{{ processedCount }}件処理済み"
+        }
+      },
+      "menuHeader": {
+        "labels": {
+          "history": "履歴",
+          "clear-recent": "最近の履歴をすべてクリア"
+        }
+      },
+      "account-changePassword": {
+        "labels": {
+          "title": "新しいパスワードを入力してください",
+          "login": "ログイン",
+          "force-change-info": "パスワードの有効期限が切れています。マネージャーの使用を続けるには<b>パスワードを変更する必要があります</b>",
+          "current-password": "現在のパスワード",
+          "new-password": "新しいパスワード",
+          "repeat-password": "新しいパスワードを再入力",
+          "cancel": "キャンセル",
+          "save": "変更",
+          "fail": "申し訳ありませんが、このユーザーのパスワードをリセットできませんでした"
+        },
+        "validations": {
+          "current-password": "必須",
+          "new-password": "古いパスワードと新しいパスワードが同じです！",
+          "repeat-password": "新しいパスワードが一致しません！"
+        },
+        "placeholders": {
+          "current-password": "現在のパスワードを入力",
+          "new-password": "新しいパスワードを入力",
+          "repeat-password": "新しいパスワードを再入力"
+        }
+      },
+      "account-resetPassword": {
+        "subtitle": "ユーザーパスワードの変更",
+        "labels": {
+          "new-password": "新しいパスワード",
+          "repeat-password": "パスワードを再入力",
+          "force-password-change": "次回サインイン時にこのユーザーにパスワードの変更を強制する"
+        },
+        "validations": {
+          "repeat-password": "新しいパスワードが一致しません！",
+          "invalid-token": "パスワードリセットトークンが無効または期限切れです",
+          "password-too-weak": "新しいパスワードが1つ以上のパスワードセキュリティポリシーに準拠していません：",
+          "passwordTooShort": "パスワードは{{parameter}}文字以上である必要があります",
+          "passwordRequiresUniqueChars": "パスワードは少なくとも{{parameter}}種類の異なる文字を使用する必要があります",
+          "passwordRequiresLower": "パスワードには少なくとも1つの小文字（'a'-'z'）が必要です",
+          "passwordRequiresUpper": "パスワードには少なくとも1つの大文字（'A'-'Z'）が必要です",
+          "passwordRequiresDigit": "パスワードには少なくとも1つの数字（'0'-'9'）が必要です",
+          "passwordRequiresNonAlphanumeric": "パスワードには少なくとも1つの英数字以外の文字が必要です",
+          "recentPasswordUsed": "このパスワードは過去に使用されています。別のパスワードを選択してください"
+        },
+        "placeholders": {
+          "new-password": "新しいパスワードを入力",
+          "repeat-password": "新しいパスワードを再入力"
+        }
+      },
+      "account-detail": {
+        "title-new": "新規アカウント",
+        "labels": {
+          "user-information": "ユーザー情報",
+          "is-administrator": "管理者権限",
+          "account-type": "アカウントタイプ",
+          "login": "ログイン",
+          "account-state": "アカウント状態",
+          "account-email": "メールアドレス",
+          "locked-state": "ロック状態",
+          "status": "ステータス",
+          "verified": "認証済み",
+          "resend-link": "リンクを再送信",
+          "link-sent": "リンクが送信されました",
+          "last-login-date": "最終ログイン日時"
+        },
+        "placeholders": {
+          "account-type": "選択してください...",
+          "email": "メールアドレスを入力",
+          "user-name": "ユーザー名を入力",
+          "status": "選択してください..."
+        }
+      },
+      "account-list": {
+        "title": "ユーザー",
+        "subtitle": "セキュリティサービス",
+        "labels": {
+          "name": "名前",
+          "account-type": "アカウントタイプ",
+          "login": "ログイン",
+          "state": "状態",
+          "status": "ステータス"
+        }
+      },
+      "account-api": {
+        "labels": {
+          "api-key": "APIキー",
+          "is-active": "アクティブ"
+        },
+        "placeholders": {
+          "api-key": "APIキーを入力"
+        }
+      },
+      "role-detail": {
+        "subtitle": "ロール詳細",
+        "labels": {
+          "summary": "概要",
+          "name": "名前",
+          "description": "説明",
+          "assigned-permissions": "割り当てられた権限",
+          "permission-name": "名前",
+          "assigned-scopes": "割り当てられたスコープ",
+          "no-permissions-assigned": "割り当てられた権限がありません"
+        },
+        "placeholders": {
+          "name": "名前を入力",
+          "description": "説明を入力"
+        }
+      },
+      "account-roles": {
+        "subtitle": "ロールの割り当て",
+        "labels": {
+          "select-roles": "割り当てるロールを選択",
+          "no-roles": "割り当てるロールがありません"
+        }
+      },
+      "account-roles-list": {
+        "title": "",
+        "labels": {
+          "assigned-roles": "割り当てられたロール",
+          "no-assigned": "割り当てられたロールがありません"
+        }
+      },
+      "permission-scopes": {
+        "subtitle": "権限スコープの設定",
+        "labels": {
+          "select-bounded-scopes": "バウンドされたスコープを選択",
+          "selected": "選択済み",
+          "scope-name": "スコープ名とパラメータ",
+          "no-scopes": "スコープがありません"
+        }
+      },
+      "role-permissions": {
+        "subtitle": "権限の割り当て",
+        "labels": {
+          "select-permissions": "割り当てる権限を選択"
+        }
+      },
+      "new-role-wizard": {
+        "title": "新規ロール",
+        "labels": {
+          "summary": "概要",
+          "name": "名前",
+          "description": "説明",
+          "assign-permissions": "権限の割り当て"
+        },
+        "placeholders": {
+          "name": "名前を入力",
+          "description": "説明を入力"
+        }
+      },
+      "role-list": {
+        "title": "ロール",
+        "subtitle": "セキュリティサービス",
+        "labels": {
+          "name": "名前"
+        }
+      },
+      "oauthapps": {
+        "labels": {
+          "clientId": "クライアントID",
+          "displayName": "表示名",
+          "type": "タイプ",
+          "clientSecret": "クライアントシークレット",
+          "assigned-permissions": "割り当てられた権限",
+          "redirectUris": "リダイレクトURI",
+          "postLogoutRedirectUris": "ログアウト後のリダイレクトURI"
+        },
+        "placeholders": {
+          "clientId": "クライアントIDを入力",
+          "displayName": "表示名を入力",
+          "type": "タイプを入力",
+          "clientSecret": "クライアントシークレットを入力"
+        }
+      },
+      "oauthapps-list": {
+        "title": "OAuthアプリケーション",
+        "subtitle": "セキュリティサービス"
+      },
+      "oauthapps-detail": {
+        "title": "OAuthアプリケーションの編集",
+        "title-new": "OAuthアプリケーションの作成",
+        "subtitle": "セキュリティサービス",
+        "labels": {
+          "clientSecret-warning": "警告！シークレットを今すぐコピーする必要があります。ブレードを閉じると非表示になります",
+          "urls": "URL"
+        },
+        "blades": {
+          "edit-redirectUris": {
+            "title": "リダイレクトURI",
+            "subtitle": "リダイレクトURIの管理"
+          },
+          "edit-postLogoutRedirectUris": {
+            "title": "ログアウト後のリダイレクトURI",
+            "subtitle": "ログアウト後のリダイレクトURIの管理"
+          }
+        }
+      },
+      "login": {
+        "labels": {
+          "sign-in": "{{title}}マネージャーにサインイン",
+          "login": "ログイン",
+          "password": "パスワード",
+          "remember-me": "ログイン情報を記憶する",
+          "external-sign-in": "{{displayName}}でサインイン",
+          "forgot-password": "パスワードをお忘れですか？",
+          "log-in": "ログイン",
+          "log-in-placeholder": "メールアドレスまたはユーザー名を入力",
+          "password-placeholder": "パスワードを入力",
+          "azure-log-in-label": "Azureを通じて管理サイトにログイン",
+          "password-log-in-type": "システムユーザー",
+          "or": "または",
+          "signing-in": "サインイン中..."
+        }
+      },
+      "forgotpassword": {
+        "title": "パスワードをお忘れですか？",
+        "labels": {
+          "login": "ログインまたはメールアドレス",
+          "description": "パスワードをリセットする方法についての説明をメールでお送りします",
+          "success": "説明のメールを送信しました",
+          "fail": "申し訳ありませんが、このユーザーのパスワードをリセットできませんでした",
+          "back": "戻る",
+          "submit": "送信",
+          "time-limit": "{{countdown}}後に再試行できます",
+          "time-limit-end": "今すぐ再試行できます"
+        },
+        "placeholders": {
+          "login-or-email": "ログインまたはメールアドレスを入力"
+        }
+      },
+      "access-denied": {
+        "title": "アクセスが拒否されました",
+        "labels": {
+          "message": "このリソースにアクセスする権限がありません。管理者にお問い合わせください",
+          "button": "別の認証情報でログイン"
+        }
+      },
+      "resetpassword": {
+        "title": "パスワードのリセット",
+        "labels": {
+          "success": "パスワードがリセットされました",
+          "fail": "申し訳ありませんが、このユーザーのパスワードをリセットできませんでした",
+          "submit": "リセット",
+          "log-in": "サインイン"
+        }
+      },
+      "license": {
+        "title": "現在のライセンス",
+        "title-new": "新しいライセンスの有効化",
+        "license-info": "ライセンス情報",
+        "license-activation": "ライセンスの有効化",
+        "labels": {
+          "info-running-no-license": "このVirto Commerceインスタンスは以下で実行されています：",
+          "info-open-source-license": "オープンソースコミュニティライセンス",
+          "info0": "ライセンスの取得または更新：",
+          "info1": "提出してください ",
+          "info2": "リクエストを処理し、まもなくご連絡いたします",
+          "info3": "「アクティベーションコード」および/またはライセンスファイルを受け取ったら、以下のアクティベーションフィールドのいずれかに入力してください",
+          "info4": "システムが新しいライセンス情報を表示します。確認して「有効化」をクリックして確定してください",
+          "customer": "ライセンス発行先",
+          "type": "タイプ",
+          "expiration": "有効期限",
+          "email": "顧客メールアドレス",
+          "request-license": "ライセンスリクエストフォーム",
+          "code-descr": "受け取ったライセンスの「アクティベーションコード」を入力し、[Enter]を押してください。これが最も迅速なライセンス有効化方法です。（インターネット接続が必要）",
+          "file-descr": "オプションで、受け取ったライセンスファイルを提供してください。（オフライン有効化）",
+          "upload-progress": "アップロード進行状況",
+          "errors": "有効化エラー"
+        },
+        "placeholders": {
+          "code": "アクティベーションコードを入力"
+        }
+      },
+      "new-account-wizard": {
+        "labels": {
+          "login": "ログイン",
+          "email": "メールアドレス",
+          "password": "パスワード",
+          "repeat-password": "パスワードの再入力",
+          "assign-roles": "ロールの割り当て"
+        },
+        "placeholders": {
+          "email": "メールアドレスを入力",
+          "login": "ログインを入力",
+          "password": "新しいパスワードを入力",
+          "repeat-password": "新しいパスワードを再入力"
+        },
+        "validations": {
+          "repeat-password": "入力されたパスワードが一致しません！",
+          "password-too-weak": "入力されたパスワードが1つ以上のパスワードセキュリティポリシーに準拠していません："
+        }
+      },
+      "security-main": {
+        "title": "セキュリティ",
+        "subtitle": "ユーザー管理"
+      },
+      "entitySetting-list": {
+        "title": "設定"
+      },
+      "setting-dictionary": {
+        "subtitle": "辞書値の管理",
+        "labels": {
+          "new-value": "値を入力してください",
+          "current-values": "現在の値",
+          "value": "値"
+        },
+        "validations": {
+          "new-value-required": "必須",
+          "new-value": "重複する値が見つかりました"
+        },
+        "placeholders": {
+          "new-value": "値を入力してください"
+        }
+      },
+      "settings-detail": {
+        "title": "設定値",
+        "hide-description": "非表示"
+      },
+      "settingGroup-list": {
+        "title": "設定",
+        "bread-crumb-top": "すべての設定"
+      },
+      "settings-uploader": {
+        "drag-drop-comment": "ファイルをここにドラッグ＆ドロップ",
+        "or": "または",
+        "browse-your-files": "ファイルを参照"
+      },
+      "localizable-setting-value-list": {
+        "subtitle": "辞書値の管理"
+      },
+      "localizable-setting-value-details": {
+        "title": "辞書値の編集",
+        "alias": "システム値"
+      },
+      "user-profile": {
+        "title": "ユーザープロフィール",
+        "labels": {
+          "language": "言語",
+          "language-description": "表示言語。ブラウザまたはフォールバック言語を使用する場合はクリアしてください",
+          "regional-format": "地域フォーマット",
+          "regional-format-description": "数字、通貨、日付、時刻の地域フォーマット。ブラウザまたはフォールバック地域フォーマットを使用する場合はクリアしてください",
+          "time-zone": "タイムゾーン",
+          "time-zone-description": "現在のユーザーのタイムゾーン（IANA（tzデータベース）形式）。あなたのタイムゾーンに最も近い都市を選択してください。ブラウザまたはフォールバックタイムゾーンを使用する場合はクリアしてください",
+          "use-time-ago": "可能な場合は経過時間形式を使用",
+          "full-date-threshold-group": "以下より前の日付には完全な日付形式を使用...",
+          "full-date-threshold-description": "時間単位の数値",
+          "full-date-threshold-unit-description": "時間単位（例：時間または年）"
+        },
+        "placeholders": {
+          "full-date-threshold": "しきい値を入力",
+          "full-date-threshold-unit": "しきい値の単位を選択"
+        },
+        "full-date-threshold-units": {
+          "Never": "なし",
+          "Seconds": "秒",
+          "Minutes": "分",
+          "Hours": "時間",
+          "Days": "日",
+          "Weeks": "週",
+          "Months": "月",
+          "Quarters": "四半期",
+          "Years": "年"
+        }
+      }
+    },
+    "templates": {
+      "sampleDataChoose": {
+        "labels": {
+          "choose-sample-data-type": "サンプルデータタイプを選択",
+          "size": "サイズ",
+          "version": "バージョン"
+        }
+      },
+      "sampleDataInitialization": {
+        "labels": {
+          "sample-data-initialization": "サンプルデータの初期化",
+          "starting-initialization": "サンプルデータの初期化を開始しています...",
+          "errors": "エラー",
+          "start": "開始",
+          "end": "終了"
+        }
+      },
+      "licensing": {
+        "license-absent": "コミュニティライセンス",
+        "license-present": "{{type}}ライセンス、{{expirationDate | amParse | date}}に期限切れ",
+        "community": "コミュニティエディションを実行中、商用ライセンスをリクエストするにはクリック",
+        "expired": "ライセンスは{{expirationDate | amParse | date}}に期限切れました。更新してください",
+        "purchase": "購入",
+        "renew": "更新",
+        "expiration-date": "有効期限"
+      },
+      "password-expiry": {
+        "expire-days": "アカウントを保護するため、<b>{{count}}日以内に</b>パスワードを変更する必要があります。",
+        "expire-today": "アカウントを保護するため、<b>今日</b>パスワードを変更する必要があります。",
+        "change-link": "今すぐ変更"
+      },
+      "modulesAutoInstallation": {
+        "labels": {
+          "module-auto-installation": "モジュールの自動インストール",
+          "loading": "モジュール情報を取得中...",
+          "finished": "インストールが完了しました。続行するには再起動をクリックしてください",
+          "start": "開始",
+          "end": "終了"
+        }
+      }
+    },
+    "widgets": {
+      "operations": {
+        "title": "変更",
+        "blade-subtitle": "変更履歴"
+      },
+      "dynamicProperty": {
+        "title": "動的プロパティ"
+      },
+      "entitySettings": {
+        "title": "設定"
+      },
+      "accountApi": {
+        "title": "APIキー",
+        "blade-subtitle": "APIキー"
+      },
+      "accountRoles": {
+        "title": "ロール",
+        "blade-subtitle": "ロールの管理"
+      }
+    },
+    "dialogs": {
+      "folders-delete": {
+        "title": "削除の確認",
+        "message": "選択したフォルダまたはファイルを削除してもよろしいですか？"
+      },
+      "properties-save": {
+        "title": "変更の保存",
+        "message": "プロパティが変更されました。変更を保存しますか？"
+      },
+      "notification-template-save": {
+        "title": "変更の保存",
+        "message": "通知テンプレートが変更されました。変更を保存しますか？"
+      },
+      "role-save": {
+        "title": "変更の保存",
+        "message": "ロールが変更されました。変更を保存しますか？"
+      },
+      "roles-delete": {
+        "title": "削除の確認",
+        "message": "選択したロールを削除してもよろしいですか？"
+      },
+      "account-save": {
+        "title": "変更の保存",
+        "message": "アカウントが変更されました。変更を保存しますか？"
+      },
+      "account-delete": {
+        "title": "削除の確認",
+        "message": "選択したアカウントを削除してもよろしいですか？"
+      },
+      "oauthapps-save": {
+        "title": "変更の保存",
+        "message": "OAuthアプリケーションが変更されました。変更を保存しますか？"
+      },
+      "oauthapps-delete": {
+        "title": "削除の確認",
+        "message": "選択したOAuthアプリケーションを削除してもよろしいですか？"
+      },
+      "dynamic-property-delete": {
+        "title": "削除の確認",
+        "message": "この動的プロパティを削除してもよろしいですか？"
+      },
+      "settings-value-delete": {
+        "title": "削除の確認",
+        "message": "選択した値を削除してもよろしいですか？"
+      },
+      "settings-save": {
+        "title": "変更の保存",
+        "message": "設定が変更されました。変更を保存しますか？"
+      },
+      "settings-delete": {
+        "title": "削除の確認",
+        "message": "設定が変更されました。変更を保存しますか？"
+      },
+      "localizable-setting-value-delete": {
+        "title": "削除の確認",
+        "message": "選択した辞書値を削除してもよろしいですか？"
+      },
+      "localizable-setting-value-save": {
+        "title": "変更の保存",
+        "message": "この辞書値が変更されました。変更を保存しますか？"
+      },
+      "email-sending-success": {
+        "title": "送信成功",
+        "message": "メールが正常に送信されました！"
+      },
+      "email-send-error": {
+        "title": "送信エラー",
+        "message": "メールを送信できませんでした！エラー：{{error}}"
+      },
+      "dictionary-items-delete": {
+        "title": "削除の確認",
+        "message": "選択した{{quantity}}個の辞書項目を削除してもよろしいですか？"
+      },
+      "module-action": {
+        "title-install": "インストールの確認",
+        "title-update": "更新の確認",
+        "title-delete": "アンインストールの確認",
+        "message0-install": "以下をインストールしようとしています：",
+        "message0-update": "以下を更新しようとしています：",
+        "message0-delete": "以下をアンインストールしようとしています：",
+        "message1-install": "以下の依存関係も一緒にインストールされます：",
+        "message1-delete": "以下の依存モジュールも一緒にアンインストールされます：",
+        "message2-install": "選択項目と依存関係をインストールしますか？",
+        "message2-update": "選択項目と依存関係を更新しますか？",
+        "message2-delete": "このモジュールとすべての依存モジュールをアンインストールしますか？"
+      },
+      "module-delete": {
+        "title": "削除の確認",
+        "message": "このモジュールをアンインストールしてもよろしいですか？"
+      },
+      "api-key-delete": {
+        "title": "削除の確認",
+        "message": "このAPIキーを削除してもよろしいですか？"
+      },
+      "app-restart": {
+        "title": "アプリケーションのシャットダウン",
+        "message": "変更を適用するにはアプリケーションを再起動する必要があります。ホスティングサービスによっては、アプリケーションが自動的に再起動するか、手動で再起動する必要があります。今すぐアプリケーションを閉じてもよろしいですか？"
+      },
+      "error-details": {
+        "title": "エラーの詳細"
+      },
+      "impersonate-no-url": {
+        "title": "代理ログイン",
+        "message": "ストアのURLがストア設定に追加されていません。管理者に連絡してください"
+      },
+      "asset-upload-error": {
+        "title": "アップロードエラー",
+        "message": "フォルダを選択してください！ルートにファイルをアップロードすることはできません！"
+      },
+      "run-import": {
+        "title": "インポートの確認",
+        "message": "サンプルデータをインポートしてもよろしいですか？"
+      },
+      "create-folder": {
+        "title": "フォルダ名は以下の命名規則に従う必要があります：\n  フォルダ名は3文字以上63文字以下である必要があります。\n  フォルダ名は文字または数字で始まり、文字、数字、ハイフン(-)のみを含むことができます。\n  各ハイフン(-)の前後には文字または数字が必要です。連続したハイフンは使用できません。\n  フォルダ名のすべての文字は小文字である必要があります"
+      },
+      "storefront-cache-reset-successfully": {
+        "title": "キャッシュのリセット",
+        "message": "フロントエンドアプリケーションのキャッシュが正常にリセットされました"
+      }
+    },
+    "commands": {
+      "login-on-behalf": "代理ログイン",
+      "reset-storefront-cache": "キャッシュのリセット"
+    }
+  },
+  "permissions": {
+    "platform:asset:access": "メインメニューでリソースを表示",
+    "platform:asset:delete": "プラットフォームリソースの削除",
+    "platform:asset:update": "プラットフォームリソースの変更",
+    "platform:asset:create": "新しいプラットフォームリソースのアップロード",
+    "platform:asset:read": "プラットフォームリソースのダウンロード",
+    "platform:module:read": "モジュールの詳細を表示",
+    "platform:module:access": "メインメニューでモジュールを表示",
+    "platform:module:manage": "モジュールのインストール/アンインストール",
+    "platform:setting:read": "プラットフォーム設定の読み取り",
+    "platform:setting:access": "メインメニューで設定を表示",
+    "platform:setting:update": "プラットフォーム設定の変更",
+    "platform:dynamic_properties:read": "動的プロパティの詳細を表示",
+    "platform:dynamic_properties:create": "新しい動的プロパティの作成",
+    "platform:dynamic_properties:access": "メインメニューで動的プロパティを表示",
+    "platform:dynamic_properties:update": "動的プロパティの変更",
+    "platform:dynamic_properties:delete": "動的プロパティの削除",
+    "platform:security:read": "ユーザーとロールの詳細を表示",
+    "platform:security:create": "新しいユーザーとロールの作成",
+    "platform:security:access": "メインメニューでセキュリティを表示",
+    "platform:security:update": "ユーザーとロールの変更",
+    "platform:security:delete": "ユーザーとロールの削除",
+    "platform:security:verifyEmail": "確認済み状態の変更と確認メールの送信",
+    "background_jobs:manage": "Hangfireコンソールへのアクセス",
+    "platform:exportImport:access": "メインメニューでエクスポート/インポートを表示",
+    "platform:import": "プラットフォームとモジュールデータのインポート",
+    "platform:export": "プラットフォームとモジュールデータのエクスポート",
+    "platform:security:loginOnBehalf": "顧客の代理としてログイン"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "Core": {
+        "General": {
+          "Languages": {
+            "title": "言語",
+            "description": "利用可能な言語のリスト"
+          }
+        }
+      },
+      "ModulesAutoInstalled": {
+        "description": "モジュールが自動的にインストールされたことを示すフラグ",
+        "title": "インストールされたモジュール"
+      },
+      "ModulesAutoInstallState": {
+        "title": "モジュール自動インストールの状態",
+        "description": "モジュール自動インストールウィザードの現在の状態"
+      },
+      "SetupStep": {
+        "title": "現在のセットアップステップ",
+        "description": "セットアップウィザードの現在のステップ"
+      },
+      "SampleDataState": {
+        "title": "サンプルデータの状態",
+        "description": "サンプルデータウィザードの現在の状態"
+      },
+      "SendDiagnosticData": {
+        "title": "診断データの送信",
+        "description": "VCプラットフォームの診断データをVCに送信します。ライセンスの購入でのみ無効にできます"
+      },
+      "Platform": {
+        "Security": {
+          "AccountTypes": {
+            "description": "可能なアカウントタイプの辞書",
+            "title": "アカウントタイプ"
+          },
+          "DefaultAccountType": {
+            "title": "デフォルトのアカウントタイプ",
+            "description": "新しいアカウントを作成する際のアカウントタイプのデフォルト値"
+          },
+          "DefaultAccountStatus": {
+            "title": "デフォルトのアカウントステータス",
+            "description": "新しいアカウントを作成する際のアカウントステータスのデフォルト値"
+          },
+          "DefaultExternalAccountStatus": {
+            "title": "デフォルトの外部アカウントステータス",
+            "description": "外部サインイン中に新しいアカウントを作成する際のアカウントステータスのデフォルト値"
+          },
+          "EnablePruneExpiredTokensJob": {
+            "description": "期限切れおよび無効なトークン/認証の削除を有効にします",
+            "title": "期限切れトークンの削除"
+          },
+          "CronPruneExpiredTokensJob": {
+            "description": "期限切れおよび無効なトークン/認証を削除するジョブのCron式",
+            "title": "トークン削除ジョブのCron"
+          },
+          "FileExtensionsBlackList": {
+            "description": "プラットフォームによってアップロードが禁止されているファイル拡張子（appsettings.jsonの'FileExtensionsBlackList'に加えて）",
+            "title": "ブラックリスト"
+          },
+          "FileExtensionsWhiteList": {
+            "description": "プラットフォームによってアップロードが許可されているファイル拡張子（appsettings.jsonの'FileExtensionsWhiteList'に加えて）",
+            "title": "ホワイトリスト"
+          }
+        },
+        "UI": {
+          "MainMenu": {
+            "State": {
+              "description": "メインメニューの永続化された状態",
+              "title": "メインメニューの永続化された状態"
+            }
+          },
+          "Language": {
+            "description": "デフォルトの言語（ISO 639-1の2文字コード、大文字小文字を区別しない）。例：en, de",
+            "title": "言語"
+          },
+          "RegionalFormat": {
+            "description": "デフォルトの地域フォーマット（CLDRロケールコード、区切り文字としてダッシュまたはアンダースコアを使用、大文字小文字を区別しない）。例：en, en_US, sr_Cyrl, sr_Cyrl_RS",
+            "title": "地域フォーマット"
+          },
+          "TimeZone": {
+            "description": "デフォルトのタイムゾーン（IANAタイムゾーン名[tzデータベース]、データベースと完全に一致、大文字小文字を区別する）。例：America/New_York, Europe/Moscow",
+            "title": "タイムゾーン"
+          },
+          "UseTimeAgo": {
+            "description": "trueに設定すると（デフォルト）、可能な限り'数秒前'形式で日付を表示します",
+            "title": "可能な場合は時間経過形式を使用"
+          },
+          "FullDateThreshold": {
+            "description": "時間経過形式は、一定の時間単位後に完全な日付形式に切り替わります",
+            "title": "完全な日付のしきい値"
+          },
+          "FullDateThresholdUnit": {
+            "description": "完全な日付のしきい値の単位",
+            "title": "完全な日付のしきい値の単位"
+          },
+          "Customization": {
+            "description": "マネージャーUIのパーソナライゼーション設定を含むJSON",
+            "title": "マネージャーUIのカスタマイズ"
+          },
+          "ShowMeridian": {
+            "description": "時間の午前/午後表示を表示",
+            "title": "時間の午前/午後表示"
+          }
+        },
+        "Cache": {
+          "Enabled": {
+            "description": "この設定により、プラットフォームアプリケーション全体のキャッシュをグローバルに有効または無効にできます",
+            "title": "キャッシュをグローバルに有効または無効にする"
+          },
+          "AbsoulteExpiration": {
+            "description": "キャッシュされたデータがキャッシュに保存される最大時間を指定します。形式：[-][d.]hh:mm:ss[.fffffff]",
+            "title": "キャッシュ内のオブジェクトのグローバルな有効期間"
+          }
+        }
+      },
+      "Other": {
+        "AccountStatuses": {
+          "title": "アカウントステータス",
+          "description": "アカウントステータスの変更"
+        }
+      }
+    }
+  }
+}
