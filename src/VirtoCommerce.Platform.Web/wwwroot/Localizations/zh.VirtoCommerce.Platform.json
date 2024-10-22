@@ -12,7 +12,7 @@
       "modules": "模块",
       "export-import": "导出 & 导入",
       "user-profile": "用户资料",
-      "assets": "资产",
+      "assets": "资源",
       "toggle-favorites": "按 Shift + 空格键切换收藏夹",
       "help": "帮助"
     },
@@ -31,8 +31,8 @@
         }
       },
       "asset-list": {
-        "title": "资产管理",
-        "bread-crumb-top": "所有资产",
+        "title": "资源管理",
+        "bread-crumb-top": "所有资源",
         "labels": {
           "picture": "图片",
           "name": "名称",
@@ -44,12 +44,12 @@
         }
       },
       "asset-upload": {
-        "title": "资产上传",
+        "title": "资源上传",
         "labels": {
           "select-files": "选择文件",
           "drag-note": "拖放文件到此处",
           "progress": "进度",
-          "asset-uploaded": "资产已上传"
+          "asset-uploaded": "资源已上传"
         },
         "placeholders": {
           "image-url": "在此粘贴文件URL"

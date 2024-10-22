@@ -394,7 +394,7 @@
           "login": "Логин",
           "account-state": "Состояние учетной записи",
           "account-email": "Email",
-          "locked-state": "Состояние блокировки",
+          "locked-state": "Статус блокировки",
           "status": "Статус",
           "verified": "Подтвержден",
           "resend-link": "Отправить ссылку повторно",

@@ -12,7 +12,7 @@
       "modules": "Módulos",
       "export-import": "Exportar e Importar",
       "user-profile": "Perfil do usuário",
-      "assets": "Ativos",
+      "assets": "Recursos",
       "toggle-favorites": "Shift + Espaço para alternar favoritos",
       "help": "Ajuda"
     },
@@ -31,8 +31,8 @@
         }
       },
       "asset-list": {
-        "title": "Gerenciamento de ativos",
-        "bread-crumb-top": "Todos os ativos",
+        "title": "Gerenciamento de recursos",
+        "bread-crumb-top": "Todos os recursos",
         "labels": {
           "picture": "Imagem",
           "name": "Nome",
@@ -44,12 +44,12 @@
         }
       },
       "asset-upload": {
-        "title": "Upload de ativo",
+        "title": "Upload de recurso",
         "labels": {
           "select-files": "Selecionar arquivos",
           "drag-note": "Arraste e solte arquivos aqui",
           "progress": "Progresso",
-          "asset-uploaded": "Ativo(s) carregado(s)"
+          "asset-uploaded": "Recurso(s) carregado(s)"
         },
         "placeholders": {
           "image-url": "Cole a URL do arquivo aqui"
@@ -889,11 +889,11 @@
     }
   },
   "permissions": {
-    "platform:asset:access": "Visualizar ativos no menu principal",
-    "platform:asset:delete": "Excluir ativos da Plataforma",
-    "platform:asset:update": "Alterar ativos da Plataforma",
-    "platform:asset:create": "Fazer upload de novos ativos da Plataforma",
-    "platform:asset:read": "Baixar ativos da Plataforma",
+    "platform:asset:access": "Visualizar recursos no menu principal",
+    "platform:asset:delete": "Excluir recursos da Plataforma",
+    "platform:asset:update": "Alterar recursos da Plataforma",
+    "platform:asset:create": "Fazer upload de novos recursos da Plataforma",
+    "platform:asset:read": "Baixar recursos da Plataforma",
     "platform:module:read": "Visualizar detalhes do módulo",
     "platform:module:access": "Visualizar módulos no menu principal",
     "platform:module:manage": "Instalar/desinstalar módulos",

@@ -392,9 +392,9 @@
           "is-administrator": "Est administrateur",
           "account-type": "Type de compte",
           "login": "Identifiant",
-          "account-state": "État du compte",
+          "account-state": "Statut du compte",
           "account-email": "Email",
-          "locked-state": "État verrouillé",
+          "locked-state": "Statut verrouillé",
           "status": "Statut",
           "verified": "Vérifié",
           "resend-link": "Renvoyer le lien",
@@ -415,7 +415,7 @@
           "name": "Nom",
           "account-type": "Type de compte",
           "login": "Identifiant",
-          "state": "État",
+          "state": "Statut",
           "status": "Statut"
         }
       },
@@ -932,16 +932,16 @@
         "title": "Modules installés"
       },
       "ModulesAutoInstallState": {
-        "title": "État d'auto-installation des modules",
-        "description": "État actuel de l'assistant d'auto-installation des modules"
+        "title": "Statut d'auto-installation des modules",
+        "description": "Statut actuel de l'assistant d'auto-installation des modules"
       },
       "SetupStep": {
         "title": "Étape de configuration actuelle",
         "description": "Étape actuelle dans l'assistant de configuration"
       },
       "SampleDataState": {
-        "title": "État des données d'exemple",
-        "description": "État actuel de l'assistant de données d'exemple"
+        "title": "Statut des données d'exemple",
+        "description": "Statut actuel de l'assistant de données d'exemple"
       },
       "SendDiagnosticData": {
         "title": "Envoyer des données de diagnostic",
@@ -985,8 +985,8 @@
         "UI": {
           "MainMenu": {
             "State": {
-              "description": "État persistant du menu principal",
-              "title": "État persistant du menu principal"
+              "description": "Statut persistant du menu principal",
+              "title": "Statut persistant du menu principal"
             }
           },
           "Language": {

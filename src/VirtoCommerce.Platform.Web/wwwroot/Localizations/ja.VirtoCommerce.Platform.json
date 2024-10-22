@@ -12,7 +12,7 @@
       "modules": "モジュール",
       "export-import": "エクスポート＆インポート",
       "user-profile": "ユーザープロフィール",
-      "assets": "アセット",
+      "assets": "リソース",
       "toggle-favorites": "Shift + スペースでお気に入りを切り替え",
       "help": "ヘルプ"
     },
@@ -31,8 +31,8 @@
         }
       },
       "asset-list": {
-        "title": "アセット管理",
-        "bread-crumb-top": "すべてのアセット",
+        "title": "リソース管理",
+        "bread-crumb-top": "すべてのリソース",
         "labels": {
           "picture": "画像",
           "name": "名前",
@@ -44,12 +44,12 @@
         }
       },
       "asset-upload": {
-        "title": "アセットアップロード",
+        "title": "リソースアップロード",
         "labels": {
           "select-files": "ファイルを選択",
           "drag-note": "ファイルをここにドラッグ＆ドロップ",
           "progress": "進行状況",
-          "asset-uploaded": "アセットがアップロードされました"
+          "asset-uploaded": "リソースがアップロードされました"
         },
         "placeholders": {
           "image-url": "ファイルURLをここに貼り付け"
@@ -889,11 +889,11 @@
     }
   },
   "permissions": {
-    "platform:asset:access": "メインメニューでアセットを表示",
-    "platform:asset:delete": "プラットフォームアセットの削除",
-    "platform:asset:update": "プラットフォームアセットの変更",
-    "platform:asset:create": "新しいプラットフォームアセットのアップロード",
-    "platform:asset:read": "プラットフォームアセットのダウンロード",
+    "platform:asset:access": "メインメニューでリソースを表示",
+    "platform:asset:delete": "プラットフォームリソースの削除",
+    "platform:asset:update": "プラットフォームリソースの変更",
+    "platform:asset:create": "新しいプラットフォームリソースのアップロード",
+    "platform:asset:read": "プラットフォームリソースのダウンロード",
     "platform:module:read": "モジュールの詳細を表示",
     "platform:module:access": "メインメニューでモジュールを表示",
     "platform:module:manage": "モジュールのインストール/アンインストール",

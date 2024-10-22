@@ -12,7 +12,7 @@
       "modules": "Módulos",
       "export-import": "Exportar e Importar",
       "user-profile": "Perfil de usuario",
-      "assets": "Activos",
+      "assets": "Recursos",
       "toggle-favorites": "Shift + Espacio para alternar favoritos",
       "help": "Ayuda"
     },
@@ -31,8 +31,8 @@
         }
       },
       "asset-list": {
-        "title": "Gestión de activos",
-        "bread-crumb-top": "Todos los activos",
+        "title": "Gestión de recursos",
+        "bread-crumb-top": "Todos los recursos",
         "labels": {
           "picture": "Imagen",
           "name": "Nombre",
@@ -44,12 +44,12 @@
         }
       },
       "asset-upload": {
-        "title": "Subida de activos",
+        "title": "Subida de recursos",
         "labels": {
           "select-files": "Seleccionar archivos",
           "drag-note": "Arrastrar y soltar archivos aquí",
           "progress": "Progreso",
-          "asset-uploaded": "Activo(s) subido(s)"
+          "asset-uploaded": "Recursos subidos"
         },
         "placeholders": {
           "image-url": "Pegar URL del archivo aquí"
@@ -416,7 +416,7 @@
           "account-type": "Tipo de cuenta",
           "login": "Nombre de usuario",
           "state": "Estado",
-          "status": "Estado"
+          "status": "Status"
         }
       },
       "account-api": {
@@ -889,11 +889,11 @@
     }
   },
   "permissions": {
-    "platform:asset:access": "Ver activos en el menú principal",
-    "platform:asset:delete": "Eliminar activos de la Plataforma",
-    "platform:asset:update": "Cambiar activos de la Plataforma",
-    "platform:asset:create": "Cargar nuevos activos de la Plataforma",
-    "platform:asset:read": "Descargar activos de la Plataforma",
+    "platform:asset:access": "Ver recursos en el menú principal",
+    "platform:asset:delete": "Eliminar recursos de la Plataforma",
+    "platform:asset:update": "Cambiar recursos de la Plataforma",
+    "platform:asset:create": "Cargar nuevos recursos de la Plataforma",
+    "platform:asset:read": "Descargar recursos de la Plataforma",  
     "platform:module:read": "Ver detalles del módulo",
     "platform:module:access": "Ver módulos en el menú principal",
     "platform:module:manage": "Instalar/desinstalar módulos",
