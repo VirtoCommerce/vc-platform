@@ -356,6 +356,7 @@ namespace VirtoCommerce.Platform.Web
                         .EnableTokenEndpointPassthrough()
                         .EnableUserinfoEndpointPassthrough()
                         .EnableStatusCodePagesIntegration();
+
                     // Enable the authorization, logout, token and userinfo endpoints.
                     options.SetTokenEndpointUris("/connect/token")
                         .SetUserinfoEndpointUris("/connect/userinfo")
@@ -439,6 +440,7 @@ namespace VirtoCommerce.Platform.Web
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
             {
+                options.Cookie.Name = ".VirtoCommerce.Identity.Application";
                 options.LoginPath = "/";
                 //TODO: Temporary comment return status codes instead of redirection. It is required for
                 //normal authorization code flow. We should implement  login form as server side view.
