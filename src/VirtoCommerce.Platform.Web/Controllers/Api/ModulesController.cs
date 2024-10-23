@@ -36,11 +36,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISettingsManager _settingsManager;
         private readonly PlatformOptions _platformOptions;
         private readonly ExternalModuleCatalogOptions _externalModuleCatalogOptions;
+        private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly IPlatformRestarter _platformRestarter;
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
-        public ModulesController(IExternalModuleCatalog externalModuleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, ISettingsManager settingsManager, IOptions<PlatformOptions> platformOptions, IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions, IPlatformRestarter platformRestarter)
+        public ModulesController(IExternalModuleCatalog externalModuleCatalog,
+            IModuleInstaller moduleInstaller,
+            IPushNotificationManager pushNotifier,
+            IUserNameResolver userNameResolver,
+            ISettingsManager settingsManager,
+            IOptions<PlatformOptions> platformOptions,
+            IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
+            IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
+            IPlatformRestarter platformRestarter)
         {
             _externalModuleCatalog = externalModuleCatalog;
             _moduleInstaller = moduleInstaller;
@@ -49,6 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _settingsManager = settingsManager;
             _platformOptions = platformOptions.Value;
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
+            _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
         }
 
@@ -143,22 +153,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ModuleDescriptor>> UploadModuleArchive()
         {
             EnsureModulesCatalogInitialized();
-            ModuleDescriptor result = null;
+
+            if (!_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
+            {
+                return BadRequest("The process is not completed because RefreshProbingFolderOnStart is set to false.");
+            }
+
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
                 return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
             }
+
             var uploadPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
             if (!Directory.Exists(uploadPath))
             {
                 Directory.CreateDirectory(uploadPath);
             }
-            string targetFilePath = null;
 
+            ModuleDescriptor result = null;
+            string targetFilePath = null;
             var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
             var reader = new MultipartReader(boundary, HttpContext.Request.Body);
-
             var section = await reader.ReadNextSectionAsync();
+
             if (section != null)
             {
                 var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
@@ -205,6 +222,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
             }
+
             return Ok(result);
         }
 
@@ -394,27 +412,42 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             try
             {
                 notification.Started = DateTime.UtcNow;
-                var moduleInfos = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
-                                     .Where(x => options.Modules.Any(y => y.Identity.Equals(x.Identity)))
-                                     .ToArray();
-                var reportProgress = new Progress<ProgressMessage>(m =>
-                {
-                    lock (_lockObject)
-                    {
-                        notification.Description = m.Message;
-                        notification.ProgressLog.Add(m);
-                        _pushNotifier.Send(notification);
-                    }
-                });
 
-                switch (options.Action)
+                if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
                 {
-                    case ModuleAction.Install:
-                        _moduleInstaller.Install(moduleInfos, reportProgress);
-                        break;
-                    case ModuleAction.Uninstall:
-                        _moduleInstaller.Uninstall(moduleInfos, reportProgress);
-                        break;
+                    var moduleInfos = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+                        .Where(x => options.Modules.Any(y => y.Identity.Equals(x.Identity)))
+                        .ToArray();
+                    var reportProgress = new Progress<ProgressMessage>(m =>
+                    {
+                        lock (_lockObject)
+                        {
+                            notification.Description = m.Message;
+                            notification.ProgressLog.Add(m);
+                            _pushNotifier.Send(notification);
+                        }
+                    });
+
+                    switch (options.Action)
+                    {
+                        case ModuleAction.Install:
+                            _moduleInstaller.Install(moduleInfos, reportProgress);
+                            break;
+                        case ModuleAction.Uninstall:
+                            _moduleInstaller.Uninstall(moduleInfos, reportProgress);
+                            break;
+                    }
+                }
+                else
+                {
+                    notification.Finished = DateTime.UtcNow;
+                    notification.Description = "The process is not completed because RefreshProbingFolderOnStart is set to false.";
+                    notification.ProgressLog.Add(new ProgressMessage
+                    {
+                        Level = ProgressMessageLevel.Error,
+                        Message = notification.Description,
+                    });
+                    _pushNotifier.Send(notification);
                 }
             }
             catch (Exception ex)
@@ -430,7 +463,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Completed);
 
                 notification.Finished = DateTime.UtcNow;
-                notification.Description = "Installation finished.";
+                notification.Description = options.Action == ModuleAction.Install ? "Installation finished." : "Uninstalling finished.";
                 notification.ProgressLog.Add(new ProgressMessage
                 {
                     Level = ProgressMessageLevel.Info,

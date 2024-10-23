@@ -129,9 +129,12 @@ angular.module('platformWebApp')
         blade.currentEntities = [
             nodeExisting = { name: 'platform.blades.modules-main.labels.browse', mode: 'browse' },
             nodeInstalled = { name: 'platform.blades.modules-main.labels.installed', mode: 'installed' },
-            nodeUpdate = { name: 'platform.blades.modules-main.labels.updates', mode: 'update' },
-            { name: 'platform.blades.modules-main.labels.advanced', mode: 'advanced' }
+            nodeUpdate = { name: 'platform.blades.modules-main.labels.updates', mode: 'update' }
         ];
+
+        if ($scope.allowInstallModules) {
+            blade.currentEntities.push({ name: 'platform.blades.modules-main.labels.advanced', mode: 'advanced' });
+        }
 
         var nodeWithErrors = { name: 'platform.blades.modules-main.labels.withErrors', mode: 'withErrors' };
 
