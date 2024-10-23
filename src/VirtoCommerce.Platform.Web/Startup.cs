@@ -105,6 +105,7 @@ namespace VirtoCommerce.Platform.Web
             // Optional Modules Dependecy Resolving
             services.Add(ServiceDescriptor.Singleton(typeof(IOptionalDependency<>), typeof(OptionalDependencyManager<>)));
 
+            services.AddCustomSecurityHeaders();
             services.AddForwardedHeaders();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -577,7 +578,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseHsts();
             }
 
-            app.UseCustomSecurityHeaders();
+            app.UseSecurityHeaders();
 
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();

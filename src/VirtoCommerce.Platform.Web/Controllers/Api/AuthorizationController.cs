@@ -26,6 +26,7 @@ using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.ActionConstraints;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model;
+using VirtoCommerce.Platform.Web.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -551,6 +552,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 // In every other case, render the consent form.
                 default:
+                    HttpContext.OverrideScpFormActionUri(request.RedirectUri);
+
                     return View(new AuthorizeViewModel
                     {
                         ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
