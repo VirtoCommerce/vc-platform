@@ -41,7 +41,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
-        public ModulesController(IExternalModuleCatalog externalModuleCatalog,
+        public ModulesController(
+            IExternalModuleCatalog externalModuleCatalog,
             IModuleInstaller moduleInstaller,
             IPushNotificationManager pushNotifier,
             IUserNameResolver userNameResolver,
