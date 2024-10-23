@@ -163,7 +163,7 @@
     },
     "validators": {
       "uriWithoutQuery": {
-        "error": "Invalid uri format. Make shure uri dosn't have query params."
+        "error": "Invalid URI format. Make sure URI doesn't have query params."
       }
     },
     "errors": {
