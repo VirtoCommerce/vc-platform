@@ -15,9 +15,9 @@ angular.lowercase = function (text) {
 
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
     'platformWebApp.i18n', 'platformWebApp.modules', 'platformWebApp.moduleHelper', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
-    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps',
+    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps', 'platformWebApp.validators',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps) {
+        i18n, modules, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps, validators) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -63,7 +63,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                         });
                         var query = new URLSearchParams(window.location.search);
                         var returnUrl = query.get('ReturnUrl');
-                        if (returnUrl) {
+                        if (returnUrl && validators.isLocalUrl(returnUrl)) {
                             window.location.href = returnUrl;
                         }
                         else {
@@ -342,8 +342,13 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
             $compileProvider.debugInfoEnabled(false);
         }])
-    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver',
-        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver) {
+    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService',
+        'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache',
+        'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService',
+        'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.validators',
+        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
+            dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest,
+            $compile, toolbarService, loginOfBehalfUrlResolver, validators) {
 
             //Disable animation
             $animate.enabled(false);
@@ -449,7 +454,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
                         var query = new URLSearchParams(window.location.search);
                         var returnUrl = query.get('ReturnUrl');
-                        if (returnUrl) {
+                        if (returnUrl && validators.isLocalUrl(returnUrl)) {
                             window.location.href = returnUrl;
                         }
                         else {
