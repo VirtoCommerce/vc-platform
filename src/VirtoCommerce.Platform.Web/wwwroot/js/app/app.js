@@ -15,9 +15,9 @@ angular.lowercase = function (text) {
 
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
     'platformWebApp.i18n', 'platformWebApp.modules', 'platformWebApp.moduleHelper', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
-    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps', 'platformWebApp.validators',
+    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps', 'platformWebApp.urlHelper',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps, validators) {
+        i18n, modules, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps, urlHelper) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -61,9 +61,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + "<br/>" + x.validationErrors.join("<br/>");
                             $scope.platformError.detail += moduleErrors;
                         });
-                        var query = new URLSearchParams(window.location.search);
-                        var returnUrl = query.get('ReturnUrl');
-                        if (returnUrl && validators.isLocalUrl(returnUrl)) {
+                        var returnUrl = urlHelper.getSafeReturnUrl();
+                        if (returnUrl) {
                             window.location.href = returnUrl;
                         }
                         else {
@@ -345,10 +344,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
     .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService',
         'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache',
         'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService',
-        'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.validators',
+        'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper',
         function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
             dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest,
-            $compile, toolbarService, loginOfBehalfUrlResolver, validators) {
+            $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper) {
 
             //Disable animation
             $animate.enabled(false);
@@ -452,9 +451,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     } else if (!authContext.isAdministrator && !authContext.permissions?.length) {
                         $state.go('contact-admin');
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
-                        var query = new URLSearchParams(window.location.search);
-                        var returnUrl = query.get('ReturnUrl');
-                        if (returnUrl && validators.isLocalUrl(returnUrl)) {
+                        var returnUrl = urlHelper.getSafeReturnUrl();
+                        if (returnUrl) {
                             window.location.href = returnUrl;
                         }
                         else {

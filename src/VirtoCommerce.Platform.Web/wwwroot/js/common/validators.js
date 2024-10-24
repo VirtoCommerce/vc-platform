@@ -15,15 +15,6 @@ angular.module('platformWebApp').factory('platformWebApp.validators', [function 
         }
     }
 
-    function isLocalUrl(value) {
-        try {
-            const url = new URL(value, window.location.origin);
-            return url.origin === window.location.origin;
-        } catch (e) {
-            return false;
-        }
-    }
-
     function none(value) {
         return true;
     }
@@ -31,7 +22,6 @@ angular.module('platformWebApp').factory('platformWebApp.validators', [function 
     return {
         webSafeFileNameValidator: webSafeFileNameValidator,
         uriWithoutQuery: uriWithoutQuery,
-        isLocalUrl,
         none: none
     };
 }]);
