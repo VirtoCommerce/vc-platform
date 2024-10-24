@@ -600,7 +600,7 @@
           "expiration": "过期时间",
           "email": "客户邮箱",
           "request-license": "许可证申请表",
-          "code-descr": "输入收到的许可证"激活码"并按 [Enter]。这是最快的许可证激活方法。（需要互联网连接）",
+          "code-descr": "输入收到的许可证\"激活码\"并按 [Enter]。这是最快的许可证激活方法。（需要互联网连接）",
           "file-descr": "或者，提供收到的许可证文件。（离线激活）",
           "upload-progress": "上传进度",
           "errors": "激活错误"
