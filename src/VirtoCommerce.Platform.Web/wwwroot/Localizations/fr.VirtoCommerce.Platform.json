@@ -1,0 +1,1044 @@
+{
+  "platform": {
+    "menu": {
+      "home": "Accueil",
+      "browse": "Parcourir",
+      "configuration": "Configuration",
+      "notifications": "Notifications",
+      "more": "Plus",
+      "settings": "Paramètres",
+      "dynamic-properties": "Propriétés dynamiques",
+      "security": "Sécurité",
+      "modules": "Modules",
+      "export-import": "Exporter & Importer",
+      "user-profile": "Profil utilisateur",
+      "assets": "Ressources",
+      "toggle-favorites": "Maj + Espace pour basculer les favoris",
+      "help": "Aide"
+    },
+    "navigation": {
+      "back": "Retour"
+    },
+    "blades": {
+      "system-info": {
+        "title": "Informations sur la plateforme",
+        "labels": {
+          "clr-version": "Version CLR",
+          "environment-name": "Mode d'environnement",
+          "is-64-bit-os": "Système d'exploitation 64 bits",
+          "is-64-bit-process": "Processus 64 bits",
+          "database-provider": "Fournisseur de base de données"
+        }
+      },
+      "asset-list": {
+        "title": "Gestion des ressources",
+        "bread-crumb-top": "Toutes les ressources",
+        "labels": {
+          "picture": "Image",
+          "name": "Nom",
+          "size": "Taille",
+          "modified": "Modifié",
+          "actions": "Actions",
+          "group": "Groupe",
+          "language": "Langue"
+        }
+      },
+      "asset-upload": {
+        "title": "Téléchargement de ressource",
+        "labels": {
+          "select-files": "Sélectionner des fichiers",
+          "drag-note": "Glisser-déposer les fichiers ici",
+          "progress": "Progression",
+          "asset-uploaded": "Ressource(s) téléchargée(s)"
+        },
+        "placeholders": {
+          "image-url": "Coller l'URL du fichier ici"
+        }
+      },
+      "operation-list": {
+        "labels": {
+          "login": "Connexion",
+          "details": "Détails",
+          "time": "Heure"
+        }
+      },
+      "dynamicObject-list": {
+        "title": "Types d'objets dynamiques",
+        "subtitle": "Choisir le type d'objet pour gérer les propriétés dynamiques",
+        "labels": {
+          "no-objects": "Aucun objet ne prend encore en charge les propriétés dynamiques"
+        }
+      },
+      "dynamicProperty-detail": {
+        "title": "Gérer la propriété",
+        "subtitle": "Gérer la propriété",
+        "subtitle-new": "Nouvelle propriété",
+        "labels": {
+          "property-name": "Nom de la propriété",
+          "required": "Obligatoire",
+          "multivalue": "Multivaleur",
+          "multilingual": "Multilingue",
+          "dictionary": "Dictionnaire",
+          "description": "Description",
+          "display-order": "Ordre d'affichage",
+          "display-name": "Nom d'affichage",
+          "value-type": "Type de valeur",
+          "dictionary-values": "Valeurs du dictionnaire",
+          "manage-dictionary": "Gérer le dictionnaire"
+        },
+        "placeholders": {
+          "description": "Entrer la description de la propriété",
+          "display-name": "Entrer le nom d'affichage...",
+          "display-order": "Ordre d'affichage"
+        },
+        "validations": {
+          "multivalue": "Une propriété multivaleur ne peut avoir que des types de valeur Texte court, Entier ou Décimal",
+          "multilingual": "Seules les valeurs texte ou HTML peuvent être multilingues",
+          "dictionary": "Seuls les dictionnaires de type de valeur Texte court sont pris en charge"
+        }
+      },
+      "dynamicProperty-list": {
+        "subtitle": "Gérer les propriétés dynamiques",
+        "labels": {
+          "no-properties": "Pas encore de propriétés dynamiques"
+        }
+      },
+      "notifications-menu": {
+        "subtitle": "Travailler avec le système de notifications"
+      },
+      "property-dictionary": {
+        "title": "Valeurs du dictionnaire",
+        "subtitle": "Gérer les valeurs du dictionnaire",
+        "labels": {
+          "edit-value": "Modifier la valeur",
+          "new-value": "Nouvelle valeur",
+          "dictionary-name": "Nom de l'entrée du dictionnaire",
+          "localized-values": "Valeurs localisées",
+          "current-values": "Valeurs actuelles",
+          "name": "Nom",
+          "values": "Valeurs"
+        },
+        "validations": {
+          "dictionary-name-required": "Obligatoire",
+          "dictionary-name": "Nom en double trouvé",
+          "localized-values-required": "Obligatoire",
+          "localized-values": "Nom en double trouvé",
+          "dictionary": "Seuls les dictionnaires de type de valeur Texte court sont pris en charge"
+        },
+        "placeholders": {
+          "dictionary-name": "Entrer le nom",
+          "localized-values": "Entrer la valeur"
+        }
+      },
+      "propertyValue-list": {
+        "title": "Propriétés dynamiques",
+        "subtitle": "",
+        "labels": {
+          "header": "Valeurs des propriétés",
+          "no-properties": "Cette entité n'a pas encore de propriétés dynamiques. Cliquez sur 'Types de propriétés' et créez des propriétés. Fermez et rouvrez la vue de l'entité actuelle pour charger les propriétés dynamiques"
+        }
+      },
+      "edit-array": {
+        "validations": {
+          "new-value-required": "Obligatoire"
+        },
+        "labels": {
+          "new-value": "Nouvelle valeur",
+          "current-values": "Valeurs actuelles",
+          "values": "Valeurs"
+        },
+        "placeholders": {
+          "value": "Entrer la valeur"
+        }
+      },
+      "export-main": {
+        "title": "Exportation de données",
+        "labels": {
+          "platform-entries": "Entrées de la plateforme",
+          "choose-modules": "Choisir les modules à exporter",
+          "download-url": "URL de téléchargement",
+          "errors": "Erreurs",
+          "start": "Début",
+          "end": "Fin"
+        },
+        "menu": {
+          "security": {
+            "title": "Sécurité",
+            "description": "Comptes et rôles"
+          },
+          "binary": {
+            "title": "Binaire",
+            "description": "Données binaires"
+          },
+          "settings": {
+            "title": "Paramètres",
+            "description": "Paramètres de la plateforme"
+          },
+          "dynamic-props": {
+            "title": "Propriétés dynamiques",
+            "description": "Propriétés dynamiques de la plateforme"
+          }
+        }
+      },
+      "import-main": {
+        "title": "Importation de données",
+        "labels": {
+          "start-import": "Démarrer l'importation",
+          "select-file": "Sélectionner un fichier .zip à importer. Le fichier doit être produit par l'exportation de données du Commerce Manager",
+          "drag-note": "Glisser-déposer un fichier .zip à importer. Le fichier doit être produit par l'exportation de données du Commerce Manager",
+          "upload-failed": "Échec du téléchargement",
+          "upload-progress": "Progression du téléchargement",
+          "import-progress": "Progression de l'importation",
+          "import-finished": "Importation terminée",
+          "import-data-information": "Informations sur les données importées",
+          "author": "Auteur",
+          "data-file-created": "Fichier de données créé",
+          "created-platform-version": "Créé dans la version de la plateforme",
+          "platform-entries": "Entrées de la plateforme",
+          "choose-modules": "Choisir les modules à importer",
+          "no-data": "Pas de données",
+          "errors": "Erreurs",
+          "start": "Début",
+          "end": "Fin"
+        },
+        "menu": {
+          "security": {
+            "title": "Sécurité",
+            "description": "Comptes et rôles"
+          },
+          "binary": {
+            "title": "Binaire",
+            "description": "Données binaires"
+          },
+          "settings": {
+            "title": "Paramètres",
+            "description": "Paramètres de la plateforme"
+          },
+          "dynamic-props": {
+            "title": "Propriétés dynamiques",
+            "description": "Propriétés dynamiques de la plateforme"
+          }
+        }
+      },
+      "exportImport-main": {
+        "title": "Exportation et importation de données",
+        "menu": {
+          "export": {
+            "title": "Exporter",
+            "description": "Les données seront sauvegardées dans un fichier pour pouvoir être importées ultérieurement"
+          },
+          "import": {
+            "title": "Importer",
+            "description": "Importer des données à partir d'un fichier exporté"
+          }
+        }
+      },
+      "resolve-result": {
+        "title": "Aperçu du résultat",
+        "labels": {
+          "subject": "Sujet",
+          "body": "Corps"
+        }
+      },
+      "module-settings-detail": {
+        "title": "Paramètres du module"
+      },
+      "module-wizard-progress-step": {
+        "title-install": "Installation du module",
+        "title-update": "Mise à jour du module",
+        "title-uninstall": "Désinstallation du module",
+        "labels": {
+          "start": "Début",
+          "end": "Fin",
+          "progress-messages": "Messages de progression",
+          "process-completed": "Processus d'installation du module terminé",
+          "restart-application": "Redémarrer l'application maintenant ou plus tard"
+        }
+      },
+      "module-detail": {
+        "title": "Informations sur le module",
+        "labels": {
+          "i-accept-the": "J'accepte la",
+          "license-link": "licence",
+          "license": "Licence",
+          "agreement": "accord",
+          "install-from-file": "Installer / mettre à jour le module à partir d'un fichier",
+          "select-module-file": "Télécharger un fichier de module (.zip) depuis une source externe en dehors du dépôt central des modules",
+          "upload-progress": "Progression du téléchargement",
+          "module-info": "Infos du module",
+          "title": "Titre",
+          "official": "Module officiel par {{$owner}}",
+          "owners": "Développé par {{$owner}}",
+          "author": "Auteur",
+          "authors": "Auteurs",
+          "id": "ID",
+          "version": "Version",
+          "project-information": "Informations sur le projet",
+          "description": "Description",
+          "platform-version": "Version de la plateforme",
+          "dependencies": "Dépendances",
+          "optional-dependencies": "Dépendances optionnelles",
+          "tags": "Tags",
+          "install-version": "Installer la version",
+          "errors": "Erreurs"
+        }
+      },
+      "modules-main": {
+        "title": "Modules",
+        "labels": {
+          "updates": "Mises à jour",
+          "available": "Disponibles",
+          "installed": "Installés",
+          "withErrors": "Erreurs",
+          "advanced": "Avancé"
+        }
+      },
+      "modules-list": {
+        "subtitle": "Gestion des modules",
+        "labels": {
+          "grouping": "Afficher les paquets de modules",
+          "ungrouped": "Autres",
+          "no-updates": "Aucune mise à jour trouvée",
+          "no-modules-part1": "Aucun nouveau module à installer",
+          "no-installed-modules": "Aucun module installé trouvé",
+          "icon": "Icône",
+          "up-to-date": "Le module est à jour",
+          "update-available": "Mise à jour disponible pour ce module",
+          "module": "Module",
+          "version": "Version",
+          "author": "Auteur",
+          "installed": "Modules installés",
+          "manual-install-warning": "Attention ! Les modules installés manuellement ne démarreront pas car RefreshProbingFolderOnStart est défini sur false"
+        }
+      },
+      "history": {
+        "title": "Événements système",
+        "subtitle": "Historique des événements",
+        "labels": {
+          "type": "Type",
+          "title": "Titre",
+          "created": "Créé",
+          "description": "Description"
+        }
+      },
+      "historyDetailDefault": {
+        "title": "Détail de l'événement",
+        "subtitle": "Détail de l'événement",
+        "labels": {
+          "start": "Début",
+          "end": "Fin",
+          "elapsed": "Écoulé",
+          "errors": "Erreurs",
+          "stats": "Traité {{ processedCount }} sur {{ totalCount }} enregistrements"
+        }
+      },
+      "menuHeader": {
+        "labels": {
+          "history": "Historique",
+          "clear-recent": "Effacer tout l'historique récent"
+        }
+      },
+      "account-changePassword": {
+        "labels": {
+          "title": "Veuillez entrer un nouveau mot de passe",
+          "login": "Identifiant",
+          "force-change-info": "Votre mot de passe a expiré. Vous devez <b>changer le mot de passe pour continuer</b> à utiliser le gestionnaire",
+          "current-password": "Mot de passe actuel",
+          "new-password": "Nouveau mot de passe",
+          "repeat-password": "Répéter le nouveau mot de passe",
+          "cancel": "Annuler",
+          "save": "Changer",
+          "fail": "Désolé, nous n'avons pas pu réinitialiser le mot de passe pour cet utilisateur"
+        },
+        "validations": {
+          "current-password": "Obligatoire",
+          "new-password": "L'ancien et le nouveau mot de passe sont identiques !",
+          "repeat-password": "Les nouveaux mots de passe ne correspondent pas !"
+        },
+        "placeholders": {
+          "current-password": "Entrez le mot de passe actuel",
+          "new-password": "Entrez le nouveau mot de passe",
+          "repeat-password": "Répétez le nouveau mot de passe"
+        }
+      },
+      "account-resetPassword": {
+        "subtitle": "Changer le mot de passe de l'utilisateur",
+        "labels": {
+          "new-password": "Nouveau mot de passe",
+          "repeat-password": "Répéter le mot de passe",
+          "force-password-change": "Obliger cet utilisateur à changer son mot de passe lors de sa prochaine connexion"
+        },
+        "validations": {
+          "repeat-password": "Les nouveaux mots de passe ne correspondent pas !",
+          "invalid-token": "Le jeton de réinitialisation du mot de passe est invalide ou a expiré",
+          "password-too-weak": "Le nouveau mot de passe ne respecte pas une ou plusieurs politiques de sécurité des mots de passe :",
+          "passwordTooShort": "Les mots de passe doivent comporter au moins {{parameter}} caractères",
+          "passwordRequiresUniqueChars": "Les mots de passe doivent utiliser au moins {{parameter}} caractères différents",
+          "passwordRequiresLower": "Les mots de passe doivent contenir au moins une minuscule ('a'-'z')",
+          "passwordRequiresUpper": "Les mots de passe doivent contenir au moins une majuscule ('A'-'Z')",
+          "passwordRequiresDigit": "Les mots de passe doivent contenir au moins un chiffre ('0'-'9')",
+          "passwordRequiresNonAlphanumeric": "Les mots de passe doivent contenir au moins un caractère non alphanumérique",
+          "recentPasswordUsed": "Vous avez déjà utilisé ce mot de passe dans le passé. Choisissez-en un autre"
+        },
+        "placeholders": {
+          "new-password": "Entrez le nouveau mot de passe",
+          "repeat-password": "Répétez le nouveau mot de passe"
+        }
+      },
+      "account-detail": {
+        "title-new": "Nouveau compte",
+        "labels": {
+          "user-information": "Informations utilisateur",
+          "is-administrator": "Est administrateur",
+          "account-type": "Type de compte",
+          "login": "Identifiant",
+          "account-state": "Statut du compte",
+          "account-email": "Email",
+          "locked-state": "Statut verrouillé",
+          "status": "Statut",
+          "verified": "Vérifié",
+          "resend-link": "Renvoyer le lien",
+          "link-sent": "Le lien a été envoyé",
+          "last-login-date": "Date de dernière connexion"
+        },
+        "placeholders": {
+          "account-type": "Sélectionner ...",
+          "email": "Entrez l'email",
+          "user-name": "Entrez le nom d'utilisateur",
+          "status": "Sélectionner ..."
+        }
+      },
+      "account-list": {
+        "title": "Utilisateurs",
+        "subtitle": "Service de sécurité",
+        "labels": {
+          "name": "Nom",
+          "account-type": "Type de compte",
+          "login": "Identifiant",
+          "state": "Statut",
+          "status": "Statut"
+        }
+      },
+      "account-api": {
+        "labels": {
+          "api-key": "Clé API",
+          "is-active": "est active"
+        },
+        "placeholders": {
+          "api-key": "Entrez la clé API"
+        }
+      },
+      "role-detail": {
+        "subtitle": "Détails du rôle",
+        "labels": {
+          "summary": "Résumé",
+          "name": "Nom",
+          "description": "Description",
+          "assigned-permissions": "Permissions attribuées",
+          "permission-name": "Nom",
+          "assigned-scopes": "Portées attribuées",
+          "no-permissions-assigned": "Aucune permission attribuée"
+        },
+        "placeholders": {
+          "name": "Entrez le nom",
+          "description": "Entrez la description"
+        }
+      },
+      "account-roles": {
+        "subtitle": "Attribuer des rôles",
+        "labels": {
+          "select-roles": "Sélectionnez les rôles à attribuer",
+          "no-roles": "Aucun rôle à attribuer"
+        }
+      },
+      "account-roles-list": {
+        "title": "",
+        "labels": {
+          "assigned-roles": "Rôles attribués",
+          "no-assigned": "Aucun rôle attribué"
+        }
+      },
+      "permission-scopes": {
+        "subtitle": "Configurer les portées des permissions",
+        "labels": {
+          "select-bounded-scopes": "Sélectionner les portées limitées",
+          "selected": "Sélectionné",
+          "scope-name": "Nom et paramètres de la portée",
+          "no-scopes": "Aucune portée"
+        }
+      },
+      "role-permissions": {
+        "subtitle": "Attribuer des permissions",
+        "labels": {
+          "select-permissions": "Sélectionner les permissions à attribuer"
+        }
+      },
+      "new-role-wizard": {
+        "title": "Nouveau rôle",
+        "labels": {
+          "summary": "Résumé",
+          "name": "Nom",
+          "description": "Description",
+          "assign-permissions": "Attribuer des permissions"
+        },
+        "placeholders": {
+          "name": "Entrez le nom",
+          "description": "Entrez la description"
+        }
+      },
+      "role-list": {
+        "title": "Rôles",
+        "subtitle": "Service de sécurité",
+        "labels": {
+          "name": "Nom"
+        }
+      },
+      "oauthapps": {
+        "labels": {
+          "clientId": "ID client",
+          "displayName": "Nom d'affichage",
+          "type": "Type",
+          "clientSecret": "Secret client",
+          "assigned-permissions": "Permissions attribuées",
+          "redirectUris": "URIs de redirection",
+          "postLogoutRedirectUris": "URIs de redirection après déconnexion"
+        },
+        "placeholders": {
+          "clientId": "Saisissez l'ID client",
+          "displayName": "Saisissez le nom d'affichage",
+          "type": "Saisissez le type",
+          "clientSecret": "Saisissez le secret client"
+        }
+      },
+      "oauthapps-list": {
+        "title": "Applications OAuth",
+        "subtitle": "Service de sécurité"
+      },
+      "oauthapps-detail": {
+        "title": "Modifier l'application OAuth",
+        "title-new": "Créer une application OAuth",
+        "subtitle": "Service de sécurité",
+        "labels": {
+          "clientSecret-warning": "Attention ! Vous devez copier le secret maintenant. Il sera caché après la fermeture du panneau",
+          "urls": "URLs"
+        },
+        "blades": {
+          "edit-redirectUris": {
+            "title": "URIs de redirection",
+            "subtitle": "Gérer les URIs de redirection"
+          },
+          "edit-postLogoutRedirectUris": {
+            "title": "URIs de redirection après déconnexion",
+            "subtitle": "Gérer les URIs de redirection après déconnexion"
+          }
+        }
+      },
+      "login": {
+        "labels": {
+          "sign-in": "Connectez-vous au gestionnaire {{title}}",
+          "login": "Identifiant",
+          "password": "Mot de passe",
+          "remember-me": "Se souvenir de moi",
+          "external-sign-in": "Se connecter avec {{displayName}}",
+          "forgot-password": "Mot de passe oublié ?",
+          "log-in": "Se connecter",
+          "log-in-placeholder": "Entrez votre email ou nom d'utilisateur",
+          "password-placeholder": "Entrez votre mot de passe",
+          "azure-log-in-label": "Se connecter au site d'administration via Azure",
+          "password-log-in-type": "Utilisateur système",
+          "or": "ou",
+          "signing-in": "Connexion en cours..."
+        }
+      },
+      "forgotpassword": {
+        "title": "Mot de passe oublié ?",
+        "labels": {
+          "login": "Identifiant ou email",
+          "description": "Nous vous enverrons un email avec les instructions pour réinitialiser votre mot de passe",
+          "success": "Un email avec les instructions vous a été envoyé",
+          "fail": "Désolé, nous n'avons pas pu réinitialiser le mot de passe pour cet utilisateur",
+          "back": "Retour",
+          "submit": "Envoyer",
+          "time-limit": "Vous pouvez réessayer dans {{countdown}}",
+          "time-limit-end": "Vous pouvez réessayer maintenant"
+        },
+        "placeholders": {
+          "login-or-email": "Entrez l'identifiant ou l'email"
+        }
+      },
+      "access-denied": {
+        "title": "Accès refusé",
+        "labels": {
+          "message": "Vous n'avez pas accès à cette ressource. Veuillez contacter votre administrateur",
+          "button": "Se connecter avec d'autres identifiants"
+        }
+      },
+      "resetpassword": {
+        "title": "Réinitialisation du mot de passe",
+        "labels": {
+          "success": "Votre mot de passe a été réinitialisé",
+          "fail": "Désolé, nous n'avons pas pu réinitialiser le mot de passe pour cet utilisateur",
+          "submit": "Réinitialiser",
+          "log-in": "Se connecter"
+        }
+      },
+      "license": {
+        "title": "Licence actuelle",
+        "title-new": "Activation d'une nouvelle licence",
+        "license-info": "Informations de licence",
+        "license-activation": "Activation de la licence",
+        "labels": {
+          "info-running-no-license": "Cette instance de Virto Commerce fonctionne avec",
+          "info-open-source-license": "une licence communautaire Open Source",
+          "info0": "Acquisition ou renouvellement de la licence :",
+          "info1": "Soumettez le ",
+          "info2": "Nous traiterons votre demande et vous contacterons bientôt",
+          "info3": "Une fois que vous aurez reçu le \"Code d'activation\" et/ou le fichier de licence, remplissez l'un des champs d'activation ci-dessous",
+          "info4": "Le système affichera les nouvelles informations de licence. Vérifiez-les et cliquez sur \"Activer\" pour confirmer",
+          "customer": "Licence émise pour",
+          "type": "Type",
+          "expiration": "Expiration",
+          "email": "Email du client",
+          "request-license": "Formulaire de demande de licence",
+          "code-descr": "Entrez le \"Code d'activation\" de licence reçu et appuyez sur [Entrée]. C'est la méthode d'activation de licence la plus rapide. (Nécessite une connexion Internet)",
+          "file-descr": "Vous pouvez également fournir le fichier de licence reçu. (Activation hors ligne)",
+          "upload-progress": "Progression du téléchargement",
+          "errors": "Erreur d'activation"
+        },
+        "placeholders": {
+          "code": "Entrez le code d'activation"
+        }
+      },
+      "new-account-wizard": {
+        "labels": {
+          "login": "Identifiant",
+          "email": "Email",
+          "password": "Mot de passe",
+          "repeat-password": "Répéter le mot de passe",
+          "assign-roles": "Attribuer des rôles"
+        },
+        "placeholders": {
+          "email": "Entrez l'email",
+          "login": "Entrez l'identifiant",
+          "password": "Entrez le nouveau mot de passe",
+          "repeat-password": "Répétez le nouveau mot de passe"
+        },
+        "validations": {
+          "repeat-password": "Les mots de passe saisis ne correspondent pas !",
+          "password-too-weak": "Le mot de passe saisi ne respecte pas une ou plusieurs politiques de sécurité des mots de passe :"
+        }
+      },
+      "security-main": {
+        "title": "Sécurité",
+        "subtitle": "Gestion des utilisateurs"
+      },
+      "entitySetting-list": {
+        "title": "Paramètres"
+      },
+      "setting-dictionary": {
+        "subtitle": "Gérer les valeurs du dictionnaire",
+        "labels": {
+          "new-value": "Veuillez entrer une valeur",
+          "current-values": "Valeurs actuelles",
+          "value": "Valeur"
+        },
+        "validations": {
+          "new-value-required": "Obligatoire",
+          "new-value": "Valeur en double trouvée"
+        },
+        "placeholders": {
+          "new-value": "Veuillez entrer une valeur"
+        }
+      },
+      "settings-detail": {
+        "title": "Valeurs des paramètres",
+        "hide-description": "Masquer"
+      },
+      "settingGroup-list": {
+        "title": "Paramètres",
+        "bread-crumb-top": "Tous les paramètres"
+      },
+      "settings-uploader": {
+        "drag-drop-comment": "Glissez et déposez le fichier ici",
+        "or": "ou",
+        "browse-your-files": "parcourez vos fichiers"
+      },
+      "localizable-setting-value-list": {
+        "subtitle": "Gérer les valeurs du dictionnaire"
+      },
+      "localizable-setting-value-details": {
+        "title": "Modifier la valeur du dictionnaire",
+        "alias": "Valeur système"
+      },
+      "user-profile": {
+        "title": "Profil utilisateur",
+        "labels": {
+          "language": "Langue",
+          "language-description": "Langue d'affichage. Effacez pour utiliser la langue du navigateur ou la langue par défaut",
+          "regional-format": "Format régional",
+          "regional-format-description": "Format régional des nombres, de la monnaie, de la date et de l'heure. Effacez pour utiliser le format régional du navigateur ou par défaut",
+          "time-zone": "Fuseau horaire",
+          "time-zone-description": "Fuseau horaire actuel de l'utilisateur au format IANA (base de données tz). Sélectionnez la ville la plus proche dans votre fuseau horaire. Effacez pour utiliser le fuseau horaire du navigateur ou par défaut",
+          "use-time-ago": "Utiliser le format 'il y a' si possible",
+          "full-date-threshold-group": "Utiliser le format de date complet pour les dates antérieures à...",
+          "full-date-threshold-description": "Valeur numérique des unités de temps",
+          "full-date-threshold-unit-description": "Unité de temps (par exemple, heures ou années)"
+        },
+        "placeholders": {
+          "full-date-threshold": "Entrez la valeur seuil",
+          "full-date-threshold-unit": "Sélectionnez l'unité seuil"
+        },
+        "full-date-threshold-units": {
+          "Never": "Jamais",
+          "Seconds": "Secondes",
+          "Minutes": "Minutes",
+          "Hours": "Heures",
+          "Days": "Jours",
+          "Weeks": "Semaines",
+          "Months": "Mois",
+          "Quarters": "Trimestres",
+          "Years": "Années"
+        }
+      }
+    },
+    "templates": {
+      "sampleDataChoose": {
+        "labels": {
+          "choose-sample-data-type": "Choisir le type de données d'exemple",
+          "size": "taille",
+          "version": "version"
+        }
+      },
+      "sampleDataInitialization": {
+        "labels": {
+          "sample-data-initialization": "Initialisation des données d'exemple",
+          "starting-initialization": "Démarrage de l'initialisation des données d'exemple...",
+          "errors": "Erreurs",
+          "start": "Début",
+          "end": "Fin"
+        }
+      },
+      "licensing": {
+        "license-absent": "Licence communautaire",
+        "license-present": "Licence {{type}}, expire le {{expirationDate | amParse | date}}",
+        "community": "Édition communautaire en cours d'exécution, cliquez pour demander une licence commerciale",
+        "expired": "Votre licence a expiré le {{expirationDate | amParse | date}}, veuillez la renouveler",
+        "purchase": "Acheter",
+        "renew": "Renouveler",
+        "expiration-date": "Date d'expiration"
+      },
+      "password-expiry": {
+        "expire-days": "Pour protéger votre compte, vous devrez changer votre mot de passe <b>dans {{count}} jours.</b> ",
+        "expire-today": "Pour protéger votre compte, vous devrez changer votre mot de passe <b>aujourd'hui.</b> ",
+        "change-link": "Changer maintenant"
+      },
+      "modulesAutoInstallation": {
+        "labels": {
+          "module-auto-installation": "Installation automatique des modules",
+          "loading": "Récupération des informations sur les modules...",
+          "finished": "Installation terminée. Cliquez sur Redémarrer pour continuer",
+          "start": "Début",
+          "end": "Fin"
+        }
+      }
+    },
+    "widgets": {
+      "operations": {
+        "title": "Changements",
+        "blade-subtitle": "Historique des changements"
+      },
+      "dynamicProperty": {
+        "title": "Propriétés dynamiques"
+      },
+      "entitySettings": {
+        "title": "Paramètres"
+      },
+      "accountApi": {
+        "title": "Clé API",
+        "blade-subtitle": "Clé API"
+      },
+      "accountRoles": {
+        "title": "Rôles",
+        "blade-subtitle": "Gérer les rôles"
+      }
+    },
+    "dialogs": {
+      "folders-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer les dossiers ou fichiers sélectionnés ?"
+      },
+      "properties-save": {
+        "title": "Enregistrer les modifications",
+        "message": "Les propriétés ont été modifiées. Voulez-vous enregistrer les changements ?"
+      },
+      "notification-template-save": {
+        "title": "Enregistrer les modifications",
+        "message": "Le modèle de notification a été modifié. Voulez-vous enregistrer les changements ?"
+      },
+      "role-save": {
+        "title": "Enregistrer les modifications",
+        "message": "Le rôle a été modifié. Voulez-vous enregistrer les changements ?"
+      },
+      "roles-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer les rôles sélectionnés ?"
+      },
+      "account-save": {
+        "title": "Enregistrer les modifications",
+        "message": "Le compte a été modifié. Voulez-vous enregistrer les changements ?"
+      },
+      "account-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer les comptes sélectionnés ?"
+      },
+      "oauthapps-save": {
+        "title": "Enregistrer les modifications",
+        "message": "L'application OAuth a été modifiée. Voulez-vous enregistrer les changements ?"
+      },
+      "oauthapps-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer l'application OAuth sélectionnée ?"
+      },
+      "dynamic-property-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer cette propriété dynamique ?"
+      },
+      "settings-value-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer les valeurs sélectionnées ?"
+      },
+      "settings-save": {
+        "title": "Enregistrer les modifications",
+        "message": "Les paramètres ont été modifiés. Voulez-vous enregistrer les changements ?"
+      },
+      "settings-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Les paramètres ont été modifiés. Voulez-vous enregistrer les changements ?"
+      },
+      "localizable-setting-value-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer les valeurs de dictionnaire sélectionnées ?"
+      },
+      "localizable-setting-value-save": {
+        "title": "Enregistrer les modifications",
+        "message": "Cette valeur de dictionnaire a été modifiée. Voulez-vous enregistrer les changements ?"
+      },
+      "email-sending-success": {
+        "title": "Envoi réussi",
+        "message": "L'email a été envoyé avec succès !"
+      },
+      "email-send-error": {
+        "title": "Erreur d'envoi",
+        "message": "L'email n'a pas été envoyé ! Erreur : {{error}}"
+      },
+      "dictionary-items-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer {{quantity}} élément(s) de dictionnaire sélectionné(s) ?"
+      },
+      "module-action": {
+        "title-install": "Confirmation d'installation",
+        "title-update": "Confirmation de mise à jour",
+        "title-delete": "Confirmation de désinstallation",
+        "message0-install": "Vous êtes sur le point d'installer :",
+        "message0-update": "Vous êtes sur le point de mettre à jour :",
+        "message0-delete": "Vous êtes sur le point de désinstaller :",
+        "message1-install": "Les dépendances suivantes seront également installées :",
+        "message1-delete": "Les modules dépendants suivants seront également désinstallés :",
+        "message2-install": "Installer la sélection et les dépendances ?",
+        "message2-update": "Mettre à jour la sélection et les dépendances ?",
+        "message2-delete": "Désinstaller ce module et TOUS les modules dépendants ?"
+      },
+      "module-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir désinstaller ce module ?"
+      },
+      "api-key-delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer cette clé API ?"
+      },
+      "app-restart": {
+        "title": "Arrêt de l'application",
+        "message": "Redémarrez l'application pour appliquer les changements. Selon votre service d'hébergement, l'application peut redémarrer automatiquement ou vous devrez peut-être le faire manuellement. Êtes-vous sûr de vouloir fermer l'application maintenant ?"
+      },
+      "error-details": {
+        "title": "Détails de l'erreur"
+      },
+      "impersonate-no-url": {
+        "title": "Connexion au nom de",
+        "message": "L'URL de la boutique n'a pas été ajoutée aux paramètres de la boutique. Veuillez contacter l'administrateur"
+      },
+      "asset-upload-error": {
+        "title": "Erreur de téléchargement",
+        "message": "Choisissez un dossier ! Impossible de télécharger un fichier à la racine !"
+      },
+      "run-import": {
+        "title": "Confirmation d'importation",
+        "message": "Êtes-vous sûr de vouloir importer les données d'exemple ?"
+      },
+      "create-folder": {
+        "title": "Le nom d'un dossier doit respecter les règles de nommage suivantes :\n  Le nom du dossier doit comporter entre 3 et 63 caractères.\n  Le nom du dossier doit commencer par une lettre ou un chiffre et ne peut contenir que des lettres, des chiffres et des traits d'union (-).\n  Chaque trait d'union (-) doit être immédiatement précédé et suivi d'une lettre ou d'un chiffre ; les traits d'union consécutifs ne sont pas autorisés.\n  Toutes les lettres d'un nom de dossier doivent être en minuscules"
+      },
+      "storefront-cache-reset-successfully": {
+        "title": "Réinitialisation du cache",
+        "message": "Le cache de l'application frontale a été réinitialisé avec succès"
+      }
+    },
+    "commands": {
+      "login-on-behalf": "Se connecter au nom de",
+      "reset-storefront-cache": "Réinitialiser le cache"
+    }
+  },
+  "permissions": {
+    "platform:asset:access": "Voir les ressources dans le menu principal",
+    "platform:asset:delete": "Supprimer les ressources de la plateforme",
+    "platform:asset:update": "Modifier les ressources de la plateforme",
+    "platform:asset:create": "Télécharger de nouvelles ressources de la plateforme",
+    "platform:asset:read": "Télécharger les ressources de la plateforme",
+    "platform:module:read": "Voir les détails du module",
+    "platform:module:access": "Voir les modules dans le menu principal",
+    "platform:module:manage": "Installer/désinstaller les modules",
+    "platform:setting:read": "Lire les paramètres de la plateforme",
+    "platform:setting:access": "Voir les paramètres dans le menu principal",
+    "platform:setting:update": "Modifier les paramètres de la plateforme",
+    "platform:dynamic_properties:read": "Voir les détails des propriétés dynamiques",
+    "platform:dynamic_properties:create": "Créer de nouvelles propriétés dynamiques",
+    "platform:dynamic_properties:access": "Voir les propriétés dynamiques dans le menu principal",
+    "platform:dynamic_properties:update": "Modifier les propriétés dynamiques",
+    "platform:dynamic_properties:delete": "Supprimer les propriétés dynamiques",
+    "platform:security:read": "Voir les détails des utilisateurs et des rôles",
+    "platform:security:create": "Créer de nouveaux utilisateurs et rôles",
+    "platform:security:access": "Voir la sécurité dans le menu principal",
+    "platform:security:update": "Modifier les utilisateurs et les rôles",
+    "platform:security:delete": "Supprimer les utilisateurs et les rôles",
+    "platform:security:verifyEmail": "Modifier l'état vérifié et envoyer un email de vérification",
+    "background_jobs:manage": "Accès à la console Hangfire",
+    "platform:exportImport:access": "Voir Exporter/Importer dans le menu principal",
+    "platform:import": "Importer les données de la plateforme et des modules",
+    "platform:export": "Exporter les données de la plateforme et des modules",
+    "platform:security:loginOnBehalf": "Se connecter au nom d'un client"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "Core": {
+        "General": {
+          "Languages": {
+            "title": "Langues",
+            "description": "Liste des langues disponibles"
+          }
+        }
+      },
+      "ModulesAutoInstalled": {
+        "description": "L'indicateur indique que les modules sont automatiquement installés",
+        "title": "Modules installés"
+      },
+      "ModulesAutoInstallState": {
+        "title": "Statut d'auto-installation des modules",
+        "description": "Statut actuel de l'assistant d'auto-installation des modules"
+      },
+      "SetupStep": {
+        "title": "Étape de configuration actuelle",
+        "description": "Étape actuelle dans l'assistant de configuration"
+      },
+      "SampleDataState": {
+        "title": "Statut des données d'exemple",
+        "description": "Statut actuel de l'assistant de données d'exemple"
+      },
+      "SendDiagnosticData": {
+        "title": "Envoyer des données de diagnostic",
+        "description": "Envoyer les données de diagnostic de VC Platform à VC. Ne peut être désactivé qu'avec l'achat d'une licence"
+      },
+      "Platform": {
+        "Security": {
+          "AccountTypes": {
+            "description": "Dictionnaire pour les types de compte possibles",
+            "title": "Types de compte"
+          },
+          "DefaultAccountType": {
+            "title": "Type de compte par défaut",
+            "description": "Valeur par défaut pour le type de compte lors de la création d'un nouveau compte"
+          },
+          "DefaultAccountStatus": {
+            "title": "Statut de compte par défaut",
+            "description": "Valeur par défaut pour le statut du compte lors de la création d'un nouveau compte"
+          },
+          "DefaultExternalAccountStatus": {
+            "title": "Statut de compte externe par défaut",
+            "description": "Valeur par défaut pour le statut du compte lors de la création d'un nouveau compte pendant une connexion externe"
+          },
+          "EnablePruneExpiredTokensJob": {
+            "description": "Active la suppression des jetons/autorisations expirés et invalides",
+            "title": "Supprimer les jetons expirés"
+          },
+          "CronPruneExpiredTokensJob": {
+            "description": "Expression Cron pour la tâche de suppression des jetons/autorisations expirés et invalides",
+            "title": "Cron pour la tâche de suppression des jetons"
+          },
+          "FileExtensionsBlackList": {
+            "description": "Extensions de fichiers interdites au téléchargement par la plateforme (en plus de 'FileExtensionsBlackList' dans appsettings.json)",
+            "title": "Liste noire"
+          },
+          "FileExtensionsWhiteList": {
+            "description": "Extensions de fichiers autorisées au téléchargement par la plateforme (en plus de 'FileExtensionsWhiteList' dans appsettings.json)",
+            "title": "Liste blanche"
+          }
+        },
+        "UI": {
+          "MainMenu": {
+            "State": {
+              "description": "Statut persistant du menu principal",
+              "title": "Statut persistant du menu principal"
+            }
+          },
+          "Language": {
+            "description": "Langue par défaut (code à deux lettres de ISO 639-1, insensible à la casse). Exemple : fr, en",
+            "title": "Langue"
+          },
+          "RegionalFormat": {
+            "description": "Format régional par défaut (code de locale CLDR, avec tiret ou underscore comme délimiteur, insensible à la casse). Exemple : fr, fr_FR, sr_Cyrl, sr_Cyrl_RS",
+            "title": "Format régional"
+          },
+          "TimeZone": {
+            "description": "Fuseau horaire par défaut (nom de fuseau horaire IANA [base de données tz], exactement comme dans la base de données, sensible à la casse). Exemples : Europe/Paris, America/New_York",
+            "title": "Fuseau horaire"
+          },
+          "UseTimeAgo": {
+            "description": "Lorsque défini sur true (par défaut), le système affiche la date au format 'il y a quelques secondes' lorsque c'est possible",
+            "title": "Utiliser le format 'il y a' quand c'est possible"
+          },
+          "FullDateThreshold": {
+            "description": "Le format 'il y a' passera à un format de date complet après un certain nombre d'unités de temps",
+            "title": "Seuil de date complète"
+          },
+          "FullDateThresholdUnit": {
+            "description": "Unité du seuil de date complète",
+            "title": "Unité du seuil de date complète"
+          },
+          "Customization": {
+            "description": "JSON contenant les paramètres de personnalisation de l'interface utilisateur du gestionnaire",
+            "title": "Personnalisation de l'interface utilisateur du gestionnaire"
+          },
+          "ShowMeridian": {
+            "description": "Afficher l'indicateur de l'heure de méridien (AM ou PM)",
+            "title": "Afficher le méridien"
+          }
+        },
+        "Cache": {
+          "Enabled": {
+            "description": "Ce paramètre vous permet d'activer et de désactiver globalement la mise en cache pour toute l'application de la plateforme",
+            "title": "Activer ou désactiver le cache globalement"
+          },
+          "AbsoulteExpiration": {
+            "description": "Spécifie la durée maximale pendant laquelle les données mises en cache sont stockées dans le cache. Format : [-][j.]hh:mm:ss[.fffffff]",
+            "title": "Durée de vie globale des objets en cache"
+          }
+        }
+      },
+      "Other": {
+        "AccountStatuses": {
+          "title": "Statuts de compte",
+          "description": "Modifier les statuts de compte"
+        }
+      }
+    }
+  }
+}

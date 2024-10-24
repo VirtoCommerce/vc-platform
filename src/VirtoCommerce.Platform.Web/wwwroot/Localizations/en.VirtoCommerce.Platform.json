@@ -49,7 +49,7 @@
           "select-files": "Select files",
           "drag-note": "Drag and drop files here",
           "progress": "Progress",
-          "asset-uploaded": "Asset(s) uploaded."
+          "asset-uploaded": "Asset(s) uploaded"
         },
         "placeholders": {
           "image-url": "Paste file URL here"
@@ -66,7 +66,7 @@
         "title": "Dynamic object types",
         "subtitle": "Pick object type to manage dynamic properties",
         "labels": {
-          "no-objects": "No objects supports dynamic properties yet."
+          "no-objects": "No objects support dynamic properties yet"
         }
       },
       "dynamicProperty-detail": {
@@ -82,7 +82,7 @@
           "description": "Description",
           "display-order": "Display order",
           "display-name": "Display name",
-          "value-type": "Value Type",
+          "value-type": "Value type",
           "dictionary-values": "Dictionary values",
           "manage-dictionary": "Manage dictionary"
         },
@@ -92,15 +92,15 @@
           "display-order": "Display order"
         },
         "validations": {
-          "multivalue": "Multivalue property can have only ShortText, Integer or Decimal value type.",
-          "multilingual": "Only text or HTML value can be multilingual.",
-          "dictionary": "Only dictionaries of value type ShortText are supported."
+          "multivalue": "Multivalue property can have only ShortText, Integer or Decimal value type",
+          "multilingual": "Only text or HTML value can be multilingual",
+          "dictionary": "Only dictionaries of the ShortText value type are supported"
         }
       },
       "dynamicProperty-list": {
         "subtitle": "Manage dynamic properties",
         "labels": {
-          "no-properties": "No dynamic properties yet."
+          "no-properties": "No dynamic properties yet"
         }
       },
       "notifications-menu": {
@@ -123,7 +123,7 @@
           "dictionary-name": "Duplicate name found",
           "localized-values-required": "Required",
           "localized-values": "Duplicate name found",
-          "dictionary": "Only dictionaries of value type ShortText are supported."
+          "dictionary": "Only dictionaries of the ShortText value type are supported"
         },
         "placeholders": {
           "dictionary-name": "Enter name",
@@ -135,7 +135,7 @@
         "subtitle": "",
         "labels": {
           "header": "Properties values",
-          "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Types of properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
+          "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Types of properties' and create some properties. Close and reopen current entity view to load dynamic properties"
         }
       },
       "edit-array": {
@@ -156,7 +156,7 @@
         "labels": {
           "platform-entries": "Platform entries",
           "choose-modules": "Choose modules to export",
-          "download-url": "Download Url",
+          "download-url": "Download URL",
           "errors": "Errors",
           "start": "Start",
           "end": "End"
@@ -184,8 +184,8 @@
         "title": "Data import",
         "labels": {
           "start-import": "Start import",
-          "select-file": "Select .zip file to import. The file must be produced by Commerce Manager data export.",
-          "drag-note": "Drag and drop .zip file to import. The file must be produced by Commerce Manager data export.",
+          "select-file": "Select .zip file to import. The file must be produced by Commerce Manager data export",
+          "drag-note": "Drag and drop .zip file to import. The file must be produced by Commerce Manager data export",
           "upload-failed": "Upload failed",
           "upload-progress": "Upload progress",
           "import-progress": "Import progress",
@@ -193,7 +193,7 @@
           "import-data-information": "Import data information",
           "author": "Author",
           "data-file-created": "Data file created",
-          "created-platform-version": "Created in platform version",
+          "created-platform-version": "Created in Platform version",
           "platform-entries": "Platform entries",
           "choose-modules": "Choose modules to import",
           "no-data": "No data",
@@ -225,11 +225,11 @@
         "menu": {
           "export": {
             "title": "Export",
-            "description": "Data will be saved out to a file so it can later be imported."
+            "description": "Data will be saved out to a file so it can be imported later"
           },
           "import": {
             "title": "Import",
-            "description": "Import data from an exported file."
+            "description": "Import data from an exported file"
           }
         }
       },
@@ -251,8 +251,8 @@
           "start": "Start",
           "end": "End",
           "progress-messages": "Progress messages",
-          "process-completed": "Module installation process completed.",
-          "restart-application": "Restart the application now or later."
+          "process-completed": "Module installation process completed",
+          "restart-application": "Restart the application now or later"
         }
       },
       "module-detail": {
@@ -261,9 +261,9 @@
           "i-accept-the": "I accept the",
           "license-link": "license",
           "license": "License",
-          "agreement": "agreement.",
+          "agreement": "agreement",
           "install-from-file": "Install / update module from file",
-          "select-module-file": "Upload a module (.zip) file from outside the central modules repository",
+          "select-module-file": "Upload a module (.zip) file from an external source outside the central modules repository",
           "upload-progress": "Upload progress",
           "module-info": "Module info",
           "title": "Title",
@@ -273,9 +273,9 @@
           "authors": "Authors",
           "id": "ID",
           "version": "Version",
-          "project-information": "Project Information",
+          "project-information": "Project information",
           "description": "Description",
-          "platform-version": "Platform Version",
+          "platform-version": "Platform version",
           "dependencies": "Dependencies",
           "optional-dependencies": "Optional dependencies",
           "tags": "Tags",
@@ -297,19 +297,19 @@
       "modules-list": {
         "subtitle": "Modules management",
         "labels": {
-          "grouping": "Show Module bundles",
+          "grouping": "Show module bundles",
           "ungrouped": "Other",
-          "no-updates": "No updates found.",
-          "no-modules": "No Modules to install.",
-          "no-installed-modules": "No installed Modules found.",
+          "no-updates": "No updates found",
+          "no-modules": "No new modules to install",
+          "no-installed-modules": "No installed modules found",
           "icon": "Icon",
           "up-to-date": "Module is up to date",
           "update-available": "Update available for this module",
           "module": "Module",
           "version": "Version",
           "author": "Author",
-          "installed": "Installed Modules",
-          "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart set to false."
+          "installed": "Installed modules",
+          "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart is set to false"
         }
       },
       "history": {
@@ -343,13 +343,13 @@
         "labels": {
           "title": "Please enter a new password",
           "login": "Login",
-          "force-change-info": "Your password has expired. You must <b>change the password to continue</b> using the manager.",
+          "force-change-info": "Your password has expired. You must <b>change the password to continue</b> using the manager",
           "current-password": "Current password",
           "new-password": "New password",
           "repeat-password": "Repeat new password",
           "cancel": "Cancel",
           "save": "Change",
-          "fail": "Sorry, we could't reset password for this user."
+          "fail": "Sorry, we could't reset password for this user"
         },
         "validations": {
           "current-password": "Required",
@@ -372,14 +372,14 @@
         "validations": {
           "repeat-password": "New passwords do not match!",
           "invalid-token": "Reset password token is invalid or expired",
-          "password-too-weak": "New password does not comply one or more password security policies:",
+          "password-too-weak": "New password does not comply with one or more password security policies:",
           "passwordTooShort": "Passwords must be {{parameter}} or more characters long",
           "passwordRequiresUniqueChars": "Passwords must use at least {{parameter}} different characters",
           "passwordRequiresLower": "Passwords must have at least one lowercase ('a'-'z')",
           "passwordRequiresUpper": "Passwords must have at least one uppercase ('A'-'Z')",
           "passwordRequiresDigit": "Passwords must have at least one digit ('0'-'9')",
           "passwordRequiresNonAlphanumeric": "Passwords must have at least one non alphanumeric character",
-          "recentPasswordUsed": "You have used this password in the past. Choose another one."
+          "recentPasswordUsed": "You have used this password in the past. Choose another one"
         },
         "placeholders": {
           "new-password": "Enter new password",
@@ -387,7 +387,7 @@
         }
       },
       "account-detail": {
-        "title-new": "New Account",
+        "title-new": "New account",
         "labels": {
           "user-information": "User information",
           "is-administrator": "Is administrator",
@@ -422,11 +422,11 @@
       },
       "account-api": {
         "labels": {
-          "api-key": "Api key",
+          "api-key": "API key",
           "is-active": "is active"
         },
         "placeholders": {
-          "api-key": "Enter an Api key"
+          "api-key": "Enter API key"
         }
       },
       "role-detail": {
@@ -449,14 +449,14 @@
         "subtitle": "Assign roles",
         "labels": {
           "select-roles": "Select roles to assign",
-          "no-roles": "No roles to assign."
+          "no-roles": "No roles to assign"
         }
       },
       "account-roles-list": {
         "title": "",
         "labels": {
           "assigned-roles": "Assigned roles",
-          "no-assigned": "No roles assigned."
+          "no-assigned": "No roles assigned"
         }
       },
       "permission-scopes": {
@@ -465,7 +465,7 @@
           "select-bounded-scopes": "Select bounded scopes",
           "selected": "Selected",
           "scope-name": "Scope name and parameters",
-          "no-scopes": "No scopes."
+          "no-scopes": "No scopes"
         }
       },
       "role-permissions": {
@@ -475,7 +475,7 @@
         }
       },
       "new-role-wizard": {
-        "title": "New Role",
+        "title": "New role",
         "labels": {
           "summary": "Summary",
           "name": "Name",
@@ -496,7 +496,7 @@
       },
       "oauthapps": {
         "labels": {
-          "clientId": "Client id",
+          "clientId": "Client Id",
           "displayName": "Display name",
           "type": "Type",
           "clientSecret": "Client secret",
@@ -505,7 +505,7 @@
           "postLogoutRedirectUris": "Post logout redirect URIs"
         },
         "placeholders": {
-          "clientId": "Input client id",
+          "clientId": "Input client Id",
           "displayName": "Input display name",
           "type": "Input type",
           "clientSecret": "Input client secret"
@@ -520,17 +520,17 @@
         "title-new": "Create OAuth application",
         "subtitle": "Security service",
         "labels": {
-          "clientSecret-warning": "Warning! You must copy the secret now. It will be hidden after closing the blade.",
-          "urls": "Urls"
+          "clientSecret-warning": "Warning! You must copy the secret now. It will be hidden after closing the blade",
+          "urls": "URLs"
         },
         "blades": {
           "edit-redirectUris": {
-            "title": "Redirect uris",
-            "subtitle": "Manage redirect uris"
+            "title": "Redirect URIs",
+            "subtitle": "Manage redirect URIs"
           },
           "edit-postLogoutRedirectUris": {
-            "title": "Post logout redirect uris",
-            "subtitle": "Manage post logout redirect uris"
+            "title": "Post logout redirect URIs",
+            "subtitle": "Manage post logout redirect URIs"
           }
         }
       },
@@ -545,7 +545,7 @@
           "log-in": "Log in",
           "log-in-placeholder": "Enter your email or user name",
           "password-placeholder": "Enter your password",
-          "azure-log-in-label": "Login to admin site through Azure",
+          "azure-log-in-label": "Log in to admin site through Azure",
           "password-log-in-type": "System user",
           "or": "or",
           "signing-in": "Signing in..."
@@ -555,22 +555,22 @@
         "title": "Forgot your password?",
         "labels": {
           "login": "Login or email",
-          "description": "We will send you an email with instructions on how to reset your password.",
-          "success": "Email with instructions has been sent to you.",
-          "fail": "Sorry, we could't reset password for this user.",
+          "description": "We will send you an email with instructions on how to reset your password",
+          "success": "Email with instructions has been sent to you",
+          "fail": "Sorry, we could't reset password for this user",
           "back": "Back",
           "submit": "Submit",
           "time-limit": "You can try again in {{countdown}}",
-          "time-limit-end": "You can try again now."
+          "time-limit-end": "You can try again now"
         },
         "placeholders": {
-          "login-or-email": "Please enter login or email"
+          "login-or-email": "Enter login or email"
         }
       },
       "access-denied": {
         "title": "Access denied",
         "labels": {
-          "message": "You don't have access to this resource. Please contact your administrator.",
+          "message": "You don't have access to this resource. Please contact your administrator",
           "button": "Login with another credentials"
         }
       },
@@ -578,7 +578,7 @@
         "title": "Password reset",
         "labels": {
           "success": "Your password was reset",
-          "fail": "Sorry, we couldn't reset password for this user.",
+          "fail": "Sorry, we couldn't reset password for this user",
           "submit": "Reset",
           "log-in": "Sign in"
         }
@@ -590,17 +590,17 @@
         "license-activation": "License activation",
         "labels": {
           "info-running-no-license": "This instance of Virto Commerce is running on",
-          "info-open-source-license": "Open Source Community license.",
+          "info-open-source-license": "Open Source Community license",
           "info0": "Acquiring or renewing the license:",
           "info1": "Submit the ",
-          "info2": "We'll process your request and should contact you soon.",
-          "info3": "Once you receive the \"Activation Code\" and / or the License file, fill one of the activation fields below.",
-          "info4": "The system will display you the new license information. Review it and click \"Activate\" to confirm.",
+          "info2": "We'll process your request and should contact you soon",
+          "info3": "Once you receive the \"Activation Code\" and / or the License file, fill one of the activation fields below",
+          "info4": "The system will display the new license information. Review it and click \"Activate\" to confirm",
           "customer": "License issued to",
           "type": "Type",
           "expiration": "Expiration",
           "email": "Customer email",
-          "request-license": "License request form.",
+          "request-license": "License request form",
           "code-descr": "Enter the received license \"Activation Code\" and hit [Enter]. This is the quickest license activation method. (Requires internet connection)",
           "file-descr": "Optionally, provide the received License file. (Off-line activation)",
           "upload-progress": "Upload progress",
@@ -626,7 +626,7 @@
         },
         "validations": {
           "repeat-password": "Entered passwords do not match!",
-          "password-too-weak": "Entered password does not comply one or more password security policies:"
+          "password-too-weak": "Entered password does not comply with one or more password security policies:"
         }
       },
       "security-main": {
@@ -675,11 +675,11 @@
         "title": "User profile",
         "labels": {
           "language": "Language",
-          "language-description": "Display language. Clear to use browser or fallback language.",
+          "language-description": "Display language. Clear to use browser or fallback language",
           "regional-format": "Regional format",
-          "regional-format-description": "Regional format of numbers, currency, date and time. Clear to use browser or fallback regional format.",
+          "regional-format-description": "Regional format of numbers, currency, date and time. Clear to use browser or fallback regional format",
           "time-zone": "Time zone",
-          "time-zone-description": "Current user time zone in IANA (tz database) format. Select the nearest city in your time zone. Clear to use browser or fallback time zone.",
+          "time-zone-description": "Current user time zone in IANA (tz database) format. Select the nearest city in your time zone. Clear to use browser or fallback time zone",
           "use-time-ago": "Use time ago format if it is possible",
           "full-date-threshold-group": "Use full date format for dates earlier than...",
           "full-date-threshold-description": "Numeric value of time units",
@@ -722,8 +722,8 @@
       "licensing": {
         "license-absent": "Community license",
         "license-present": "{{type}} license, expires on {{expirationDate | amParse | date}}",
-        "community": "Running community edition, click to request a commercial license.",
-        "expired": "You license has expired on {{expirationDate | amParse | date}}, please renew.",
+        "community": "Running community edition, click to request a commercial license",
+        "expired": "Your license has expired on {{expirationDate | amParse | date}}, please renew",
         "purchase": "Purchase",
         "renew": "Renew",
         "expiration-date": "Expiration Date"
@@ -737,7 +737,7 @@
         "labels": {
           "module-auto-installation": "Modules auto installation",
           "loading": "Retrieving modules information...",
-          "finished": "Installation finished. Click Restart to continue.",
+          "finished": "Installation finished. Click Restart to continue",
           "start": "Start",
           "end": "End"
         }
@@ -755,8 +755,8 @@
         "title": "Settings"
       },
       "accountApi": {
-        "title": "Api key",
-        "blade-subtitle": "Api key"
+        "title": "API key",
+        "blade-subtitle": "API key"
       },
       "accountRoles": {
         "title": "Roles",
@@ -770,7 +770,7 @@
       },
       "properties-save": {
         "title": "Save changes",
-        "message": "The properties have been modified. Do you want to confirm changes?"
+        "message": "The properties have been modified. Do you want to save changes?"
       },
       "notification-template-save": {
         "title": "Save changes",
@@ -778,19 +778,19 @@
       },
       "role-save": {
         "title": "Save changes",
-        "message": "The Role has been modified. Do you want to save changes?"
+        "message": "The role has been modified. Do you want to save changes?"
       },
       "roles-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected Roles?"
+        "message": "Are you sure you want to delete selected roles?"
       },
       "account-save": {
         "title": "Save changes",
-        "message": "The Account has been modified. Do you want to save changes?"
+        "message": "The account has been modified. Do you want to save changes?"
       },
       "account-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected Accounts?"
+        "message": "Are you sure you want to delete selected accounts?"
       },
       "oauthapps-save": {
         "title": "Save changes",
@@ -802,23 +802,23 @@
       },
       "dynamic-property-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete this Dynamic Property?"
+        "message": "Are you sure you want to delete this dynamic Property?"
       },
       "settings-value-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected Values?"
+        "message": "Are you sure you want to delete selected values?"
       },
       "settings-save": {
         "title": "Save changes",
-        "message": "The settings has been modified. Do you want to confirm changes?"
+        "message": "The settings has been modified. Do you want to save changes?"
       },
       "settings-delete": {
         "title": "Delete confirmation",
         "message": "The settings has been modified. Do you want to save changes?"
       },
       "localizable-setting-value-delete": {
-        "title": "Confirm Delete",
-        "message": "Are you sure you want to delete the selected dictionary values?"
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected dictionary values?"
       },
       "localizable-setting-value-save": {
         "title": "Save changes",
@@ -826,11 +826,11 @@
       },
       "email-sending-success": {
         "title": "Sending success",
-        "message": "Email was sent successfully!"
+        "message": "Email has been sent successfully!"
       },
       "email-send-error": {
         "title": "Error in sending",
-        "message": "Email wasn't send! Error: {{error}}"
+        "message": "Email hasn't been sent! Error: {{error}}"
       },
       "dictionary-items-delete": {
         "title": "Delete confirmation",
@@ -851,7 +851,7 @@
       },
       "module-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to uninstall this Module?"
+        "message": "Are you sure you want to uninstall this module?"
       },
       "api-key-delete": {
         "title": "Delete confirmation",
@@ -859,29 +859,29 @@
       },
       "app-restart": {
         "title": "Application shutdown",
-        "message": "To apply changes, it is need to restart the application. Depending on hosting service, the application will be restarted automatically or you should do it manually. Are you sure you want to shutdown the application now?"
+        "message": "Restart the application to apply changes. Depending on your hosting service, the application may restart automatically or you may need to do it manually. Are you sure you want to close the application now?"
       },
       "error-details": {
-        "title": "The error details"
+        "title": "Error details"
       },
       "impersonate-no-url": {
         "title": "Login on behalf",
-        "message": "Store URL was not added in the store setting. Please contact administrator."
+        "message": "Store URL was not added to the store setting. Please contact administrator"
       },
       "asset-upload-error": {
-        "title": "Error in upload",
-        "message": "Need to choose a folder! Can't upload a file to the root!"
+        "title": "Upload error",
+        "message": "Choose a folder! Can't upload a file to the root!"
       },
       "run-import": {
         "title": "Import confirmation",
         "message": "Are you sure you want to import sample data?"
       },
       "create-folder": {
-        "title": "A folder name must conform to the following naming rules:\n  Folder name must be from 3 through 63 characters long.\n  Folder name must start with a letter or number, and can contain only letters, numbers, and the dash (-) character.\n  Every dash (-) character must be immediately preceded and followed by a letter or number; consecutive dashes are not permitted.\n  All letters in a folder name must be lowercase."
+        "title": "A folder name must conform to the following naming rules:\n  Folder name must be between 3 and 63 characters long.\n  Folder name must start with a letter or number, and can only contain letters, numbers, and hyphen (-).\n  Each hyphen (-) must be immediately preceded and followed by a letter or number; consecutive hyphens are not permitted.\n  All letters in a folder name must be lower case"
       },
       "storefront-cache-reset-successfully": {
         "title": "Cache reset",
-        "message": "Storefront cache has been reset successfully."
+        "message": "Frontend Application cache has been reset successfully"
       }
     },
     "commands": {
@@ -890,32 +890,32 @@
     }
   },
   "permissions": {
-    "platform:asset:access": "Allows to see Assets in the main menu",
-    "platform:asset:delete": "Allows to delete platform assets",
-    "platform:asset:update": "Allows to change platform assets",
-    "platform:asset:create": "Allows to upload new platform assets",
-    "platform:asset:read": "Allows to download platform assets",
-    "platform:module:read": "Allows to view module details",
-    "platform:module:access": "Allows to see Modules in the main menu",
-    "platform:module:manage": "Allows to install/uninstall modules",
-    "platform:setting:read": "Allows to read platform settings",
-    "platform:setting:access": "Allows to see Settings in the main menu",
-    "platform:setting:update": "Allows to change platform settings",
-    "platform:dynamic_properties:read": "Allows to view dynamic property details",
-    "platform:dynamic_properties:create": "Allows to create new dynamic properties",
-    "platform:dynamic_properties:access": "Allows to see Dynamic Properties in the main menu",
-    "platform:dynamic_properties:update": "Allows to change dynamic properties",
-    "platform:dynamic_properties:delete": "Allows to delete dynamic properties",
-    "platform:security:read": "Allows to view user and roles details",
-    "platform:security:create": "Allows to create a new users and roles",
-    "platform:security:access": "Allows to see Security in the main menu",
-    "platform:security:update": "Allows to change an users and roles",
-    "platform:security:delete": "Allows to delete an users and roles",
-    "platform:security:verifyEmail": "Allows to change verified state and send verification email",
-    "background_jobs:manage": "Allows to access to  the Hangfire console",
-    "platform:exportImport:access": "Allows to see Export/Import in the main menu",
-    "platform:import": "Allows to import platform and modules data",
-    "platform:export": "Allows to export platform and modules data",
+    "platform:asset:access": "View assets in the main menu",
+    "platform:asset:delete": "Delete Platform assets",
+    "platform:asset:update": "Change Platform assets",
+    "platform:asset:create": "Upload new Platform assets",
+    "platform:asset:read": "Download Platform assets",
+    "platform:module:read": "View module details",
+    "platform:module:access": "View modules in the main menu",
+    "platform:module:manage": "Install/uninstall modules",
+    "platform:setting:read": "Read Platform settings",
+    "platform:setting:access": "View settings in the main menu",
+    "platform:setting:update": "Change Platform settings",
+    "platform:dynamic_properties:read": "View dynamic property details",
+    "platform:dynamic_properties:create": "Create new dynamic properties",
+    "platform:dynamic_properties:access": "View dynamic properties in the main menu",
+    "platform:dynamic_properties:update": "Change dynamic properties",
+    "platform:dynamic_properties:delete": "Delete dynamic properties",
+    "platform:security:read": "View user and roles details",
+    "platform:security:create": "Create new users and roles",
+    "platform:security:access": "View security in the main menu",
+    "platform:security:update": "Change users and roles",
+    "platform:security:delete": "Delete users and roles",
+    "platform:security:verifyEmail": "Change verified state and send verification email",
+    "background_jobs:manage": "Access to the Hangfire console",
+    "platform:exportImport:access": "View Export/Import in the main menu",
+    "platform:import": "Import Platform and modules data",
+    "platform:export": "Export Platform and modules data",
     "platform:security:loginOnBehalf": "Login on behalf of a customer"
   },
   "settings": {
@@ -934,19 +934,19 @@
       },
       "ModulesAutoInstallState": {
         "title": "Modules autoinstall state",
-        "description": "The current state of autoinstall modules wizard"
+        "description": "Current state of autoinstall modules wizard"
       },
       "SetupStep": {
         "title": "Current setup step",
-        "description": "The current step in the setup wizard"
+        "description": "Current step in the setup wizard"
       },
       "SampleDataState": {
         "title": "Sample data state",
-        "description": "The current state of sample data wizard"
+        "description": "Current state of sample data wizard"
       },
       "SendDiagnosticData": {
         "title": "Send diagnostic data",
-        "description": "Send VC Platform diagnostic data to VC. Can switch off only if a paid license acquired."
+        "description": "Send VC Platform diagnostic data to VC. Can only be disabled with purchase of a licence"
       },
       "Platform": {
         "Security": {
@@ -967,27 +967,27 @@
             "description": "Default value for account status when creating a new account during external sign in"
           },
           "EnablePruneExpiredTokensJob": {
-            "description": "Enables prune expired and invalid tokens/authorizations",
+            "description": "Enables the pruning of expired and invalid tokens/authorizations",
             "title": "Prune expired tokens"
           },
           "CronPruneExpiredTokensJob": {
-            "description": "Cron expression for prune expired and invalid tokens/authorizations job",
+            "description": "Cron expression for the job to prune expired and invalid tokens/authorizations",
             "title": "Cron for the tokens prune job"
           },
           "FileExtensionsBlackList": {
-            "description": "Files extensions prohibited to upload by the platform (additionally to 'FileExtensionsBlackList' in appsettings.json)",
+            "description": "File extensions prohibited from upload by the Platform (additionally to 'FileExtensionsBlackList' in appsettings.json)",
             "title": "Black list"
           },
           "FileExtensionsWhiteList": {
-            "description": "Files extensions allowed to upload by the platform (additionally to 'FileExtensionsWhiteList' in appsettings.json)",
+            "description": "File extensions permitted for upload by the Platform (additionally to 'FileExtensionsWhiteList' in appsettings.json)",
             "title": "White list"
           }
         },
         "UI": {
           "MainMenu": {
             "State": {
-              "description": "Persisted state of main menu",
-              "title": "Persisted state of main menu"
+              "description": "Persisted state of the main menu",
+              "title": "Persisted state of the main menu"
             }
           },
           "Language": {
@@ -1003,11 +1003,11 @@
             "title": "Time zone"
           },
           "UseTimeAgo": {
-            "description": "When set to true (by default), system will display date in format like 'a few seconds ago' when possible",
-            "title": "Use time ago format when is possible"
+            "description": "When set to true (the default), the system displays the date in 'a few seconds ago' format whenever possible",
+            "title": "Use time ago format when possible"
           },
           "FullDateThreshold": {
-            "description": "Number of units after time ago format will be switched to full date format",
+            "description": "The time-ago format will switch to a full date format after a certain number of time units",
             "title": "Full date threshold"
           },
           "FullDateThresholdUnit": {
@@ -1025,12 +1025,12 @@
         },
         "Cache": {
           "Enabled": {
-            "description": "Using this setting, you can turn on and off  cache globally for the entire platform application",
+            "description": "This setting allows you to globally enable and disable caching for the entire Platform application",
             "title": "Enable or disable cache globally"
           },
           "AbsoulteExpiration": {
-            "description": "Specifies the maximum time  that the cached data to be stored in the cache. Format: [-][d.]hh:mm:ss[.fffffff]",
-            "title": "The global lifetime of objects in the cache"
+            "description": "Specifies the maximum time the cached data is stored in the cache. Format: [-][d.]hh:mm:ss[.fffffff]",
+            "title": "Global lifetime of objects in cache"
           }
         }
       },
