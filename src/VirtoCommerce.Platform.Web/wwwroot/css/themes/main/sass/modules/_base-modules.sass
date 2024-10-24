@@ -1480,8 +1480,14 @@ $names: "", ".double", ".triple", ".quadro"
     height: 19px
     padding: 6px 20px 0 7px
 .select2-container-multi .select2-choices .select2-search-field
+  width: -moz-available
+  width: -webkit-fill-available
+  width: fill-available
   input
+    width: inherit !important
     padding: 7px 10px 7px 5px
+    margin: 14px 1px 1px 10px
+    border: 1px solid $baseBrd
 .select2-search-choice-close
   left: auto !important
   top: 6px
@@ -1503,6 +1509,8 @@ $names: "", ".double", ".triple", ".quadro"
     &:hover
       &::after
         color: $baseColor
+.select2-container-multi .select2-search-choice-close
+  background: none !important
 .select2-container-multi .select2-search-choice-close::after,
 .select2-container-multi .select2-search-choice-close:hover::after
   color: #a1c0d4
@@ -1513,6 +1521,9 @@ $names: "", ".double", ".triple", ".quadro"
 .select2-container .select2-search input,
 .select2-container .select2-choice .select2-arrow b
   background-image: none !important
+
+.ui-select-choices.ui-select-choices-content.select2-results
+  margin: 4px 10px 4px 10px
 
 /* Tags input */
 tags-input
