@@ -29,6 +29,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class ModulesController : Controller
     {
+        private const string ManagementIsDisabledMessage = "Module management is disabled.";
+
         private readonly IExternalModuleCatalog _externalModuleCatalog;
         private readonly IModuleInstaller _moduleInstaller;
         private readonly IPushNotificationManager _pushNotifier;
@@ -157,7 +159,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
             {
-                return BadRequest("The process is not completed because RefreshProbingFolderOnStart is set to false.");
+                return BadRequest(ManagementIsDisabledMessage);
             }
 
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
@@ -442,7 +444,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 else
                 {
                     notification.Finished = DateTime.UtcNow;
-                    notification.Description = "The process is not completed because RefreshProbingFolderOnStart is set to false.";
+                    notification.Description = ManagementIsDisabledMessage;
                     notification.ProgressLog.Add(new ProgressMessage
                     {
                         Level = ProgressMessageLevel.Error,

@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Owners = manifest.Owners;
             LicenseUrl = manifest.LicenseUrl;
             ProjectUrl = manifest.ProjectUrl;
-            IconUrl = ExistsIcon(manifest.IconUrl) ? manifest.IconUrl : null;
+            IconUrl = IconExists(manifest.IconUrl) ? manifest.IconUrl : null;
             RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
             Copyright = manifest.Copyright;
             Tags = manifest.Tags;
@@ -147,7 +147,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Owners = manifest.Owners;
             LicenseUrl = manifest.LicenseUrl;
             ProjectUrl = manifest.ProjectUrl;
-            IconUrl = ExistsIcon(manifest.IconUrl) ? manifest.IconUrl : null;
+            IconUrl = IconExists(manifest.IconUrl) ? manifest.IconUrl : null;
             RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
             Copyright = manifest.Copyright;
             Tags = manifest.Tags;
@@ -186,7 +186,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             return ToString().GetHashCode();
         }
 
-        private bool ExistsIcon(string iconUrl)
+        private bool IconExists(string iconUrl)
         {
             if (string.IsNullOrEmpty(iconUrl))
             {

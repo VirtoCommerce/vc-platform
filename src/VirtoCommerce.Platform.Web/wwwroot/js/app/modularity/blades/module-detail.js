@@ -151,7 +151,7 @@ angular.module('platformWebApp')
     };
 
     blade.headIcon = 'fa fa-cubes';
-    blade.fallbackIconSrc = '/images/module-logo.png';
+    blade.fallbackIconUrl = '/images/module-logo.png';
 
     if (blade.mode === 'advanced') {
         // the uploader
