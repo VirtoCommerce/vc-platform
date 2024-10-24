@@ -679,7 +679,7 @@
           "regional-format-description": "数字、货币、日期和时间的区域格式。清除以使用浏览器或备用区域格式",
           "time-zone": "时区",
           "time-zone-description": "当前用户时区（IANA tz 数据库格式）。选择您时区内最近的城市。清除以使用浏览器或备用时区",
-          "use-time-ago": "尽可能使用"多久以前"格式",
+          "use-time-ago": "尽可能使用\"多久以前\"格式",
           "full-date-threshold-group": "对早于以下时间的日期使用完整日期格式...",
           "full-date-threshold-description": "时间单位的数值",
           "full-date-threshold-unit-description": "时间单位（如小时或年）"
@@ -1002,11 +1002,11 @@
             "title": "时区"
           },
           "UseTimeAgo": {
-            "description": "当设置为 true（默认值）时，系统会在可能的情况下以"几秒钟前"的格式显示日期",
-            "title": "尽可能使用"多久以前"格式"
+            "description": "当设置为 true（默认值）时，系统会在可能的情况下以\"几秒钟前\"的格式显示日期",
+            "title": "尽可能使用\"多久以前\"格式"
           },
           "FullDateThreshold": {
-            "description": ""多久以前"格式将在特定时间单位数后切换为完整日期格式",
+            "description": "\"多久以前\"格式将在特定时间单位数后切换为完整日期格式",
             "title": "完整日期阈值"
           },
           "FullDateThresholdUnit": {
