@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -215,7 +216,7 @@ namespace VirtoCommerce.Platform.Web.Security
             if (providerConfig?.Provider is not null)
             {
                 userName = providerConfig.Provider.GetUserName(externalLoginInfo);
-                userEmail = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ??
+                userEmail = externalLoginInfo.Principal.FindFirstValue(OpenIddictConstants.Claims.Email) ??
                             (userName.IsValidEmail() ? userName : null);
             }
 

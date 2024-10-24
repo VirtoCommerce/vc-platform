@@ -9,6 +9,6 @@ public class PushNotificationUserIdProvider : IUserIdProvider
     public virtual string GetUserId(HubConnectionContext connection)
     {
         // Return user name for compatibility with PushNotification.Creator
-        return connection.User.FindFirstValue(OpenIddictConstants.Claims.Subject);
+        return connection.User.FindFirstValue(OpenIddictConstants.Claims.Name);
     }
 }
