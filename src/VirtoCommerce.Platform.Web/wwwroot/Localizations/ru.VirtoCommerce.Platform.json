@@ -280,7 +280,7 @@
           "optional-dependencies": "Опциональные зависимости",
           "tags": "Теги",
           "install-version": "Установить версию",
-          "errors": "Ошибки"
+          "errors": "Ошибки",
           "update-version": "Обновить {{id}} до"
         }
       },
@@ -291,8 +291,8 @@
           "available": "Доступные",
           "installed": "Установленные",
           "withErrors": "Ошибки",
-          "advanced": "Расширенные"
-          "browse": "Обзор",
+          "advanced": "Расширенные",
+          "browse": "Обзор"
         }
       },
       "modules-list": {

@@ -280,7 +280,7 @@
           "optional-dependencies": "Optionale Abhängigkeiten",
           "tags": "Tags",
           "install-version": "Installations version",
-          "errors": "Fehler"
+          "errors": "Fehler",
           "update-version": "{{id}} auf aktualisieren"
         }
       },
@@ -289,7 +289,6 @@
         "labels": {
           "updates": "Aktualisierungen",
           "available": "Verfügbar",
-          "updates": "Updates",
           "browse": "Überblick",
           "installed": "Installiert",
           "withErrors": "Fehler",
