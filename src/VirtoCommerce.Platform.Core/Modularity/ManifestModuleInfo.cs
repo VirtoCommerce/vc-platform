@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -88,7 +87,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Owners = manifest.Owners;
             LicenseUrl = manifest.LicenseUrl;
             ProjectUrl = manifest.ProjectUrl;
-            IconUrl = IconExists(manifest.IconUrl) ? manifest.IconUrl : null;
+            IconUrl = manifest.IconUrl;
             RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
             Copyright = manifest.Copyright;
             Tags = manifest.Tags;
@@ -147,7 +146,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Owners = manifest.Owners;
             LicenseUrl = manifest.LicenseUrl;
             ProjectUrl = manifest.ProjectUrl;
-            IconUrl = IconExists(manifest.IconUrl) ? manifest.IconUrl : null;
+            IconUrl = manifest.IconUrl;
             RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
             Copyright = manifest.Copyright;
             Tags = manifest.Tags;
@@ -184,28 +183,6 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public override int GetHashCode()
         {
             return ToString().GetHashCode();
-        }
-
-        private bool IconExists(string iconUrl)
-        {
-            if (string.IsNullOrEmpty(iconUrl))
-            {
-                return false;
-            }
-
-            // Skip check for http resources
-            if (Uri.IsWellFormedUriString(iconUrl, UriKind.Absolute))
-            {
-                return true;
-            }
-
-            var platformDirectory = !string.IsNullOrEmpty(AppDomain.CurrentDomain.BaseDirectory)
-                ? AppDomain.CurrentDomain.BaseDirectory
-                : Directory.GetCurrentDirectory();
-
-            var iconFile = Path.Combine(platformDirectory, iconUrl.Replace('/', Path.DirectorySeparatorChar).Replace("$(", "").Replace(")", ""));
-
-            return File.Exists(iconFile);
         }
     }
 }
