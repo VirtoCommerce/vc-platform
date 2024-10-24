@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class ModulesController : Controller
     {
-        private const string ManagementIsDisabledMessage = "Module management is disabled.";
+        private const string _managementIsDisabledMessage = "Module management is disabled.";
 
         private readonly IExternalModuleCatalog _externalModuleCatalog;
         private readonly IModuleInstaller _moduleInstaller;
@@ -159,7 +159,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
             {
-                return BadRequest(ManagementIsDisabledMessage);
+                return BadRequest(_managementIsDisabledMessage);
             }
 
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
@@ -444,7 +444,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 else
                 {
                     notification.Finished = DateTime.UtcNow;
-                    notification.Description = ManagementIsDisabledMessage;
+                    notification.Description = _managementIsDisabledMessage;
                     notification.ProgressLog.Add(new ProgressMessage
                     {
                         Level = ProgressMessageLevel.Error,
