@@ -281,6 +281,7 @@
           "tags": "Теги",
           "install-version": "Установить версию",
           "errors": "Ошибки"
+          "update-version": "Обновить {{id}} до"
         }
       },
       "modules-main": {
@@ -291,6 +292,7 @@
           "installed": "Установленные",
           "withErrors": "Ошибки",
           "advanced": "Расширенные"
+          "browse": "Обзор",
         }
       },
       "modules-list": {
@@ -299,7 +301,7 @@
           "grouping": "Показать наборы модулей",
           "ungrouped": "Другие",
           "no-updates": "Обновлений не найдено",
-          "no-modules-part1": "Нет новых модулей для установки",
+          "no-modules": "Нет новых модулей для установки",
           "no-installed-modules": "Установленных модулей не найдено",
           "icon": "Иконка",
           "up-to-date": "Модуль актуален",

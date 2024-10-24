@@ -279,8 +279,9 @@
           "dependencies": "Abhängigkeiten",
           "optional-dependencies": "Optionale Abhängigkeiten",
           "tags": "Tags",
-          "install-version": "Installationsversion",
+          "install-version": "Installations version",
           "errors": "Fehler"
+          "update-version": "{{id}} auf aktualisieren"
         }
       },
       "modules-main": {
@@ -288,6 +289,8 @@
         "labels": {
           "updates": "Aktualisierungen",
           "available": "Verfügbar",
+          "updates": "Updates",
+          "browse": "Überblick",
           "installed": "Installiert",
           "withErrors": "Fehler",
           "advanced": "Erweitert"
@@ -299,7 +302,7 @@
           "grouping": "Modulbündel anzeigen",
           "ungrouped": "Andere",
           "no-updates": "Keine Aktualisierungen gefunden",
-          "no-modules-part1": "Keine neuen Module zum Installieren",
+          "no-modules": "Keine neuen Module zum Installieren",
           "no-installed-modules": "Keine installierten Module gefunden",
           "icon": "Symbol",
           "up-to-date": "Modul ist auf dem neuesten Stand",
