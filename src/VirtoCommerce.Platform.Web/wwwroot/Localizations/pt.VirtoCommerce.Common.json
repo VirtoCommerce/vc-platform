@@ -1,0 +1,188 @@
+{
+  "platform": {
+    "commands": {
+      "add": "Adicionar",
+      "activate": "Ativar",
+      "assign": "Atribuir",
+      "cancel": "Cancelar",
+      "clear": "Limpar",
+      "clear-all": "Limpar tudo",
+      "clone": "Clonar",
+      "close": "Fechar",
+      "confirm": "Confirmar",
+      "copy-link": "Copiar link",
+      "copy": "Copiar",
+      "create": "Criar",
+      "cut": "Recortar",
+      "delete": "Excluir",
+      "add-all": "Adicionar tudo",
+      "remove-all": "Excluir tudo",
+      "download": "Baixar",
+      "edit": "Editar",
+      "export": "Exportar",
+      "generate": "Gerar",
+      "import": "Importar",
+      "import-sample-data": "Importar dados de exemplo",
+      "install": "Instalar",
+      "manage": "Gerenciar",
+      "more": "Mais",
+      "no": "Não",
+      "new-folder": "Nova pasta",
+      "new-license": "Renovar licença",
+      "ok": "OK",
+      "paste": "Colar",
+      "pick-selected": "Escolher selecionados",
+      "preview": "Visualizar",
+      "open-browser": "Abrir no navegador",
+      "redo": "Refazer",
+      "refresh": "Atualizar",
+      "remove": "Remover",
+      "reset": "Redefinir",
+      "restart": "Reiniciar",
+      "save": "Salvar",
+      "send": "Enviar",
+      "select-all": "Selecionar tudo",
+      "set-to-default": "Definir como padrão",
+      "start-export": "Iniciar exportação",
+      "settings": "Configurações",
+      "sign-out": "Sair",
+      "undo": "Desfazer",
+      "uninstall": "Desinstalar",
+      "unselect-all": "Desmarcar tudo",
+      "update": "Atualizar",
+      "upload": "Enviar",
+      "yes": "Sim",
+      "add-new-property": "Adicionar nova propriedade",
+      "manage-type-properties": "Tipos de propriedades",
+      "manage-profile": "Gerenciar perfil",
+      "minimize": "Minimizar",
+      "maximize": "Maximizar",
+      "stop-sending": "Parar envio",
+      "set-active": "Definir como ativo",
+      "reject-user": "Rejeitar usuário",
+      "change-password": "Alterar senha",
+      "unlock-account": "Desbloquear conta",
+      "lock-account": "Bloquear conta",
+      "today": "Hoje",
+      "time": "Hora",
+      "now": "Agora",
+      "date": "Data",
+      "see-details": "Ver detalhes",
+      "dismiss": "Dispensar",
+      "hide-empty-property-values": "Ocultar valores vazios",
+      "show-empty-property-values": "Mostrar valores vazios",
+      "titles": {
+        "refresh": "Atualizar",
+        "new-folder": "Nova pasta",
+        "upload": "Enviar"
+      }
+    },
+    "list": {
+      "no-data": "Sem dados",
+      "count": "Contagem",
+      "loading": "Carregando...",
+      "item-not-found": "Erro: Não encontrado"
+    },
+    "placeholders": {
+      "n-a": "N/D",
+      "no-file": "Escolher arquivo",
+      "search-keyword": "Pesquisar palavra-chave...",
+      "select-value": "Selecionar valor",
+      "select-values": "Selecionar valor"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Confirmação de exclusão",
+        "message": "Tem certeza de que deseja excluir as entradas selecionadas?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Texto curto",
+        "description": "Valores de texto com menos de 1024 caracteres"
+      },
+      "long-text": {
+        "title": "Texto longo",
+        "description": "Texto ilimitado sem restrição de tamanho"
+      },
+      "integer": {
+        "title": "Inteiro",
+        "description": "Número inteiro"
+      },
+      "decimal": {
+        "title": "Número decimal",
+        "description": "Número decimal com precisão de 18 e escala de 4"
+      },
+      "date-time": {
+        "title": "Data e hora",
+        "description": "Selecionar data"
+      },
+      "boolean": {
+        "title": "Booleano",
+        "description": "Tipo interruptor"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "Marcação HTML"
+      },
+      "undefined": {
+        "title": "Indefinido"
+      },
+      "image": {
+        "title": "Imagem",
+        "description": "Tipo de imagem"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "Digite texto curto",
+        "secure-string": "Digite texto secreto",
+        "email": "Digite e-mail",
+        "url": "Digite URL",
+        "long-text": "Digite texto longo",
+        "integer": "Digite número inteiro",
+        "number": "Digite número decimal",
+        "date-time": "Escolha a data",
+        "short-text-multivalue": "Adicionar valor",
+        "integer-multivalue": "Adicionar inteiro",
+        "number-multivalue": "Adicionar decimal",
+        "short-text-dictionary": "Selecionar valor",
+        "short-text-dictionary-multivalue": "Selecionar valor",
+        "short-text-multilang": "Digite o valor",
+        "long-text-multilang": "Digite o valor",
+        "short-text-multivalue-multilang": "Adicionar valor",
+        "short-text-dictionary-multilang": "Selecionar valor",
+        "short-text-dictionary-multivalue-multilang": "Selecionar valor",
+        "long-text-dictionary-multivalue-multilang": "Selecionar valor"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "Digite o valor",
+      "required": "Este campo é obrigatório",
+      "maxLength": "Este campo não deve conter mais de {{number}} caracteres"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Formato de URI inválido. Certifique-se de que a URI não tenha parâmetros de consulta"
+      }
+    },
+    "errors": {
+      "generic-error": "Erro",
+      "400": "Requisição inválida",
+      "401": "Não autorizado",
+      "403": "Proibido",
+      "404": "Não encontrado",
+      "405": "Método não permitido",
+      "406": "Não aceitável",
+      "407": "Autenticação de proxy necessária",
+      "408": "Tempo limite da requisição",
+      "409": "Conflito",
+      "429": "Muitas requisições",
+      "500": "Erro interno do servidor",
+      "501": "Não implementado",
+      "502": "Gateway inválido",
+      "503": "Serviço indisponível",
+      "504": "Tempo limite do gateway"
+    }
+  }
+}

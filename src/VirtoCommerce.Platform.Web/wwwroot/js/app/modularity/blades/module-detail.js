@@ -4,7 +4,7 @@ angular.module('platformWebApp')
 
     function initializeBlade() {
         if (blade.currentEntity.isInstalled) {
-            var canUpdate = _.any(moduleHelper.allmodules, function (x) {
+            var canUpdate = $scope.allowInstallModules && _.any(moduleHelper.allmodules, function (x) {
                 return x.id === blade.currentEntity.id && !x.isInstalled;
             });
 
@@ -23,7 +23,7 @@ angular.module('platformWebApp')
                     executeMethod: function () {
                         $scope.confirmActionInDialog('uninstall');
                     },
-                    canExecuteMethod: function () { return true; },
+                    canExecuteMethod: function () { return $scope.allowInstallModules; },
                     permission: 'platform:module:manage'
                 }
             ];
@@ -52,7 +52,7 @@ angular.module('platformWebApp')
             });
         } else {
             blade.toolbarCommands = [];
-            blade.mode = blade.currentEntity.$alternativeVersion ? 'update' : 'install';
+            blade.mode = blade.currentEntity.$installedVersion ? 'update' : 'install';
             $scope.availableVersions = _.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false });
             blade.isLoading = false;
         }
@@ -151,6 +151,7 @@ angular.module('platformWebApp')
     };
 
     blade.headIcon = 'fa fa-cubes';
+    blade.fallbackIconUrl = '/images/module-logo.png';
 
     if (blade.mode === 'advanced') {
         // the uploader

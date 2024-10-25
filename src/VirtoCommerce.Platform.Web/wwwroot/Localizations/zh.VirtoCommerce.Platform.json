@@ -1,0 +1,1044 @@
+{
+  "platform": {
+    "menu": {
+      "home": "首页",
+      "browse": "浏览",
+      "configuration": "配置",
+      "notifications": "通知",
+      "more": "更多",
+      "settings": "设置",
+      "dynamic-properties": "动态属性",
+      "security": "安全",
+      "modules": "模块",
+      "export-import": "导出 & 导入",
+      "user-profile": "用户资料",
+      "assets": "资源",
+      "toggle-favorites": "按 Shift + 空格键切换收藏夹",
+      "help": "帮助"
+    },
+    "navigation": {
+      "back": "返回"
+    },
+    "blades": {
+      "system-info": {
+        "title": "平台信息",
+        "labels": {
+          "clr-version": "CLR 版本",
+          "environment-name": "环境模式",
+          "is-64-bit-os": "64位操作系统",
+          "is-64-bit-process": "64位进程",
+          "database-provider": "数据库提供商"
+        }
+      },
+      "asset-list": {
+        "title": "资源管理",
+        "bread-crumb-top": "所有资源",
+        "labels": {
+          "picture": "图片",
+          "name": "名称",
+          "size": "大小",
+          "modified": "修改时间",
+          "actions": "操作",
+          "group": "组",
+          "language": "语言"
+        }
+      },
+      "asset-upload": {
+        "title": "资源上传",
+        "labels": {
+          "select-files": "选择文件",
+          "drag-note": "拖放文件到此处",
+          "progress": "进度",
+          "asset-uploaded": "资源已上传"
+        },
+        "placeholders": {
+          "image-url": "在此粘贴文件URL"
+        }
+      },
+      "operation-list": {
+        "labels": {
+          "login": "登录",
+          "details": "详情",
+          "time": "时间"
+        }
+      },
+      "dynamicObject-list": {
+        "title": "动态对象类型",
+        "subtitle": "选择对象类型以管理动态属性",
+        "labels": {
+          "no-objects": "目前还没有支持动态属性的对象"
+        }
+      },
+      "dynamicProperty-detail": {
+        "title": "管理属性",
+        "subtitle": "管理属性",
+        "subtitle-new": "新属性",
+        "labels": {
+          "property-name": "属性名称",
+          "required": "必填",
+          "multivalue": "多值",
+          "multilingual": "多语言",
+          "dictionary": "字典",
+          "description": "描述",
+          "display-order": "显示顺序",
+          "display-name": "显示名称",
+          "value-type": "值类型",
+          "dictionary-values": "字典值",
+          "manage-dictionary": "管理字典"
+        },
+        "placeholders": {
+          "description": "输入属性描述",
+          "display-name": "输入显示名称...",
+          "display-order": "显示顺序"
+        },
+        "validations": {
+          "multivalue": "多值属性只能有短文本、整数或小数值类型",
+          "multilingual": "只有文本或HTML值可以是多语言的",
+          "dictionary": "只支持短文本值类型的字典"
+        }
+      },
+      "dynamicProperty-list": {
+        "subtitle": "管理动态属性",
+        "labels": {
+          "no-properties": "目前还没有动态属性"
+        }
+      },
+      "notifications-menu": {
+        "subtitle": "使用通知系统"
+      },
+      "property-dictionary": {
+        "title": "字典值",
+        "subtitle": "管理字典值",
+        "labels": {
+          "edit-value": "编辑值",
+          "new-value": "新值",
+          "dictionary-name": "字典条目名称",
+          "localized-values": "本地化值",
+          "current-values": "当前值",
+          "name": "名称",
+          "values": "值"
+        },
+        "validations": {
+          "dictionary-name-required": "必填",
+          "dictionary-name": "发现重复名称",
+          "localized-values-required": "必填",
+          "localized-values": "发现重复名称",
+          "dictionary": "只支持短文本值类型的字典"
+        },
+        "placeholders": {
+          "dictionary-name": "输入名称",
+          "localized-values": "输入值"
+        }
+      },
+      "propertyValue-list": {
+        "title": "动态属性",
+        "subtitle": "",
+        "labels": {
+          "header": "属性值",
+          "no-properties": "此实体还没有任何动态属性。点击'属性类型'并创建一些属性。关闭并重新打开当前实体视图以加载动态属性"
+        }
+      },
+      "edit-array": {
+        "validations": {
+          "new-value-required": "必填"
+        },
+        "labels": {
+          "new-value": "新值",
+          "current-values": "当前值",
+          "values": "值"
+        },
+        "placeholders": {
+          "value": "输入值"
+        }
+      },
+      "export-main": {
+        "title": "数据导出",
+        "labels": {
+          "platform-entries": "平台条目",
+          "choose-modules": "选择要导出的模块",
+          "download-url": "下载URL",
+          "errors": "错误",
+          "start": "开始",
+          "end": "结束"
+        },
+        "menu": {
+          "security": {
+            "title": "安全",
+            "description": "账户和角色"
+          },
+          "binary": {
+            "title": "二进制",
+            "description": "二进制数据"
+          },
+          "settings": {
+            "title": "设置",
+            "description": "平台设置"
+          },
+          "dynamic-props": {
+            "title": "动态属性",
+            "description": "平台动态属性"
+          }
+        }
+      },
+      "import-main": {
+        "title": "数据导入",
+        "labels": {
+          "start-import": "开始导入",
+          "select-file": "选择要导入的.zip文件。该文件必须由Commerce Manager数据导出生成",
+          "drag-note": "拖放要导入的.zip文件。该文件必须由Commerce Manager数据导出生成",
+          "upload-failed": "上传失败",
+          "upload-progress": "上传进度",
+          "import-progress": "导入进度",
+          "import-finished": "导入完成",
+          "import-data-information": "导入数据信息",
+          "author": "作者",
+          "data-file-created": "数据文件创建时间",
+          "created-platform-version": "创建于平台版本",
+          "platform-entries": "平台条目",
+          "choose-modules": "选择要导入的模块",
+          "no-data": "无数据",
+          "errors": "错误",
+          "start": "开始",
+          "end": "结束"
+        },
+        "menu": {
+          "security": {
+            "title": "安全",
+            "description": "账户和角色"
+          },
+          "binary": {
+            "title": "二进制",
+            "description": "二进制数据"
+          },
+          "settings": {
+            "title": "设置",
+            "description": "平台设置"
+          },
+          "dynamic-props": {
+            "title": "动态属性",
+            "description": "平台动态属性"
+          }
+        }
+      },
+      "exportImport-main": {
+        "title": "数据导出和导入",
+        "menu": {
+          "export": {
+            "title": "导出",
+            "description": "数据将被保存到文件中，以便稍后导入"
+          },
+          "import": {
+            "title": "导入",
+            "description": "从导出的文件中导入数据"
+          }
+        }
+      },
+      "resolve-result": {
+        "title": "预览结果",
+        "labels": {
+          "subject": "主题",
+          "body": "正文"
+        }
+      },
+      "module-settings-detail": {
+        "title": "模块设置"
+      },
+      "module-wizard-progress-step": {
+        "title-install": "模块安装",
+        "title-update": "模块更新",
+        "title-uninstall": "模块卸载",
+        "labels": {
+          "start": "开始",
+          "end": "结束",
+          "progress-messages": "进度消息",
+          "process-completed": "模块安装过程已完成",
+          "restart-application": "立即重启应用程序或稍后重启"
+        }
+      },
+      "module-detail": {
+        "title": "模块信息",
+        "labels": {
+          "i-accept-the": "我接受",
+          "license-link": "许可",
+          "license": "许可",
+          "agreement": "协议",
+          "install-from-file": "从文件安装/更新模块",
+          "select-module-file": "从中央模块存储库外部上传模块（.zip）文件",
+          "upload-progress": "上传进度",
+          "module-info": "模块信息",
+          "title": "标题",
+          "official": "{{$owner}}的官方模块",
+          "owners": "由{{$owner}}开发",
+          "author": "作者",
+          "authors": "作者",
+          "id": "ID",
+          "version": "版本",
+          "project-information": "项目信息",
+          "description": "描述",
+          "platform-version": "平台版本",
+          "dependencies": "依赖项",
+          "optional-dependencies": "可选依赖项",
+          "tags": "标签",
+          "install-version": "安装版本",
+          "errors": "错误"
+        }
+      },
+      "modules-main": {
+        "title": "模块",
+        "labels": {
+          "updates": "更新",
+          "available": "可用",
+          "installed": "已安装",
+          "withErrors": "错误",
+          "advanced": "高级"
+        }
+      },
+      "modules-list": {
+        "subtitle": "模块管理",
+        "labels": {
+          "grouping": "显示模块包",
+          "ungrouped": "其他",
+          "no-updates": "未找到更新",
+          "no-modules-part1": "没有新模块可安装",
+          "no-installed-modules": "未找到已安装的模块",
+          "icon": "图标",
+          "up-to-date": "模块已是最新",
+          "update-available": "此模块有可用更新",
+          "module": "模块",
+          "version": "版本",
+          "author": "作者",
+          "installed": "已安装的模块",
+          "manual-install-warning": "警告！手动安装的模块将不会启动，因为 RefreshProbingFolderOnStart 设置为 false"
+        }
+      },
+      "history": {
+        "title": "系统事件",
+        "subtitle": "事件历史",
+        "labels": {
+          "type": "类型",
+          "title": "标题",
+          "created": "创建时间",
+          "description": "描述"
+        }
+      },
+      "historyDetailDefault": {
+        "title": "事件详情",
+        "subtitle": "事件详情",
+        "labels": {
+          "start": "开始",
+          "end": "结束",
+          "elapsed": "耗时",
+          "errors": "错误",
+          "stats": "已处理 {{ totalCount }} 条记录中的 {{ processedCount }} 条"
+        }
+      },
+      "menuHeader": {
+        "labels": {
+          "history": "历史",
+          "clear-recent": "清除所有最近记录"
+        }
+      },
+      "account-changePassword": {
+        "labels": {
+          "title": "请输入新密码",
+          "login": "登录",
+          "force-change-info": "您的密码已过期。您必须<b>更改密码才能继续</b>使用管理器",
+          "current-password": "当前密码",
+          "new-password": "新密码",
+          "repeat-password": "重复新密码",
+          "cancel": "取消",
+          "save": "更改",
+          "fail": "抱歉，我们无法为此用户重置密码"
+        },
+        "validations": {
+          "current-password": "必填",
+          "new-password": "新旧密码相同！",
+          "repeat-password": "新密码不匹配！"
+        },
+        "placeholders": {
+          "current-password": "输入当前密码",
+          "new-password": "输入新密码",
+          "repeat-password": "重复新密码"
+        }
+      },
+      "account-resetPassword": {
+        "subtitle": "更改用户密码",
+        "labels": {
+          "new-password": "新密码",
+          "repeat-password": "重复密码",
+          "force-password-change": "让此用户在下次登录时更改密码"
+        },
+        "validations": {
+          "repeat-password": "新密码不匹配！",
+          "invalid-token": "重置密码令牌无效或已过期",
+          "password-too-weak": "新密码不符合一个或多个密码安全策略：",
+          "passwordTooShort": "密码必须至少包含 {{parameter}} 个字符",
+          "passwordRequiresUniqueChars": "密码必须使用至少 {{parameter}} 个不同的字符",
+          "passwordRequiresLower": "密码必须包含至少一个小写字母（'a'-'z'）",
+          "passwordRequiresUpper": "密码必须包含至少一个大写字母（'A'-'Z'）",
+          "passwordRequiresDigit": "密码必须包含至少一个数字（'0'-'9'）",
+          "passwordRequiresNonAlphanumeric": "密码必须包含至少一个非字母数字字符",
+          "recentPasswordUsed": "您过去使用过这个密码。请选择另一个"
+        },
+        "placeholders": {
+          "new-password": "输入新密码",
+          "repeat-password": "重复新密码"
+        }
+      },
+      "account-detail": {
+        "title-new": "新账户",
+        "labels": {
+          "user-information": "用户信息",
+          "is-administrator": "是管理员",
+          "account-type": "账户类型",
+          "login": "登录名",
+          "account-state": "账户状态",
+          "account-email": "电子邮件",
+          "locked-state": "锁定状态",
+          "status": "状态",
+          "verified": "已验证",
+          "resend-link": "重新发送链接",
+          "link-sent": "链接已发送",
+          "last-login-date": "最后登录日期"
+        },
+        "placeholders": {
+          "account-type": "选择...",
+          "email": "输入电子邮件",
+          "user-name": "输入用户名",
+          "status": "选择..."
+        }
+      },
+      "account-list": {
+        "title": "用户",
+        "subtitle": "安全服务",
+        "labels": {
+          "name": "姓名",
+          "account-type": "账户类型",
+          "login": "登录名",
+          "state": "状态",
+          "status": "状态"
+        }
+      },
+      "account-api": {
+        "labels": {
+          "api-key": "API 密钥",
+          "is-active": "是否激活"
+        },
+        "placeholders": {
+          "api-key": "输入 API 密钥"
+        }
+      },
+      "role-detail": {
+        "subtitle": "角色详情",
+        "labels": {
+          "summary": "摘要",
+          "name": "名称",
+          "description": "描述",
+          "assigned-permissions": "已分配权限",
+          "permission-name": "名称",
+          "assigned-scopes": "已分配范围",
+          "no-permissions-assigned": "未分配权限"
+        },
+        "placeholders": {
+          "name": "输入名称",
+          "description": "输入描述"
+        }
+      },
+      "account-roles": {
+        "subtitle": "分配角色",
+        "labels": {
+          "select-roles": "选择要分配的角色",
+          "no-roles": "没有可分配的角色"
+        }
+      },
+      "account-roles-list": {
+        "title": "",
+        "labels": {
+          "assigned-roles": "已分配的角色",
+          "no-assigned": "未分配角色"
+        }
+      },
+      "permission-scopes": {
+        "subtitle": "配置权限范围",
+        "labels": {
+          "select-bounded-scopes": "选择绑定的范围",
+          "selected": "已选择",
+          "scope-name": "范围名称和参数",
+          "no-scopes": "没有范围"
+        }
+      },
+      "role-permissions": {
+        "subtitle": "分配权限",
+        "labels": {
+          "select-permissions": "选择要分配的权限"
+        }
+      },
+      "new-role-wizard": {
+        "title": "新角色",
+        "labels": {
+          "summary": "摘要",
+          "name": "名称",
+          "description": "描述",
+          "assign-permissions": "分配权限"
+        },
+        "placeholders": {
+          "name": "输入名称",
+          "description": "输入描述"
+        }
+      },
+      "role-list": {
+        "title": "角色",
+        "subtitle": "安全服务",
+        "labels": {
+          "name": "名称"
+        }
+      },
+      "oauthapps": {
+        "labels": {
+          "clientId": "客户端 ID",
+          "displayName": "显示名称",
+          "type": "类型",
+          "clientSecret": "客户端密钥",
+          "assigned-permissions": "已分配权限",
+          "redirectUris": "重定向 URI",
+          "postLogoutRedirectUris": "登出后重定向 URI"
+        },
+        "placeholders": {
+          "clientId": "输入客户端 ID",
+          "displayName": "输入显示名称",
+          "type": "输入类型",
+          "clientSecret": "输入客户端密钥"
+        }
+      },
+      "oauthapps-list": {
+        "title": "OAuth 应用",
+        "subtitle": "安全服务"
+      },
+      "oauthapps-detail": {
+        "title": "编辑 OAuth 应用",
+        "title-new": "创建 OAuth 应用",
+        "subtitle": "安全服务",
+        "labels": {
+          "clientSecret-warning": "警告！您必须立即复制密钥。关闭此页面后将无法再次查看",
+          "urls": "URL"
+        },
+        "blades": {
+          "edit-redirectUris": {
+            "title": "重定向 URI",
+            "subtitle": "管理重定向 URI"
+          },
+          "edit-postLogoutRedirectUris": {
+            "title": "登出后重定向 URI",
+            "subtitle": "管理登出后重定向 URI"
+          }
+        }
+      },
+      "login": {
+        "labels": {
+          "sign-in": "登录到 {{title}} 管理器",
+          "login": "登录",
+          "password": "密码",
+          "remember-me": "记住我",
+          "external-sign-in": "使用 {{displayName}} 登录",
+          "forgot-password": "忘记密码？",
+          "log-in": "登录",
+          "log-in-placeholder": "输入您的邮箱或用户名",
+          "password-placeholder": "输入您的密码",
+          "azure-log-in-label": "通过 Azure 登录管理站点",
+          "password-log-in-type": "系统用户",
+          "or": "或",
+          "signing-in": "正在登录..."
+        }
+      },
+      "forgotpassword": {
+        "title": "忘记密码？",
+        "labels": {
+          "login": "登录名或邮箱",
+          "description": "我们将向您发送一封包含重置密码说明的电子邮件",
+          "success": "包含说明的电子邮件已发送给您",
+          "fail": "抱歉，我们无法为该用户重置密码",
+          "back": "返回",
+          "submit": "提交",
+          "time-limit": "您可以在 {{countdown}} 后再次尝试",
+          "time-limit-end": "您现在可以再次尝试"
+        },
+        "placeholders": {
+          "login-or-email": "输入登录名或邮箱"
+        }
+      },
+      "access-denied": {
+        "title": "访问被拒绝",
+        "labels": {
+          "message": "您没有访问此资源的权限。请联系您的管理员",
+          "button": "使用其他凭据登录"
+        }
+      },
+      "resetpassword": {
+        "title": "密码重置",
+        "labels": {
+          "success": "您的密码已重置",
+          "fail": "抱歉，我们无法为该用户重置密码",
+          "submit": "重置",
+          "log-in": "登录"
+        }
+      },
+      "license": {
+        "title": "当前许可证",
+        "title-new": "新许可证激活",
+        "license-info": "许可证信息",
+        "license-activation": "许可证激活",
+        "labels": {
+          "info-running-no-license": "此 Virto Commerce 实例正在运行",
+          "info-open-source-license": "开源社区许可证",
+          "info0": "获取或续订许可证：",
+          "info1": "提交",
+          "info2": "我们将处理您的请求并尽快与您联系",
+          "info3": "一旦您收到\"激活码\"和/或许可证文件，请填写下面的一个激活字段",
+          "info4": "系统将显示新的许可证信息。请检查并点击\"激活\"确认",
+          "customer": "许可证发给",
+          "type": "类型",
+          "expiration": "过期时间",
+          "email": "客户邮箱",
+          "request-license": "许可证申请表",
+          "code-descr": "输入收到的许可证\"激活码\"并按 [Enter]。这是最快的许可证激活方法。（需要互联网连接）",
+          "file-descr": "或者，提供收到的许可证文件。（离线激活）",
+          "upload-progress": "上传进度",
+          "errors": "激活错误"
+        },
+        "placeholders": {
+          "code": "输入激活码"
+        }
+      },
+      "new-account-wizard": {
+        "labels": {
+          "login": "登录名",
+          "email": "邮箱",
+          "password": "密码",
+          "repeat-password": "重复密码",
+          "assign-roles": "分配角色"
+        },
+        "placeholders": {
+          "email": "输入邮箱",
+          "login": "输入登录名",
+          "password": "输入新密码",
+          "repeat-password": "重复新密码"
+        },
+        "validations": {
+          "repeat-password": "输入的密码不匹配！",
+          "password-too-weak": "输入的密码不符合一个或多个密码安全策略："
+        }
+      },
+      "security-main": {
+        "title": "安全",
+        "subtitle": "用户管理"
+      },
+      "entitySetting-list": {
+        "title": "设置"
+      },
+      "setting-dictionary": {
+        "subtitle": "管理字典值",
+        "labels": {
+          "new-value": "请输入值",
+          "current-values": "当前值",
+          "value": "值"
+        },
+        "validations": {
+          "new-value-required": "必填",
+          "new-value": "发现重复值"
+        },
+        "placeholders": {
+          "new-value": "请输入值"
+        }
+      },
+      "settings-detail": {
+        "title": "设置值",
+        "hide-description": "隐藏"
+      },
+      "settingGroup-list": {
+        "title": "设置",
+        "bread-crumb-top": "所有设置"
+      },
+      "settings-uploader": {
+        "drag-drop-comment": "将文件拖放到此处",
+        "or": "或",
+        "browse-your-files": "浏览您的文件"
+      },
+      "localizable-setting-value-list": {
+        "subtitle": "管理字典值"
+      },
+      "localizable-setting-value-details": {
+        "title": "编辑字典值",
+        "alias": "系统值"
+      },
+      "user-profile": {
+        "title": "用户资料",
+        "labels": {
+          "language": "语言",
+          "language-description": "显示语言。清除以使用浏览器或备用语言",
+          "regional-format": "区域格式",
+          "regional-format-description": "数字、货币、日期和时间的区域格式。清除以使用浏览器或备用区域格式",
+          "time-zone": "时区",
+          "time-zone-description": "当前用户时区（IANA tz 数据库格式）。选择您时区内最近的城市。清除以使用浏览器或备用时区",
+          "use-time-ago": "尽可能使用\"多久以前\"格式",
+          "full-date-threshold-group": "对早于以下时间的日期使用完整日期格式...",
+          "full-date-threshold-description": "时间单位的数值",
+          "full-date-threshold-unit-description": "时间单位（如小时或年）"
+        },
+        "placeholders": {
+          "full-date-threshold": "输入阈值",
+          "full-date-threshold-unit": "选择阈值单位"
+        },
+        "full-date-threshold-units": {
+          "Never": "从不",
+          "Seconds": "秒",
+          "Minutes": "分钟",
+          "Hours": "小时",
+          "Days": "天",
+          "Weeks": "周",
+          "Months": "月",
+          "Quarters": "季度",
+          "Years": "年"
+        }
+      }
+    },
+    "templates": {
+      "sampleDataChoose": {
+        "labels": {
+          "choose-sample-data-type": "选择示例数据类型",
+          "size": "大小",
+          "version": "版本"
+        }
+      },
+      "sampleDataInitialization": {
+        "labels": {
+          "sample-data-initialization": "示例数据初始化",
+          "starting-initialization": "正在开始示例数据初始化...",
+          "errors": "错误",
+          "start": "开始",
+          "end": "结束"
+        }
+      },
+      "licensing": {
+        "license-absent": "社区许可证",
+        "license-present": "{{type}} 许可证，过期时间 {{expirationDate | amParse | date}}",
+        "community": "正在运行社区版，点击申请商业许可证",
+        "expired": "您的许可证已于 {{expirationDate | amParse | date}} 过期，请续订",
+        "purchase": "购买",
+        "renew": "续订",
+        "expiration-date": "过期日期"
+      },
+      "password-expiry": {
+        "expire-days": "为保护您的账户，您需要在 <b>{{count}} 天内</b>更改密码。",
+        "expire-today": "为保护您的账户，您需要<b>今天</b>更改密码。",
+        "change-link": "立即更改"
+      },
+      "modulesAutoInstallation": {
+        "labels": {
+          "module-auto-installation": "模块自动安装",
+          "loading": "正在获取模块信息...",
+          "finished": "安装完成。点击重启以继续",
+          "start": "开始",
+          "end": "结束"
+        }
+      }
+    },
+    "widgets": {
+      "operations": {
+        "title": "更改",
+        "blade-subtitle": "更改历史"
+      },
+      "dynamicProperty": {
+        "title": "动态属性"
+      },
+      "entitySettings": {
+        "title": "设置"
+      },
+      "accountApi": {
+        "title": "API 密钥",
+        "blade-subtitle": "API 密钥"
+      },
+      "accountRoles": {
+        "title": "角色",
+        "blade-subtitle": "管理角色"
+      }
+    },
+    "dialogs": {
+      "folders-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除选定的文件夹或文件吗？"
+      },
+      "properties-save": {
+        "title": "保存更改",
+        "message": "属性已被修改。您想保存更改吗？"
+      },
+      "notification-template-save": {
+        "title": "保存更改",
+        "message": "通知模板已被修改。您想保存更改吗？"
+      },
+      "role-save": {
+        "title": "保存更改",
+        "message": "角色已被修改。您想保存更改吗？"
+      },
+      "roles-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除选定的角色吗？"
+      },
+      "account-save": {
+        "title": "保存更改",
+        "message": "账户已被修改。您想保存更改吗？"
+      },
+      "account-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除选定的账户吗？"
+      },
+      "oauthapps-save": {
+        "title": "保存更改",
+        "message": "OAuth 应用已被修改。您想保存更改吗？"
+      },
+      "oauthapps-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除选定的 OAuth 应用吗？"
+      },
+      "dynamic-property-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除此动态属性吗？"
+      },
+      "settings-value-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除选定的值吗？"
+      },
+      "settings-save": {
+        "title": "保存更改",
+        "message": "设置已被修改。您想保存更改吗？"
+      },
+      "settings-delete": {
+        "title": "删除确认",
+        "message": "设置已被修改。您想保存更改吗？"
+      },
+      "localizable-setting-value-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除选定的字典值吗？"
+      },
+      "localizable-setting-value-save": {
+        "title": "保存更改",
+        "message": "此字典值已被修改。您想保存更改吗？"
+      },
+      "email-sending-success": {
+        "title": "发送成功",
+        "message": "邮件已成功发送！"
+      },
+      "email-send-error": {
+        "title": "发送错误",
+        "message": "邮件未能发送！错误：{{error}}"
+      },
+      "dictionary-items-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除选定的 {{quantity}} 个字典项吗？"
+      },
+      "module-action": {
+        "title-install": "安装确认",
+        "title-update": "更新确认",
+        "title-delete": "卸载确认",
+        "message0-install": "您即将安装：",
+        "message0-update": "您即将更新：",
+        "message0-delete": "您即将卸载：",
+        "message1-install": "以下依赖项也将被安装：",
+        "message1-delete": "以下依赖模块也将被卸载：",
+        "message2-install": "安装选定项和依赖项？",
+        "message2-update": "更新选定项和依赖项？",
+        "message2-delete": "卸载此模块和所有依赖模块？"
+      },
+      "module-delete": {
+        "title": "删除确认",
+        "message": "您确定要卸载此模块吗？"
+      },
+      "api-key-delete": {
+        "title": "删除确认",
+        "message": "您确定要删除此 API 密钥吗？"
+      },
+      "app-restart": {
+        "title": "应用程序关闭",
+        "message": "重启应用程序以应用更改。根据您的托管服务，应用程序可能会自动重启，或者您可能需要手动重启。您确定要现在关闭应用程序吗？"
+      },
+      "error-details": {
+        "title": "错误详情"
+      },
+      "impersonate-no-url": {
+        "title": "代表登录",
+        "message": "商店 URL 未添加到商店设置中。请联系管理员"
+      },
+      "asset-upload-error": {
+        "title": "上传错误",
+        "message": "请选择一个文件夹！无法上传文件到根目录！"
+      },
+      "run-import": {
+        "title": "导入确认",
+        "message": "您确定要导入示例数据吗？"
+      },
+      "create-folder": {
+        "title": "文件夹名称必须符合以下命名规则：\n  文件夹名称长度必须在 3 到 63 个字符之间。\n  文件夹名称必须以字母或数字开头，只能包含字母、数字和连字符(-)。\n  每个连字符(-)的前后必须紧跟字母或数字；不允许连续的连字符。\n  文件夹名称中的所有字母必须是小写"
+      },
+      "storefront-cache-reset-successfully": {
+        "title": "缓存重置",
+        "message": "前端应用程序缓存已成功重置"
+      }
+    },
+    "commands": {
+      "login-on-behalf": "代表登录",
+      "reset-storefront-cache": "重置缓存"
+    }
+  },
+  "permissions": {
+    "platform:asset:access": "在主菜单中查看资产",
+    "platform:asset:delete": "删除平台资产",
+    "platform:asset:update": "更改平台资产",
+    "platform:asset:create": "上传新的平台资产",
+    "platform:asset:read": "下载平台资产",
+    "platform:module:read": "查看模块详情",
+    "platform:module:access": "在主菜单中查看模块",
+    "platform:module:manage": "安装/卸载模块",
+    "platform:setting:read": "读取平台设置",
+    "platform:setting:access": "在主菜单中查看设置",
+    "platform:setting:update": "更改平台设置",
+    "platform:dynamic_properties:read": "查看动态属性详情",
+    "platform:dynamic_properties:create": "创建新的动态属性",
+    "platform:dynamic_properties:access": "在主菜单中查看动态属性",
+    "platform:dynamic_properties:update": "更改动态属性",
+    "platform:dynamic_properties:delete": "删除动态属性",
+    "platform:security:read": "查看用户和角色详情",
+    "platform:security:create": "创建新用户和角色",
+    "platform:security:access": "在主菜单中查看安全设置",
+    "platform:security:update": "更改用户和角色",
+    "platform:security:delete": "删除用户和角色",
+    "platform:security:verifyEmail": "更改验证状态并发送验证邮件",
+    "background_jobs:manage": "访问 Hangfire 控制台",
+    "platform:exportImport:access": "在主菜单中查看导出/导入",
+    "platform:import": "导入平台和模块数据",
+    "platform:export": "导出平台和模块数据",
+    "platform:security:loginOnBehalf": "代表客户登录"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "Core": {
+        "General": {
+          "Languages": {
+            "title": "语言",
+            "description": "可用语言列表"
+          }
+        }
+      },
+      "ModulesAutoInstalled": {
+        "description": "该标志表示模块是自动安装的",
+        "title": "已安装模块"
+      },
+      "ModulesAutoInstallState": {
+        "title": "模块自动安装状态",
+        "description": "自动安装模块向导的当前状态"
+      },
+      "SetupStep": {
+        "title": "当前设置步骤",
+        "description": "设置向导中的当前步骤"
+      },
+      "SampleDataState": {
+        "title": "示例数据状态",
+        "description": "示例数据向导的当前状态"
+      },
+      "SendDiagnosticData": {
+        "title": "发送诊断数据",
+        "description": "向 VC 发送 VC 平台诊断数据。只能通过购买许可证来禁用"
+      },
+      "Platform": {
+        "Security": {
+          "AccountTypes": {
+            "description": "可能的账户类型字典",
+            "title": "账户类型"
+          },
+          "DefaultAccountType": {
+            "title": "默认账户类型",
+            "description": "创建新账户时的默认账户类型值"
+          },
+          "DefaultAccountStatus": {
+            "title": "默认账户状态",
+            "description": "创建新账户时的默认账户状态值"
+          },
+          "DefaultExternalAccountStatus": {
+            "title": "默认外部账户状态",
+            "description": "外部登录时创建新账户的默认账户状态值"
+          },
+          "EnablePruneExpiredTokensJob": {
+            "description": "启用清理过期和无效令牌/授权的功能",
+            "title": "清理过期令牌"
+          },
+          "CronPruneExpiredTokensJob": {
+            "description": "清理过期和无效令牌/授权的作业的 Cron 表达式",
+            "title": "令牌清理作业的 Cron"
+          },
+          "FileExtensionsBlackList": {
+            "description": "平台禁止上传的文件扩展名（除了 appsettings.json 中的 'FileExtensionsBlackList'）",
+            "title": "黑名单"
+          },
+          "FileExtensionsWhiteList": {
+            "description": "平台允许上传的文件扩展名（除了 appsettings.json 中的 'FileExtensionsWhiteList'）",
+            "title": "白名单"
+          }
+        },
+        "UI": {
+          "MainMenu": {
+            "State": {
+              "description": "主菜单的持久化状态",
+              "title": "主菜单的持久化状态"
+            }
+          },
+          "Language": {
+            "description": "默认语言（ISO 639-1 的两字母代码，不区分大小写）。例如：en, de",
+            "title": "语言"
+          },
+          "RegionalFormat": {
+            "description": "默认区域格式（CLDR 区域代码，使用破折号或下划线作为分隔符，不区分大小写）。例如：en, en_US, sr_Cyrl, sr_Cyrl_RS",
+            "title": "区域格式"
+          },
+          "TimeZone": {
+            "description": "默认时区（IANA 时区名称 [tz 数据库]，与数据库中完全一致，区分大小写）。例如：America/New_York, Europe/Moscow",
+            "title": "时区"
+          },
+          "UseTimeAgo": {
+            "description": "当设置为 true（默认值）时，系统会在可能的情况下以\"几秒钟前\"的格式显示日期",
+            "title": "尽可能使用\"多久以前\"格式"
+          },
+          "FullDateThreshold": {
+            "description": "\"多久以前\"格式将在特定时间单位数后切换为完整日期格式",
+            "title": "完整日期阈值"
+          },
+          "FullDateThresholdUnit": {
+            "description": "完整日期阈值的单位",
+            "title": "完整日期阈值单位"
+          },
+          "Customization": {
+            "description": "JSON 包含管理界面的个性化设置",
+            "title": "管理界面自定义"
+          },
+          "ShowMeridian": {
+            "description": "显示时间午线指示器（上午或下午）",
+            "title": "显示时间午线"
+          }
+        },
+        "Cache": {
+          "Enabled": {
+            "description": "此设置允许您全局启用和禁用整个平台应用程序的缓存",
+            "title": "全局启用或禁用缓存"
+          },
+          "AbsoulteExpiration": {
+            "description": "指定缓存数据在缓存中存储的最长时间。格式：[-][d.]hh:mm:ss[.fffffff]",
+            "title": "缓存中对象的全局生命周期"
+          }
+        }
+      },
+      "Other": {
+        "AccountStatuses": {
+          "title": "账户状态",
+          "description": "更改账户状态"
+        }
+      }
+    }
+  }
+}
