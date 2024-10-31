@@ -276,7 +276,7 @@ namespace VirtoCommerce.Platform.Web
                 options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Name;
                 options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
 
-                ClaimsPrincipalExtensions.UserIdClaimTypes = [ClaimTypes.NameIdentifier, options.ClaimsIdentity.UserIdClaimType];
+                ClaimsPrincipalExtensions.UserIdClaimTypes = [options.ClaimsIdentity.UserIdClaimType, ClaimTypes.NameIdentifier];
                 ClaimsPrincipalExtensions.UserNameClaimTypes = [options.ClaimsIdentity.UserNameClaimType];
             });
 
