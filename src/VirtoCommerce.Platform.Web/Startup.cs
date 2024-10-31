@@ -75,6 +75,7 @@ using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
+using MsTokens = Microsoft.IdentityModel.Tokens;
 
 
 namespace VirtoCommerce.Platform.Web
@@ -301,6 +302,7 @@ namespace VirtoCommerce.Platform.Web
             ConsoleLog.EndOperation();
 
             //Create backup of token handler before default claim maps are cleared
+            // [Obsolete("Use JsonWebToken", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
             var defaultTokenHandler = new JwtSecurityTokenHandler();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -309,31 +311,31 @@ namespace VirtoCommerce.Platform.Web
             // register it as a singleton to use in external login providers
             services.AddSingleton(defaultTokenHandler);
 
-            //authBuilder.AddJwtBearer(options =>
-            //{
-            //    options.Authority = Configuration["Auth:Authority"];
-            //    options.Audience = Configuration["Auth:Audience"];
+            authBuilder.AddJwtBearer(options =>
+            {
+                options.Authority = Configuration["Auth:Authority"];
+                options.Audience = Configuration["Auth:Audience"];
 
-            //    if (WebHostEnvironment.IsDevelopment())
-            //    {
-            //        options.RequireHttpsMetadata = false;
-            //        options.IncludeErrorDetails = true;
-            //    }
+                if (WebHostEnvironment.IsDevelopment())
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.IncludeErrorDetails = true;
+                }
 
-            //    MsTokens.X509SecurityKey publicKey = null;
+                MsTokens.X509SecurityKey publicKey = null;
 
-            //    var publicCert = ServerCertificate.X509Certificate;
-            //    publicKey = new MsTokens.X509SecurityKey(publicCert);
-            //    options.MapInboundClaims = false;
-            //    options.TokenValidationParameters = new MsTokens.TokenValidationParameters
-            //    {
-            //        NameClaimType = OpenIddictConstants.Claims.Subject,
-            //        RoleClaimType = OpenIddictConstants.Claims.Role,
-            //        ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
-            //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = publicKey
-            //    };
-            //});
+                var publicCert = ServerCertificate.X509Certificate;
+                publicKey = new MsTokens.X509SecurityKey(publicCert);
+                options.MapInboundClaims = false;
+                options.TokenValidationParameters = new MsTokens.TokenValidationParameters
+                {
+                    NameClaimType = OpenIddictConstants.Claims.Name,
+                    RoleClaimType = OpenIddictConstants.Claims.Role,
+                    ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = publicKey
+                };
+            });
 
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
@@ -443,20 +445,6 @@ namespace VirtoCommerce.Platform.Web
             {
                 options.Cookie.Name = platformOptions.ApplicationCookieName;
                 options.LoginPath = "/";
-                //TODO: Temporary comment return status codes instead of redirection. It is required for
-                //normal authorization code flow. We should implement  login form as server side view.
-                //This logic is used to handle 401 errors when token is expired to force redirect to angular login form
-                //in case we have server side login form, this logic is no longer needed and can be removed. 
-                //options.Events.OnRedirectToLogin = context =>
-                //{
-                //    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                //    return Task.CompletedTask;
-                //};
-                //options.Events.OnRedirectToAccessDenied = context =>
-                //{
-                //    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                //    return Task.CompletedTask;
-                //};
             });
 
             services.AddAuthorization(options =>
