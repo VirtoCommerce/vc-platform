@@ -8,6 +8,25 @@ namespace VirtoCommerce.Platform.Core.Security
 {
     public static class ClaimsPrincipalExtensions
     {
+        public static string[] UserIdClaimTypes { get; set; } = [];
+
+        public static string GetCurrentUserId(this ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal != null)
+            {
+                foreach (var claimType in UserIdClaimTypes)
+                {
+                    var userId = claimsPrincipal.FindFirstValue(claimType);
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        return userId;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         public static Permission FindPermission(this ClaimsPrincipal principal, string permissionName, JsonSerializerSettings jsonSettings)
         {
             return FindPermissions(principal, permissionName, jsonSettings).FirstOrDefault();
