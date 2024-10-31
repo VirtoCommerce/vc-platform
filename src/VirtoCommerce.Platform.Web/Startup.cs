@@ -277,6 +277,7 @@ namespace VirtoCommerce.Platform.Web
                 options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
 
                 ClaimsPrincipalExtensions.UserIdClaimTypes = [ClaimTypes.NameIdentifier, options.ClaimsIdentity.UserIdClaimType];
+                ClaimsPrincipalExtensions.UserNameClaimTypes = [options.ClaimsIdentity.UserNameClaimType];
             });
 
             services.ConfigureOptions<ConfigureSecurityStampValidatorOptions>();
