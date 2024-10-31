@@ -563,7 +563,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost("~/connect/authorize")]
-        [Authorize, FormValueRequired("submit.Deny")]
+        [Authorize, HasFormValue("submit.Deny")]
         // Notify OpenIddict that the authorization grant has been denied by the resource owner
         // to redirect the user agent to the client application using the appropriate response_mode.
         public IActionResult Deny()
@@ -572,7 +572,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost("~/connect/authorize"),]
-        [Authorize, FormValueRequired("submit.Accept")]
+        [Authorize, HasFormValue("submit.Accept")]
         public async Task<IActionResult> Accept()
         {
             var request = HttpContext.GetOpenIddictServerRequest() ??

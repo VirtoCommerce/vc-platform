@@ -132,7 +132,7 @@ namespace VirtoCommerce.Platform.Web.Security
                 .SetPolicySelector(context =>
                 {
                     var options = context.HttpContext.RequestServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
-                    var formActionUri = context.HttpContext.GetFormActionUri() ?? string.Empty;
+                    var formActionUri = context.HttpContext.GetScpFormActionUri() ?? string.Empty;
 
                     if (_policyCache.TryGetValue(formActionUri, out var policies))
                     {
@@ -184,7 +184,7 @@ namespace VirtoCommerce.Platform.Web.Security
             httpContext.Items[_scpFormActionUriKey] = uri;
         }
 
-        public static string GetFormActionUri(this HttpContext httpContext)
+        public static string GetScpFormActionUri(this HttpContext httpContext)
         {
             return httpContext.Items.TryGetValue(_scpFormActionUriKey, out var value)
                 ? value as string
