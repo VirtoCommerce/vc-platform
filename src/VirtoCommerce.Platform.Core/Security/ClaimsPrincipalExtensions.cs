@@ -8,6 +8,37 @@ namespace VirtoCommerce.Platform.Core.Security
 {
     public static class ClaimsPrincipalExtensions
     {
+        public static string[] UserIdClaimTypes { get; set; } = [];
+
+        public static string[] UserNameClaimTypes { get; set; } = [];
+
+        public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
+        {
+            return GetClaimValue(claimsPrincipal, UserIdClaimTypes);
+        }
+
+        public static string GetUserName(this ClaimsPrincipal claimsPrincipal)
+        {
+            return GetClaimValue(claimsPrincipal, UserNameClaimTypes);
+        }
+
+        private static string GetClaimValue(ClaimsPrincipal claimsPrincipal, string[] claimTypes)
+        {
+            if (claimsPrincipal != null)
+            {
+                foreach (var claimType in claimTypes)
+                {
+                    var value = claimsPrincipal.FindFirstValue(claimType);
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        return value;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         public static Permission FindPermission(this ClaimsPrincipal principal, string permissionName, JsonSerializerSettings jsonSettings)
         {
             return FindPermissions(principal, permissionName, jsonSettings).FirstOrDefault();
@@ -26,7 +57,6 @@ namespace VirtoCommerce.Platform.Core.Security
             }
             return result;
         }
-
 
         public static bool HasGlobalPermission(this ClaimsPrincipal principal, string permissionName)
         {
