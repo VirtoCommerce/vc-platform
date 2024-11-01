@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
@@ -274,6 +275,9 @@ namespace VirtoCommerce.Platform.Web
                 options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
                 options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
                 options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
+
+                ClaimsPrincipalExtensions.UserIdClaimTypes = [options.ClaimsIdentity.UserIdClaimType, ClaimTypes.NameIdentifier];
+                ClaimsPrincipalExtensions.UserNameClaimTypes = [options.ClaimsIdentity.UserNameClaimType];
             });
 
             services.ConfigureOptions<ConfigureSecurityStampValidatorOptions>();
