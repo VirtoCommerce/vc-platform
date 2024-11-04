@@ -879,14 +879,19 @@
       "create-folder": {
         "title": "A folder name must conform to the following naming rules:\n  Folder name must be between 3 and 63 characters long.\n  Folder name must start with a letter or number, and can only contain letters, numbers, and hyphen (-).\n  Each hyphen (-) must be immediately preceded and followed by a letter or number; consecutive hyphens are not permitted.\n  All letters in a folder name must be lower case"
       },
-      "storefront-cache-reset-successfully": {
-        "title": "Cache reset",
-        "message": "Frontend Application cache has been reset successfully"
+      "storefront-cache-reset": {
+        "title": "Resetting the cache",
+        "confirm-reset-message": "Are you sure you want to reset the cache? This action will clear all cached data and may temporarily affect system performance. Please confirm to proceed.",
+        "reset-successfully-message": "Frontend Application cache has been reset successfully."
       }
     },
     "commands": {
       "login-on-behalf": "Login on behalf",
-      "reset-storefront-cache": "Reset cache"
+      "reset-storefront-cache": {
+        "title": "Reset the Frontend Application cache",
+        "name": "Reset cache"
+      },
+      "restart-application-title": "Restart the application"
     }
   },
   "permissions": {
