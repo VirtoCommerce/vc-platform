@@ -346,15 +346,17 @@ namespace VirtoCommerce.Platform.Web
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
-            services.AddOpenIddict()
-                .AddCore(coreBuilder =>
+            services.AddOpenIddict(openIddictBuilder =>
+            {
+                openIddictBuilder.AddCore(coreBuilder =>
                 {
                     coreBuilder.UseEntityFrameworkCore(efBuilder =>
                     {
                         efBuilder.UseDbContext<SecurityDbContext>();
                     });
-                })
-                .AddServer(serverBuilder =>
+                });
+
+                openIddictBuilder.AddServer(serverBuilder =>
                 {
                     // Register the ASP.NET Core MVC binder used by OpenIddict.
                     // Note: if you don't call this method, you won't be able to
@@ -426,6 +428,7 @@ namespace VirtoCommerce.Platform.Web
                     serverBuilder.AddSigningCertificate(privateKey);
                     serverBuilder.AddEncryptionCertificate(privateKey);
                 });
+            });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
