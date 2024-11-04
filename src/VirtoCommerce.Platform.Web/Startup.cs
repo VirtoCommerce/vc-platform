@@ -349,97 +349,98 @@ namespace VirtoCommerce.Platform.Web
             // to replace the default OpenIddict entities.
             services.AddOpenIddict(openIddictBuilder =>
             {
-                openIddictBuilder
-                    .AddCore(coreBuilder =>
+                openIddictBuilder.AddCore(coreBuilder =>
+                {
+                    coreBuilder.UseEntityFrameworkCore(efBuilder =>
                     {
-                        coreBuilder.UseEntityFrameworkCore(efBuilder =>
-                        {
-                            efBuilder.UseDbContext<SecurityDbContext>();
-                        });
-                    })
-                    .AddServer(serverBuilder =>
-                    {
-                        // Register the ASP.NET Core MVC binder used by OpenIddict.
-                        // Note: if you don't call this method, you won't be able to
-                        // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                        serverBuilder.UseAspNetCore(aspNetBuilder =>
-                        {
-                            aspNetBuilder.EnableAuthorizationEndpointPassthrough();
-                            aspNetBuilder.EnableLogoutEndpointPassthrough();
-                            aspNetBuilder.EnableTokenEndpointPassthrough();
-                            aspNetBuilder.EnableUserinfoEndpointPassthrough();
-                            aspNetBuilder.EnableStatusCodePagesIntegration();
-
-                            // When request caching is enabled, authorization and logout requests
-                            // are stored in the distributed cache by OpenIddict and the user agent
-                            // is redirected to the same page with a single parameter (request_id).
-                            // This allows flowing large OpenID Connect requests even when using
-                            // an external authentication provider like Google, Facebook or Twitter.
-                            aspNetBuilder.EnableAuthorizationRequestCaching();
-                            aspNetBuilder.EnableLogoutRequestCaching();
-
-                            // During development or when you intentionally run the platform in production mode without https,
-                            // need to disable the HTTPS requirement.
-                            if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
-                            {
-                                aspNetBuilder.DisableTransportSecurityRequirement();
-                            }
-                        });
-
-                        // Enable the authorization, logout, token and userinfo endpoints.
-                        serverBuilder.SetTokenEndpointUris("/connect/token");
-                        serverBuilder.SetUserinfoEndpointUris("/connect/userinfo");
-                        serverBuilder.SetAuthorizationEndpointUris("/connect/authorize");
-                        serverBuilder.SetLogoutEndpointUris("/connect/logout");
-
-                        // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
-                        // can enable the other flows if you need to support implicit or client credentials.
-                        serverBuilder.AllowPasswordFlow();
-                        serverBuilder.AllowRefreshTokenFlow();
-                        serverBuilder.AllowClientCredentialsFlow();
-                        serverBuilder.AllowAuthorizationCodeFlow();
-                        serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate);
-                        serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.ExternalSignIn);
-
-                        serverBuilder.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
-                        serverBuilder.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
-
-                        serverBuilder.AcceptAnonymousClients();
-
-                        // Configure Openiddict to issues new refresh token for each token refresh request.
-                        // Enabled by default, to disable use serverBuilder.DisableRollingRefreshTokens()
-
-                        serverBuilder.DisableScopeValidation();
-
-                        // Note: to use JWT access tokens instead of the default
-                        // encrypted format, the following lines are required:
-                        serverBuilder.DisableAccessTokenEncryption();
-
-                        X509Certificate2 privateKey;
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
-                            // macOS cannot load certificate private keys without a keychain object, which requires writing to disk.
-                            // Keychains are created automatically for PFX loading, and are deleted when no longer in use.
-                            // Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
-                            privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet);
-                        }
-                        else
-                        {
-                            privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
-                        }
-
-                        serverBuilder.AddSigningCertificate(privateKey);
-                        serverBuilder.AddEncryptionCertificate(privateKey);
-                    })
-                    .AddValidation(validationBuilder =>
-                    {
-                        // Import the configuration from the local OpenIddict server instance.
-                        validationBuilder.UseLocalServer();
-
-                        // Register the ASP.NET Core host.
-                        validationBuilder.UseAspNetCore();
+                        efBuilder.UseDbContext<SecurityDbContext>();
                     });
+                });
+
+                openIddictBuilder.AddServer(serverBuilder =>
+                {
+                    // Register the ASP.NET Core MVC binder used by OpenIddict.
+                    // Note: if you don't call this method, you won't be able to
+                    // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                    serverBuilder.UseAspNetCore(aspNetBuilder =>
+                    {
+                        aspNetBuilder.EnableAuthorizationEndpointPassthrough();
+                        aspNetBuilder.EnableLogoutEndpointPassthrough();
+                        aspNetBuilder.EnableTokenEndpointPassthrough();
+                        aspNetBuilder.EnableUserinfoEndpointPassthrough();
+                        aspNetBuilder.EnableStatusCodePagesIntegration();
+
+                        // When request caching is enabled, authorization and logout requests
+                        // are stored in the distributed cache by OpenIddict and the user agent
+                        // is redirected to the same page with a single parameter (request_id).
+                        // This allows flowing large OpenID Connect requests even when using
+                        // an external authentication provider like Google, Facebook or Twitter.
+                        aspNetBuilder.EnableAuthorizationRequestCaching();
+                        aspNetBuilder.EnableLogoutRequestCaching();
+
+                        // During development or when you intentionally run the platform in production mode without https,
+                        // need to disable the HTTPS requirement.
+                        if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
+                        {
+                            aspNetBuilder.DisableTransportSecurityRequirement();
+                        }
+                    });
+
+                    // Enable the authorization, logout, token and userinfo endpoints.
+                    serverBuilder.SetTokenEndpointUris("/connect/token");
+                    serverBuilder.SetUserinfoEndpointUris("/connect/userinfo");
+                    serverBuilder.SetAuthorizationEndpointUris("/connect/authorize");
+                    serverBuilder.SetLogoutEndpointUris("/connect/logout");
+
+                    // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
+                    // can enable the other flows if you need to support implicit or client credentials.
+                    serverBuilder.AllowPasswordFlow();
+                    serverBuilder.AllowRefreshTokenFlow();
+                    serverBuilder.AllowClientCredentialsFlow();
+                    serverBuilder.AllowAuthorizationCodeFlow();
+                    serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate);
+                    serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.ExternalSignIn);
+
+                    serverBuilder.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
+                    serverBuilder.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
+
+                    serverBuilder.AcceptAnonymousClients();
+
+                    // Configure Openiddict to issues new refresh token for each token refresh request.
+                    // Enabled by default, to disable use serverBuilder.DisableRollingRefreshTokens()
+
+                    serverBuilder.DisableScopeValidation();
+
+                    // Note: to use JWT access tokens instead of the default
+                    // encrypted format, the following lines are required:
+                    serverBuilder.DisableAccessTokenEncryption();
+
+                    X509Certificate2 privateKey;
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
+                        // macOS cannot load certificate private keys without a keychain object, which requires writing to disk.
+                        // Keychains are created automatically for PFX loading, and are deleted when no longer in use.
+                        // Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
+                        privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet);
+                    }
+                    else
+                    {
+                        privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                    }
+
+                    serverBuilder.AddSigningCertificate(privateKey);
+                    serverBuilder.AddEncryptionCertificate(privateKey);
+                });
+
+                openIddictBuilder.AddValidation(validationBuilder =>
+                {
+                    // Import the configuration from the local OpenIddict server instance.
+                    validationBuilder.UseLocalServer();
+
+                    // Register the ASP.NET Core host.
+                    validationBuilder.UseAspNetCore();
+                });
             });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
