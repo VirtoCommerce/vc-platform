@@ -352,7 +352,8 @@ namespace VirtoCommerce.Platform.Web
                 {
                     options.UseEntityFrameworkCore()
                         .UseDbContext<SecurityDbContext>();
-                }).AddServer(options =>
+                })
+                .AddServer(options =>
                 {
                     // Register the ASP.NET Core MVC binder used by OpenIddict.
                     // Note: if you don't call this method, you won't be able to

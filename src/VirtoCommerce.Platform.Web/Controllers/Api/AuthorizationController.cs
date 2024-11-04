@@ -476,7 +476,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     });
             }
 
-
             // Retrieve the profile of the logged-in user.
             var user = await _userManager.GetUserAsync(result.Principal) ??
                 throw new InvalidOperationException("The user details cannot be retrieved.");
