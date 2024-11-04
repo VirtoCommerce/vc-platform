@@ -390,6 +390,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         // GET: /api/userinfo
         [HttpGet("~/connect/userinfo"), HttpPost("~/connect/userinfo"), Produces("application/json")]
         [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
+        [AllowAnonymous]
         public async Task<IActionResult> Userinfo()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -563,7 +564,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost("~/connect/authorize")]
-        [Authorize, HasFormValue("submit.Deny")]
+        [HasFormValue("submit.Deny")]
+        [Authorize]
+        [AllowAnonymous]
         // Notify OpenIddict that the authorization grant has been denied by the resource owner
         // to redirect the user agent to the client application using the appropriate response_mode.
         public IActionResult Deny()
@@ -571,8 +574,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
-        [HttpPost("~/connect/authorize"),]
-        [Authorize, HasFormValue("submit.Accept")]
+        [HttpPost("~/connect/authorize")]
+        [HasFormValue("submit.Accept")]
+        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Accept()
         {
             var request = HttpContext.GetOpenIddictServerRequest() ??

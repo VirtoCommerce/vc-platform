@@ -80,7 +80,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
-        private string CurrentUserName => User?.Identity?.Name;
 
         private readonly string UserNotFound = "User not found.";
         private readonly string UserForbiddenToEdit = "It is forbidden to edit this user.";
@@ -143,11 +142,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         [HttpGet]
         [Authorize]
+        [AllowAnonymous]
         [Route("logout")]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Logout()
         {
-            var user = await UserManager.FindByNameAsync(CurrentUserName);
+            var user = await GetCurrentUserAsync();
             if (user != null)
             {
                 await _signInManager.SignOutAsync();
@@ -166,15 +166,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("currentuser")]
         public async Task<ActionResult<UserDetail>> GetCurrentUser()
         {
-            if (User.Identity?.IsAuthenticated != true)
-            {
-                return Ok(new { });
-            }
-
-            var user = await UserManager.FindByNameAsync(CurrentUserName);
+            var user = await GetCurrentUserAsync();
             if (user == null)
             {
-                return NotFound();
+                return Ok(new { });
             }
 
             var result = new UserDetail
@@ -454,7 +449,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
         {
-            var currentUser = await UserManager.FindByNameAsync(CurrentUserName);
+            var currentUser = await GetCurrentUserAsync();
             if (currentUser == null)
             {
                 throw new PlatformException("Can't find current user.");
@@ -509,7 +504,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
         {
-            var currentUser = await UserManager.FindByNameAsync(CurrentUserName);
+            var currentUser = await GetCurrentUserAsync();
             if (currentUser == null)
             {
                 throw new PlatformException("Can't find current user.");
@@ -824,7 +819,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var result = new PasswordChangeEnabledResult(true);
 
-            var currentUser = await UserManager.FindByNameAsync(CurrentUserName);
+            var currentUser = await GetCurrentUserAsync();
             if (currentUser?.IsAdministrator == true)
             {
                 result.Enabled = _passwordOptions.PasswordChangeByAdminEnabled;
@@ -1059,6 +1054,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var success = await _signInManager.UserManager.VerifyUserTokenAsync(user, request.TokenProvider, request.Purpose, request.Token);
 
             return Ok(success);
+        }
+
+        private Task<ApplicationUser> GetCurrentUserAsync()
+        {
+            if (User.Identity is null ||
+                !User.Identity.IsAuthenticated ||
+                string.IsNullOrEmpty(User.Identity.Name))
+            {
+                return Task.FromResult<ApplicationUser>(null);
+            }
+
+            return UserManager.FindByNameAsync(User.Identity.Name);
         }
 
         private bool IsUserEditable(string userName)
