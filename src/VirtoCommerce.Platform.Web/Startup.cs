@@ -347,61 +347,67 @@ namespace VirtoCommerce.Platform.Web
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
             services.AddOpenIddict()
-                .AddCore(options =>
+                .AddCore(coreBuilder =>
                 {
-                    options.UseEntityFrameworkCore()
-                        .UseDbContext<SecurityDbContext>();
-                }).AddServer(options =>
+                    coreBuilder.UseEntityFrameworkCore(efBuilder =>
+                    {
+                        efBuilder.UseDbContext<SecurityDbContext>();
+                    });
+                })
+                .AddServer(serverBuilder =>
                 {
                     // Register the ASP.NET Core MVC binder used by OpenIddict.
                     // Note: if you don't call this method, you won't be able to
                     // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                    var builder = options.UseAspNetCore().
-                        EnableTokenEndpointPassthrough().
-                        EnableAuthorizationEndpointPassthrough();
+                    serverBuilder.UseAspNetCore(aspNetBuilder =>
+                    {
+                        aspNetBuilder.EnableTokenEndpointPassthrough();
+                        aspNetBuilder.EnableAuthorizationEndpointPassthrough();
+
+                        // When request caching is enabled, authorization and logout requests
+                        // are stored in the distributed cache by OpenIddict and the user agent
+                        // is redirected to the same page with a single parameter (request_id).
+                        // This allows flowing large OpenID Connect requests even when using
+                        // an external authentication provider like Google, Facebook or Twitter.
+                        aspNetBuilder.EnableAuthorizationRequestCaching();
+                        aspNetBuilder.EnableLogoutRequestCaching();
+
+                        // During development or when you explicitly run the platform in production mode without https,
+                        // need to disable the HTTPS requirement.
+                        if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
+                        {
+                            aspNetBuilder.DisableTransportSecurityRequirement();
+                        }
+                    });
 
                     // Enable the authorization, logout, token and userinfo endpoints.
-                    options.SetTokenEndpointUris("connect/token");
-                    options.SetUserinfoEndpointUris("api/security/userinfo");
+                    serverBuilder.SetTokenEndpointUris("connect/token");
+                    serverBuilder.SetUserinfoEndpointUris("api/security/userinfo");
 
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.
-                    options.AllowPasswordFlow()
-                        .AllowRefreshTokenFlow()
-                        .AllowClientCredentialsFlow()
-                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate)
-                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.ExternalSignIn);
+                    serverBuilder.AllowPasswordFlow();
+                    serverBuilder.AllowRefreshTokenFlow();
+                    serverBuilder.AllowClientCredentialsFlow();
+                    serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate);
+                    serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.ExternalSignIn);
 
-                    options.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
-                    options.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
+                    serverBuilder.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
+                    serverBuilder.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
 
-                    options.AcceptAnonymousClients();
+                    serverBuilder.AcceptAnonymousClients();
 
                     // Configure Openiddict to issues new refresh token for each token refresh request.
-                    // Enabled by default, to disable use options.DisableRollingRefreshTokens()
+                    // Enabled by default, to disable use serverBuilder.DisableRollingRefreshTokens()
 
                     // Make the "client_id" parameter mandatory when sending a token request.
                     //options.RequireClientIdentification()
 
-                    // When request caching is enabled, authorization and logout requests
-                    // are stored in the distributed cache by OpenIddict and the user agent
-                    // is redirected to the same page with a single parameter (request_id).
-                    // This allows flowing large OpenID Connect requests even when using
-                    // an external authentication provider like Google, Facebook or Twitter.
-                    builder.EnableAuthorizationRequestCaching();
-                    builder.EnableLogoutRequestCaching();
-
-                    options.DisableScopeValidation();
-
-                    // During development or when you explicitly run the platform in production mode without https, need to disable the HTTPS requirement.
-                    if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
-                    {
-                        builder.DisableTransportSecurityRequirement();
-                    }
+                    serverBuilder.DisableScopeValidation();
 
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
-                    options.DisableAccessTokenEncryption();
+                    serverBuilder.DisableAccessTokenEncryption();
 
                     X509Certificate2 privateKey;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -416,8 +422,9 @@ namespace VirtoCommerce.Platform.Web
                     {
                         privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
-                    options.AddSigningCertificate(privateKey);
-                    options.AddEncryptionCertificate(privateKey);
+
+                    serverBuilder.AddSigningCertificate(privateKey);
+                    serverBuilder.AddEncryptionCertificate(privateKey);
                 });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
