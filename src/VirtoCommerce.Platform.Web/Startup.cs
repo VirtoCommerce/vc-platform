@@ -364,9 +364,9 @@ namespace VirtoCommerce.Platform.Web
                     // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
                     serverBuilder.UseAspNetCore(aspNetBuilder =>
                     {
+                        aspNetBuilder.EnableTokenEndpointPassthrough();
                         aspNetBuilder.EnableAuthorizationEndpointPassthrough();
                         aspNetBuilder.EnableLogoutEndpointPassthrough();
-                        aspNetBuilder.EnableTokenEndpointPassthrough();
                         aspNetBuilder.EnableUserinfoEndpointPassthrough();
                         aspNetBuilder.EnableStatusCodePagesIntegration();
 
@@ -378,7 +378,7 @@ namespace VirtoCommerce.Platform.Web
                         aspNetBuilder.EnableAuthorizationRequestCaching();
                         aspNetBuilder.EnableLogoutRequestCaching();
 
-                        // During development or when you intentionally run the platform in production mode without https,
+                        // During development or when you explicitly run the platform in production mode without https,
                         // need to disable the HTTPS requirement.
                         if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
                         {
@@ -408,6 +408,9 @@ namespace VirtoCommerce.Platform.Web
 
                     // Configure Openiddict to issues new refresh token for each token refresh request.
                     // Enabled by default, to disable use serverBuilder.DisableRollingRefreshTokens()
+
+                    // Make the "client_id" parameter mandatory when sending a token request.
+                    //options.RequireClientIdentification()
 
                     serverBuilder.DisableScopeValidation();
 
