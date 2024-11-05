@@ -426,21 +426,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     });
             }
 
-            // Retrieve the profile of the logged-in user.
-            var user = await _userManager.GetUserAsync(result.Principal) ??
-                throw new InvalidOperationException("The user details cannot be retrieved.");
-
-            // Retrieve the application details from the database.
-            var application = await _applicationManager.FindByClientIdAsync(request.ClientId) ??
-                throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
-
-            // Retrieve the permanent authorizations associated with the user and the calling client application.
-            var authorizations = await _authorizationManager.FindAsync(
-                subject: await _userManager.GetUserIdAsync(user),
-                client: await _applicationManager.GetIdAsync(application),
-                status: Statuses.Valid,
-                type: AuthorizationTypes.Permanent,
-                scopes: request.GetScopes()).ToListAsync();
+            var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
 
             switch (await _applicationManager.GetConsentTypeAsync(application))
             {
@@ -461,32 +447,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 case ConsentTypes.Implicit:
                 case ConsentTypes.External when authorizations.Count != 0:
                 case ConsentTypes.Explicit when authorizations.Count != 0 && !request.HasPrompt(Prompts.Consent):
-                    var principal = await _signInManager.CreateUserPrincipalAsync(user);
-
-                    // Note: in this sample, the granted scopes match the requested scope,
-                    // but you may want to allow the user to uncheck specific scopes.
-                    // For that, simply restrict the list of scopes before calling SetScopes.
-                    principal.SetScopes(request.GetScopes());
-                    principal.SetResources(await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
-
-                    // Automatically create a permanent authorization to avoid requiring explicit consent
-                    // for future authorization or token requests containing the same scopes.
-                    var authorization = authorizations.LastOrDefault() ??
-                                        await _authorizationManager.CreateAsync(
-                                            principal: principal,
-                                            subject: await _userManager.GetUserIdAsync(user),
-                                            client: await _applicationManager.GetIdAsync(application),
-                                            type: AuthorizationTypes.Permanent,
-                                            scopes: principal.GetScopes());
-
-                    principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
-
-                    foreach (var claim in principal.Claims)
-                    {
-                        claim.SetDestinations(GetDestinations(claim, principal));
-                    }
-
-                    return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                    return await SignInAsync(request, user, application, authorizations);
 
                 // At this point, no authorization was found in the database and an error must be returned
                 // if the client application specified prompt=none in the authorization request.
@@ -532,21 +493,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var request = HttpContext.GetOpenIddictServerRequest() ??
                           throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-            // Retrieve the profile of the logged-in user.
-            var user = await _userManager.GetUserAsync(User) ??
-                throw new InvalidOperationException("The user details cannot be retrieved.");
-
-            // Retrieve the application details from the database.
-            var application = await _applicationManager.FindByClientIdAsync(request.ClientId) ??
-                throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
-
-            // Retrieve the permanent authorizations associated with the user and the calling client application.
-            var authorizations = await _authorizationManager.FindAsync(
-                subject: await _userManager.GetUserIdAsync(user),
-                client: await _applicationManager.GetIdAsync(application),
-                status: Statuses.Valid,
-                type: AuthorizationTypes.Permanent,
-                scopes: request.GetScopes()).ToListAsync();
+            var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, User);
 
             // Note: the same check is already made in the other action but is repeated
             // here to ensure a malicious user can't abuse this POST-only endpoint and
@@ -563,6 +510,37 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }));
             }
 
+            return await SignInAsync(request, user, application, authorizations);
+        }
+
+        private async Task<(ApplicationUser user, OpenIddictEntityFrameworkCoreApplication application, List<object> authorizations)>
+            GetUserApplicationAuthorizationsAsync(OpenIddictRequest request, ClaimsPrincipal principal)
+        {
+            // Retrieve the profile of the logged-in user.
+            var user = await _userManager.GetUserAsync(principal) ??
+                       throw new InvalidOperationException("The user details cannot be retrieved.");
+
+            // Retrieve the application details from the database.
+            var application = await _applicationManager.FindByClientIdAsync(request.ClientId) ??
+                              throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
+
+            // Retrieve the permanent authorizations associated with the user and the calling client application.
+            var authorizations = await _authorizationManager.FindAsync(
+                subject: await _userManager.GetUserIdAsync(user),
+                client: await _applicationManager.GetIdAsync(application),
+                status: Statuses.Valid,
+                type: AuthorizationTypes.Permanent,
+                scopes: request.GetScopes()).ToListAsync();
+
+            return (user, application, authorizations);
+        }
+
+        private async Task<IActionResult> SignInAsync(
+            OpenIddictRequest request,
+            ApplicationUser user,
+            OpenIddictEntityFrameworkCoreApplication application,
+            List<object> authorizations)
+        {
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
             // Note: in this sample, the granted scopes match the requested scope,
