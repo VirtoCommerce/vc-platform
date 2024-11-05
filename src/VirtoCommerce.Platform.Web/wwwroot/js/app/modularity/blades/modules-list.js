@@ -93,6 +93,16 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                     selection.push(_.last(vals));
                 });
 
+                // find not installed versions
+                if (action === 'update') {
+                    var installed = angular.copy(selection);
+                    selection = [];
+                    _.each(installed, function(x) {
+                        var notInstalled = _.last(_.where(moduleHelper.allmodules, { id: x.id, isInstalled: false }));
+                        selection.push(notInstalled);
+                    });
+                }
+
                 var modulesApiMethod = action === 'uninstall' ? modules.getDependents : modules.getDependencies;
                 modulesApiMethod(selection, function (data) {
                     blade.isLoading = false;
