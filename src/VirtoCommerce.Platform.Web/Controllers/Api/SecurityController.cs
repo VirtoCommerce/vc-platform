@@ -663,12 +663,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult<IdentityResult>> ValidatePassword([FromBody] string password)
         {
-            ApplicationUser user = null;
-            if (User.Identity?.IsAuthenticated == true)
-            {
-                user = await UserManager.FindByNameAsync(User.Identity.Name);
-            }
-
+            var user = await GetCurrentUserAsync();
             var result = await ValidatePassword(user, password);
 
             return Ok(result);
@@ -1058,9 +1053,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private Task<ApplicationUser> GetCurrentUserAsync()
         {
-            if (User.Identity is null ||
-                !User.Identity.IsAuthenticated ||
-                string.IsNullOrEmpty(User.Identity.Name))
+            if (string.IsNullOrEmpty(User.Identity?.Name) ||
+                !User.Identity.IsAuthenticated)
             {
                 return Task.FromResult<ApplicationUser>(null);
             }
