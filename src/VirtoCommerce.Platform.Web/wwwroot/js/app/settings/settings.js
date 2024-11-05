@@ -59,28 +59,26 @@ angular.module("platformWebApp")
             title: 'platform.commands.reset-storefront-cache.title',
             icon: 'fa fa-eraser',
             executeMethod: function (blade) {
-                var dialog = {
+                var confirmDialog = {
                     id: "confirmCacheResetDialog",
                     title: "platform.dialogs.storefront-cache-reset.title",
                     message: "platform.dialogs.storefront-cache-reset.confirm-reset-message",
                     callback: function (confirm) {
                         if (confirm) {
                             blade.isLoading = true;
-                            
                             changeLogApi.resetPlatformCache({}, function () {
                                 blade.isLoading = false;
-                            
-                                var dialog = {
+                                var successDialog = {
                                     id: "successCacheResetDialog",
                                     title: "platform.dialogs.storefront-cache-reset.title",
                                     message: "platform.dialogs.storefront-cache-reset.reset-successfully-message",
                                 };
-                                dialogService.showSuccessDialog(dialog);
+                                dialogService.showSuccessDialog(successDialog);
                             });
                         }
                     }
                 }
-                dialogService.showWarningDialog(dialog);
+                dialogService.showWarningDialog(confirmDialog);
             },
             canExecuteMethod: function (blade) { return !blade.isLoading; },
             permission: 'cache:reset',
