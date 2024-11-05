@@ -878,14 +878,19 @@
       "create-folder": {
         "title": "Nazwa folderu musi być zgodna z następującymi zasadami nazewnictwa:\n  Nazwa folderu musi mieć od 3 do 63 znaków.\n  Nazwa folderu musi zaczynać się od litery lub cyfry i może zawierać tylko litery, cyfry i myślnik (-).\n  Każdy myślnik (-) musi być bezpośrednio poprzedzony i następowany przez literę lub cyfrę; kolejne myślniki są niedozwolone.\n  Wszystkie litery w nazwie folderu muszą być małe"
       },
-      "storefront-cache-reset-successfully": {
+      "storefront-cache-reset": {
         "title": "Reset pamięci podręcznej",
-        "message": "Pamięć podręczna aplikacji frontendowej została pomyślnie zresetowana"
+        "confirm-reset-message": "Czy na pewno chcesz zresetować pamięć podręczną? Ta czynność spowoduje wyczyszczenie wszystkich buforowanych danych i może tymczasowo wpłynąć na wydajność systemu. Proszę potwierdzić, aby kontynuować.",
+        "reset-successfully-message": "Pamięć podręczna aplikacji frontendowej została pomyślnie zresetowana."
       }
     },
     "commands": {
       "login-on-behalf": "Zaloguj się w imieniu",
-      "reset-storefront-cache": "Zresetuj pamięć podręczną"
+      "reset-storefront-cache": {
+        "title": "Zresetuj pamięć podręczną aplikacji frontendowej",
+        "name": "Zresetuj pamięć podręczn"
+      },
+      "restart-application-title": "Uruchom ponownie aplikację"
     }
   },
   "permissions": {

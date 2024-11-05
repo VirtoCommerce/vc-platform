@@ -878,14 +878,19 @@
       "create-folder": {
         "title": "Le nom d'un dossier doit respecter les règles de nommage suivantes :\n  Le nom du dossier doit comporter entre 3 et 63 caractères.\n  Le nom du dossier doit commencer par une lettre ou un chiffre et ne peut contenir que des lettres, des chiffres et des traits d'union (-).\n  Chaque trait d'union (-) doit être immédiatement précédé et suivi d'une lettre ou d'un chiffre ; les traits d'union consécutifs ne sont pas autorisés.\n  Toutes les lettres d'un nom de dossier doivent être en minuscules"
       },
-      "storefront-cache-reset-successfully": {
+      "storefront-cache-reset": {
         "title": "Réinitialisation du cache",
-        "message": "Le cache de l'application frontale a été réinitialisé avec succès"
+        "confirm-reset-message": "Êtes-vous sûr de vouloir réinitialiser le cache? Cette action effacera toutes les données mises en cache et peut affecter temporairement les performances du système. Veuillez confirmer pour continuer.",
+        "reset-successfully-message": "Le cache de l'application frontale a été réinitialisé avec succès."
       }
     },
     "commands": {
       "login-on-behalf": "Se connecter au nom de",
-      "reset-storefront-cache": "Réinitialiser le cache"
+      "reset-storefront-cache": {
+        "title": "Réinitialiser le cache de l'application frontale",
+        "name": "Réinitialiser le cache"
+      },
+      "restart-application-title": "Redémarrez l'application"
     }
   },
   "permissions": {
