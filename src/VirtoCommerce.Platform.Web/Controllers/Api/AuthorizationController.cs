@@ -392,8 +392,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Authorize()
         {
-            var request = HttpContext.GetOpenIddictServerRequest() ??
-                          throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+            var request = GetOpenIddictServerRequest();
 
             // If prompt=login was specified by the client application,
 
@@ -401,8 +400,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // If a max_age parameter was provided, ensure that the cookie is not too old.
             // If the user principal can't be extracted or the cookie is too old, redirect the user to the login page.
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
-            if (!result.Succeeded || (request.MaxAge != null && result.Properties?.IssuedUtc != null &&
-                                      DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value)))
+
+            if (!result.Succeeded || RequestHasExpired(request, result))
             {
                 // If the client application requested promptless authentication,
                 // return an error indicating that the user is not logged in.
@@ -433,14 +432,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // If the consent is external (e.g. when authorizations are granted by a sysadmin),
                 // immediately return an error if no authorization can be found in the database.
                 case ConsentTypes.External when authorizations.Count == 0:
-                    return Forbid(
-                        authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                        properties: new AuthenticationProperties(new Dictionary<string, string>
-                        {
-                            [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.ConsentRequired,
-                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
-                                "The logged in user is not allowed to access this client application.",
-                        }));
+                    return ConsentNotGiven();
 
                 // If the consent is implicit or if an authorization was found,
                 // return an authorization response without displaying the consent form.
@@ -473,6 +465,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
+        private static bool RequestHasExpired(OpenIddictRequest request, AuthenticateResult result)
+        {
+            return request.MaxAge != null &&
+                   result.Properties?.IssuedUtc != null &&
+                   DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value);
+        }
+
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Deny")]
         [Authorize]
@@ -490,8 +489,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<IActionResult> Accept()
         {
-            var request = HttpContext.GetOpenIddictServerRequest() ??
-                          throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+            var request = GetOpenIddictServerRequest();
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, User);
 
@@ -500,17 +498,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // force it to return a valid response without the external authorization.
             if (authorizations.Count == 0 && await _applicationManager.HasConsentTypeAsync(application, ConsentTypes.External))
             {
-                return Forbid(
-                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
-                    {
-                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.ConsentRequired,
-                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
-                            "The logged in user is not allowed to access this client application.",
-                    }));
+                return ConsentNotGiven();
             }
 
             return await SignInAsync(request, user, application, authorizations);
+        }
+
+        private OpenIddictRequest GetOpenIddictServerRequest()
+        {
+            return HttpContext.GetOpenIddictServerRequest() ??
+                   throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
         }
 
         private async Task<(ApplicationUser user, OpenIddictEntityFrameworkCoreApplication application, List<object> authorizations)>
@@ -533,6 +530,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 scopes: request.GetScopes()).ToListAsync();
 
             return (user, application, authorizations);
+        }
+
+        private ForbidResult ConsentNotGiven()
+        {
+            return Forbid(
+                authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                properties: new AuthenticationProperties(new Dictionary<string, string>
+                {
+                    [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.ConsentRequired,
+                    [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                        "The logged-in user has not given consent for this application.",
+                }));
         }
 
         private async Task<IActionResult> SignInAsync(
