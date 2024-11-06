@@ -251,6 +251,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Update modules 
+        /// </summary>
+        /// <param name="modules">modules for update</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("update")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        public ActionResult<ModulePushNotification> UpdateModules([FromBody] ModuleDescriptor[] modules)
+        {
+            EnsureModulesCatalogInitialized();
+
+            var options = new ModuleBackgroundJobOptions
+            {
+                Action = ModuleAction.Update,
+                Modules = modules
+            };
+            var result = ScheduleJob(options);
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Uninstall module
         /// </summary>
         /// <param name="modules">modules</param>
@@ -434,6 +455,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     switch (options.Action)
                     {
                         case ModuleAction.Install:
+                        case ModuleAction.Update:
                             _moduleInstaller.Install(moduleInfos, reportProgress);
                             break;
                         case ModuleAction.Uninstall:
@@ -466,12 +488,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Completed);
 
                 notification.Finished = DateTime.UtcNow;
-                notification.Description = options.Action == ModuleAction.Install ? "Installation finished." : "Uninstalling finished.";
+                notification.Description = options.Action switch
+                {
+                    ModuleAction.Install => "Installation finished.",
+                    ModuleAction.Update => "Updating finished.",
+                    _ => "Uninstalling finished."
+                };
+
                 notification.ProgressLog.Add(new ProgressMessage
                 {
                     Level = ProgressMessageLevel.Info,
                     Message = notification.Description,
                 });
+
                 _pushNotifier.Send(notification);
             }
         }
@@ -512,6 +541,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 case ModuleAction.Uninstall:
                     notification.Title = "Uninstall Module";
                     notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting uninstall..." });
+                    break;
+                case ModuleAction.Update:
+                    notification.Title = "Update Module";
+                    notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting update..." });
                     break;
             }
 

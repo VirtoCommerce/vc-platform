@@ -251,7 +251,7 @@
           "start": "Start",
           "end": "End",
           "progress-messages": "Progress messages",
-          "process-completed": "Module installation process completed",
+          "process-completed": "The module management process is completed",
           "restart-application": "Restart the application now or later"
         }
       },

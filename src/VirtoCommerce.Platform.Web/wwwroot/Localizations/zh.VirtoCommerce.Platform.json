@@ -251,7 +251,7 @@
           "start": "开始",
           "end": "结束",
           "progress-messages": "进度消息",
-          "process-completed": "模块安装过程已完成",
+          "process-completed": "模块管理过程完成",
           "restart-application": "立即重启应用程序或稍后重启"
         }
       },

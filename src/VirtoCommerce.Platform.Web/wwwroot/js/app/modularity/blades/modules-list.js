@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
-function ($scope, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
+.controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
+function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
     $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
@@ -82,67 +82,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
     }
 
     $scope.confirmActionInDialog = function (action, selection) {
-        if (_.any(selection)) {
-            bladeNavigationService.closeChildrenBlades(blade, function () {
-                blade.isLoading = true;
-
-                // eliminate duplicating nodes, if any
-                var grouped = _.groupBy(selection, 'id');
-                selection = [];
-                _.each(grouped, function (vals) {
-                    selection.push(_.last(vals));
-                });
-
-                // find not installed versions
-                if (action === 'update') {
-                    var installed = angular.copy(selection);
-                    selection = [];
-                    _.each(installed, function(x) {
-                        var notInstalled = _.last(_.where(moduleHelper.allmodules, { id: x.id, isInstalled: false }));
-                        selection.push(notInstalled);
-                    });
-                }
-
-                var modulesApiMethod = action === 'uninstall' ? modules.getDependents : modules.getDependencies;
-                modulesApiMethod(selection, function (data) {
-                    blade.isLoading = false;
-
-                    var dialog = {
-                        id: "confirm",
-                        action: action,
-                        selection: selection,
-                        dependencies: data,
-                        callback: function (resume) {
-                            if (resume) {
-                                _.each(selection, function (x) {
-                                    if (!_.findWhere(data, { id: x.id })) {
-                                        data.push(x);
-                                    }
-                                });
-                                modulesApiMethod = action === 'uninstall' ? modules.uninstall : modules.install;
-                                modulesApiMethod(data, onAfterConfirmed, function (error) {
-                                    bladeNavigationService.setError('Error ' + error.status, blade);
-                                });
-                            }
-                        }
-                    }
-                    dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');
-                }, function (error) {
-                    bladeNavigationService.setError('Error ' + error.status, blade);
-                });
-            });
-        }
-    }
-
-    function onAfterConfirmed(data) {
-        var newBlade = {
-            id: 'moduleInstallProgress',
-            currentEntity: data,
-            title: blade.title,
-            controller: 'platformWebApp.moduleInstallProgressController',
-            template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, blade);
+        moduleHelper.performAction(action, selection, blade, false);
     }
 
     // ui-grid
@@ -184,9 +124,9 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                         let parentSelected = row.isSelected;
                         _.each(row.treeNode.children, function (treeNode) {
                             if (!parentSelected) {
-                                gridApi.selection.selectRow(treeNode.row.entity);//this is unselect
+                                gridApi.selection.selectRow(treeNode.row.entity); // this is unselect
                             } else {
-                                gridApi.selection.unSelectRow(treeNode.row.entity);//this is select
+                                gridApi.selection.unSelectRow(treeNode.row.entity); // this is select
                             }
                         });
                     }
