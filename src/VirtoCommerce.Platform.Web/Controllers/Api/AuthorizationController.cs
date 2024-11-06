@@ -465,13 +465,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private static bool RequestHasExpired(OpenIddictRequest request, AuthenticateResult result)
-        {
-            return request.MaxAge != null &&
-                   result.Properties?.IssuedUtc != null &&
-                   DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value);
-        }
-
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Deny")]
         [Authorize]
@@ -502,6 +495,83 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             return await SignInAsync(request, user, application, authorizations);
+        }
+
+        // GET: /api/userinfo
+        [HttpGet("~/connect/userinfo"), HttpPost("~/connect/userinfo"), Produces("application/json")]
+        [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
+        [AllowAnonymous]
+        public async Task<IActionResult> Userinfo()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Challenge(
+                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    {
+                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidToken,
+                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                            "The specified access token is bound to an account that no longer exists.",
+                    }));
+            }
+
+            var claims = new Dictionary<string, object>(StringComparer.Ordinal)
+            {
+                // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
+                [Claims.Subject] = await _userManager.GetUserIdAsync(user),
+                [Claims.Username] = user.UserName,
+                [Claims.Name] = user.UserName
+            };
+
+            if (User.HasScope(Scopes.Email))
+            {
+                claims[Claims.Email] = await _userManager.GetEmailAsync(user);
+                claims[Claims.EmailVerified] = await _userManager.IsEmailConfirmedAsync(user);
+            }
+
+            if (User.HasScope(Scopes.Phone))
+            {
+                claims[Claims.PhoneNumber] = await _userManager.GetPhoneNumberAsync(user);
+                claims[Claims.PhoneNumberVerified] = await _userManager.IsPhoneNumberConfirmedAsync(user);
+            }
+
+            if (User.HasScope(Scopes.Roles))
+            {
+                claims[Claims.Role] = await _userManager.GetRolesAsync(user);
+            }
+
+            // Note: the complete list of standard claims supported by the OpenID Connect specification
+            // can be found here: http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+
+            return Ok(claims);
+        }
+
+        [HttpGet("~/connect/logout")]
+        public async Task<IActionResult> Logout()
+        {
+            // Ask ASP.NET Core Identity to delete the local and external cookies created
+            // when the user agent is redirected from the external identity provider
+            // after a successful authentication flow (e.g. Google or Facebook).
+            await _signInManager.SignOutAsync();
+
+            // Returning a SignOutResult will ask OpenIddict to redirect the user agent
+            // to the post_logout_redirect_uri specified by the client application or to
+            // the RedirectUri specified in the authentication properties if none was set.
+            return SignOut(
+                authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                properties: new AuthenticationProperties
+                {
+                    RedirectUri = "/"
+                });
+        }
+
+
+        private static bool RequestHasExpired(OpenIddictRequest request, AuthenticateResult result)
+        {
+            return request.MaxAge != null &&
+                   result.Properties?.IssuedUtc != null &&
+                   DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value);
         }
 
         private OpenIddictRequest GetOpenIddictServerRequest()
@@ -577,75 +647,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-        }
-
-        // GET: /api/userinfo
-        [HttpGet("~/connect/userinfo"), HttpPost("~/connect/userinfo"), Produces("application/json")]
-        [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
-        [AllowAnonymous]
-        public async Task<IActionResult> Userinfo()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Challenge(
-                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
-                    {
-                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidToken,
-                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
-                            "The specified access token is bound to an account that no longer exists.",
-                    }));
-            }
-
-            var claims = new Dictionary<string, object>(StringComparer.Ordinal)
-            {
-                // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
-                [Claims.Subject] = await _userManager.GetUserIdAsync(user),
-                [Claims.Username] = user.UserName,
-                [Claims.Name] = user.UserName
-            };
-
-            if (User.HasScope(Scopes.Email))
-            {
-                claims[Claims.Email] = await _userManager.GetEmailAsync(user);
-                claims[Claims.EmailVerified] = await _userManager.IsEmailConfirmedAsync(user);
-            }
-
-            if (User.HasScope(Scopes.Phone))
-            {
-                claims[Claims.PhoneNumber] = await _userManager.GetPhoneNumberAsync(user);
-                claims[Claims.PhoneNumberVerified] = await _userManager.IsPhoneNumberConfirmedAsync(user);
-            }
-
-            if (User.HasScope(Scopes.Roles))
-            {
-                claims[Claims.Role] = await _userManager.GetRolesAsync(user);
-            }
-
-            // Note: the complete list of standard claims supported by the OpenID Connect specification
-            // can be found here: http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
-
-            return Ok(claims);
-        }
-
-        [HttpGet("~/connect/logout")]
-        public async Task<IActionResult> Logout()
-        {
-            // Ask ASP.NET Core Identity to delete the local and external cookies created
-            // when the user agent is redirected from the external identity provider
-            // after a successful authentication flow (e.g. Google or Facebook).
-            await _signInManager.SignOutAsync();
-
-            // Returning a SignOutResult will ask OpenIddict to redirect the user agent
-            // to the post_logout_redirect_uri specified by the client application or to
-            // the RedirectUri specified in the authentication properties if none was set.
-            return SignOut(
-                authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                properties: new AuthenticationProperties
-                {
-                    RedirectUri = "/"
-                });
         }
 
         private static IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
