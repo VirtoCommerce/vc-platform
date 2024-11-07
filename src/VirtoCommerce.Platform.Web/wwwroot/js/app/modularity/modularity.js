@@ -173,36 +173,18 @@ angular
                                     }
                                 });
 
-                                // choose the right API method
-                                switch (action) {
-                                    case 'install': modulesApiMethod = modulesApi.install;
-                                        break;
-                                    case 'update': modulesApiMethod = modulesApi.update;
-                                        break;
-                                    case 'uninstall': modulesApiMethod = modulesApi.uninstall;
-                                        break;
-                                }
-
                                 // apply the action
-                                modulesApiMethod(data, function (data) {
+                                var apiActionDescriptor = getApiActionDescriptor(action);
+                                apiActionDescriptor.method(data, function (data) {
                                     blade.isLoading = false;
                                     // show module (un)installation progress
                                     var newBlade = {
                                         id: 'moduleInstallProgress',
                                         currentEntity: data,
                                         controller: 'platformWebApp.moduleInstallProgressController',
-                                        template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
+                                        template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html',
+                                        title: apiActionDescriptor.title
                                     };
-
-                                    // title depends on the action
-                                    switch (action) {
-                                        case 'install':_.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-install' });
-                                            break;
-                                        case 'update':_.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-update' });
-                                            break;
-                                        case 'uninstall':_.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-uninstall' });
-                                            break;
-                                    }
 
                                     bladeNavigationService.showBlade(newBlade, useParentBlade ? blade.parentBlade : blade);
                                 }, function (error) {
@@ -215,6 +197,17 @@ angular
                 }, function (error) {
                     bladeNavigationService.setError('Error ' + error.status, blade);
                 });
+            }
+        }
+
+        function getApiActionDescriptor(action) {
+            switch (action) {
+            case 'install':
+                return { title: 'platform.blades.module-wizard-progress-step.title-install', method: modulesApi.install };
+            case 'update':
+                return { title: 'platform.blades.module-wizard-progress-step.title-update', method: modulesApi.update };
+            case 'uninstall':
+                return { title: 'platform.blades.module-wizard-progress-step.title-uninstall', method: modulesApi.uninstall };
             }
         }
 
