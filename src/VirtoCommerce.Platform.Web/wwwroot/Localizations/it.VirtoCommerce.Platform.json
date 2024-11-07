@@ -880,15 +880,15 @@
       },
       "storefront-cache-reset": {
         "title": "Reset della cache",
-        "confirm-reset-message": "Sei sicuro di voler ripristinare la cache? Questa azione cancellerà tutti i dati memorizzati nella cache e potrebbe influire temporaneamente sulle prestazioni del sistema. Si prega di confermare di procedere.",
-        "reset-successfully-message": "La cache dell'applicazione frontend è stata resettata con successo."
+        "confirm-reset-message": "Sei sicuro di voler resettare la cache? Questa azione cancellerà tutti i dati memorizzati nella cache e potrebbe influire temporaneamente sulle prestazioni del sistema. Conferma per procedere",
+        "reset-successfully-message": "La cache dell'applicazione frontend è stata resettata con successo"
       }
     },
     "commands": {
       "login-on-behalf": "Accedi per conto di",
       "reset-storefront-cache": {
-        "title": "Resetta la cache dell'applicazione frontend",
-        "name": "Resetta cache"
+        "title": "Reset della cache dell'applicazione frontend",
+        "name": "Reset della cache"
       },
       "restart-application-title": "Riavvia l'applicazione"
     }
