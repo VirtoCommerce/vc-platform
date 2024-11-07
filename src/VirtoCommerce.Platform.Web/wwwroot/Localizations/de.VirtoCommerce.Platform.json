@@ -882,17 +882,17 @@
       },
       "storefront-cache-reset": {
         "title": "Cache zurücksetzen",
-        "confirm-reset-message": "Sind Sie sicher, dass Sie den Cache zurücksetzen möchten? Diese Aktion löscht alle zwischengespeicherten Daten und kann die Systemleistung vorübergehend beeinträchtigen. Bitte bestätigen Sie, um fortzufahren.",
-        "reset-successfully-message": "Der Cache der Frontend-Anwendung wurde erfolgreich zurückgesetzt."
+        "confirm-reset-message": "Sind Sie sicher, dass Sie den Cache zurücksetzen möchten? Diese Aktion löscht alle zwischengespeicherten Daten und kann die Systemleistung vorübergehend beeinträchtigen. Bitte bestätigen Sie, um fortzufahren",
+        "reset-successfully-message": "Der Cache der Frontend-Anwendung wurde erfolgreich zurückgesetzt"
       }
     },
     "commands": {
       "login-on-behalf": "Im Namen von anmelden",
       "reset-storefront-cache": {
-        "title": "Setzen Sie den Frontend-Anwendungs-Cache zurück",
+        "title": "Frontend-Anwendungs-Cache zurücksetzen",
         "name": "Cache zurücksetzen"
       },
-      "restart-application-title": "Starten Sie die Anwendung neu"
+      "restart-application-title": "Anwendung neu starten"
     }
   },
   "permissions": {
