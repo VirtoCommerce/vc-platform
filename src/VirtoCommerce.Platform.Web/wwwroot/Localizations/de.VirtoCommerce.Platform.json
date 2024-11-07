@@ -882,7 +882,7 @@
       },
       "storefront-cache-reset": {
         "title": "Cache zurücksetzen",
-        "confirm-reset-message": "Sind Sie sicher, dass Sie den Cache zurücksetzen möchten? Diese Aktion löscht alle zwischengespeicherten Daten und kann die Systemleistung vorübergehend beeinträchtigen. Bitte bestätigen Sie, um fortzufahren",
+        "confirm-reset-message": "Sind Sie sicher, dass Sie den Cache zurücksetzen möchten? Diese Aktion löscht alle zwischengespeicherten Daten und kann die Systemleistung vorübergehend beeinträchtigen. Bestätigen Sie, um fortzufahren",
         "reset-successfully-message": "Der Cache der Frontend-Anwendung wurde erfolgreich zurückgesetzt"
       }
     },
