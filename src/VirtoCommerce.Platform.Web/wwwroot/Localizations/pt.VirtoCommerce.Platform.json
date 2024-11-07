@@ -880,8 +880,8 @@
       },
       "storefront-cache-reset": {
         "title": "Cache redefinido",
-        "confirm-reset-message": "Tem certeza de que deseja redefinir o cache? Esta ação limpará todos os dados armazenados em cache e poderá afetar temporariamente o desempenho do sistema. Por favor, confirme para prosseguir.",
-        "reset-successfully-message": "O cache da aplicação frontend foi redefinido com sucess."
+        "confirm-reset-message": "Tem certeza de que deseja redefinir o cache? Esta ação limpará todos os dados armazenados em cache e poderá afetar temporariamente o desempenho do sistema. Confirme para prosseguir",
+        "reset-successfully-message": "O cache da aplicação frontend foi redefinido com sucess"
       }
     },
     "commands": {
