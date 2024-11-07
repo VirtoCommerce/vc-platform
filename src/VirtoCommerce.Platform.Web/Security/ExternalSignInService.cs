@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -213,10 +211,13 @@ namespace VirtoCommerce.Platform.Web.Security
             userEmail = string.Empty;
 
             var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
-            if (providerConfig?.Provider is not null)
+            var provider = providerConfig?.Provider;
+
+            if (provider is not null)
             {
-                userName = providerConfig.Provider.GetUserName(externalLoginInfo);
-                userEmail = externalLoginInfo.Principal.FindFirstValue(OpenIddictConstants.Claims.Email) ??
+                userName = provider.GetUserName(externalLoginInfo);
+
+                userEmail = provider.GetEmail(externalLoginInfo) ??
                             (userName.IsValidEmail() ? userName : null);
             }
 
