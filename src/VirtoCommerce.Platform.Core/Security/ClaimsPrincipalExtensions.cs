@@ -14,15 +14,15 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
         {
-            return claimsPrincipal.FindFirstValue(UserIdClaimTypes);
+            return claimsPrincipal.FindAnyValue(UserIdClaimTypes);
         }
 
         public static string GetUserName(this ClaimsPrincipal claimsPrincipal)
         {
-            return claimsPrincipal.FindFirstValue(UserNameClaimTypes);
+            return claimsPrincipal.FindAnyValue(UserNameClaimTypes);
         }
 
-        public static string FindFirstValue(this ClaimsPrincipal claimsPrincipal, IList<string> claimTypes)
+        public static string FindAnyValue(this ClaimsPrincipal claimsPrincipal, IList<string> claimTypes)
         {
             if (claimsPrincipal != null)
             {

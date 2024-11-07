@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Security.ExternalSignIn
 {
@@ -16,8 +17,7 @@ namespace VirtoCommerce.Platform.Security.ExternalSignIn
 
         string GetEmail(ExternalLoginInfo externalLoginInfo)
         {
-            return externalLoginInfo.Principal.FindFirstValue(OpenIddictConstants.Claims.Email) ??
-                   externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            return externalLoginInfo.Principal.FindAnyValue([OpenIddictConstants.Claims.Email, ClaimTypes.Email]);
         }
 
         string GetUserType();
