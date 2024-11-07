@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
- .factory('platformWebApp.modulesApi', ['$resource', function ($resource) {
+.factory('platformWebApp.modulesApi', ['$resource', function ($resource) {
 
     return $resource('api/platform/modules', null, {
         getDependencies: { method: 'POST', url: 'api/platform/modules/getmissingdependencies', isArray: true },

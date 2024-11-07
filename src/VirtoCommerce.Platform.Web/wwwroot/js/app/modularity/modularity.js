@@ -174,21 +174,23 @@ angular.module('platformWebApp')
 
                             // apply the action
                             var apiActionDescriptor = getApiActionDescriptor(action);
-                            apiActionDescriptor.method(data, function (data) {
-                                blade.isLoading = false;
-                                // show module (un)installation progress
-                                var newBlade = {
-                                    id: 'moduleInstallProgress',
-                                    currentEntity: data,
-                                    controller: 'platformWebApp.moduleInstallProgressController',
-                                    template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html',
-                                    title: apiActionDescriptor.title
-                                };
+                            if (apiActionDescriptor.method) {
+                                apiActionDescriptor.method(data, function (progressData) {
+                                    blade.isLoading = false;
+                                    // show module (un)installation progress
+                                    var newBlade = {
+                                        id: 'moduleInstallProgress',
+                                        currentEntity: progressData,
+                                        controller: 'platformWebApp.moduleInstallProgressController',
+                                        template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html',
+                                        title: apiActionDescriptor.title
+                                    };
 
-                                bladeNavigationService.showBlade(newBlade, useParentBlade ? blade.parentBlade : blade);
-                            }, function (error) {
-                                bladeNavigationService.setError('Error ' + error.status, blade);
-                            });
+                                    bladeNavigationService.showBlade(newBlade, useParentBlade ? blade.parentBlade : blade);
+                                }, function (error) {
+                                    bladeNavigationService.setError('Error ' + error.status, blade);
+                                });
+                            }
                         }
                     }
                 }
@@ -207,6 +209,8 @@ angular.module('platformWebApp')
                 return { title: 'platform.blades.module-wizard-progress-step.title-update', method: modulesApi.update };
             case 'uninstall':
                 return { title: 'platform.blades.module-wizard-progress-step.title-uninstall', method: modulesApi.uninstall };
+            default:
+                return {};
         }
     }
 
