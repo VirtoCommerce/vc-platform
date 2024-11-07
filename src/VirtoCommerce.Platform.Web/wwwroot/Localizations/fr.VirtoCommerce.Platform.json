@@ -880,8 +880,8 @@
       },
       "storefront-cache-reset": {
         "title": "Réinitialisation du cache",
-        "confirm-reset-message": "Êtes-vous sûr de vouloir réinitialiser le cache? Cette action effacera toutes les données mises en cache et peut affecter temporairement les performances du système. Veuillez confirmer pour continuer.",
-        "reset-successfully-message": "Le cache de l'application frontale a été réinitialisé avec succès."
+        "confirm-reset-message": "Êtes-vous sûr de vouloir réinitialiser le cache? Cette action effacera toutes les données mises en cache et peut affecter temporairement les performances du système. Veuillez confirmer pour continuer",
+        "reset-successfully-message": "Le cache de l'application frontale a été réinitialisé avec succès"
       }
     },
     "commands": {
