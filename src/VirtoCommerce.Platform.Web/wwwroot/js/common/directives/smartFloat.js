@@ -17,7 +17,7 @@ angular.module('platformWebApp')
 				// possible values for fraction are: 0, positive number, negative number, none
 				// when fraction is a negative number result has maximum length of the fractional part of the value
 				var fraction = (attrs.fraction || Number(attrs.fraction) === 0) ? attrs.fraction : 2;
-				if (attrs.numType === "float") {
+				if (attrs.numType === 'float') {
 					ctrl.$parsers.unshift(function (viewValue) {
 						if (FLOAT_REGEXP_1.test(viewValue)) {
 							ctrl.$setValidity('float', true);
@@ -32,7 +32,8 @@ angular.module('platformWebApp')
 							ctrl.$setValidity('float', true);
 							return parseFloat(viewValue.replace(',', '.'));
 						} else {
-                            ctrl.$setValidity('float', false);
+							//Allow to use empty values
+							ctrl.$setValidity('float', !viewValue);
 							return viewValue;
 						}
 					});
@@ -54,7 +55,7 @@ angular.module('platformWebApp')
 						}
 					);
 				}
-				else if (attrs.numType === "positiveInteger") {
+				else if (attrs.numType === 'positiveInteger') {
 					ctrl.$parsers.unshift(function (viewValue) {
 						ctrl.$setValidity('positiveInteger', INTEGER_REGEXP.test(viewValue) && viewValue > 0);
 						return viewValue;
