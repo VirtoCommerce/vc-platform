@@ -5,6 +5,7 @@ angular.uppercase = function (text) {
     }
     return text;
 }
+
 angular.lowercase = function (text) {
     if (text) {
         return text.toLowerCase();
@@ -12,12 +13,10 @@ angular.lowercase = function (text) {
     return text;
 }
 
-
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', 'platformWebApp.modules', 'platformWebApp.moduleHelper', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
+    'platformWebApp.i18n', 'platformWebApp.modulesApi', 'platformWebApp.moduleHelper', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
     'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps', 'platformWebApp.urlHelper',
-    function ($rootScope, $scope, mainMenuService,
-        i18n, modules, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps, urlHelper) {
+    function ($rootScope, $scope, mainMenuService, i18n, modulesApi, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps, urlHelper) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -47,7 +46,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             angular.forEach(mainMenuService.menuItems, function (menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
 
             if (authContext.isAuthenticated) {
-                modules.query().$promise.then(function (results) {
+                modulesApi.query().$promise.then(function (results) {
                     moduleHelper.modules = results;
                     moduleHelper.onLoaded();
 

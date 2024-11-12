@@ -251,8 +251,8 @@
           "start": "Начало",
           "end": "Конец",
           "progress-messages": "Сообщения о прогрессе",
-          "process-completed": "Процесс установки модуля завершен",
-          "restart-application": "Перезапустить приложение сейчас или позже"
+          "process-completed": "Процесс управления модулем завершен",
+          "restart-application": "Перезапустите приложение сейчас или позже"
         }
       },
       "module-detail": {
