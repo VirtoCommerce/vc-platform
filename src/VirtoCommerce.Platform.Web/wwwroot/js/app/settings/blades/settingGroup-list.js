@@ -147,7 +147,9 @@ angular.module('platformWebApp')
 
             blade.toolbarCommands = [
                 {
-                    name: "platform.commands.restart", icon: 'fa fa-bolt',
+                    name: "platform.commands.restart",
+                    title: "platform.commands.restart-application-title",
+                    icon: 'fa fa-bolt',
                     executeMethod: function () { restart(); },
                     canExecuteMethod: function () { return !blade.isLoading; },
                     permission: 'platform:module:manage'

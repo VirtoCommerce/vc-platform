@@ -878,14 +878,19 @@
       "create-folder": {
         "title": "文件夹名称必须符合以下命名规则：\n  文件夹名称长度必须在 3 到 63 个字符之间。\n  文件夹名称必须以字母或数字开头，只能包含字母、数字和连字符(-)。\n  每个连字符(-)的前后必须紧跟字母或数字；不允许连续的连字符。\n  文件夹名称中的所有字母必须是小写"
       },
-      "storefront-cache-reset-successfully": {
+      "storefront-cache-reset": {
         "title": "缓存重置",
-        "message": "前端应用程序缓存已成功重置"
+        "confirm-reset-message": "确定要重置缓存吗？ 此操作将清除所有缓存的数据，并可能暂时影响系统性能。 确认继续",
+        "reset-successfully-message": "前端应用程序缓存已成功重置"
       }
     },
     "commands": {
       "login-on-behalf": "代表登录",
-      "reset-storefront-cache": "重置缓存"
+      "reset-storefront-cache": {
+        "title": "重置前端应用程序缓存",
+        "name": "重置缓存"
+      },
+      "restart-application-title": "重新启动应用程序"
     }
   },
   "permissions": {

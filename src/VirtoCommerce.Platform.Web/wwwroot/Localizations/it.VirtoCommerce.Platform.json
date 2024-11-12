@@ -878,14 +878,19 @@
       "create-folder": {
         "title": "Il nome di una cartella deve rispettare le seguenti regole di denominazione:\n  Il nome della cartella deve essere compreso tra 3 e 63 caratteri.\n  Il nome della cartella deve iniziare con una lettera o un numero e può contenere solo lettere, numeri e trattini (-).\n  Ogni trattino (-) deve essere immediatamente preceduto e seguito da una lettera o un numero; non sono consentiti trattini consecutivi.\n  Tutte le lettere nel nome di una cartella devono essere minuscole"
       },
-      "storefront-cache-reset-successfully": {
+      "storefront-cache-reset": {
         "title": "Reset della cache",
-        "message": "La cache dell'applicazione frontend è stata resettata con successo"
+        "confirm-reset-message": "Sei sicuro di voler resettare la cache? Questa azione cancellerà tutti i dati memorizzati nella cache e potrebbe influire temporaneamente sulle prestazioni del sistema. Conferma per procedere",
+        "reset-successfully-message": "La cache dell'applicazione frontend è stata resettata con successo"
       }
     },
     "commands": {
       "login-on-behalf": "Accedi per conto di",
-      "reset-storefront-cache": "Resetta cache"
+      "reset-storefront-cache": {
+        "title": "Reset della cache dell'applicazione frontend",
+        "name": "Reset della cache"
+      },
+      "restart-application-title": "Riavvia l'applicazione"
     }
   },
   "permissions": {
