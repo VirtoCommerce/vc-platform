@@ -16,7 +16,9 @@ angular.lowercase = function (text) {
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
     'platformWebApp.i18n', 'platformWebApp.modulesApi', 'platformWebApp.moduleHelper', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
     'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps', 'platformWebApp.urlHelper',
-    function ($rootScope, $scope, mainMenuService, i18n, modulesApi, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps, urlHelper) {
+    function ($rootScope, $scope, mainMenuService,
+        i18n, modulesApi, moduleHelper, $state, bladeNavigationService, userProfile,
+        settings, common, THEME_SETTINGS, webApps, urlHelper) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
