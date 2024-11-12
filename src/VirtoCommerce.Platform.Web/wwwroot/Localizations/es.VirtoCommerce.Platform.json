@@ -251,7 +251,7 @@
           "start": "Inicio",
           "end": "Fin",
           "progress-messages": "Mensajes de progreso",
-          "process-completed": "Proceso de instalación del módulo completado",
+          "process-completed": "El proceso de gestión del módulo se ha completado",
           "restart-application": "Reiniciar la aplicación ahora o más tarde"
         }
       },

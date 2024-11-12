@@ -1,8 +1,8 @@
 const { contains } = require("underscore");
 
 angular.module('platformWebApp')
-    .controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate', 'THEME_SETTINGS',
-        function ($window, modules, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate, THEME_SETTINGS) {
+    .controller('platformWebApp.settingGroupListController', ['platformWebApp.modulesApi', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate', 'THEME_SETTINGS',
+        function (modulesApi, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate, THEME_SETTINGS) {
             var settingsTree;
             var blade = $scope.blade;
 
@@ -165,7 +165,7 @@ angular.module('platformWebApp')
                         if (confirm) {
                             blade.isLoading = true;
                             try {
-                                modules.restart(function () {
+                                modulesApi.restart(function () {
                                     //$window.location.reload(); returns 400 bad request due server restarts
                                 });
                             }

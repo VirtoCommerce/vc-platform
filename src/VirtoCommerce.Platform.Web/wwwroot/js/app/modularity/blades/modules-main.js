@@ -1,19 +1,19 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.modulesMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', function ($scope, bladeNavigationService, modules, moduleHelper) {
+    .controller('platformWebApp.modulesMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.modulesApi', 'platformWebApp.moduleHelper', function ($scope, bladeNavigationService, modulesApi, moduleHelper) {
         var blade = $scope.blade;
         var nodeUpdate, nodeExisting, nodeInstalled;
         $scope.selectedNodeId = null;
 
         blade.reload = function () {
-            modules.reload().$promise.then(blade.refresh);
+            modulesApi.reload().$promise.then(blade.refresh);
         };
 
         blade.refresh = function () {
             blade.isLoading = true;
 
-            return modules.query().$promise.then(function (results) {
+            return modulesApi.query().$promise.then(function (results) {
                 moduleHelper.moduleBundles = [];
-                moduleHelper.allmodules = results;
+                moduleHelper.modules = results;
                 _.each(results, function (x) {
                     x.description = x.description || '';
                     x.tags = x.tags || '';
@@ -43,7 +43,7 @@ angular.module('platformWebApp')
                                     m.$alternativeVersion = latest.version;
                                 }
                             } else {
-                                // It is necessary to detect the update on the module details page (the latest non-installed version contains the current installed version here)
+                                // It is necessary to detect the update (the latest non-installed version contains the current installed version here)
                                 m.$installedVersion = foundInstalledModule.version;
                             }
                         });

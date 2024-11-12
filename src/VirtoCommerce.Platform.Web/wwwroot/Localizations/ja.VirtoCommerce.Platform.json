@@ -251,7 +251,7 @@
           "start": "開始",
           "end": "終了",
           "progress-messages": "進行メッセージ",
-          "process-completed": "モジュールインストールプロセスが完了しました",
+          "process-completed": "モジュール管理プロセスが完了しました",
           "restart-application": "アプリケーションを今すぐ再起動するか、後で再起動してください"
         }
       },

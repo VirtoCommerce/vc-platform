@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp').controller('platformWebApp.moduleInstallProgressController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', 'platformWebApp.dialogService', '$timeout', function ($scope, $window, bladeNavigationService, modules, waitForRestart, dialogService, $timeout) {
+angular.module('platformWebApp').controller('platformWebApp.moduleInstallProgressController', ['$scope', 'platformWebApp.modulesApi', 'platformWebApp.WaitForRestart', 'platformWebApp.dialogService', '$timeout', function ($scope, modulesApi, waitForRestart, dialogService, $timeout) {
     var blade = $scope.blade;
     blade.subtitle = 'Installation progress';
 
@@ -24,7 +24,7 @@
                     $scope.restarted = true;
                     blade.isLoading = true;
                     try {
-                        modules.restart(function () {
+                        modulesApi.restart(function () {
                             //$window.location.reload(); returns 400 bad request due server restarts
                         });
                     }
