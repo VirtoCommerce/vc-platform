@@ -880,14 +880,19 @@
       "create-folder": {
         "title": "Ein Ordnername muss den folgenden Benennungsregeln entsprechen:\n  Der Ordnername muss zwischen 3 und 63 Zeichen lang sein.\n  Der Ordnername muss mit einem Buchstaben oder einer Zahl beginnen und darf nur Buchstaben, Zahlen und Bindestriche (-) enthalten.\n  Jeder Bindestrich (-) muss unmittelbar vor und nach einem Buchstaben oder einer Zahl stehen; aufeinanderfolgende Bindestriche sind nicht erlaubt.\n  Alle Buchstaben in einem Ordnernamen müssen klein geschrieben sein"
       },
-      "storefront-cache-reset-successfully": {
-        "title": "Cache zurückgesetzt",
-        "message": "Der Cache der Frontend-Anwendung wurde erfolgreich zurückgesetzt"
+      "storefront-cache-reset": {
+        "title": "Cache zurücksetzen",
+        "confirm-reset-message": "Sind Sie sicher, dass Sie den Cache zurücksetzen möchten? Diese Aktion löscht alle zwischengespeicherten Daten und kann die Systemleistung vorübergehend beeinträchtigen. Bestätigen Sie, um fortzufahren",
+        "reset-successfully-message": "Der Cache der Frontend-Anwendung wurde erfolgreich zurückgesetzt"
       }
     },
     "commands": {
       "login-on-behalf": "Im Namen von anmelden",
-      "reset-storefront-cache": "Cache zurücksetzen"
+      "reset-storefront-cache": {
+        "title": "Frontend-Anwendungs-Cache zurücksetzen",
+        "name": "Cache zurücksetzen"
+      },
+      "restart-application-title": "Anwendung neu starten"
     }
   },
   "permissions": {

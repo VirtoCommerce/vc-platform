@@ -55,24 +55,32 @@ angular.module("platformWebApp")
 
         // Add 'Reset cache' command to settings blade
         var resetCacheCommand = {
-            name: 'platform.commands.reset-storefront-cache',
+            name: 'platform.commands.reset-storefront-cache.name',
+            title: 'platform.commands.reset-storefront-cache.title',
             icon: 'fa fa-eraser',
             executeMethod: function (blade) {
-                blade.isLoading = true;
-
-                changeLogApi.forceChanges({}, function () {
-                    blade.isLoading = false;
-
-                    var dialog = {
-                        id: "cacheResetDialog",
-                        title: 'platform.dialogs.storefront-cache-reset-successfully.title',
-                        message: 'platform.dialogs.storefront-cache-reset-successfully.message'
-                    };
-                    dialogService.showSuccessDialog(dialog);
-                });
-
+                var confirmDialog = {
+                    id: "confirmCacheResetDialog",
+                    title: "platform.dialogs.storefront-cache-reset.title",
+                    message: "platform.dialogs.storefront-cache-reset.confirm-reset-message",
+                    callback: function (confirm) {
+                        if (confirm) {
+                            blade.isLoading = true;
+                            changeLogApi.resetPlatformCache({}, function () {
+                                blade.isLoading = false;
+                                var successDialog = {
+                                    id: "successCacheResetDialog",
+                                    title: "platform.dialogs.storefront-cache-reset.title",
+                                    message: "platform.dialogs.storefront-cache-reset.reset-successfully-message",
+                                };
+                                dialogService.showSuccessDialog(successDialog);
+                            });
+                        }
+                    }
+                }
+                dialogService.showWarningDialog(confirmDialog);
             },
-            canExecuteMethod: function () { return true; },
+            canExecuteMethod: function (blade) { return !blade.isLoading; },
             permission: 'cache:reset',
             index: 2
         };
