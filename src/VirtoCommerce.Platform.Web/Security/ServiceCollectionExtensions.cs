@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using NetEscapades.AspNetCore.SecurityHeaders.Headers.ContentSecurityPolicy;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -19,6 +22,9 @@ namespace VirtoCommerce.Platform.Web.Security
 {
     public static class ServiceCollectionExtensions
     {
+        private const string _scpFormActionUriKey = "Content-Security-Policy-Form-Action-Uri";
+        private static readonly ConcurrentDictionary<string, HeaderPolicyCollection> _policyCache = new();
+
         public static IServiceCollection AddSecurityServices(this IServiceCollection services, Action<AuthorizationOptions> setupAction = null)
         {
             services.AddTransient<ISecurityRepository, SecurityRepository>();
@@ -120,44 +126,79 @@ namespace VirtoCommerce.Platform.Web.Security
             }
         }
 
-        public static void UseCustomSecurityHeaders(this IApplicationBuilder app)
+        public static void AddCustomSecurityHeaders(this IServiceCollection services)
         {
-            var policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
-            var options = app.ApplicationServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
-
-            if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
-            {
-                policies.AddFrameOptionsSameOrigin();
-            }
-            else if (options.FrameOptions.EqualsIgnoreCase("Deny"))
-            {
-                policies.AddFrameOptionsDeny();
-            }
-            else if (!string.IsNullOrEmpty(options.FrameOptions))
-            {
-                policies.AddFrameOptionsSameOrigin(options.FrameOptions);
-            }
-
-            policies.AddContentSecurityPolicy(builder =>
-            {
-                builder.AddObjectSrc().None();
-                builder.AddFormAction().Self();
-
-                if (options.FrameAncestors.EqualsIgnoreCase("None"))
+            services.AddSecurityHeaderPolicies()
+                .SetPolicySelector(context =>
                 {
-                    builder.AddFrameAncestors().None();
-                }
-                else if (options.FrameAncestors.EqualsIgnoreCase("Self"))
-                {
-                    builder.AddFrameAncestors().Self();
-                }
-                else if (!string.IsNullOrEmpty(options.FrameAncestors))
-                {
-                    builder.AddFrameAncestors().From(options.FrameAncestors);
-                }
-            });
+                    var options = context.HttpContext.RequestServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
+                    var formActionUri = context.HttpContext.GetScpFormActionUri() ?? string.Empty;
 
-            app.UseSecurityHeaders(policies);
+                    if (_policyCache.TryGetValue(formActionUri, out var policies))
+                    {
+                        return policies;
+                    }
+
+                    policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
+
+                    if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
+                    {
+                        policies.AddFrameOptionsSameOrigin();
+                    }
+                    else if (options.FrameOptions.EqualsIgnoreCase("Deny"))
+                    {
+                        policies.AddFrameOptionsDeny();
+                    }
+                    else if (!string.IsNullOrEmpty(options.FrameOptions))
+                    {
+                        policies.AddFrameOptionsSameOrigin(options.FrameOptions);
+                    }
+
+                    policies.AddContentSecurityPolicy(builder =>
+                    {
+                        builder.AddObjectSrc().None();
+                        builder.AddFormAction().Self().Uri(formActionUri);
+
+                        if (options.FrameAncestors.EqualsIgnoreCase("None"))
+                        {
+                            builder.AddFrameAncestors().None();
+                        }
+                        else if (options.FrameAncestors.EqualsIgnoreCase("Self"))
+                        {
+                            builder.AddFrameAncestors().Self();
+                        }
+                        else if (!string.IsNullOrEmpty(options.FrameAncestors))
+                        {
+                            builder.AddFrameAncestors().From(options.FrameAncestors);
+                        }
+                    });
+
+                    _policyCache.AddOrUpdate(formActionUri, policies, (_, _) => policies);
+
+                    return policies;
+                });
+        }
+
+        public static void OverrideScpFormActionUri(this HttpContext httpContext, string uri)
+        {
+            httpContext.Items[_scpFormActionUriKey] = uri;
+        }
+
+        public static string GetScpFormActionUri(this HttpContext httpContext)
+        {
+            return httpContext.Items.TryGetValue(_scpFormActionUriKey, out var value)
+                ? value as string
+                : null;
+        }
+
+        public static T Uri<T>(this T builder, string uri) where T : CspDirectiveBuilder
+        {
+            if (!string.IsNullOrWhiteSpace(uri))
+            {
+                builder.Sources.Add(uri);
+            }
+
+            return builder;
         }
     }
 }

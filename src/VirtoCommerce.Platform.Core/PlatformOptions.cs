@@ -77,5 +77,7 @@ namespace VirtoCommerce.Platform.Core
         /// Include null values when serializing Rest API objects.
         /// </summary>
         public bool IncludeOutputNullValues { get; set; } = true;
+
+        public string ApplicationCookieName { get; set; } = ".VirtoCommerce.Identity.Application";
     }
 }

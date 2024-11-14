@@ -325,11 +325,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static bool IsValidEmail(this string input)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            return _emailRegex.IsMatch(input);
+            return input != null && _emailRegex.IsMatch(input);
         }
 
         public static string ToSnakeCase(this string name)
