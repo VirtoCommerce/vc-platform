@@ -59,7 +59,13 @@ function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleH
                     executeMethod: function () { $scope.confirmActionInDialog('uninstall', $scope.gridApi.selection.getSelectedRows()); },
                     canExecuteMethod: installedItemsChecked,
                     permission: 'platform:module:manage'
-                }
+                },
+                {
+                    name: "platform.commands.grouping", icon: 'fas fa-cubes',
+                    executeMethod: function () { blade.isGrouped = !blade.isGrouped; },
+                    canExecuteMethod: function () { return true;  },
+                    permission: 'platform:module:view'
+                },
             ];
             break;
         case 'update':

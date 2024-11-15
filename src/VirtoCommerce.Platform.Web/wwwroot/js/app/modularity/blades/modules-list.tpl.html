@@ -1,4 +1,4 @@
-<div class="blade-static" ng-class="{'__expanded': blade.mode==='browse'}" ng-if="blade.currentEntities.length">
+<div class="blade-static" ng-if="blade.currentEntities.length">
     <div class="form-group">
         <div class="form-input __search">
             <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
@@ -6,15 +6,6 @@
                 <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()"></i>
             </button>
         </div>
-    </div>
-    <div class="form-group" ng-if="blade.mode==='browse'" style="margin-top:-25px">
-        <div class="form-input">
-            <label class="form-label __switch">
-                <input type="checkbox" ng-model="blade.isGrouped" />
-                <span class="switch"></span>
-            </label>
-        </div>
-        <label class="form-label">{{ 'platform.blades.modules-list.labels.grouping' | translate }}</label>
     </div>
 </div>
 <div class="blade-content __medium-wide">
@@ -91,7 +82,7 @@
             <span class="error" ng-if="row.entity.validationErrors.length"><span ng-repeat="x in row.entity.validationErrors"> {{x}};</span></span>
             <span class="table-descr" title="{{row.entity.description}}" style="overflow: hidden; text-overflow: ellipsis;" ng-if="!row.entity.validationErrors.length">{{row.entity.description}}</span>
             <div title="{{ 'platform.blades.module-detail.labels.owners' | translate: row.entity }}" style="overflow: hidden; text-overflow: ellipsis;" ng-if="!row.entity.validationErrors.length">
-                <span class="table-t"><span class="table-descr">{{ 'platform.blades.module-detail.labels.owners' | translate }}</span> {{ row.entity.$owner }}</span>
+                <span class="table-t"><span class="table-descr">{{ 'platform.blades.module-detail.labels.owners' | translate }} {{ row.entity.$owner }}</span></span>
             </div>
         </div>
     </div>
