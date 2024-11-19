@@ -24,6 +24,8 @@
       "import": "Importer",
       "import-sample-data": "Importer des données d'exemple",
       "install": "Installer",
+      "grouping": "Afficher les bundles",
+      "ungrouping": "Masquer les bundles",
       "manage": "Gérer",
       "more": "Plus",
       "no": "Non",
