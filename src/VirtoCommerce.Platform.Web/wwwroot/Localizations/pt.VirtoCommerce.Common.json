@@ -25,6 +25,7 @@
       "import-sample-data": "Importar dados de exemplo",
       "install": "Instalar",
       "grouping": "Mostrar pacotes",
+      "ungrouping": "Ocultar pacotes",
       "manage": "Gerenciar",
       "more": "Mais",
       "no": "Não",

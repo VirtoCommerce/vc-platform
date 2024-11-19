@@ -25,6 +25,7 @@
       "import-sample-data": "サンプルデータをインポート",
       "install": "インストール",
       "grouping": "バンドルを表示",
+      "ungrouping": "バンドルを非表示",
       "manage": "管理",
       "more": "その他",
       "no": "いいえ",

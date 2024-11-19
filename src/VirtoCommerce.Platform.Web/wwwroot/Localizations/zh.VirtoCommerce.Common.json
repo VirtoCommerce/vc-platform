@@ -24,6 +24,8 @@
       "import": "导入",
       "import-sample-data": "导入示例数据",
       "install": "安装",
+      "grouping": "显示捆绑包",
+      "ungrouping": "隐藏捆绑包",
       "manage": "管理",
       "more": "更多",
       "no": "否",
