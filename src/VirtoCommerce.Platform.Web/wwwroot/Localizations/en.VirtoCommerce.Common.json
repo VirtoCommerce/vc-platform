@@ -24,6 +24,8 @@
       "import": "Import",
       "import-sample-data": "Import sample data",
       "install": "Install",
+      "grouping": "Show bundles",
+      "ungrouping": "Hide bundles",
       "manage": "Manage",
       "more": "More",
       "no": "No",

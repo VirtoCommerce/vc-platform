@@ -24,6 +24,8 @@
       "import": "Importieren",
       "import-sample-data": "Beispieldaten importieren",
       "install": "Installieren",
+      "grouping": "Bündel anzeigen",
+      "ungrouping": "Bündel ausblenden",
       "manage": "Verwalten",
       "more": "Mehr",
       "no": "Nein",

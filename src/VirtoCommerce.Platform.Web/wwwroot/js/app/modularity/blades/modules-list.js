@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
-function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
+    .controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout', '$translate',
+function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleHelper, $timeout, $translate) {
     $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
@@ -59,6 +59,21 @@ function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleH
                     executeMethod: function () { $scope.confirmActionInDialog('uninstall', $scope.gridApi.selection.getSelectedRows()); },
                     canExecuteMethod: installedItemsChecked,
                     permission: 'platform:module:manage'
+                },
+                {
+                    name: "platform.commands.grouping",
+                    icon: 'fas fa-cubes',
+                    executeMethod: function () {
+                        blade.isGrouped = !blade.isGrouped;
+                        if (blade.isGrouped) {
+                            this.name = $translate.instant("platform.commands.ungrouping");
+                        }
+                        else {
+                            this.name = $translate.instant("platform.commands.grouping");
+                        }
+                    },
+                    canExecuteMethod: function () { return true; },
+                    permission: 'platform:module:view'
                 }
             ];
             break;
