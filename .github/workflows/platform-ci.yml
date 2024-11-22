@@ -27,7 +27,7 @@ on:
       - '.github/**'
       - 'docs/**'
       - 'build/**'
-      - 'README.md'
+      # - 'README.md'
       - 'LICENSE'
       - '**/argoDeploy.json'
       - '**/cloudDeploy.json'
