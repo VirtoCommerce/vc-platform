@@ -10,6 +10,7 @@ FluentValidation.dll
 Hangfire.AspNetCore.dll
 Hangfire.Console.dll
 Hangfire.Core.dll
+Hangfire.Core.resources.dll
 Hangfire.MemoryStorage.dll
 Hangfire.MySql.dll
 Hangfire.NetCore.dll
@@ -63,15 +64,21 @@ Microsoft.EntityFrameworkCore.dll
 Microsoft.EntityFrameworkCore.Relational.dll
 Microsoft.EntityFrameworkCore.SqlServer.dll
 Microsoft.Extensions.AmbientMetadata.Application.dll
+Microsoft.Extensions.Caching.Memory.dll
 Microsoft.Extensions.Compliance.Abstractions.dll
 Microsoft.Extensions.Configuration.AzureAppConfiguration.dll
 Microsoft.Extensions.Configuration.Binder.dll
+Microsoft.Extensions.Configuration.FileExtensions.dll
+Microsoft.Extensions.Configuration.Json.dll
 Microsoft.Extensions.DependencyInjection.Abstractions.dll
 Microsoft.Extensions.DependencyInjection.AutoActivation.dll
+Microsoft.Extensions.DependencyInjection.dll
 Microsoft.Extensions.DependencyModel.dll
 Microsoft.Extensions.DiagnosticAdapter.dll
+Microsoft.Extensions.Diagnostics.Abstractions.dll
 Microsoft.Extensions.Diagnostics.ExceptionSummarization.dll
 Microsoft.Extensions.Features.dll
+Microsoft.Extensions.Hosting.Abstractions.dll
 Microsoft.Extensions.Http.Diagnostics.dll
 Microsoft.Extensions.Http.Polly.dll
 Microsoft.Extensions.Http.Resilience.dll
@@ -79,6 +86,8 @@ Microsoft.Extensions.Identity.Core.dll
 Microsoft.Extensions.Identity.Stores.dll
 Microsoft.Extensions.Logging.Abstractions.dll
 Microsoft.Extensions.Logging.AzureAppServices.dll
+Microsoft.Extensions.Logging.Configuration.dll
+Microsoft.Extensions.Logging.dll
 Microsoft.Extensions.ObjectPool.dll
 Microsoft.Extensions.Options.dll
 Microsoft.Extensions.Resilience.dll
@@ -169,6 +178,7 @@ System.IO.Abstractions.dll
 System.Linq.Async.dll
 System.Memory.Data.dll
 System.Runtime.Caching.dll
+System.Security.Cryptography.Pkcs.dll
 System.Security.Cryptography.ProtectedData.dll
 System.Security.Cryptography.Xml.dll
 System.Security.Permissions.dll

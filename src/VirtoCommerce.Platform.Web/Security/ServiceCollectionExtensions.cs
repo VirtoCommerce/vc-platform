@@ -94,11 +94,11 @@ namespace VirtoCommerce.Platform.Web.Security
 
                 if (!string.IsNullOrEmpty(possiblyOldCert.Id))
                 {
-                    // Delete old certificate in case of one exists (the Id of newly generated certs is null)
-                    certificateService.DeleteAsync(new[] { possiblyOldCert.Id }).GetAwaiter().GetResult();
+                    // Delete old certificate in case of one exists (the ID of newly generated certs is null)
+                    certificateService.DeleteAsync([possiblyOldCert.Id]).GetAwaiter().GetResult();
                 }
 
-                certificateService.SaveChangesAsync(new[] { currentCert }).GetAwaiter().GetResult();
+                certificateService.SaveChangesAsync([currentCert]).GetAwaiter().GetResult();
             }
         }
 
@@ -128,8 +128,9 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public static void AddCustomSecurityHeaders(this IServiceCollection services)
         {
-            services.AddSecurityHeaderPolicies()
-                .SetPolicySelector(context =>
+            services.AddSecurityHeaderPolicies((policyBuilder, _) =>
+            {
+                policyBuilder.SetPolicySelector(context =>
                 {
                     var options = context.HttpContext.RequestServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
                     var formActionUri = context.HttpContext.GetScpFormActionUri() ?? string.Empty;
@@ -177,6 +178,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
                     return policies;
                 });
+            });
         }
 
         public static void OverrideScpFormActionUri(this HttpContext httpContext, string uri)
