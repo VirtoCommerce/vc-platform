@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -487,7 +488,23 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
                     {
-                        options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
+                        // Determining the location of the modules
+                        if (options.DiscoveryPath == null)
+                        {
+                            options.DiscoveryPath = Path.GetFullPath("modules");
+                        }
+                        else if (Path.IsPathRooted(options.DiscoveryPath))
+                        {
+                            options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath);
+                        }
+                        else
+                        {
+                            // The solution correctly defines the path in debugging mode in VS and in product mode on the server
+                            var platformDirectory = !string.IsNullOrEmpty(AppDomain.CurrentDomain.BaseDirectory)
+                                ? AppDomain.CurrentDomain.BaseDirectory
+                                : Directory.GetCurrentDirectory();
+                            options.DiscoveryPath = Path.GetFullPath(Path.Combine(platformDirectory, options.DiscoveryPath));
+                        }
                     })
                     .ValidateDataAnnotations();
 
@@ -507,13 +524,13 @@ namespace VirtoCommerce.Platform.Web
             var healthBuilder = services.AddHealthChecks()
                 .AddCheck<ModulesHealthChecker>("Modules health",
                     failureStatus: HealthStatus.Unhealthy,
-                    tags: new[] { "Modules" })
+                    tags: ["Modules"])
                 .AddCheck<CacheHealthChecker>("Cache health",
                     failureStatus: HealthStatus.Degraded,
-                    tags: new[] { "Cache" })
+                    tags: ["Cache"])
                 .AddCheck<RedisHealthCheck>("Redis health",
                     failureStatus: HealthStatus.Unhealthy,
-                    tags: new[] { "Cache" });
+                    tags: ["Cache"]);
 
             var connectionString = Configuration.GetConnectionString("VirtoCommerce");
             switch (databaseProvider)
@@ -522,19 +539,19 @@ namespace VirtoCommerce.Platform.Web
                     healthBuilder.AddMySql(connectionString,
                         name: "MySql health",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "Database" });
+                        tags: ["Database"]);
                     break;
                 case "PostgreSql":
                     healthBuilder.AddNpgSql(connectionString,
                         name: "PostgreSql health",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "Database" });
+                        tags: ["Database"]);
                     break;
                 default:
                     healthBuilder.AddSqlServer(connectionString,
                         name: "SQL Server health",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "Database" });
+                        tags: ["Database"]);
                     break;
             }
 
