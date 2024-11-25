@@ -126,7 +126,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var basePath = new PathString($"/modules/$({module.Id})");
             var iconUrlPath = new PathString(moduleIconUrl);
 
-            if (!iconUrlPath.StartsWithSegments(basePath, out var subPath) || string.IsNullOrEmpty(subPath.Value))
+            if (!iconUrlPath.StartsWithSegments(basePath, out var subPath) ||
+                string.IsNullOrEmpty(subPath.Value) ||
+                !Directory.Exists(module.FullPhysicalPath))
             {
                 return false;
             }
