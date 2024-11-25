@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -489,22 +488,7 @@ namespace VirtoCommerce.Platform.Web
                     .PostConfigure(options =>
                     {
                         // Determining the location of the modules
-                        if (options.DiscoveryPath == null)
-                        {
-                            options.DiscoveryPath = Path.GetFullPath("modules");
-                        }
-                        else if (Path.IsPathRooted(options.DiscoveryPath))
-                        {
-                            options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath);
-                        }
-                        else
-                        {
-                            // The solution correctly defines the path in debugging mode in VS and in product mode on the server
-                            var platformDirectory = !string.IsNullOrEmpty(AppDomain.CurrentDomain.BaseDirectory)
-                                ? AppDomain.CurrentDomain.BaseDirectory
-                                : Directory.GetCurrentDirectory();
-                            options.DiscoveryPath = Path.GetFullPath(Path.Combine(platformDirectory, options.DiscoveryPath));
-                        }
+                        options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                     })
                     .ValidateDataAnnotations();
 
