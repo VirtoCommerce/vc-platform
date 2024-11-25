@@ -120,7 +120,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     {
                         // PathString should start from "/"
                         var moduleIconUrl = module.IconUrl;
-                        if (!moduleIconUrl.StartsWith("/", StringComparison.Ordinal))
+                        if (!moduleIconUrl.StartsWith('/'))
                         {
                             moduleIconUrl = "/" + moduleIconUrl;
                         }
