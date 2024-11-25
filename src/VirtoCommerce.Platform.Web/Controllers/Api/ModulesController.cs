@@ -106,11 +106,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))
             {
-                if (!localModules.TryGetValue(module.Id, out var localModule) ||
-                    !IconFileExists(localModule))
-                {
-                    module.IconUrl = null;
-                }
+                module.IconUrl = localModules.TryGetValue(module.Id, out var localModule) && IconFileExists(localModule)
+                    ? localModule.IconUrl
+                    : null;
             }
 
             return Ok(allModules);
@@ -128,16 +126,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var basePath = new PathString($"/modules/$({module.Id})");
             var iconUrlPath = new PathString(moduleIconUrl);
 
-            if (iconUrlPath.StartsWithSegments(basePath, out var subPath) && !string.IsNullOrEmpty(subPath.Value))
+            if (!iconUrlPath.StartsWithSegments(basePath, out var subPath) || string.IsNullOrEmpty(subPath.Value))
             {
-                using var fileProvider = new PhysicalFileProvider(module.FullPhysicalPath);
-                if (!fileProvider.GetFileInfo(subPath.Value).Exists)
-                {
-                    return false;
-                }
+                return false;
             }
 
-            return true;
+            using var fileProvider = new PhysicalFileProvider(module.FullPhysicalPath);
+
+            return fileProvider.GetFileInfo(subPath.Value).Exists;
         }
 
         /// <summary>
