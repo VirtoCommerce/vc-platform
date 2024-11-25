@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
@@ -94,52 +93,51 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public ActionResult<ModuleDescriptor[]> GetModules()
         {
             EnsureModulesCatalogInitialized();
-            _localModuleCatalog.Initialize();
 
-            var allModules = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+            var allModules = _externalModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
                 .OrderBy(x => x.Id)
                 .ThenBy(x => x.Version)
                 .Select(x => new ModuleDescriptor(x))
                 .ToList();
 
-            var localModules = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
-                .ToLookup(x => x.Id);
+            _localModuleCatalog.Initialize();
+            var localModules = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>().ToDictionary(x => x.Id);
 
-            allModules.ForEach(module =>
+            foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))
             {
-                if (!string.IsNullOrEmpty(module.IconUrl))
+                if (!localModules.TryGetValue(module.Id, out var localModule) ||
+                    !IconFileExists(localModule))
                 {
-                    var localModule = localModules[module.Id].FirstOrDefault();
-
-                    // Module is not installed
-                    if (localModule == null)
-                    {
-                        module.IconUrl = null;
-                    }
-                    else
-                    {
-                        // PathString should start from "/"
-                        var moduleIconUrl = module.IconUrl;
-                        if (!moduleIconUrl.StartsWith('/'))
-                        {
-                            moduleIconUrl = "/" + moduleIconUrl;
-                        }
-
-                        var basePath = new PathString($"/modules/$({module.Id})");
-                        var iconUrlPath = new PathString(moduleIconUrl);
-
-                        iconUrlPath.StartsWithSegments(basePath, out var subPath);
-
-                        using var fileProvider = new PhysicalFileProvider(localModule.FullPhysicalPath);
-                        if (!fileProvider.GetFileInfo(subPath.Value).Exists)
-                        {
-                            module.IconUrl = null;
-                        }
-                    }
+                    module.IconUrl = null;
                 }
-            });
+            }
 
             return Ok(allModules);
+        }
+
+        private static bool IconFileExists(ManifestModuleInfo module)
+        {
+            // PathString should start from "/"
+            var moduleIconUrl = module.IconUrl;
+            if (!moduleIconUrl.StartsWith('/'))
+            {
+                moduleIconUrl = "/" + moduleIconUrl;
+            }
+
+            var basePath = new PathString($"/modules/$({module.Id})");
+            var iconUrlPath = new PathString(moduleIconUrl);
+
+            if (iconUrlPath.StartsWithSegments(basePath, out var subPath) && !string.IsNullOrEmpty(subPath.Value))
+            {
+                using var fileProvider = new PhysicalFileProvider(module.FullPhysicalPath);
+                if (!fileProvider.GetFileInfo(subPath.Value).Exists)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
