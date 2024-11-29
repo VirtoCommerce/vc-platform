@@ -61,6 +61,7 @@
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.5.192" />
     <PackageReference Include="System.Text.Json" Version="[8.0.5,9)" />
+    <PackageReference Include="Microsoft.Win32.SystemEvents" Version="8.0.0" />
   </ItemGroup>
   
   <ItemGroup>
