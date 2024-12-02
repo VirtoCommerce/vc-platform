@@ -92,7 +92,7 @@ angular.module('platformWebApp')
                             id: 'settingsSection',
                             data: selectedSettings,
                             headIcon: node.icon || '',
-                            title: node.name || 'platform.blades.settings-detail.title',
+                            title: node.groupName || 'platform.blades.settings-detail.title',
                             disableOpenAnimation: disableOpenAnimation,
                             controller: node.controller || 'platformWebApp.settingsDetailController',
                             template: node.template || '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html',
