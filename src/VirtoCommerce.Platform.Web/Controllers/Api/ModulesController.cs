@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
@@ -42,6 +43,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPlatformRestarter _platformRestarter;
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
+        private readonly ILocalModuleCatalog _localModuleCatalog;
 
         public ModulesController(
             IExternalModuleCatalog externalModuleCatalog,
@@ -52,7 +54,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<PlatformOptions> platformOptions,
             IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
             IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
-            IPlatformRestarter platformRestarter)
+            IPlatformRestarter platformRestarter,
+            ILocalModuleCatalog localModuleCatalog)
         {
             _externalModuleCatalog = externalModuleCatalog;
             _moduleInstaller = moduleInstaller;
@@ -63,6 +66,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
+            _localModuleCatalog = localModuleCatalog;
         }
 
         /// <summary>
@@ -90,11 +94,48 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureModulesCatalogInitialized();
 
-            var retVal = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x => x.Id).ThenBy(x => x.Version)
-                                               .Select(x => new ModuleDescriptor(x))
-                                               .ToArray();
+            var allModules = _externalModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .OrderBy(x => x.Id)
+                .ThenBy(x => x.Version)
+                .Select(x => new ModuleDescriptor(x))
+                .ToList();
 
-            return Ok(retVal);
+            _localModuleCatalog.Initialize();
+            var localModules = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>().ToDictionary(x => x.Id);
+
+            foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))
+            {
+                module.IconUrl = localModules.TryGetValue(module.Id, out var localModule) && IconFileExists(localModule)
+                    ? localModule.IconUrl
+                    : null;
+            }
+
+            return Ok(allModules);
+        }
+
+        private static bool IconFileExists(ManifestModuleInfo module)
+        {
+            // PathString should start from "/"
+            var moduleIconUrl = module.IconUrl;
+            if (!moduleIconUrl.StartsWith('/'))
+            {
+                moduleIconUrl = "/" + moduleIconUrl;
+            }
+
+            var basePath = new PathString($"/modules/$({module.Id})");
+            var iconUrlPath = new PathString(moduleIconUrl);
+
+            if (!iconUrlPath.StartsWithSegments(basePath, out var subPath) ||
+                string.IsNullOrEmpty(subPath.Value) ||
+                !Directory.Exists(module.FullPhysicalPath))
+            {
+                return false;
+            }
+
+            using var fileProvider = new PhysicalFileProvider(module.FullPhysicalPath);
+
+            return fileProvider.GetFileInfo(subPath.Value).Exists;
         }
 
         /// <summary>
