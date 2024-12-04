@@ -878,16 +878,16 @@
       "create-folder": {
         "title": "El nombre de una carpeta debe cumplir con las siguientes reglas de nomenclatura:\n  El nombre de la carpeta debe tener entre 3 y 63 caracteres de longitud.\n  El nombre de la carpeta debe comenzar con una letra o número, y solo puede contener letras, números y guiones (-).\n  Cada guion (-) debe estar inmediatamente precedido y seguido por una letra o número; no se permiten guiones consecutivos.\n  Todas las letras en el nombre de una carpeta deben estar en minúsculas"
       },
-      "storefront-cache-reset": {
+      "cache-reset": {
         "title": "Restablecer caché",
         "confirm-reset-message": "¿Está seguro de que desea restablecer la caché? Esta acción borrará todos los datos almacenados en caché y puede afectar temporalmente el rendimiento del sistema. Confirme para continuar",
-        "reset-successfully-message": "La caché de la aplicación frontend se ha restablecido con éxito"
+        "reset-successfully-message": "La caché se ha restablecido con éxito"
       }
     },
     "commands": {
       "login-on-behalf": "Iniciar sesión en nombre de",
-      "reset-storefront-cache": {
-        "title": "Restablecer caché de la aplicación frontend",
+      "cache-reset": {
+        "title": "Restablecer caché",
         "name": "Restablecer caché"
       },
       "restart-application-title": "Reinicia la aplicación"

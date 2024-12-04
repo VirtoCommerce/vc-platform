@@ -878,17 +878,17 @@
       "create-folder": {
         "title": "O nome da pasta deve estar em conformidade com as seguintes regras de nomenclatura:\n  O nome da pasta deve ter entre 3 e 63 caracteres.\n  O nome da pasta deve começar com uma letra ou número e pode conter apenas letras, números e hífen (-).\n  Cada hífen (-) deve ser imediatamente precedido e seguido por uma letra ou número; hífens consecutivos não são permitidos.\n  Todas as letras no nome da pasta devem ser minúsculas"
       },
-      "storefront-cache-reset": {
+      "cache-reset": {
         "title": "Cache redefinido",
         "confirm-reset-message": "Tem certeza de que deseja redefinir o cache? Esta ação limpará todos os dados armazenados em cache e poderá afetar temporariamente o desempenho do sistema. Confirme para prosseguir",
-        "reset-successfully-message": "O cache da aplicação frontend foi redefinido com sucess"
+        "reset-successfully-message": "O cache foi redefinido com sucess"
       }
     },
     "commands": {
       "login-on-behalf": "Login em nome de",
-      "reset-storefront-cache": {
-        "title": "Redefinir o cache da aplicação frontend",
-        "name": "Redefinir cache"
+      "cache-reset": {
+        "title": "Redefinir o cache",
+        "name": "Redefinir o cache"
       },
       "restart-application-title": "Reinicie a aplicação"
     }

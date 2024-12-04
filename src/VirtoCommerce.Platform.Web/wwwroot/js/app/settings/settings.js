@@ -55,14 +55,14 @@ angular.module("platformWebApp")
 
         // Add 'Reset cache' command to settings blade
         var resetCacheCommand = {
-            name: 'platform.commands.reset-storefront-cache.name',
-            title: 'platform.commands.reset-storefront-cache.title',
+            name: 'platform.commands.cache-reset.name',
+            title: 'platform.commands.cache-reset.title',
             icon: 'fa fa-eraser',
             executeMethod: function (blade) {
                 var confirmDialog = {
                     id: "confirmCacheResetDialog",
-                    title: "platform.dialogs.storefront-cache-reset.title",
-                    message: "platform.dialogs.storefront-cache-reset.confirm-reset-message",
+                    title: "platform.dialogs.cache-reset.title",
+                    message: "platform.dialogs.cache-reset.confirm-reset-message",
                     callback: function (confirm) {
                         if (confirm) {
                             blade.isLoading = true;
@@ -70,8 +70,8 @@ angular.module("platformWebApp")
                                 blade.isLoading = false;
                                 var successDialog = {
                                     id: "successCacheResetDialog",
-                                    title: "platform.dialogs.storefront-cache-reset.title",
-                                    message: "platform.dialogs.storefront-cache-reset.reset-successfully-message",
+                                    title: "platform.dialogs.cache-reset.title",
+                                    message: "platform.dialogs.cache-reset.reset-successfully-message",
                                 };
                                 dialogService.showSuccessDialog(successDialog);
                             });
