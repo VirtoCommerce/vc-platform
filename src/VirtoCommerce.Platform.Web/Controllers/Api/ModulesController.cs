@@ -228,7 +228,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                     {
-                        var fileName = contentDisposition.FileName.Value;
+                        var fileName = Path.GetFileName(contentDisposition.FileName.Value);
                         targetFilePath = Path.Combine(uploadPath, fileName);
 
                         using (var targetStream = System.IO.File.Create(targetFilePath))
