@@ -22,9 +22,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
 {
     public static class SwaggerServiceCollectionExtensions
     {
-        public static string platformDocName { get; } = "VirtoCommerce.Platform";
-        public static string platformUIDocName { get; } = "PlatformUI";
-        private static string oauth2SchemeName = "oauth2";
+        public static string PlatformDocName { get; } = "VirtoCommerce.Platform";
+        public static string PlatformUIDocName { get; } = "PlatformUI";
+        private static string _oauth2SchemeName = "oauth2";
 
         /// <summary>
         /// Register swagger documents generator
@@ -68,8 +68,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     }
                 };
 
-                c.SwaggerDoc(platformDocName, platformInfo);
-                c.SwaggerDoc(platformUIDocName, platformInfo);
+                c.SwaggerDoc(PlatformDocName, platformInfo);
+                c.SwaggerDoc(PlatformUIDocName, platformInfo);
 
                 foreach (var module in modules)
                 {
@@ -94,7 +94,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.AddModulesXmlComments(services);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
-                c.AddSecurityDefinition(oauth2SchemeName, new OpenApiSecurityScheme
+                c.AddSecurityDefinition(_oauth2SchemeName, new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
                     Description = "OAuth2 Resource Owner Password Grant flow",
@@ -135,14 +135,14 @@ namespace VirtoCommerce.Platform.Web.Swagger
         private static bool DocInclusionPredicateCustomStrategy(ManifestModuleInfo[] modules, string docName, ApiDescription apiDesc)
         {
             // It's a UI endpoint, return all to correctly build swagger UI page
-            if (docName.EqualsInvariant(platformUIDocName))
+            if (docName.EqualsInvariant(PlatformUIDocName))
             {
                 return true;
             }
 
             // It's a platform endpoint.
             var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
-            if (docName.EqualsInvariant(platformDocName) && currentAssembly.FullName.StartsWith(docName))
+            if (docName.EqualsInvariant(PlatformDocName) && currentAssembly.FullName.StartsWith(docName))
             {
                 return true;
             }
@@ -167,7 +167,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             applicationBuilder.UseSwagger(c =>
             {
                 c.RouteTemplate = "docs/{documentName}/swagger.{json|yaml}";
-                c.PreSerializeFilters.Add((swagger, httpReq) =>
+                c.PreSerializeFilters.Add((_, _) =>
                 {
                 });
 
@@ -179,8 +179,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
             applicationBuilder.UseSwaggerUI(c =>
             {
                 // Json Format Support 
-                c.SwaggerEndpoint($"./{platformUIDocName}/swagger.json", platformUIDocName);
-                c.SwaggerEndpoint($"./{platformDocName}/swagger.json", platformDocName);
+                c.SwaggerEndpoint($"./{PlatformUIDocName}/swagger.json", PlatformUIDocName);
+                c.SwaggerEndpoint($"./{PlatformDocName}/swagger.json", PlatformDocName);
 
                 foreach (var moduleId in modules.OrderBy(m => m.Id).Select(m => m.Id))
                 {
@@ -221,9 +221,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // ------
 
             var moduleAssembly = actionDescriptor?.ControllerTypeInfo.Assembly ?? Assembly.GetExecutingAssembly();
-            var groupName = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
+            var module = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
 
-            return new List<string> { groupName != null ? groupName.ModuleName : "Platform" };
+            return new List<string> { module != null ? module.ModuleName : "Platform" };
         }
 
         /// <summary>

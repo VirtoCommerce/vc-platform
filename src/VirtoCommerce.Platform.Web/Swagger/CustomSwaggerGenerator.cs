@@ -46,7 +46,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     {
                         result = attribute.Id;
                     }
-                    else if (documentName == SwaggerServiceCollectionExtensions.platformUIDocName)
+                    else if (documentName == SwaggerServiceCollectionExtensions.PlatformUIDocName)
                     {
                         result = type.FullName;
                     }
