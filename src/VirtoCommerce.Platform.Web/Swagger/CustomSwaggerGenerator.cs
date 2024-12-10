@@ -46,13 +46,13 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     {
                         result = attribute.Id;
                     }
-                    else if (documentName == SwaggerServiceCollectionExtensions.platformUIDocName)
+                    else if (documentName == SwaggerServiceCollectionExtensions.PlatformUIDocName)
                     {
                         result = type.FullName;
                     }
                     else
                     {
-                        result = (string)_defaultSchemaIdSelectorMethodInfo.Invoke(_schemaGeneratorOptions, new object[] { type });
+                        result = (string)_defaultSchemaIdSelectorMethodInfo.Invoke(_schemaGeneratorOptions, [type]);
                     }
                     Trace.WriteLine($"SchemaIdSelector: {type.FullName} => {result}");
                     return result;

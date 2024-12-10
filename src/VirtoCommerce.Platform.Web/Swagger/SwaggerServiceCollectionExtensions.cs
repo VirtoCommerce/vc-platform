@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,9 +21,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
 {
     public static class SwaggerServiceCollectionExtensions
     {
-        public static string platformDocName { get; } = "VirtoCommerce.Platform";
-        public static string platformUIDocName { get; } = "PlatformUI";
-        private static string oauth2SchemeName = "oauth2";
+        public static string PlatformDocName => "VirtoCommerce.Platform";
+        public static string PlatformUIDocName => "PlatformUI";
 
         /// <summary>
         /// Register swagger documents generator
@@ -68,15 +66,15 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     }
                 };
 
-                c.SwaggerDoc(platformDocName, platformInfo);
-                c.SwaggerDoc(platformUIDocName, platformInfo);
+                c.SwaggerDoc(PlatformDocName, platformInfo);
+                c.SwaggerDoc(PlatformUIDocName, platformInfo);
 
                 foreach (var module in modules)
                 {
                     c.SwaggerDoc(module.ModuleName, new OpenApiInfo { Title = $"{module.Id}", Version = "v1" });
                 }
 
-                c.TagActionsBy(api => api.GroupByModuleName(services));
+                c.TagActionsBy(api => [api.GetModuleName(provider)]);
                 c.IgnoreObsoleteActions();
                 c.DocumentFilter<ExcludeRedundantDepsFilter>();
                 // This temporary filter removes broken "application/*+json" content-type.
@@ -91,29 +89,24 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.SchemaFilter<EnumSchemaFilter>();
                 c.SchemaFilter<SwaggerIgnoreFilter>();
                 c.MapType<object>(() => new OpenApiSchema { Type = "object" });
-                c.AddModulesXmlComments(services);
+                c.AddModulesXmlComments(provider);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
-                c.AddSecurityDefinition(oauth2SchemeName, new OpenApiSecurityScheme
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
                     Description = "OAuth2 Resource Owner Password Grant flow",
-                    Flows = new OpenApiOAuthFlows()
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Password = new OpenApiOAuthFlow()
+                        Password = new OpenApiOAuthFlow
                         {
-                            TokenUrl = new Uri($"/connect/token", UriKind.Relative)
+                            TokenUrl = new Uri("/connect/token", UriKind.Relative)
                         }
                     },
                 });
 
-                c.DocInclusionPredicate((docName, apiDesc) =>
-                {
-                    return DocInclusionPredicateCustomStrategy(modules, docName, apiDesc);
-                });
-
+                c.DocInclusionPredicate((docName, apiDesc) => DocInclusionPredicateCustomStrategy(modules, docName, apiDesc));
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-
                 c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
 
                 if (useAllOfToExtendReferenceSchemas)
@@ -124,26 +117,25 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
             // But we need this, because PlatformUI document should contain ref schema ids as type.FullName to avoid conflict with same type names in different modules.
-            // As a solution we use custom swagger generator that catches document name and generates schemaids depending on it
+            // As a solution we use custom swagger generator that catches document name and generates schema ids depending on it.
             services.AddTransient<ISwaggerProvider, CustomSwaggerGenerator>();
 
             //This is important line switches the SwaggerGenerator to use the Newtonsoft contract resolver that uses the globally registered PolymorphJsonContractResolver
             //to propagate up to the resulting OpenAPI schema the derived types instead of base domain types
             services.AddSwaggerGenNewtonsoftSupport();
-
         }
 
         private static bool DocInclusionPredicateCustomStrategy(ManifestModuleInfo[] modules, string docName, ApiDescription apiDesc)
         {
-            // It's an UI endpoint, return all to correctly build swagger UI page
-            if (docName.EqualsInvariant(platformUIDocName))
+            // It's a UI endpoint, return all to correctly build swagger UI page
+            if (docName.EqualsInvariant(PlatformUIDocName))
             {
                 return true;
             }
 
             // It's a platform endpoint.
             var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
-            if (docName.EqualsInvariant(platformDocName) && currentAssembly.FullName.StartsWith(docName))
+            if (docName.EqualsInvariant(PlatformDocName) && currentAssembly.FullName?.StartsWith(docName) == true)
             {
                 return true;
             }
@@ -168,7 +160,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             applicationBuilder.UseSwagger(c =>
             {
                 c.RouteTemplate = "docs/{documentName}/swagger.{json|yaml}";
-                c.PreSerializeFilters.Add((swagger, httpReq) =>
+                c.PreSerializeFilters.Add((_, _) =>
                 {
                 });
 
@@ -180,8 +172,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
             applicationBuilder.UseSwaggerUI(c =>
             {
                 // Json Format Support 
-                c.SwaggerEndpoint($"./{platformUIDocName}/swagger.json", platformUIDocName);
-                c.SwaggerEndpoint($"./{platformDocName}/swagger.json", platformDocName);
+                c.SwaggerEndpoint($"./{PlatformUIDocName}/swagger.json", PlatformUIDocName);
+                c.SwaggerEndpoint($"./{PlatformDocName}/swagger.json", PlatformDocName);
 
                 foreach (var moduleId in modules.OrderBy(m => m.Id).Select(m => m.Id))
                 {
@@ -205,17 +197,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
         }
 
 
-        /// <summary>
-        /// grouping by Module Names in the ApiDescription
-        /// with comparing Assemlies
-        /// </summary>
-        /// <param name="api"></param>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        private static IList<string> GroupByModuleName(this ApiDescription api, IServiceCollection services)
+        private static string GetModuleName(this ApiDescription api, ServiceProvider serviceProvider)
         {
-            var providerSnapshot = services.BuildServiceProvider();
-            var moduleCatalog = providerSnapshot.GetRequiredService<ILocalModuleCatalog>();
+            var moduleCatalog = serviceProvider.GetRequiredService<ILocalModuleCatalog>();
 
             // ------
             // Lifted from ApiDescriptionExtensions
@@ -229,20 +213,17 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // ------
 
             var moduleAssembly = actionDescriptor?.ControllerTypeInfo.Assembly ?? Assembly.GetExecutingAssembly();
-            var groupName = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
+            var module = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
 
-            return new List<string> { groupName != null ? groupName.ModuleName : "Platform" };
+            return module?.ModuleName ?? "Platform";
         }
 
         /// <summary>
         /// Add Comments/Descriptions from XML-files in the ApiDescription
         /// </summary>
-        /// <param name="options"></param>
-        /// <param name="services"></param>
-        private static void AddModulesXmlComments(this SwaggerGenOptions options, IServiceCollection services)
+        private static void AddModulesXmlComments(this SwaggerGenOptions options, ServiceProvider serviceProvider)
         {
-            var provider = services.BuildServiceProvider();
-            var localStorageModuleCatalogOptions = provider.GetService<IOptions<LocalStorageModuleCatalogOptions>>().Value;
+            var localStorageModuleCatalogOptions = serviceProvider.GetService<IOptions<LocalStorageModuleCatalogOptions>>().Value;
 
             var xmlCommentsDirectoryPaths = new[]
             {
