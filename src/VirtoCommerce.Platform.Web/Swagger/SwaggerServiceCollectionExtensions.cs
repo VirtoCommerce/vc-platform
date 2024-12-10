@@ -118,7 +118,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
             // But we need this, because PlatformUI document should contain ref schema ids as type.FullName to avoid conflict with same type names in different modules.
             // As a solution we use custom swagger generator that catches document name and generates schema ids depending on it.
-            services.AddTransient<ISwaggerProvider, CustomSwaggerGenerator>();
+            services.AddTransient<IAsyncSwaggerProvider, CustomSwaggerGenerator>();
 
             //This is important line switches the SwaggerGenerator to use the Newtonsoft contract resolver that uses the globally registered PolymorphJsonContractResolver
             //to propagate up to the resulting OpenAPI schema the derived types instead of base domain types
