@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,9 +21,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
 {
     public static class SwaggerServiceCollectionExtensions
     {
-        public static string PlatformDocName { get; } = "VirtoCommerce.Platform";
-        public static string PlatformUIDocName { get; } = "PlatformUI";
-        private static string _oauth2SchemeName = "oauth2";
+        public static string PlatformDocName => "VirtoCommerce.Platform";
+        public static string PlatformUIDocName => "PlatformUI";
 
         /// <summary>
         /// Register swagger documents generator
@@ -76,7 +74,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     c.SwaggerDoc(module.ModuleName, new OpenApiInfo { Title = $"{module.Id}", Version = "v1" });
                 }
 
-                c.TagActionsBy(api => api.GroupByModuleName(services));
+                c.TagActionsBy(api => [api.GetModuleName(provider)]);
                 c.IgnoreObsoleteActions();
                 c.DocumentFilter<ExcludeRedundantDepsFilter>();
                 // This temporary filter removes broken "application/*+json" content-type.
@@ -91,29 +89,24 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.SchemaFilter<EnumSchemaFilter>();
                 c.SchemaFilter<SwaggerIgnoreFilter>();
                 c.MapType<object>(() => new OpenApiSchema { Type = "object" });
-                c.AddModulesXmlComments(services);
+                c.AddModulesXmlComments(provider);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
-                c.AddSecurityDefinition(_oauth2SchemeName, new OpenApiSecurityScheme
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
                     Description = "OAuth2 Resource Owner Password Grant flow",
-                    Flows = new OpenApiOAuthFlows()
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Password = new OpenApiOAuthFlow()
+                        Password = new OpenApiOAuthFlow
                         {
-                            TokenUrl = new Uri($"/connect/token", UriKind.Relative)
+                            TokenUrl = new Uri("/connect/token", UriKind.Relative)
                         }
                     },
                 });
 
-                c.DocInclusionPredicate((docName, apiDesc) =>
-                {
-                    return DocInclusionPredicateCustomStrategy(modules, docName, apiDesc);
-                });
-
+                c.DocInclusionPredicate((docName, apiDesc) => DocInclusionPredicateCustomStrategy(modules, docName, apiDesc));
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-
                 c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
 
                 if (useAllOfToExtendReferenceSchemas)
@@ -142,7 +135,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             // It's a platform endpoint.
             var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
-            if (docName.EqualsInvariant(PlatformDocName) && currentAssembly.FullName.StartsWith(docName))
+            if (docName.EqualsInvariant(PlatformDocName) && currentAssembly.FullName?.StartsWith(docName) == true)
             {
                 return true;
             }
@@ -204,10 +197,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
         }
 
 
-        private static IList<string> GroupByModuleName(this ApiDescription api, IServiceCollection services)
+        private static string GetModuleName(this ApiDescription api, ServiceProvider serviceProvider)
         {
-            var providerSnapshot = services.BuildServiceProvider();
-            var moduleCatalog = providerSnapshot.GetRequiredService<ILocalModuleCatalog>();
+            var moduleCatalog = serviceProvider.GetRequiredService<ILocalModuleCatalog>();
 
             // ------
             // Lifted from ApiDescriptionExtensions
@@ -223,18 +215,15 @@ namespace VirtoCommerce.Platform.Web.Swagger
             var moduleAssembly = actionDescriptor?.ControllerTypeInfo.Assembly ?? Assembly.GetExecutingAssembly();
             var module = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
 
-            return new List<string> { module != null ? module.ModuleName : "Platform" };
+            return module?.ModuleName ?? "Platform";
         }
 
         /// <summary>
         /// Add Comments/Descriptions from XML-files in the ApiDescription
         /// </summary>
-        /// <param name="options"></param>
-        /// <param name="services"></param>
-        private static void AddModulesXmlComments(this SwaggerGenOptions options, IServiceCollection services)
+        private static void AddModulesXmlComments(this SwaggerGenOptions options, ServiceProvider serviceProvider)
         {
-            var provider = services.BuildServiceProvider();
-            var localStorageModuleCatalogOptions = provider.GetService<IOptions<LocalStorageModuleCatalogOptions>>().Value;
+            var localStorageModuleCatalogOptions = serviceProvider.GetService<IOptions<LocalStorageModuleCatalogOptions>>().Value;
 
             var xmlCommentsDirectoryPaths = new[]
             {

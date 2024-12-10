@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     }
                     else
                     {
-                        result = (string)_defaultSchemaIdSelectorMethodInfo.Invoke(_schemaGeneratorOptions, new object[] { type });
+                        result = (string)_defaultSchemaIdSelectorMethodInfo.Invoke(_schemaGeneratorOptions, [type]);
                     }
                     Trace.WriteLine($"SchemaIdSelector: {type.FullName} => {result}");
                     return result;
