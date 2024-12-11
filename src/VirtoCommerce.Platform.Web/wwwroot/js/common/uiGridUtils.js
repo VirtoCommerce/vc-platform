@@ -61,7 +61,7 @@ angular.module('platformWebApp')
                             if (savedState) {
 
                                 Object.keys(savedState).forEach(function (key) {
-                                    let value = savedState[key];
+                                    const value = savedState[key];
                                     if (_.isEmpty(value)) {
                                         savedState[key] = undefined;
                                     }
