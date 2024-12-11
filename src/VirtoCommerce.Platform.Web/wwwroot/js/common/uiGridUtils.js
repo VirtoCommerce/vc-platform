@@ -59,9 +59,15 @@ angular.module('platformWebApp')
 
                         if (gridApi.saveState) {
                             if (savedState) {
-                                //$timeout(function () {
+
+                                Object.keys(savedState).forEach(function (key) {
+                                    const value = savedState[key];
+                                    if (_.isEmpty(value)) {
+                                        savedState[key] = undefined;
+                                    }
+                                });
+
                                 gridApi.saveState.restore($scope, savedState);
-                                //}, 10);
                             }
 
                             if (gridApi.colResizable)
