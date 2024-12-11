@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
@@ -12,7 +13,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
     /// <summary>
     /// Generate swagger schema ids for schema refs depending on document name
     /// </summary>
-    public class CustomSwaggerGenerator : ISwaggerProvider
+    public class CustomSwaggerGenerator : IAsyncSwaggerProvider
     {
         private readonly SwaggerGenerator _swaggerGenerator;
         private readonly SchemaGeneratorOptions _schemaGeneratorOptions;
@@ -30,10 +31,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
             _swaggerGenerator = new SwaggerGenerator(options, apiDescriptionsProvider, schemaGenerator);
         }
 
-        public OpenApiDocument GetSwagger(string documentName, string host = null, string basePath = null)
+        public Task<OpenApiDocument> GetSwaggerAsync(string documentName, string host = null, string basePath = null)
         {
             SetSchemaIdSelector(documentName);
-            return _swaggerGenerator.GetSwagger(documentName, host, basePath);
+            return _swaggerGenerator.GetSwaggerAsync(documentName, host, basePath);
         }
 
         private void SetSchemaIdSelector(string documentName)
