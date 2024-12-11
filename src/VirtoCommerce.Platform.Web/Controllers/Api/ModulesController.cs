@@ -29,6 +29,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class ModulesController : Controller
     {
+        private const string _managementIsDisabledMessage = "Module management is disabled.";
+
         private readonly IExternalModuleCatalog _externalModuleCatalog;
         private readonly IModuleInstaller _moduleInstaller;
         private readonly IPushNotificationManager _pushNotifier;
@@ -36,11 +38,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISettingsManager _settingsManager;
         private readonly PlatformOptions _platformOptions;
         private readonly ExternalModuleCatalogOptions _externalModuleCatalogOptions;
+        private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly IPlatformRestarter _platformRestarter;
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
-        public ModulesController(IExternalModuleCatalog externalModuleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, ISettingsManager settingsManager, IOptions<PlatformOptions> platformOptions, IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions, IPlatformRestarter platformRestarter)
+        public ModulesController(
+            IExternalModuleCatalog externalModuleCatalog,
+            IModuleInstaller moduleInstaller,
+            IPushNotificationManager pushNotifier,
+            IUserNameResolver userNameResolver,
+            ISettingsManager settingsManager,
+            IOptions<PlatformOptions> platformOptions,
+            IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
+            IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
+            IPlatformRestarter platformRestarter)
         {
             _externalModuleCatalog = externalModuleCatalog;
             _moduleInstaller = moduleInstaller;
@@ -49,6 +61,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _settingsManager = settingsManager;
             _platformOptions = platformOptions.Value;
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
+            _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
         }
 
@@ -143,69 +156,108 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ModuleDescriptor>> UploadModuleArchive()
         {
             EnsureModulesCatalogInitialized();
-            ModuleDescriptor result = null;
+
+            if (!_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
+            {
+                return BadRequest(_managementIsDisabledMessage);
+            }
+
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
                 return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
             }
-            var uploadPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
-            if (!Directory.Exists(uploadPath))
+
+            var targetFilePath = await UploadFile(Request, Path.GetFullPath(_platformOptions.LocalUploadFolderPath));
+            if (targetFilePath is null)
             {
-                Directory.CreateDirectory(uploadPath);
+                return BadRequest("Cannot read file");
             }
-            string targetFilePath = null;
 
-            var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
-            var reader = new MultipartReader(boundary, HttpContext.Request.Body);
-
-            var section = await reader.ReadNextSectionAsync();
-            if (section != null)
+            var manifest = await LoadModuleManifestFromZipArchive(targetFilePath);
+            if (manifest is null)
             {
-                var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
-
-                if (hasContentDispositionHeader)
-                {
-                    if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
-                    {
-                        var fileName = contentDisposition.FileName.Value;
-                        targetFilePath = Path.Combine(uploadPath, fileName);
-
-                        using (var targetStream = System.IO.File.Create(targetFilePath))
-                        {
-                            await section.Body.CopyToAsync(targetStream);
-                        }
-
-                    }
-                }
-                using (var packageStream = System.IO.File.Open(targetFilePath, FileMode.Open))
-                using (var package = new ZipArchive(packageStream, ZipArchiveMode.Read))
-                {
-                    var entry = package.GetEntry("module.manifest");
-                    if (entry != null)
-                    {
-                        using (var manifestStream = entry.Open())
-                        {
-                            var manifest = ManifestReader.Read(manifestStream);
-                            var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                            module.LoadFromManifest(manifest);
-                            var alreadyExistModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(module));
-                            if (alreadyExistModule != null)
-                            {
-                                module = alreadyExistModule;
-                            }
-                            else
-                            {
-                                //Force dependency validation for new module
-                                _externalModuleCatalog.CompleteListWithDependencies(new[] { module }).ToList().Clear();
-                                _externalModuleCatalog.AddModule(module);
-                            }
-                            module.Ref = targetFilePath;
-                            result = new ModuleDescriptor(module);
-                        }
-                    }
-                }
+                return BadRequest("Cannot read module manifest");
             }
+
+            var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+            module.LoadFromManifest(manifest);
+            var existingModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(module));
+
+            if (existingModule != null)
+            {
+                module = existingModule;
+            }
+            else
+            {
+                //Force dependency validation for new module
+                _externalModuleCatalog.CompleteListWithDependencies([module]).ToList().Clear();
+                _externalModuleCatalog.AddModule(module);
+            }
+
+            module.Ref = targetFilePath;
+            var result = new ModuleDescriptor(module);
+
             return Ok(result);
+        }
+
+        private static async Task<string> UploadFile(HttpRequest request, string uploadFolderPath)
+        {
+            var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
+            var reader = new MultipartReader(boundary, request.Body);
+            var section = await reader.ReadNextSectionAsync();
+
+            if (section == null)
+            {
+                return null;
+            }
+
+            if (!ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition) ||
+                !MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+            {
+                return null;
+            }
+
+            var fileName = Path.GetFileName(contentDisposition.FileName.Value);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return null;
+            }
+
+            if (!Directory.Exists(uploadFolderPath))
+            {
+                Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            var targetFilePath = Path.Combine(uploadFolderPath, fileName);
+
+            await using var targetStream = System.IO.File.Create(targetFilePath);
+            await section.Body.CopyToAsync(targetStream);
+
+            return targetFilePath;
+        }
+
+        private static async Task<ModuleManifest> LoadModuleManifestFromZipArchive(string path)
+        {
+            ModuleManifest manifest = null;
+
+            try
+            {
+                await using var packageStream = System.IO.File.Open(path, FileMode.Open);
+                using var package = new ZipArchive(packageStream, ZipArchiveMode.Read);
+
+                var entry = package.GetEntry("module.manifest");
+                if (entry != null)
+                {
+                    await using var manifestStream = entry.Open();
+                    manifest = ManifestReader.Read(manifestStream);
+                }
+            }
+            catch
+            {
+                // Suppress any exceptions
+            }
+
+            return manifest;
         }
 
         /// <summary>
