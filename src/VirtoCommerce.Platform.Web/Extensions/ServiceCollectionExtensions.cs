@@ -40,7 +40,11 @@ namespace VirtoCommerce.Platform.Modules
             // Ensure all modules are loaded
             ConsoleLog.BeginOperation("Registering API controllers");
 
-            var modules = moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.State == ModuleState.NotStarted).ToArray();
+            var notStatedModules = moduleCatalog.Modules.Where(x => x.State == ModuleState.NotStarted);
+            var modules = moduleCatalog.CompleteListWithDependencies(notStatedModules)
+                .OfType<ManifestModuleInfo>()
+                .ToArray();
+
             for (var i = 0; i < modules.Length; i++)
             {
                 var module = modules[i];
