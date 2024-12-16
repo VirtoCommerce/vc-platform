@@ -2,6 +2,7 @@ using System;
 
 namespace VirtoCommerce.Platform.Core.Logger
 {
+    [Obsolete("Use Serilog's static Log.Logger or inject ILogger instead")]
     public static class ConsoleLog
     {
         public static void BeginOperation(string message)

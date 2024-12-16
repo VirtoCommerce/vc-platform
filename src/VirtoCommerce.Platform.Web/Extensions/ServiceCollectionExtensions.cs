@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules.External;
 
@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Modules
             manager.Run();
 
             // Ensure all modules are loaded
-            ConsoleLog.BeginOperation("Registering API controllers");
+            Log.Logger.Information("Registering API controllers");
 
             var modules = moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.State == ModuleState.NotStarted).ToArray();
             for (var i = 0; i < modules.Length; i++)
@@ -54,8 +54,6 @@ namespace VirtoCommerce.Platform.Modules
                     mvcBuilder.AddApplicationPart(module.Assembly);
                 }
             }
-
-            ConsoleLog.EndOperation();
 
             services.AddSingleton(moduleCatalog);
             return services;

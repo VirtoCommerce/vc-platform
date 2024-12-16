@@ -33,6 +33,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
+using Serilog;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -98,11 +99,26 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ConsoleLog.BeginOperation("Virto Commerce is loading");
+            // Use temporary bootstrap logger (which will be replaced with configured version later) until DI initialization completed
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration).CreateBootstrapLogger();
+
+            services.AddSerilog((serviceProvider, loggerConfiguration) =>
+            {
+                _ = loggerConfiguration.ReadFrom.Configuration(Configuration);
+
+                // Enrich configuration from external sources
+                var configurationServices = serviceProvider.GetService<IEnumerable<ILoggerConfigurationService>>();
+                foreach (var service in configurationServices)
+                {
+                    service.Configure(loggerConfiguration);
+                }
+                // Preserve static logger (i.e. create new logger for DI, instead of reconfiguring existing)
+                // to avoid exception about frozen logger because BuildServiceProvider is called multiple times
+            }, preserveStaticLogger: true);
+
+            Log.Logger.Information("Virto Commerce is loading");
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
-
-            ConsoleLog.EndOperation();
 
             // Optional Modules Dependecy Resolving
             services.Add(ServiceDescriptor.Singleton(typeof(IOptionalDependency<>), typeof(OptionalDependencyManager<>)));
@@ -301,9 +317,8 @@ namespace VirtoCommerce.Platform.Web
                     break;
             }
 
-            ConsoleLog.BeginOperation("Getting server certificate");
+            Log.Logger.Information("Getting server certificate");
             ServerCertificate = GetServerCertificate(certificateLoader);
-            ConsoleLog.EndOperation();
 
             //Create backup of token handler before default claim maps are cleared
             // [Obsolete("Use JsonWebToken", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
@@ -671,11 +686,9 @@ namespace VirtoCommerce.Platform.Web
                 app.UseAutoAccountsLockoutJob(options.Value);
 
                 // Complete modules startup and apply their migrations
-                ConsoleLog.BeginOperation("Post initializing modules");
+                Log.Logger.Information("Post initializing modules");
 
                 app.UseModules();
-
-                ConsoleLog.EndOperation();
             });
 
             app.UseEndpoints(SetupEndpoints);

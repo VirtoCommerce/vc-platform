@@ -48,7 +48,7 @@ namespace VirtoCommerce.Platform.Modules
         /// <summary>
         /// Initializes the specified module.
         /// </summary>
-        /// <param name="moduleInfo">The module to initialize</param>        
+        /// <param name="moduleInfo">The module to initialize</param>
         public void Initialize(ModuleInfo moduleInfo)
         {
             if (moduleInfo == null)
@@ -80,6 +80,7 @@ namespace VirtoCommerce.Platform.Modules
                         hasModuleCatalog.ModuleCatalog = _moduleCatalog;
                     }
 
+                    _loggerFacade.LogDebug("Initializing module {ModuleName}.", moduleInfo.ModuleName);
                     moduleInstance.Initialize(_serviceCollection);
                     moduleInfo.State = ModuleState.Initialized;
                 }
@@ -103,6 +104,7 @@ namespace VirtoCommerce.Platform.Modules
             {
                 if (moduleInstance != null)
                 {
+                    _loggerFacade.LogDebug("Post-initializing module {ModuleName}.", moduleInfo.ModuleName);
                     moduleInstance.PostInitialize(appBuilder);
                 }
             }
@@ -115,7 +117,7 @@ namespace VirtoCommerce.Platform.Modules
         /// <summary>
         /// Handles any exception occurred in the module Initialization process,
         /// logs the error using the <see cref="ILogger"/> and throws a <see cref="ModuleInitializeException"/>.
-        /// This method can be overridden to provide a different behavior. 
+        /// This method can be overridden to provide a different behavior.
         /// </summary>
         /// <param name="moduleInfo">The module metadata where the error happened.</param>
         /// <param name="exception">The exception thrown that is the cause of the current error.</param>
