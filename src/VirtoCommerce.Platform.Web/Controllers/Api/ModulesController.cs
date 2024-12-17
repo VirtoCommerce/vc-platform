@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
@@ -42,6 +43,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPlatformRestarter _platformRestarter;
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
+        private readonly ILocalModuleCatalog _localModuleCatalog;
 
         public ModulesController(
             IExternalModuleCatalog externalModuleCatalog,
@@ -52,7 +54,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<PlatformOptions> platformOptions,
             IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
             IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
-            IPlatformRestarter platformRestarter)
+            IPlatformRestarter platformRestarter,
+            ILocalModuleCatalog localModuleCatalog)
         {
             _externalModuleCatalog = externalModuleCatalog;
             _moduleInstaller = moduleInstaller;
@@ -63,6 +66,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
+            _localModuleCatalog = localModuleCatalog;
         }
 
         /// <summary>
@@ -90,11 +94,48 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureModulesCatalogInitialized();
 
-            var retVal = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x => x.Id).ThenBy(x => x.Version)
-                                               .Select(x => new ModuleDescriptor(x))
-                                               .ToArray();
+            var allModules = _externalModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .OrderBy(x => x.Id)
+                .ThenBy(x => x.Version)
+                .Select(x => new ModuleDescriptor(x))
+                .ToList();
 
-            return Ok(retVal);
+            _localModuleCatalog.Initialize();
+            var localModules = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>().ToDictionary(x => x.Id);
+
+            foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))
+            {
+                module.IconUrl = localModules.TryGetValue(module.Id, out var localModule) && IconFileExists(localModule)
+                    ? localModule.IconUrl
+                    : null;
+            }
+
+            return Ok(allModules);
+        }
+
+        private static bool IconFileExists(ManifestModuleInfo module)
+        {
+            // PathString should start from "/"
+            var moduleIconUrl = module.IconUrl;
+            if (!moduleIconUrl.StartsWith('/'))
+            {
+                moduleIconUrl = "/" + moduleIconUrl;
+            }
+
+            var basePath = new PathString($"/modules/$({module.Id})");
+            var iconUrlPath = new PathString(moduleIconUrl);
+
+            if (!iconUrlPath.StartsWithSegments(basePath, out var subPath) ||
+                string.IsNullOrEmpty(subPath.Value) ||
+                !Directory.Exists(module.FullPhysicalPath))
+            {
+                return false;
+            }
+
+            using var fileProvider = new PhysicalFileProvider(module.FullPhysicalPath);
+
+            return fileProvider.GetFileInfo(subPath.Value).Exists;
         }
 
         /// <summary>
@@ -167,66 +208,97 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
             }
 
-            var uploadPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
-            if (!Directory.Exists(uploadPath))
+            var targetFilePath = await UploadFile(Request, Path.GetFullPath(_platformOptions.LocalUploadFolderPath));
+            if (targetFilePath is null)
             {
-                Directory.CreateDirectory(uploadPath);
+                return BadRequest("Cannot read file");
             }
 
-            ModuleDescriptor result = null;
-            string targetFilePath = null;
-            var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
-            var reader = new MultipartReader(boundary, HttpContext.Request.Body);
-            var section = await reader.ReadNextSectionAsync();
-
-            if (section != null)
+            var manifest = await LoadModuleManifestFromZipArchive(targetFilePath);
+            if (manifest is null)
             {
-                var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
-
-                if (hasContentDispositionHeader)
-                {
-                    if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
-                    {
-                        var fileName = contentDisposition.FileName.Value;
-                        targetFilePath = Path.Combine(uploadPath, fileName);
-
-                        using (var targetStream = System.IO.File.Create(targetFilePath))
-                        {
-                            await section.Body.CopyToAsync(targetStream);
-                        }
-
-                    }
-                }
-                using (var packageStream = System.IO.File.Open(targetFilePath, FileMode.Open))
-                using (var package = new ZipArchive(packageStream, ZipArchiveMode.Read))
-                {
-                    var entry = package.GetEntry("module.manifest");
-                    if (entry != null)
-                    {
-                        using (var manifestStream = entry.Open())
-                        {
-                            var manifest = ManifestReader.Read(manifestStream);
-                            var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                            module.LoadFromManifest(manifest);
-                            var alreadyExistModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(module));
-                            if (alreadyExistModule != null)
-                            {
-                                module = alreadyExistModule;
-                            }
-                            else
-                            {
-                                //Force dependency validation for new module
-                                _externalModuleCatalog.CompleteListWithDependencies(new[] { module }).ToList().Clear();
-                                _externalModuleCatalog.AddModule(module);
-                            }
-                            module.Ref = targetFilePath;
-                            result = new ModuleDescriptor(module);
-                        }
-                    }
-                }
+                return BadRequest("Cannot read module manifest");
             }
+
+            var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+            module.LoadFromManifest(manifest);
+            var existingModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(module));
+
+            if (existingModule != null)
+            {
+                module = existingModule;
+            }
+            else
+            {
+                //Force dependency validation for new module
+                _externalModuleCatalog.CompleteListWithDependencies([module]).ToList().Clear();
+                _externalModuleCatalog.AddModule(module);
+            }
+
+            module.Ref = targetFilePath;
+            var result = new ModuleDescriptor(module);
 
             return Ok(result);
+        }
+
+        private static async Task<string> UploadFile(HttpRequest request, string uploadFolderPath)
+        {
+            var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
+            var reader = new MultipartReader(boundary, request.Body);
+            var section = await reader.ReadNextSectionAsync();
+
+            if (section == null)
+            {
+                return null;
+            }
+
+            if (!ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition) ||
+                !MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+            {
+                return null;
+            }
+
+            var fileName = Path.GetFileName(contentDisposition.FileName.Value);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return null;
+            }
+
+            if (!Directory.Exists(uploadFolderPath))
+            {
+                Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            var targetFilePath = Path.Combine(uploadFolderPath, fileName);
+
+            await using var targetStream = System.IO.File.Create(targetFilePath);
+            await section.Body.CopyToAsync(targetStream);
+
+            return targetFilePath;
+        }
+
+        private static async Task<ModuleManifest> LoadModuleManifestFromZipArchive(string path)
+        {
+            ModuleManifest manifest = null;
+
+            try
+            {
+                await using var packageStream = System.IO.File.Open(path, FileMode.Open);
+                using var package = new ZipArchive(packageStream, ZipArchiveMode.Read);
+
+                var entry = package.GetEntry("module.manifest");
+                if (entry != null)
+                {
+                    await using var manifestStream = entry.Open();
+                    manifest = ManifestReader.Read(manifestStream);
+                }
+            }
+            catch
+            {
+                // Suppress any exceptions
+            }
+
+            return manifest;
         }
 
         /// <summary>

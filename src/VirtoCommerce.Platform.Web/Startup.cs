@@ -507,13 +507,13 @@ namespace VirtoCommerce.Platform.Web
             var healthBuilder = services.AddHealthChecks()
                 .AddCheck<ModulesHealthChecker>("Modules health",
                     failureStatus: HealthStatus.Unhealthy,
-                    tags: new[] { "Modules" })
+                    tags: ["Modules"])
                 .AddCheck<CacheHealthChecker>("Cache health",
                     failureStatus: HealthStatus.Degraded,
-                    tags: new[] { "Cache" })
+                    tags: ["Cache"])
                 .AddCheck<RedisHealthCheck>("Redis health",
                     failureStatus: HealthStatus.Unhealthy,
-                    tags: new[] { "Cache" });
+                    tags: ["Cache"]);
 
             var connectionString = Configuration.GetConnectionString("VirtoCommerce");
             switch (databaseProvider)
@@ -522,19 +522,19 @@ namespace VirtoCommerce.Platform.Web
                     healthBuilder.AddMySql(connectionString,
                         name: "MySql health",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "Database" });
+                        tags: ["Database"]);
                     break;
                 case "PostgreSql":
                     healthBuilder.AddNpgSql(connectionString,
                         name: "PostgreSql health",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "Database" });
+                        tags: ["Database"]);
                     break;
                 default:
                     healthBuilder.AddSqlServer(connectionString,
                         name: "SQL Server health",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "Database" });
+                        tags: ["Database"]);
                     break;
             }
 
