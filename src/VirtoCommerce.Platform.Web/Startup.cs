@@ -116,7 +116,7 @@ namespace VirtoCommerce.Platform.Web
                 // to avoid exception about frozen logger because BuildServiceProvider is called multiple times
             }, preserveStaticLogger: true);
 
-            Log.Logger.Information("Virto Commerce is loading");
+            Log.ForContext<Startup>().Information("Virto Commerce is loading");
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
@@ -317,7 +317,7 @@ namespace VirtoCommerce.Platform.Web
                     break;
             }
 
-            Log.Logger.Information("Getting server certificate");
+            Log.ForContext<Startup>().Information("Getting server certificate");
             ServerCertificate = GetServerCertificate(certificateLoader);
 
             //Create backup of token handler before default claim maps are cleared
@@ -686,7 +686,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseAutoAccountsLockoutJob(options.Value);
 
                 // Complete modules startup and apply their migrations
-                Log.Logger.Information("Post initializing modules");
+                Log.ForContext<Startup>().Information("Post initializing modules");
 
                 app.UseModules();
             });
