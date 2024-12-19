@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Web
             })
             .ConfigureServices((hostingContext, services) =>
             {
-                //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
+                //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs
                 if (hostingContext.Configuration.GetValue("VirtoCommerce:Hangfire:UseHangfireServer", true))
                 {
                     // Add & start hangfire server immediately.
@@ -82,18 +82,6 @@ namespace VirtoCommerce.Platform.Web
                             options.WorkerCount = workerCount.Value;
                         }
                     });
-                }
-            })
-            .UseSerilog((context, services, loggerConfiguration) =>
-            {
-                // read from configuration
-                _ = loggerConfiguration.ReadFrom.Configuration(context.Configuration);
-
-                // enrich configuration from external sources
-                var configurationServices = services.GetService<IEnumerable<ILoggerConfigurationService>>();
-                foreach (var service in configurationServices)
-                {
-                    service.Configure(loggerConfiguration);
                 }
             });
     }
