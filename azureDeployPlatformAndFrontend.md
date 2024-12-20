@@ -11,9 +11,9 @@ The Azure deployment process consists of the following steps:
 
 1. Create all Azure resources using the Azure button.
 2. Set up the initial configuration for the platform application (install sample data if necessary; set a new password for the Admin user).
-2 Optional. If you want to use the page builder functionality, the front-end application should use the https protocol. To set this up:
+2 Optional. If you want to use the Page builder functionality, the front-end application should use the https protocol. To set this up:
     a. add an https listener to the Application gateway
-        go to Settings -> Listeners -> Add listener -> Fill in `Listener name`, set `Protocol` to `HTTPS` and `Port` to `443`. Select .pfx file in `PFX certificate file` and enter the password for the certificate
+        go to Settings -> Listeners -> Add listener -> Fill in `Listener name` and `Cert name`, set `Protocol` to `HTTPS` and `Port` to `443`. Select .pfx file in `PFX certificate file` and enter the password for the certificate.
     b. change a listener for routing rule
         go to Settings -> Rules -> <routning rule> -> set listener to `https`
 3. Add a store URL (`Stores > B2B-store > Store URL`) pointing to the Azure Application Gateway IP address in the form of `http://x.x.x.x/` (in case of using https, use form `https://<hostname-from-certificate>/`).
