@@ -547,6 +547,28 @@
                                             "reroute": false
                                         }
                                     }
+                                },
+                                {
+                                    "ruleSequence": 90,
+                                    "conditions": [],
+                                    "name": "CORS",
+                                    "actionSet": {
+                                        "requestHeaderConfigurations": [],
+                                        "responseHeaderConfigurations": [
+                                            {
+                                                "headerName": "Cross-Origin-Embedder-Policy",
+                                                "headerValue": "credentialless"
+                                            },
+                                            {
+                                                "headerName": "Cross-Origin-Resource-Policy",
+                                                "headerValue": "cross-origin"
+                                            },
+                                            {
+                                                "headerName": "Content-Security-Policy", 
+                                                "headerValue": "[concat('frame-ancestors ''self'' https://', parameters('appServiceName'), '.azurewebsites.net;')]"
+                                            }
+                                        ]
+                                    }
                                 }
                             ]
                         }
