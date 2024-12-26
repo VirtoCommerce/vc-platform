@@ -212,7 +212,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
                 var ticket = await CreateTicketAsync(user, context);
-                ticket.Principal.SetAuthenticationMethod(info.Principal.GetAuthenticationMethod(), [Destinations.AccessToken]);
+
+                var destinations = new[] { Destinations.AccessToken };
+                CopyClaim(info.Principal, ticket.Principal, ClaimTypes.AuthenticationMethod, destinations);
+                CopyClaim(info.Principal, ticket.Principal, PlatformConstants.Security.Claims.OperatorUserId, destinations);
+                CopyClaim(info.Principal, ticket.Principal, PlatformConstants.Security.Claims.OperatorUserName, destinations);
 
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
@@ -288,10 +292,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 // Resolve Impersonator from claims or from current user
-                var operatorUserId = string.IsNullOrEmpty(User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)) ?
-                    user.Id : User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId);
-                var operatorUserName = string.IsNullOrEmpty(User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)) ?
-                    user.UserName : User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName);
+                var operatorUserId = User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)?.EmptyToNull() ?? user.Id;
+                var operatorUserName = User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)?.EmptyToNull() ?? user.UserName;
 
                 var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
                 ApplicationUser impersonatedUser;
@@ -566,6 +568,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 });
         }
 
+
+        private static void CopyClaim(ClaimsPrincipal source, ClaimsPrincipal target, string claimType, IList<string> destinations)
+        {
+            var value = source.FindFirstValue(claimType);
+            target.SetClaimWithDestinations(claimType, value, destinations);
+        }
 
         private static bool RequestHasExpired(OpenIddictRequest request, AuthenticateResult result)
         {
