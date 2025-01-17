@@ -26,7 +26,8 @@ import 'uikit/dist/js/components/htmleditor.js';
 import 'uikit/dist/css/components/htmleditor.css';
 import 'uikit/dist/css/uikit.css';
 
-import 'webpack-jquery-ui';
+import 'jquery-ui';
+import 'jquery-ui/ui/widgets/sortable';
 import 'angular';
 import '@uirouter/angularjs';
 import 'angularjs-scroll-glue';
