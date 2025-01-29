@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,21 +12,25 @@ public class LocalizedString : ValueObject
 
     public void Set(string languageCode, string value)
     {
+        ArgumentNullException.ThrowIfNull(languageCode);
         _values[languageCode] = value;
     }
 
     public string Get(string languageCode)
     {
+        ArgumentNullException.ThrowIfNull(languageCode);
         return _values.TryGetValue(languageCode, out var value) ? value : null;
     }
 
     public bool TryGet(string languageCode, out string value)
     {
+        ArgumentNullException.ThrowIfNull(languageCode);
         return _values.TryGetValue(languageCode, out value);
     }
 
     public void Remove(string languageCode)
     {
+        ArgumentNullException.ThrowIfNull(languageCode);
         _values.Remove(languageCode);
     }
 
@@ -48,9 +53,15 @@ public class LocalizedString : ValueObject
         }
     }
 
-    public virtual object GetCopy()
+    public override object Clone()
     {
-        var result = Clone() as LocalizedString;
-        return result;
+        var clone = new LocalizedString();
+        foreach (var kvp in _values)
+        {
+            clone.Set(kvp.Key, kvp.Value);
+        }
+        return clone;
     }
+
+    public virtual object GetCopy() => Clone();
 }
