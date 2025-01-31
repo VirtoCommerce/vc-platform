@@ -597,6 +597,8 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseSecurityHeaders();
 
+            app.UseMiddleware<NoCacheForApiMiddleware>();
+
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
