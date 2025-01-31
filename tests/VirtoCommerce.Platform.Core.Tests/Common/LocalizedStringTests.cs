@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
     public class LocalizedStringTests
     {
         [Fact]
-        public void Set_ShouldAddValue()
+        public void SetValue_ShouldAddValue()
         {
             // Arrange
             var localizedString = new LocalizedString();
@@ -15,53 +15,53 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             var value = "Hello";
 
             // Act
-            localizedString.Set(languageCode, value);
+            localizedString.SetValue(languageCode, value);
 
             // Assert
-            Assert.Equal(value, localizedString.Get(languageCode));
+            Assert.Equal(value, localizedString.GetValue(languageCode));
         }
 
         [Fact]
-        public void Get_ShouldReturnValue()
+        public void GetValue_ShouldReturnValue()
         {
             // Arrange
             var localizedString = new LocalizedString();
             var languageCode = "en-US";
             var value = "Hello";
-            localizedString.Set(languageCode, value);
+            localizedString.SetValue(languageCode, value);
 
             // Act
-            var result = localizedString.Get(languageCode);
+            var result = localizedString.GetValue(languageCode);
 
             // Assert
             Assert.Equal(value, result);
         }
 
         [Fact]
-        public void Get_ShouldReturnNullIfNotFound()
+        public void GetValue_ShouldReturnNullIfNotFound()
         {
             // Arrange
             var localizedString = new LocalizedString();
             var languageCode = "en-US";
 
             // Act
-            var result = localizedString.Get(languageCode);
+            var result = localizedString.GetValue(languageCode);
 
             // Assert
             Assert.Null(result);
         }
 
         [Fact]
-        public void TryGet_ShouldReturnTrueIfFound()
+        public void TryGetValue_ShouldReturnTrueIfFound()
         {
             // Arrange
             var localizedString = new LocalizedString();
             var languageCode = "en-US";
             var value = "Hello";
-            localizedString.Set(languageCode, value);
+            localizedString.SetValue(languageCode, value);
 
             // Act
-            var result = localizedString.TryGet(languageCode, out var resultValue);
+            var result = localizedString.TryGetValue(languageCode, out var resultValue);
 
             // Assert
             Assert.True(result);
@@ -69,14 +69,14 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         }
 
         [Fact]
-        public void TryGet_ShouldReturnFalseIfNotFound()
+        public void TryGetValue_ShouldReturnFalseIfNotFound()
         {
             // Arrange
             var localizedString = new LocalizedString();
             var languageCode = "en-US";
 
             // Act
-            var result = localizedString.TryGet(languageCode, out var resultValue);
+            var result = localizedString.TryGetValue(languageCode, out var resultValue);
 
             // Assert
             Assert.False(result);
@@ -84,19 +84,19 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         }
 
         [Fact]
-        public void Remove_ShouldRemoveValue()
+        public void RemoveValue_ShouldRemoveValue()
         {
             // Arrange
             var localizedString = new LocalizedString();
             var languageCode = "en-US";
             var value = "Hello";
-            localizedString.Set(languageCode, value);
+            localizedString.SetValue(languageCode, value);
 
             // Act
-            localizedString.Remove(languageCode);
+            localizedString.RemoveValue(languageCode);
 
             // Assert
-            Assert.Null(localizedString.Get(languageCode));
+            Assert.Null(localizedString.GetValue(languageCode));
         }
 
         [Fact]
@@ -104,8 +104,8 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             // Arrange
             var localizedString = new LocalizedString();
-            localizedString.Set("en-US", "Hello");
-            localizedString.Set("fr-FR", "Bonjour");
+            localizedString.SetValue("en-US", "Hello");
+            localizedString.SetValue("fr-FR", "Bonjour");
             var allowedLanguages = new List<string> { "en-US" };
 
             // Act
@@ -121,7 +121,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             // Arrange
             var localizedString = new LocalizedString();
-            localizedString.Set("en-US", "Hello");
+            localizedString.SetValue("en-US", "Hello");
             var allowedLanguages = new List<string> { "en-US" };
 
             // Act
@@ -137,16 +137,16 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             // Arrange
             var localizedString = new LocalizedString();
-            localizedString.Set("en-US", "Hello");
-            localizedString.Set("fr-FR", "Bonjour");
+            localizedString.SetValue("en-US", "Hello");
+            localizedString.SetValue("fr-FR", "Bonjour");
             var allowedLanguages = new List<string> { "en-US" };
 
             // Act
             localizedString.Clean(allowedLanguages);
 
             // Assert
-            Assert.Null(localizedString.Get("fr-FR"));
-            Assert.Equal("Hello", localizedString.Get("en-US"));
+            Assert.Null(localizedString.GetValue("fr-FR"));
+            Assert.Equal("Hello", localizedString.GetValue("en-US"));
         }
 
         [Fact]
@@ -154,17 +154,17 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             // Arrange
             var localizedString = new LocalizedString();
-            localizedString.Set("en-US", "Hello");
+            localizedString.SetValue("en-US", "Hello");
 
             // Act
             var copy = localizedString.GetCopy() as LocalizedString;
 
-            localizedString.Set("fr-FR", "Bonjour");
+            localizedString.SetValue("fr-FR", "Bonjour");
 
             // Assert
             Assert.NotNull(copy);
-            Assert.Equal("Hello", copy.Get("en-US"));
-            Assert.Null(copy.Get("fr-FR"));
+            Assert.Equal("Hello", copy.GetValue("en-US"));
+            Assert.Null(copy.GetValue("fr-FR"));
         }
     }
 }

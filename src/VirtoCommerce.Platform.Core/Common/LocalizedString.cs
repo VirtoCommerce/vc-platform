@@ -6,59 +6,53 @@ namespace VirtoCommerce.Platform.Core.Common;
 
 public class LocalizedString : ValueObject
 {
-    private readonly Dictionary<string, string> _values = [];
+    public Dictionary<string, string> Values { get; } = [];
 
-    public Dictionary<string, string> Values => _values;
-
-    public void Set(string languageCode, string value)
+    public void SetValue(string languageCode, string value)
     {
         ArgumentNullException.ThrowIfNull(languageCode);
-        _values[languageCode] = value;
+        Values[languageCode] = value;
     }
 
-    public string Get(string languageCode)
+    public string GetValue(string languageCode)
     {
         ArgumentNullException.ThrowIfNull(languageCode);
-        return _values.TryGetValue(languageCode, out var value) ? value : null;
+        return Values.GetValueOrDefault(languageCode);
     }
 
-    public bool TryGet(string languageCode, out string value)
+    public bool TryGetValue(string languageCode, out string value)
     {
         ArgumentNullException.ThrowIfNull(languageCode);
-        return _values.TryGetValue(languageCode, out value);
+        return Values.TryGetValue(languageCode, out value);
     }
 
-    public void Remove(string languageCode)
+    public void RemoveValue(string languageCode)
     {
         ArgumentNullException.ThrowIfNull(languageCode);
-        _values.Remove(languageCode);
+        Values.Remove(languageCode);
     }
 
     public bool Validate(IList<string> allowedLanguages, out IList<string> invalidLanguages)
     {
-        invalidLanguages = _values.Keys.Where(key => !allowedLanguages.Contains(key)).ToList();
-        if (invalidLanguages.Count > 0)
-        {
-            return false;
-        }
-        return true;
+        invalidLanguages = Values.Keys.Where(key => !allowedLanguages.Contains(key)).ToList();
+        return invalidLanguages.Count == 0;
     }
 
     public void Clean(IList<string> allowedLanguages)
     {
-        var invalidKeys = _values.Keys.Where(key => !allowedLanguages.Contains(key));
+        var invalidKeys = Values.Keys.Where(key => !allowedLanguages.Contains(key));
         foreach (var key in invalidKeys)
         {
-            _values.Remove(key);
+            Values.Remove(key);
         }
     }
 
     public override object Clone()
     {
         var clone = new LocalizedString();
-        foreach (var kvp in _values)
+        foreach (var kvp in Values)
         {
-            clone.Set(kvp.Key, kvp.Value);
+            clone.SetValue(kvp.Key, kvp.Value);
         }
         return clone;
     }
