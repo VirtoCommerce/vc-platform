@@ -1,5 +1,5 @@
-# v3.800.11
-# bump-ubuntu-version
+# v3.800.12
+# https://virtocommerce.atlassian.net/browse/VCST-2469
 name: Platform CI
 
 on:
@@ -296,7 +296,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.11    
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.12    
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -313,7 +313,7 @@ jobs:
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.11    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.12    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
@@ -330,7 +330,7 @@ jobs:
       - deploy-cloud
     steps:
       - name: OWASP ZAP Full Scan
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@v0.14.0
         with:
           token: ${{ secrets.REPO_TOKEN }}
           target: 'https://vcptcore-dev.govirto.com'
