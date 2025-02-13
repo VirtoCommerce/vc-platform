@@ -213,6 +213,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
 
+                await HandleTokenRequests(user, context);
+
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
                 var ticket = await CreateTicketAsync(user, context);
@@ -252,6 +254,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         return BadRequest(errors.First());
                     }
                 }
+
+                await HandleTokenRequests(signInResult.User, context);
 
                 var ticket = await CreateTicketAsync(signInResult.User, context);
                 ticket.Principal.SetAuthenticationMethod(signInResult.LoginProvider, [Destinations.AccessToken]);
@@ -330,6 +334,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         return BadRequest(errors.First());
                     }
                 }
+
+                await HandleTokenRequests(impersonatedUser, context); //?????
 
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
