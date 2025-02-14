@@ -335,8 +335,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
 
-                await HandleTokenRequest(impersonatedUser, context); //?????
-
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
                 var ticket = await CreateTicketAsync(impersonatedUser, context);
