@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using OpenIddict.Abstractions;
+using VirtoCommerce.Platform.Core;
 
 namespace VirtoCommerce.Platform.Security.Extensions
 {
@@ -41,6 +42,12 @@ namespace VirtoCommerce.Platform.Security.Extensions
             }
 
             return claimsPrincipal;
+        }
+
+        public static bool IsImpersonated(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal?.HasClaim(PlatformConstants.Security.Claims.OperatorUserId) == true &&
+                claimsPrincipal?.HasClaim(PlatformConstants.Security.Claims.OperatorUserName) == true;
         }
     }
 }
