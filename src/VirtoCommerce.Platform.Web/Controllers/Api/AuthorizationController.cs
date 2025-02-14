@@ -167,7 +167,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
-                await HandleTokenRequests(user, context);
+                await HandleTokenRequest(user, context);
 
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(user, context);
@@ -213,7 +213,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
 
-                await HandleTokenRequests(user, context);
+                await HandleTokenRequest(user, context);
 
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
@@ -255,7 +255,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
 
-                await HandleTokenRequests(signInResult.User, context);
+                await HandleTokenRequest(signInResult.User, context);
 
                 var ticket = await CreateTicketAsync(signInResult.User, context);
                 ticket.Principal.SetAuthenticationMethod(signInResult.LoginProvider, [Destinations.AccessToken]);
@@ -335,7 +335,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
 
-                await HandleTokenRequests(impersonatedUser, context); //?????
+                await HandleTokenRequest(impersonatedUser, context); //?????
 
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
@@ -814,7 +814,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return _userManager.UpdateAsync(user);
         }
 
-        private async Task HandleTokenRequests(ApplicationUser user, TokenRequestContext context)
+        private async Task HandleTokenRequest(ApplicationUser user, TokenRequestContext context)
         {
             foreach (var requestHandler in _requestHandlers)
             {
