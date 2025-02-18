@@ -1,18 +1,21 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.authService', ['$http', '$rootScope', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', function ($http, $rootScope, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage) {
+    .factory('platformWebApp.authService', ['$http', '$rootScope', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', 'platformWebApp.diagnostics', function ($http, $rootScope, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage, diagnostics) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
         userLogin: null,
         fullName: null,
         permissions: null,
-        isAuthenticated: false
+        isAuthenticated: false,
+        memberId: null,
+        iconUrl: null
     };
 
     authContext.fillAuthData = function () {
         return $http.get(serviceBase + 'currentuser').then(
             function (results) {
                 changeAuth(results.data);
+                getUserDetails(results.data);
             });
         };
 
@@ -111,6 +114,7 @@ angular.module('platformWebApp')
         else {
             authDataStorage.clearStoredData();
             changeAuth({});
+            getUserDetails({});
             $http.get(serviceBase + 'logout');
         }
     };
@@ -152,6 +156,37 @@ angular.module('platformWebApp')
             });
         }
         $rootScope.$broadcast('loginStatusChanged', authContext);
-    }
+        }
+
+    function getUserDetails (user) {
+        if (user.id) {
+            $http.get(serviceBase + 'users/id/' + user.id).then(
+                function(userResponse) {
+                    authContext.memberId = userResponse.data.memberId;
+
+                    if (authContext.memberId) {
+                        diagnostics.getSystemInfo({},
+                            function(systemResponse) {
+                                if (_.any(systemResponse.installedModules,
+                                    module => module.id === 'VirtoCommerce.Customer')) {
+                                    $http.get('api/members/' + authContext.memberId).then(function(memberResponse) {
+                                        authContext.iconUrl = memberResponse.data.iconUrl;
+                                    });
+                                }
+                            });
+                    }
+
+                    return userResponse.data;
+                },
+                function(error) {
+                    authContext.logout();
+                    return $q.reject(error);
+                });
+        } else {
+            authContext.memberId = null;
+            authContext.iconUrl = null;
+        }
+    };
+
     return authContext;
 }]);
