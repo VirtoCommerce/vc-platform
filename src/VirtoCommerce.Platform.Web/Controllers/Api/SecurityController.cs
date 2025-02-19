@@ -182,6 +182,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray(),
                 AuthenticationMethod = HttpContext.User.GetAuthenticationMethod(),
                 IsSsoAuthenticationMethod = HttpContext.User.IsExternalSignIn(),
+                MemberId = user.MemberId,
             };
 
             // Password never expired with SSO

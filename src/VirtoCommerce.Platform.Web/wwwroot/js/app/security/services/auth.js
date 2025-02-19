@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.authService', ['$http', '$rootScope', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', 'platformWebApp.diagnostics', function ($http, $rootScope, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage, diagnostics) {
+    .factory('platformWebApp.authService', ['$http', '$rootScope', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', 'platformWebApp.modulesApi', function ($http, $rootScope, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage, modulesApi) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
@@ -15,7 +15,6 @@ angular.module('platformWebApp')
         return $http.get(serviceBase + 'currentuser').then(
             function (results) {
                 changeAuth(results.data);
-                getUserDetails(results.data);
             });
         };
 
@@ -114,27 +113,26 @@ angular.module('platformWebApp')
         else {
             authDataStorage.clearStoredData();
             changeAuth({});
-            getUserDetails({});
             $http.get(serviceBase + 'logout');
         }
     };
 
     authContext.checkPermission = function (permission, securityScopes) {
-        //first check admin permission
+        // First check admin permission
         // var hasPermission = $.inArray('admin', authContext.permissions) > -1;
         var hasPermission = authContext.isAdministrator;
         if (!hasPermission && permission) {
             permission = permission.trim();
-            //first check global permissions
+            // First check global permissions
             hasPermission = $.inArray(permission, authContext.permissions) > -1;
             if (!hasPermission && securityScopes) {
                 if (typeof securityScopes === 'string' || angular.isArray(securityScopes)) {
                     securityScopes = angular.isArray(securityScopes) ? securityScopes : securityScopes.split(',');
-                    //Check permissions in scope
+                    // Check permissions in scope
                     hasPermission = _.some(securityScopes, function (x) {
                         var permissionWithScope = permission + ":" + x;
                         var retVal = $.inArray(permissionWithScope, authContext.permissions) > -1;
-                        //console.log(permissionWithScope + "=" + retVal);
+                        // console.log(permissionWithScope + "=" + retVal);
                         return retVal;
                     });
                 }
@@ -148,44 +146,32 @@ angular.module('platformWebApp')
         authContext.userLogin = user.userName;
         authContext.fullName = user.userLogin;
         authContext.isAuthenticated = user.userName != null;
+        authContext.memberId = user.memberId;
+        authContext.iconUrl = null;
 
-        //Interpolate permissions to replace some template to real value
+        // Interpolate permissions to replace some template to real value
         if (authContext.permissions) {
             authContext.permissions = _.map(authContext.permissions, function (x) {
                 return $interpolate(x)(authContext);
             });
         }
+
+        if (authContext.memberId) {
+            getMemberInfo();
+        }
+
         $rootScope.$broadcast('loginStatusChanged', authContext);
-        }
+    }
 
-    function getUserDetails (user) {
-        if (user.id) {
-            $http.get(serviceBase + 'users/id/' + user.id).then(
-                function(userResponse) {
-                    authContext.memberId = userResponse.data.memberId;
-
-                    if (authContext.memberId) {
-                        diagnostics.getSystemInfo({},
-                            function(systemResponse) {
-                                if (_.any(systemResponse.installedModules,
-                                    module => module.id === 'VirtoCommerce.Customer')) {
-                                    $http.get('api/members/' + authContext.memberId).then(function(memberResponse) {
-                                        authContext.iconUrl = memberResponse.data.iconUrl;
-                                    });
-                                }
-                            });
-                    }
-
-                    return userResponse.data;
-                },
-                function(error) {
-                    authContext.logout();
-                    return $q.reject(error);
-                });
-        } else {
-            authContext.memberId = null;
-            authContext.iconUrl = null;
-        }
+    function getMemberInfo () {
+        modulesApi.query().$promise.then(function (modules) {
+                if (_.any(modules, module => module.id === 'VirtoCommerce.Customer')) {
+                    $http.get('api/members/' + authContext.memberId).then(function (memberResponse) {
+                        authContext.iconUrl = memberResponse.data.iconUrl;
+                    });
+                }
+            }
+        );
     };
 
     return authContext;
