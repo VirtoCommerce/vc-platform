@@ -14,11 +14,16 @@ namespace VirtoCommerce.Platform.Core.Common
             return data == null || !data.Any();
         }
 
+        public static bool ContainsIgnoreCase(this IEnumerable<string> values, string value)
+        {
+            return values.Contains(value, StringComparer.OrdinalIgnoreCase);
+        }
+
         public static IEnumerable<IList<T>> Paginate<T>(this IEnumerable<T> items, int pageSize)
         {
             var page = new List<T>();
 
-            foreach (var item in items ?? Enumerable.Empty<T>())
+            foreach (var item in items ?? [])
             {
                 page.Add(item);
                 if (page.Count >= pageSize)
@@ -42,7 +47,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <remarks>If an exception occurs, the action will not be performed on the remaining items.</remarks>
         public static void Apply<T>(this IEnumerable<T> items, Action<T> action)
         {
-            foreach (var item in items ?? Enumerable.Empty<T>())
+            foreach (var item in items ?? [])
             {
                 action(item);
             }
@@ -56,7 +61,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <remarks>If an exception occurs, the action will not be performed on the remaining items.</remarks>
         public static void Apply<T>(this List<T> items, Action<T> action)
         {
-            foreach (var item in items ?? Enumerable.Empty<T>())
+            foreach (var item in items ?? [])
             {
                 action(item);
             }
