@@ -10,19 +10,16 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         private readonly Version _version;
 
-        public static readonly char[] Delimiters = { '.', '-' };
+        public static readonly char[] Delimiters = ['.', '-'];
 
-        public static readonly Regex SemanticVersionStrictRegex = new Regex(
+        public static readonly Regex SemanticVersionStrictRegex = new(
                 @"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})" +
                 @"(?>\-(?<Prerelease>[0-9A-Za-z\-\.]+))?(?<Metadata>\+[0-9A-Za-z-]+)?$",
                 RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled);
 
         public SemanticVersion(Version version)
         {
-            if (version == null)
-            {
-                throw new ArgumentNullException(nameof(version));
-            }
+            ArgumentNullException.ThrowIfNull(version);
 
             _version = NormalizeVersionValue(version);
         }
@@ -46,8 +43,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public bool IsCompatibleWithBySemVer(SemanticVersion other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             //MAJOR version when you make incompatible API changes,
             var retVal = Major == other.Major;
@@ -61,8 +57,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public bool IsCompatibleWith(SemanticVersion other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             var comparisonResult = CompareTo(other);
             return comparisonResult <= 0;
@@ -81,7 +76,7 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 var normalizedVersion = NormalizeVersionValue(versionValue);
                 var result = new SemanticVersion(normalizedVersion);
-                if (((ICollection<Group>)match.Groups).Any(x => x.Name.EqualsInvariant("Prerelease")))
+                if (((ICollection<Group>)match.Groups).Any(x => x.Name.EqualsIgnoreCase("Prerelease")))
                 {
                     result.Prerelease = match.Groups["Prerelease"].Value;
                 }
@@ -180,22 +175,27 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public int CompareTo(object obj)
         {
-            if (obj == null)
-                throw new ArgumentNullException(nameof(obj));
+            ArgumentNullException.ThrowIfNull(obj);
 
             var other = (SemanticVersion)obj;
 
             var result = Major.CompareTo(other.Major);
             if (result != 0)
+            {
                 return result;
+            }
 
             result = Minor.CompareTo(other.Minor);
             if (result != 0)
+            {
                 return result;
+            }
 
             result = Patch.CompareTo(other.Patch);
             if (result != 0)
+            {
                 return result;
+            }
 
             return CompareComponent(Prerelease, other.Prerelease, true);
         }
@@ -205,12 +205,19 @@ namespace VirtoCommerce.Platform.Core.Common
             var aEmpty = string.IsNullOrEmpty(a);
             var bEmpty = string.IsNullOrEmpty(b);
             if (aEmpty && bEmpty)
+            {
                 return 0;
+            }
 
             if (aEmpty)
+            {
                 return nonemptyIsLower ? 1 : -1;
+            }
+
             if (bEmpty)
+            {
                 return nonemptyIsLower ? -1 : 1;
+            }
 
             var aComps = a.Split(Delimiters);
             var bComps = b.Split(Delimiters);
@@ -227,17 +234,27 @@ namespace VirtoCommerce.Platform.Core.Common
                 {
                     r = aNum.CompareTo(bNum);
                     if (r != 0)
+                    {
                         return r;
+                    }
                 }
                 else
                 {
                     if (aIsNum)
+                    {
                         return -1;
+                    }
+
                     if (bIsNum)
+                    {
                         return 1;
+                    }
+
                     r = string.CompareOrdinal(ac, bc);
                     if (r != 0)
+                    {
                         return r;
+                    }
                 }
             }
 

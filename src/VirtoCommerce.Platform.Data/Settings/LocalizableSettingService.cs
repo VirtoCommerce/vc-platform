@@ -58,7 +58,7 @@ public class LocalizableSettingService : ILocalizableSettingService
         var values = await GetValuesAsync(settingName, languageCode);
 
         return values
-            ?.Where(x => x.Key.EqualsInvariant(key))
+            ?.Where(x => x.Key.EqualsIgnoreCase(key))
             .Select(x => x.Value)
             .FirstOrDefault()?.EmptyToNull() ?? key;
     }
@@ -80,22 +80,21 @@ public class LocalizableSettingService : ILocalizableSettingService
                 .Select(item => new KeyValue
                 {
                     Key = item.Alias,
-                    Value = item.LocalizedValues.FirstOrDefault(value => value.LanguageCode.EqualsInvariant(languageCode))?.Value.EmptyToNull() ?? item.Alias,
+                    Value = item.LocalizedValues.FirstOrDefault(value => value.LanguageCode.EqualsIgnoreCase(languageCode))?.Value.EmptyToNull() ?? item.Alias,
                 })
                 .ToList();
         }
 
         // If language code is a two-letter code
         var languagePrefix = languageCode + "-";
-        const StringComparison ignoreCase = StringComparison.OrdinalIgnoreCase;
 
-        if (languages.Any(x => x.StartsWith(languagePrefix, ignoreCase)))
+        if (languages.Any(x => x.StartsWithIgnoreCase(languagePrefix)))
         {
             return items
                 .Select(item => new KeyValue
                 {
                     Key = item.Alias,
-                    Value = item.LocalizedValues.FirstOrDefault(value => value.LanguageCode.StartsWith(languagePrefix, ignoreCase))?.Value.EmptyToNull() ?? item.Alias,
+                    Value = item.LocalizedValues.FirstOrDefault(value => value.LanguageCode.StartsWithIgnoreCase(languagePrefix))?.Value.EmptyToNull() ?? item.Alias,
                 })
                 .ToList();
         }
@@ -245,7 +244,7 @@ public class LocalizableSettingService : ILocalizableSettingService
             setting.Value = string.Empty;
         }
 
-        await _settingsManager.SaveObjectSettingsAsync(new[] { setting });
+        await _settingsManager.SaveObjectSettingsAsync([setting]);
     }
 
     private async Task<IList<string>> GetLanguages()
@@ -277,7 +276,7 @@ public class LocalizableSettingService : ILocalizableSettingService
                     .ToArray());
 
         return values
-            .Select(x => new DictionaryItem { Alias = x, LocalizedValues = localizedValues.GetValueSafe(x) ?? Array.Empty<LocalizedValue>(), })
+            .Select(x => new DictionaryItem { Alias = x, LocalizedValues = localizedValues.GetValueSafe(x) ?? [] })
             .ToList();
     }
 
@@ -318,7 +317,7 @@ public class LocalizableSettingService : ILocalizableSettingService
     private Task<IList<LocalizedItem>> GetLocalizedItems(string name, IList<string> aliases = null)
     {
         var criteria = AbstractTypeFactory<LocalizedItemSearchCriteria>.TryCreateInstance();
-        criteria.Names = new[] { name };
+        criteria.Names = [name];
         criteria.Aliases = aliases;
 
         return _localizedItemSearchService.SearchAllNoCloneAsync(criteria);

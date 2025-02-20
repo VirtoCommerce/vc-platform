@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public override string ToString()
         {
-            return SortColumn + ":" + (SortDirection == SortDirection.Descending ? "desc" : "asc");
+            return SortColumn + (SortDirection == SortDirection.Descending ? ":desc" : string.Empty);
         }
 
         public static string ToString(IEnumerable<SortInfo> sortInfos)
@@ -37,13 +37,16 @@ namespace VirtoCommerce.Platform.Core.Common
         public static IEnumerable<SortInfo> Parse(string sortExpr)
         {
             var retVal = new List<SortInfo>();
-            if (string.IsNullOrEmpty(sortExpr))
-                return retVal;
 
-            var sortInfoStrings = sortExpr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            if (string.IsNullOrEmpty(sortExpr))
+            {
+                return retVal;
+            }
+
+            var sortInfoStrings = sortExpr.Split([';'], StringSplitOptions.RemoveEmptyEntries);
             foreach (var sortInfoString in sortInfoStrings)
             {
-                var parts = sortInfoString.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = sortInfoString.Split([':', '-'], StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Any())
                 {
                     var sortInfo = new SortInfo
@@ -53,7 +56,7 @@ namespace VirtoCommerce.Platform.Core.Common
                     };
                     if (parts.Length > 1)
                     {
-                        sortInfo.SortDirection = parts[1].StartsWith("desc", StringComparison.InvariantCultureIgnoreCase) ? SortDirection.Descending : SortDirection.Ascending;
+                        sortInfo.SortDirection = parts[1].StartsWithIgnoreCase("desc") ? SortDirection.Descending : SortDirection.Ascending;
                     }
                     retVal.Add(sortInfo);
                 }
@@ -64,7 +67,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public bool Equals(SortInfo other)
         {
             return other != null
-                   && string.Equals(SortColumn, other.SortColumn, StringComparison.OrdinalIgnoreCase)
+                   && SortColumn.EqualsIgnoreCase(other.SortColumn)
                    && SortDirection == other.SortDirection;
         }
 

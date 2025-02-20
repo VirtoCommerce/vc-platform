@@ -23,8 +23,8 @@ namespace VirtoCommerce.Platform.Modules
         {
             var obj = JObject.Load(reader);
 
-            var id = obj.GetValue("id", StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
-            var versionToken = (JObject)obj.GetValue("version", StringComparison.InvariantCultureIgnoreCase);
+            var id = obj.GetValue("id", StringComparison.OrdinalIgnoreCase)?.Value<string>();
+            var versionToken = (JObject)obj.GetValue("version", StringComparison.OrdinalIgnoreCase);
 
             if (id != null && versionToken != null)
             {

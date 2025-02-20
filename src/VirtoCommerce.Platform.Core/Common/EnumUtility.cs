@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
             if (!string.IsNullOrEmpty(value))
             {
-                var parts = value.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = value.Split([separator], StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (var part in parts)
                 {
@@ -78,7 +78,8 @@ namespace VirtoCommerce.Platform.Core.Common
                 else
                 {
                     var parts = value.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                    result = string.Join(separator, parts.Where(x => !x.EqualsInvariant(flag.ToString())));
+                    var flagString = flag.ToString();
+                    result = string.Join(separator, parts.Where(x => !x.EqualsIgnoreCase(flagString)));
                 }
             }
             return result;

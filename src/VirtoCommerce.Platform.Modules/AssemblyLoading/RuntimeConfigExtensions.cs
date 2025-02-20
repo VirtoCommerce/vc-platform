@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Modules.AssemblyLoading
 {
@@ -15,8 +16,6 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
     /// </summary>
     public static class RuntimeConfigExtensions
     {
-        private const string JsonExt = ".json";
-
         /// <summary>
         /// Tries to get additional probing paths using settings found in the runtimeconfig.json and runtimeconfig.dev.json files.
         /// </summary>
@@ -40,7 +39,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
                     return result;
                 }
 
-                var configDevPath = runtimeConfigPath.Substring(0, runtimeConfigPath.Length - JsonExt.Length) + ".dev.json";
+                var configDevPath = runtimeConfigPath.Substring(0, runtimeConfigPath.Length - ".json".Length) + ".dev.json";
                 var devConfig = TryReadConfig(configDevPath);
 
                 var tfm = config.runtimeOptions?.Tfm ?? devConfig?.runtimeOptions?.Tfm;
@@ -59,7 +58,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
                 if (tfm != null)
                 {
                     var dotnet = Process.GetCurrentProcess().MainModule.FileName;
-                    if (string.Equals(Path.GetFileNameWithoutExtension(dotnet), "dotnet", StringComparison.OrdinalIgnoreCase))
+                    if (Path.GetFileNameWithoutExtension(dotnet).EqualsIgnoreCase("dotnet"))
                     {
                         var dotnetHome = Path.GetDirectoryName(dotnet);
                         result.Add(Path.Combine(dotnetHome, "store", RuntimeInformation.OSArchitecture.ToString().ToLowerInvariant(), tfm));
