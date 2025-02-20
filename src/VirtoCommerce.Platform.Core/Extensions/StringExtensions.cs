@@ -127,6 +127,11 @@ namespace VirtoCommerce.Platform.Core.Common
             return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
         }
 
+        public static bool ContainsIgnoreCase(this string value, string substring)
+        {
+            return value.Contains(substring, StringComparison.OrdinalIgnoreCase);
+        }
+
 
         public static string GetCurrencyName(this string isoCurrencySymbol)
         {
