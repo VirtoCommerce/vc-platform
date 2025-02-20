@@ -172,7 +172,7 @@ angular.module('platformWebApp')
                 }
             }
         );
-    };
+    }
 
     $rootScope.$on("memberIconChanged", function (event, url) {
         authContext.iconUrl = url;
