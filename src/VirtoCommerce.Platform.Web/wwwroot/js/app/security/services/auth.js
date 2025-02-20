@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.authService', ['$http', '$rootScope', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', 'platformWebApp.modulesApi', function ($http, $rootScope, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage, modulesApi) {
+    .factory('platformWebApp.authService', ['$http', '$rootScope', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', 'platformWebApp.modulesApi', function ($http, $rootScope, $interpolate, $q, $window, authDataStorage, externalSignInStorage, modulesApi) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
@@ -173,6 +173,10 @@ angular.module('platformWebApp')
             }
         );
     };
+
+    $rootScope.$on("memberIconChanged", function (event, url) {
+        authContext.iconUrl = url;
+    });
 
     return authContext;
 }]);
