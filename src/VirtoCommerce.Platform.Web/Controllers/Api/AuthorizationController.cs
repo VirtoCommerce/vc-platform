@@ -41,6 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEventPublisher _eventPublisher;
         private readonly List<ITokenRequestValidator> _requestValidators;
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
+        private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
         private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IExternalSignInService _externalSignInService;
@@ -55,6 +56,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEventPublisher eventPublisher,
             IEnumerable<ITokenRequestValidator> requestValidators,
             IEnumerable<ITokenClaimProvider> claimProviders,
+            IEnumerable<ITokenRequestHandler> requestHandlers,
             OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager,
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
@@ -69,6 +71,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _eventPublisher = eventPublisher;
             _requestValidators = requestValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList();
             _claimProviders = claimProviders;
+            _requestHandlers = requestHandlers;
             _tokenManager = tokenManager;
             _authorizationService = authorizationService;
             _externalSignInService = externalSignInService;
@@ -164,6 +167,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
+                await HandleTokenRequest(user, context);
 
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(user, context);
@@ -209,6 +213,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
 
+                await HandleTokenRequest(user, context);
+
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
                 var ticket = await CreateTicketAsync(user, context);
@@ -248,6 +254,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         return BadRequest(errors.First());
                     }
                 }
+
+                await HandleTokenRequest(signInResult.User, context);
 
                 var ticket = await CreateTicketAsync(signInResult.User, context);
                 ticket.Principal.SetAuthenticationMethod(signInResult.LoginProvider, [Destinations.AccessToken]);
@@ -326,6 +334,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         return BadRequest(errors.First());
                     }
                 }
+
+                await HandleTokenRequest(impersonatedUser, context);
 
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
@@ -802,6 +812,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             user.LastLoginDate = DateTime.UtcNow;
             return _userManager.UpdateAsync(user);
+        }
+
+        private async Task HandleTokenRequest(ApplicationUser user, TokenRequestContext context)
+        {
+            foreach (var requestHandler in _requestHandlers)
+            {
+                await requestHandler.HandleAsync(user, context);
+            }
         }
     }
 }
