@@ -65,7 +65,10 @@
                         </div>
                     </div>
                 </div>
-            </form>
+                <div class="form-group" ng-if="userProfile.memberId">
+                    <va-widget-container group="userProfileDetail" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
+                </div>
+              </form>
         </div>
     </div>
 </div>

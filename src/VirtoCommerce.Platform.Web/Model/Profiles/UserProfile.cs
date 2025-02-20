@@ -8,5 +8,6 @@ namespace VirtoCommerce.Platform.Web.Model.Profiles
     {
         public virtual ICollection<ObjectSettingEntry> Settings { get; set; } = new List<ObjectSettingEntry>();
         public virtual string TypeName => GetType().Name;
+        public virtual string MemberId { get; set; }
     }
 }
