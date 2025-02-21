@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
                 var result = await _searchService.SearchAllNoCloneAsync(criteria);
 
-                return result.Distinct().ToDictionary(x => $"{x.ObjectType}__{x.Name}", StringComparer.InvariantCultureIgnoreCase).WithDefaultValue(null);
+                return result.Distinct().ToDictionary(x => $"{x.ObjectType}__{x.Name}", StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
 
             });
             return dict[$"{objectType}__{propertyName}"];

@@ -1,8 +1,7 @@
-using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Routing;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.ActionConstraints;
 
@@ -20,9 +19,9 @@ public sealed class HasFormValueAttribute : ActionMethodSelectorAttribute
     {
         var request = routeContext.HttpContext.Request;
 
-        return _allowedMethods.Contains(request.Method, StringComparer.OrdinalIgnoreCase) &&
+        return _allowedMethods.ContainsIgnoreCase(request.Method) &&
                !string.IsNullOrEmpty(request.ContentType) &&
-               request.ContentType.StartsWith("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase) &&
+               request.ContentType.StartsWithIgnoreCase("application/x-www-form-urlencoded") &&
                !string.IsNullOrEmpty(request.Form[_name]);
     }
 }

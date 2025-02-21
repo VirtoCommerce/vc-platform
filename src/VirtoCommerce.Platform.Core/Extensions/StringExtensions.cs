@@ -19,17 +19,14 @@ namespace VirtoCommerce.Platform.Core.Common
         [GeneratedRegex(@"[\[, \]]")]
         private static partial Regex IllegalRegex();
 
-        private static readonly Regex _emailRegex = new Regex(@"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
+        private static readonly Regex _emailRegex = new(@"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
         private static readonly string[] _allowedUriSchemes = [Uri.UriSchemeFile, Uri.UriSchemeFtp, Uri.UriSchemeHttp, Uri.UriSchemeHttps, Uri.UriSchemeMailto, Uri.UriSchemeNetPipe, Uri.UriSchemeNetTcp];
 
         public static bool IsAbsoluteUrl(this string url)
         {
-            if (url == null)
-            {
-                throw new ArgumentNullException(url);
-            }
+            ArgumentNullException.ThrowIfNull(url);
 
-            var result = Uri.IsWellFormedUriString(url, UriKind.Absolute) && _allowedUriSchemes.Any(x => new Uri(url).Scheme.EqualsInvariant(x));
+            var result = Uri.IsWellFormedUriString(url, UriKind.Absolute) && _allowedUriSchemes.ContainsIgnoreCase(new Uri(url).Scheme);
 
             return result;
         }
@@ -99,24 +96,12 @@ namespace VirtoCommerce.Platform.Core.Common
             return string.IsNullOrEmpty(a) ? null : a;
         }
 
-        /// <summary>
-        /// Equalses the or null empty.
-        /// </summary>
-        /// <param name="str1">The STR1.</param>
-        /// <param name="str2">The STR2.</param>
-        /// <param name="comparisonType">Type of the comparison.</param>
-        /// <returns></returns>
         public static bool EqualsOrNullEmpty(this string str1, string str2, StringComparison comparisonType)
         {
             return string.Compare(str1 ?? "", str2 ?? "", comparisonType) == 0;
         }
 
-        /// <summary>
-        /// Equals invariant
-        /// </summary>
-        /// <param name="str1">The STR1.</param>
-        /// <param name="str2">The STR2.</param>
-        /// <returns></returns>
+        [Obsolete("Use EqualsIgnoreCase()", DiagnosticId = "VC0010", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static bool EqualsInvariant(this string str1, string str2)
         {
             return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
@@ -130,6 +115,16 @@ namespace VirtoCommerce.Platform.Core.Common
         public static bool ContainsIgnoreCase(this string value, string substring)
         {
             return value.Contains(substring, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool StartsWithIgnoreCase(this string value, string substring)
+        {
+            return value.StartsWith(substring, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool EndsWithIgnoreCase(this string value, string substring)
+        {
+            return value.EndsWith(substring, StringComparison.OrdinalIgnoreCase);
         }
 
 
@@ -170,20 +165,23 @@ namespace VirtoCommerce.Platform.Core.Common
         public static string Truncate(this string value, int maxLength, string suffix = "...")
         {
             if (string.IsNullOrEmpty(value))
+            {
                 return value;
+            }
+
             return value.Length <= maxLength ? value : value.Substring(0, maxLength) + suffix;
         }
 
         public static string EscapeSearchTerm(this string term)
         {
-            char[] specialCharacters = { '+', '-', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '\\' };
+            char[] specialCharacters = ['+', '-', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '\\'];
             var result = new StringBuilder("");
             //'&&', '||',
             foreach (var ch in term)
             {
                 if (specialCharacters.Any(x => x == ch))
                 {
-                    result.Append("\\");
+                    result.Append('\\');
                 }
                 result.Append(ch);
             }
@@ -206,7 +204,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static string GenerateSlug(this string phrase)
         {
-            string str = phrase.RemoveAccent().ToLower();
+            var str = phrase.RemoveAccent().ToLower();
 
             str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // invalid chars           
             str = Regex.Replace(str, @"\s+", " ").Trim(); // convert multiple spaces into one space   
@@ -228,7 +226,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns></returns>
         public static string MakeFileNameWebSafe(this string fileName)
         {
-            string str = fileName.RemoveAccent().ToLower();
+            var str = fileName.RemoveAccent().ToLower();
             str = str.Replace("&", "-and-");
             str = Regex.Replace(str, @"[^A-Za-z0-9_\-. ]", ""); // invalid chars           
             str = Regex.Replace(str, @"\s+", "-").Trim(); // convert multiple spaces into one dash
@@ -238,8 +236,8 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static string RemoveAccent(this string txt)
         {
-            byte[] bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
-            return System.Text.Encoding.ASCII.GetString(bytes);
+            var bytes = Encoding.GetEncoding("Cyrillic").GetBytes(txt);
+            return Encoding.ASCII.GetString(bytes);
         }
 
         /// <summary>
@@ -247,9 +245,9 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </summary>
         public static int ComputeLevenshteinDistance(this string s, string t)
         {
-            int n = s.Length;
-            int m = t.Length;
-            int[,] d = new int[n + 1, m + 1];
+            var n = s.Length;
+            var m = t.Length;
+            var d = new int[n + 1, m + 1];
 
             // Step 1
             if (n == 0)
@@ -263,22 +261,22 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             // Step 2
-            for (int i = 0; i <= n; d[i, 0] = i++)
+            for (var i = 0; i <= n; d[i, 0] = i++)
             {
             }
 
-            for (int j = 0; j <= m; d[0, j] = j++)
+            for (var j = 0; j <= m; d[0, j] = j++)
             {
             }
 
             // Step 3
-            for (int i = 1; i <= n; i++)
+            for (var i = 1; i <= n; i++)
             {
                 //Step 4
-                for (int j = 1; j <= m; j++)
+                for (var j = 1; j <= m; j++)
                 {
                     // Step 5
-                    int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+                    var cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
 
                     // Step 6
                     d[i, j] = Math.Min(
@@ -290,9 +288,9 @@ namespace VirtoCommerce.Platform.Core.Common
             return d[n, m];
         }
 
-        public static Nullable<T> ToNullable<T>(this string s) where T : struct
+        public static T? ToNullable<T>(this string s) where T : struct
         {
-            var result = new Nullable<T>();
+            var result = new T?();
             try
             {
                 if (!string.IsNullOrEmpty(s) && s.Trim().Length > 0)
@@ -311,20 +309,18 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static string[] LeftJoin(this IEnumerable<string> left, IEnumerable<string> right, string delimiter)
         {
-            if (right == null)
-            {
-                right = Enumerable.Empty<string>();
-            }
+            right ??= [];
 
-            return left.Join(right.DefaultIfEmpty(String.Empty), x => true, y => true, (x, y) => String.Join(delimiter, new[] { x, y }.Where(z => !String.IsNullOrEmpty(z)))).ToArray();
+            return left.Join(right.DefaultIfEmpty(string.Empty), _ => true, _ => true, (x, y) => string.Join(delimiter, new[] { x, y }.Where(z => !string.IsNullOrEmpty(z)))).ToArray();
         }
 
         public static string FirstCharToUpper(this string input)
         {
-            if (String.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input))
             {
-                throw new ArgumentException("input");
+                return string.Empty;
             }
+
             return input.First().ToString().ToUpper() + input.Substring(1);
         }
 

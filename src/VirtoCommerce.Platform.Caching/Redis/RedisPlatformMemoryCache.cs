@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Redis
 {
     public class RedisPlatformMemoryCache : PlatformMemoryCache
     {
-        private static string _instanceId { get; } = $"{Environment.MachineName}_{Guid.NewGuid():N}";
+        private static readonly string _instanceId = $"{Environment.MachineName}_{Guid.NewGuid():N}";
         private bool _isSubscribed;
         private readonly ISubscriber _bus;
         private readonly RedisCachingOptions _redisCachingOptions;
@@ -41,7 +41,7 @@ namespace VirtoCommerce.Platform.Redis
 
         private void CacheCancellableTokensRegistry_OnTokenCancelled(TokenCancelledEventArgs e)
         {
-            var message = new RedisCachingMessage { InstanceId = _instanceId, IsToken = true, CacheKeys = new[] { e.TokenKey } };
+            var message = new RedisCachingMessage { InstanceId = _instanceId, IsToken = true, CacheKeys = [e.TokenKey] };
             Publish(message);
             _log.LogTrace("Published token cancellation message {Message}", message.ToString());
         }
@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Redis
         {
             var message = JsonConvert.DeserializeObject<RedisCachingMessage>(redisValue);
 
-            if (!string.IsNullOrEmpty(message.InstanceId) && !message.InstanceId.EqualsInvariant(_instanceId))
+            if (!string.IsNullOrEmpty(message.InstanceId) && !message.InstanceId.EqualsIgnoreCase(_instanceId))
             {
                 _log.LogTrace("Received message {Message}", message.ToString());
 
@@ -95,7 +95,7 @@ namespace VirtoCommerce.Platform.Redis
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            var message = new RedisCachingMessage { InstanceId = _instanceId, CacheKeys = new[] { key } };
+            var message = new RedisCachingMessage { InstanceId = _instanceId, CacheKeys = [key] };
             Publish(message);
             _log.LogTrace("Published message {Message} to the Redis backplane", message);
 

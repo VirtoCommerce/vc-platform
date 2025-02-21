@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.Common
         public Task<IList<Country>> GetCountriesAsync()
         {
             var cacheKey = CacheKey.With(GetType(), nameof(GetCountriesAsync));
-            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async _ =>
             {
                 var filePath = Path.GetFullPath(_platformOptions.CountriesFilePath);
                 var countriesList = JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
@@ -53,13 +53,13 @@ namespace VirtoCommerce.Platform.Data.Common
             countryId = GetIso3Code(countryId);
 
             var cacheKey = CacheKey.With(GetType(), nameof(GetCountryRegionsAsync));
-            var countries = await _memoryCache.GetOrCreateExclusive(cacheKey, async (cacheEntry) =>
+            var countries = await _memoryCache.GetOrCreateExclusive(cacheKey, async _ =>
             {
                 var filePath = Path.GetFullPath(_platformOptions.CountryRegionsFilePath);
                 return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
             });
 
-            var country = countries.FirstOrDefault(x => x.Id.Equals(countryId, StringComparison.InvariantCultureIgnoreCase));
+            var country = countries.FirstOrDefault(x => x.Id.EqualsIgnoreCase(countryId));
             if (country != null)
             {
                 return country.Regions.OrderBy(x => x.Name).ToList();

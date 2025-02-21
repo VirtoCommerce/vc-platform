@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Modules.Local;
@@ -52,7 +53,7 @@ public class FileMetadataProvider : IFileMetadataProvider
 
     public Architecture? GetArchitecture(string filePath)
     {
-        if (!_options.AssemblyFileExtensions.Any(x => filePath.EndsWith(x, StringComparison.OrdinalIgnoreCase)))
+        if (!_options.AssemblyFileExtensions.Any(filePath.EndsWithIgnoreCase))
         {
             return null;
         }
