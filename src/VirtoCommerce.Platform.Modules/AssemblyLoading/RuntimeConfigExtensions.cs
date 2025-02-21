@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
                     return result;
                 }
 
-                var configDevPath = runtimeConfigPath.Substring(0, runtimeConfigPath.Length - ".json".Length) + ".dev.json";
+                var configDevPath = Path.ChangeExtension(runtimeConfigPath, ".dev.json");
                 var devConfig = TryReadConfig(configDevPath);
 
                 var tfm = config.runtimeOptions?.Tfm ?? devConfig?.runtimeOptions?.Tfm;
