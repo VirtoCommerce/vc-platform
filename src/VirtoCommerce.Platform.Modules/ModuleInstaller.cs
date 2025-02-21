@@ -58,8 +58,8 @@ namespace VirtoCommerce.Platform.Modules
                                                           .ToArray();
                     if (installedIncompatibilities.Any())
                     {
-                        var identities = string.Join(", ", installedIncompatibilities.Select(x => x.ToString()));
-                        Report(progress, ProgressMessageLevel.Error, $"{module} is incompatible with installed {identities}. You should uninstall these modules first.");
+                        var identitiesString = string.Join(", ", installedIncompatibilities.Select(x => x.ToString()));
+                        Report(progress, ProgressMessageLevel.Error, $"{module} is incompatible with installed {identitiesString}. You should uninstall these modules first.");
                         isValid = false;
                     }
                 }
