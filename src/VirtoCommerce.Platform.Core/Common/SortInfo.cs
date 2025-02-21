@@ -21,6 +21,9 @@ namespace VirtoCommerce.Platform.Core.Common
 
     public class SortInfo : IEquatable<SortInfo>
     {
+        private static readonly char[] _columnSeparators = [';'];
+        private static readonly char[] _directionSeparators = [':', '-'];
+
         public string SortColumn { get; set; }
         public SortDirection SortDirection { get; set; }
 
@@ -43,10 +46,10 @@ namespace VirtoCommerce.Platform.Core.Common
                 return retVal;
             }
 
-            var sortInfoStrings = sortExpr.Split([';'], StringSplitOptions.RemoveEmptyEntries);
+            var sortInfoStrings = sortExpr.Split(_columnSeparators, StringSplitOptions.RemoveEmptyEntries);
             foreach (var sortInfoString in sortInfoStrings)
             {
-                var parts = sortInfoString.Split([':', '-'], StringSplitOptions.RemoveEmptyEntries);
+                var parts = sortInfoString.Split(_directionSeparators, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Any())
                 {
                     var sortInfo = new SortInfo
