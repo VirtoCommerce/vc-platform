@@ -100,21 +100,10 @@ namespace VirtoCommerce.Platform.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Use temporary bootstrap logger (which will be replaced with configured version later) until DI initialization completed
-            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration).CreateBootstrapLogger();
-
-            services.AddSerilog((serviceProvider, loggerConfiguration) =>
-            {
-                _ = loggerConfiguration.ReadFrom.Configuration(Configuration);
-
-                // Enrich configuration from external sources
-                var configurationServices = serviceProvider.GetService<IEnumerable<ILoggerConfigurationService>>();
-                foreach (var service in configurationServices)
-                {
-                    service.Configure(loggerConfiguration);
-                }
-                // Preserve static logger (i.e. create new logger for DI, instead of reconfiguring existing)
-                // to avoid exception about frozen logger because BuildServiceProvider is called multiple times
-            }, preserveStaticLogger: true);
+            var loggerConfiguration = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.Debug();
+            Log.Logger = loggerConfiguration.CreateBootstrapLogger();
 
             Log.ForContext<Startup>().Information("Virto Commerce is loading");
 
@@ -513,7 +502,22 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
 
-            //HangFire
+            // Serilog (initialize after all modules DLLs were loaded)
+            services.AddSerilog((serviceProvider, loggerConfiguration) =>
+            {
+                _ = loggerConfiguration.ReadFrom.Configuration(Configuration);
+
+                // Enrich configuration from external sources
+                var configurationServices = serviceProvider.GetService<IEnumerable<ILoggerConfigurationService>>();
+                foreach (var service in configurationServices)
+                {
+                    service.Configure(loggerConfiguration);
+                }
+                // Preserve static logger (i.e. create new logger for DI, instead of reconfiguring existing)
+                // to avoid exception about frozen logger because BuildServiceProvider is called multiple times
+            }, preserveStaticLogger: true);
+
+            // HangFire
             services.AddHangfire(Configuration);
 
             // Register the Swagger generator
