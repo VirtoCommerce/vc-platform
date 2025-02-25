@@ -84,7 +84,7 @@ namespace VirtoCommerce.Platform.Web.Security
             var certificateStorage = app.ApplicationServices.GetService<ICertificateLoader>();
             var certificateService = app.ApplicationServices.GetService<IServerCertificateService>();
             var possiblyOldCert = certificateStorage.Load(); // Previously stored cert (possibly old, default or just created by another platform instance)
-            if (!possiblyOldCert.SerialNumber.EqualsInvariant(currentCert.SerialNumber))
+            if (!possiblyOldCert.SerialNumber.EqualsIgnoreCase(currentCert.SerialNumber))
             {   // Therefore, currentCert is newly generated and needs to be saved.
                 // But we should check if old cert is stored
                 if (possiblyOldCert.StoredInDb && !possiblyOldCert.Expired)
@@ -110,9 +110,7 @@ namespace VirtoCommerce.Platform.Web.Security
         public static void AddForwardedHeaders(this IServiceCollection services)
         {
             // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-6.0
-            if (string.Equals(
-                Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
-                "true", StringComparison.OrdinalIgnoreCase))
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED").EqualsIgnoreCase("true"))
             {
                 services.Configure<ForwardedHeadersOptions>(options =>
                 {

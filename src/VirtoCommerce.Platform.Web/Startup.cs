@@ -109,7 +109,7 @@ namespace VirtoCommerce.Platform.Web
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
-            // Optional Modules Dependecy Resolving
+            // Optional Modules Dependency Resolving
             services.Add(ServiceDescriptor.Singleton(typeof(IOptionalDependency<>), typeof(OptionalDependencyManager<>)));
 
             services.AddCustomSecurityHeaders();
@@ -576,7 +576,7 @@ namespace VirtoCommerce.Platform.Web
         {
             var result = certificateLoader.Load();
 
-            if (result.SerialNumber.EqualsInvariant(ServerCertificate.SerialNumberOfVirtoPredefined) ||
+            if (result.SerialNumber.EqualsIgnoreCase(ServerCertificate.SerialNumberOfVirtoPredefined) ||
                 result.Expired)
             {
                 result = ServerCertificateService.CreateSelfSigned();
@@ -665,9 +665,9 @@ namespace VirtoCommerce.Platform.Web
 
             app.ExecuteSynchronized(() =>
             {
-                // This method contents will run inside of critical section of instance distributed lock.
+                // This method contents will run inside critical section of instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
-                // This ensures only one active EF-migration ran simultaneously to avoid DB-related side-effects.
+                // This ensures only one active EF-migration ran simultaneously to avoid DB-related side effects.
 
                 // Apply platform migrations
                 app.UsePlatformMigrations(Configuration);
@@ -704,8 +704,8 @@ namespace VirtoCommerce.Platform.Web
 
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
 
-            //Json converter that resolve a meta-data for all incoming objects of  DynamicObjectProperty type
-            //in order to be able pass { name: "dynPropName", value: "myVal" } in the incoming requests for dynamic properties, and do not care about meta-data loading. see more details: PT-48
+            //Json converter that resolves a meta-data for all incoming objects of DynamicObjectProperty type
+            //in order to be able to pass { name: "dynPropName", value: "myVal" } in the incoming requests for dynamic properties, and do not care about meta-data loading. see more details: PT-48
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new DynamicObjectPropertyJsonConverter(app.ApplicationServices.GetService<IDynamicPropertyMetaDataResolver>()));
 
             //The converter is responsible for the materialization of objects, taking into account the information on overriding

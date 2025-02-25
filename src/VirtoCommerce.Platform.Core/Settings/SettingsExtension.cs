@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Core.Settings
 
         public static async Task DeepSaveSettingsAsync(this ISettingsManager manager, IHasSettings entry)
         {
-            await manager.DeepSaveSettingsAsync(new[] { entry });
+            await manager.DeepSaveSettingsAsync([entry]);
         }
         /// <summary>
         /// Deep save entity and all nested objects settings values
@@ -99,7 +99,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// </summary>
         public static async Task DeepRemoveSettingsAsync(this ISettingsManager manager, IHasSettings entry)
         {
-            await manager.DeepRemoveSettingsAsync(new[] { entry });
+            await manager.DeepRemoveSettingsAsync([entry]);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         {
             var objectSetting = await manager.GetObjectSettingAsync(name);
             objectSetting.Value = value;
-            await manager.SaveObjectSettingsAsync(new[] { objectSetting });
+            await manager.SaveObjectSettingsAsync([objectSetting]);
         }
 
         public static TValue GetValue<TValue>(this IEnumerable<ObjectSettingEntry> objectSettings, SettingDescriptor descriptor)
@@ -190,7 +190,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         private static T GetValueInternal<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaultValue)
         {
             var retVal = defaultValue;
-            var setting = objectSettings.FirstOrDefault(x => x.Name.EqualsInvariant(settingName));
+            var setting = objectSettings.FirstOrDefault(x => x.Name.EqualsIgnoreCase(settingName));
             if (setting != null && setting.Value != null)
             {
                 retVal = (T)Convert.ChangeType(setting.Value, typeof(T), CultureInfo.InvariantCulture);

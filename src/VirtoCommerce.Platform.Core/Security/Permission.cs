@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public static Permission TryCreateFromClaim(Claim claim, JsonSerializerSettings jsonSettings)
         {
             Permission result = null;
-            if (claim != null && claim.Type.EqualsInvariant(PlatformConstants.Security.Claims.PermissionClaimType))
+            if (claim != null && claim.Type.EqualsIgnoreCase(PlatformConstants.Security.Claims.PermissionClaimType))
             {
                 result = AbstractTypeFactory<Permission>.TryCreateInstance();
                 result.Name = claim.Value;

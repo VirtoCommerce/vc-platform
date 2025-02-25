@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Get predefined login page background opitons
+        /// Get predefined login page background options
         /// </summary>
         [HttpGet]
         [AllowAnonymous]
@@ -50,19 +50,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public ActionResult GetLoginPageUIOptions()
         {
             // options priority - first BackgroundUrl/PatternUrl then presets
-            string backgrounUrl = _loginPageOptions.BackgroundUrl;
-            string patternUrl = _loginPageOptions.PatternUrl;
+            var backgroundUrl = _loginPageOptions.BackgroundUrl;
+            var patternUrl = _loginPageOptions.PatternUrl;
 
-            if (string.IsNullOrWhiteSpace(backgrounUrl) &&
+            if (string.IsNullOrWhiteSpace(backgroundUrl) &&
                 string.IsNullOrWhiteSpace(patternUrl) &&
                 !string.IsNullOrWhiteSpace(_loginPageOptions.Preset))
             {
-                var preset = _loginPageOptions.Presets?.FirstOrDefault(x => x.Name.EqualsInvariant(_loginPageOptions.Preset));
-                backgrounUrl = preset?.BackgroundUrl;
+                var preset = _loginPageOptions.Presets?.FirstOrDefault(x => x.Name.EqualsIgnoreCase(_loginPageOptions.Preset));
+                backgroundUrl = preset?.BackgroundUrl;
                 patternUrl = preset?.PatternUrl;
             }
 
-            return Ok(new { BackgroundUrl = backgrounUrl, PatternUrl = patternUrl });
+            return Ok(new { BackgroundUrl = backgroundUrl, PatternUrl = patternUrl });
         }
     }
 }

@@ -5,16 +5,16 @@ using System.IO;
 namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
-    /// Loads modules from an arbitrary location on the filesystem. This typeloader is only called if 
+    /// Loads modules from an arbitrary location on the filesystem. This type loader is only called if 
     /// <see cref="ModuleInfo"/> classes have a Ref parameter that starts with "file://". 
     /// This class is only used on the Desktop version of the Prism Library.
     /// </summary>
     public class FileModuleTypeLoader : IModuleTypeLoader, IDisposable
     {
-        private const string RefFilePrefix = "file://";
+        private const string _fileSchema = "file://";
 
-        private readonly IAssemblyResolver assemblyResolver;
-        private readonly HashSet<Uri> downloadedUris = new HashSet<Uri>();
+        private readonly IAssemblyResolver _assemblyResolver;
+        private readonly HashSet<Uri> _downloadedUris = [];
 
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <param name="assemblyResolver">The assembly resolver.</param>
         public FileModuleTypeLoader(IAssemblyResolver assemblyResolver)
         {
-            this.assemblyResolver = assemblyResolver;
+            _assemblyResolver = assemblyResolver;
         }
 
         /// <summary>
@@ -63,37 +63,31 @@ namespace VirtoCommerce.Platform.Core.Modularity
         }
 
         /// <summary>
-        /// Evaluates the <see cref="ModuleInfo.Ref"/> property to see if the current typeloader will be able to retrieve the <paramref name="moduleInfo"/>.
+        /// Evaluates the <see cref="ModuleInfo.Ref"/> property to see if the current type loader will be able to retrieve the <paramref name="moduleInfo"/>.
         /// Returns true if the <see cref="ModuleInfo.Ref"/> property starts with "file://", because this indicates that the file
         /// is a local file. 
         /// </summary>
-        /// <param name="moduleInfo">Module that should have it's type loaded.</param>
+        /// <param name="moduleInfo">Module that should have its type loaded.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the current typeloader is able to retrieve the module, otherwise <see langword="false"/>.
+        /// 	<see langword="true"/> if the current type loader is able to retrieve the module, otherwise <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">An <see cref="ArgumentNullException"/> is thrown if <paramref name="moduleInfo"/> is null.</exception>
         public bool CanLoadModuleType(ModuleInfo moduleInfo)
         {
-            if (moduleInfo == null)
-            {
-                throw new System.ArgumentNullException("moduleInfo");
-            }
+            ArgumentNullException.ThrowIfNull(moduleInfo);
 
-            return moduleInfo.Ref != null && moduleInfo.Ref.StartsWith(RefFilePrefix, StringComparison.Ordinal);
+            return moduleInfo.Ref != null && moduleInfo.Ref.StartsWith(_fileSchema, StringComparison.Ordinal);
         }
 
 
         /// <summary>
         /// Retrieves the <paramref name="moduleInfo"/>.
         /// </summary>
-        /// <param name="moduleInfo">Module that should have it's type loaded.</param>
+        /// <param name="moduleInfo">Module that should have its type loaded.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Exception is rethrown as part of a completion event")]
         public void LoadModuleType(ModuleInfo moduleInfo)
         {
-            if (moduleInfo == null)
-            {
-                throw new System.ArgumentNullException("moduleInfo");
-            }
+            ArgumentNullException.ThrowIfNull(moduleInfo);
 
             try
             {
@@ -106,16 +100,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 }
                 else
                 {
-                    string path;
-
-                    if (moduleInfo.Ref.StartsWith(RefFilePrefix + "/", StringComparison.Ordinal))
-                    {
-                        path = moduleInfo.Ref.Substring(RefFilePrefix.Length + 1);
-                    }
-                    else
-                    {
-                        path = moduleInfo.Ref.Substring(RefFilePrefix.Length);
-                    }
+                    var path = moduleInfo.Ref.StartsWith(_fileSchema + "/", StringComparison.Ordinal)
+                        ? moduleInfo.Ref.Substring(_fileSchema.Length + 1)
+                        : moduleInfo.Ref.Substring(_fileSchema.Length);
 
                     var fileSize = -1L;
                     if (File.Exists(path))
@@ -127,7 +114,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                     // Although this isn't asynchronous, nor expected to take very long, I raise progress changed for consistency.
                     RaiseModuleDownloadProgressChanged(moduleInfo, 0, fileSize);
 
-                    moduleInfo.Assembly = assemblyResolver.LoadAssemblyFrom(moduleInfo.Ref);
+                    moduleInfo.Assembly = _assemblyResolver.LoadAssemblyFrom(moduleInfo.Ref);
 
                     // Although this isn't asynchronous, nor expected to take very long, I raise progress changed for consistency.
                     RaiseModuleDownloadProgressChanged(moduleInfo, fileSize, fileSize);
@@ -146,17 +133,17 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         private bool IsSuccessfullyDownloaded(Uri uri)
         {
-            lock (downloadedUris)
+            lock (_downloadedUris)
             {
-                return downloadedUris.Contains(uri);
+                return _downloadedUris.Contains(uri);
             }
         }
 
         private void RecordDownloadSuccess(Uri uri)
         {
-            lock (downloadedUris)
+            lock (_downloadedUris)
             {
-                downloadedUris.Add(uri);
+                _downloadedUris.Add(uri);
             }
         }
 
@@ -174,12 +161,12 @@ namespace VirtoCommerce.Platform.Core.Modularity
         }
 
         /// <summary>
-        /// Disposes the associated <see cref="assemblyResolver"/>.
+        /// Disposes the associated <see cref="_assemblyResolver"/>.
         /// </summary>
         /// <param name="disposing">When <see langword="true"/>, it is being called from the Dispose method.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (assemblyResolver is IDisposable disposableResolver)
+            if (_assemblyResolver is IDisposable disposableResolver)
             {
                 disposableResolver.Dispose();
             }

@@ -128,20 +128,20 @@ namespace VirtoCommerce.Platform.Web.Swagger
         private static bool DocInclusionPredicateCustomStrategy(ManifestModuleInfo[] modules, string docName, ApiDescription apiDesc)
         {
             // It's a UI endpoint, return all to correctly build swagger UI page
-            if (docName.EqualsInvariant(PlatformUIDocName))
+            if (docName.EqualsIgnoreCase(PlatformUIDocName))
             {
                 return true;
             }
 
             // It's a platform endpoint.
             var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
-            if (docName.EqualsInvariant(PlatformDocName) && currentAssembly.FullName?.StartsWith(docName) == true)
+            if (docName.EqualsIgnoreCase(PlatformDocName) && currentAssembly.FullName?.StartsWith(docName) == true)
             {
                 return true;
             }
 
             // It's a module endpoint. 
-            var module = modules.FirstOrDefault(m => m.ModuleName.EqualsInvariant(docName));
+            var module = modules.FirstOrDefault(m => m.ModuleName.EqualsIgnoreCase(docName));
             return module != null && module.Assembly == currentAssembly;
         }
 

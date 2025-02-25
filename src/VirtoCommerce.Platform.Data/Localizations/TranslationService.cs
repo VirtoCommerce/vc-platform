@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Data.Localizations
                 return InnerGetTranslationData(_options.FallbackLanguage);
             });
 
-            if (lang != null && !lang.EqualsInvariant(_options.FallbackLanguage))
+            if (lang != null && !lang.EqualsIgnoreCase(_options.FallbackLanguage))
             {
                 var cacheKey = CacheKey.With(GetType(), "RequestedLanguageJson", lang);
                 result = _memoryCache.GetOrCreateExclusive(cacheKey, cacheEntry =>
@@ -53,8 +53,8 @@ namespace VirtoCommerce.Platform.Data.Localizations
 
         public string[] GetListOfInstalledLanguages()
         {
-            var cachekey = CacheKey.With(GetType(), nameof(GetListOfInstalledLanguages));
-            var result = _memoryCache.GetOrCreateExclusive(cachekey, cacheEntry =>
+            var cacheKey = CacheKey.With(GetType(), nameof(GetListOfInstalledLanguages));
+            var result = _memoryCache.GetOrCreateExclusive(cacheKey, cacheEntry =>
             {
                 cacheEntry.AddExpirationToken(LocalizationCacheRegion.CreateChangeToken());
                 return _providers.SelectMany(x => x.GetListOfInstalledLanguages()).Distinct().ToArray();
@@ -80,7 +80,5 @@ namespace VirtoCommerce.Platform.Data.Localizations
             }
             return result;
         }
-
-
     }
 }
