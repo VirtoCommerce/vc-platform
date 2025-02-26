@@ -28,6 +28,7 @@ angular.module('platformWebApp')
                     scope.userType = '';
                     scope.isAdministrator = false;
                     scope.isSsoAuthenticationMethod = false;
+                    scope.iconUrl = null;
 
                     function handleClickEvent(event) {
                         var dropdownElement = $document.find('[userProfileWidget]');
@@ -67,6 +68,12 @@ angular.module('platformWebApp')
                         scope.userType = authService.userType;
                         scope.isAdministrator = authService.isAdministrator;
                         scope.isSsoAuthenticationMethod = authService.isSsoAuthenticationMethod;
+                    });
+
+                    scope.$watch(function () {
+                        return authService.iconUrl;
+                    }, function () {
+                        scope.iconUrl = authService.iconUrl;
                     });
 
                     $document.bind('click', handleClickEvent);
