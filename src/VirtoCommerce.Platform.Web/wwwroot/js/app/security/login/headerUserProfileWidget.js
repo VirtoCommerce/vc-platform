@@ -71,9 +71,9 @@ angular.module('platformWebApp')
                     });
 
                     scope.$watch(function () {
-                        return authService.iconUrl;
+                        return authService.member;
                     }, function () {
-                        scope.iconUrl = authService.iconUrl;
+                        scope.iconUrl = authService.member ? authService.member.iconUrl : null;
                     });
 
                     $document.bind('click', handleClickEvent);

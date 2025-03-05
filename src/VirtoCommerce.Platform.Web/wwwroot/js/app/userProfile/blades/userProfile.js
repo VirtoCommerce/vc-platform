@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.userProfile.userProfileController', ['$http', '$rootScope', '$scope', 'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', 'platformWebApp.moduleHelper',
-        function ($http, $rootScope, $scope, i18n, userProfile, languages, locales, timeZones, userProfileApi, moduleHelper) {
+    .controller('platformWebApp.userProfile.userProfileController', ['$rootScope', '$scope', 'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', 'platformWebApp.authService',
+        function ($rootScope, $scope, i18n, userProfile, languages, locales, timeZones, userProfileApi, authService) {
             var blade = $scope.blade;
             blade.headIcon = 'fa fa-user';
             blade.title = 'platform.blades.user-profile.title';
@@ -10,7 +10,9 @@ angular.module('platformWebApp')
             blade.currentTimeZone = i18n.getTimeZone();
             blade.currentTimeAgoSettings = i18n.getTimeAgoSettings();
             blade.currentTimeSettings = i18n.getTimeSettings();
-            blade.currentEntity = {};
+            blade.currentEntity = authService.member;
+            // This flag is used to save icon immediately in the MemberIcon blade of the Customer model
+            blade.saveIconImmediately = true;
 
             userProfile.load().then(function () {
                 initializeBlade();
@@ -53,14 +55,6 @@ angular.module('platformWebApp')
                 blade.currentTimeZone = getNameByCode($scope.timeZones, blade.currentTimeZone);
                 blade.currentTimeAgoSettings = userProfile.timeAgoSettings;
                 blade.currentTimeSettings = userProfile.timeSettings;
-
-                if (userProfile.memberId && _.any(moduleHelper.modules, module => module.id === 'VirtoCommerce.Customer')) {
-                    $http.get('api/members/' + userProfile.memberId).then(function (memberResponse) {
-                        blade.currentEntity = memberResponse.data;
-                        // This flag is used to save icon immediately in the MemberIcon blade of the Customer model
-                        blade.saveIconImmediately = true;
-                    });
-                }
             }
 
             function isLoading() {

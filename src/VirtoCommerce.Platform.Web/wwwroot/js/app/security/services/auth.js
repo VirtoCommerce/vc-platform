@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.authService', ['$http', '$rootScope', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', 'platformWebApp.modulesApi', function ($http, $rootScope, $interpolate, $q, $window, authDataStorage, externalSignInStorage, modulesApi) {
+    .factory('platformWebApp.authService', ['$http', '$rootScope', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', function ($http, $rootScope, $interpolate, $q, $window, authDataStorage, externalSignInStorage) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
@@ -8,7 +8,7 @@ angular.module('platformWebApp')
         permissions: null,
         isAuthenticated: false,
         memberId: null,
-        iconUrl: null
+        member: null
     };
 
     authContext.fillAuthData = function () {
@@ -147,7 +147,7 @@ angular.module('platformWebApp')
         authContext.fullName = user.userLogin;
         authContext.isAuthenticated = user.userName != null;
         authContext.memberId = user.memberId;
-        authContext.iconUrl = null;
+        authContext.member = null;
 
         // Interpolate permissions to replace some template to real value
         if (authContext.permissions) {
@@ -156,26 +156,11 @@ angular.module('platformWebApp')
             });
         }
 
-        if (authContext.memberId) {
-            getMemberInfo();
-        }
-
         $rootScope.$broadcast('loginStatusChanged', authContext);
     }
 
-    function getMemberInfo () {
-        modulesApi.query().$promise.then(function (modules) {
-                if (_.any(modules, module => module.id === 'VirtoCommerce.Customer')) {
-                    $http.get('api/members/' + authContext.memberId).then(function (memberResponse) {
-                        authContext.iconUrl = memberResponse.data.iconUrl;
-                    });
-                }
-            }
-        );
-    }
-
-    $rootScope.$on("memberIconChanged", function (event, url) {
-        authContext.iconUrl = url;
+    $rootScope.$on("memberIconChanged", function (event, member) {
+        authContext.member = member;
     });
 
     return authContext;
