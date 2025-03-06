@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Extensions;
 using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
@@ -331,7 +332,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected virtual TModel ToModel(TEntity entity)
         {
-            return entity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
+            return entity.ToModel();
         }
 
         protected virtual TEntity FromModel(TModel model, PrimaryKeyResolvingMap keyMap)
