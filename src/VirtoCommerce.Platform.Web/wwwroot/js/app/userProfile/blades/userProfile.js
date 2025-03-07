@@ -1,19 +1,17 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.userProfile.userProfileController', ['$rootScope', '$scope', 'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', 'platformWebApp.authService',
-        function ($rootScope, $scope, i18n, userProfile, languages, locales, timeZones, userProfileApi, authService) {
+    .controller('platformWebApp.userProfile.userProfileController', ['$rootScope', '$scope', 'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', 'platformWebApp.userProfileIconService',
+        function ($rootScope, $scope, i18n, userProfile, languages, locales, timeZones, userProfileApi, userProfileIconService) {
             var blade = $scope.blade;
             blade.headIcon = 'fa fa-user';
             blade.title = 'platform.blades.user-profile.title';
+            blade.iconUrl = userProfileIconService.userIconUrl;
 
             blade.currentLanguage = i18n.getLanguage();
             blade.currentRegionalFormat = i18n.getRegionalFormat();
             blade.currentTimeZone = i18n.getTimeZone();
             blade.currentTimeAgoSettings = i18n.getTimeAgoSettings();
             blade.currentTimeSettings = i18n.getTimeSettings();
-            blade.currentEntity = authService.member;
-            // This flag is used to save icon immediately in the MemberIcon blade of the Customer model
-            blade.saveIconImmediately = true;
-
+            
             userProfile.load().then(function () {
                 initializeBlade();
             });
@@ -55,6 +53,7 @@ angular.module('platformWebApp')
                 blade.currentTimeZone = getNameByCode($scope.timeZones, blade.currentTimeZone);
                 blade.currentTimeAgoSettings = userProfile.timeAgoSettings;
                 blade.currentTimeSettings = userProfile.timeSettings;
+                blade.currentMemberId = userProfile.memberId;
             }
 
             function isLoading() {
@@ -115,4 +114,10 @@ angular.module('platformWebApp')
                     userProfile.save();
                 }
             }
+
+            $scope.$watch(function () {
+                return userProfileIconService.userIconUrl;
+            }, function () {
+                blade.iconUrl = userProfileIconService.userIconUrl;
+            });
         }]);

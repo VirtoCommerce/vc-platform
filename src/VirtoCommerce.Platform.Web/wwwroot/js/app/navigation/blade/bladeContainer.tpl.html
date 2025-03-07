@@ -42,13 +42,13 @@
             </div>
 
             <div class="blade-header">
-                <i ng-if="!blade.currentEntity.iconUrl" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'" class="blade-header__icon"></i>
+                <i ng-if="!blade.currentEntity.iconUrl && !blade.iconUrl" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'" class="blade-header__icon"></i>
 
-                <img ng-if="blade.currentEntity.iconUrl" ng-src="{{ blade.currentEntity.iconUrl }}" fallback-src="{{ blade.fallbackIconUrl }}" class="blade-header__img" />
+                <img ng-if="blade.currentEntity.iconUrl || blade.iconUrl" ng-src="{{ blade.iconUrl || blade.currentEntity.iconUrl }}" fallback-src="{{ blade.fallbackIconUrl }}" class="blade-header__img" />
 
                 <div class="blade-header__title">{{ blade.title | translate: blade.titleValues }}</div>
 
-                <span ng-if="pageSettings.totalItems" class="vc-badge">{{ pageSettings.totalItems | number: 0 }}</ span>
+                <span ng-if="pageSettings.totalItems" class="vc-badge">{{ pageSettings.totalItems | number: 0 }}</span>
             </div>
 
             <div class="blade-toolbar">

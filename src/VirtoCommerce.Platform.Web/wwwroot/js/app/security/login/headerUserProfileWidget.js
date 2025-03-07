@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .directive('vaHeaderUserProfileWidget', ['$document', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.login',
-        function ($document, $state, authService, dialogService, loginResources) {
+    .directive('vaHeaderUserProfileWidget', ['$document', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.login', 'platformWebApp.userProfileIconService',
+        function ($document, $state, authService, dialogService, loginResources, userProfileIconService) {
 
             return {
                 restrict: 'E',
@@ -28,7 +28,7 @@ angular.module('platformWebApp')
                     scope.userType = '';
                     scope.isAdministrator = false;
                     scope.isSsoAuthenticationMethod = false;
-                    scope.iconUrl = null;
+                    scope.userIconUrl = userProfileIconService.userIconUrl;
 
                     function handleClickEvent(event) {
                         var dropdownElement = $document.find('[userProfileWidget]');
@@ -71,9 +71,9 @@ angular.module('platformWebApp')
                     });
 
                     scope.$watch(function () {
-                        return authService.member;
+                        return userProfileIconService.userIconUrl;
                     }, function () {
-                        scope.iconUrl = authService.member ? authService.member.iconUrl : null;
+                        scope.userIconUrl = userProfileIconService.userIconUrl;
                     });
 
                     $document.bind('click', handleClickEvent);

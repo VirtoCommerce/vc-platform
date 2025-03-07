@@ -7,8 +7,7 @@ angular.module('platformWebApp')
         fullName: null,
         permissions: null,
         isAuthenticated: false,
-        memberId: null,
-        member: null
+        memberId: null
     };
 
     authContext.fillAuthData = function () {
@@ -147,7 +146,6 @@ angular.module('platformWebApp')
         authContext.fullName = user.userLogin;
         authContext.isAuthenticated = user.userName != null;
         authContext.memberId = user.memberId;
-        authContext.member = null;
 
         // Interpolate permissions to replace some template to real value
         if (authContext.permissions) {
@@ -158,10 +156,6 @@ angular.module('platformWebApp')
 
         $rootScope.$broadcast('loginStatusChanged', authContext);
     }
-
-    $rootScope.$on("memberIconChanged", function (event, member) {
-        authContext.member = member;
-    });
 
     return authContext;
 }]);
