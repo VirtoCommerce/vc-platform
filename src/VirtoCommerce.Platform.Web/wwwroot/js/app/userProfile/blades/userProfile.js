@@ -11,7 +11,7 @@ angular.module('platformWebApp')
             blade.currentTimeZone = i18n.getTimeZone();
             blade.currentTimeAgoSettings = i18n.getTimeAgoSettings();
             blade.currentTimeSettings = i18n.getTimeSettings();
-            
+
             userProfile.load().then(function () {
                 initializeBlade();
             });
