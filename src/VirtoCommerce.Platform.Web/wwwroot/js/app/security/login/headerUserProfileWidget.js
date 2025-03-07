@@ -28,7 +28,7 @@ angular.module('platformWebApp')
                     scope.userType = '';
                     scope.isAdministrator = false;
                     scope.isSsoAuthenticationMethod = false;
-                    scope.userIconUrl = userProfileIconService.userIconUrl;
+                    scope.userIconUrl = userProfileIconService.getUserIconUrl();
 
                     function handleClickEvent(event) {
                         var dropdownElement = $document.find('[userProfileWidget]');
@@ -71,9 +71,9 @@ angular.module('platformWebApp')
                     });
 
                     scope.$watch(function () {
-                        return userProfileIconService.userIconUrl;
+                        return userProfileIconService.iconUrlChanging;
                     }, function () {
-                        scope.userIconUrl = userProfileIconService.userIconUrl;
+                        scope.userIconUrl = userProfileIconService.getUserIconUrl();
                     });
 
                     $document.bind('click', handleClickEvent);

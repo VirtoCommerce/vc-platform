@@ -4,7 +4,7 @@ angular.module('platformWebApp')
             var blade = $scope.blade;
             blade.headIcon = 'fa fa-user';
             blade.title = 'platform.blades.user-profile.title';
-            blade.iconUrl = userProfileIconService.userIconUrl;
+            blade.iconUrl = userProfileIconService.getUserIconUrl();
 
             blade.currentLanguage = i18n.getLanguage();
             blade.currentRegionalFormat = i18n.getRegionalFormat();
@@ -116,8 +116,8 @@ angular.module('platformWebApp')
             }
 
             $scope.$watch(function () {
-                return userProfileIconService.userIconUrl;
+                return userProfileIconService.iconUrlChanging;
             }, function () {
-                blade.iconUrl = userProfileIconService.userIconUrl;
+                blade.iconUrl = userProfileIconService.getUserIconUrl();
             });
         }]);
