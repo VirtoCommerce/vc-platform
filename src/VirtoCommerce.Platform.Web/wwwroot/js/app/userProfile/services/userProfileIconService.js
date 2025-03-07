@@ -11,13 +11,6 @@ angular.module('platformWebApp')
         currentMemberId = authContext.memberId;
     });
 
-    function setUserIconUrl (memberId, url) {
-        if (currentMemberId === memberId) {
-            userIconUrl = url;
-            service.iconUrlChanging = !service.iconUrlChanging;
-        }
-    }
-
     var service = {
         iconUrlChanging: false,
         setUserIconUrl: setUserIconUrl,
@@ -25,6 +18,13 @@ angular.module('platformWebApp')
             return userIconUrl;
         }
     };
+
+    function setUserIconUrl (memberId, url) {
+        if (currentMemberId === memberId) {
+            userIconUrl = url;
+            service.iconUrlChanging = !service.iconUrlChanging;
+        }
+    }
 
     return service;
 }]);
