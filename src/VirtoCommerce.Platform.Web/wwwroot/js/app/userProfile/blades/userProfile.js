@@ -1,5 +1,8 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.userProfile.userProfileController', ['$rootScope', '$scope', 'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', 'platformWebApp.userProfileIconService',
+    .controller('platformWebApp.userProfile.userProfileController', [
+        '$rootScope', '$scope',
+        'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones',
+        'platformWebApp.userProfileApi', 'platformWebApp.userProfileIconService',
         function ($rootScope, $scope, i18n, userProfile, languages, locales, timeZones, userProfileApi, userProfileIconService) {
             var blade = $scope.blade;
             blade.headIcon = 'fa fa-user';
@@ -116,7 +119,7 @@ angular.module('platformWebApp')
             }
 
             $scope.$watch(function () {
-                return userProfileIconService.iconUrlChanging;
+                return userProfileIconService.iconUrlChanged;
             }, function () {
                 blade.iconUrl = userProfileIconService.getUserIconUrl();
             });

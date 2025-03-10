@@ -1,5 +1,6 @@
 angular.module('platformWebApp')
-    .directive('vaHeaderUserProfileWidget', ['$document', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.login', 'platformWebApp.userProfileIconService',
+    .directive('vaHeaderUserProfileWidget', [
+        '$document', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.login', 'platformWebApp.userProfileIconService',
         function ($document, $state, authService, dialogService, loginResources, userProfileIconService) {
 
             return {
@@ -71,7 +72,7 @@ angular.module('platformWebApp')
                     });
 
                     scope.$watch(function () {
-                        return userProfileIconService.iconUrlChanging;
+                        return userProfileIconService.iconUrlChanged;
                     }, function () {
                         scope.userIconUrl = userProfileIconService.getUserIconUrl();
                     });

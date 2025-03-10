@@ -12,7 +12,7 @@ angular.module('platformWebApp')
     });
 
     var service = {
-        iconUrlChanging: false,
+        iconUrlChanged: Date.now(),
         setUserIconUrl: setUserIconUrl,
         getUserIconUrl: function () {
             return userIconUrl;
@@ -22,7 +22,7 @@ angular.module('platformWebApp')
     function setUserIconUrl (memberId, url) {
         if (currentMemberId === memberId) {
             userIconUrl = url;
-            service.iconUrlChanging = !service.iconUrlChanging;
+            service.iconUrlChanged = Date.now();
         }
     }
 

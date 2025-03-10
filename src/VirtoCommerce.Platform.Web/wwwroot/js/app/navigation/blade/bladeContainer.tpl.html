@@ -42,7 +42,7 @@
             </div>
 
             <div class="blade-header">
-                <i ng-if="!blade.currentEntity.iconUrl && !blade.iconUrl" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'" class="blade-header__icon"></i>
+                <span ng-if="!blade.iconUrl && !blade.currentEntity.iconUrl" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'" class="blade-header__icon"></span>
 
                 <img ng-if="blade.iconUrl || blade.currentEntity.iconUrl" ng-src="{{ blade.iconUrl || blade.currentEntity.iconUrl }}" fallback-src="{{ blade.fallbackIconUrl }}" class="blade-header__img" />
 
