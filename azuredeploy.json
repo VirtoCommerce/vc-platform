@@ -84,9 +84,10 @@
                 "tier": "Standard"
             },
             "kind": "StorageV2",
-            "properties": {
-                "allowBlobPublicAccess": true
-                }
+          "properties": {
+            "allowBlobPublicAccess": true,
+            "minimalTlsVersion": "TLS1_2"
+          }
         },
         {
             "apiVersion": "2014-04-01",
