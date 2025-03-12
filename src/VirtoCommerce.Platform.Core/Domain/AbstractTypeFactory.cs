@@ -254,13 +254,10 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns>The TypeInfo instance for the specified type name.</returns>
         public static TypeInfo<BaseType> FindTypeInfoByName(string typeName)
         {
-            //Try find first direct type match from registered types
-            var result = _typeInfos.FirstOrDefault(x => x.TypeName.EqualsInvariant(typeName));
+            //Try to find first direct type match from registered types
             //Then need to find in inheritance chain from registered types
-            if (result == null)
-            {
-                result = _typeInfos.FirstOrDefault(x => x.IsAssignableTo(typeName));
-            }
+            var result = _typeInfos.FirstOrDefault(x => x.TypeName.EqualsIgnoreCase(typeName)) ??
+                         _typeInfos.FirstOrDefault(x => x.IsAssignableTo(typeName));
             return result;
         }
     }
@@ -378,7 +375,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns>true if the associated type is assignable to the specified type name; otherwise, false.</returns>
         public bool IsAssignableTo(string typeName)
         {
-            return Type.GetTypeInheritanceChainTo(typeof(BaseType)).Concat(new[] { typeof(BaseType) }).Any(t => typeName.EqualsInvariant(t.Name));
+            return Type.GetTypeInheritanceChainTo(typeof(BaseType)).Concat([typeof(BaseType)]).Any(t => typeName.EqualsIgnoreCase(t.Name));
         }
 
         /// <summary>

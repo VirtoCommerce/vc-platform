@@ -173,7 +173,7 @@ namespace VirtoCommerce.Platform.Modules
 
                 foreach (var declaredDependency in module.Dependencies)
                 {
-                    var installedDependency = manifestModules.FirstOrDefault(x => x.Id.EqualsInvariant(declaredDependency.Id));
+                    var installedDependency = manifestModules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(declaredDependency.Id));
                     if (installedDependency != null && !declaredDependency.Version.IsCompatibleWithBySemVer(installedDependency.Version))
                     {
                         module.Errors.Add($"Module dependency {declaredDependency} is incompatible with installed {installedDependency.Version}");
@@ -327,12 +327,12 @@ namespace VirtoCommerce.Platform.Modules
 
         private bool IsAssemblyRelatedFile(string path)
         {
-            return _options.AssemblyFileExtensions.Union(_options.AssemblyServiceFileExtensions).Any(x => path.EndsWith(x, StringComparison.OrdinalIgnoreCase));
+            return _options.AssemblyFileExtensions.Union(_options.AssemblyServiceFileExtensions).Any(path.EndsWithIgnoreCase);
         }
 
         private bool IsAssemblyFile(string path)
         {
-            return _options.AssemblyFileExtensions.Any(x => path.EndsWith(x, StringComparison.OrdinalIgnoreCase));
+            return _options.AssemblyFileExtensions.Any(path.EndsWithIgnoreCase);
         }
 
         private bool IsReferenceAssemblyFile(string path)
@@ -352,7 +352,7 @@ namespace VirtoCommerce.Platform.Modules
 
         private bool IsLocalizationFile(string path)
         {
-            return _options.LocalizationFileExtensions.Any(x => path.EndsWith(x, StringComparison.OrdinalIgnoreCase));
+            return _options.LocalizationFileExtensions.Any(path.EndsWithIgnoreCase);
         }
 
         private static string GetFileAbsoluteUri(string rootPath, string relativePath)
