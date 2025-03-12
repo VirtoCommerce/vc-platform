@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.Extensions
 {
@@ -33,7 +34,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
             foreach (var address in addresses.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var bindingAddress = BindingAddress.Parse(address);
-                if (bindingAddress.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                if (bindingAddress.Scheme.EqualsIgnoreCase("https"))
                 {
                     // If we find multiple different https ports specified, throw
                     if (nullablePort.HasValue && nullablePort != bindingAddress.Port)

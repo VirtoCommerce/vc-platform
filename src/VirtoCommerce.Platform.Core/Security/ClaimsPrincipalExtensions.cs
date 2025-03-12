@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Core.Security
             foreach (var claim in principal.Claims)
             {
                 var permission = Permission.TryCreateFromClaim(claim, jsonSettings);
-                if (permission != null && permission.Name.EqualsInvariant(permissionName))
+                if (permission != null && permission.Name.EqualsIgnoreCase(permissionName))
                 {
                     result.Add(permission);
                 }
