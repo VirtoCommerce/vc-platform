@@ -54,6 +54,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 using (var httpClient = new HttpClient())
                 {
+                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("VirtoCommerce/3.0 (https://virtocommerce.com)");
+                    httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
+
                     _logger.LogInformation("Sending request to activation URL: {ActivationUrl}", activationUrl);
                     var httpResponse = await httpClient.GetAsync(activationUrl);
 
