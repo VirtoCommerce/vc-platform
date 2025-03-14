@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core;
@@ -22,6 +23,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IOptions<PlatformOptions>> _platformOptionsMock = new Mock<IOptions<PlatformOptions>>();
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
         private readonly Mock<Func<IPlatformRepository>> _platformRepository = new Mock<Func<IPlatformRepository>>();
+        private readonly Mock<ILogger<LicensingController>> _logger = new Mock<ILogger<LicensingController>>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();
         private readonly LicenseProvider _licenseProvider;
 
@@ -33,7 +35,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             _licenseProvider = new LicenseProvider(_platformOptionsMock.Object, _platformRepository.Object);
 
-            _controller = new LicensingController(_platformOptionsMock.Object, _settingsManager.Object, _licenseProvider);
+            _controller = new LicensingController(_platformOptionsMock.Object, _settingsManager.Object, _licenseProvider, _logger.Object);
         }
 
         [Theory]

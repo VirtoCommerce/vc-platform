@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Settings;
@@ -21,40 +22,62 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly PlatformOptions _platformOptions;
         private readonly ISettingsManager _settingsManager;
         private readonly LicenseProvider _licenseProvider;
+        private readonly ILogger<LicensingController> _logger;
 
-        public LicensingController(IOptions<PlatformOptions> platformOptions, ISettingsManager settingsManager, LicenseProvider licenseProvider)
+        public LicensingController(IOptions<PlatformOptions> platformOptions,
+            ISettingsManager settingsManager,
+            LicenseProvider licenseProvider,
+            ILogger<LicensingController> logger)
         {
             _platformOptions = platformOptions.Value;
             _settingsManager = settingsManager;
             _licenseProvider = licenseProvider;
+            _logger = logger;
         }
 
         [HttpPost]
         [Route("activateByCode")]
         public async Task<ActionResult<License>> ActivateByCode([FromBody] string activationCode)
         {
+            _logger.LogInformation("Activation by code started.");
+
             if (!Regex.IsMatch(activationCode, "^([a-zA-Z_0-9-])+$"))
             {
+                _logger.LogWarning("Invalid activation code: {ActivationCode}", activationCode);
                 return BadRequest(new { Message = $"Activation code \"{activationCode}\" is invalid" });
             }
 
             License license = null;
 
-            using (var httpClient = new HttpClient())
+            var activationUrl = new Uri(_platformOptions.LicenseActivationUrl + activationCode);
+            try
             {
-                var activationUrl = new Uri(_platformOptions.LicenseActivationUrl + activationCode);
-                var httpResponse = await httpClient.GetAsync(activationUrl);
-
-                if (httpResponse.IsSuccessStatusCode)
+                using (var httpClient = new HttpClient())
                 {
-                    var rawLicense = await httpResponse.Content.ReadAsStringAsync();
-                    license = License.Parse(rawLicense, _platformOptions.LicensePublicKeyResourceName);
+                    _logger.LogInformation("Sending request to activation URL: {ActivationUrl}", activationUrl);
+                    var httpResponse = await httpClient.GetAsync(activationUrl);
+
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        var rawLicense = await httpResponse.Content.ReadAsStringAsync();
+                        _logger.LogInformation("License content '{LicenseContent}' received successful.", rawLicense);
+                        license = License.Parse(rawLicense, _platformOptions.LicensePublicKeyResourceName);
+                        _logger.LogInformation("License activation successful.");
+                    }
+                    else
+                    {
+                        _logger.LogWarning("License activation failed using {ActivationUrl} by code {ActivationCode} with status code: {StatusCode}", activationUrl, activationCode, httpResponse.StatusCode);
+                    }
+                }
+
+                if (license != null)
+                {
+                    await DisableTrial();
                 }
             }
-
-            if (license != null)
+            catch (Exception ex)
             {
-                await DisableTrial();
+                _logger.LogError(ex, "Error occurred during license activation using {ActivationUrl} by code {ActivationCode}.", activationUrl, activationCode);
             }
 
             return Ok(license);
