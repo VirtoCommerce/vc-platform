@@ -330,7 +330,7 @@ jobs:
       - deploy-cloud
     steps:
       - name: OWASP ZAP Full Scan
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@v0.14.0
         with:
           token: ${{ secrets.REPO_TOKEN }}
           target: 'https://vcptcore-dev.govirto.com'

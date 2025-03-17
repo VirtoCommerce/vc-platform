@@ -45,12 +45,12 @@ namespace VirtoCommerce.Platform.Modules
                 //Check platform version
                 if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion))
                 {
-                    Report(progress, ProgressMessageLevel.Error, string.Format("Target Platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
+                    Report(progress, ProgressMessageLevel.Error, $"Target Platform version {module.PlatformVersion} is incompatible with current {PlatformVersion.CurrentVersion}");
                     isValid = false;
                 }
 
                 var allInstalledModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToArray();
-                //Check that incompatible modules does not installed
+                //Check that incompatible modules are not installed
                 if (!module.Incompatibilities.IsNullOrEmpty())
                 {
                     var installedIncompatibilities = allInstalledModules.Select(x => x.Identity).Join(module.Incompatibilities, x => x.Id, y => y.Id, (x, y) => new { x, y })
@@ -58,22 +58,23 @@ namespace VirtoCommerce.Platform.Modules
                                                           .ToArray();
                     if (installedIncompatibilities.Any())
                     {
-                        Report(progress, ProgressMessageLevel.Error, string.Format("{0} is incompatible with installed {1}. You should uninstall these modules first.", module, string.Join(", ", installedIncompatibilities.Select(x => x.ToString()))));
+                        var identitiesString = string.Join(", ", installedIncompatibilities.Select(x => x.ToString()));
+                        Report(progress, ProgressMessageLevel.Error, $"{module} is incompatible with installed {identitiesString}. You should uninstall these modules first.");
                         isValid = false;
                     }
                 }
 
                 //Check that installable version compatible with already installed
-                var alreadyInstalledModule = allInstalledModules.FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
+                var alreadyInstalledModule = allInstalledModules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(module.Id));
                 if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
                 {
                     if (alreadyInstalledModule.Version.Major < module.Version.Major)
                     {
-                        Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.", module));
+                        Report(progress, ProgressMessageLevel.Error, $"Issue with {module}. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.");
                     }
                     else
                     {
-                        Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}. Automated downgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.", module));
+                        Report(progress, ProgressMessageLevel.Error, $"Issue with {module}. Automated downgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.");
                     }
                     isValid = false;
                 }
@@ -102,14 +103,14 @@ namespace VirtoCommerce.Platform.Modules
 
                         foreach (var newModule in updatableModules)
                         {
-                            var existModule = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled && x.Id == newModule.Id).First();
+                            var existModule = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().First(x => x.IsInstalled && x.Id == newModule.Id);
                             var dstModuleDir = Path.Combine(_options.DiscoveryPath, existModule.Id);
                             _fileManager.SafeDelete(dstModuleDir);
                             Report(progress, ProgressMessageLevel.Info, "Updating '{0}' -> '{1}'", existModule, newModule);
                             InnerInstall(newModule, progress);
                             existModule.IsInstalled = false;
                             newModule.IsInstalled = true;
-                            changedModulesLog.AddRange(new[] { existModule, newModule });
+                            changedModulesLog.AddRange([existModule, newModule]);
                         }
                         scope.Complete();
                     }
@@ -193,7 +194,7 @@ namespace VirtoCommerce.Platform.Modules
 
             try
             {
-                result = _extModuleCatalog.CompleteListWithDependencies(new[] { module })
+                result = _extModuleCatalog.CompleteListWithDependencies([module])
                     .OfType<ManifestModuleInfo>()
                     .Where(x => !x.IsInstalled)
                     .Except(modules)

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
@@ -72,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                 var headerValue = values.ToString();
                 const string scheme = "Basic ";
 
-                if (headerValue.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
+                if (headerValue.StartsWithIgnoreCase(scheme))
                 {
                     encodedCredentials = headerValue.Substring(scheme.Length).Trim();
                 }
