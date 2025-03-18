@@ -9,6 +9,8 @@ namespace VirtoCommerce.Platform.Core
 {
     public static class PlatformConstants
     {
+        public const string UserAgent = "VirtoCommerce/3.0 (https://virtocommerce.com)";
+
         public static class Security
         {
             public static class GrantTypes
