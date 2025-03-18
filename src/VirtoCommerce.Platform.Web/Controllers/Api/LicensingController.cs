@@ -23,16 +23,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISettingsManager _settingsManager;
         private readonly LicenseProvider _licenseProvider;
         private readonly ILogger<LicensingController> _logger;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public LicensingController(IOptions<PlatformOptions> platformOptions,
+        public LicensingController(
+            IOptions<PlatformOptions> platformOptions,
             ISettingsManager settingsManager,
             LicenseProvider licenseProvider,
-            ILogger<LicensingController> logger)
+            ILogger<LicensingController> logger,
+            IHttpClientFactory httpClientFactory)
         {
             _platformOptions = platformOptions.Value;
             _settingsManager = settingsManager;
             _licenseProvider = licenseProvider;
             _logger = logger;
+            _httpClientFactory = httpClientFactory;
         }
 
         [HttpPost]
@@ -52,25 +56,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var activationUrl = new Uri(_platformOptions.LicenseActivationUrl + activationCode);
             try
             {
-                using (var httpClient = new HttpClient())
+                var httpClient = _httpClientFactory.CreateClient();
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(PlatformConstants.UserAgent);
+                httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
+
+                _logger.LogInformation("Sending request to activation URL: {ActivationUrl}", _platformOptions.LicenseActivationUrl);
+                var httpResponse = await httpClient.GetAsync(activationUrl);
+
+                if (httpResponse.IsSuccessStatusCode)
                 {
-                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(PlatformConstants.UserAgent);
-                    httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
-
-                    _logger.LogInformation("Sending request to activation URL: {ActivationUrl}", activationUrl);
-                    var httpResponse = await httpClient.GetAsync(activationUrl);
-
-                    if (httpResponse.IsSuccessStatusCode)
-                    {
-                        var rawLicense = await httpResponse.Content.ReadAsStringAsync();
-                        _logger.LogInformation("License content '{LicenseContent}' received successful.", rawLicense);
-                        license = License.Parse(rawLicense, _platformOptions.LicensePublicKeyResourceName);
-                        _logger.LogInformation("License activation successful.");
-                    }
-                    else
-                    {
-                        _logger.LogWarning("License activation failed using {ActivationUrl} by code {ActivationCode} with status code: {StatusCode}", activationUrl, activationCode, httpResponse.StatusCode);
-                    }
+                    var rawLicense = await httpResponse.Content.ReadAsStringAsync();
+                    _logger.LogInformation("License content '{LicenseContent}' received successful.", rawLicense);
+                    license = License.Parse(rawLicense, _platformOptions.LicensePublicKeyResourceName);
+                    _logger.LogInformation("License activation successful.");
+                }
+                else
+                {
+                    _logger.LogWarning("License activation failed using {ActivationUrl} by code with status code: {StatusCode}", _platformOptions.LicenseActivationUrl, httpResponse.StatusCode);
                 }
 
                 if (license != null)
@@ -80,7 +82,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred during license activation using {ActivationUrl} by code {ActivationCode}.", activationUrl, activationCode);
+                _logger.LogError(ex, "Error occurred during license activation using {ActivationUrl} by code.", _platformOptions.LicenseActivationUrl);
             }
 
             return Ok(license);

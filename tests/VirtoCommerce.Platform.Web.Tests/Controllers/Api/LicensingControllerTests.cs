@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
@@ -24,6 +25,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
         private readonly Mock<Func<IPlatformRepository>> _platformRepository = new Mock<Func<IPlatformRepository>>();
         private readonly Mock<ILogger<LicensingController>> _logger = new Mock<ILogger<LicensingController>>();
+        private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();
         private readonly LicenseProvider _licenseProvider;
 
@@ -35,7 +37,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             _licenseProvider = new LicenseProvider(_platformOptionsMock.Object, _platformRepository.Object);
 
-            _controller = new LicensingController(_platformOptionsMock.Object, _settingsManager.Object, _licenseProvider, _logger.Object);
+            _controller = new LicensingController(_platformOptionsMock.Object, _settingsManager.Object, _licenseProvider, _logger.Object, _httpClientFactory.Object);
         }
 
         [Theory]
