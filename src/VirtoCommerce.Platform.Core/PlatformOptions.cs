@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Core
 
         // The public URL for license activation
         [Url]
-        public string LicenseActivationUrl { get; set; } = "https://virtocommerce.com/admin/api/licenses/activate/";
+        public string LicenseActivationUrl { get; set; } = "https://license.virtocommerce.org/api/licenses/activate/";
 
         // Local path for license file
         public string LicenseFilePath { get; set; } = "app_data/VirtoCommerce.lic";
