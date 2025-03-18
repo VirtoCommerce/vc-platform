@@ -12,5 +12,6 @@ namespace VirtoCommerce.Platform.Web.Model.Security
         public int DaysTillPasswordExpiry { get; set; }
         public string AuthenticationMethod { get; set; }
         public bool IsSsoAuthenticationMethod { get; set; }
+        public string MemberId { get; set; }
     }
 }
