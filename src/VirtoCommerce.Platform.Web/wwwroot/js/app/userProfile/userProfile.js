@@ -4,7 +4,7 @@ angular.module('platformWebApp')
         .state('workspace.userProfile', {
             url: '/userProfile',
             templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
-            controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+            controller: ['platformWebApp.bladeNavigationService', function (bladeNavigationService) {
                 var blade = {
                     id: 'userProfile',
                     controller: 'platformWebApp.userProfile.userProfileController',

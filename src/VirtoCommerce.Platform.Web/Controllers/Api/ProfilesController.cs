@@ -44,6 +44,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 var userProfile = AbstractTypeFactory<UserProfile>.TryCreateInstance();
                 userProfile.Id = currentUser.Id;
+                userProfile.MemberId = currentUser.MemberId;
                 await _settingsManager.DeepLoadSettingsAsync(userProfile);
 
                 // Main menu settings at initial boot
