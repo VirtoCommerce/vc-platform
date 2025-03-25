@@ -84,7 +84,9 @@
           "display-name": "表示名",
           "value-type": "値タイプ",
           "dictionary-values": "辞書の値",
-          "manage-dictionary": "辞書を管理"
+          "manage-dictionary": "辞書を管理",
+          "show-more-languages": "さらに多くの言語を表示",
+          "show-less-languages": "少ない言語を表示"
         },
         "placeholders": {
           "description": "プロパティの説明を入力",

@@ -84,7 +84,9 @@
           "display-name": "Anzeigename",
           "value-type": "Werttyp",
           "dictionary-values": "Wörterbuch-Werte",
-          "manage-dictionary": "Wörterbuch verwalten"
+          "manage-dictionary": "Wörterbuch verwalten",
+          "show-more-languages": "Mehr Sprachen anzeigen",
+          "show-less-languages": "Weniger Sprachen anzeigen"
         },
         "placeholders": {
           "description": "Eigenschaftsbeschreibung eingeben",
