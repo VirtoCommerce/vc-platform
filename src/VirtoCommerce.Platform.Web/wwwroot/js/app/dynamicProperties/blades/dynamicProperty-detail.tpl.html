@@ -9,6 +9,18 @@
                         <input focus-on="" required ng-model="blade.currentEntity.name" placeholder="{{ 'platform.genericValueInput.placeholders.short-text' | translate}}" />
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.display-name' | translate }}</label>
+                    <div class="form-input __langs" ng-repeat="data in blade.currentEntity.displayNames | limitTo: blade.showAllLanguages ? blade.currentEntity.displayNames.length : 2">
+                        <label class="lang-code">{{data.locale}}</label>
+                        <input ng-model="data.name" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-name' | translate }}" />
+                    </div>
+                    <div ng-if="blade.currentEntity.displayNames.length > 2">
+                        <a href="" ng-click="blade.showAllLanguages = !blade.showAllLanguages">
+                          {{ (blade.showAllLanguages ? 'platform.blades.dynamicProperty-detail.labels.show-less-languages' : 'platform.blades.dynamicProperty-detail.labels.show-more-languages' ) | translate }}
+                        </a>
+                    </div>
+                </div>
                 <div class="columns clearfix">
                     <div class="column">
                         <div class="columns">
@@ -109,18 +121,7 @@
                         <input ng-model="blade.currentEntity.description" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.description' | translate}}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.display-name' | translate }}</label>
-                    <div class="form-input __langs" ng-repeat="data in blade.currentEntity.displayNames | limitTo: blade.showAllLanguages ? blade.currentEntity.displayNames.length : 2">
-                        <label class="lang-code">{{data.locale}}</label>
-                        <input ng-model="data.name" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-name' | translate }}" />
-                    </div>
-                    <div ng-if="blade.currentEntity.displayNames.length > 2">
-                        <a href="" ng-click="blade.showAllLanguages = !blade.showAllLanguages">
-                          {{ (blade.showAllLanguages ? 'platform.blades.dynamicProperty-detail.labels.show-less-languages' : 'platform.blades.dynamicProperty-detail.labels.show-more-languages' ) | translate }}
-                        </a>
-                    </div>
-                </div>
+
             </form>
 
             <ul class="list __items">
