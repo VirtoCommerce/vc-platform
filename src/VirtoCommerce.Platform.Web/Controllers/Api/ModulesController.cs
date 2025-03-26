@@ -431,7 +431,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             //Need install only latest versions
             foreach (var moduleVersionGroup in moduleVersionGroups)
             {
-                var alreadyInstalledModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.IsInstalled && x.Id.EqualsInvariant(moduleVersionGroup.Key));
+                var alreadyInstalledModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.IsInstalled && x.Id.EqualsIgnoreCase(moduleVersionGroup.Key));
                 //skip already installed modules
                 if (alreadyInstalledModule == null)
                 {
@@ -590,7 +590,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 retVal.Add(module);
                 var dependingModules = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
                                                              .Where(x => x.IsInstalled)
-                                                             .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase))
+                                                             .Where(x => x.DependsOn.ContainsIgnoreCase(module.Id))
                                                              .ToList();
                 if (dependingModules.Any())
                 {

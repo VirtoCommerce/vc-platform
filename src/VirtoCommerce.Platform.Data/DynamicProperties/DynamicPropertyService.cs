@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         public virtual void RegisterType<T>() where T : IHasDynamicProperties
         {
-            if (!AbstractTypeFactory<IHasDynamicProperties>.AllTypeInfos.Any(t => t.Type == typeof(T)))
+            if (AbstractTypeFactory<IHasDynamicProperties>.AllTypeInfos.All(t => t.Type != typeof(T)))
             {
                 AbstractTypeFactory<IHasDynamicProperties>.RegisterType<T>();
             }
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 var dbExistProperties = (await repository.GetDynamicPropertiesForTypesAsync(properties.Select(x => x.ObjectType).Distinct().ToArray())).ToList();
                 foreach (var property in properties)
                 {
-                    var originalEntity = dbExistProperties.FirstOrDefault(x => property.IsTransient() ? x.Name.EqualsInvariant(property.Name) && x.ObjectType.EqualsInvariant(property.ObjectType) : x.Id.EqualsInvariant(property.Id));
+                    var originalEntity = dbExistProperties.FirstOrDefault(x => property.IsTransient() ? x.Name.EqualsIgnoreCase(property.Name) && x.ObjectType.EqualsIgnoreCase(property.ObjectType) : x.Id.EqualsIgnoreCase(property.Id));
                     var modifiedEntity = AbstractTypeFactory<DynamicPropertyEntity>.TryCreateInstance().FromModel(property, pkMap);
                     if (originalEntity != null)
                     {
@@ -84,7 +84,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                         repository.Add(modifiedEntity);
                     }
                 }
-                repository.UnitOfWork.Commit();
+                await repository.UnitOfWork.CommitAsync();
                 pkMap.ResolvePrimaryKeys();
 
                 DynamicPropertiesCacheRegion.ExpireRegion();
@@ -116,6 +116,5 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
         }
 
         #endregion
-
     }
 }

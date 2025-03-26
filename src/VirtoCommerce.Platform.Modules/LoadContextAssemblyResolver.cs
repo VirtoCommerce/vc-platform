@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.Extensions.Logging;
@@ -15,23 +14,21 @@ namespace VirtoCommerce.Platform.Modules
 
     public class LoadContextAssemblyResolver : IAssemblyResolver
     {
-        private readonly ILogger<LoadContextAssemblyResolver> _logger;
-        private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
+        private readonly Dictionary<string, Assembly> _loadedAssemblies = new();
         private readonly bool _isDevelopmentEnvironment;
 
-        private readonly IList<string> _ignoredAssemblies = new[]
-        {
+        private readonly IList<string> _ignoredAssemblies =
+        [
             "AspNet.Security.OpenIdConnect.Extensions",
             "AspNet.Security.OpenIdConnect.Primitives",
             "AspNet.Security.OpenIdConnect.Server",
             "OpenIddict.Mvc",
             "CryptoHelper",
-            "Microsoft.EntityFrameworkCore.Design"
-        };
+            "Microsoft.EntityFrameworkCore.Design",
+        ];
 
         public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
         {
-            _logger = logger;
             _isDevelopmentEnvironment = isDevelopmentEnvironment;
         }
 
@@ -83,7 +80,7 @@ namespace VirtoCommerce.Platform.Modules
             var mainAssemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
             Assembly mainAssembly = null;
 
-            // Load all assembly referencies which we could get through .deps.json file
+            // Load all assembly references which we could get through .deps.json file
             foreach (var dependency in depsFilePath.ExtractDependenciesFromPath())
             {
                 try
@@ -91,10 +88,10 @@ namespace VirtoCommerce.Platform.Modules
                     var loadedAssembly = LoadAssemblyCached(dependency, loadContext);
                     if (loadedAssembly == null)
                     {
-                        // Temprorary workaround to ensure seamless update to OpenIddictV3:
-                        // skips unsuded OpenIddictV2 assemblies that might not be present on the machine from being loaded by modules (in Platform.Security package)
+                        // Temporary workaround to ensure seamless update to OpenIddictV3:
+                        // skips unused OpenIddictV2 assemblies that might not be present on the machine from being loaded by modules (in Platform.Security package)
                         // will be removed later.
-                        if (_ignoredAssemblies.Contains(dependency.Name.Name, StringComparer.OrdinalIgnoreCase))
+                        if (_ignoredAssemblies.ContainsIgnoreCase(dependency.Name.Name))
                         {
                             continue;
                         }
@@ -102,7 +99,7 @@ namespace VirtoCommerce.Platform.Modules
                         throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
                     }
 
-                    if (mainAssemblyName.EqualsInvariant(loadedAssembly.GetName().Name))
+                    if (mainAssemblyName.EqualsIgnoreCase(loadedAssembly.GetName().Name))
                     {
                         mainAssembly = loadedAssembly;
                     }
@@ -129,13 +126,13 @@ namespace VirtoCommerce.Platform.Modules
         /// </summary>
         /// <param name="managedLibrary">ManagedLibrary object containing library name and paths.</param>
         /// <param name="loadContext">ManagedAssemblyLoadContext object.</param>
-        /// <returns>Retures loaded assembly (could be cached).</returns>
+        /// <returns>Returns loaded assembly (could be cached).</returns>
         private Assembly LoadAssemblyCached(ManagedLibrary managedLibrary, ManagedAssemblyLoadContext loadContext)
         {
             var assemblyName = managedLibrary.Name;
-            if (_loadedAssemblies.ContainsKey(assemblyName.Name))
+            if (_loadedAssemblies.TryGetValue(assemblyName.Name, out var assembly))
             {
-                return _loadedAssemblies[assemblyName.Name];
+                return assembly;
             }
 
             var loadedAssembly = LoadAssemblyInternal(managedLibrary, loadContext);
@@ -147,7 +144,7 @@ namespace VirtoCommerce.Platform.Modules
         }
 
         /// <summary>
-        /// Performs loading into AssemblyLoadContext.Default using LoadFromAssemblyName for TPA assemblies and LoadFromAssemblyPath for other dependecies.
+        /// Performs loading into AssemblyLoadContext.Default using LoadFromAssemblyName for TPA assemblies and LoadFromAssemblyPath for other dependencies.
         /// <para>
         /// Based on https://github.com/natemcmaster/DotNetCorePlugins/blob/8f5c28fa70f0869a1af2e2904536268f184e71de/src/Plugins/Loader/ManagedLoadContext.cs Load method,
         /// but avoided FileNotFoundException from LoadFromAssemblyName trying only load TPA assemblies that way.
@@ -220,7 +217,7 @@ namespace VirtoCommerce.Platform.Modules
                 return null;
             }
 
-            if (!Uri.TryCreate(filePath, UriKind.Absolute, out Uri uri))
+            if (!Uri.TryCreate(filePath, UriKind.Absolute, out var uri))
             {
                 return null;
             }

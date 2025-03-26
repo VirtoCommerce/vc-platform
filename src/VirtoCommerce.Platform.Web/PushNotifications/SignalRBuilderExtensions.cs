@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             builder.Services.AddOptions<PushNotificationOptions>().Bind(configuration.GetSection("PushNotifications")).ValidateDataAnnotations();
 
             // SignalR scalability configuration.
-            if (scalabilityMode != null && !scalabilityMode.EqualsInvariant("None"))
+            if (scalabilityMode != null && !scalabilityMode.EqualsIgnoreCase("None"))
             {
 
                 // Store full type information in JSON to deserialize push notifications on other instances
@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 builder.Services.AddSingleton<IPushNotificationManager, ScalablePushNotificationManager>();
                 builder.Services.AddHostedService<PushNotificationSynchronizerTask>();
 
-                if (scalabilityMode.EqualsInvariant("AzureSignalRService"))
+                if (scalabilityMode.EqualsIgnoreCase("AzureSignalRService"))
                 {
                     var azureSignalRConnectionString = configuration["PushNotifications:AzureSignalRService:ConnectionString"];
                     if (string.IsNullOrEmpty(azureSignalRConnectionString))

@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Core.Extensions
         {
             return moduleCatalog.Modules
                 .OfType<ManifestModuleInfo>()
-                .Any(x => x.Id.EqualsInvariant(moduleId) && x.IsInstalled);
+                .Any(x => x.Id.EqualsIgnoreCase(moduleId) && x.IsInstalled);
         }
     }
 }

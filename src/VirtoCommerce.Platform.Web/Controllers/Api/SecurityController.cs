@@ -182,6 +182,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray(),
                 AuthenticationMethod = HttpContext.User.GetAuthenticationMethod(),
                 IsSsoAuthenticationMethod = HttpContext.User.IsExternalSignIn(),
+                MemberId = user.MemberId,
             };
 
             // Password never expired with SSO
@@ -431,7 +432,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             if (HttpContext.User.IsExternalSignIn())
             {
-                return BadRequest(new SecurityResult { Errors = new[] { $"Could not change password for {HttpContext.User.GetAuthenticationMethod()} authentication method" } });
+                return BadRequest(new SecurityResult { Errors = [$"Could not change password for {HttpContext.User.GetAuthenticationMethod()} authentication method"] });
             }
 
             return await ChangePassword(User.Identity.Name, changePassword);
@@ -462,12 +463,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!_passwordLoginOptions.Enabled)
             {
-                return BadRequest(new SecurityResult { Errors = new[] { "Password login is disabled" } });
+                return BadRequest(new SecurityResult { Errors = ["Password login is disabled"] });
             }
 
             if (changePassword.OldPassword == changePassword.NewPassword)
             {
-                return BadRequest(new SecurityResult { Errors = new[] { "You have used this password in the past. Choose another one." } });
+                return BadRequest(new SecurityResult { Errors = ["You have used this password in the past. Choose another one."] });
             }
 
             if (!IsUserEditable(userName))
@@ -517,7 +518,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!_passwordLoginOptions.Enabled)
             {
-                return BadRequest(new SecurityResult { Errors = new[] { "Password login is disabled" } });
+                return BadRequest(new SecurityResult { Errors = ["Password login is disabled"] });
             }
 
             var user = await UserManager.FindByNameAsync(userName);
@@ -721,7 +722,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Forbid();
             }
 
-            if (!applicationUser.Email.EqualsInvariant(user.Email))
+            if (!applicationUser.Email.EqualsIgnoreCase(user.Email))
             {
                 // SetEmailAsync also: sets EmailConfirmed to false and updates the SecurityStamp
                 await UserManager.SetEmailAsync(user, user.Email);
@@ -878,7 +879,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<UserApiKey[]>> SaveUserApiKey([FromBody] UserApiKey userApiKey)
         {
-            await _userApiKeyService.SaveApiKeysAsync(new[] { userApiKey });
+            await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
             return Ok();
         }
 
@@ -1064,7 +1065,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private bool IsUserEditable(string userName)
         {
-            return _securityOptions.NonEditableUsers?.FirstOrDefault(x => x.EqualsInvariant(userName)) == null;
+            return _securityOptions.NonEditableUsers?.FirstOrDefault(x => x.EqualsIgnoreCase(userName)) == null;
         }
 
         private void LogUserNotFound(string idOrName)
@@ -1095,7 +1096,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private IList<ApplicationUser> ReduceUsersDetails(IList<ApplicationUser> users)
         {
-            return users?.Select(x => ReduceUserDetails(x)).ToList();
+            return users?.Select(ReduceUserDetails).ToList();
         }
 
         private async Task<IdentityResult> ValidatePassword(ApplicationUser user, string password)

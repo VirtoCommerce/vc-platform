@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -15,7 +14,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             var platformMigrator = databaseFacade.GetService<IMigrator>();
             var appliedMigrations = databaseFacade.GetAppliedMigrations();
-            if (!appliedMigrations.Any(x => x.EqualsInvariant(targetMigration)))
+            if (!appliedMigrations.ContainsIgnoreCase(targetMigration))
             {
                 platformMigrator.Migrate(targetMigration);
             }

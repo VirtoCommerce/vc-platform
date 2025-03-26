@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Modules.AssemblyLoading
 {
@@ -36,7 +37,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
         /// <returns>True if TPA list contains assembly with the same file name, otherwise false.</returns>
         public static bool ContainsAssembly(string assemblyFileName)
         {
-            return _TPAPaths.Any(x => x.EndsWith(Path.DirectorySeparatorChar + assemblyFileName, StringComparison.OrdinalIgnoreCase));
+            return _TPAPaths.Any(x => x.EndsWithIgnoreCase(Path.DirectorySeparatorChar + assemblyFileName));
         }
     }
 }
