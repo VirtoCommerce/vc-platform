@@ -10,7 +10,7 @@
       "dynamic-properties": "Proprietà dinamiche",
       "security": "Sicurezza",
       "modules": "Moduli",
-      "export-import": "Esporta & Importa",
+      "export-import": "Backup e Ripristino",
       "user-profile": "Profilo utente",
       "assets": "Risorse",
       "toggle-favorites": "Shift + Spazio per attivare/disattivare i preferiti",
@@ -152,10 +152,10 @@
         }
       },
       "export-main": {
-        "title": "Esportazione dati",
+        "title": "Backup dei dati",
         "labels": {
           "platform-entries": "Voci della piattaforma",
-          "choose-modules": "Scegli i moduli da esportare",
+          "choose-modules": "Scegli i moduli da salvare",
           "download-url": "URL di download",
           "errors": "Errori",
           "start": "Inizio",
@@ -181,21 +181,21 @@
         }
       },
       "import-main": {
-        "title": "Importazione dati",
+        "title": "Ripristino dati",
         "labels": {
-          "start-import": "Avvia importazione",
-          "select-file": "Seleziona il file .zip da importare. Il file deve essere prodotto dall'esportazione dati di Commerce Manager",
-          "drag-note": "Trascina e rilascia il file .zip da importare. Il file deve essere prodotto dall'esportazione dati di Commerce Manager",
+          "start-import": "Avvia ripristino",
+          "select-file": "Seleziona il file .zip da ripristinare. Il file deve essere stato generato dal backup dei dati di Virto Commerce",
+          "drag-note": "Trascina e rilascia il file .zip per ripristinarlo. Il file deve essere stato generato dal backup dei dati di Virto Commerce",
           "upload-failed": "Caricamento fallito",
           "upload-progress": "Progresso del caricamento",
-          "import-progress": "Progresso dell'importazione",
-          "import-finished": "Importazione completata",
-          "import-data-information": "Informazioni sui dati importati",
+          "import-progress": "Avanzamento del ripristino",
+          "import-finished": "Ripristino completato",
+          "import-data-information": "Ripristina informazioni sui dati",
           "author": "Autore",
           "data-file-created": "File dati creato",
           "created-platform-version": "Creato nella versione della piattaforma",
           "platform-entries": "Voci della piattaforma",
-          "choose-modules": "Scegli i moduli da importare",
+          "choose-modules": "Scegli i moduli da ripristinare",
           "no-data": "Nessun dato",
           "errors": "Errori",
           "start": "Inizio",
@@ -221,15 +221,15 @@
         }
       },
       "exportImport-main": {
-        "title": "Esportazione e importazione dati",
+        "title": "Backup e ripristino dei dati",
         "menu": {
           "export": {
-            "title": "Esporta",
-            "description": "I dati saranno salvati in un file per poter essere importati successivamente"
+            "title": "Backup",
+            "description": "I dati verranno salvati in un file per un futuro ripristino"
           },
           "import": {
-            "title": "Importa",
-            "description": "Importa dati da un file esportato"
+            "title": "Ripristino",
+            "description": "Ripristina i dati da un file di backup per utilizzi futuri"
           }
         }
       },
@@ -917,9 +917,9 @@
     "platform:security:delete": "Elimina utenti e ruoli",
     "platform:security:verifyEmail": "Modifica lo stato di verifica e invia email di verifica",
     "background_jobs:manage": "Accesso alla console Hangfire",
-    "platform:exportImport:access": "Visualizza Esporta/Importa nel menu principale",
-    "platform:import": "Importa dati della Piattaforma e dei moduli",
-    "platform:export": "Esporta dati della Piattaforma e dei moduli",
+    "platform:exportImport:access": "Visualizza Backup/Ripristino nel menu principale",
+    "platform:import": "Ripristina dati della piattaforma e dei moduli",
+    "platform:export": "Esegui il backup della piattaforma e dei moduli",
     "platform:security:loginOnBehalf": "Accedi per conto di un cliente"
   },
   "settings": {

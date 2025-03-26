@@ -10,7 +10,7 @@
       "dynamic-properties": "Propiedades dinámicas",
       "security": "Seguridad",
       "modules": "Módulos",
-      "export-import": "Exportar e Importar",
+      "export-import": "Copia de seguridad y Restauración",
       "user-profile": "Perfil de usuario",
       "assets": "Recursos",
       "toggle-favorites": "Shift + Espacio para alternar favoritos",
@@ -152,10 +152,10 @@
         }
       },
       "export-main": {
-        "title": "Exportación de datos",
+        "title": "Copia de seguridad de datos",
         "labels": {
           "platform-entries": "Entradas de la plataforma",
-          "choose-modules": "Elegir módulos para exportar",
+          "choose-modules": "Elija los módulos para la copia de seguridad",
           "download-url": "URL de descarga",
           "errors": "Errores",
           "start": "Inicio",
@@ -181,21 +181,21 @@
         }
       },
       "import-main": {
-        "title": "Importación de datos",
+        "title": "Restauración de datos",
         "labels": {
-          "start-import": "Iniciar importación",
-          "select-file": "Seleccionar archivo .zip para importar. El archivo debe ser producido por la exportación de datos del Commerce Manager",
-          "drag-note": "Arrastrar y soltar archivo .zip para importar. El archivo debe ser producido por la exportación de datos del Commerce Manager",
+          "start-import": "Iniciar restauración",
+          "select-file": "Seleccione el archivo .zip para restaurar. El archivo debe haber sido generado por la copia de seguridad de datos de Virto Commerce",
+          "drag-note": "Arrastre y suelte el archivo .zip para restaurar. El archivo debe haber sido generado por la copia de seguridad de datos de Virto Commerce",
           "upload-failed": "Fallo en la subida",
-          "upload-progress": "Progreso de subida",
-          "import-progress": "Progreso de importación",
+          "upload-progress": "Progreso de restauración",
+          "import-progress": "Restauración finalizada",
           "import-finished": "Importación finalizada",
-          "import-data-information": "Información de datos de importación",
+          "import-data-information": "Restaurar información de datos",
           "author": "Autor",
           "data-file-created": "Archivo de datos creado",
           "created-platform-version": "Creado en la versión de la Plataforma",
           "platform-entries": "Entradas de la plataforma",
-          "choose-modules": "Elegir módulos para importar",
+          "choose-modules": "Elija los módulos para restaurar",
           "no-data": "Sin datos",
           "errors": "Errores",
           "start": "Inicio",
@@ -221,15 +221,15 @@
         }
       },
       "exportImport-main": {
-        "title": "Exportación e importación de datos",
+        "title": "Copia de seguridad y restauración de datos",
         "menu": {
           "export": {
-            "title": "Exportar",
-            "description": "Los datos se guardarán en un archivo para poder importarlos más tarde"
+            "title": "Copia de seguridad",
+            "description": "Los datos se guardarán en un archivo para su futura restauración"
           },
           "import": {
-            "title": "Importar",
-            "description": "Importar datos desde un archivo exportado"
+            "title": "Restauración",
+            "description": "Restaurar datos desde un archivo de copia de seguridad para su uso futuro"
           }
         }
       },
@@ -898,7 +898,7 @@
     "platform:asset:delete": "Eliminar recursos de la Plataforma",
     "platform:asset:update": "Cambiar recursos de la Plataforma",
     "platform:asset:create": "Cargar nuevos recursos de la Plataforma",
-    "platform:asset:read": "Descargar recursos de la Plataforma",  
+    "platform:asset:read": "Descargar recursos de la Plataforma",
     "platform:module:read": "Ver detalles del módulo",
     "platform:module:access": "Ver módulos en el menú principal",
     "platform:module:manage": "Instalar/desinstalar módulos",
@@ -917,9 +917,9 @@
     "platform:security:delete": "Eliminar usuarios y roles",
     "platform:security:verifyEmail": "Cambiar estado verificado y enviar correo electrónico de verificación",
     "background_jobs:manage": "Acceso a la consola de Hangfire",
-    "platform:exportImport:access": "Ver Exportar/Importar en el menú principal",
-    "platform:import": "Importar datos de la Plataforma y módulos",
-    "platform:export": "Exportar datos de la Plataforma y módulos",
+    "platform:exportImport:access": "Ver Copia de seguridad/Restauración en el menú principal",
+    "platform:import": "Restaurar datos de la plataforma y módulos",
+    "platform:export": "Hacer copia de seguridad de la plataforma y módulos",
     "platform:security:loginOnBehalf": "Iniciar sesión en nombre de un cliente"
   },
   "settings": {
