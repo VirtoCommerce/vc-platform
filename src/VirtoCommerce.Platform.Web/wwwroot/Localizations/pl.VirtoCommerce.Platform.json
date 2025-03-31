@@ -84,7 +84,9 @@
           "display-name": "Nazwa wyświetlana",
           "value-type": "Typ wartości",
           "dictionary-values": "Wartości słownikowe",
-          "manage-dictionary": "Zarządzaj słownikiem"
+          "manage-dictionary": "Zarządzaj słownikiem",
+          "show-more-languages": "Pokaż więcej języków",
+          "show-less-languages": "Pokaż mniej języków"
         },
         "placeholders": {
           "description": "Wprowadź opis właściwości",
