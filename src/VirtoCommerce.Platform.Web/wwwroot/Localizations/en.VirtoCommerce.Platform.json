@@ -10,7 +10,7 @@
       "dynamic-properties": "Dynamic properties",
       "security": "Security",
       "modules": "Modules",
-      "export-import": "Export & Import",
+      "export-import": "Backup & Restore",
       "user-profile": "User profile",
       "assets": "Assets",
       "toggle-favorites": "Shift + Space to toggle favorites",
@@ -154,10 +154,10 @@
         }
       },
       "export-main": {
-        "title": "Data export",
+        "title": "Data backup",
         "labels": {
           "platform-entries": "Platform entries",
-          "choose-modules": "Choose modules to export",
+          "choose-modules": "Choose modules to backup",
           "download-url": "Download URL",
           "errors": "Errors",
           "start": "Start",
@@ -183,21 +183,21 @@
         }
       },
       "import-main": {
-        "title": "Data import",
+        "title": "Data restore",
         "labels": {
-          "start-import": "Start import",
-          "select-file": "Select .zip file to import. The file must be produced by Commerce Manager data export",
-          "drag-note": "Drag and drop .zip file to import. The file must be produced by Commerce Manager data export",
+          "start-import": "Start restore",
+          "select-file": "Select .zip file to restore. The file must be produced by Virto Commerce data backup",
+          "drag-note": "Drag and drop .zip file to restore. The file must be produced by Virto Commerce data backup",
           "upload-failed": "Upload failed",
           "upload-progress": "Upload progress",
-          "import-progress": "Import progress",
-          "import-finished": "Import finished",
-          "import-data-information": "Import data information",
+          "import-progress": "Restore progress",
+          "import-finished": "Restore finished",
+          "import-data-information": "Restore data information",
           "author": "Author",
           "data-file-created": "Data file created",
           "created-platform-version": "Created in Platform version",
           "platform-entries": "Platform entries",
-          "choose-modules": "Choose modules to import",
+          "choose-modules": "Choose modules to restore",
           "no-data": "No data",
           "errors": "Errors",
           "start": "Start",
@@ -223,15 +223,15 @@
         }
       },
       "exportImport-main": {
-        "title": "Data export and import",
+        "title": "Data backup and restore",
         "menu": {
           "export": {
-            "title": "Export",
-            "description": "Data will be saved out to a file so it can be imported later"
+            "title": "Backup",
+            "description": "Data will be saved to a file for future restoration"
           },
           "import": {
-            "title": "Import",
-            "description": "Import data from an exported file"
+            "title": "Restore",
+            "description": "Restore data from a backup file for future use"
           }
         }
       },
@@ -920,9 +920,9 @@
     "platform:security:delete": "Delete users and roles",
     "platform:security:verifyEmail": "Change verified state and send verification email",
     "background_jobs:manage": "Access to the Hangfire console",
-    "platform:exportImport:access": "View Export/Import in the main menu",
-    "platform:import": "Import Platform and modules data",
-    "platform:export": "Export Platform and modules data",
+    "platform:exportImport:access": "View Backup/Restore in the main menu",
+    "platform:import": "Restore platform and modules data",
+    "platform:export": "Backup platform and modules data",
     "platform:security:loginOnBehalf": "Login on behalf of a customer"
   },
   "settings": {

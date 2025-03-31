@@ -10,7 +10,7 @@
       "dynamic-properties": "动态属性",
       "security": "安全",
       "modules": "模块",
-      "export-import": "导出 & 导入",
+      "export-import": "备份与恢复",
       "user-profile": "用户资料",
       "assets": "资源",
       "toggle-favorites": "按 Shift + 空格键切换收藏夹",
@@ -154,10 +154,10 @@
         }
       },
       "export-main": {
-        "title": "数据导出",
+        "title": "数据备份",
         "labels": {
           "platform-entries": "平台条目",
-          "choose-modules": "选择要导出的模块",
+          "choose-modules": "选择要备份的模块",
           "download-url": "下载URL",
           "errors": "错误",
           "start": "开始",
@@ -183,21 +183,21 @@
         }
       },
       "import-main": {
-        "title": "数据导入",
+        "title": "数据恢复",
         "labels": {
-          "start-import": "开始导入",
-          "select-file": "选择要导入的.zip文件。该文件必须由Commerce Manager数据导出生成",
-          "drag-note": "拖放要导入的.zip文件。该文件必须由Commerce Manager数据导出生成",
+          "start-import": "开始恢复",
+          "select-file": "选择 .zip 文件进行恢复。该文件必须由 Virto Commerce 数据备份生成。",
+          "drag-note": "拖放 .zip 文件进行恢复。该文件必须由 Virto Commerce 数据备份生成。",
           "upload-failed": "上传失败",
           "upload-progress": "上传进度",
-          "import-progress": "导入进度",
-          "import-finished": "导入完成",
-          "import-data-information": "导入数据信息",
+          "import-progress": "恢复进度",
+          "import-finished": "恢复完成",
+          "import-data-information": "恢复数据信息",
           "author": "作者",
           "data-file-created": "数据文件创建时间",
           "created-platform-version": "创建于平台版本",
           "platform-entries": "平台条目",
-          "choose-modules": "选择要导入的模块",
+          "choose-modules": "选择要恢复的模块",
           "no-data": "无数据",
           "errors": "错误",
           "start": "开始",
@@ -223,15 +223,15 @@
         }
       },
       "exportImport-main": {
-        "title": "数据导出和导入",
+        "title": "数据备份与恢复",
         "menu": {
           "export": {
-            "title": "导出",
-            "description": "数据将被保存到文件中，以便稍后导入"
+            "title": "备份",
+            "description": "数据将保存到文件，以便将来恢复"
           },
           "import": {
-            "title": "导入",
-            "description": "从导出的文件中导入数据"
+            "title": "恢复",
+            "description": "从备份文件恢复数据，以供将来使用"
           }
         }
       },
@@ -919,9 +919,9 @@
     "platform:security:delete": "删除用户和角色",
     "platform:security:verifyEmail": "更改验证状态并发送验证邮件",
     "background_jobs:manage": "访问 Hangfire 控制台",
-    "platform:exportImport:access": "在主菜单中查看导出/导入",
-    "platform:import": "导入平台和模块数据",
-    "platform:export": "导出平台和模块数据",
+    "platform:exportImport:access": "在主菜单中查看备份/恢复",
+    "platform:import": "恢复平台和模块数据",
+    "platform:export": "备份平台和模块数据",
     "platform:security:loginOnBehalf": "代表客户登录"
   },
   "settings": {
