@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -14,7 +13,6 @@ using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Hangfire;
 
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
@@ -28,26 +26,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
-        private readonly ISettingsManager _settingsManager;
         private readonly IUserNameResolver _userNameResolver;
         private readonly PlatformOptions _platformOptions;
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        private static readonly object _lockObject = new();
 
         public PlatformBackupRestoreController(
             IPlatformExportImportManager platformExportManager,
             IPushNotificationManager pushNotifier,
-            ISettingsManager settingManager,
             IUserNameResolver userNameResolver,
-            IOptions<PlatformOptions> options,
-            IHttpClientFactory httpClientFactory)
+            IOptions<PlatformOptions> options)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
-            _settingsManager = settingManager;
             _userNameResolver = userNameResolver;
-            _httpClientFactory = httpClientFactory;
             _platformOptions = options.Value;
         }
 
@@ -117,7 +107,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
-            void progressCallback(ExportImportProgressInfo x)
+            void ProgressCallback(ExportImportProgressInfo x)
             {
                 pushNotification.Path(x);
                 pushNotification.JobId = context.BackgroundJob.Id;
@@ -136,7 +126,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     var manifest = importRequest.ToManifest();
                     manifest.Created = now;
-                    await _platformExportManager.ImportAsync(stream, manifest, progressCallback, cancellationTokenWrapper);
+                    await _platformExportManager.ImportAsync(stream, manifest, ProgressCallback, cancellationTokenWrapper);
                 }
             }
             catch (JobAbortedException)
@@ -157,7 +147,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
-            void progressCallback(ExportImportProgressInfo x)
+            void ProgressCallback(ExportImportProgressInfo x)
             {
                 pushNotification.Path(x);
                 pushNotification.JobId = context.BackgroundJob.Id;
@@ -184,7 +174,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 using (var stream = System.IO.File.OpenWrite(localTmpPath))
                 {
                     var manifest = exportRequest.ToManifest();
-                    await _platformExportManager.ExportAsync(stream, manifest, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
+                    await _platformExportManager.ExportAsync(stream, manifest, ProgressCallback, new JobCancellationTokenWrapper(cancellationToken));
                     pushNotification.DownloadUrl = $"api/platform/export/download/{fileName}";
                 }
             }
