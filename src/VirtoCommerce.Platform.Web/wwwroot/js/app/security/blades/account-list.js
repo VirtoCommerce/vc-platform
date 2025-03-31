@@ -97,6 +97,10 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
 
     var filter = $scope.filter = {};
     filter.criteriaChanged = function () {
+        if (filter.keyword) {
+            $scope.gridApi.grid.resetColumnSorting();
+        }
+
         if ($scope.pageSettings.currentPage > 1) {
             $scope.pageSettings.currentPage = 1;
         } else {
