@@ -84,7 +84,9 @@
           "display-name": "Nombre para mostrar",
           "value-type": "Tipo de valor",
           "dictionary-values": "Valores del diccionario",
-          "manage-dictionary": "Gestionar diccionario"
+          "manage-dictionary": "Gestionar diccionario",
+          "show-more-languages": "Mostrar más idiomas",
+          "show-less-languages": "Mostrar menos idiomas"
         },
         "placeholders": {
           "description": "Introducir descripción de la propiedad",
