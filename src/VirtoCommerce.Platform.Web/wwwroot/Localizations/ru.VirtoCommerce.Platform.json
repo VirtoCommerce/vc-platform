@@ -84,7 +84,9 @@
           "display-name": "Отображаемое имя",
           "value-type": "Тип значения",
           "dictionary-values": "Словарные значения",
-          "manage-dictionary": "Управление словарем"
+          "manage-dictionary": "Управление словарем",
+          "show-more-languages": "Показать больше языков",
+          "show-less-languages": "Показать меньше языков"
         },
         "placeholders": {
           "description": "Введите описание свойства",

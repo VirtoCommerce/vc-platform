@@ -84,7 +84,9 @@
           "display-name": "显示名称",
           "value-type": "值类型",
           "dictionary-values": "字典值",
-          "manage-dictionary": "管理字典"
+          "manage-dictionary": "管理字典",
+          "show-more-languages": "显示更多语言",
+          "show-less-languages": "显示更少语言"
         },
         "placeholders": {
           "description": "输入属性描述",
