@@ -1,6 +1,6 @@
 <div class="blade" ng-class="[moduleName, {'__animated': blade.animated, '__expanded': blade.isExpanded, '__maximized': blade.isMaximized, '__closing': blade.closing}]" ng-repeat="blade in blades">
     <div class="blade-wrapper" va-blade='blade'>
-        <header class="blade-head">
+        <header class="blade-head" ng-style="{'height': blade.hideToolbar ? '80px' : ''}">
             <div class="blade-status" ng-if="blade.error || blade.isLoading" ng-class="{'__error': blade.error}">
                 <div class="status-message" ng-if="blade.error">
                     <div class="error-icon-container">
@@ -51,7 +51,7 @@
                 <span ng-if="pageSettings.totalItems" class="vc-badge">{{ pageSettings.totalItems | number: 0 }}</span>
             </div>
 
-            <div class="blade-toolbar">
+            <div class="blade-toolbar" ng-if="!blade.hideToolbar">
                 <ul class="menu __inline">
                     <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade), 'separator': toolbarCommand.showSeparator}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands | limitTo:toolsPerLineCount" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" ng-show="!toolbarCommand.hide(blade)" va-permission="{{toolbarCommand.permission}}" security-scopes="blade.securityScopes">
                         <button class="menu-btn" ng-attr-title="{{toolbarCommand.title | translate}}">
@@ -77,7 +77,7 @@
             <span></span>
         </div>
 
-        <div class="blade-container" ng-class="{'__loading': blade.isLoading}">
+        <div class="blade-container" ng-class="{'__loading': blade.isLoading}" ng-style="{'height': blade.hideToolbar ? 'calc(100% - 80px)' : '' }">
             <ng-include src='blade.template'></ng-include>
         </div>
     </div>

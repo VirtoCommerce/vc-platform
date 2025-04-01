@@ -1,0 +1,28 @@
+<div class="blade-content" style="display: flex; flex-direction: column;">
+  <div class="blade-content__devtools-list">
+    <ng-container ng-repeat="item in items">
+      <a href="{{item.url}}" ng-click="item.executeMethod($event)" ng-class="{'active': currentUrl === item.url}">{{item.name}}</a>
+    </ng-container>
+  </div>
+  <iframe style="width: 100%; flex-grow: 1;" ng-if="currentUrl" src="{{currentUrl}}"></iframe>
+</div>
+
+<style>
+  .blade-content__devtools-list {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0 10px 2px;
+    background-color: #465769;
+  }
+
+  .blade-content__devtools-list a {
+    color: #fff;
+  }
+
+  .blade-content__devtools-list a.active {
+    color: #43b0e6;
+    border-bottom: 2px solid #43b0e6;
+  }
+</style>

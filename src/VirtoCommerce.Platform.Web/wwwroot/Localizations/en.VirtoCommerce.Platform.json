@@ -14,6 +14,7 @@
       "user-profile": "User profile",
       "assets": "Assets",
       "toggle-favorites": "Shift + Space to toggle favorites",
+      "dev-tools": "DevTools",
       "help": "Help"
     },
     "navigation": {

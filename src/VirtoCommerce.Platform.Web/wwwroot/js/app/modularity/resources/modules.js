@@ -2,6 +2,7 @@ angular.module('platformWebApp')
 .factory('platformWebApp.modulesApi', ['$resource', function ($resource) {
 
     return $resource('api/platform/modules', null, {
+        get: { method: 'GET', url: 'api/platform/modules', isArray: true },
         getDependencies: { method: 'POST', url: 'api/platform/modules/getmissingdependencies', isArray: true },
         getDependents: { method: 'POST', url: 'api/platform/modules/getdependents', isArray: true },
         install: { method: 'POST', url: 'api/platform/modules/install' },
