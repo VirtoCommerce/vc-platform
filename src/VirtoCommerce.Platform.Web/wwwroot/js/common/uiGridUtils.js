@@ -7,13 +7,6 @@ angular.module('platformWebApp')
 				var blade = bladeNavigationService.currentBlade;
 				var $scope = blade.$scope;
 
-				// enable headerTooltip options
-				_.each(initOptions.columnDefs, function (x) {
-					if (angular.isUndefined(x.headerTooltip)) {
-						x.headerTooltip = true;
-					}
-				});
-
 				// restore saved state, if any
 				var savedState = $localStorage['gridState:' + blade.template];
 				if (savedState) {
@@ -24,6 +17,7 @@ angular.module('platformWebApp')
 							foundDef.sort = x.sort;
 							foundDef.width = x.width || foundDef.width;
 							foundDef.visible = x.visible;
+
 							// prevent loading outdated cellTemplate
 							delete x.cellTemplate;
 							_.extend(x, foundDef);
@@ -43,8 +37,15 @@ angular.module('platformWebApp')
 					});
 				}
 
-				// translate headers
-				_.each(initOptions.columnDefs, function (x) { x.headerCellFilter = 'translate'; });
+				// translate and setup tooltip for headers
+				_.each(initOptions.columnDefs,
+					function (x)
+					{
+						x.headerCellFilter = 'translate';
+						if (angular.isUndefined(x.headerTooltip)) {
+							x.headerTooltip = true;
+						}
+					});
 
 				var customOnRegisterApiCallback = initOptions.onRegisterApi;
 
@@ -129,7 +130,7 @@ angular.module('platformWebApp')
 					// generate columnDefs for each undefined property
 					_.each(allKeysFromEntity, function (x) {
 						if (!_.findWhere(gridOptions.columnDefs, { name: x })) {
-							gridOptions.columnDefs.push({ name: x, visible: false });
+							gridOptions.columnDefs.push({ name: x, visible: false, headerTooltip: true });
 						}
 					});
 					gridOptions.columnDefsGenerated = true;
