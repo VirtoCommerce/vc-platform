@@ -57,7 +57,9 @@ angular.module('platformWebApp')
 
                 // do it here, because it is the single thing why we should add scripts into the xapi module.
                 modulesApi.get({}, function (result) {
-                    var xapiModule = result.find(function (x) { return x.id === 'VirtoCommerce.Xapi' });
+                    var xapiModule = result.find(function (x) {
+                        return x.id === 'VirtoCommerce.Xapi'
+                    });
                     if (xapiModule) {
                         _devtools.push({
                             name: 'GraphQL',
