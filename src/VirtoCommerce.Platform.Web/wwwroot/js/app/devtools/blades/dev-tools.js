@@ -31,17 +31,14 @@ angular.module('platformWebApp')
         ['platformWebApp.modulesApi', '$q', function (modulesApi, $q) {
             var _devtools = [
                 {
-                    icon: 'fab fa-quinscape',
                     name: 'Swagger',
                     url: '/docs/index.html'
                 },
                 {
-                    icon: 'fab fa-quinscape',
                     name: 'Hangfire',
                     url: '/hangfire'
                 },
                 {
-                    icon: 'fab fa-quinscape',
                     name: 'Health',
                     url: '/health'
                 },
@@ -51,7 +48,9 @@ angular.module('platformWebApp')
             var _initPromise = null;
 
             function init() {
-                if (_initialized) return _initPromise;
+                if (_initialized) {
+                    return _initPromise;
+                }
 
                 var deferred = $q.defer();
 
@@ -61,7 +60,6 @@ angular.module('platformWebApp')
                     var xapiModule = result.find(function (x) { return x.id === 'VirtoCommerce.Xapi' });
                     if (xapiModule) {
                         _devtools.push({
-                            icon: 'fas fa-project-diagram',
                             name: 'GraphQL',
                             url: '/ui/graphiql'
                         });
