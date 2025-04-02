@@ -9,8 +9,6 @@ angular.module('platformWebApp')
                         id: 'devTools',
                         controller: 'platformWebApp.devToolsController',
                         template: '$(Platform)/Scripts/app/devtools/blades/dev-tools.tpl.html',
-                        title: 'DevTools',
-                        headIcon: 'fab fa-dev',
                         hideToolbar: true
                     };
 

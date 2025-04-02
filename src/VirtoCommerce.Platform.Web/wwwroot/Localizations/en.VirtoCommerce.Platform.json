@@ -21,6 +21,9 @@
       "back": "Back"
     },
     "blades": {
+      "dev-tools": {
+        "title": "DevTools"
+      },
       "system-info": {
         "title": "Platform information",
         "labels": {

@@ -1,9 +1,10 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.devToolsController', ['$scope', 'platformWebApp.devToolsList', function ($scope, list) {
         var blade = $scope.blade;
-        blade.title = 'DevTools';
+        blade.title = 'platform.blades.dev-tools.title';
         blade.isMaximized = true;
         blade.isLoading = false;
+        blade.headIcon = 'fab fa-dev';
 
         $scope.currentUrl = null;
         $scope.currentName = null;
@@ -12,7 +13,7 @@ angular.module('platformWebApp')
         var data = list.getAll();
         $scope.items = data.map(function (item) {
             return {
-                name: item.name, icon: item.icon,
+                name: item.name,
                 url: document.location.origin + item.url,
                 executeMethod: function (event) {
                     $scope.currentUrl = this.url;
