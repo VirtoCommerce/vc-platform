@@ -1,6 +1,5 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.devToolsController', [
-        '$scope', 'platformWebApp.devToolsList', function ($scope, list) {
+    .controller('platformWebApp.devToolsController', ['$scope', 'platformWebApp.devToolsList', function ($scope, list) {
         var blade = $scope.blade;
         blade.title = 'DevTools';
         blade.isMaximized = true;
@@ -41,7 +40,7 @@ angular.module('platformWebApp')
                     url: '/health'
                 },
             ];
-            
+
             return {
                 add: function (tool) {
                     _devtools.push(tool);
