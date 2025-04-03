@@ -1,5 +1,5 @@
 <div class="blade-content" style="display: flex; flex-direction: column;">
-  <div class="blade-content__devtools-list">
+  <div class="blade-content__developer-tools-list">
     <ng-container ng-repeat="item in items">
       <a href="{{item.url}}" ng-click="item.executeMethod($event)" ng-class="{'active': currentUrl === item.url}">{{item.name}}</a>
     </ng-container>
@@ -8,7 +8,7 @@
 </div>
 
 <style>
-  .blade-content__devtools-list {
+  .blade-content__developer-tools-list {
     display: flex;
     flex-direction: row;
     gap: 15px;
@@ -17,12 +17,12 @@
     background-color: #465769;
   }
 
-  .blade-content__devtools-list a {
-    color: #fff;
-  }
+    .blade-content__developer-tools-list a {
+      color: #fff;
+    }
 
-  .blade-content__devtools-list a.active {
-    color: #43b0e6;
-    border-bottom: 2px solid #43b0e6;
-  }
+      .blade-content__developer-tools-list a.active {
+        color: #43b0e6;
+        border-bottom: 2px solid #43b0e6;
+      }
 </style>
