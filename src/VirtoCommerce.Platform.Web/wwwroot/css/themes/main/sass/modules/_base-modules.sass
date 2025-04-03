@@ -1639,6 +1639,9 @@ tags-input
     height: 127px
     padding: 30px 0 5px
     position: relative
+        
+    &__no-toolbar
+      height: 80px
 
     transition: height .3s ease
     .blade-status
@@ -1973,6 +1976,8 @@ tags-input
       height: calc(100% - 174px)
     .blade-container .canceled + .blade-content
       height: calc(100% - 45px)
+  .blade-container.__no-toolbar
+    height: calc(100% - 80px)
   .blade-container.__loading
     opacity: .25
     pointer-events: none
