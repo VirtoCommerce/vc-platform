@@ -1,14 +1,14 @@
 angular.module('platformWebApp')
     .config(['$stateProvider', function ($stateProvider) {
-        $stateProvider.state('workspace.devtools', {
+        $stateProvider.state('workspace.developer-tools', {
             url: '/devtools',
             templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
             controller: ['platformWebApp.bladeNavigationService',
                 function (bladeNavigationService) {
                     var newBlade = {
-                        id: 'devTools',
+                        id: 'developer-tools',
                         controller: 'platformWebApp.devToolsController',
-                        template: '$(Platform)/Scripts/app/devtools/blades/dev-tools.tpl.html',
+                        template: '$(Platform)/Scripts/app/developer-tools/blades/developer-tools.html',
                         hideToolbar: true
                     };
 
@@ -20,11 +20,11 @@ angular.module('platformWebApp')
         ['$state', 'platformWebApp.mainMenuService',
             function ($state, mainMenuService,) {
                 var menuItem = {
-                    path: 'configuration/devTools',
+                    path: 'configuration/developer-tools',
                     icon: 'fab fa-dev',
-                    title: 'platform.menu.dev-tools',
+                    title: 'platform.menu.developer-tools',
                     priority: 10,
-                    action: function () { $state.go('workspace.devtools'); },
+                    action: function () { $state.go('workspace.developer-tools'); },
                 };
                 mainMenuService.addMenuItem(menuItem);
             }]);

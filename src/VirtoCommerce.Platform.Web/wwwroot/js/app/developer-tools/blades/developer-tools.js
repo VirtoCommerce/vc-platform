@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.devToolsController', ['$scope', 'platformWebApp.devToolsList', function ($scope, list) {
         var blade = $scope.blade;
-        blade.title = 'platform.blades.dev-tools.title';
+        blade.title = 'platform.blades.developer-tools.title';
         blade.isMaximized = true;
         blade.isLoading = false;
         blade.headIcon = 'fab fa-dev';
