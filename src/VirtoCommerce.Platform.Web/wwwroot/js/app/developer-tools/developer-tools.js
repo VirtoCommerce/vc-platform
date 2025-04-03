@@ -7,7 +7,7 @@ angular.module('platformWebApp')
                 function (bladeNavigationService) {
                     var newBlade = {
                         id: 'developer-tools',
-                        controller: 'platformWebApp.devToolsController',
+                        controller: 'platformWebApp.developerToolsController',
                         template: '$(Platform)/Scripts/app/developer-tools/blades/developer-tools.html',
                         hideToolbar: true
                     };

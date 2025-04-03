@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.devToolsController', ['$scope', 'platformWebApp.devToolsList', function ($scope, list) {
+    .controller('platformWebApp.developerToolsController', ['$scope', 'platformWebApp.developerToolsList', function ($scope, list) {
         var blade = $scope.blade;
         blade.title = 'platform.blades.developer-tools.title';
         blade.isMaximized = true;
@@ -25,7 +25,7 @@ angular.module('platformWebApp')
             };
         });
     }])
-    .factory('platformWebApp.devToolsList',
+    .factory('platformWebApp.developerToolsList',
         [function () {
             var _devtools = [
                 {
