@@ -1639,6 +1639,9 @@ tags-input
     height: 127px
     padding: 30px 0 5px
     position: relative
+        
+    &__no-toolbar
+      height: 80px
 
     transition: height .3s ease
     .blade-status
@@ -1973,6 +1976,8 @@ tags-input
       height: calc(100% - 174px)
     .blade-container .canceled + .blade-content
       height: calc(100% - 45px)
+  .blade-container.__no-toolbar
+    height: calc(100% - 80px)
   .blade-container.__loading
     opacity: .25
     pointer-events: none
@@ -2022,6 +2027,23 @@ tags-input
       $width: getBladeInnerSize($bladeSizeName)
       min-width: $width
       width: $width
+.blade-content
+  &__tabs-container
+    display: flex
+    flex-direction: column
+    height: 100%
+  &__tabs-list
+    display: flex
+    flex-direction: row
+    gap: 15px
+    border-top: 1px solid rgba(255, 255, 255, 0.2)
+    padding: 0 10px 2px
+    background-color: $bladeHeadBg
+    & a
+      color: $whiteColor
+      &.active
+        color: $menuContextMenuItemColorOver
+        border-bottom: 2px solid $menuContextMenuItemColorOver
 .inner-block
   .blade.__maximized .blade-content &,
   .blade.__expanded .blade-content &
