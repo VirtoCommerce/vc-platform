@@ -11,17 +11,19 @@ angular.module('platformWebApp')
         $scope.currentName = null;
         $scope.items = [];
 
-        $scope.items = developerTools.getAll().map(function (tool) {
-            return {
-                name: tool.name,
-                url: document.location.origin + tool.url,
-                executeMethod: function (event) {
-                    $scope.currentUrl = this.url;
-                    $scope.currentName = tool.name;
-                    event.preventDefault();
-                    event.stopPropagation();
-                    return false;
-                },
-            };
+        developerTools.getAll().then(function (tools) {
+            $scope.items = tools.map(function (tool) {
+                return {
+                    name: tool.name,
+                    url: document.location.origin + tool.url,
+                    executeMethod: function (event) {
+                        $scope.currentUrl = this.url;
+                        $scope.currentName = tool.name;
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return false;
+                    },
+                };
+            })
         });
     }]);

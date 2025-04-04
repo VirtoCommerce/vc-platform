@@ -15,28 +15,42 @@ angular.module('platformWebApp')
         });
     }])
     .factory('platformWebApp.developerTools',
-        [function () {
-            var _tools = [
-                {
-                    name: 'Swagger',
-                    url: '/docs/index.html'
-                },
-                {
-                    name: 'Hangfire',
-                    url: '/hangfire'
-                },
-                {
-                    name: 'Health',
-                    url: '/health'
-                },
-            ];
+        ['$http', function ($http) {
+            var _tools = [];
+
+            function isUrlAccessible(url) {
+                return $http({
+                    method: 'GET',
+                    url: url
+                }).then(function () {
+                    return true;
+                }).catch(function () {
+                    return false;
+                });
+            }
+
+            function addTool(tool) {
+                var toolPromise = isUrlAccessible(tool.url).then(function (accessible) {
+                    if (accessible) {
+                        return tool;
+                    } else {
+                        console.warn('URL not accessible:', tool.url);
+                        return null;
+                    }
+                });
+                _tools.push(toolPromise);
+            }
+
+            addTool({ name: 'Swagger', url: '/docs/index.html' });
+            addTool({ name: 'Hangfire', url: '/hangfire' });
+            addTool({ name: 'Health', url: '/health' });
 
             return {
-                add: function (tool) {
-                    _tools.push(tool);
-                },
+                add: addTool,
                 getAll: function () {
-                    return _tools;
+                    return Promise.all(_tools).then(function (tools) {
+                        return tools.filter(function (tool) { return tool !== null; });
+                    });
                 }
             };
         }]
