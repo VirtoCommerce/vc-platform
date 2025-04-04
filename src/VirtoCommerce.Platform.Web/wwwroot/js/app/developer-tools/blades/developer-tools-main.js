@@ -17,7 +17,7 @@ angular.module('platformWebApp')
                 return {
                     name: tool.name,
                     url: tool.url,
-                    external: tool.external,
+                    isExternal: tool.isExternal,
                     executeMethod: function (event) {
                         if (!tool.external) {
                             event.preventDefault();

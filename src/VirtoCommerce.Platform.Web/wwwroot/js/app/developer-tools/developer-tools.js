@@ -13,7 +13,7 @@ angular.module('platformWebApp')
                     bladeNavigationService.showBlade(newBlade);
                 }]
         });
-    }])    
+    }])
     .run(
         ['$state', 'platformWebApp.mainMenuService',
             function ($state, mainMenuService,) {
@@ -28,7 +28,7 @@ angular.module('platformWebApp')
                 mainMenuService.addMenuItem(menuItem);
             }])
     .factory('platformWebApp.developerTools',
-        ['$http', '$q', function ($http, $q) {
+        ['$q', 'platformWebApp.developerToolsApi', function ($q, developerToolsApi) {
             var _tools = [];
 
             var _initialized = false;
@@ -41,16 +41,19 @@ angular.module('platformWebApp')
 
                 var deferred = $q.defer();
 
-                $http.get('/api/platform/developer-tools').then(function (result) {
-                    for (var i = 0; i < result.data.length; i++) {
-                        _tools.push(result.data[i]);
-                    }
-                    _initialized = true;
-                    deferred.resolve(_tools);
-                }).catch(function (error) {
-                    console.log(error);
-                    deferred.resolve(_tools);
-                });
+                developerToolsApi.get().$promise
+                    .then(function (result) {
+                        for (var i = 0; i < result.length; i++) {
+                            _tools.push(result[i]);
+                        }
+                        sortTools();
+                        _initialized = true;
+                        deferred.resolve(_tools);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        deferred.resolve(_tools);
+                    });
 
                 _initPromise = deferred.promise;
                 return _initPromise;
@@ -58,6 +61,13 @@ angular.module('platformWebApp')
 
             function addTool(tool) {
                 _tools.push(tool);
+                sortTools();
+            }
+
+            function sortTools() {
+                _tools.sort(function (a, b) {
+                    return (a.sortOrder || 0) - (b.sortOrder || 0);
+                });
             }
 
             return {
@@ -67,4 +77,4 @@ angular.module('platformWebApp')
                 }
             };
         }]
-    )    ;
+    );

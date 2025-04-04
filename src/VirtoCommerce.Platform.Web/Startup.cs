@@ -36,6 +36,7 @@ using OpenIddict.Validation.AspNetCore;
 using Serilog;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
@@ -44,6 +45,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.DeveloperTools;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.MySql;
 using VirtoCommerce.Platform.Data.MySql.Extensions;
@@ -52,7 +54,6 @@ using VirtoCommerce.Platform.Data.PostgreSql;
 using VirtoCommerce.Platform.Data.PostgreSql.Extensions;
 using VirtoCommerce.Platform.Data.PostgreSql.HealthCheck;
 using VirtoCommerce.Platform.Data.Repositories;
-using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Data.SqlServer;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.HealthCheck;
@@ -79,7 +80,6 @@ using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using MsTokens = Microsoft.IdentityModel.Tokens;
-
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -705,7 +705,8 @@ namespace VirtoCommerce.Platform.Web
             toolRegistrar.RegisterDeveloperTool(new DeveloperToolDescriptor
             {
                 Name = "Health",
-                Url = "/health"
+                Url = "/health",
+                SortOrder = 10,
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.

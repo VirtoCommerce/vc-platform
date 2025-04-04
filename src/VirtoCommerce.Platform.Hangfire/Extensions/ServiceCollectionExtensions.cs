@@ -4,7 +4,6 @@ using Hangfire.MySql;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Hangfire.Extensions
 {
