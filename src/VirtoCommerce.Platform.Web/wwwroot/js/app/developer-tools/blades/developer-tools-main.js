@@ -17,12 +17,15 @@ angular.module('platformWebApp')
                 return {
                     name: tool.name,
                     url: tool.url,
+                    external: tool.external,
                     executeMethod: function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        $scope.currentUrl = $sce.trustAsResourceUrl(this.url);
-                        $scope.currentName = tool.name;
-                        return false;
+                        if (!tool.external) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            $scope.currentUrl = $sce.trustAsResourceUrl(this.url);
+                            $scope.currentName = tool.name;
+                            return false;
+                        }
                     },
                 };
             })
