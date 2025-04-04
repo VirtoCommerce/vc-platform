@@ -2027,6 +2027,22 @@ tags-input
       $width: getBladeInnerSize($bladeSizeName)
       min-width: $width
       width: $width
+.blade-content
+  &__tabs-container
+    display: flex
+    flex-direction: column
+  &__tabs-list
+    display: flex
+    flex-direction: row
+    gap: 15px
+    border-top: 1px solid rgba(255, 255, 255, 0.2)
+    padding: 0 10px 2px
+    background-color: $bladeHeadBg
+    & a
+      color: $whiteColor
+      &.active
+        color: $menuContextMenuItemColorOver
+        border-bottom: 2px solid $menuContextMenuItemColorOver
 .inner-block
   .blade.__maximized .blade-content &,
   .blade.__expanded .blade-content &

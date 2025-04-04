@@ -50,6 +50,7 @@ angular.module('platformWebApp')
                     title: 'platform.menu.developer-tools',
                     priority: Number.MAX_SAFE_INTEGER - 1,
                     action: function () { $state.go('workspace.developer-tools'); },
+                    permission: 'platform:developer-tools:access',
                 };
                 mainMenuService.addMenuItem(menuItem);
             }]);

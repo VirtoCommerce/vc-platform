@@ -63,6 +63,8 @@ namespace VirtoCommerce.Platform.Core
                 public const string SettingAccess = "platform:setting:access";
                 public const string SettingUpdate = "platform:setting:update";
 
+                public const string DeveloperToolsAccess = "platform:developer-tools:access";
+
                 public const string DynamicPropertiesQuery = "platform:dynamic_properties:read";
                 public const string DynamicPropertiesCreate = "platform:dynamic_properties:create";
                 public const string DynamicPropertiesAccess = "platform:dynamic_properties:access";
@@ -86,11 +88,14 @@ namespace VirtoCommerce.Platform.Core
                 public const string PlatformImport = "platform:import";
                 public const string PlatformExport = "platform:export";
 
-                public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
-                                              SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
-                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf ,
-                                              SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken,
-                };
+                public static string[] AllPermissions { get; } =
+                [
+                    ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
+                    SettingQuery, SettingAccess, SettingUpdate, DeveloperToolsAccess, DynamicPropertiesQuery, DynamicPropertiesCreate,
+                    DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete, SecurityQuery, SecurityCreate, SecurityAccess,
+                    SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport,
+                    SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken,
+                ];
             }
 
             public static class Changes
