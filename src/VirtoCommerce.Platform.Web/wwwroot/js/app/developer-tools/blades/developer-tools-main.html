@@ -4,7 +4,7 @@
       <ng-container ng-repeat="item in items">
         <a href="{{item.url}}" ng-click="item.executeMethod($event)" target="_blank" ng-class="{'active': currentName === item.name}">
           {{item.name}}
-          <i ng-if="item.isExternal" class="fas fa-external-link-alt"></i>
+          <span ng-if="item.isExternal" class="fas fa-external-link-alt"></span>
         </a>
       </ng-container>
     </div>

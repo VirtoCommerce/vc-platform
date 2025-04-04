@@ -696,6 +696,7 @@ namespace VirtoCommerce.Platform.Web
 
                 // Complete modules startup and apply their migrations
                 Log.ForContext<Startup>().Information("Post initializing modules");
+
                 app.UseModules();
             });
 
