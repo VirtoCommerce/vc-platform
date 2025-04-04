@@ -43,7 +43,7 @@ angular.module('platformWebApp')
 
                 developerToolsApi.get().$promise
                     .then(function (result) {
-                        for (tool of result) {
+                        for (var tool of result) {
                             _tools.push(tool);
                         }
                         sortTools();
