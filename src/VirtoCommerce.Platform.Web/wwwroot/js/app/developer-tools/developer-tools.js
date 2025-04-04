@@ -43,8 +43,8 @@ angular.module('platformWebApp')
 
                 developerToolsApi.get().$promise
                     .then(function (result) {
-                        for (var i = 0; i < result.length; i++) {
-                            _tools.push(result[i]);
+                        for (tool of result) {
+                            _tools.push(tool);
                         }
                         sortTools();
                         _initialized = true;

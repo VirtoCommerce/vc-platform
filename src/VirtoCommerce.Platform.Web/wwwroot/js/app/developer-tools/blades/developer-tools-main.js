@@ -26,6 +26,7 @@ angular.module('platformWebApp')
                             $scope.currentName = tool.name;
                             return false;
                         }
+                        return true;
                     },
                 };
             })
