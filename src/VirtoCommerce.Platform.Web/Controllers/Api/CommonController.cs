@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -16,12 +17,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly ICountriesService _countriesService;
         private readonly LoginPageUIOptions _loginPageOptions;
+        private readonly IDeveloperToolRegistrar _developerToolRegistrar;
 
         public CommonController(ICountriesService countriesService,
-            IOptions<LoginPageUIOptions> loginPageOptions)
+            IOptions<LoginPageUIOptions> loginPageOptions,
+            IDeveloperToolRegistrar developerToolRegistrar)
         {
             _countriesService = countriesService;
             _loginPageOptions = loginPageOptions.Value;
+            _developerToolRegistrar = developerToolRegistrar;
         }
 
 
@@ -63,6 +67,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             return Ok(new { BackgroundUrl = backgroundUrl, PatternUrl = patternUrl });
+        }
+
+        [HttpGet]
+        [Authorize(PlatformConstants.Security.Permissions.DeveloperToolsAccess)]
+        [Route("/api/platform/developer-tools")]
+        [ApiExplorerSettings(IgnoreApi = false)]
+        public ActionResult GetDeveloperTools()
+        {
+            return Ok(_developerToolRegistrar.GetRegisteredTools());
         }
     }
 }

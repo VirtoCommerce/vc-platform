@@ -2,9 +2,9 @@
   <div class="blade-content__tabs-container">
     <div class="blade-content__tabs-list">
       <ng-container ng-repeat="item in items">
-        <a href="{{item.url}}" ng-click="item.executeMethod($event)" ng-class="{'active': currentUrl === item.url}">{{item.name}}</a>
+        <a href="{{item.url}}" ng-click="item.executeMethod($event)" ng-class="{'active': currentName === item.name}">{{item.name}}</a>
       </ng-container>
     </div>
-    <iframe style="width: 100%; flex-grow: 1;" ng-if="currentUrl" src="{{currentUrl}}"></iframe>
+    <iframe ng-if="currentUrl" style="width: 100%; flex-grow: 1;" ng-src="{{currentUrl}}"></iframe>
   </div>
 </div>

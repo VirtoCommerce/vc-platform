@@ -15,6 +15,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Swagger;
 
 namespace VirtoCommerce.Platform.Web.Swagger
@@ -193,6 +194,14 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.ShowExtensions();
                 c.DocExpansion(DocExpansion.None);
                 c.DefaultModelsExpandDepth(-1);
+            });
+
+
+            var toolRegistrar = applicationBuilder.ApplicationServices.GetService<IDeveloperToolRegistrar>();
+            toolRegistrar.RegisterDeveloperTool(new()
+            {
+                Name = "Swagger",
+                Url = "/docs/index.html"
             });
         }
 

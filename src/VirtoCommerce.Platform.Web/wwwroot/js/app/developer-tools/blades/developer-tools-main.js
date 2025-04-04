@@ -1,5 +1,6 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.developerToolsMainController', ['$scope', 'platformWebApp.developerTools', function ($scope, developerTools) {
+    .controller('platformWebApp.developerToolsMainController',
+        ['$scope', '$sce', 'platformWebApp.developerTools', function ($scope, $sce, developerTools) {
         var blade = $scope.blade;
         blade.title = 'platform.blades.developer-tools.title';
         blade.headIcon = 'fab fa-dev';
@@ -15,12 +16,12 @@ angular.module('platformWebApp')
             $scope.items = tools.map(function (tool) {
                 return {
                     name: tool.name,
-                    url: document.location.origin + tool.url,
+                    url: tool.url,
                     executeMethod: function (event) {
-                        $scope.currentUrl = this.url;
-                        $scope.currentName = tool.name;
                         event.preventDefault();
                         event.stopPropagation();
+                        $scope.currentUrl = $sce.trustAsResourceUrl(this.url);
+                        $scope.currentName = tool.name;
                         return false;
                     },
                 };

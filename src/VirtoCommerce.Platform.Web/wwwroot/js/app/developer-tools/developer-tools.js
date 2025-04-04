@@ -13,48 +13,7 @@ angular.module('platformWebApp')
                     bladeNavigationService.showBlade(newBlade);
                 }]
         });
-    }])
-    .factory('platformWebApp.developerTools',
-        ['$http', function ($http) {
-            var _tools = [];
-
-            function isUrlAccessible(url) {
-                return $http({
-                    method: 'GET',
-                    url: url
-                }).then(function () {
-                    return true;
-                }).catch(function () {
-                    return false;
-                });
-            }
-
-            function addTool(tool) {
-                var toolPromise = isUrlAccessible(tool.url).then(function (accessible) {
-                    if (accessible) {
-                        return tool;
-                    } else {
-                        console.warn('URL not accessible:', tool.url);
-                        return null;
-                    }
-                });
-                _tools.push(toolPromise);
-            }
-
-            addTool({ name: 'Swagger', url: '/docs/index.html' });
-            addTool({ name: 'Hangfire', url: '/hangfire' });
-            addTool({ name: 'Health', url: '/health' });
-
-            return {
-                add: addTool,
-                getAll: function () {
-                    return Promise.all(_tools).then(function (tools) {
-                        return tools.filter(function (tool) { return tool !== null; });
-                    });
-                }
-            };
-        }]
-    )
+    }])    
     .run(
         ['$state', 'platformWebApp.mainMenuService',
             function ($state, mainMenuService,) {
@@ -67,4 +26,45 @@ angular.module('platformWebApp')
                     permission: 'platform:developer-tools:access',
                 };
                 mainMenuService.addMenuItem(menuItem);
-            }]);
+            }])
+    .factory('platformWebApp.developerTools',
+        ['$http', '$q', function ($http, $q) {
+            var _tools = [];
+
+            var _initialized = false;
+            var _initPromise = null;
+
+            function init() {
+                if (_initialized) {
+                    return _initPromise;
+                }
+
+                var deferred = $q.defer();
+
+                $http.get('/api/platform/developer-tools').then(function (result) {
+                    for (var i = 0; i < result.data.length; i++) {
+                        _tools.push(result.data[i]);
+                    }
+                    _initialized = true;
+                    deferred.resolve(_tools);
+                }).catch(function (error) {
+                    console.log(error);
+                    deferred.resolve(_tools);
+                });
+
+                _initPromise = deferred.promise;
+                return _initPromise;
+            }
+
+            function addTool(tool) {
+                _tools.push(tool);
+            }
+
+            return {
+                add: addTool,
+                getAll: function () {
+                    return init();
+                }
+            };
+        }]
+    )    ;

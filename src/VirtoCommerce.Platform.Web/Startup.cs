@@ -52,6 +52,7 @@ using VirtoCommerce.Platform.Data.PostgreSql;
 using VirtoCommerce.Platform.Data.PostgreSql.Extensions;
 using VirtoCommerce.Platform.Data.PostgreSql.HealthCheck;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Data.SqlServer;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.HealthCheck;
@@ -485,6 +486,8 @@ namespace VirtoCommerce.Platform.Web
             //Platform authorization handler for policies based on permissions
             services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
 
+            services.AddSingleton<IDeveloperToolRegistrar, DeveloperToolRegistrar>();
+
             services.AddTransient<IExternalSignInService, ExternalSignInService>();
             services.AddTransient<IExternalSigninService, ExternalSignInService>();
 
@@ -693,11 +696,17 @@ namespace VirtoCommerce.Platform.Web
 
                 // Complete modules startup and apply their migrations
                 Log.ForContext<Startup>().Information("Post initializing modules");
-
                 app.UseModules();
             });
 
             app.UseEndpoints(SetupEndpoints);
+
+            var toolRegistrar = app.ApplicationServices.GetService<IDeveloperToolRegistrar>();
+            toolRegistrar.RegisterDeveloperTool(new DeveloperToolDescriptor
+            {
+                Name = "Health",
+                Url = "/health"
+            });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
