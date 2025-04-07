@@ -76,11 +76,15 @@ namespace VirtoCommerce.Platform.Core
                 public const string SecurityAccess = "platform:security:access";
                 public const string SecurityUpdate = "platform:security:update";
                 public const string SecurityDelete = "platform:security:delete";
-                public const string SecurityVerifyEmail = "platform:security:verifyEmail";
                 public const string SecurityLoginOnBehalf = "platform:security:loginOnBehalf";
+                public const string SecurityVerifyEmail = "platform:security:verifyEmail";
                 public const string SecurityConfirmEmail = "platform:security:confirmEmail";
                 public const string SecurityGenerateToken = "platform:security:generateToken";
                 public const string SecurityVerifyToken = "platform:security:verifyToken";
+                public const string SecurityOAuthApplicationsCreate = "platform:security:oauth_applications:create";
+                public const string SecurityOAuthApplicationsRead = "platform:security:oauth_applications:read";
+                public const string SecurityOAuthApplicationsUpdate = "platform:security:oauth_applications:update";
+                public const string SecurityOAuthApplicationsDelete = "platform:security:oauth_applications:delete";
 
                 public const string BackgroundJobsManage = "background_jobs:manage";
 
@@ -90,11 +94,17 @@ namespace VirtoCommerce.Platform.Core
 
                 public static string[] AllPermissions { get; } =
                 [
-                    ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
-                    SettingQuery, SettingAccess, SettingUpdate, DeveloperToolsAccess, DynamicPropertiesQuery, DynamicPropertiesCreate,
-                    DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete, SecurityQuery, SecurityCreate, SecurityAccess,
-                    SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport,
+                    ResetCache,
+                    AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead,
+                    ModuleQuery, ModuleAccess, ModuleManage,
+                    SettingQuery, SettingAccess, SettingUpdate,
+                    DeveloperToolsAccess,
+                    DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
+                    SecurityQuery, SecurityCreate, SecurityAccess, SecurityUpdate, SecurityDelete,
                     SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken,
+                    SecurityOAuthApplicationsCreate, SecurityOAuthApplicationsRead, SecurityOAuthApplicationsUpdate, SecurityOAuthApplicationsDelete,
+                    BackgroundJobsManage,
+                    PlatformExportImportAccess, PlatformImport, PlatformExport,
                 ];
             }
 
