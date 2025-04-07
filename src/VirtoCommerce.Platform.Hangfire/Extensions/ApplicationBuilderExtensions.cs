@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Hangfire.Middleware;
 
@@ -66,6 +68,14 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             // Add Hangfire filters/middlewares
             var userNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<IUserNameResolver>();
             GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(userNameResolver));
+
+            var toolRegistrar = appBuilder.ApplicationServices.GetService<IDeveloperToolRegistrar>();
+            toolRegistrar.RegisterDeveloperTool(new DeveloperToolDescriptor
+            {
+                Name = "Hangfire",
+                Url = "/hangfire",
+                SortOrder = 20,
+            });
 
             return appBuilder;
         }
