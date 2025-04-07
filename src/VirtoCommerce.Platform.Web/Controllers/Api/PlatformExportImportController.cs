@@ -119,6 +119,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("export/manifest/new")]
+        [Authorize(Permissions.PlatformExport)]
         public ActionResult<PlatformExportManifest> GetNewExportManifest()
         {
             return Ok(_platformExportManager.GetNewExportManifest(_userNameResolver.GetCurrentUserName()));
@@ -126,6 +127,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("export/manifest/load")]
+        [Authorize(Permissions.PlatformImport)]
         public ActionResult<PlatformExportManifest> LoadExportManifest([FromQuery] string fileUrl)
         {
             if (string.IsNullOrEmpty(fileUrl))
