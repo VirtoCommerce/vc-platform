@@ -22,10 +22,9 @@ public class DeveloperToolRegistrar : IDeveloperToolRegistrar
     {
         ArgumentNullException.ThrowIfNull(claimsPrincipal);
         var isAdmin = claimsPrincipal.IsInRole(PlatformConstants.Security.SystemRoles.Administrator);
-        const string claimType = PlatformConstants.Security.Claims.PermissionClaimType;
         return _tools.Where(x => isAdmin
-                                 || x.Permissions.IsNullOrEmpty()
-                                 || x.Permissions.Any(permission => claimsPrincipal.HasClaim(claimType, permission)))
+                                 || x.Permission.IsNullOrEmpty()
+                                 || claimsPrincipal.HasClaim(PlatformConstants.Security.Claims.PermissionClaimType, x.Permission))
             .OrderBy(x => x.SortOrder).ToList();
     }
 }
