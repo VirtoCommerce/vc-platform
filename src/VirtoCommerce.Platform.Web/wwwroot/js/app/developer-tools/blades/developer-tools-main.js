@@ -6,13 +6,14 @@ angular.module('platformWebApp')
             blade.headIcon = 'fab fa-dev';
             blade.hideToolbar = true;
             blade.isMaximized = true;
-            blade.isLoading = false;
+            blade.isLoading = true;
 
             $scope.currentUrl = null;
             $scope.currentName = null;
             $scope.items = [];
 
             developerTools.getAll().then(function (tools) {
+                blade.isLoading = false;
                 $scope.items = tools.map(function (tool) {
                     return {
                         name: tool.name,
