@@ -75,8 +75,8 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             {
                 Name = "Hangfire",
                 Url = "/hangfire",
-                Permission = PlatformConstants.Security.Permissions.BackgroundJobsManage,
                 SortOrder = 20,
+                Permission = PlatformConstants.Security.Permissions.BackgroundJobsManage,
             });
 
             return appBuilder;

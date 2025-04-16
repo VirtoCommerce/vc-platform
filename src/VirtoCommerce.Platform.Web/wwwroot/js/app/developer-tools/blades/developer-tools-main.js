@@ -1,3 +1,5 @@
+const { first } = require("underscore");
+
 angular.module('platformWebApp')
     .controller('platformWebApp.developerToolsMainController',
         ['$scope', '$sce', 'platformWebApp.developerTools', function ($scope, $sce, developerTools) {
@@ -14,6 +16,7 @@ angular.module('platformWebApp')
 
             developerTools.getAll().then(function (tools) {
                 blade.isLoading = false;
+
                 $scope.items = tools.map(function (tool) {
                     return {
                         name: tool.name,
@@ -31,12 +34,16 @@ angular.module('platformWebApp')
                         },
                     };
                 });
+
+                // Show first internal tool by default
                 if ($scope.items.length > 0 && !$scope.currentUrl) {
-                    var firstTool = $scope.items.find(function (x) {
-                        return !x.isExternal;
+                    var firstInternalTool = $scope.items.find(function (tool) {
+                        return !tool.isExternal;
                     });
-                    $scope.currentUrl = $sce.trustAsResourceUrl(firstTool.url);
-                    $scope.currentName = firstTool.name;
+                    if (firstInternalTool) {
+                        $scope.currentUrl = $sce.trustAsResourceUrl(firstInternalTool.url);
+                        $scope.currentName = firstInternalTool.name;
+                    }
                 }
             });
         }]);
