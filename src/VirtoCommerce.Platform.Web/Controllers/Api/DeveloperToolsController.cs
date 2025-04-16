@@ -13,6 +13,6 @@ public class DeveloperToolsController(IDeveloperToolRegistrar developerToolRegis
     [Authorize(Permissions.DeveloperToolsAccess)]
     public ActionResult<DeveloperToolDescriptor[]> GetDeveloperTools()
     {
-        return Ok(developerToolRegistrar.GetRegisteredTools());
+        return Ok(developerToolRegistrar.GetRegisteredTools(User));
     }
 }

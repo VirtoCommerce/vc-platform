@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
@@ -74,6 +75,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             {
                 Name = "Hangfire",
                 Url = "/hangfire",
+                Permissions = [PlatformConstants.Security.Permissions.BackgroundJobsManage],
                 SortOrder = 20,
             });
 
