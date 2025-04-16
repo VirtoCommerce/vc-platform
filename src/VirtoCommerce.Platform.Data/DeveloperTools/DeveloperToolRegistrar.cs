@@ -20,10 +20,12 @@ public class DeveloperToolRegistrar : IDeveloperToolRegistrar
 
     public IList<DeveloperToolDescriptor> GetRegisteredTools(ClaimsPrincipal claimsPrincipal)
     {
-        var isAdmin = claimsPrincipal != null && claimsPrincipal.IsInRole(PlatformConstants.Security.SystemRoles.Administrator);
+        ArgumentNullException.ThrowIfNull(claimsPrincipal);
+        var isAdmin = claimsPrincipal.IsInRole(PlatformConstants.Security.SystemRoles.Administrator);
+        const string claimType = PlatformConstants.Security.Claims.PermissionClaimType;
         return _tools.Where(x => isAdmin
                                  || x.Permissions.IsNullOrEmpty()
-                                 || (claimsPrincipal != null && x.Permissions.Any(permission => claimsPrincipal.HasClaim(PlatformConstants.Security.Claims.PermissionClaimType, permission))))
+                                 || x.Permissions.Any(permission => claimsPrincipal.HasClaim(claimType, permission)))
             .OrderBy(x => x.SortOrder).ToList();
     }
 }
