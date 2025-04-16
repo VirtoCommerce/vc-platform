@@ -347,7 +347,7 @@
       },
       "account-changePassword": {
         "labels": {
-          "title": "Please enter a new password",
+          "title": "Enter a new password",
           "login": "Login",
           "force-change-info": "Your password has expired. You must <b>change the password to continue</b> using the manager",
           "current-password": "Current password",
@@ -577,13 +577,13 @@
         "title": "Access denied",
         "labels": {
           "message": "You don't have access to this resource. Please contact your administrator",
-          "button": "Login with another credentials"
+          "button": "Login with other credentials"
         }
       },
       "resetpassword": {
         "title": "Password reset",
         "labels": {
-          "success": "Your password was reset",
+          "success": "Your password has been reset",
           "fail": "Sorry, we couldn't reset password for this user",
           "submit": "Reset",
           "log-in": "Sign in"
@@ -599,7 +599,7 @@
           "info-open-source-license": "Open Source Community license",
           "info0": "Acquiring or renewing the license:",
           "info1": "Submit the ",
-          "info2": "We'll process your request and should contact you soon",
+          "info2": "We'll process your request and contact you soon",
           "info3": "Once you receive the \"Activation Code\" and / or the License file, fill one of the activation fields below",
           "info4": "The system will display the new license information. Review it and click \"Activate\" to confirm",
           "customer": "License issued to",
@@ -608,7 +608,7 @@
           "email": "Customer email",
           "request-license": "License request form",
           "code-descr": "Enter the received license \"Activation Code\" and hit [Enter]. This is the quickest license activation method. (Requires internet connection)",
-          "file-descr": "Optionally, provide the received License file. (Off-line activation)",
+          "file-descr": "Optionally, provide the received License file. (Offline activation)",
           "upload-progress": "Upload progress",
           "errors": "Activation error"
         },
@@ -645,7 +645,7 @@
       "setting-dictionary": {
         "subtitle": "Manage dictionary values",
         "labels": {
-          "new-value": "Please enter value",
+          "new-value": "Enter value",
           "current-values": "Current values",
           "value": "Value"
         },
@@ -654,7 +654,7 @@
           "new-value": "Duplicate value found"
         },
         "placeholders": {
-          "new-value": "Please enter value"
+          "new-value": "Enter value"
         }
       },
       "settings-detail": {
@@ -732,7 +732,7 @@
         "expired": "Your license has expired on {{expirationDate | amParse | date}}, please renew",
         "purchase": "Purchase",
         "renew": "Renew",
-        "expiration-date": "Expiration Date"
+        "expiration-date": "Expiration date"
       },
       "password-expiry": {
         "expire-days": "To protect your account you will need to change your password <b>in {{count}} days.</b> ",
@@ -808,7 +808,7 @@
       },
       "dynamic-property-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete this dynamic Property?"
+        "message": "Are you sure you want to delete this dynamic property?"
       },
       "settings-value-delete": {
         "title": "Delete confirmation",
