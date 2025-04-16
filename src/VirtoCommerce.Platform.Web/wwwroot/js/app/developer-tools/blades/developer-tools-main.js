@@ -29,6 +29,13 @@ angular.module('platformWebApp')
                             return true;
                         },
                     };
-                })
+                });
+                if ($scope.items.length > 0 && !$scope.currentUrl) {
+                    var firstTool = $scope.items.find(function (x) {
+                        return !x.isExternal;
+                    });
+                    $scope.currentUrl = $sce.trustAsResourceUrl(firstTool.url);
+                    $scope.currentName = firstTool.name;
+                }
             });
         }]);
