@@ -14,12 +14,16 @@
       "user-profile": "User profile",
       "assets": "Assets",
       "toggle-favorites": "Shift + Space to toggle favorites",
+      "developer-tools": "Developer tools",
       "help": "Help"
     },
     "navigation": {
       "back": "Back"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Developer tools"
+      },
       "system-info": {
         "title": "Platform information",
         "labels": {

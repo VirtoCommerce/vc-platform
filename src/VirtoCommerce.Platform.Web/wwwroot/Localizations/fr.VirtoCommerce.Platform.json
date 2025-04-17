@@ -14,12 +14,16 @@
       "user-profile": "Profil utilisateur",
       "assets": "Ressources",
       "toggle-favorites": "Maj + Espace pour basculer les favoris",
+      "developer-tools": "Outils développeur",
       "help": "Aide"
     },
     "navigation": {
       "back": "Retour"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Outils développeur"
+      },
       "system-info": {
         "title": "Informations sur la plateforme",
         "labels": {

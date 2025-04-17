@@ -36,6 +36,7 @@ using OpenIddict.Validation.AspNetCore;
 using Serilog;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
@@ -44,6 +45,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.DeveloperTools;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.MySql;
 using VirtoCommerce.Platform.Data.MySql.Extensions;
@@ -78,7 +80,6 @@ using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using MsTokens = Microsoft.IdentityModel.Tokens;
-
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -485,6 +486,8 @@ namespace VirtoCommerce.Platform.Web
             //Platform authorization handler for policies based on permissions
             services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
 
+            services.AddSingleton<IDeveloperToolRegistrar, DeveloperToolRegistrar>();
+
             services.AddTransient<IExternalSignInService, ExternalSignInService>();
             services.AddTransient<IExternalSigninService, ExternalSignInService>();
 
@@ -698,6 +701,14 @@ namespace VirtoCommerce.Platform.Web
             });
 
             app.UseEndpoints(SetupEndpoints);
+
+            var toolRegistrar = app.ApplicationServices.GetService<IDeveloperToolRegistrar>();
+            toolRegistrar.RegisterDeveloperTool(new DeveloperToolDescriptor
+            {
+                Name = "Health",
+                Url = "/health",
+                SortOrder = 10,
+            });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

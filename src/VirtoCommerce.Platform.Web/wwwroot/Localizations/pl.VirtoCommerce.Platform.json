@@ -14,12 +14,16 @@
       "user-profile": "Profil użytkownika",
       "assets": "Zasoby",
       "toggle-favorites": "Shift + Spacja, aby przełączyć ulubione",
+      "developer-tools": "Narzędzia deweloperskie",      
       "help": "Pomoc"
     },
     "navigation": {
       "back": "Wstecz"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Narzędzia deweloperskie"
+      },
       "system-info": {
         "title": "Informacje o platformie",
         "labels": {

@@ -14,12 +14,16 @@
       "user-profile": "Profilo utente",
       "assets": "Risorse",
       "toggle-favorites": "Shift + Spazio per attivare/disattivare i preferiti",
+      "developer-tools": "Strumenti per sviluppatori",
       "help": "Aiuto"
     },
     "navigation": {
       "back": "Indietro"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Strumenti per sviluppatori"
+      },
       "system-info": {
         "title": "Informazioni sulla piattaforma",
         "labels": {
