@@ -14,12 +14,16 @@
       "user-profile": "ユーザープロフィール",
       "assets": "リソース",
       "toggle-favorites": "Shift + スペースでお気に入りを切り替え",
+      "developer-tools": "開発者ツール",
       "help": "ヘルプ"
     },
     "navigation": {
       "back": "戻る"
     },
     "blades": {
+      "developer-tools": {
+        "title": "開発者ツール"
+      },
       "system-info": {
         "title": "プラットフォーム情報",
         "labels": {

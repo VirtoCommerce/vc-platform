@@ -14,12 +14,16 @@
       "user-profile": "Benutzerprofil",
       "assets": "Ressourcen",
       "toggle-favorites": "Umschalt + Leertaste zum Umschalten der Favoriten",
+      "developer-tools": "Entwicklerwerkzeuge",
       "help": "Hilfe"
     },
     "navigation": {
       "back": "Zurück"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Entwicklerwerkzeuge"
+      },
       "system-info": {
         "title": "Plattforminformationen",
         "labels": {

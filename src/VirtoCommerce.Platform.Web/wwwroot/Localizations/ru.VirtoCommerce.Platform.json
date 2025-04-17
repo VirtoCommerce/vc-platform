@@ -14,12 +14,16 @@
       "user-profile": "Профиль пользователя",
       "assets": "Ресурсы",
       "toggle-favorites": "Shift + Пробел для переключения избранного",
+      "developer-tools": "Инструменты разработчика",      
       "help": "Помощь"
     },
     "navigation": {
       "back": "Назад"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Инструменты разработчика"
+      },      
       "system-info": {
         "title": "Информация о платформе",
         "labels": {
