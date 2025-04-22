@@ -10,16 +10,20 @@
       "dynamic-properties": "Właściwości dynamiczne",
       "security": "Bezpieczeństwo",
       "modules": "Moduły",
-      "export-import": "Eksport i Import",
+      "export-import": "Kopia zapasowa i Przywracanie",
       "user-profile": "Profil użytkownika",
       "assets": "Zasoby",
       "toggle-favorites": "Shift + Spacja, aby przełączyć ulubione",
+      "developer-tools": "Narzędzia deweloperskie",      
       "help": "Pomoc"
     },
     "navigation": {
       "back": "Wstecz"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Narzędzia deweloperskie"
+      },
       "system-info": {
         "title": "Informacje o platformie",
         "labels": {
@@ -84,7 +88,9 @@
           "display-name": "Nazwa wyświetlana",
           "value-type": "Typ wartości",
           "dictionary-values": "Wartości słownikowe",
-          "manage-dictionary": "Zarządzaj słownikiem"
+          "manage-dictionary": "Zarządzaj słownikiem",
+          "show-more-languages": "Pokaż więcej języków",
+          "show-less-languages": "Pokaż mniej języków"
         },
         "placeholders": {
           "description": "Wprowadź opis właściwości",
@@ -152,7 +158,7 @@
         }
       },
       "export-main": {
-        "title": "Eksport danych",
+        "title": "Kopia zapasowa danych",
         "labels": {
           "platform-entries": "Wpisy platformy",
           "choose-modules": "Wybierz moduły do eksportu",
@@ -181,21 +187,21 @@
         }
       },
       "import-main": {
-        "title": "Import danych",
+        "title": "Przywracanie danych",
         "labels": {
-          "start-import": "Rozpocznij import",
-          "select-file": "Wybierz plik .zip do importu. Plik musi być wygenerowany przez eksport danych Commerce Manager",
-          "drag-note": "Przeciągnij i upuść plik .zip do importu. Plik musi być wygenerowany przez eksport danych Commerce Manager",
+          "start-import": "Rozpocznij przywracanie",
+          "select-file": "Wybierz plik .zip do przywrócenia. Plik musi zostać utworzony przez kopię zapasową danych Virto Commerce",
+          "drag-note": "Przeciągnij i upuść plik .zip, aby go przywrócić. Plik musi zostać utworzony przez kopię zapasową danych Virto Commerce",
           "upload-failed": "Przesyłanie nie powiodło się",
           "upload-progress": "Postęp przesyłania",
-          "import-progress": "Postęp importu",
-          "import-finished": "Import zakończony",
-          "import-data-information": "Informacje o importowanych danych",
+          "import-progress": "Postęp przywracania",
+          "import-finished": "Przywracanie zakończone",
+          "import-data-information": "Przywracanie informacji o danych",
           "author": "Autor",
           "data-file-created": "Plik danych utworzony",
           "created-platform-version": "Utworzono w wersji platformy",
           "platform-entries": "Wpisy platformy",
-          "choose-modules": "Wybierz moduły do importu",
+          "choose-modules": "Wybierz moduły do przywrócenia",
           "no-data": "Brak danych",
           "errors": "Błędy",
           "start": "Start",
@@ -221,15 +227,15 @@
         }
       },
       "exportImport-main": {
-        "title": "Eksport i import danych",
+        "title": "Kopia zapasowa i przywracanie danych",
         "menu": {
           "export": {
-            "title": "Eksport",
-            "description": "Dane zostaną zapisane do pliku, aby można je było później zaimportować"
+            "title": "Kopia zapasowa",
+            "description": "Dane zostaną zapisane w pliku do późniejszego przywrócenia"
           },
           "import": {
-            "title": "Import",
-            "description": "Importuj dane z wyeksportowanego pliku"
+            "title": "Przywracanie",
+            "description": "Przywróć dane z pliku kopii zapasowej do późniejszego użycia"
           }
         }
       },
@@ -917,9 +923,9 @@
     "platform:security:delete": "Usuń użytkowników i role",
     "platform:security:verifyEmail": "Zmień stan weryfikacji i wyślij email weryfikacyjny",
     "background_jobs:manage": "Dostęp do konsoli Hangfire",
-    "platform:exportImport:access": "Wyświetl Eksport/Import w menu głównym",
-    "platform:import": "Importuj dane platformy i modułów",
-    "platform:export": "Eksportuj dane platformy i modułów",
+    "platform:exportImport:access": "Wyświetl Kopia zapasowa/Przywracanie w menu głównym",
+    "platform:import": "Przywróć dane platformy i modułów",
+    "platform:export": "Utwórz kopię zapasową danych platformy i modułów",
     "platform:security:loginOnBehalf": "Zaloguj się w imieniu klienta"
   },
   "settings": {

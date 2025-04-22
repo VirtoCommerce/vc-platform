@@ -10,16 +10,20 @@
       "dynamic-properties": "Propriedades dinâmicas",
       "security": "Segurança",
       "modules": "Módulos",
-      "export-import": "Exportar e Importar",
+      "export-import": "Backup e Restauração",
       "user-profile": "Perfil do usuário",
       "assets": "Recursos",
       "toggle-favorites": "Shift + Espaço para alternar favoritos",
+      "developer-tools": "Ferramentas de desenvolvedor",      
       "help": "Ajuda"
     },
     "navigation": {
       "back": "Voltar"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Ferramentas de desenvolvedor"
+      },      
       "system-info": {
         "title": "Informações da plataforma",
         "labels": {
@@ -84,7 +88,9 @@
           "display-name": "Nome de exibição",
           "value-type": "Tipo de valor",
           "dictionary-values": "Valores do dicionário",
-          "manage-dictionary": "Gerenciar dicionário"
+          "manage-dictionary": "Gerenciar dicionário",
+          "show-more-languages": "Mostrar mais idiomas",
+          "show-less-languages": "Mostrar menos idiomas"
         },
         "placeholders": {
           "description": "Digite a descrição da propriedade",
@@ -152,10 +158,10 @@
         }
       },
       "export-main": {
-        "title": "Exportação de dados",
+        "title": "Backup de dados",
         "labels": {
           "platform-entries": "Entradas da plataforma",
-          "choose-modules": "Escolha os módulos para exportar",
+          "choose-modules": "Escolha os módulos para backup",
           "download-url": "URL de download",
           "errors": "Erros",
           "start": "Início",
@@ -181,21 +187,21 @@
         }
       },
       "import-main": {
-        "title": "Importação de dados",
+        "title": "Restauração de dados",
         "labels": {
-          "start-import": "Iniciar importação",
-          "select-file": "Selecione o arquivo .zip para importar. O arquivo deve ser produzido pela exportação de dados do Commerce Manager",
-          "drag-note": "Arraste e solte o arquivo .zip para importar. O arquivo deve ser produzido pela exportação de dados do Commerce Manager",
+          "start-import": "Iniciar restauração",
+          "select-file": "Selecione o arquivo .zip para restaurar. O arquivo deve ter sido gerado pelo backup de dados do Virto Commerce",
+          "drag-note": "Arraste e solte o arquivo .zip para restaurá-lo. O arquivo deve ter sido gerado pelo backup de dados do Virto Commerce",
           "upload-failed": "Falha no upload",
           "upload-progress": "Progresso do upload",
-          "import-progress": "Progresso da importação",
-          "import-finished": "Importação concluída",
-          "import-data-information": "Informações dos dados importados",
+          "import-progress": "Progresso da restauração",
+          "import-finished": "Restauração concluída",
+          "import-data-information": "Restaurar informações dos dados",
           "author": "Autor",
           "data-file-created": "Arquivo de dados criado",
           "created-platform-version": "Criado na versão da Plataforma",
           "platform-entries": "Entradas da plataforma",
-          "choose-modules": "Escolha os módulos para importar",
+          "choose-modules": "Escolha os módulos para restaurar",
           "no-data": "Sem dados",
           "errors": "Erros",
           "start": "Início",
@@ -221,15 +227,15 @@
         }
       },
       "exportImport-main": {
-        "title": "Exportação e importação de dados",
+        "title": "Backup e restauração de dados",
         "menu": {
           "export": {
-            "title": "Exportar",
-            "description": "Os dados serão salvos em um arquivo para que possam ser importados posteriormente"
+            "title": "Backup",
+            "description": "Os dados serão salvos em um arquivo para futura restauração"
           },
           "import": {
-            "title": "Importar",
-            "description": "Importar dados de um arquivo exportado"
+            "title": "Restauração",
+            "description": "Restaurar dados a partir de um arquivo de backup para uso futuro"
           }
         }
       },
@@ -917,9 +923,9 @@
     "platform:security:delete": "Excluir usuários e funções",
     "platform:security:verifyEmail": "Alterar estado verificado e enviar e-mail de verificação",
     "background_jobs:manage": "Acesso ao console Hangfire",
-    "platform:exportImport:access": "Visualizar Exportação/Importação no menu principal",
-    "platform:import": "Importar dados da Plataforma e módulos",
-    "platform:export": "Exportar dados da Plataforma e módulos",
+    "platform:exportImport:access": "Exibir Backup/Restauração no menu principal",
+    "platform:import": "Restaurar dados da plataforma e dos módulos",
+    "platform:export": "Fazer backup dos dados da plataforma e dos módulos",
     "platform:security:loginOnBehalf": "Login em nome de um cliente"
   },
   "settings": {

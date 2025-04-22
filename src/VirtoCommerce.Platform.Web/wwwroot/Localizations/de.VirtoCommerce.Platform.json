@@ -10,16 +10,20 @@
       "dynamic-properties": "Dynamische Eigenschaften",
       "security": "Sicherheit",
       "modules": "Module",
-      "export-import": "Export & Import",
+      "export-import": "Sicherung & Wiederherstellung",
       "user-profile": "Benutzerprofil",
       "assets": "Ressourcen",
       "toggle-favorites": "Umschalt + Leertaste zum Umschalten der Favoriten",
+      "developer-tools": "Entwicklerwerkzeuge",
       "help": "Hilfe"
     },
     "navigation": {
       "back": "Zurück"
     },
     "blades": {
+      "developer-tools": {
+        "title": "Entwicklerwerkzeuge"
+      },
       "system-info": {
         "title": "Plattforminformationen",
         "labels": {
@@ -84,7 +88,9 @@
           "display-name": "Anzeigename",
           "value-type": "Werttyp",
           "dictionary-values": "Wörterbuch-Werte",
-          "manage-dictionary": "Wörterbuch verwalten"
+          "manage-dictionary": "Wörterbuch verwalten",
+          "show-more-languages": "Mehr Sprachen anzeigen",
+          "show-less-languages": "Weniger Sprachen anzeigen"
         },
         "placeholders": {
           "description": "Eigenschaftsbeschreibung eingeben",
@@ -152,10 +158,10 @@
         }
       },
       "export-main": {
-        "title": "Datenexport",
+        "title": "Datensicherung",
         "labels": {
           "platform-entries": "Plattformeinträge",
-          "choose-modules": "Module zum Exportieren auswählen",
+          "choose-modules": "Wählen Sie Module für die Sicherung",
           "download-url": "Download-URL",
           "errors": "Fehler",
           "start": "Start",
@@ -181,21 +187,21 @@
         }
       },
       "import-main": {
-        "title": "Datenimport",
+        "title": "Datenwiederherstellung",
         "labels": {
-          "start-import": "Import starten",
-          "select-file": "Wählen Sie eine .zip-Datei zum Importieren aus. Die Datei muss vom Commerce Manager-Datenexport erstellt worden sein",
-          "drag-note": "Ziehen Sie eine .zip-Datei zum Importieren hierher. Die Datei muss vom Commerce Manager-Datenexport erstellt worden sein",
+          "start-import": "Wiederherstellung starten",
+          "select-file": "Wählen Sie die .zip-Datei zur Wiederherstellung aus. Die Datei muss von der Virto Commerce-Datensicherung erstellt worden sein",
+          "drag-note": "Ziehen Sie die .zip-Datei hierher, um sie wiederherzustellen. Die Datei muss von der Virto Commerce-Datensicherung erstellt worden sein",
           "upload-failed": "Upload fehlgeschlagen",
           "upload-progress": "Upload-Fortschritt",
-          "import-progress": "Import-Fortschritt",
-          "import-finished": "Import abgeschlossen",
-          "import-data-information": "Import-Dateninformationen",
+          "import-progress": "Wiederherstellungsfortschritt",
+          "import-finished": "Wiederherstellung abgeschlossen",
+          "import-data-information": "Dateninformationen wiederherstellen",
           "author": "Autor",
           "data-file-created": "Datendatei erstellt",
           "created-platform-version": "Erstellt in Plattformversion",
           "platform-entries": "Plattformeinträge",
-          "choose-modules": "Module zum Importieren auswählen",
+          "choose-modules": "Wählen Sie Module zur Wiederherstellung",
           "no-data": "Keine Daten",
           "errors": "Fehler",
           "start": "Start",
@@ -221,15 +227,15 @@
         }
       },
       "exportImport-main": {
-        "title": "Datenexport und -import",
+        "title": "Daten sichern und wiederherstellen",
         "menu": {
           "export": {
-            "title": "Export",
-            "description": "Daten werden in eine Datei gespeichert, damit sie später importiert werden können"
+            "title": "Sicherung",
+            "description": "Daten werden in einer Datei gespeichert, um sie später wiederherzustellen"
           },
           "import": {
-            "title": "Import",
-            "description": "Daten aus einer exportierten Datei importieren"
+            "title": "Wiederherstellung",
+            "description": "Stellen Sie Daten aus einer Sicherungsdatei für die zukünftige Nutzung wieder her"
           }
         }
       },
@@ -919,9 +925,9 @@
     "platform:security:delete": "Benutzer und Rollen löschen",
     "platform:security:verifyEmail": "Verifizierten Status ändern und Verifizierungs-E-Mail senden",
     "background_jobs:manage": "Zugriff auf die Hangfire-Konsole",
-    "platform:exportImport:access": "Export/Import im Hauptmenü anzeigen",
-    "platform:import": "Platform- und Moduldaten importieren",
-    "platform:export": "Platform- und Moduldaten exportieren",
+    "platform:exportImport:access": "Backup/Wiederherstellung im Hauptmenü anzeigen",
+    "platform:import": "Plattform- und Modul-Daten wiederherstellen",
+    "platform:export": "Plattform- und Modul-Daten sichern",
     "platform:security:loginOnBehalf": "Im Namen eines Kunden anmelden"
   },
   "settings": {

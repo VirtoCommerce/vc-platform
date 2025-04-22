@@ -1,0 +1,13 @@
+<div class="blade-content">
+  <div class="blade-content__tabs-container">
+    <div class="blade-content__tabs-list">
+      <ng-container ng-repeat="item in items">
+        <a href="{{item.url}}" ng-click="item.executeMethod($event)" target="_blank" ng-class="{'active': currentName === item.name}">
+          {{item.name}}
+          <span ng-if="item.isExternal" class="fas fa-external-link-alt"></span>
+        </a>
+      </ng-container>
+    </div>
+    <iframe ng-if="currentUrl" style="width: 100%; flex-grow: 1;" ng-src="{{currentUrl}}"></iframe>
+  </div>
+</div>

@@ -10,16 +10,20 @@
       "dynamic-properties": "動的プロパティ",
       "security": "セキュリティ",
       "modules": "モジュール",
-      "export-import": "エクスポート＆インポート",
+      "export-import": "バックアップと復元",
       "user-profile": "ユーザープロフィール",
       "assets": "リソース",
       "toggle-favorites": "Shift + スペースでお気に入りを切り替え",
+      "developer-tools": "開発者ツール",
       "help": "ヘルプ"
     },
     "navigation": {
       "back": "戻る"
     },
     "blades": {
+      "developer-tools": {
+        "title": "開発者ツール"
+      },
       "system-info": {
         "title": "プラットフォーム情報",
         "labels": {
@@ -84,7 +88,9 @@
           "display-name": "表示名",
           "value-type": "値タイプ",
           "dictionary-values": "辞書の値",
-          "manage-dictionary": "辞書を管理"
+          "manage-dictionary": "辞書を管理",
+          "show-more-languages": "さらに多くの言語を表示",
+          "show-less-languages": "少ない言語を表示"
         },
         "placeholders": {
           "description": "プロパティの説明を入力",
@@ -152,10 +158,10 @@
         }
       },
       "export-main": {
-        "title": "データエクスポート",
+        "title": "データのバックアップ",
         "labels": {
           "platform-entries": "プラットフォームエントリー",
-          "choose-modules": "エクスポートするモジュールを選択",
+          "choose-modules": "バックアップするモジュールを選択",
           "download-url": "ダウンロードURL",
           "errors": "エラー",
           "start": "開始",
@@ -181,21 +187,21 @@
         }
       },
       "import-main": {
-        "title": "データインポート",
+        "title": "データの復元",
         "labels": {
-          "start-import": "インポート開始",
-          "select-file": "インポートする.zipファイルを選択してください。ファイルはCommerce Managerのデータエクスポートで作成されたものである必要があります",
-          "drag-note": "インポートする.zipファイルをドラッグ＆ドロップしてください。ファイルはCommerce Managerのデータエクスポートで作成されたものである必要があります",
+          "start-import": "復元を開始",
+          "select-file": ".zipファイルを選択して復元します。このファイルはVirto Commerceのデータバックアップによって作成されたものである必要があります。",
+          "drag-note": ".zipファイルをドラッグ＆ドロップして復元します。このファイルはVirto Commerceのデータバックアップによって作成されたものである必要があります。",
           "upload-failed": "アップロード失敗",
-          "upload-progress": "アップロード進行状況",
-          "import-progress": "インポート進行状況",
-          "import-finished": "インポート完了",
-          "import-data-information": "インポートデータ情報",
+          "upload-progress": "復元の進行状況",
+          "import-progress": "復元が完了しました",
+          "import-finished": "データ情報の復元",
+          "import-data-information": "データ情報の復元",
           "author": "作成者",
           "data-file-created": "データファイル作成日時",
           "created-platform-version": "作成されたプラットフォームバージョン",
           "platform-entries": "プラットフォームエントリー",
-          "choose-modules": "インポートするモジュールを選択",
+          "choose-modules": "復元するモジュールを選択",
           "no-data": "データなし",
           "errors": "エラー",
           "start": "開始",
@@ -221,15 +227,15 @@
         }
       },
       "exportImport-main": {
-        "title": "データエクスポートとインポート",
+        "title": "データのバックアップと復元",
         "menu": {
           "export": {
-            "title": "エクスポート",
-            "description": "データはファイルに保存され、後でインポートできます"
+            "title": "バックアップ",
+            "description": "データは将来の復元のためにファイルに保存されます"
           },
           "import": {
-            "title": "インポート",
-            "description": "エクスポートされたファイルからデータをインポート"
+            "title": "復元",
+            "description": "バックアップファイルからデータを復元し、将来使用できるようにします"
           }
         }
       },
@@ -917,9 +923,9 @@
     "platform:security:delete": "ユーザーとロールの削除",
     "platform:security:verifyEmail": "確認済み状態の変更と確認メールの送信",
     "background_jobs:manage": "Hangfireコンソールへのアクセス",
-    "platform:exportImport:access": "メインメニューでエクスポート/インポートを表示",
-    "platform:import": "プラットフォームとモジュールデータのインポート",
-    "platform:export": "プラットフォームとモジュールデータのエクスポート",
+    "platform:exportImport:access": "メインメニューでバックアップ/復元を表示",
+    "platform:import": "プラットフォームとモジュールのデータを復元",
+    "platform:export": "プラットフォームとモジュールのデータをバックアップ",
     "platform:security:loginOnBehalf": "顧客の代理としてログイン"
   },
   "settings": {

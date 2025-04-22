@@ -9,6 +9,7 @@ using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Web.Model.Security;
+using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -38,6 +39,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("new")]
+        [Authorize(Permissions.SecurityOAuthApplicationsCreate)]
         public ActionResult<OpenIddictApplicationDescriptor> New()
         {
             var app = new OpenIddictApplicationDescriptor
@@ -54,6 +56,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("")]
+        [Authorize(Permissions.SecurityOAuthApplicationsUpdate)]
         public async Task<ActionResult<OpenIddictApplicationDescriptor>> SaveAsync(OpenIddictApplicationDescriptor descriptor)
         {
             descriptor.Permissions.Clear();
@@ -81,6 +84,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpDelete]
         [Route("")]
+        [Authorize(Permissions.SecurityOAuthApplicationsDelete)]
         public async Task<ActionResult> DeleteAsync([FromQuery] string[] clientIds)
         {
             var apps = await _manager.ListAsync(x => x.Where(y => clientIds.Contains(y.ClientId))).ToListAsync();
@@ -95,6 +99,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("search")]
+        [Authorize(Permissions.SecurityOAuthApplicationsRead)]
         public async Task<ActionResult<OAuthAppSearchResult>> SearchAsync(OAuthAppSearchCriteria criteria)
         {
             if (criteria.Sort.IsNullOrEmpty())
