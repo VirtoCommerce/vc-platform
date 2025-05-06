@@ -33,7 +33,7 @@ public static class CrudServiceExtensions
             return null;
         }
 
-        var entities = await crudService.GetAsync(new[] { id }, responseGroup, clone);
+        var entities = await crudService.GetAsync([id], responseGroup, clone);
 
         return entities?.FirstOrDefault();
     }

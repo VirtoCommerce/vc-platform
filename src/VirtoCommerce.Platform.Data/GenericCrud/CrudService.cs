@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Caching;
@@ -263,33 +264,32 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             var models = await GetAsync(ids);
 
-            using (var repository = _repositoryFactory())
+            using var repository = _repositoryFactory();
+
+            // Raise domain events before deletion
+            var changedEntries = models.Select(x => new GenericChangedEntry<TModel>(x, EntryState.Deleted)).ToList();
+            await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
+
+            if (softDelete)
             {
-                // Raise domain events before deletion
-                var changedEntries = models.Select(x => new GenericChangedEntry<TModel>(x, EntryState.Deleted)).ToList();
-                await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
-
-                if (softDelete)
-                {
-                    await SoftDelete(repository, ids);
-                    await repository.UnitOfWork.CommitAsync();
-                }
-                else
-                {
-                    var keyMap = new PrimaryKeyResolvingMap();
-                    foreach (var model in models)
-                    {
-                        var entity = FromModel(model, keyMap);
-                        repository.Remove(entity);
-                    }
-                    await repository.UnitOfWork.CommitAsync();
-                    await AfterDeleteAsync(models, changedEntries);
-                }
-                ClearCache(models);
-
-                // Raise domain events after deletion
-                await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
+                await SoftDelete(repository, ids);
+                await repository.UnitOfWork.CommitAsync();
             }
+            else
+            {
+                var keyMap = new PrimaryKeyResolvingMap();
+                foreach (var model in models)
+                {
+                    var entity = FromModel(model, keyMap);
+                    repository.Remove(entity);
+                }
+                await repository.UnitOfWork.CommitAsync();
+                await AfterDeleteAsync(models, changedEntries);
+            }
+            ClearCache(models);
+
+            // Raise domain events after deletion
+            await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
         }
 
         /// <summary>
@@ -342,7 +342,47 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IList<GenericChangedEntry<TModel>> changedEntries)
         {
-            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor(new[] { typeof(IEnumerable<GenericChangedEntry<TModel>>) }).Invoke(new object[] { changedEntries });
+            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor([typeof(IEnumerable<GenericChangedEntry<TModel>>)]).Invoke([changedEntries]);
+        }
+
+        public virtual async Task<TModel> GetByOuterId(string id, string responseGroup = null, bool clone = true)
+        {
+            var cacheKey = CacheKey.With(GetType(), nameof(GetByOuterId), id);
+            var entity = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
+            {
+                ConfigureCache(cacheEntry, id, null);
+
+                using var repository = _repositoryFactory();
+
+                // Optimize performance and CPU usage
+                repository.DisableChangesTracking();
+
+                TEntity entity = null;
+                if (repository.UnitOfWork is DbContextUnitOfWork dbContextUoW)
+                {
+                    entity = (TEntity)await dbContextUoW.DbContext
+                        .Set<TEntity>()
+                        .Cast<IHasOuterId>()
+                        .Where(x => x.OuterId == id)
+                        .FirstOrDefaultAsync();
+                }
+
+                return entity;
+            });
+
+            TModel model = null;
+
+            if (entity != null)
+            {
+                model = ProcessModels([entity], responseGroup)[0];
+            }
+
+            if (!clone)
+            {
+                return model;
+            }
+
+            return model?.CloneTyped();
         }
     }
 }
