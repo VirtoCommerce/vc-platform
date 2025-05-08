@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Core.GenericCrud
         /// <param name="responseGroup"></param>
         /// <param name="clone">If false, returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.</param>
         /// <returns></returns>
-        Task<T> GetByOuterId(string id, string responseGroup = null, bool clone = true)
+        Task<T> GetByOuterIdAsync(string id, string responseGroup = null, bool clone = true)
         {
             throw new NotImplementedException();
         }

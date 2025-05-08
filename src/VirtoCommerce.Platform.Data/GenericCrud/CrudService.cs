@@ -345,9 +345,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor([typeof(IEnumerable<GenericChangedEntry<TModel>>)]).Invoke([changedEntries]);
         }
 
-        public virtual async Task<TModel> GetByOuterId(string id, string responseGroup = null, bool clone = true)
+        public virtual async Task<TModel> GetByOuterIdAsync(string id, string responseGroup = null, bool clone = true)
         {
-            var cacheKey = CacheKey.With(GetType(), nameof(GetByOuterId), id);
+            var cacheKey = CacheKey.With(GetType(), nameof(GetByOuterIdAsync), id);
             var entity = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 ConfigureCache(cacheEntry, id, null);
