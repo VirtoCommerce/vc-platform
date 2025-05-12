@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
             var getAsync = await service.GetAsync(ids);
 
             // Assert
-            Assert.Equal(new List<TestModel> { new() { Id = "1", Name = "ProcessModelCalled" } }, getAsync);
+            Assert.Equal([new() { Id = "1", Name = "ProcessModelCalled" }], getAsync);
         }
 
         [Fact]
@@ -118,9 +118,9 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         public async Task GetByOuterIdAsync_getById_returnTestModel()
         {
             // Arrange
-            var id = "1";
-            var mockModels = new List<TestEntity> { new() { Id = "1", OuterId = "1" } };
-            var testModels = new List<TestModel> { new() { Id = "1", OuterId = "1" } };
+            var outerId = "123456";
+            var mockModels = new List<TestEntity> { new() { Id = "1", OuterId = "123456" } };
+            var testModels = new List<TestModel> { new() { Id = "1", OuterId = "123456" } };
 
             var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
             optionsBuilder.UseInMemoryDatabase("MyInMemoryDatabseName");
@@ -134,13 +134,13 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
 
             var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
             var platformMemoryCache = new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
-            var service = new CrudServiceMock(() => _repositoryMock.Object, platformMemoryCache, _eventPublisherMock.Object);
+            var service = new OuterEntityServiceMock(() => _repositoryMock.Object, platformMemoryCache, _eventPublisherMock.Object);
 
             // Act
-            var getAsync = await service.GetByOuterIdAsync(id);
+            var result = await service.GetByOuterIdsAsync([outerId]);
 
             // Assert
-            Assert.Equal(testModels.FirstOrDefault(), getAsync);
+            Assert.Equal(testModels, result);
         }
 
         private CrudServiceMock GetCrudServiceMock()

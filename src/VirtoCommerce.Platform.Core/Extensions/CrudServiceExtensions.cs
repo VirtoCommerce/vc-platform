@@ -41,9 +41,11 @@ public static class CrudServiceExtensions
     /// <summary>
     /// Returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.
     /// </summary>
-    public static Task<TModel> GetByOuterIdNoCloneAsync<TModel>(this ICrudService<TModel> crudService, string id, string responseGroup = null)
-        where TModel : Entity
+    public static async Task<TModel> GetByOuterIdNoCloneAsync<TModel>(this IOuterEntityService<TModel> crudService, string id, string responseGroup = null)
+        where TModel : Entity, IHasOuterId
     {
-        return crudService.GetByOuterIdAsync(id, responseGroup, clone: false);
+        var entities = await crudService.GetByOuterIdsAsync([id], responseGroup, clone: false);
+
+        return entities?.FirstOrDefault();
     }
 }

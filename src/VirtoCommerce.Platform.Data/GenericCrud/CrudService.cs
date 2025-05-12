@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Caching;
@@ -343,46 +342,6 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IList<GenericChangedEntry<TModel>> changedEntries)
         {
             return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor([typeof(IEnumerable<GenericChangedEntry<TModel>>)]).Invoke([changedEntries]);
-        }
-
-        public virtual async Task<TModel> GetByOuterIdAsync(string id, string responseGroup = null, bool clone = true)
-        {
-            var cacheKey = CacheKey.With(GetType(), nameof(GetByOuterIdAsync), id);
-            var entity = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
-            {
-                ConfigureCache(cacheEntry, id, null);
-
-                using var repository = _repositoryFactory();
-
-                // Optimize performance and CPU usage
-                repository.DisableChangesTracking();
-
-                TEntity entity = null;
-                if (repository.UnitOfWork is DbContextUnitOfWork dbContextUoW)
-                {
-                    entity = (TEntity)await dbContextUoW.DbContext
-                        .Set<TEntity>()
-                        .Cast<IHasOuterId>()
-                        .Where(x => x.OuterId == id)
-                        .FirstOrDefaultAsync();
-                }
-
-                return entity;
-            });
-
-            TModel model = null;
-
-            if (entity != null)
-            {
-                model = ProcessModels([entity], responseGroup)[0];
-            }
-
-            if (!clone)
-            {
-                return model;
-            }
-
-            return model?.CloneTyped();
         }
     }
 }
