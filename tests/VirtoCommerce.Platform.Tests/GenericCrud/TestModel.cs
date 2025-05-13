@@ -3,14 +3,14 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Tests.GenericCrud
 {
-    public class TestModel : Entity, ICloneable, IHasOuterId
+    public class TestModel : Entity, IHasOuterId, ICloneable
     {
-        public string Name { get; set; }
         public string OuterId { get; set; }
+        public string Name { get; set; }
 
         public object Clone()
         {
-            return MemberwiseClone() as TestModel;
+            return (TestModel)MemberwiseClone();
         }
     }
 }

@@ -6,16 +6,16 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
 {
     public class TestEntity : Entity, IHasOuterId, IDataEntity<TestEntity, TestModel>
     {
-        public string Name { get; set; }
         public string OuterId { get; set; }
+        public string Name { get; set; }
 
         public TestEntity FromModel(TestModel model, PrimaryKeyResolvingMap pkMap)
         {
             pkMap.AddPair(model, this);
 
             Id = model.Id;
-            Name = model.Name;
             OuterId = model.OuterId;
+            Name = model.Name;
             return this;
         }
 
@@ -24,15 +24,15 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
             ArgumentNullException.ThrowIfNull(target);
 
             target.Id = Id;
-            target.Name = Name;
             target.OuterId = OuterId;
+            target.Name = Name;
         }
 
         public TestModel ToModel(TestModel model)
         {
             model.Id = Id;
-            model.Name = Name;
             model.OuterId = OuterId;
+            model.Name = Name;
             return model;
         }
     }
