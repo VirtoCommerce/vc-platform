@@ -1,38 +1,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MockQueryable.Moq;
 using Moq;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Events;
-using VirtoCommerce.Platform.Data.Infrastructure;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.GenericCrud
 {
     public class CrudServiceTests
     {
-        private readonly Mock<IEventPublisher> _eventPublisherMock;
-        private readonly Mock<IRepository> _repositoryMock;
-        private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-
-        public CrudServiceTests()
-        {
-            _eventPublisherMock = new Mock<IEventPublisher>();
-            _repositoryMock = new Mock<IRepository>();
-            _mockUnitOfWork = new Mock<IUnitOfWork>();
-        }
+        private readonly Mock<IEventPublisher> _eventPublisherMock = new();
+        private readonly Mock<ITestRepository> _repositoryMock = new();
+        private readonly Mock<IUnitOfWork> _mockUnitOfWork = new();
 
         [Fact]
         public async Task GetAsync_getById_returnTestModel()
         {
             // Arrange
-            var ids = new List<string>() { "1" };
+            var ids = new List<string> { "1" };
             var testModels = new List<TestModel> { new() { Id = "1" } };
             var service = GetCrudServiceMock();
 
@@ -47,7 +39,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         public async Task GetAsync__ProcessModelCalled()
         {
             // Arrange
-            var ids = new List<string>() { "1" };
+            var ids = new List<string> { "1" };
             var service = GetCrudServiceMock();
 
             // Act
@@ -68,7 +60,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
             await service.SaveChangesAsync(testModels);
 
             // Assert
-            Assert.Equal(testModels.FirstOrDefault(), TestChangedEvent.testChangedEntries.FirstOrDefault().NewEntry);
+            Assert.Equal(testModels.FirstOrDefault(), TestChangedEvent.testChangedEntries.First().NewEntry);
             Assert.Equal(2, service.BeforeAndAfterSaveChangesCalled);
         }
 
@@ -76,21 +68,21 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         public async Task DeleteAsync_deleteById_returnChangedEntries()
         {
             // Arrange
-            var ids = new List<string>() { "1" };
+            var ids = new List<string> { "1" };
             var service = GetCrudServiceMock();
 
             // Act
             await service.DeleteAsync(ids);
 
             // Assert
-            Assert.Equal(ids.FirstOrDefault(), TestChangedEvent.testChangedEntries.FirstOrDefault().NewEntry.Id);
+            Assert.Equal(ids.FirstOrDefault(), TestChangedEvent.testChangedEntries.First().NewEntry.Id);
         }
 
         [Fact]
         public async Task DeleteAsync_SoftDeleteCalled()
         {
             // Arrange
-            var ids = new List<string>() { "1" };
+            var ids = new List<string> { "1" };
             var service = GetCrudServiceMock();
 
             // Act
@@ -104,7 +96,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         public async Task DeleteAsync_AfterDeleteAsyncCalled()
         {
             // Arrange
-            var ids = new List<string>() { "1" };
+            var ids = new List<string> { "1" };
             var service = GetCrudServiceMock();
 
             // Act
@@ -115,57 +107,41 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         }
 
         [Fact]
-        public async Task GetByOuterIdAsync_getById_returnTestModel()
+        public async Task GetByOuterIdAsync_ReturnsCorrectEntity()
         {
             // Arrange
-            var outerId = "123456";
-            var mockModels = new List<TestEntity> { new() { Id = "1", OuterId = "123456" } };
-            var testModels = new List<TestModel> { new() { Id = "1", OuterId = "123456" } };
+            var entities = new List<TestEntity>
+            {
+                new() { Id = "1", OuterId = "a" },
+                new() { Id = "2", OuterId = "b" },
+                new() { Id = "3", OuterId = "c" },
+            };
 
-            var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
-            optionsBuilder.UseInMemoryDatabase("MyInMemoryDatabseName");
+            var entitiesDbSetMock = entities.BuildMockDbSet();
 
-            var context = new TestDbContext(optionsBuilder.Options);
-            context.TestEntities.AddRange(mockModels);
-            context.SaveChanges();
+            _repositoryMock
+                .Setup(x => x.Entities)
+                .Returns(entitiesDbSetMock.Object);
 
-            var unitOfWork = AbstractTypeFactory<DbContextUnitOfWork>.TryCreateInstance(new DbContextUnitOfWork(context), context);
-            _repositoryMock.Setup(x => x.UnitOfWork).Returns(unitOfWork);
-
-            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
-            var platformMemoryCache = new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
-            var service = new OuterEntityServiceMock(() => _repositoryMock.Object, platformMemoryCache, _eventPublisherMock.Object);
+            var service = new TestOuterEntityService(() => _repositoryMock.Object, GetPlatformMemoryCache(), _eventPublisherMock.Object);
 
             // Act
-            var result = await service.GetByOuterIdsAsync([outerId]);
+            var model = await service.GetByOuterIdNoCloneAsync("b");
 
             // Assert
-            Assert.Equal(testModels, result);
+            Assert.Equal("2", model.Id);
         }
 
         private CrudServiceMock GetCrudServiceMock()
         {
-            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
-            var platformMemoryCache = new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()),
-                new Mock<ILogger<PlatformMemoryCache>>().Object);
-
             _repositoryMock.Setup(x => x.UnitOfWork).Returns(_mockUnitOfWork.Object);
-            return new CrudServiceMock(() => _repositoryMock.Object, platformMemoryCache, _eventPublisherMock.Object);
+            return new CrudServiceMock(() => _repositoryMock.Object, GetPlatformMemoryCache(), _eventPublisherMock.Object);
         }
 
-        public class TestDbContext : DbContextBase
+        private static PlatformMemoryCache GetPlatformMemoryCache()
         {
-            public TestDbContext(DbContextOptions<TestDbContext> options)
-                : base(options)
-            {
-            }
-
-            protected TestDbContext(DbContextOptions options)
-                : base(options)
-            {
-            }
-
-            public DbSet<TestEntity> TestEntities { get; set; }
+            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+            return new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
         }
     }
 }

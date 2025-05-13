@@ -12,9 +12,9 @@ public interface IOuterEntityService<T> : ICrudService<T>
     where T : Entity, IHasOuterId
 {
     /// <summary>
-    /// Returns a list of model instances for specified outer ids (integration key)
+    /// Returns a list of model instances for specified outer IDs (integration key)
     /// </summary>
-    /// <param name="outerIds">List of outer ids</param>
+    /// <param name="outerIds">List of outer IDs</param>
     /// <param name="responseGroup"></param>
     /// <param name="clone">If false, returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.</param>
     /// <returns></returns>
