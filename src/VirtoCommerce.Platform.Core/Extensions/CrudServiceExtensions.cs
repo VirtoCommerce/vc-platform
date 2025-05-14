@@ -50,7 +50,13 @@ public static class CrudServiceExtensions
     /// <summary>
     /// Returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.
     /// </summary>
-    public static async Task<TModel> GetByOuterIdNoCloneAsync<TModel>(this IOuterEntityService<TModel> outerEntityService, string outerId, string responseGroup = null)
+    public static Task<TModel> GetByOuterIdNoCloneAsync<TModel>(this IOuterEntityService<TModel> outerEntityService, string outerId, string responseGroup = null)
+        where TModel : Entity, IHasOuterId
+    {
+        return outerEntityService.GetByOuterIdAsync(outerId, responseGroup, clone: false);
+    }
+
+    public static async Task<TModel> GetByOuterIdAsync<TModel>(this IOuterEntityService<TModel> outerEntityService, string outerId, string responseGroup = null, bool clone = true)
         where TModel : Entity, IHasOuterId
     {
         if (string.IsNullOrEmpty(outerId))
@@ -58,7 +64,7 @@ public static class CrudServiceExtensions
             return null;
         }
 
-        var entities = await outerEntityService.GetByOuterIdsAsync([outerId], responseGroup, clone: false);
+        var entities = await outerEntityService.GetByOuterIdsAsync([outerId], responseGroup, clone);
 
         return entities?.FirstOrDefault();
     }
