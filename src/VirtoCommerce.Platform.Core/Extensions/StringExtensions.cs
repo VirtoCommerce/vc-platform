@@ -324,6 +324,16 @@ namespace VirtoCommerce.Platform.Core.Common
             return input.First().ToString().ToUpper() + input.Substring(1);
         }
 
+        public static bool IsNullOrEmpty(this string value)
+        {
+            return string.IsNullOrEmpty(value);
+        }
+
+        public static bool IsNullOrWhiteSpace(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value);
+        }
+
         public static bool IsValidEmail(this string input)
         {
             return input != null && _emailRegex.IsMatch(input);
