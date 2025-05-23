@@ -19,6 +19,11 @@ namespace VirtoCommerce.Platform.Core.Common
             return values.Contains(value, StringComparer.OrdinalIgnoreCase);
         }
 
+        public static IEnumerable<string> DistinctIgnoreCase(this IEnumerable<string> values)
+        {
+            return values.Distinct(StringComparer.OrdinalIgnoreCase);
+        }
+
         public static IEnumerable<IList<T>> Paginate<T>(this IEnumerable<T> items, int pageSize)
         {
             var page = new List<T>();
