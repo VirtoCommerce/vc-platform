@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="[8.0.11,9)" />
     <PackageReference Include="Microsoft.IdentityModel.Validators" Version="8.2.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.8.0" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>

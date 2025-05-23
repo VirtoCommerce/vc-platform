@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISet<string> _defaultPermissions = new HashSet<string>
         {
             OpenIddictConstants.Permissions.Endpoints.Authorization,
-            OpenIddictConstants.Permissions.Endpoints.Logout,
+            OpenIddictConstants.Permissions.Endpoints.EndSession,
             OpenIddictConstants.Permissions.Endpoints.Token,
             OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
             OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
