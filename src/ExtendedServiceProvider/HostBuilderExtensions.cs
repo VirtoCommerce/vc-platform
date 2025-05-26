@@ -8,13 +8,13 @@ namespace ExtendedServiceProvider
     {
         public static IHostBuilder UseExtendedServiceProvider(this IHostBuilder builder, ServiceProviderOptions? options = null, IServiceProviderResolver? resolver = null)
         {
-            ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+            ArgumentNullException.ThrowIfNull(builder);
             var serviceProviderFactory = new ExtendedServiceProviderFactory(options ?? ExtendedServiceProviderFactory.DefaultServiceProviderOptions, resolver);
             return builder
                 .UseServiceProviderFactory(serviceProviderFactory)
                 .ConfigureServices((ctx, services) =>
                 {
-                    services.AddSingleton<IStartupFilter>(sp =>
+                    services.AddSingleton<IStartupFilter>(_ =>
                     {
                         var serviceProvider = serviceProviderFactory.CreateServiceProvider(services);
                         return new ExtendedServiceProvidersFeatureFilter(serviceProvider);
