@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ExtendedServiceProvider
 {
     internal class ExtendedServiceProviderFactory : IServiceProviderFactory<IServiceCollection>
     {
-        internal static readonly ServiceProviderOptions DefaultServiceProviderOptions = new(){ ValidateOnBuild = true, ValidateScopes = true };
+        internal static readonly ServiceProviderOptions DefaultServiceProviderOptions = new() { ValidateOnBuild = true, ValidateScopes = true };
 
         private IServiceProvider? _serviceProvider;
         private readonly IServiceProviderResolver? _resolver;
@@ -18,14 +18,15 @@ namespace ExtendedServiceProvider
 
         public IServiceCollection CreateBuilder(IServiceCollection services)
         {
-            ArgumentNullException.ThrowIfNull(services, nameof(services));
+            ArgumentNullException.ThrowIfNull(services);
             return services;
         }
 
         public IServiceProvider CreateServiceProvider(IServiceCollection containerBuilder)
         {
-            ArgumentNullException.ThrowIfNull(containerBuilder, nameof(containerBuilder));
-            return _serviceProvider is null ? _serviceProvider = new ExtendedServiceProvider(containerBuilder, _options, _resolver) : _serviceProvider;
+            ArgumentNullException.ThrowIfNull(containerBuilder);
+            _serviceProvider ??= new ExtendedServiceProvider(containerBuilder, _options, _resolver);
+            return _serviceProvider;
         }
     }
 }

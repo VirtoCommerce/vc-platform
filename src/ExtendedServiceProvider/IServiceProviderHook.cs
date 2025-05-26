@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ExtendedServiceProvider
 {
@@ -20,7 +20,7 @@ namespace ExtendedServiceProvider
 
         public void ServiceResolved(Type serviceType, object service)
         {
-            _logger.LogDebug($"ServiceResolved: serviceType = {serviceType}, service = {service}");
+            _logger.LogDebug("ServiceResolved: serviceType = {serviceType}, service = {service}", serviceType, service);
         }
     }
 
@@ -41,14 +41,11 @@ namespace ExtendedServiceProvider
             {
                 var injectPropertyAttribute = prop.GetCustomAttribute<InjectAttribute>();
 
-                if (injectPropertyAttribute != null)
+                if (injectPropertyAttribute != null && prop.GetValue(service) == null)
                 {
-                    if (prop.GetValue(service) == null)
-                    {
-                        _logger.LogDebug($"ServiceResolved: serviceType = {serviceType}, setting {prop.Name}");
-                        var propertyService = _serviceProvider.GetRequiredKeyedService(prop.PropertyType, injectPropertyAttribute.ServiceKey);
-                        prop.SetValue(service, propertyService);
-                    }
+                    _logger.LogDebug("ServiceResolved: serviceType = {serviceType}, setting {propertyName}", serviceType, prop.Name);
+                    var propertyService = _serviceProvider.GetRequiredKeyedService(prop.PropertyType, injectPropertyAttribute.ServiceKey);
+                    prop.SetValue(service, propertyService);
                 }
             }
         }

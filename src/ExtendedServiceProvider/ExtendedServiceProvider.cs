@@ -1,13 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System.Collections;
 using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ExtendedServiceProvider
 {
-    public interface IExtendedServiceProvider : IKeyedServiceProvider, IServiceProviderIsService, IServiceProviderIsKeyedService, ISupportRequiredService, IServiceScopeFactory
-    {
-    }
+    public interface IExtendedServiceProvider : IKeyedServiceProvider, IServiceProviderIsKeyedService, ISupportRequiredService, IServiceScopeFactory;
 
     [DebuggerDisplay("ServiceDescriptors = {_services.Count}, Extended")]
     internal class ExtendedServiceProvider : IExtendedServiceProvider, IEnumerable<ServiceDescriptor>
@@ -21,7 +19,7 @@ namespace ExtendedServiceProvider
 
         public ExtendedServiceProvider(IServiceCollection services, ServiceProviderOptions? options = null, IServiceProviderResolver? resolver = null)
         {
-            ArgumentNullException.ThrowIfNull(services, nameof(services));
+            ArgumentNullException.ThrowIfNull(services);
             _services = services;
             _serviceProvider = services.BuildServiceProvider(options ?? ExtendedServiceProviderFactory.DefaultServiceProviderOptions);
             _serviceProvider = (_serviceProvider.CreateScope().ServiceProvider as IKeyedServiceProvider)!;
@@ -33,13 +31,13 @@ namespace ExtendedServiceProvider
 
         public object? GetKeyedService(Type serviceType, object? serviceKey)
         {
-            ArgumentNullException.ThrowIfNull(serviceType, nameof(serviceType));
+            ArgumentNullException.ThrowIfNull(serviceType);
 
-            _logger.LogDebug($"GetKeyedService: serviceType = {serviceType}, serviceKey = {serviceKey}");
+            _logger.LogDebug("GetKeyedService: serviceType = {serviceType}, serviceKey = {serviceKey}", serviceType, serviceKey);
 
             if (_selfTypes.Contains(serviceType) && serviceKey is null)
             {
-                _logger.LogDebug($"GetKeyedService: asking for {serviceType}, returning self");
+                _logger.LogDebug("GetKeyedService: asking for {serviceType}, returning self", serviceType);
                 return this;
             }
 
@@ -75,7 +73,7 @@ namespace ExtendedServiceProvider
         public object GetRequiredKeyedService(Type serviceType, object? serviceKey)
         {
             var service = GetKeyedService(serviceType, serviceKey);
-            return service is null ? throw new InvalidOperationException($"No service for type '{serviceType}' has been registered.") : service;
+            return service ?? throw new InvalidOperationException($"No service for type '{serviceType}' has been registered.");
         }
 
         public object? GetService(Type serviceType) => GetKeyedService(serviceType, null);
