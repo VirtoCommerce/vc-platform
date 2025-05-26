@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ExtendedServiceProvider;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Security;
 
@@ -10,8 +12,13 @@ namespace VirtoCommerce.Platform.Security.Authorization
 {
     public abstract class PermissionAuthorizationHandlerBase<TRequirement> : AuthorizationHandler<TRequirement> where TRequirement : PermissionAuthorizationRequirement
     {
+        [Inject]
+        public ILogger<PermissionAuthorizationHandlerBase<TRequirement>> Logger { get; set; }
+
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, TRequirement requirement)
         {
+            Logger?.LogInformation("Property injection: {Method}", "PermissionAuthorizationHandlerBase.HandleRequirementAsync()");
+
             var limitedPermissionsClaim = context.User.FindFirstValue(PlatformConstants.Security.Claims.LimitedPermissionsClaimType);
 
             // LimitedPermissions claims that will be granted to the user by cookies when bearer token authentication is enabled.
