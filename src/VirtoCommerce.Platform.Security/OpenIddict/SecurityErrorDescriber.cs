@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
         public static TokenResponse UserIsTemporaryLockedOut() => new()
         {
             Error = Errors.InvalidGrant,
-            Code = nameof(UserIsLockedOut).ToSnakeCase(),
+            Code = nameof(UserIsTemporaryLockedOut).ToSnakeCase(),
             ErrorDescription = "Your account has been temporarily locked. Please try again after some time."
         };
 
