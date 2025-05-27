@@ -100,6 +100,5 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             }
         }
         #endregion
-
     }
 }

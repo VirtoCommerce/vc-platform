@@ -21,12 +21,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// </summary>
     /// <typeparam name="TModel">The type of service layer model</typeparam>
     /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
-    /// <typeparam name="TChangeEvent">The type of *change event</typeparam>
+    /// <typeparam name="TChangingEvent">The type of *changing event</typeparam>
     /// <typeparam name="TChangedEvent">The type of *changed event</typeparam>
-    public abstract class CrudService<TModel, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>
+    public abstract class CrudService<TModel, TEntity, TChangingEvent, TChangedEvent> : ICrudService<TModel>
         where TModel : Entity, ICloneable
         where TEntity : Entity, IDataEntity<TEntity, TModel>
-        where TChangeEvent : GenericChangedEntryEvent<TModel>
+        where TChangingEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
     {
         private readonly IEventPublisher _eventPublisher;
@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// </summary>
         /// <param name="repositoryFactory">Repository factory to get access to the data source</param>
         /// <param name="platformMemoryCache">The cache used to temporary store returned values</param>
-        /// <param name="eventPublisher">The publisher to propagate platform-wide events (TChangeEvent, TChangedEvent)</param>
+        /// <param name="eventPublisher">The publisher to propagate platform-wide events (TChangingEvent, TChangedEvent)</param>
         protected CrudService(Func<IRepository> repositoryFactory, IPlatformMemoryCache platformMemoryCache, IEventPublisher eventPublisher)
         {
             _repositoryFactory = repositoryFactory;
@@ -215,7 +215,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 }
 
                 // Raise domain events
-                await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
+                await _eventPublisher.Publish(EventFactory<TChangingEvent>(changedEntries));
                 await CommitAsync(repository);
             }
 
@@ -238,7 +238,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             var ids = models.Where(x => !x.IsTransient()).Select(x => x.Id).ToList();
 
-            return ids.Any()
+            return ids.Count > 0
                 ? LoadEntities(repository, ids)
                 : Task.FromResult<IList<TEntity>>(Array.Empty<TEntity>());
         }
@@ -263,33 +263,33 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             var models = await GetAsync(ids);
 
-            using (var repository = _repositoryFactory())
+            using var repository = _repositoryFactory();
+
+            // Raise domain events before deletion
+            var changedEntries = models.Select(x => new GenericChangedEntry<TModel>(x, EntryState.Deleted)).ToList();
+            await _eventPublisher.Publish(EventFactory<TChangingEvent>(changedEntries));
+
+            if (softDelete)
             {
-                // Raise domain events before deletion
-                var changedEntries = models.Select(x => new GenericChangedEntry<TModel>(x, EntryState.Deleted)).ToList();
-                await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
-
-                if (softDelete)
-                {
-                    await SoftDelete(repository, ids);
-                    await repository.UnitOfWork.CommitAsync();
-                }
-                else
-                {
-                    var keyMap = new PrimaryKeyResolvingMap();
-                    foreach (var model in models)
-                    {
-                        var entity = FromModel(model, keyMap);
-                        repository.Remove(entity);
-                    }
-                    await repository.UnitOfWork.CommitAsync();
-                    await AfterDeleteAsync(models, changedEntries);
-                }
-                ClearCache(models);
-
-                // Raise domain events after deletion
-                await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
+                await SoftDelete(repository, ids);
+                await repository.UnitOfWork.CommitAsync();
             }
+            else
+            {
+                var keyMap = new PrimaryKeyResolvingMap();
+                foreach (var model in models)
+                {
+                    var entity = FromModel(model, keyMap);
+                    repository.Remove(entity);
+                }
+                await repository.UnitOfWork.CommitAsync();
+                await AfterDeleteAsync(models, changedEntries);
+            }
+
+            ClearCache(models);
+
+            // Raise domain events after deletion
+            await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IList<GenericChangedEntry<TModel>> changedEntries)
         {
-            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor(new[] { typeof(IEnumerable<GenericChangedEntry<TModel>>) }).Invoke(new object[] { changedEntries });
+            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor([typeof(IEnumerable<GenericChangedEntry<TModel>>)]).Invoke([changedEntries]);
         }
     }
 }
