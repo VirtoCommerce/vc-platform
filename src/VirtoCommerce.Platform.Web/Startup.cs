@@ -371,17 +371,9 @@ namespace VirtoCommerce.Platform.Web
                     {
                         aspNetBuilder.EnableTokenEndpointPassthrough();
                         aspNetBuilder.EnableAuthorizationEndpointPassthrough();
-                        aspNetBuilder.EnableLogoutEndpointPassthrough();
-                        aspNetBuilder.EnableUserinfoEndpointPassthrough();
+                        aspNetBuilder.EnableEndSessionEndpointPassthrough();
+                        aspNetBuilder.EnableUserInfoEndpointPassthrough();
                         aspNetBuilder.EnableStatusCodePagesIntegration();
-
-                        // When request caching is enabled, authorization and logout requests
-                        // are stored in the distributed cache by OpenIddict and the user agent
-                        // is redirected to the same page with a single parameter (request_id).
-                        // This allows flowing large OpenID Connect requests even when using
-                        // an external authentication provider like Google, Facebook or Twitter.
-                        aspNetBuilder.EnableAuthorizationRequestCaching();
-                        aspNetBuilder.EnableLogoutRequestCaching();
 
                         // During development or when you explicitly run the platform in production mode without https,
                         // need to disable the HTTPS requirement.
@@ -391,11 +383,19 @@ namespace VirtoCommerce.Platform.Web
                         }
                     });
 
+                    // When request caching is enabled, authorization and logout requests
+                    // are stored in the distributed cache by OpenIddict and the user agent
+                    // is redirected to the same page with a single parameter (request_id).
+                    // This allows flowing large OpenID Connect requests even when using
+                    // an external authentication provider like Google, Facebook or Twitter.
+                    serverBuilder.EnableAuthorizationRequestCaching();
+                    serverBuilder.EnableEndSessionRequestCaching();
+
                     // Enable the authorization, logout, token and userinfo endpoints.
                     serverBuilder.SetTokenEndpointUris("/connect/token");
-                    serverBuilder.SetUserinfoEndpointUris("/connect/userinfo");
+                    serverBuilder.SetUserInfoEndpointUris("/connect/userinfo");
                     serverBuilder.SetAuthorizationEndpointUris("/connect/authorize");
-                    serverBuilder.SetLogoutEndpointUris("/connect/logout");
+                    serverBuilder.SetEndSessionEndpointUris("/connect/logout");
 
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.
