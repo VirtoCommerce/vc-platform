@@ -44,8 +44,23 @@ The following chart illustrates the high-level architecture and main areas of th
 
 **[Integration](https://virtocommerce.com/integrations/key-ecommerce-integrations) middleware**: Asynchronous integration middleware for declarative integration with non-real-time and legacy services.
 
-## Introduction to Virto Commerce
-These Virto Commerce docs will help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise builds: 
+## Getting Started
+
+### For Developers
+If you're setting up the platform locally for development, please see our comprehensive setup guides:
+
+**📖 [Developer Setup Guide](DEVELOPER_SETUP.md)** - *Addresses common issues and provides step-by-step instructions*
+
+**🎨 [Frontend Setup Guide](FRONTEND_SETUP.md)** - *Complete guide for setting up the Vue.js Storefront application*
+
+This guide covers:
+- ⚠️ Common pitfalls and solutions (wrong directory navigation, PowerShell syntax, port conflicts)
+- 🛠️ Step-by-step setup for both backend and frontend
+- 🔧 Troubleshooting section for Windows developers
+- 📋 Quick commands cheat sheet
+
+### General Documentation
+These Virto Commerce docs will help you learn and use the Virto Commerce platform: 
 
 * [Quick Start](https://docs.virtocommerce.org/platform/developer-guide/)
 * [User Guide](https://docs.virtocommerce.org/platform/user-guide/)
