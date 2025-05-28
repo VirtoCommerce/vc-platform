@@ -252,9 +252,16 @@ angular.module('platformWebApp')
              * @returns {Promise} Resolves when override is complete
              */
             service.overrideTemplate = function (originalTemplateKey, customTemplateUrl) {
-                return $http.get(customTemplateUrl).then(function (response) {
-                    $templateCache.put(originalTemplateKey, response.data);
-                });
+                var cachedTemplate = $templateCache.get(customTemplateUrl);
+
+                if (!cachedTemplate) {
+                    return $http.get(customTemplateUrl).then(function (response) {
+                        $templateCache.put(originalTemplateKey, response.data);
+                    });
+                } else {
+                    $templateCache.put(originalTemplateKey, cachedTemplate);
+                    return $q.resolve();
+                }
             };
 
             return service;
