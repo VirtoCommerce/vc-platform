@@ -71,7 +71,7 @@ module.exports = (env, argv) => {
                         {
                             loader: "html-loader",
                             options: {
-                                sources: false
+                                sources: false,
                             }
                         }
                     ]
