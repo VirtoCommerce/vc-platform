@@ -70,7 +70,6 @@ angular.module('platformWebApp')
                     if (lastSearchPhrase !== $select.search) {
                         lastSearchPhrase = $select.search;
                         $select.page = 0;
-                        $scope.items = [];
                     }
 
                     var criteria = {
@@ -130,7 +129,7 @@ angular.module('platformWebApp')
                 }
 
                 function join(newItems, callFilter) {
-                    newItems = _.reject(newItems, x => _.any($scope.items, y => y.id === x.id));
+                    $scope.items = _.reject($scope.items, x => _.any(newItems, y => y.id === x.id));
 
                     if (callFilter) {
                         newItems = filterItems(newItems);
