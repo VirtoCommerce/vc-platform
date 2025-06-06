@@ -70,6 +70,7 @@ angular.module('platformWebApp')
                     if (lastSearchPhrase !== $select.search) {
                         lastSearchPhrase = $select.search;
                         $select.page = 0;
+                        $scope.items = [];
                     }
 
                     var criteria = {
