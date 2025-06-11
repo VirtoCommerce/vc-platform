@@ -13,7 +13,10 @@ module.exports = (env, argv) => {
     return {
         entry: {
             vendor: ['./wwwroot/src/js/vendor.js', './wwwroot/css/themes/main/sass/main.sass'],
-            app: glob.sync('./wwwroot/js/**/*.js'),
+            app: [
+                ...glob.sync('./wwwroot/js/**/*.js'),
+                ...(isProduction ? glob.sync('./wwwroot/js/**/*.html', { nosort: true }): [])
+            ]
         },
         devtool: isProduction ? 'source-map' : 'eval-source-map',
         output: {
@@ -54,6 +57,24 @@ module.exports = (env, argv) => {
                             },
                         },
                     ],
+                },
+                {
+                    test: /\.html$/,
+                    use: [
+                        {
+                            loader: 'ngtemplate-loader',
+                            options: {
+                                relativeTo: path.resolve(__dirname, './wwwroot/js/'),
+                                prefix: "$(Platform)/Scripts/",
+                            }
+                        },
+                        {
+                            loader: "html-loader",
+                            options: {
+                                sources: false,
+                            }
+                        }
+                    ]
                 },
             ],
         },
