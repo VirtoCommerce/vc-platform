@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OpenIddict.EntityFrameworkCore.Models;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.SqlServer;
 public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
