@@ -1,5 +1,5 @@
-# v3.800.11
-# bump-ubuntu-version
+# v3.800.12
+# https://virtocommerce.atlassian.net/browse/VCST-2469
 name: Publish nuget
 
 on:
@@ -13,12 +13,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.11    
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.12    
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.11    
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.12    
     with:
       uploadPackage: 'true'
       uploadDocker: 'false'
@@ -29,10 +29,12 @@ jobs:
   publish-nuget:
     needs:
       [build, test]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.11    
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.12
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       forceGithub: false
+      forceBlob: true
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
       nugetKey: ${{ secrets.NUGET_KEY }}
+      BLOB_TOKEN: ${{ secrets.BLOB_TOKEN }}
