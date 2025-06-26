@@ -1070,12 +1070,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private void LogUserNotFound(string idOrName)
         {
-            _logger.LogWarning("User {user} not found.", idOrName);
+            var sanitizedUserName = UserManager.SanitizeUserName(idOrName);
+            _logger.LogWarning("User {user} not found.", sanitizedUserName);
         }
 
         private void LogUserForbiddenToEdit(string idOrName)
         {
-            _logger.LogWarning("User {user} is forbidden to edit.", idOrName);
+            var sanitizedUserName = UserManager.SanitizeUserName(idOrName);
+            _logger.LogWarning("User {user} is forbidden to edit.", sanitizedUserName);
         }
 
         private ApplicationUser ReduceUserDetails(ApplicationUser user)
