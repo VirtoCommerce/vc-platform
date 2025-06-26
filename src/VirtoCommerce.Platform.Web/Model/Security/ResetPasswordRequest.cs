@@ -1,8 +1,8 @@
 namespace VirtoCommerce.Platform.Web.Model.Security
 {
-    public class ResetPasswordConfirmRequest
+    public class ResetPasswordRequest
     {
-        public string Token { get; set; }
         public string NewPassword { get; set; }
+        public bool ForcePasswordChangeOnNextSignIn { get; set; }
     }
 }
