@@ -498,12 +498,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Reset password confirmation
         /// </summary>
         /// <param name="userName"></param>
-        /// <param name="resetPasswordConfirm">Password reset information containing new password.</param>
+        /// <param name="request">Password reset information.</param>
         /// <returns>Result of password reset.</returns>
         [HttpPost]
         [Route("users/{userName}/resetpassword")]
         [Authorize(PlatformPermissions.SecurityUpdate)]
-        public async Task<ActionResult<SecurityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
+        public async Task<ActionResult<SecurityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordRequest request)
         {
             var currentUser = await GetCurrentUserAsync();
             if (currentUser == null)
@@ -536,14 +536,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var token = await UserManager.GeneratePasswordResetTokenAsync(user);
 
-            var result = await UserManager.ResetPasswordAsync(user, token, resetPasswordConfirm.NewPassword);
+            var result = await UserManager.ResetPasswordAsync(user, token, request.NewPassword);
             if (result.Succeeded)
             {
                 user = await UserManager.FindByNameAsync(userName);
 
-                if (user.PasswordExpired != resetPasswordConfirm.ForcePasswordChangeOnNextSignIn)
+                if (user.PasswordExpired != request.ForcePasswordChangeOnNextSignIn)
                 {
-                    user.PasswordExpired = resetPasswordConfirm.ForcePasswordChangeOnNextSignIn;
+                    user.PasswordExpired = request.ForcePasswordChangeOnNextSignIn;
                     await UserManager.UpdateAsync(user);
                 }
             }
@@ -555,11 +555,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Reset password confirmation
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="resetPasswordConfirm">New password.</param>
+        /// <param name="request">Password reset information.</param>
         [HttpPost]
         [Route("users/{userId}/resetpasswordconfirm")]
         [AllowAnonymous]
-        public async Task<ActionResult<SecurityResult>> ResetPasswordByToken([FromRoute] string userId, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
+        public async Task<ActionResult<SecurityResult>> ResetPasswordByToken([FromRoute] string userId, [FromBody] ResetPasswordConfirmRequest request)
         {
             var user = await UserManager.FindByIdAsync(userId);
             if (user == null)
@@ -574,7 +574,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Ok(IdentityResultExtensions.CreateErrorResult(UserForbiddenToEdit));
             }
 
-            var result = await UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);
+            var result = await UserManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
             if (result.Succeeded && user.PasswordExpired)
             {
                 user.PasswordExpired = false;
@@ -1070,12 +1070,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private void LogUserNotFound(string idOrName)
         {
-            _logger.LogWarning("User {user} not found.", idOrName);
+            var sanitizedUserName = UserManager.SanitizeUserName(idOrName);
+            _logger.LogWarning("User {user} not found.", sanitizedUserName);
         }
 
         private void LogUserForbiddenToEdit(string idOrName)
         {
-            _logger.LogWarning("User {user} is forbidden to edit.", idOrName);
+            var sanitizedUserName = UserManager.SanitizeUserName(idOrName);
+            _logger.LogWarning("User {user} is forbidden to edit.", sanitizedUserName);
         }
 
         private ApplicationUser ReduceUserDetails(ApplicationUser user)
