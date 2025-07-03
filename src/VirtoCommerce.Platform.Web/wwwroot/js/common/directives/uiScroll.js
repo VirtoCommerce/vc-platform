@@ -25,9 +25,14 @@ angular.module('platformWebApp')
             link: function ($scope, element, attrs, ngModelController) {
                 $scope.context = {
                     modelValue: null,
-                    required: angular.isDefined(attrs.required) && (attrs.required === '' || attrs.required.toLowerCase() === 'true'),
-                    multiple: angular.isDefined(attrs.multiple) && (attrs.multiple === '' || attrs.multiple.toLowerCase() === 'true')
+                    required: getBooleanAttributeValue('required'),
+                    multiple: getBooleanAttributeValue('multiple'),
                 };
+
+                function getBooleanAttributeValue(name) {
+                    const value = attrs[name];
+                    return angular.isDefined(value) && (value === '' || value === name || value.toLowerCase() === 'true');
+                }
 
                 $scope.items = [];
                 $scope.isNoItems = true;
