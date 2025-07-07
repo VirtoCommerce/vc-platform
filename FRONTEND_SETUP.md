@@ -11,7 +11,7 @@ This guide addresses common frontend setup issues and provides solutions for Vir
 **Cause**: Project requires Yarn 4.7.0 but system has older version  
 **Solutions**:
 
-```bash
+```powershell
 # Option 1: Enable Corepack (Requires Admin Privileges)
 corepack enable
 npm run dev
@@ -43,12 +43,12 @@ npx vite --host 0.0.0.0 --port 3000
 
 ### Issue 4: Backend Connection Errors
 **Problem**: GraphQL connection refused or 404 errors  
-**Cause**: Wrong backend URL in .env file  
+**Cause**: Wrong backend URL in `.env.local` file  
 **Solution**: Ensure correct backend URL:
 
-```bash
-# Create/update .env file
-echo APP_BACKEND_URL=http://localhost:10645 > .env
+```powershell
+# Create/update .env.local file
+"APP_BACKEND_URL=http://localhost:10645" | Out-File -FilePath .env.local -Encoding utf8
 
 # Verify backend is running first
 curl -I http://localhost:10645
@@ -64,30 +64,30 @@ curl -I http://localhost:10645
 ### Setup Steps
 
 1. **Clone the repository:**
-```bash
+```powershell
 git clone https://github.com/VirtoCommerce/vc-frontend.git
 cd vc-frontend
 ```
 
 2. **Configure environment:**
-```bash
-# Create .env file with backend URL
-echo APP_BACKEND_URL=http://localhost:10645 > .env
+```powershell
+# Create .env.local file with backend URL for local development
+"APP_BACKEND_URL=http://localhost:10645" | Out-File -FilePath .env.local -Encoding utf8
 
 # Verify content
-cat .env
+Get-Content .env.local
 # Should show: APP_BACKEND_URL=http://localhost:10645
 ```
 
 3. **Install dependencies (choose one method):**
 
 **Method A: Using npm (Recommended)**
-```bash
+```powershell
 npm install
 ```
 
 **Method B: Using yarn (if Corepack enabled)**
-```bash
+```powershell
 corepack enable  # Requires admin privileges
 npm run dev
 ```
@@ -95,12 +95,12 @@ npm run dev
 4. **Start development server:**
 
 **Option A: Direct Vite start (Most stable)**
-```bash
+```powershell
 npx vite --host 0.0.0.0 --port 3000
 ```
 
 **Option B: npm script (if yarn conflicts resolved)**
-```bash
+```powershell
 npm run dev
 ```
 
@@ -119,14 +119,14 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$(Get-Locatio
 ### Yarn/npm Issues
 
 **Error**: `packageManager field in package.json`
-```bash
+```powershell
 # Ignore yarn requirement, use npm
 npm install --legacy-peer-deps
 npx vite --host 0.0.0.0 --port 3000
 ```
 
 **Error**: `corepack enable` permission denied
-```bash
+```powershell
 # Use npm instead
 npm install
 npx vite --host 0.0.0.0 --port 3000
@@ -135,7 +135,7 @@ npx vite --host 0.0.0.0 --port 3000
 ### Process/Runtime Issues
 
 **Error**: Process starts then stops immediately
-```bash
+```powershell
 # Check if Node.js process is actually running
 Get-Process node -ErrorAction SilentlyContinue
 
@@ -144,7 +144,7 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "npx vite --host 0
 ```
 
 **Error**: Port 3000 already in use
-```bash
+```powershell
 # Find and kill process using port 3000
 netstat -ano | findstr ":3000"
 Stop-Process -Id <ProcessId> -Force
@@ -156,17 +156,17 @@ npx vite --host 0.0.0.0 --port 3001
 ### Backend Connection Issues
 
 **Error**: GraphQL errors or connection refused
-```bash
+```powershell
 # Verify backend is running
 curl http://localhost:10645/health
 # or visit: http://localhost:10645
 
-# Check .env file has correct URL
-cat .env
+# Check .env.local file has correct URL
+Get-Content .env.local
 # Should show: APP_BACKEND_URL=http://localhost:10645
 
 # If backend URL is wrong, update it:
-echo APP_BACKEND_URL=http://localhost:10645 > .env
+"APP_BACKEND_URL=http://localhost:10645" | Out-File -FilePath .env.local -Encoding utf8
 ```
 
 **Error**: CORS errors in browser console
@@ -192,7 +192,7 @@ server: {
 
 ## 📋 Quick Commands Cheat Sheet
 
-```bash
+```powershell
 # Kill all Node.js processes
 Stop-Process -Name "node" -Force -ErrorAction SilentlyContinue
 
@@ -207,15 +207,15 @@ netstat -an | findstr ":3000" | findstr "LISTENING"
 # Test backend connection
 curl -I http://localhost:10645
 
-# View .env configuration
-cat .env
+# View .env.local configuration
+Get-Content .env.local
 ```
 
 ## 🎯 Environment Configuration
 
 **Required Environment Variables:**
 ```bash
-# .env file content
+# .env.local file content
 APP_BACKEND_URL=http://localhost:10645
 ```
 
@@ -231,19 +231,19 @@ APP_BACKEND_URL=https://your-backend-domain.com
 ## 🔍 Verification Steps
 
 1. **Process Check:**
-   ```bash
+   ```powershell
    Get-Process node -ErrorAction SilentlyContinue
    # Should show node.exe process
    ```
 
 2. **Port Check:**
-   ```bash
+   ```powershell
    netstat -an | findstr ":3000" | findstr "LISTENING"
    # Should show 0.0.0.0:3000 LISTENING
    ```
 
 3. **Backend Connection:**
-   ```bash
+   ```powershell
    curl -I http://localhost:10645
    # Should return 200 OK
    ```

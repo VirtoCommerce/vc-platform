@@ -7,11 +7,11 @@ This guide addresses common setup issues and provides step-by-step instructions 
 ## ⚠️ Common Issues & Solutions
 
 ### Issue 1: "Unable to run your project" (Docker Compose Error)
-**Problem**: Running `dotnet run` from wrong directory shows Docker Compose error  
-**Cause**: VirtoCommerce has multiple projects; running from root triggers Docker Compose mode  
-**Solution**: Always run from the web project directory:
+**Problem**: Running `dotnet run` from the repository's root directory results in a Docker Compose-related error.  
+**Cause**: The Virto Commerce Platform solution is configured to launch with Docker Compose by default when initiated from the root. However, for local development, you should run the web project directly.  
+**Solution**: Always execute `dotnet run` from within the web project's directory:
 
-```bash
+```powershell
 # ❌ Wrong (from root directory - triggers Docker Compose error)
 D:\work\vc-platform> dotnet run
 
@@ -68,7 +68,7 @@ cd src/VirtoCommerce.Platform.Web
 2. **Setup SQL Server:**
 
 **Option A: Docker (Recommended)**
-```bash
+```powershell
 docker run -d --name vc-sqlserver \
   -e "ACCEPT_EULA=Y" \
   -e "MSSQL_PID=Express" \
@@ -77,24 +77,31 @@ docker run -d --name vc-sqlserver \
   mcr.microsoft.com/mssql/server:latest
 ```
 
-**Option B: Local SQL Server**
-Update `appsettings.Development.json`:
-```json
-{
-  "ConnectionStrings": {
-    "VirtoCommerce": "Data Source=localhost,1433;Initial Catalog=VirtoCommerce3;User ID=sa;Password=Pass@word;TrustServerCertificate=True;"
-  }
-}
-```
+**Option B: Local SQL Server (using .NET User Secrets)**
+
+For security reasons, avoid storing connection strings directly in `appsettings.Development.json`. Use the .NET Secret Manager tool instead.
+
+1.  **Initialize User Secrets** (run from `src/VirtoCommerce.Platform.Web` directory):
+    ```powershell
+    # Make sure you are in the correct directory
+    cd src\VirtoCommerce.Platform.Web
+    dotnet user-secrets init
+    ```
+
+2.  **Set the Connection String Secret:**
+    ```powershell
+    # Set the secret. This value is stored securely on your machine, not in the project files.
+    dotnet user-secrets set "ConnectionStrings:VirtoCommerce" "Data Source=localhost,1433;Initial Catalog=VirtoCommerce3;User ID=sa;Password=Pass@word;TrustServerCertificate=True;"
+    ```
 
 3. **Build the project:**
-```bash
+```powershell
 # From root directory
 dotnet build VirtoCommerce.Platform.sln
 ```
 
 4. **Run the backend:**
-```bash
+```powershell
 # ⚠️ IMPORTANT: Must be run from src/VirtoCommerce.Platform.Web directory
 cd src/VirtoCommerce.Platform.Web  # If not already there
 dotnet run --environment Development
@@ -118,9 +125,9 @@ cd vc-frontend
 ```
 
 2. **Configure backend connection:**
-```bash
-# Create .env file with correct backend URL
-echo APP_BACKEND_URL=http://localhost:10645 > .env
+```powershell
+# Create a .env.local file to override the default backend URL for local development
+"APP_BACKEND_URL=http://localhost:10645" | Out-File -FilePath .env.local -Encoding utf8
 ```
 
 3. **Handle Yarn version conflicts:**
@@ -128,19 +135,19 @@ echo APP_BACKEND_URL=http://localhost:10645 > .env
 The frontend requires Yarn 4.7.0, but most systems have Yarn 1.x. Here are solutions:
 
 **Option A: Enable Corepack (Requires Admin Privileges)**
-```bash
+```powershell
 corepack enable
 npm run dev
 ```
 
 **Option B: Use npm instead (If Corepack fails)**
-```bash
+```powershell
 npm install
 npx vite --host 0.0.0.0 --port 3000
 ```
 
 **Option C: Bypass yarn precheck**
-```bash
+```powershell
 npx vite --host 0.0.0.0 --port 3000 --force
 ```
 
@@ -163,14 +170,14 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$(pwd)'; npx 
 ### Backend Issues
 
 **Error**: "Unable to run your project... OutputType is 'DockerCompose'"
-```bash
+```powershell
 # You're in the wrong directory! Navigate to the web project:
 cd src/VirtoCommerce.Platform.Web
 dotnet run --environment Development
 ```
 
 **Error**: "Address already in use" on port 10645
-```bash
+```powershell
 # Find and kill the process using the port
 netstat -ano | findstr ":10645"
 Stop-Process -Id <ProcessId> -Force
@@ -181,18 +188,19 @@ dotnet run --environment Development
 ```
 
 **Error**: Database connection issues
-```bash
+```powershell
 # Verify SQL Server is running
 docker ps  # If using Docker
 # Or check SQL Server services in Windows
 
-# Test connection string in appsettings.Development.json
+# Test connection string setup
+dotnet user-secrets list --project src/VirtoCommerce.Platform.Web
 ```
 
 ### Frontend Issues
 
 **Error**: `packageManager: yarn@4.7.0... current global version is 1.22.22`
-```bash
+```powershell
 # Solution 1: Enable Corepack (requires admin)
 corepack enable
 
@@ -205,7 +213,7 @@ npx vite --host 0.0.0.0 --port 3000 --force
 ```
 
 **Error**: Frontend shows as running but browser can't connect
-```bash
+```powershell
 # Check if Node.js processes are actually running
 Get-Process node -ErrorAction SilentlyContinue
 
@@ -221,7 +229,7 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'path-to-front
 ### General Issues
 
 **Services stop unexpectedly:**
-```bash
+```powershell
 # Monitor running processes
 Get-Process dotnet,node -ErrorAction SilentlyContinue
 
@@ -238,7 +246,7 @@ npx vite --host 0.0.0.0 --port 3000
 
 ## 📋 Quick Commands Cheat Sheet
 
-```bash
+```powershell
 # Kill all development processes
 Stop-Process -Name "dotnet","node" -Force -ErrorAction SilentlyContinue
 
@@ -259,7 +267,7 @@ netstat -an | findstr ":10645\|:3000" | findstr "LISTENING"
 # Frontend: Open https://localhost:3000 in browser
 ```
 
-## 🎯 Final Access URLs
+## �� Final Access URLs
 
 Once everything is running successfully:
 
@@ -272,13 +280,13 @@ Once everything is running successfully:
 ## 🔍 Verification Steps
 
 1. **Backend Check:**
-   ```bash
+   ```powershell
    # Should return 200 OK
    curl -I http://localhost:10645
    ```
 
 2. **Frontend Check:**
-   ```bash
+   ```powershell
    # Check processes are running
    Get-Process node -ErrorAction SilentlyContinue
    
@@ -319,34 +327,54 @@ The [VirtoCommerce MCP Server module](https://github.com/VirtoCommerce/vc-module
 ### **Installation Steps**
 
 1. **Clone and build the MCP Server module:**
-```bash
+```powershell
 # In D:\work directory
 git clone https://github.com/VirtoCommerce/vc-module-mcp-server.git
 cd vc-module-mcp-server
 dotnet build VirtoCommerce.McpServer.sln
 ```
 
-2. **Deploy to VirtoCommerce:**
-```bash
-# Create module directory
-New-Item -ItemType Directory -Path "D:\work\vc-platform\modules\VirtoCommerce.McpServer" -Force
+2.  **Deploy to VirtoCommerce (Option A: Recommended):**
 
-# Copy built files
-Copy-Item "src\VirtoCommerce.McpServer.Web\bin\Debug\net8.0\*" "D:\work\vc-platform\modules\VirtoCommerce.McpServer" -Recurse -Force
+    Clone the module repository directly into the `modules` directory of your vc-platform installation. This is the simplest method.
 
-# Copy essential module files
-Copy-Item "src\VirtoCommerce.McpServer.Web\module.manifest" "D:\work\vc-platform\modules\VirtoCommerce.McpServer\" -Force
-New-Item -ItemType Directory -Path "D:\work\vc-platform\modules\VirtoCommerce.McpServer\Scripts" -Force
-Copy-Item "src\VirtoCommerce.McpServer.Web\Scripts\*" "D:\work\vc-platform\modules\VirtoCommerce.McpServer\Scripts\" -Recurse -Force
-```
+    ```powershell
+    # Navigate to the modules directory of your platform instance
+    cd D:\work\vc-platform\modules
 
-3. **Install mcp-remote proxy:**
-```bash
+    # Clone the MCP server module here
+    git clone https://github.com/VirtoCommerce/vc-module-mcp-server.git VirtoCommerce.McpServer
+    ```
+
+3.  **Deploy to VirtoCommerce (Option B: Using Symbolic Links):**
+    
+    If you prefer to keep the module repository in a separate location, you can use a symbolic link.
+
+    ```powershell
+    # In PowerShell (as Administrator)
+    # Create a symbolic link from your cloned module to the platform's modules directory
+    New-Item -ItemType Junction -Path "D:\work\vc-platform\modules\VirtoCommerce.McpServer" -Target "D:\work\vc-module-mcp-server"
+    ```
+
+4.  **Build the Solution:**
+
+    After cloning or linking the module, build the main platform solution. This will automatically discover and build the new module.
+    
+    ```powershell
+    # Navigate back to the root of the platform
+    cd D:\work\vc-platform
+
+    # Build the entire solution
+    dotnet build VirtoCommerce.Platform.sln
+    ```
+
+5. **Install mcp-remote proxy:**
+```powershell
 npm install -g mcp-remote
 ```
 
-4. **Restart VirtoCommerce:**
-```bash
+6. **Restart VirtoCommerce:**
+```powershell
 # Stop current instance
 Stop-Process -Name "dotnet" -Force -ErrorAction SilentlyContinue
 
@@ -355,8 +383,8 @@ cd D:\work\vc-platform\src\VirtoCommerce.Platform.Web
 dotnet run --environment Development
 ```
 
-5. **Test MCP endpoints:**
-```bash
+7. **Test MCP endpoints:**
+```powershell
 # Test status endpoint
 Invoke-WebRequest -Uri "http://localhost:10645/api/mcp/status" -Method GET
 
@@ -391,7 +419,7 @@ Once installed, the module provides:
 ### **Troubleshooting MCP Module**
 
 **Issue**: MCP endpoints return 404
-```bash
+```powershell
 # Check if module is loaded
 Get-ChildItem "D:\work\vc-platform\modules\VirtoCommerce.McpServer"
 # Should show module.manifest and DLL files
@@ -406,7 +434,7 @@ Get-ChildItem "D:\work\vc-platform\modules\VirtoCommerce.McpServer"
 - Check VirtoCommerce platform version compatibility
 
 **Issue**: mcp-remote connection fails
-```bash
+```powershell
 # Verify mcp-remote is installed
 npm list -g mcp-remote
 
