@@ -735,6 +735,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 user.SecurityStamp = applicationUser.SecurityStamp;
             }
 
+            user.PasswordExpired = applicationUser.PasswordExpired;
+            user.LockoutEnabled = applicationUser.LockoutEnabled;
+
+            if (user.LockoutEnd != applicationUser.LockoutEnd)
+            {
+                user.LockoutEnd = applicationUser.LockoutEnd;
+            }
+
+            if (user.LastLoginDate != applicationUser.LastLoginDate)
+            {
+                user.LastLoginDate = applicationUser.LastLoginDate;
+            }
+
             if (user.LastPasswordChangedDate != applicationUser.LastPasswordChangedDate)
             {
                 user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
