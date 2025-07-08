@@ -19,9 +19,9 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 var currentTime = DateTime.UtcNow;
                 var userName = currentUserNameResolver.GetCurrentUserName();
 
-                entry.Entity.CreatedDate = entry.Entity.CreatedDate == default ? currentTime : entry.Entity.CreatedDate;
+                entry.Entity.CreatedDate = currentTime;
                 entry.Entity.ModifiedDate = entry.Entity.CreatedDate;
-                entry.Entity.CreatedBy = entry.Entity.CreatedBy ?? userName;
+                entry.Entity.CreatedBy = userName;
                 entry.Entity.ModifiedBy = entry.Entity.CreatedBy;
             };
 
@@ -30,6 +30,9 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 var currentUserNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService<IUserNameResolver>();
                 var currentTime = DateTime.UtcNow;
                 var userName = currentUserNameResolver.GetCurrentUserName();
+
+                entry.Entity.CreatedDate = entry.Original.CreatedDate;
+                entry.Entity.CreatedBy = entry.Original.CreatedBy;
 
                 entry.Entity.ModifiedDate = currentTime;
 
