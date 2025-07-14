@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
-namespace VirtoCommerce.Platform.Core.Common;
+namespace VirtoCommerce.Platform.Data.Model;
 
-public abstract class LocalizedStringEntity<T> : Entity
+public abstract class LocalizedStringEntity<T> : Entity, IHasLanguageCode
     where T : Entity
 {
     [Required]
-    [StringLength(16)]
+    [StringLength(DbContextBase.LanguageCodeLength)]
     public string LanguageCode { get; set; } = string.Empty; // e.g., "en-US"
 
     [Required]
