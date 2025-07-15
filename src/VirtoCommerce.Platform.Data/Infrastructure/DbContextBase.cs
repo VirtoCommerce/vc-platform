@@ -9,6 +9,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
     /// </summary>
     public class DbContextBase : DbContextWithTriggers
     {
+        public const int LanguageCodeLength = Length16;
         public const int CultureNameLength = Length16;
         public const int IdLength = Length128;
         public const int UrlLength = Length2048;
