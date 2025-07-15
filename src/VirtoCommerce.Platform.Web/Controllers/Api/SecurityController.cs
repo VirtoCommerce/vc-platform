@@ -486,7 +486,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (await UserManager.IsLockedOutAsync(user))
             {
-                return BadRequest(new SecurityResult { Errors = ["Your account is locked due to multiple failed attempts. Please try again later."] });
+                return BadRequest(new SecurityResult { Errors = ["Your account is locked."] });
             }
 
             var result = await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
