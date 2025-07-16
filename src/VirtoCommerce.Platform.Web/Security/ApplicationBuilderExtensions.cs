@@ -1,6 +1,9 @@
 using System.Linq;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
@@ -37,6 +40,9 @@ namespace VirtoCommerce.Platform.Web.Security
             appBuilder.RegisterEventHandler<UserLogoutEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserRoleAddedEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserRoleRemovedEvent, LogChangesUserChangedEventHandler>();
+
+            appBuilder.RegisterEventHandler<UserChangedEvent, RevokeUserTokenEventHandler>();
+            appBuilder.RegisterEventHandler<UserLogoutEvent, RevokeUserTokenEventHandler>();
 
             return appBuilder;
         }
@@ -76,6 +82,29 @@ namespace VirtoCommerce.Platform.Web.Security
             {
                 RecurringJob.RemoveIfExists("AutoAccountLockoutJob");
             }
+
+            return appBuilder;
+        }
+
+        public static IApplicationBuilder UseAccountLockoutMiddleware(this IApplicationBuilder appBuilder)
+        {
+            appBuilder.Use(async (context, next) =>
+            {
+                if (context.User.Identity?.IsAuthenticated == true)
+                {
+                    var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+                    var user = await userManager.GetUserAsync(context.User);
+
+                    if (user != null && await userManager.IsLockedOutAsync(user))
+                    {
+                        await context.SignOutAsync(IdentityConstants.ApplicationScheme);
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return;
+                    }
+                }
+
+                await next();
+            });
 
             return appBuilder;
         }
