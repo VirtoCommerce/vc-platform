@@ -42,7 +42,6 @@ namespace VirtoCommerce.Platform.Web.Security
             appBuilder.RegisterEventHandler<UserRoleRemovedEvent, LogChangesUserChangedEventHandler>();
 
             appBuilder.RegisterEventHandler<UserChangedEvent, RevokeUserTokenEventHandler>();
-            appBuilder.RegisterEventHandler<UserLogoutEvent, RevokeUserTokenEventHandler>();
 
             return appBuilder;
         }

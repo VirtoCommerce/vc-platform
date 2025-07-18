@@ -7,8 +7,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 namespace VirtoCommerce.Platform.Security.Handlers;
 
 public class RevokeUserTokenEventHandler(IOpenIddictTokenManager tokenManager) :
-    IEventHandler<UserChangedEvent>,
-    IEventHandler<UserLogoutEvent>
+    IEventHandler<UserChangedEvent>
 {
     private readonly IOpenIddictTokenManager _tokenManager = tokenManager;
 
@@ -28,11 +27,6 @@ public class RevokeUserTokenEventHandler(IOpenIddictTokenManager tokenManager) :
                 await RevokeUserTokensAsync(changedEntry.NewEntry.Id);
             }
         }
-    }
-
-    public virtual Task Handle(UserLogoutEvent message)
-    {
-        return RevokeUserTokensAsync(message.User.Id);
     }
 
     protected virtual async Task RevokeUserTokensAsync(string userId)
