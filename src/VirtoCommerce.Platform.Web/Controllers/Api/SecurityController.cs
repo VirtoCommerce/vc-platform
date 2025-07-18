@@ -488,11 +488,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Ok(IdentityResultExtensions.CreateErrorResult(UserNotFound));
             }
 
+            if (await UserManager.IsLockedOutAsync(user))
+            {
+                return BadRequest(new SecurityResult { Errors = ["Your account is locked."] });
+            }
+
             var result = await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
             if (result.Succeeded && user.PasswordExpired)
             {
                 user.PasswordExpired = false;
                 await UserManager.UpdateAsync(user);
+                await UserManager.ResetAccessFailedCountAsync(user);
+            }
+            else
+            {
+                // Register failed attempt
+                await UserManager.AccessFailedAsync(user);
             }
 
             return Ok(result.ToSecurityResult());
