@@ -86,11 +86,12 @@ namespace VirtoCommerce.Platform.Web.Security
             return appBuilder;
         }
 
-        public static IApplicationBuilder UseAccountLockoutMiddleware(this IApplicationBuilder appBuilder)
+        public static IApplicationBuilder UseAccountLockoutMiddleware(this IApplicationBuilder appBuilder, string identityCookieName)
         {
             appBuilder.Use(async (context, next) =>
             {
-                if (context.User.Identity?.IsAuthenticated == true)
+                if (context.User.Identity?.IsAuthenticated == true &&
+                    context.Request.Cookies.ContainsKey(identityCookieName))
                 {
                     var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
                     var user = await userManager.GetUserAsync(context.User);

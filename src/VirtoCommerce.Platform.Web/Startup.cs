@@ -665,7 +665,7 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseAuthentication();
 
-            app.UseAccountLockoutMiddleware();
+            app.UseAccountLockoutMiddleware(platformOptions.ApplicationCookieName);
 
             app.UseAuthorization();
 
