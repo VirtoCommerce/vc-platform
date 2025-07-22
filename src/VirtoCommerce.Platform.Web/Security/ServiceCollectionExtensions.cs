@@ -59,6 +59,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             services.AddSingleton<LogChangesUserChangedEventHandler>();
             services.AddSingleton<UserApiKeyActualizeEventHandler>();
+            services.AddSingleton<RevokeUserTokenEventHandler>();
 
             services.AddTransient<IServerCertificateService, ServerCertificateService>();
 

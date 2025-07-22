@@ -620,6 +620,9 @@ namespace VirtoCommerce.Platform.Web
             app.UseDefaultFiles();
 
             app.UseAuthentication();
+
+            app.UseAccountLockoutMiddleware(platformOptions.ApplicationCookieName);
+
             app.UseAuthorization();
 
             app.ExecuteSynchronized(() =>
