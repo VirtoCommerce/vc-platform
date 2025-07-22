@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using VirtoCommerce.Platform.Core.Common;
-
 namespace VirtoCommerce.Platform.Core.Modularity
 {
-    public class ManifestAppInfo 
+    public class ManifestAppInfo
     {
         public ManifestAppInfo()
         {
@@ -21,6 +15,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             this.RelativeUrl = $"/apps/{item.Id}";
             this.Permission = item.Permission;
             this.ContentPath = item.ContentPath;
+            this.SupportEmbeddedMode = item.SupportEmbeddedMode;
         }
 
         public string Id { get; set; }
@@ -39,5 +34,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// Path to App content in the module. By default Content/{moduleApp.Id}
         /// </summary>
         public string ContentPath { get; set; }
+
+        public bool SupportEmbeddedMode { get; set; }
     }
 }

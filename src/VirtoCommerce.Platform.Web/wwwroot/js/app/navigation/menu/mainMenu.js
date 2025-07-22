@@ -1,6 +1,7 @@
 angular.module('platformWebApp')
     .factory('platformWebApp.mainMenuService', [function () {
         var menuItems = [];
+        var appMenuItems = [];
 
         function sortByGroupFirst(a, b) {
             return a.path.split('/').length - b.path.split('/').length;

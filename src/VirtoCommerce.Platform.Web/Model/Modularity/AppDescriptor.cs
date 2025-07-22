@@ -3,7 +3,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Web.Model.Modularity
 {
-    public class AppDescriptor: Entity
+    public class AppDescriptor : Entity
     {
         public AppDescriptor()
         {
@@ -18,6 +18,7 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
             this.IconUrl = moduleAppInfo.IconUrl;
             this.RelativeUrl = moduleAppInfo.RelativeUrl;
             this.Permission = moduleAppInfo.Permission;
+            this.SupportEmbeddedMode = moduleAppInfo.SupportEmbeddedMode;
         }
 
 
@@ -30,5 +31,7 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
         public string RelativeUrl { get; set; }
 
         public string Permission { get; set; }
+
+        public bool SupportEmbeddedMode { get; set; }
     }
 }
