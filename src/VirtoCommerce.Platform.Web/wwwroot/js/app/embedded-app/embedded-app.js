@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .config(['$stateProvider', function ($stateProvider, mainMenuService) {
+    .config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('workspace.embeddedApp', {
             url: '/embedded-app/:appId',
             templateUrl: '$(Platform)/Scripts/app/embedded-app/embedded-app.tpl.html',
@@ -14,7 +14,7 @@ angular.module('platformWebApp')
                     if (menuItem && menuItem.relativeUrl) {
                         $scope.appRelativeUrl = `${menuItem.relativeUrl}?EmbeddedMode=true`;
                     } else {
-                        $state.go('workspace', {}, { reload: true }); 
+                        $state.go('workspace', {}, { reload: true });
                     }
                 }
             ]
