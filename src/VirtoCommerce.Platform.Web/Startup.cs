@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -450,6 +451,9 @@ namespace VirtoCommerce.Platform.Web
                     validationBuilder.UseAspNetCore();
                 });
             });
+
+            services.AddSingleton<Func<IOpenIddictTokenManager>>(provider =>
+                () => provider.CreateScope().ServiceProvider.GetRequiredService<IOpenIddictTokenManager>());
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
