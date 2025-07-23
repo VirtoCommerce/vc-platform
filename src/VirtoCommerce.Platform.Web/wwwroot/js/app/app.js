@@ -104,6 +104,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     // create menu item for embedded app
                     var menuItem = {
                         path: `browse/${item.id}`,
+                        iconUrl: item.iconUrl,
                         icon: 'fa fa-cube',
                         title: item.title,
                         priority: 100,

@@ -1,5 +1,8 @@
-﻿<a class="list-link" ng-if="!menuItem.template" href="" tabindex="-1">
-    <i class="list-ico fa-fw" ng-class="menuItem.icon"><i></i></i>
-    <span class="list-name">{{menuItem.title | translate}}</span>
+<a class="list-link" ng-if="!menuItem.template" href="" tabindex="-1">
+  <span ng-if="menuItem.iconUrl">
+    <img class="list-ico" ng-src="{{menuItem.iconUrl}}" alt="{{menuItem.title | translate}}" style="width: 1em; height: 1em; vertical-align: middle;" />
+  </span>
+  <i class="list-ico fa-fw" ng-if="!menuItem.iconUrl" ng-class="menuItem.icon"><i></i></i>
+  <span class="list-name">{{menuItem.title | translate}}</span>
 </a>
 <ng-include src='menuItem.template'></ng-include>
