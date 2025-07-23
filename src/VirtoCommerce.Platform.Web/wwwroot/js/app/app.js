@@ -93,9 +93,9 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         $scope.mainMenu.apps = [];
 
         // load web apps
-        webApps.list({}, function (result) {
-            if (angular.isArray(result)) {
-                angular.forEach(result, function (item) {
+        webApps.loadApps().then(function (apps) {
+            if (angular.isArray(apps)) {
+                angular.forEach(apps, function (item) {
                     // ignore platform app and apps that do not support embedded mode
                     if (!item.supportEmbeddedMode) {
                         return;
@@ -114,10 +114,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     mainMenuService.addMenuItem(menuItem);
                 });
 
-                mainMenuService.appMenuItems = result;
-
                 // remove embedded apps from main menu items
-                $scope.mainMenu.apps = result.filter(function(item) {
+                $scope.mainMenu.apps = apps.filter(function(item) {
                     return item.supportEmbeddedMode === false;
                 });
             }

@@ -4,15 +4,15 @@ angular.module('platformWebApp')
             url: '/embedded-app/:appId',
             templateUrl: '$(Platform)/Scripts/app/embedded-app/embedded-app.tpl.html',
             controller: [
-                '$scope', '$stateParams', '$state', 'platformWebApp.mainMenuService',
-                function ($scope, $stateParams, $state, mainMenuService) {
+                '$scope', '$stateParams', '$state', 'platformWebApp.webApps',
+                function ($scope, $stateParams, $state, webApps) {
                     var appId = $stateParams.appId;
                     // Find menu item by id and appId
-                    var menuItem = mainMenuService.appMenuItems.find(function(item) {
+                    var app = webApps.apps.find(function(item) {
                         return item.id === appId;
                     });
-                    if (menuItem && menuItem.relativeUrl) {
-                        $scope.appRelativeUrl = `${menuItem.relativeUrl}?EmbeddedMode=true`;
+                    if (app && app.relativeUrl) {
+                        $scope.appRelativeUrl = `${app.relativeUrl}?EmbeddedMode=true`;
                     } else {
                         $state.go('workspace', {}, { reload: true });
                     }
