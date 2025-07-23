@@ -12,7 +12,7 @@ angular.module('platformWebApp')
                         return item.id === appId;
                     });
                     if (app && app.relativeUrl) {
-                        $scope.appRelativeUrl = `${app.relativeUrl}?EmbeddedMode=true`;
+                        $scope.appRelativeUrl = `${app.relativeUrl}#?EmbeddedMode=true`;
                     } else {
                         $state.go('workspace', {}, { reload: true });
                     }
