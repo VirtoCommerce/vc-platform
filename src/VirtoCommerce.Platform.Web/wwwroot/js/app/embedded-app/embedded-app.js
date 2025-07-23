@@ -7,14 +7,24 @@ angular.module('platformWebApp')
                 '$scope', '$stateParams', '$state', 'platformWebApp.webApps',
                 function ($scope, $stateParams, $state, webApps) {
                     var appId = $stateParams.appId;
-                    // Find menu item by id and appId
-                    var app = webApps.apps.find(function(item) {
-                        return item.id === appId;
-                    });
-                    if (app && app.relativeUrl) {
-                        $scope.appRelativeUrl = `${app.relativeUrl}#?EmbeddedMode=true`;
+
+                    function setAppRelativeUrlOrRedirect(apps, appId) {
+                        var app = apps.find(function (item) {
+                            return item.id === appId;
+                        });
+                        if (app && app.relativeUrl) {
+                            $scope.appRelativeUrl = `${app.relativeUrl}#?EmbeddedMode=true`;
+                        } else {
+                            $state.go('workspace', {}, { reload: true });
+                        }
+                    }
+
+                    if (webApps.apps) {
+                        setAppRelativeUrlOrRedirect(webApps.apps, appId);
                     } else {
-                        $state.go('workspace', {}, { reload: true });
+                        webApps.loadApps().then(function (apps) {
+                            setAppRelativeUrlOrRedirect(apps, appId);
+                        });
                     }
                 }
             ]
