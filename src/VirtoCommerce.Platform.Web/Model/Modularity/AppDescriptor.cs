@@ -12,13 +12,13 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
         public AppDescriptor(ManifestAppInfo moduleAppInfo)
            : this()
         {
-            this.Id = moduleAppInfo.Id;
-            this.Title = moduleAppInfo.Title;
-            this.Description = moduleAppInfo.Description;
-            this.IconUrl = moduleAppInfo.IconUrl;
-            this.RelativeUrl = moduleAppInfo.RelativeUrl;
-            this.Permission = moduleAppInfo.Permission;
-            this.SupportEmbeddedMode = moduleAppInfo.SupportEmbeddedMode;
+            Id = moduleAppInfo.Id;
+            Title = moduleAppInfo.Title;
+            Description = moduleAppInfo.Description;
+            IconUrl = moduleAppInfo.IconUrl;
+            RelativeUrl = moduleAppInfo.RelativeUrl;
+            Permission = moduleAppInfo.Permission;
+            SupportEmbeddedMode = moduleAppInfo.SupportEmbeddedMode;
         }
 
 

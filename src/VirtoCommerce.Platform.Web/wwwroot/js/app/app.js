@@ -92,31 +92,33 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         $scope.mainMenu.items = mainMenuService.menuItems;
         $scope.mainMenu.apps = [];
 
-        // load web apps
+        // Load web apps
         webApps.loadApps().then(function (apps) {
             if (angular.isArray(apps)) {
-                angular.forEach(apps, function (item) {
-                    // ignore platform app and apps that do not support embedded mode
-                    if (!item.supportEmbeddedMode) {
+                angular.forEach(apps, function (app) {
+                    // Ignore platform app and apps that do not support embedded mode
+                    if (!app.supportEmbeddedMode) {
                         return;
                     }
 
-                    // create menu item for embedded app
+                    // Create menu item for embedded app
                     var menuItem = {
-                        path: `browse/${item.id}`,
-                        iconUrl: item.iconUrl,
+                        path: `browse/${app.id}`,
+                        iconUrl: app.iconUrl,
                         icon: 'fa fa-cube',
-                        title: item.title,
+                        title: app.title,
                         priority: 100,
-                        action: function () { $state.go('workspace.embeddedApp', { appId: item.id }); },
-                        permission: item.permission,
+                        action: function () {
+                            $state.go('workspace.embeddedApp', { appId: app.id });
+                        },
+                        permission: app.permission,
                     };
 
                     mainMenuService.addMenuItem(menuItem);
                 });
 
-                // remove embedded apps from main menu items
-                $scope.mainMenu.apps = apps.filter(function(item) {
+                // Remove embedded apps from main menu items
+                $scope.mainMenu.apps = apps.filter(function (item) {
                     return item.supportEmbeddedMode === false;
                 });
             }

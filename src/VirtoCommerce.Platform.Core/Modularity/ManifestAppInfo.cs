@@ -8,14 +8,14 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public ManifestAppInfo(ManifestApp item)
         {
-            this.Id = item.Id;
-            this.Title = item.Title;
-            this.Description = item.Description;
-            this.IconUrl = item.IconUrl;
-            this.RelativeUrl = $"/apps/{item.Id}";
-            this.Permission = item.Permission;
-            this.ContentPath = item.ContentPath;
-            this.SupportEmbeddedMode = item.SupportEmbeddedMode;
+            Id = item.Id;
+            Title = item.Title;
+            Description = item.Description;
+            IconUrl = item.IconUrl;
+            RelativeUrl = $"/apps/{item.Id}";
+            Permission = item.Permission;
+            ContentPath = item.ContentPath;
+            SupportEmbeddedMode = item.SupportEmbeddedMode;
         }
 
         public string Id { get; set; }
@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public string Permission { get; set; }
 
         /// <summary>
-        /// Path to App content in the module. By default Content/{moduleApp.Id}
+        /// Path to App content in the module. By default, Content/{moduleApp.Id}
         /// </summary>
         public string ContentPath { get; set; }
 
