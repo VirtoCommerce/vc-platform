@@ -92,10 +92,35 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         $scope.mainMenu.items = mainMenuService.menuItems;
         $scope.mainMenu.apps = [];
 
-        // load web apps
-        webApps.list({}, function (result) {
-            if (angular.isArray(result)) {
-                $scope.mainMenu.apps = result;
+        // Load web apps
+        webApps.loadApps().then(function (apps) {
+            if (angular.isArray(apps)) {
+                angular.forEach(apps, function (app) {
+                    // Ignore platform app and apps that do not support embedded mode
+                    if (!app.supportEmbeddedMode) {
+                        return;
+                    }
+
+                    // Create menu item for embedded app
+                    var menuItem = {
+                        path: `browse/${app.id}`,
+                        iconUrl: app.iconUrl,
+                        icon: 'fa fa-cube',
+                        title: app.title,
+                        priority: 100,
+                        action: function () {
+                            $state.go('workspace.embeddedApp', { appId: app.id });
+                        },
+                        permission: app.permission,
+                    };
+
+                    mainMenuService.addMenuItem(menuItem);
+                });
+
+                // Remove embedded apps from main menu items
+                $scope.mainMenu.apps = apps.filter(function (item) {
+                    return item.supportEmbeddedMode === false;
+                });
             }
         });
 
@@ -112,7 +137,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         };
 
         $scope.hasApps = function () {
-            return $scope.mainMenu.apps.length > 1;
+            return Array.isArray($scope.mainMenu.apps) && $scope.mainMenu.apps.length > 1;
         };
 
         function initializeMainMenu(profile) {
