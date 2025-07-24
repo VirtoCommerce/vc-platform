@@ -755,15 +755,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 user.SecurityStamp = applicationUser.SecurityStamp;
             }
 
-            if (user.LastPasswordChangedDate != applicationUser.LastPasswordChangedDate)
-            {
-                user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
-            }
+            user.PasswordExpired = applicationUser.PasswordExpired;
+            user.LockoutEnabled = applicationUser.LockoutEnabled;
 
-            if (user.LastPasswordChangeRequestDate != applicationUser.LastPasswordChangeRequestDate)
-            {
-                user.LastPasswordChangeRequestDate = applicationUser.LastPasswordChangeRequestDate;
-            }
+            user.LockoutEnd = applicationUser.LockoutEnd;
+            user.LastLoginDate = applicationUser.LastLoginDate;
+            user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
+            user.LastPasswordChangeRequestDate = applicationUser.LastPasswordChangeRequestDate;
 
             var result = await UserManager.UpdateAsync(user);
 
