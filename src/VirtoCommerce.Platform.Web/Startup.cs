@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -451,6 +452,9 @@ namespace VirtoCommerce.Platform.Web
                 });
             });
 
+            services.AddSingleton<Func<IOpenIddictTokenManager>>(provider =>
+                () => provider.CreateScope().ServiceProvider.GetRequiredService<IOpenIddictTokenManager>());
+
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
             services.Configure<LockoutOptionsExtended>(Configuration.GetSection("IdentityOptions:Lockout"));
@@ -664,6 +668,9 @@ namespace VirtoCommerce.Platform.Web
             app.UseDefaultFiles();
 
             app.UseAuthentication();
+
+            app.UseAccountLockoutMiddleware(platformOptions.ApplicationCookieName);
+
             app.UseAuthorization();
 
             app.ExecuteSynchronized(() =>
