@@ -20,9 +20,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// If the probing folder is absent at platform startup, it will be forcibly refreshed regardless of RefreshProbingFolderOnStart value. 
         /// </summary>
         public bool RefreshProbingFolderOnStart { get; set; } = true;
-        public string[] LocalizationFileExtensions { get; set; } = new[] { "resources.dll" };
-        public string[] AssemblyFileExtensions { get; set; } = new[] { ".dll", ".exe" };
-        public string[] AssemblyServiceFileExtensions { get; set; } = new[] { ".pdb", ".xml", ".deps.json", ".runtimeconfig.json", ".runtimeconfig.dev.json", ".dep" };
-        public string[] ReferenceAssemblyFolders { get; set; } = new[] { "ref" };
+        public string[] LocalizationFileExtensions { get; set; } = ["resources.dll"];
+        public string[] AssemblyFileExtensions { get; set; } = [".dll", ".exe"];
+        public string[] AssemblyServiceFileExtensions { get; set; } = [".pdb", ".xml", ".deps.json", ".runtimeconfig.json", ".runtimeconfig.dev.json", ".dep", ".zip"];
+        public string[] ReferenceAssemblyFolders { get; set; } = ["ref"];
     }
 }
