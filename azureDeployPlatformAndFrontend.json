@@ -504,7 +504,7 @@
                                     "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/urlPathMaps/routing/pathRules/api_files')]",
                                     "properties": {
                                         "paths": [
-                                            "externalsignin"
+                                            "/externalsignin"
                                         ],
                                         "backendAddressPool": {
                                             "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/backendAddressPools/platform')]"
