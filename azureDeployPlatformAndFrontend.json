@@ -71,7 +71,7 @@
         },
         "themeArchiveHref": {
             "type": "string",
-            "defaultValue": "https://github.com/VirtoCommerce/vc-theme-b2b-vue/releases/download/2.0.0/vc-theme-b2b-vue-2.0.0.zip",
+            "defaultValue": "https://github.com/VirtoCommerce/vc-frontend/releases/download/2.27.0/vc-theme-b2b-vue-2.27.0.zip",
             "metadata": {
                 "description": "The url for the archive containing vc-theme, requered version >= 2.0.0"
             }
@@ -97,7 +97,7 @@
             "kind": "StorageV2",
             "properties": {
                 "allowBlobPublicAccess": true
-                }
+            }
         },
         {
             "type": "Microsoft.Storage/storageAccounts",
@@ -223,22 +223,22 @@
                 "scriptContent": "$ErrorActionPreference = 'Stop'\n $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:ResourceGroupName -AccountName $env:StorageAccountName\n $ctx = $storageAccount.Context\n Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:IndexDocumentPath\n Invoke-WebRequest -Uri $env:themeArchiveHref -OutFile ./vc-theme.zip \n Expand-Archive -LiteralPath ./vc-theme.zip -DestinationPath ./vc-theme \n cd ./vc-theme/default/ \n $pwd = get-location \n $mimeHash = @{'.js' = 'application/javascript';'.html' = 'text/html';'.txt' = 'text/plain';'.map' = 'text/plain';'.css' = 'text/css';'.json' = 'application/json';'.svg' = 'image/svg+xml';'.png' = 'image/png';'.ico' = 'image/x-icon';'.webp' = 'image/webp'} \n Get-ChildItem -File -Recurse $pwd | ForEach-Object { $fe = [System.IO.Path]::GetExtension($_.FullName); if ($($mimeHash.keys) -contains $fe) {$mimeType = $($mimeHash[$fe])} else {$mimeType = 'application/octet-stream'}; Set-AzStorageBlobContent -File $_.FullName -Blob $_.FullName.Substring($($pwd.Path.Length)+1) -Container '$web' -Context $ctx -Properties @{'ContentType'=$mimeType} -Force }\n",
                 "retentionInterval": "PT4H",
                 "environmentVariables": [
-                {
-                    "name": "ResourceGroupName",
-                    "value": "[resourceGroup().name]"
-                },
-                {
-                    "name": "StorageAccountName",
-                    "value": "[variables('themeStorageAccountName')]"
-                },
-                {
-                    "name": "IndexDocumentPath",
-                    "value": "[variables('IndexDocumentPath')]"
-                },
-                {
-                    "name": "themeArchiveHref",
-                    "value": "[parameters('themeArchiveHref')]"
-                }
+                    {
+                        "name": "ResourceGroupName",
+                        "value": "[resourceGroup().name]"
+                    },
+                    {
+                        "name": "StorageAccountName",
+                        "value": "[variables('themeStorageAccountName')]"
+                    },
+                    {
+                        "name": "IndexDocumentPath",
+                        "value": "[variables('IndexDocumentPath')]"
+                    },
+                    {
+                        "name": "themeArchiveHref",
+                        "value": "[parameters('themeArchiveHref')]"
+                    }
                 ]
             },
             "dependsOn": [
@@ -313,7 +313,7 @@
                         "properties": {
                             "backendAddresses": [
                                 {
-                                    "fqdn": "[concat( parameters('appServiceName'), '.azurewebsites.net')]"  //TD "admin.kubkz.kz"
+                                    "fqdn": "[concat( parameters('appServiceName'), '.azurewebsites.net')]"
                                 }
                             ]
                         }
@@ -325,7 +325,6 @@
                             "backendAddresses": [
                                 {
                                     "fqdn": "[replace(split(reference(resourceId('Microsoft.Storage/storageAccounts', variables('themeStorageAccountName'))).primaryEndpoints.web, '//')[1], '/', '')]"
-                                    //"fqdn": "[concat(variables('themeStorageAccountName'), '.z13.web.core.windows.net')]" //TD "[concat(variables('applicationGatewayName'), 'theme.z13.web.core.windows.net')]"
                                 }
                             ]
                         }
@@ -386,7 +385,7 @@
                     //         },
                     //         "protocol": "Https",
                     //         "sslCertificate": {
-                    //             "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/sslCertificates/kubkz')]"
+                    //             "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/sslCertificates/test')]"
                     //         },
                     //         "hostNames": [],
                     //         "requireServerNameIndication": false,
@@ -499,6 +498,36 @@
                                             "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/backendHttpSettingsCollection/backendsettings')]"
                                         }
                                     }
+                                },
+                                {
+                                    "name": "externalsignin",
+                                    "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/urlPathMaps/routing/pathRules/api_files')]",
+                                    "properties": {
+                                        "paths": [
+                                            "/externalsignin"
+                                        ],
+                                        "backendAddressPool": {
+                                            "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/backendAddressPools/platform')]"
+                                        },
+                                        "backendHttpSettings": {
+                                            "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/backendHttpSettingsCollection/backendsettings')]"
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "signin-oidc",
+                                    "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/urlPathMaps/routing/pathRules/api_files')]",
+                                    "properties": {
+                                        "paths": [
+                                            "/signin-oidc"
+                                        ],
+                                        "backendAddressPool": {
+                                            "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/backendAddressPools/platform')]"
+                                        },
+                                        "backendHttpSettings": {
+                                            "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/backendHttpSettingsCollection/backendsettings')]"
+                                        }
+                                    }
                                 }
                             ]
                         }
@@ -564,7 +593,7 @@
                                                 "headerValue": "cross-origin"
                                             },
                                             {
-                                                "headerName": "Content-Security-Policy", 
+                                                "headerName": "Content-Security-Policy",
                                                 "headerValue": "[concat('frame-ancestors ''self'' https://', parameters('appServiceName'), '.azurewebsites.net;')]"
                                             }
                                         ]
@@ -588,33 +617,14 @@
             "apiVersion": "2023-11-01",
             "name": "[parameters('virtualNetworkName')]",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                // "[resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName'))]"
-            ],
+            "dependsOn": [],
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
                         "10.1.0.0/16"
                     ]
                 },
-                "subnets": [
-                    // {
-                    //     "name": "default",
-                    //     "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), 'default')]",
-                    //     "properties": {
-                    //         "addressPrefix": "10.1.0.0/24",
-                    //         "applicationGatewayIPConfigurations": [
-                    //             {
-                    //                 "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/gatewayIPConfigurations/appGatewayIpConfig')]"
-                    //             }
-                    //         ],
-                    //         "delegations": [],
-                    //         "privateEndpointNetworkPolicies": "Disabled",
-                    //         "privateLinkServiceNetworkPolicies": "Enabled"
-                    //     },
-                    //     "type": "Microsoft.Network/virtualNetworks/subnets"
-                    // }
-                ],
+                "subnets": [],
                 "virtualNetworkPeerings": [],
                 "enableDdosProtection": false
             }
@@ -625,7 +635,6 @@
             "name": "[concat(parameters('virtualNetworkName'), '/default')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
-                // "[resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName'))]"
             ],
             "properties": {
                 "addressPrefix": "10.1.0.0/24",
@@ -710,7 +719,7 @@
                 "numberOfWorkers": "1",
                 "reserved": true,
                 "zoneRedundant": false
-                }
+            }
         },
         {
             "name": "[parameters('appServiceName')]",
@@ -744,100 +753,57 @@
                 "redundancyMode": "None",
                 "keyVaultReferenceIdentity": "SystemAssigned",
                 "siteConfig": {
-                "appCommandLine": "",
-                "appSettings": [
-                    {
-                        "name": "Assets__Provider",
-                        "value": "AzureBlobStorage"
-                    },
-                    {
-                        "name": "Assets__AzureBlobStorage__ConnectionString",
-                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
-                    },
-                    {
-                        "name": "Content__Provider",
-                        "value": "AzureBlobStorage"
-                    },
-                    {
-                        "name": "Content__AzureBlobStorage__ConnectionString",
-                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
-                    },
-                    {
-                        "name": "Content__AzureBlobStorage__RootPath",
-                        "value": "cms"
-                    },
-                    {
-                        "name": "Search__Provider",
-                        "value": "Lucene"
-                    },
-                    {
-                        "name": "Search__Lucene__Path",
-                        "value": "App_Data/Lucene"
-                    },
-                    {
-                        "name": "ExternalModules__AutoInstallModuleBundles",
-                        "value": ""
-                    }
-                ],
-                "connectionStrings": [
-                    {
-                        "name": "VirtoCommerce",
-                        "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('appServiceName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('appServiceName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('appServiceName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
-                        "type": "SQLAzure"
-                    }
-                ],
-                "linuxFxVersion": "[concat( 'DOCKER|', parameters('containerRegistry'), ':', parameters('imageTag'))]"
+                    "appCommandLine": "",
+                    "appSettings": [
+                        {
+                            "name": "Assets__Provider",
+                            "value": "AzureBlobStorage"
+                        },
+                        {
+                            "name": "Assets__AzureBlobStorage__ConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                            "name": "Content__Provider",
+                            "value": "AzureBlobStorage"
+                        },
+                        {
+                            "name": "Content__AzureBlobStorage__ConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                            "name": "Content__AzureBlobStorage__RootPath",
+                            "value": "cms"
+                        },
+                        {
+                            "name": "Search__Provider",
+                            "value": "Lucene"
+                        },
+                        {
+                            "name": "Search__Lucene__Path",
+                            "value": "App_Data/Lucene"
+                        },
+                        {
+                            "name": "ExternalModules__AutoInstallModuleBundles",
+                            "value": ""
+                        },
+                        {
+                            "name": "ASPNETCORE_FORWARDEDHEADERS_ENABLED",
+                            "value": "true"
+                        }
+                    ],
+                    "connectionStrings": [
+                        {
+                            "name": "VirtoCommerce",
+                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('appServiceName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('appServiceName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('appServiceName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "type": "SQLAzure"
+                        }
+                    ],
+                    "linuxFxVersion": "[concat( 'DOCKER|', parameters('containerRegistry'), ':', parameters('imageTag'))]"
                 }
             },
             "resources": []
         }
-        // {
-        //     "type": "Microsoft.Web/sites/config",
-        //     "apiVersion": "2023-01-01",
-        //     "name": "[concat(parameters('appServiceName'), '/web')]",
-        //     "location": "[resourceGroup().location]",
-        //     "dependsOn": [
-        //         "[resourceId('Microsoft.Web/sites', parameters('appServiceName'))]"
-        //     ],
-        //     "properties": {
-        //         "numberOfWorkers": 1,
-        //         "defaultDocuments": [
-        //             "Default.htm",
-        //             "Default.html",
-        //             "Default.asp",
-        //             "index.htm",
-        //             "index.html",
-        //             "iisstart.htm",
-        //             "default.aspx",
-        //             "index.php",
-        //             "hostingstart.html"
-        //         ],
-        //         "netFrameworkVersion": "v4.0",
-        //         "linuxFxVersion": "[concat( 'DOCKER|', parameters('containerRegistry'), ':', parameters('imageTag'))]",
-        //         "publishingUsername": "[concat('$', variables('storageName'))]",
-        //         "alwaysOn": true,
-        //         "managedPipelineMode": "Integrated",
-        //         "virtualApplications": [
-        //             {
-        //                 "virtualPath": "/",
-        //                 "physicalPath": "site\\wwwroot",
-        //                 "preloadEnabled": true
-        //             }
-        //         ],
-        //         "loadBalancing": "LeastRequests",
-        //         "publicNetworkAccess": "Enabled"
-        //         // "azureStorageAccounts": {
-        //         //     "modules": {
-        //         //         "type": "AzureFiles",
-        //         //         "accountName": "[variables('storageName')]",
-        //         //         "shareName": "modules",
-        //         //         "mountPath": "/modules",
-        //         //         "accessKey": "[concat( listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, '')]",
-        //         //         "name": "modules"
-        //         //     }
-        //         // }
-        //     }
-        // }
     ],
     "outputs": {
         "url": {
