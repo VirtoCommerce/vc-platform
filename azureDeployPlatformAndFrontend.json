@@ -519,7 +519,7 @@
                                     "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/urlPathMaps/routing/pathRules/api_files')]",
                                     "properties": {
                                         "paths": [
-                                            "signin-oidc"
+                                            "/signin-oidc"
                                         ],
                                         "backendAddressPool": {
                                             "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName')), '/backendAddressPools/platform')]"
