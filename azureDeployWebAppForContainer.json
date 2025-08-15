@@ -1,4 +1,5 @@
 {
+    // Azure API versions reference: https://learn.microsoft.com/en-us/azure/templates
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
@@ -62,7 +63,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2019-06-01",
+            "apiVersion": "2025-01-01",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
             "location": "[resourceGroup().location]",
@@ -75,9 +76,10 @@
                 "allowBlobPublicAccess": true
             }
         },
+        // Create file share for modules
         // {
         //     "type": "Microsoft.Storage/storageAccounts/fileServices",
-        //     "apiVersion": "2023-01-01",
+        //     "apiVersion": "2025-01-01",
         //     "name": "[concat(variables('storageName'), '/default')]",
         //     "dependsOn": [
         //         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
@@ -101,7 +103,7 @@
         // },
         // {
         //     "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-        //     "apiVersion": "2023-01-01",
+        //     "apiVersion": "2025-01-01",
         //     "name": "[concat(variables('storageName'), '/default/modules')]",
         //     "dependsOn": [
         //         "[resourceId('Microsoft.Storage/storageAccounts/fileServices', variables('storageName'), 'default')]",
@@ -114,7 +116,7 @@
         //     }
         // },
         {
-            "apiVersion": "2021-11-01",
+            "apiVersion": "2023-08-01",
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -125,7 +127,7 @@
             },
             "resources": [
                 {
-                    "apiVersion": "2021-11-01",
+                    "apiVersion": "2023-08-01",
                     "type": "databases",
                     "name": "[parameters('appServiceName')]",
                     "location": "[resourceGroup().location]",
@@ -143,7 +145,7 @@
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
                     "location": "[resourceGroup().location]",
-                    "apiVersion": "2021-11-01",
+                    "apiVersion": "2023-08-01",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
                     ],
@@ -155,7 +157,7 @@
             ]
         },
         {
-            "apiVersion": "2020-12-01",
+            "apiVersion": "2024-11-01",
             "type": "Microsoft.Web/serverfarms",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -176,7 +178,7 @@
         {
             "name": "[parameters('appServiceName')]",
             "type": "Microsoft.Web/sites",
-            "apiVersion": "2022-09-01",
+            "apiVersion": "2024-11-01",
             "kind": "app,linux,container",
             "identity": {
                 "type": "SystemAssigned"
@@ -253,7 +255,7 @@
         },
         {
             "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2023-01-01",
+            "apiVersion": "2024-11-01",
             "name": "[concat(parameters('appServiceName'), '/web')]",
             "location": "East US",
             "dependsOn": [

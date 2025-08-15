@@ -1,4 +1,5 @@
 {
+    // Azure API versions reference: https://learn.microsoft.com/en-us/azure/templates
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
@@ -86,7 +87,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2023-01-01",
+            "apiVersion": "2025-01-01",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
             "location": "[resourceGroup().location]",
@@ -101,7 +102,7 @@
         },
         {
             "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2023-01-01",
+            "apiVersion": "2025-01-01",
             "name": "[variables('themeStorageAccountName')]",
             "location": "[resourceGroup().location]",
             "sku": {
@@ -144,7 +145,7 @@
         },
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
-            "apiVersion": "2023-01-01",
+            "apiVersion": "2025-01-01",
             "name": "[concat(variables('themeStorageAccountName'), '/default')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('themeStorageAccountName'))]"
@@ -170,7 +171,7 @@
         },
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-            "apiVersion": "2023-01-01",
+            "apiVersion": "2025-01-01",
             "name": "[concat(variables('themeStorageAccountName'), '/default/$web')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('themeStorageAccountName'), 'default')]",
@@ -187,13 +188,13 @@
         },
         {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-            "apiVersion": "2018-11-30",
+            "apiVersion": "2024-11-30",
             "name": "DeploymentScript",
             "location": "[resourceGroup().location]"
         },
         {
             "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
+            "apiVersion": "2022-04-01",
             "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('themeStorageAccountName'))]",
             "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScript'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab'))]",
             "properties": {
@@ -208,7 +209,7 @@
         },
         {
             "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2023-08-01",
             "name": "deploymentScript",
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell",
@@ -249,7 +250,7 @@
         },
         {
             "type": "Microsoft.Network/applicationGateways",
-            "apiVersion": "2023-11-01",
+            "apiVersion": "2024-07-01",
             "name": "[variables('applicationGatewayName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
@@ -614,7 +615,7 @@
         },
         {
             "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2023-11-01",
+            "apiVersion": "2024-07-01",
             "name": "[parameters('virtualNetworkName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
@@ -631,7 +632,7 @@
         },
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2023-11-01",
+            "apiVersion": "2024-07-01",
             "name": "[concat(parameters('virtualNetworkName'), '/default')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
@@ -649,7 +650,7 @@
             }
         },
         {
-            "apiVersion": "2020-08-01",
+            "apiVersion": "2024-07-01",
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[parameters('publicIPAddressName')]",
             "location": "[resourceGroup().location]",
@@ -662,7 +663,7 @@
             }
         },
         {
-            "apiVersion": "2021-11-01",
+            "apiVersion": "2023-08-01",
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -673,7 +674,7 @@
             },
             "resources": [
                 {
-                    "apiVersion": "2021-11-01",
+                    "apiVersion": "2023-08-01",
                     "type": "databases",
                     "name": "[parameters('appServiceName')]",
                     "location": "[resourceGroup().location]",
@@ -691,7 +692,7 @@
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
                     "location": "[resourceGroup().location]",
-                    "apiVersion": "2021-11-01",
+                    "apiVersion": "2023-08-01",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
                     ],
@@ -703,7 +704,7 @@
             ]
         },
         {
-            "apiVersion": "2020-12-01",
+            "apiVersion": "2024-11-01",
             "type": "Microsoft.Web/serverfarms",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -724,7 +725,7 @@
         {
             "name": "[parameters('appServiceName')]",
             "type": "Microsoft.Web/sites",
-            "apiVersion": "2022-09-01",
+            "apiVersion": "2024-11-01",
             "kind": "app,linux,container",
             "identity": {
                 "type": "SystemAssigned"
