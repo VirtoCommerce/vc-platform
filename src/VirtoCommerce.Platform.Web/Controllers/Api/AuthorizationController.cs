@@ -236,7 +236,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (!signInResult.Success)
                 {
-                    return BadRequest(SecurityErrorDescriber.LoginFailed());
+                    return Forbid();
                 }
 
                 if (!await _signInManager.CanSignInAsync(signInResult.User))
