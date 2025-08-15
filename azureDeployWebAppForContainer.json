@@ -1,4 +1,5 @@
 {
+    // Azure API versions reference: https://learn.microsoft.com/en-us/azure/templates
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
@@ -62,7 +63,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2019-06-01",
+            "apiVersion": "2025-01-01",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
             "location": "[resourceGroup().location]",
@@ -73,11 +74,12 @@
             "kind": "StorageV2",
             "properties": {
                 "allowBlobPublicAccess": true
-                }
+            }
         },
+        // Create file share for modules
         // {
         //     "type": "Microsoft.Storage/storageAccounts/fileServices",
-        //     "apiVersion": "2023-01-01",
+        //     "apiVersion": "2025-01-01",
         //     "name": "[concat(variables('storageName'), '/default')]",
         //     "dependsOn": [
         //         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
@@ -101,7 +103,7 @@
         // },
         // {
         //     "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-        //     "apiVersion": "2023-01-01",
+        //     "apiVersion": "2025-01-01",
         //     "name": "[concat(variables('storageName'), '/default/modules')]",
         //     "dependsOn": [
         //         "[resourceId('Microsoft.Storage/storageAccounts/fileServices', variables('storageName'), 'default')]",
@@ -114,7 +116,7 @@
         //     }
         // },
         {
-            "apiVersion": "2014-04-01",
+            "apiVersion": "2023-08-01",
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -125,7 +127,7 @@
             },
             "resources": [
                 {
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2023-08-01",
                     "type": "databases",
                     "name": "[parameters('appServiceName')]",
                     "location": "[resourceGroup().location]",
@@ -143,7 +145,7 @@
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
                     "location": "[resourceGroup().location]",
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2023-08-01",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
                     ],
@@ -155,7 +157,7 @@
             ]
         },
         {
-            "apiVersion": "2020-12-01",
+            "apiVersion": "2024-11-01",
             "type": "Microsoft.Web/serverfarms",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -171,12 +173,12 @@
                 "numberOfWorkers": "1",
                 "reserved": true,
                 "zoneRedundant": false
-                }
+            }
         },
         {
             "name": "[parameters('appServiceName')]",
             "type": "Microsoft.Web/sites",
-            "apiVersion": "2022-09-01",
+            "apiVersion": "2024-11-01",
             "kind": "app,linux,container",
             "identity": {
                 "type": "SystemAssigned"
@@ -205,55 +207,55 @@
                 "redundancyMode": "None",
                 "keyVaultReferenceIdentity": "SystemAssigned",
                 "siteConfig": {
-                "appCommandLine": "",
-                "appSettings": [
-                    {
-                        "name": "Assets__Provider",
-                        "value": "AzureBlobStorage"
-                    },
-                    {
-                        "name": "Assets__AzureBlobStorage__ConnectionString",
-                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
-                    },
-                    {
-                        "name": "Content__Provider",
-                        "value": "AzureBlobStorage"
-                    },
-                    {
-                        "name": "Content__AzureBlobStorage__ConnectionString",
-                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
-                    },
-                    {
-                        "name": "Content__AzureBlobStorage__RootPath",
-                        "value": "cms"
-                    },
-                    {
-                        "name": "Search__Provider",
-                        "value": "Lucene"
-                    },
-                    {
-                        "name": "Search__Lucene__Path",
-                        "value": "App_Data/Lucene"
-                    },
-                    {
-                        "name": "ExternalModules__AutoInstallModuleBundles",
-                        "value": ""
-                    }
-                ],
-                "connectionStrings": [
-                    {
-                        "name": "VirtoCommerce",
-                        "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('appServiceName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('appServiceName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('appServiceName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
-                        "type": "SQLAzure"
-                    }
-                ]
+                    "appCommandLine": "",
+                    "appSettings": [
+                        {
+                            "name": "Assets__Provider",
+                            "value": "AzureBlobStorage"
+                        },
+                        {
+                            "name": "Assets__AzureBlobStorage__ConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                            "name": "Content__Provider",
+                            "value": "AzureBlobStorage"
+                        },
+                        {
+                            "name": "Content__AzureBlobStorage__ConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                            "name": "Content__AzureBlobStorage__RootPath",
+                            "value": "cms"
+                        },
+                        {
+                            "name": "Search__Provider",
+                            "value": "Lucene"
+                        },
+                        {
+                            "name": "Search__Lucene__Path",
+                            "value": "App_Data/Lucene"
+                        },
+                        {
+                            "name": "ExternalModules__AutoInstallModuleBundles",
+                            "value": ""
+                        }
+                    ],
+                    "connectionStrings": [
+                        {
+                            "name": "VirtoCommerce",
+                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('appServiceName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('appServiceName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('appServiceName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "type": "SQLAzure"
+                        }
+                    ]
                 }
             },
             "resources": []
         },
         {
             "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2023-01-01",
+            "apiVersion": "2024-11-01",
             "name": "[concat(parameters('appServiceName'), '/web')]",
             "location": "East US",
             "dependsOn": [
