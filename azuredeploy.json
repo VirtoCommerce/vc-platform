@@ -84,13 +84,13 @@
                 "tier": "Standard"
             },
             "kind": "StorageV2",
-          "properties": {
-            "allowBlobPublicAccess": true,
-            "minimalTlsVersion": "TLS1_2"
-          }
+            "properties": {
+                "allowBlobPublicAccess": true,
+                "minimalTlsVersion": "TLS1_2"
+            }
         },
         {
-            "apiVersion": "2014-04-01",
+            "apiVersion": "2021-11-01",
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -101,7 +101,7 @@
             },
             "resources": [
                 {
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2021-11-01",
                     "type": "databases",
                     "name": "[parameters('appServiceName')]",
                     "location": "[resourceGroup().location]",
@@ -119,7 +119,7 @@
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
                     "location": "[resourceGroup().location]",
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2021-11-01",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
                     ],
