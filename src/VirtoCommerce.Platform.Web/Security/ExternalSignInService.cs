@@ -85,7 +85,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (externalLoginResult == SignInResult.LockedOut)
             {
-                throw new AuthenticationException($"The user {externalLoginInfo.Principal.Identity?.Name} for the external provider {externalLoginInfo.ProviderDisplayName} is locked out.");
+                return ExternalSignInResult.Fail();
             }
 
             if (externalLoginResult == SignInResult.TwoFactorRequired)
