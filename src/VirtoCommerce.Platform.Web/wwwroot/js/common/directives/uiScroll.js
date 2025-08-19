@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .directive('uiScrollDropDown', [function () {
+    .directive('uiScrollDropDown', ['$translate', function ($translate) {
         const defaultPageSize = 20;
         const defaultResponseGroup = 'none';
         const defaultSelectedItemsPropertyName = 'objectIds';
@@ -18,6 +18,7 @@ angular.module('platformWebApp')
                 pageSize: '=?',
                 placeholder: '=?',
                 required: '=?',
+                searchplaceholder: '=?',
                 responseGroup: '=?',
                 selectedItemsPropertyName: '=?' //TODO: delete this when storeIds/etc are changed to objectIds
             },
@@ -27,6 +28,13 @@ angular.module('platformWebApp')
                     modelValue: null,
                     required: getBooleanAttributeValue('required'),
                     multiple: getBooleanAttributeValue('multiple'),
+                };
+
+                $scope.onOpenCloseFn = function (isOpen) {
+                    if (isOpen) {
+                        const input = element.find('input[type=search]');
+                        input.attr('placeholder', $scope.searchplaceholder || $translate.instant('platform.placeholders.search-keyword'));
+                    }
                 };
 
                 function getBooleanAttributeValue(name) {
