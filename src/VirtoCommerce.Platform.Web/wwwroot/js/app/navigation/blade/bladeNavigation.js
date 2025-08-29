@@ -347,7 +347,6 @@ angular.module('platformWebApp')
                 //}
                 blade.errorBody = "";
                 blade.isLoading = true;
-                blade.parentBlade = parentBlade;
                 blade.childrenBlades = [];
                 if (parentBlade) {
                     blade.headIcon = blade.headIcon || parentBlade.headIcon;
@@ -369,12 +368,15 @@ angular.module('platformWebApp')
 
                 //Show blade in previous location
                 if (existingBlade != undefined) {
+                    parentBlade = existingBlade.parentBlade;
                     //store prev blade x-index
                     blade.xindex = existingBlade.xindex;
                 } else if (!angular.isDefined(blade.xindex)) {
                     //Show blade as last one by default
                     blade.xindex = service.stateBlades().length;
                 }
+
+                blade.parentBlade = parentBlade;
 
                 var showBlade = function () {
                     if (angular.isDefined(parentBlade)) {
