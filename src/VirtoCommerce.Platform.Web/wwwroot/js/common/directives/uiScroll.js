@@ -106,7 +106,9 @@ angular.module('platformWebApp')
                 };
 
                 function load() {
-                    var selectedIds = $scope.context.multiple ? $scope.context.modelValue : [$scope.context.modelValue];
+                    var selectedIds = $scope.context.multiple
+                        ? $scope.context.modelValue
+                        : [$scope.context.modelValue]; // here may be array with undefined or null, but next if condition will not run without it
 
                     if ($scope.isNoItems && _.any(selectedIds)) {
                         var criteria = {
@@ -127,6 +129,7 @@ angular.module('platformWebApp')
                         result.$promise.then((x) => {
                             join(x.results, true);
                             if (select) {
+                                setActiveIndex(select);
                                 select.page++;
 
                                 if (select.page * pageSize < x.totalCount) {
@@ -136,9 +139,22 @@ angular.module('platformWebApp')
                         });
                     } else if (angular.isArray(result)) {
                         join(result);
+                        setActiveIndex(select);
                         $scope.paginationDisabled = true;
                     }
                     return result;
+                }
+
+                function setActiveIndex(select) {
+                    if (!select) return;
+                    var value = $scope.context.modelValue;
+                    if (!!value) {
+                        select.activeIndex = $scope.items.findIndex(function (item) {
+                            return item.id === value;
+                        });
+                    } else {
+                        select.activeIndex = 0;
+                    }
                 }
 
                 function join(newItems, callFilter) {
