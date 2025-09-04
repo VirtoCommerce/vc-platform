@@ -81,6 +81,9 @@ angular.module('platformWebApp')
                     $select.page = $select.page || 0;
 
                     if (lastSearchPhrase !== $select.search) {
+                        if (!$select.search) {
+                            $scope.items = [];
+                        }
                         lastSearchPhrase = $select.search;
                         $select.page = 0;
                     }
@@ -130,10 +133,12 @@ angular.module('platformWebApp')
                             join(x.results, true);
                             if (select) {
                                 setActiveIndex(select);
-                                select.page++;
+                                if (x.results.length > 0) {
+                                    select.page++;
 
-                                if (select.page * pageSize < x.totalCount) {
-                                    $scope.$broadcast('scrollCompleted');
+                                    if (select.page * pageSize < x.totalCount) {
+                                        $scope.$broadcast('scrollCompleted');
+                                    }
                                 }
                             }
                         });
