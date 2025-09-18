@@ -177,7 +177,7 @@ namespace VirtoCommerce.Platform.Modules
         private bool SearchForLibrary(ManagedLibrary library, ManagedAssemblyLoadContext loadContext, out string path)
         {
             // 1. Check for in _basePath + app local path
-            var localFile = Path.Combine(loadContext.BasePath, library.AppLocalPath);
+            var localFile = Path.Combine(loadContext.BasePath, Path.GetFileName(library.AppLocalPath));
             if (File.Exists(localFile))
             {
                 path = localFile;
