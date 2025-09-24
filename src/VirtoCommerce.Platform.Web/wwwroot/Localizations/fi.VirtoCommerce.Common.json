@@ -1,0 +1,190 @@
+{
+  "platform": {
+    "commands": {
+      "add": "Lisää",
+      "activate": "Aktivoi",
+      "assign": "Määritä",
+      "cancel": "Peruuta",
+      "clear": "Tyhjennä",
+      "clear-all": "Tyhjennä kaikki",
+      "clone": "Kloonaa",
+      "close": "Sulje",
+      "confirm": "Vahvista",
+      "copy-link": "Kopioi linkki",
+      "copy": "Kopioi",
+      "create": "Luo",
+      "cut": "Leikkaa",
+      "delete": "Poista",
+      "add-all": "Lisää kaikki",
+      "remove-all": "Poista kaikki",
+      "download": "Lataa",
+      "edit": "Muokkaa",
+      "export": "Vie",
+      "generate": "Luo",
+      "import": "Tuo",
+      "import-sample-data": "Tuo esimerkkidata",
+      "install": "Asenna",
+      "grouping": "Näytä niput",
+      "ungrouping": "Piilota niput",
+      "manage": "Hallinnoi",
+      "more": "Lisää",
+      "no": "Ei",
+      "new-folder": "Uusi kansio",
+      "new-license": "Uusi lisenssi",
+      "ok": "OK",
+      "paste": "Liitä",
+      "pick-selected": "Valitse valitut",
+      "preview": "Esikatsele",
+      "open-browser": "Avaa selaimessa",
+      "redo": "Tee uudelleen",
+      "refresh": "Päivitä",
+      "remove": "Poista",
+      "reset": "Nollaa",
+      "restart": "Käynnistä uudelleen",
+      "save": "Tallenna",
+      "send": "Lähetä",
+      "select-all": "Valitse kaikki",
+      "set-to-default": "Aseta oletukseksi",
+      "start-export": "Aloita vienti",
+      "settings": "Asetukset",
+      "sign-out": "Kirjaudu ulos",
+      "undo": "Kumoa",
+      "uninstall": "Poista asennus",
+      "unselect-all": "Poista kaikkien valinta",
+      "update": "Päivitä",
+      "upload": "Lataa",
+      "yes": "Kyllä",
+      "add-new-property": "Lisää uusi ominaisuus",
+      "manage-type-properties": "Ominaisuuksien tyypit",
+      "manage-profile": "Hallinnoi profiilia",
+      "minimize": "Pienennä",
+      "maximize": "Suurenna",
+      "stop-sending": "Lopeta lähettäminen",
+      "set-active": "Aseta aktiiviseksi",
+      "reject-user": "Hylkää käyttäjä",
+      "change-password": "Vaihda salasana",
+      "unlock-account": "Avaa tili",
+      "lock-account": "Lukitse tili",
+      "today": "Tänään",
+      "time": "Aika",
+      "now": "Nyt",
+      "date": "Päivämäärä",
+      "see-details": "Katso tiedot",
+      "dismiss": "Hylkää",
+      "hide-empty-property-values": "Piilota tyhjät arvot",
+      "show-empty-property-values": "Näytä tyhjät arvot",
+      "titles": {
+        "refresh": "Päivitä",
+        "new-folder": "Uusi kansio",
+        "upload": "Lataa"
+      }
+    },
+    "list": {
+      "no-data": "Ei tietoja",
+      "count": "Määrä",
+      "loading": "Ladataan...",
+      "item-not-found": "Virhe: Ei löydy"
+    },
+    "placeholders": {
+      "n-a": "Ei saatavilla",
+      "no-file": "Valitse tiedosto",
+      "search-keyword": "Hakusana...",
+      "select-value": "Valitse arvo",
+      "select-values": "Valitse arvo"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Poiston vahvistus",
+        "message": "Oletko varma, että haluat poistaa valitut merkinnät?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Lyhyt teksti",
+        "description": "Tekstiarvot alle 1024 merkkiä"
+      },
+      "long-text": {
+        "title": "Pitkä teksti",
+        "description": "Rajoittamaton teksti ilman kokorajoitusta"
+      },
+      "integer": {
+        "title": "Kokonaisluku",
+        "description": "Kokonaisluku"
+      },
+      "decimal": {
+        "title": "Desimaaliluku",
+        "description": "Desimaaliluku, tarkkuus 18 ja skaala 4"
+      },
+      "date-time": {
+        "title": "Päivämäärä ja aika",
+        "description": "Valitse päivämäärä"
+      },
+      "boolean": {
+        "title": "Totuusarvo",
+        "description": "Kytkin-tyyppi"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "HTML-merkintä"
+      },
+      "undefined": {
+        "title": "Määrittelemätön"
+      },
+      "image": {
+        "title": "Kuva",
+        "description": "Kuvatyyppi"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "Syötä lyhyt teksti",
+        "secure-string": "Syötä salainen teksti",
+        "email": "Syötä sähköposti",
+        "url": "Syötä URL-osoite",
+        "long-text": "Syötä pitkä teksti",
+        "integer": "Syötä kokonaisluku",
+        "number": "Syötä desimaaliluku",
+        "date-time": "Valitse päivämäärä",
+        "short-text-multivalue": "Lisää arvo",
+        "integer-multivalue": "Lisää kokonaisluku",
+        "number-multivalue": "Lisää desimaaliluku",
+        "short-text-dictionary": "Valitse arvo",
+        "short-text-dictionary-multivalue": "Valitse arvo",
+        "short-text-multilang": "Syötä arvo",
+        "long-text-multilang": "Syötä arvo",
+        "short-text-multivalue-multilang": "Lisää arvo",
+        "short-text-dictionary-multilang": "Valitse arvo",
+        "short-text-dictionary-multivalue-multilang": "Valitse arvo",
+        "long-text-dictionary-multivalue-multilang": "Valitse arvo"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "Syötä arvo",
+      "required": "Tämä kenttä on pakollinen",
+      "maxLength": "Tämä kenttä ei saa sisältää enempää kuin {{number}} merkkiä"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Virheellinen URI-muoto. Varmista, että URI ei sisällä kyselyparametreja"
+      }
+    },
+    "errors": {
+      "generic-error": "Virhe",
+      "400": "Virheellinen pyyntö",
+      "401": "Ei valtuutettu",
+      "403": "Kielletty",
+      "404": "Ei löydy",
+      "405": "Menetelmä ei sallittu",
+      "406": "Ei hyväksyttävä",
+      "407": "Välityspalvelimen todennus vaaditaan",
+      "408": "Pyynnön aikakatkaisu",
+      "409": "Ristiriita",
+      "429": "Liian monta pyyntöä",
+      "500": "Sisäinen palvelinvirhe",
+      "501": "Ei toteutettu",
+      "502": "Viallinen yhdyskäytävä",
+      "503": "Palvelu ei ole käytettävissä",
+      "504": "Yhdyskäytävän aikakatkaisu"
+    }
+  }
+}

@@ -10,7 +10,7 @@
       "dynamic-properties": "Dynamic properties",
       "security": "Security",
       "modules": "Modules",
-      "export-import": "Backup & Restore",
+      "export-import": "Backup and restore",
       "user-profile": "User profile",
       "assets": "Assets",
       "toggle-favorites": "Shift + Space to toggle favorites",
@@ -31,7 +31,7 @@
           "environment-name": "Environment mode",
           "is-64-bit-os": "64-bit operating system",
           "is-64-bit-process": "64-bit process",
-          "database-provider": "Database Provider"
+          "database-provider": "Database provider"
         }
       },
       "asset-list": {
@@ -98,7 +98,7 @@
           "display-order": "Display order"
         },
         "validations": {
-          "multivalue": "Multivalue property can have only ShortText, Integer or Decimal value type",
+          "multivalue": "Multivalue property can have only ShortText, Integer, or Decimal value type",
           "multilingual": "Only text or HTML value can be multilingual",
           "dictionary": "Only dictionaries of the ShortText value type are supported"
         }
@@ -925,8 +925,8 @@
     "platform:security:verifyEmail": "Change verified state and send verification email",
     "background_jobs:manage": "Access to the Hangfire console",
     "platform:exportImport:access": "View Backup/Restore in the main menu",
-    "platform:import": "Restore platform and modules data",
-    "platform:export": "Backup platform and modules data",
+    "platform:import": "Restore Platform and modules data",
+    "platform:export": "Backup Platform and modules data",
     "platform:security:loginOnBehalf": "Login on behalf of a customer"
   },
   "settings": {
@@ -957,7 +957,7 @@
       },
       "SendDiagnosticData": {
         "title": "Send diagnostic data",
-        "description": "Send VC Platform diagnostic data to VC. Can only be disabled with purchase of a licence"
+        "description": "Send VC Platform diagnostic data to VC. Can only be disabled with purchase of a license"
       },
       "Platform": {
         "Security": {

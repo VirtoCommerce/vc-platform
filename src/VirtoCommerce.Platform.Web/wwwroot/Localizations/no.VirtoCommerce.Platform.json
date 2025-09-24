@@ -1,0 +1,1056 @@
+{
+  "platform": {
+    "menu": {
+      "home": "Hjem",
+      "browse": "Bla gjennom",
+      "configuration": "Konfigurasjon",
+      "notifications": "Varsler",
+      "more": "Mer",
+      "settings": "Innstillinger",
+      "dynamic-properties": "Dynamiske egenskaper",
+      "security": "Sikkerhet",
+      "modules": "Moduler",
+      "export-import": "Sikkerhetskopiering og gjenoppretting",
+      "user-profile": "Brukerprofil",
+      "assets": "Ressurser",
+      "toggle-favorites": "Shift + Mellomrom for å veksle favoritter",
+      "developer-tools": "Utviklerverktøy",
+      "help": "Hjelp"
+    },
+    "navigation": {
+      "back": "Tilbake"
+    },
+    "blades": {
+      "developer-tools": {
+        "title": "Utviklerverktøy"
+      },
+      "system-info": {
+        "title": "Plattforminformasjon",
+        "labels": {
+          "clr-version": "CLR-versjon",
+          "environment-name": "Miljømodus",
+          "is-64-bit-os": "64-biters operativsystem",
+          "is-64-bit-process": "64-biters prosess",
+          "database-provider": "Databaseleverandør"
+        }
+      },
+      "asset-list": {
+        "title": "Ressurshåndtering",
+        "bread-crumb-top": "Alle ressurser",
+        "labels": {
+          "picture": "Bilde",
+          "name": "Navn",
+          "size": "Størrelse",
+          "modified": "Endret",
+          "actions": "Handlinger",
+          "group": "Gruppe",
+          "language": "Språk"
+        }
+      },
+      "asset-upload": {
+        "title": "Opplasting av ressurser",
+        "labels": {
+          "select-files": "Velg filer",
+          "drag-note": "Dra og slipp filer her",
+          "progress": "Fremdrift",
+          "asset-uploaded": "Ressurs(er) lastet opp"
+        },
+        "placeholders": {
+          "image-url": "Lim inn filens URL her"
+        }
+      },
+      "operation-list": {
+        "labels": {
+          "login": "Innlogging",
+          "details": "Detaljer",
+          "time": "Tid"
+        }
+      },
+      "dynamicObject-list": {
+        "title": "Dynamiske objektstyper",
+        "subtitle": "Velg objektstype for å administrere dynamiske egenskaper",
+        "labels": {
+          "no-objects": "Ingen objekter støtter dynamiske egenskaper ennå"
+        }
+      },
+      "dynamicProperty-detail": {
+        "title": "Administrer egenskap",
+        "subtitle": "Administrer egenskap",
+        "subtitle-new": "Ny egenskap",
+        "labels": {
+          "property-name": "Egenskapsnavn",
+          "required": "Påkrevd",
+          "multivalue": "Flere verdier",
+          "multilingual": "Flerspråklig",
+          "dictionary": "Ordbok",
+          "description": "Beskrivelse",
+          "display-order": "Visningsrekkefølge",
+          "display-name": "Visningsnavn",
+          "value-type": "Verditype",
+          "dictionary-values": "Ordbokverdier",
+          "manage-dictionary": "Administrer ordbok",
+          "show-more-languages": "Vis flere språk",
+          "show-less-languages": "Vis færre språk"
+        },
+        "placeholders": {
+          "description": "Angi egenskapsbeskrivelse",
+          "display-name": "Angi visningsnavn...",
+          "display-order": "Visningsrekkefølge"
+        },
+        "validations": {
+          "multivalue": "Egenskap med flere verdier kan bare ha verditypen KortTekst, Heltall eller Desimal",
+          "multilingual": "Bare tekst- eller HTML-verdier kan være flerspråklige",
+          "dictionary": "Bare ordbøker av verditypen KortTekst støttes"
+        }
+      },
+      "dynamicProperty-list": {
+        "subtitle": "Administrer dynamiske egenskaper",
+        "labels": {
+          "no-properties": "Ingen dynamiske egenskaper ennå"
+        }
+      },
+      "notifications-menu": {
+        "subtitle": "Arbeid med varslingssystemet"
+      },
+      "property-dictionary": {
+        "title": "Ordbokverdier",
+        "subtitle": "Administrer ordbokverdier",
+        "labels": {
+          "edit-value": "Rediger verdi",
+          "new-value": "Ny verdi",
+          "dictionary-name": "Ordbokoppføringsnavn",
+          "localized-values": "Lokaliserte verdier",
+          "current-values": "Gjeldende verdier",
+          "name": "Navn",
+          "values": "Verdier"
+        },
+        "validations": {
+          "dictionary-name-required": "Påkrevd",
+          "dictionary-name": "Duplikatnavn funnet",
+          "localized-values-required": "Påkrevd",
+          "localized-values": "Duplikatnavn funnet",
+          "dictionary": "Bare ordbøker av verditypen KortTekst støttes"
+        },
+        "placeholders": {
+          "dictionary-name": "Angi navn",
+          "localized-values": "Angi verdi"
+        }
+      },
+      "propertyValue-list": {
+        "title": "Dynamiske egenskaper",
+        "subtitle": "",
+        "labels": {
+          "header": "Egenskapsverdier",
+          "no-properties": "Denne enheten har ingen dynamiske egenskaper ennå. Klikk på 'Egenskapstyper' og opprett noen egenskaper. Lukk og åpne gjeldende enhetsvisning for å laste dynamiske egenskaper"
+        }
+      },
+      "edit-array": {
+        "validations": {
+          "new-value-required": "Påkrevd"
+        },
+        "labels": {
+          "new-value": "Ny verdi",
+          "current-values": "Gjeldende verdier",
+          "values": "Verdier"
+        },
+        "placeholders": {
+          "value": "Angi verdi"
+        }
+      },
+      "export-main": {
+        "title": "Datasikkerhetskopiering",
+        "labels": {
+          "platform-entries": "Plattformoppføringer",
+          "choose-modules": "Velg moduler å sikkerhetskopiere",
+          "download-url": "Nedlastings-URL",
+          "errors": "Feil",
+          "start": "Start",
+          "end": "Slutt"
+        },
+        "menu": {
+          "security": {
+            "title": "Sikkerhet",
+            "description": "Kontoer og roller"
+          },
+          "binary": {
+            "title": "Binær",
+            "description": "Binærdata"
+          },
+          "settings": {
+            "title": "Innstillinger",
+            "description": "Plattforminnstillinger"
+          },
+          "dynamic-props": {
+            "title": "Dynamiske egenskaper",
+            "description": "Plattformens dynamiske egenskaper"
+          }
+        }
+      },
+      "import-main": {
+        "title": "Datagjenoppretting",
+        "labels": {
+          "start-import": "Start gjenoppretting",
+          "select-file": "Velg .zip-fil å gjenopprette. Filen må være opprettet av Virto Commerce datasikkerhetskopiering",
+          "drag-note": "Dra og slipp .zip-fil for gjenoppretting. Filen må være opprettet av Virto Commerce datasikkerhetskopiering",
+          "upload-failed": "Opplasting mislyktes",
+          "upload-progress": "Opplastingsfremdrift",
+          "import-progress": "Gjenopprettingsfremdrift",
+          "import-finished": "Gjenoppretting fullført",
+          "import-data-information": "Informasjon om gjenopprettingsdata",
+          "author": "Forfatter",
+          "data-file-created": "Datafil opprettet",
+          "created-platform-version": "Opprettet i plattformversjon",
+          "platform-entries": "Plattformoppføringer",
+          "choose-modules": "Velg moduler å gjenopprette",
+          "no-data": "Ingen data",
+          "errors": "Feil",
+          "start": "Start",
+          "end": "Slutt"
+        },
+        "menu": {
+          "security": {
+            "title": "Sikkerhet",
+            "description": "Kontoer og roller"
+          },
+          "binary": {
+            "title": "Binær",
+            "description": "Binærdata"
+          },
+          "settings": {
+            "title": "Innstillinger",
+            "description": "Plattforminnstillinger"
+          },
+          "dynamic-props": {
+            "title": "Dynamiske egenskaper",
+            "description": "Plattformens dynamiske egenskaper"
+          }
+        }
+      },
+      "exportImport-main": {
+        "title": "Datasikkerhetskopiering og gjenoppretting",
+        "menu": {
+          "export": {
+            "title": "Sikkerhetskopiering",
+            "description": "Data lagres til en fil for fremtidig gjenoppretting"
+          },
+          "import": {
+            "title": "Gjenoppretting",
+            "description": "Gjenopprett data fra en sikkerhetskopifil for fremtidig bruk"
+          }
+        }
+      },
+      "resolve-result": {
+        "title": "Forhåndsvis resultat",
+        "labels": {
+          "subject": "Emne",
+          "body": "Innhold"
+        }
+      },
+      "module-settings-detail": {
+        "title": "Modulinnstillinger"
+      },
+      "module-wizard-progress-step": {
+        "title-install": "Modulinstallasjon",
+        "title-update": "Moduloppdatering",
+        "title-uninstall": "Modulavinstallering",
+        "labels": {
+          "start": "Start",
+          "end": "Slutt",
+          "progress-messages": "Fremdriftsmeldinger",
+          "process-completed": "Modulhåndteringsprosessen er fullført",
+          "restart-application": "Start applikasjonen på nytt nå eller senere"
+        }
+      },
+      "module-detail": {
+        "title": "Modulinformasjon",
+        "labels": {
+          "i-accept-the": "Jeg aksepterer",
+          "license-link": "lisensen",
+          "license": "Lisens",
+          "agreement": "avtalen",
+          "install-from-file": "Installer / oppdater modul fra fil",
+          "select-module-file": "Last opp en modul (.zip)-fil fra en ekstern kilde utenfor det sentrale modularkivet",
+          "upload-progress": "Opplastingsfremdrift",
+          "module-info": "Modulinfo",
+          "title": "Tittel",
+          "official": "Offisiell modul av {{$owner}}",
+          "owners": "Utviklet av {{$owner}}",
+          "author": "Forfatter",
+          "authors": "Forfattere",
+          "id": "ID",
+          "version": "Versjon",
+          "project-information": "Prosjektinformasjon",
+          "description": "Beskrivelse",
+          "platform-version": "Plattformversjon",
+          "dependencies": "Avhengigheter",
+          "optional-dependencies": "Valgfrie avhengigheter",
+          "tags": "Tagger",
+          "install-version": "Installer versjon",
+          "errors": "Feil",
+          "update-version": "Oppdater {{id}} til"
+        }
+      },
+      "modules-main": {
+        "title": "Moduler",
+        "labels": {
+          "updates": "Oppdateringer",
+          "browse": "Bla gjennom",
+          "installed": "Installerte",
+          "withErrors": "Feil",
+          "advanced": "Avansert"
+        }
+      },
+      "modules-list": {
+        "subtitle": "Modulhåndtering",
+        "labels": {
+          "grouping": "Vis modulpakker",
+          "ungrouped": "Annet",
+          "no-updates": "Ingen oppdateringer funnet",
+          "no-modules": "Ingen nye moduler å installere",
+          "no-installed-modules": "Ingen installerte moduler funnet",
+          "icon": "Ikon",
+          "up-to-date": "Modulen er oppdatert",
+          "update-available": "Oppdatering tilgjengelig for denne modulen",
+          "module": "Modul",
+          "version": "Versjon",
+          "author": "Forfatter",
+          "installed": "Installerte moduler",
+          "manual-install-warning": "Advarsel! Manuelt installerte moduler starter ikke fordi RefreshProbingFolderOnStart er satt til falsk"
+        }
+      },
+      "history": {
+        "title": "Systemhendelser",
+        "subtitle": "Hendelseshistorikk",
+        "labels": {
+          "type": "Type",
+          "title": "Tittel",
+          "created": "Opprettet",
+          "description": "Beskrivelse"
+        }
+      },
+      "historyDetailDefault": {
+        "title": "Hendelsesdetaljer",
+        "subtitle": "Hendelsesdetaljer",
+        "labels": {
+          "start": "Start",
+          "end": "Slutt",
+          "elapsed": "Forløpt tid",
+          "errors": "Feil",
+          "stats": "Behandlet {{ processedCount }} av {{ totalCount }} poster"
+        }
+      },
+      "menuHeader": {
+        "labels": {
+          "history": "Historikk",
+          "clear-recent": "Tøm alle nylige"
+        }
+      },
+      "account-changePassword": {
+        "labels": {
+          "title": "Angi et nytt passord",
+          "login": "Innlogging",
+          "force-change-info": "Passordet ditt har utløpt. Du må <b>endre passordet for å fortsette</b> å bruke administratoren",
+          "current-password": "Nåværende passord",
+          "new-password": "Nytt passord",
+          "repeat-password": "Gjenta nytt passord",
+          "cancel": "Avbryt",
+          "save": "Endre",
+          "fail": "Beklager, vi kunne ikke tilbakestille passordet for denne brukeren"
+        },
+        "validations": {
+          "current-password": "Påkrevd",
+          "new-password": "Gammelt og nytt passord er det samme!",
+          "repeat-password": "Nye passord samsvarer ikke!"
+        },
+        "placeholders": {
+          "current-password": "Angi nåværende passord",
+          "new-password": "Angi nytt passord",
+          "repeat-password": "Gjenta nytt passord"
+        }
+      },
+      "account-resetPassword": {
+        "subtitle": "Endre brukerens passord",
+        "labels": {
+          "new-password": "Nytt passord",
+          "repeat-password": "Gjenta passord",
+          "force-password-change": "Tving denne brukeren til å endre passord ved neste innlogging"
+        },
+        "validations": {
+          "repeat-password": "Nye passord samsvarer ikke!",
+          "invalid-token": "Token for tilbakestilling av passord er ugyldig eller har utløpt",
+          "password-too-weak": "Nytt passord oppfyller ikke en eller flere passordsikkerhetspolicyer:",
+          "passwordTooShort": "Passordet må være {{parameter}} eller flere tegn langt",
+          "passwordRequiresUniqueChars": "Passordet må bruke minst {{parameter}} ulike tegn",
+          "passwordRequiresLower": "Passordet må ha minst en liten bokstav ('a'-'z')",
+          "passwordRequiresUpper": "Passordet må ha minst en stor bokstav ('A'-'Z')",
+          "passwordRequiresDigit": "Passordet må ha minst ett siffer ('0'-'9')",
+          "passwordRequiresNonAlphanumeric": "Passordet må ha minst ett ikke-alfanumerisk tegn",
+          "recentPasswordUsed": "Du har brukt dette passordet tidligere. Velg et annet"
+        },
+        "placeholders": {
+          "new-password": "Angi nytt passord",
+          "repeat-password": "Gjenta nytt passord"
+        }
+      },
+      "account-detail": {
+        "title-new": "Ny konto",
+        "labels": {
+          "user-information": "Brukerinformasjon",
+          "is-administrator": "Er administrator",
+          "account-type": "Kontotype",
+          "login": "Innlogging",
+          "account-state": "Kontostatus",
+          "account-email": "E-post",
+          "locked-state": "Låst status",
+          "status": "Status",
+          "verified": "Verifisert",
+          "resend-link": "Send lenke på nytt",
+          "link-sent": "Lenken er sendt",
+          "last-login-date": "Siste innloggingsdato"
+        },
+        "placeholders": {
+          "account-type": "Velg ...",
+          "email": "Angi e-post",
+          "user-name": "Angi brukernavn",
+          "status": "Velg ..."
+        }
+      },
+      "account-list": {
+        "title": "Brukere",
+        "subtitle": "Sikkerhetstjeneste",
+        "labels": {
+          "name": "Navn",
+          "account-type": "Kontotype",
+          "login": "Innlogging",
+          "state": "Status",
+          "status": "Status"
+        }
+      },
+      "account-api": {
+        "labels": {
+          "api-key": "API-nøkkel",
+          "is-active": "er aktiv"
+        },
+        "placeholders": {
+          "api-key": "Angi API-nøkkel"
+        }
+      },
+      "role-detail": {
+        "subtitle": "Rolledetaljer",
+        "labels": {
+          "summary": "Sammendrag",
+          "name": "Navn",
+          "description": "Beskrivelse",
+          "assigned-permissions": "Tildelte tillatelser",
+          "permission-name": "Navn",
+          "assigned-scopes": "Tildelte omfang",
+          "no-permissions-assigned": "Ingen tillatelser tildelt"
+        },
+        "placeholders": {
+          "name": "Angi navn",
+          "description": "Angi beskrivelse"
+        }
+      },
+      "account-roles": {
+        "subtitle": "Tildel roller",
+        "labels": {
+          "select-roles": "Velg roller å tildele",
+          "no-roles": "Ingen roller å tildele"
+        }
+      },
+      "account-roles-list": {
+        "title": "",
+        "labels": {
+          "assigned-roles": "Tildelte roller",
+          "no-assigned": "Ingen roller tildelt"
+        }
+      },
+      "permission-scopes": {
+        "subtitle": "Konfigurer tillatelsesomfang",
+        "labels": {
+          "select-bounded-scopes": "Velg begrensede omfang",
+          "selected": "Valgte",
+          "scope-name": "Omfangsnavn og parametere",
+          "no-scopes": "Ingen omfang"
+        }
+      },
+      "role-permissions": {
+        "subtitle": "Tildel tillatelser",
+        "labels": {
+          "select-permissions": "Velg tillatelser å tildele"
+        }
+      },
+      "new-role-wizard": {
+        "title": "Ny rolle",
+        "labels": {
+          "summary": "Sammendrag",
+          "name": "Navn",
+          "description": "Beskrivelse",
+          "assign-permissions": "Tildel tillatelser"
+        },
+        "placeholders": {
+          "name": "Angi navn",
+          "description": "Angi beskrivelse"
+        }
+      },
+      "role-list": {
+        "title": "Roller",
+        "subtitle": "Sikkerhetstjeneste",
+        "labels": {
+          "name": "Navn"
+        }
+      },
+      "oauthapps": {
+        "labels": {
+          "clientId": "Klient-ID",
+          "displayName": "Visningsnavn",
+          "type": "Type",
+          "clientSecret": "Klienthemmelighet",
+          "assigned-permissions": "Tildelte tillatelser",
+          "redirectUris": "Omdirigerings-URI-er",
+          "postLogoutRedirectUris": "URI-er for omdirigering etter utlogging"
+        },
+        "placeholders": {
+          "clientId": "Angi klient-ID",
+          "displayName": "Angi visningsnavn",
+          "type": "Angi type",
+          "clientSecret": "Angi klienthemmelighet"
+        }
+      },
+      "oauthapps-list": {
+        "title": "OAuth-applikasjoner",
+        "subtitle": "Sikkerhetstjeneste"
+      },
+      "oauthapps-detail": {
+        "title": "Rediger OAuth-applikasjon",
+        "title-new": "Opprett OAuth-applikasjon",
+        "subtitle": "Sikkerhetstjeneste",
+        "labels": {
+          "clientSecret-warning": "Advarsel! Du må kopiere hemmeligheten nå. Den vil bli skjult etter at bladet lukkes",
+          "urls": "URL-er"
+        },
+        "blades": {
+          "edit-redirectUris": {
+            "title": "Omdirigerings-URI-er",
+            "subtitle": "Administrer omdirigerings-URI-er"
+          },
+          "edit-postLogoutRedirectUris": {
+            "title": "URI-er for omdirigering etter utlogging",
+            "subtitle": "Administrer URI-er for omdirigering etter utlogging"
+          }
+        }
+      },
+      "login": {
+        "labels": {
+          "sign-in": "Logg inn på {{title}} Manager",
+          "login": "Innlogging",
+          "password": "Passord",
+          "remember-me": "Husk meg",
+          "external-sign-in": "Logg inn med {{displayName}}",
+          "forgot-password": "Glemt passordet ditt?",
+          "log-in": "Logg inn",
+          "log-in-placeholder": "Angi e-post eller brukernavn",
+          "password-placeholder": "Angi passordet ditt",
+          "azure-log-in-label": "Logg inn på administrasjonssiden via Azure",
+          "password-log-in-type": "Systembruker",
+          "or": "eller",
+          "signing-in": "Logger inn..."
+        }
+      },
+      "forgotpassword": {
+        "title": "Glemt passordet ditt?",
+        "labels": {
+          "login": "Innlogging eller e-post",
+          "description": "Vi sender deg en e-post med instruksjoner om hvordan du tilbakestiller passordet ditt",
+          "success": "E-post med instruksjoner er sendt til deg",
+          "fail": "Beklager, vi kunne ikke tilbakestille passordet for denne brukeren",
+          "back": "Tilbake",
+          "submit": "Send",
+          "time-limit": "Du kan prøve igjen om {{countdown}}",
+          "time-limit-end": "Du kan prøve igjen nå"
+        },
+        "placeholders": {
+          "login-or-email": "Angi innlogging eller e-post"
+        }
+      },
+      "access-denied": {
+        "title": "Tilgang nektet",
+        "labels": {
+          "message": "Du har ikke tilgang til denne ressursen. Kontakt administratoren din",
+          "button": "Logg inn med andre legitimasjoner"
+        }
+      },
+      "resetpassword": {
+        "title": "Tilbakestilling av passord",
+        "labels": {
+          "success": "Passordet ditt er tilbakestilt",
+          "fail": "Beklager, vi kunne ikke tilbakestille passordet for denne brukeren",
+          "submit": "Tilbakestill",
+          "log-in": "Logg inn"
+        }
+      },
+      "license": {
+        "title": "Gjeldende lisens",
+        "title-new": "Ny lisensaktivering",
+        "license-info": "Lisensinformasjon",
+        "license-activation": "Lisensaktivering",
+        "labels": {
+          "info-running-no-license": "Denne instansen av Virto Commerce kjører på",
+          "info-open-source-license": "Open Source Community-lisens",
+          "info0": "For å skaffe eller fornye lisensen:",
+          "info1": "Send inn ",
+          "info2": "Vi vil behandle forespørselen din og kontakte deg snart",
+          "info3": "Når du mottar \"Aktiveringskoden\" og/eller lisensfilen, fyll ut ett av aktiveringsfeltene nedenfor",
+          "info4": "Systemet viser den nye lisensinformasjonen. Gjennomgå den og klikk på \"Aktiver\" for å bekrefte",
+          "customer": "Lisens utstedt til",
+          "type": "Type",
+          "expiration": "Utløp",
+          "email": "Kundens e-post",
+          "request-license": "Lisensforespørsel",
+          "code-descr": "Angi mottatt lisensens \"Aktiveringskode\" og trykk [Enter]. Dette er den raskeste måten å aktivere lisensen på. (Krever internettforbindelse)",
+          "file-descr": "Alternativt, angi mottatt lisensfil. (Frakoblet aktivering)",
+          "upload-progress": "Opplastingsfremdrift",
+          "errors": "Aktiveringsfeil"
+        },
+        "placeholders": {
+          "code": "Angi aktiveringskode"
+        }
+      },
+      "new-account-wizard": {
+        "labels": {
+          "login": "Innlogging",
+          "email": "E-post",
+          "password": "Passord",
+          "repeat-password": "Gjenta passord",
+          "assign-roles": "Tildel roller"
+        },
+        "placeholders": {
+          "email": "Angi e-post",
+          "login": "Angi innlogging",
+          "password": "Angi nytt passord",
+          "repeat-password": "Gjenta nytt passord"
+        },
+        "validations": {
+          "repeat-password": "Angitte passord samsvarer ikke!",
+          "password-too-weak": "Angitt passord oppfyller ikke en eller flere passordsikkerhetspolicyer:"
+        }
+      },
+      "security-main": {
+        "title": "Sikkerhet",
+        "subtitle": "Brukerhåndtering"
+      },
+      "entitySetting-list": {
+        "title": "Innstillinger"
+      },
+      "setting-dictionary": {
+        "subtitle": "Administrer ordbokverdier",
+        "labels": {
+          "new-value": "Angi verdi",
+          "current-values": "Gjeldende verdier",
+          "value": "Verdi"
+        },
+        "validations": {
+          "new-value-required": "Påkrevd",
+          "new-value": "Duplikatverdi funnet"
+        },
+        "placeholders": {
+          "new-value": "Angi verdi"
+        }
+      },
+      "settings-detail": {
+        "title": "Innstillingverdier",
+        "hide-description": "Skjul"
+      },
+      "settingGroup-list": {
+        "title": "Innstillinger",
+        "bread-crumb-top": "Alle innstillinger"
+      },
+      "settings-uploader": {
+        "drag-drop-comment": "Dra og slipp fil her",
+        "or": "eller",
+        "browse-your-files": "bla gjennom filene dine"
+      },
+      "localizable-setting-value-list": {
+        "subtitle": "Administrer ordbokverdier"
+      },
+      "localizable-setting-value-details": {
+        "title": "Rediger ordbokverdi",
+        "alias": "Systemverdi"
+      },
+      "user-profile": {
+        "title": "Brukerprofil",
+        "labels": {
+          "language": "Språk",
+          "language-description": "Visningsspråk. Tøm for å bruke nettleserens eller reservespråket",
+          "regional-format": "Regionalt format",
+          "regional-format-description": "Regionalt format for tall, valuta, dato og tid. Tøm for å bruke nettleserens eller reserveformatet",
+          "time-zone": "Tidssone",
+          "time-zone-description": "Gjeldende brukers tidssone i IANA-format (tz-database). Velg nærmeste by i din tidssone. Tøm for å bruke nettleserens eller reservetidssonen",
+          "use-time-ago": "Bruk formatet 'for en stund siden' hvis mulig",
+          "full-date-threshold-group": "Bruk fullt datoformat for datoer eldre enn...",
+          "full-date-threshold-description": "Numerisk verdi for tidsenheter",
+          "full-date-threshold-unit-description": "Tidsenhet (f.eks. timer eller år)"
+        },
+        "placeholders": {
+          "full-date-threshold": "Angi terskelverdi",
+          "full-date-threshold-unit": "Velg terskelenhet"
+        },
+        "full-date-threshold-units": {
+          "Never": "Aldri",
+          "Seconds": "Sekunder",
+          "Minutes": "Minutter",
+          "Hours": "Timer",
+          "Days": "Dager",
+          "Weeks": "Uker",
+          "Months": "Måneder",
+          "Quarters": "Kvartaler",
+          "Years": "År"
+        }
+      }
+    },
+    "templates": {
+      "sampleDataChoose": {
+        "labels": {
+          "choose-sample-data-type": "Velg type eksempeldata",
+          "size": "størrelse",
+          "version": "versjon"
+        }
+      },
+      "sampleDataInitialization": {
+        "labels": {
+          "sample-data-initialization": "Initialisering av eksempeldata",
+          "starting-initialization": "Starter initialisering av eksempeldata...",
+          "errors": "Feil",
+          "start": "Start",
+          "end": "Slutt"
+        }
+      },
+      "licensing": {
+        "license-absent": "Community-lisens",
+        "license-present": "{{type}}-lisens, utløper {{expirationDate | amParse | date}}",
+        "community": "Kjører community-utgave, klikk for å be om en kommersiell lisens",
+        "expired": "Lisensen din har utløpt {{expirationDate | amParse | date}}, vennligst forny",
+        "purchase": "Kjøp",
+        "renew": "Forny",
+        "expiration-date": "Utløpsdato"
+      },
+      "password-expiry": {
+        "expire-days": "For å beskytte kontoen din må du endre passordet ditt <b>om {{count}} dager.</b>",
+        "expire-today": "For å beskytte kontoen din må du endre passordet ditt <b>i dag.</b>",
+        "change-link": "Endre nå"
+      },
+      "modulesAutoInstallation": {
+        "labels": {
+          "module-auto-installation": "Automatisk installasjon av moduler",
+          "loading": "Henter modulinformasjon...",
+          "finished": "Installasjonen er fullført. Klikk på Start på nytt for å fortsette",
+          "start": "Start",
+          "end": "Slutt"
+        }
+      }
+    },
+    "widgets": {
+      "operations": {
+        "title": "Endringer",
+        "blade-subtitle": "Endringshistorikk"
+      },
+      "dynamicProperty": {
+        "title": "Dynamiske egenskaper"
+      },
+      "entitySettings": {
+        "title": "Innstillinger"
+      },
+      "accountApi": {
+        "title": "API-nøkkel",
+        "blade-subtitle": "API-nøkkel"
+      },
+      "accountRoles": {
+        "title": "Roller",
+        "blade-subtitle": "Administrer roller"
+      }
+    },
+    "dialogs": {
+      "folders-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette valgte mapper eller filer?"
+      },
+      "properties-save": {
+        "title": "Lagre endringer",
+        "message": "Egenskapene er endret. Vil du lagre endringene?"
+      },
+      "notification-template-save": {
+        "title": "Lagre endringer",
+        "message": "Varslingsmalen er endret. Vil du lagre endringene?"
+      },
+      "role-save": {
+        "title": "Lagre endringer",
+        "message": "Rollen er endret. Vil du lagre endringene?"
+      },
+      "roles-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette valgte roller?"
+      },
+      "account-save": {
+        "title": "Lagre endringer",
+        "message": "Kontoen er endret. Vil du lagre endringene?"
+      },
+      "account-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette valgte kontoer?"
+      },
+      "oauthapps-save": {
+        "title": "Lagre endringer",
+        "message": "OAuth-applikasjonen er endret. Vil du lagre endringene?"
+      },
+      "oauthapps-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette den valgte OAuth-applikasjonen?"
+      },
+      "dynamic-property-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette denne dynamiske egenskapen?"
+      },
+      "settings-value-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette valgte verdier?"
+      },
+      "settings-save": {
+        "title": "Lagre endringer",
+        "message": "Innstillingene er endret. Vil du lagre endringene?"
+      },
+      "settings-delete": {
+        "title": "Bekreft sletting",
+        "message": "Innstillingene er endret. Vil du lagre endringene?"
+      },
+      "localizable-setting-value-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette valgte ordbokverdier?"
+      },
+      "localizable-setting-value-save": {
+        "title": "Lagre endringer",
+        "message": "Denne ordbokverdien er endret. Vil du lagre endringene?"
+      },
+      "email-sending-success": {
+        "title": "Sending vellykket",
+        "message": "E-posten er sendt!"
+      },
+      "email-send-error": {
+        "title": "Feil ved sending",
+        "message": "E-posten ble ikke sendt! Feil: {{error}}"
+      },
+      "dictionary-items-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette {{quantity}} valgte ordbokoppføringer?"
+      },
+      "module-action": {
+        "title-install": "Bekreft installasjon",
+        "title-update": "Bekreft oppdatering",
+        "title-delete": "Bekreft avinstallering",
+        "message0-install": "Du er i ferd med å installere:",
+        "message0-update": "Du er i ferd med å oppdatere:",
+        "message0-delete": "Du er i ferd med å avinstallere:",
+        "message1-install": "Følgende avhengigheter vil også bli installert:",
+        "message1-delete": "Følgende avhengige moduler vil også bli avinstallert:",
+        "message2-install": "Installere valg og avhengigheter?",
+        "message2-update": "Oppdatere valg og avhengigheter?",
+        "message2-delete": "Avinstallere denne og ALLE avhengige moduler?"
+      },
+      "module-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil avinstallere denne modulen?"
+      },
+      "api-key-delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette denne API-nøkkelen?"
+      },
+      "app-restart": {
+        "title": "Applikasjonsavslutning",
+        "message": "Start applikasjonen på nytt for å bruke endringene. Avhengig av vertstjenesten din kan applikasjonen starte på nytt automatisk, eller du må gjøre det manuelt. Er du sikker på at du vil avslutte applikasjonen nå?"
+      },
+      "error-details": {
+        "title": "Feilinformasjon"
+      },
+      "impersonate-no-url": {
+        "title": "Innlogging på vegne av",
+        "message": "Butikk-URL er ikke lagt til i butikkinnstillingene. Kontakt administratoren"
+      },
+      "asset-upload-error": {
+        "title": "Opplastingsfeil",
+        "message": "Velg en mappe! Kan ikke laste opp en fil til roten!"
+      },
+      "run-import": {
+        "title": "Bekreft import",
+        "message": "Er du sikker på at du vil importere eksempeldata?"
+      },
+      "create-folder": {
+        "title": "Et mappenavn må følge følgende navneregler:\n  Mappenavnet må være mellom 3 og 63 tegn langt.\n  Mappenavnet må starte med en bokstav eller et tall og kan bare inneholde bokstaver, tall og bindestreker (-).\n  Hver bindestrek (-) må umiddelbart være etterfulgt og forutgått av en bokstav eller et tall; påfølgende bindestreker er ikke tillatt.\n  Alle bokstaver i et mappenavn må være små"
+      },
+      "cache-reset": {
+        "title": "Tilbakestilling av hurtigbuffer",
+        "confirm-reset-message": "Er du sikker på at du vil tilbakestille hurtigbufferen? Denne handlingen sletter alle bufrede data og kan midlertidig påvirke systemets ytelse. Bekreft for å fortsette",
+        "reset-successfully-message": "Hurtigbufferen er tilbakestilt"
+      }
+    },
+    "commands": {
+      "login-on-behalf": "Logg inn på vegne av",
+      "cache-reset": {
+        "title": "Tilbakestill hurtigbuffer",
+        "name": "Tilbakestill hurtigbuffer"
+      },
+      "restart-application-title": "Start applikasjonen på nytt"
+    }
+  },
+  "permissions": {
+    "platform:asset:access": "Vis ressurser i hovedmenyen",
+    "platform:asset:delete": "Slett plattformressurser",
+    "platform:asset:update": "Endre plattformressurser",
+    "platform:asset:create": "Last opp nye plattformressurser",
+    "platform:asset:read": "Last ned plattformressurser",
+    "platform:module:read": "Vis modulinformasjon",
+    "platform:module:access": "Vis moduler i hovedmenyen",
+    "platform:module:manage": "Installer/avinstaller moduler",
+    "platform:setting:read": "Les plattforminnstillinger",
+    "platform:setting:access": "Vis innstillinger i hovedmenyen",
+    "platform:setting:update": "Endre plattforminnstillinger",
+    "platform:dynamic_properties:read": "Vis detaljer om dynamiske egenskaper",
+    "platform:dynamic_properties:create": "Opprett nye dynamiske egenskaper",
+    "platform:dynamic_properties:access": "Vis dynamiske egenskaper i hovedmenyen",
+    "platform:dynamic_properties:update": "Endre dynamiske egenskaper",
+    "platform:dynamic_properties:delete": "Slett dynamiske egenskaper",
+    "platform:security:read": "Vis bruker- og rolledetaljer",
+    "platform:security:create": "Opprett nye brukere og roller",
+    "platform:security:access": "Vis sikkerhet i hovedmenyen",
+    "platform:security:update": "Endre brukere og roller",
+    "platform:security:delete": "Slett brukere og roller",
+    "platform:security:verifyEmail": "Endre verifisert tilstand og send verifiserings-e-post",
+    "background_jobs:manage": "Tilgang til Hangfire-konsollen",
+    "platform:exportImport:access": "Vis Sikkerhetskopiering/Gjenoppretting i hovedmenyen",
+    "platform:import": "Gjenopprett plattform- og moduldata",
+    "platform:export": "Sikkerhetskopier plattform- og moduldata",
+    "platform:security:loginOnBehalf": "Logg inn på vegne av kunden"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "Core": {
+        "General": {
+          "Languages": {
+            "title": "Språk",
+            "description": "Liste over tilgjengelige språk"
+          }
+        }
+      },
+      "ModulesAutoInstalled": {
+        "description": "Flagg som indikerer at moduler er installert automatisk",
+        "title": "Moduler installert"
+      },
+      "ModulesAutoInstallState": {
+        "title": "Status for automatisk installasjon av moduler",
+        "description": "Gjeldende status for veiviseren for automatisk installasjon av moduler"
+      },
+      "SetupStep": {
+        "title": "Gjeldende installasjonstrinn",
+        "description": "Gjeldende trinn i installasjonsveiviseren"
+      },
+      "SampleDataState": {
+        "title": "Status for eksempeldata",
+        "description": "Gjeldende status for veiviseren for eksempeldata"
+      },
+      "SendDiagnosticData": {
+        "title": "Send diagnostikkdata",
+        "description": "Send diagnostikkdata for VC-plattformen til VC. Kan bare deaktiveres ved kjøp av lisens"
+      },
+      "Platform": {
+        "Security": {
+          "AccountTypes": {
+            "description": "Ordbok for mulige kontotyper",
+            "title": "Kontotyper"
+          },
+          "DefaultAccountType": {
+            "title": "Standard kontotype",
+            "description": "Standardverdi for kontotype ved opprettelse av ny konto"
+          },
+          "DefaultAccountStatus": {
+            "title": "Standard kontostatus",
+            "description": "Standardverdi for kontostatus ved opprettelse av ny konto"
+          },
+          "DefaultExternalAccountStatus": {
+            "title": "Standardstatus for ekstern konto",
+            "description": "Standardverdi for kontostatus ved opprettelse av ny konto under ekstern innlogging"
+          },
+          "EnablePruneExpiredTokensJob": {
+            "description": "Aktiverer fjerning av utløpte og ugyldige token/autoriseringer",
+            "title": "Fjern utløpte token"
+          },
+          "CronPruneExpiredTokensJob": {
+            "description": "Cron-uttrykk for jobben som fjerner utløpte og ugyldige token/autoriseringer",
+            "title": "Cron for token-fjerningsjobben"
+          },
+          "FileExtensionsBlackList": {
+            "description": "Filutvidelser som er forbudt å laste opp av plattformen (i tillegg til 'FileExtensionsBlackList' i appsettings.json)",
+            "title": "Svarteliste"
+          },
+          "FileExtensionsWhiteList": {
+            "description": "Filutvidelser som er tillatt å laste opp av plattformen (i tillegg til 'FileExtensionsWhiteList' i appsettings.json)",
+            "title": "Hvitliste"
+          }
+        },
+        "UI": {
+          "MainMenu": {
+            "State": {
+              "description": "Lagret tilstand for hovedmenyen",
+              "title": "Lagret tilstand for hovedmenyen"
+            }
+          },
+          "Language": {
+            "description": "Standard språk (tobokstavskode fra ISO 639-1, ikke skiftesensitiv). Eksempel: no, de",
+            "title": "Språk"
+          },
+          "RegionalFormat": {
+            "description": "Standard regionalt format (CLDR-lokalkode, med bindestrek eller understrek som separator, ikke skiftesensitiv). Eksempel: no, no_NO, sr_Cyrl, sr_Cyrl_RS",
+            "title": "Regionalt format"
+          },
+          "TimeZone": {
+            "description": "Standard tidssone (IANA-tidssonenavn [tz-database], nøyaktig som i databasen, skiftesensitiv). Eksempler: Europe/Oslo, America/New_York",
+            "title": "Tidssone"
+          },
+          "UseTimeAgo": {
+            "description": "Når satt til sann (standard), viser systemet datoer i formatet 'for en stund siden' når det er mulig",
+            "title": "Bruk formatet 'for en stund siden' når mulig"
+          },
+          "FullDateThreshold": {
+            "description": "Formatet 'for en stund siden' bytter til et fullt datoformat etter et visst antall tidsenheter",
+            "title": "Terskel for fullt datoformat"
+          },
+          "FullDateThresholdUnit": {
+            "description": "Enhet for terskel for fullt datoformat",
+            "title": "Enhet for terskel for fullt datoformat"
+          },
+          "Customization": {
+            "description": "JSON som inneholder tilpasningsinnstillinger for administratorens brukergrensesnitt",
+            "title": "Tilpasning av administratorens brukergrensesnitt"
+          },
+          "ShowMeridian": {
+            "description": "Vis tidsmeridianindikator (AM eller PM)",
+            "title": "Vis tidsmeridian"
+          }
+        },
+        "Cache": {
+          "Enabled": {
+            "description": "Denne innstillingen aktiverer eller deaktiverer hurtigbuffer globalt for hele plattformsapplikasjonen",
+            "title": "Aktiver eller deaktiver hurtigbuffer globalt"
+          },
+          "AbsoulteExpiration": {
+            "description": "Angir maksimal tid bufrede data lagres i hurtigbufferen. Format: [-][d.]hh:mm:ss[.fffffff]",
+            "title": "Global levetid for objekter i hurtigbuffer"
+          }
+        }
+      },
+      "Other": {
+        "AccountStatuses": {
+          "title": "Kontostatuser",
+          "description": "Endre kontostatuser"
+        }
+      }
+    }
+  }
+}

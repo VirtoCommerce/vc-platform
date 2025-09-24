@@ -112,7 +112,7 @@
         "description": "Integer number"
       },
       "decimal": {
-        "title": "Decimal Number",
+        "title": "Decimal number",
         "description": "Decimal number with a precision of 18 and a scale of 4"
       },
       "date-time": {
