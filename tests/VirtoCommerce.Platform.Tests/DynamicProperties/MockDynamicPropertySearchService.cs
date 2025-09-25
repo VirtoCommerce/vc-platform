@@ -126,7 +126,7 @@ public class MockDynamicPropertySearchService : IDynamicPropertySearchService
             },
             new DynamicProperty
             {
-                Name = "BooleantFieldSingleValue",
+                Name = "BooleanFieldSingleValue",
                 Description = "Description of Boolean Text Field Single Value",
                 ObjectType = typeof(TestEntityWithDynamicProperties).FullName,
                 IsArray = false,
@@ -144,7 +144,7 @@ public class MockDynamicPropertySearchService : IDynamicPropertySearchService
                 ModifiedDate = DateTime.Parse("2025-08-07T16:46:58.5460043Z"),
                 CreatedBy = "admin",
                 ModifiedBy = "admin",
-                Id = "904d359f-222b-4f62-861e-BooleantFieldSingleValue"
+                Id = "904d359f-222b-4f62-861e-BooleanFieldSingleValue"
             },
             new DynamicProperty
             {
