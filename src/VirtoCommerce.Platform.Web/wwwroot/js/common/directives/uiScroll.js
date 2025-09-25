@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .directive('uiScrollDropDown', [function () {
+    .directive('uiScrollDropDown', ['$translate', function ($translate) {
         const defaultPageSize = 20;
         const defaultResponseGroup = 'none';
         const defaultSelectedItemsPropertyName = 'objectIds';
@@ -18,6 +18,7 @@ angular.module('platformWebApp')
                 pageSize: '=?',
                 placeholder: '=?',
                 required: '=?',
+                searchplaceholder: '=?',
                 responseGroup: '=?',
                 selectedItemsPropertyName: '=?' //TODO: delete this when storeIds/etc are changed to objectIds
             },
@@ -27,6 +28,13 @@ angular.module('platformWebApp')
                     modelValue: null,
                     required: getBooleanAttributeValue('required'),
                     multiple: getBooleanAttributeValue('multiple'),
+                };
+
+                $scope.onOpenCloseFn = function (isOpen) {
+                    if (isOpen) {
+                        const input = element.find('input[type=search]');
+                        input.attr('placeholder', $scope.searchplaceholder || $translate.instant('platform.placeholders.search-keyword'));
+                    }
                 };
 
                 function getBooleanAttributeValue(name) {
@@ -73,6 +81,9 @@ angular.module('platformWebApp')
                     $select.page = $select.page || 0;
 
                     if (lastSearchPhrase !== $select.search) {
+                        if (!$select.search) {
+                            $scope.items = [];
+                        }
                         lastSearchPhrase = $select.search;
                         $select.page = 0;
                     }
@@ -98,7 +109,9 @@ angular.module('platformWebApp')
                 };
 
                 function load() {
-                    var selectedIds = $scope.context.multiple ? $scope.context.modelValue : [$scope.context.modelValue];
+                    var selectedIds = $scope.context.multiple
+                        ? $scope.context.modelValue
+                        : [$scope.context.modelValue]; // here may be array with undefined or null, but next if condition will not run without it
 
                     if ($scope.isNoItems && _.any(selectedIds)) {
                         var criteria = {
@@ -119,18 +132,34 @@ angular.module('platformWebApp')
                         result.$promise.then((x) => {
                             join(x.results, true);
                             if (select) {
-                                select.page++;
+                                setActiveIndex(select);
+                                if (x.results.length > 0) {
+                                    select.page++;
 
-                                if (select.page * pageSize < x.totalCount) {
-                                    $scope.$broadcast('scrollCompleted');
+                                    if (select.page * pageSize < x.totalCount) {
+                                        $scope.$broadcast('scrollCompleted');
+                                    }
                                 }
                             }
                         });
                     } else if (angular.isArray(result)) {
                         join(result);
+                        setActiveIndex(select);
                         $scope.paginationDisabled = true;
                     }
                     return result;
+                }
+
+                function setActiveIndex(select) {
+                    if (!select) return;
+                    var value = $scope.context.modelValue;
+                    if (!!value) {
+                        select.activeIndex = $scope.items.findIndex(function (item) {
+                            return item.id === value;
+                        });
+                    } else {
+                        select.activeIndex = 0;
+                    }
                 }
 
                 function join(newItems, callFilter) {

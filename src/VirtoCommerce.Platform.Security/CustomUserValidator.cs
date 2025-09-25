@@ -9,13 +9,13 @@ namespace VirtoCommerce.Platform.Security
     public class CustomUserValidator : IUserValidator<ApplicationUser>
     {
         private const string ValidationErrorMessage =
-            "User name can be either a valid email or must contain only alphanumeric characters and symbols '_' and '.'. " +
+            "User name can be either a valid email or must contain only alphanumeric characters and symbols, '-', '_' and '.'. " +
             "Symbols cannot be at the beginig or the end of the name or be next to each other. " +
             "User name length must be from 3 to 128.";
 
         private readonly Regex _userNameRegex =
-            new (@"^(?=.{3,128}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$");
-        
+            new(@"^(?=.{3,128}$)(?![_.\-])(?!.*[_.\-]{2})[a-zA-Z0-9._\-]+(?<![_.\-])$");
+
         public Task<IdentityResult> ValidateAsync(UserManager<ApplicationUser> manager, ApplicationUser user)
         {
             if (user.UserName.IsValidEmail())
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Security
             {
                 return Task.FromResult(IdentityResult.Failed(new IdentityError
                 {
-                    Code = "Incorrect username",
+                    Code = "Incorrect user name",
                     Description = ValidationErrorMessage
                 }));
             }

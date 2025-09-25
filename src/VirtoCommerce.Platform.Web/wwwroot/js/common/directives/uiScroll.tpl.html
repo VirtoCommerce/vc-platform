@@ -19,18 +19,19 @@
     <ui-select ng-if="!context.multiple"
                ng-model="context.modelValue"
                ng-required="context.required"
+               uis-open-close="onOpenCloseFn(isOpen)"
                ng-disabled="disabled"
                ng-class="{ disabled: isNoItems }"
                on-select="selectValue($item, $model)"
                on-remove="removeValue($item, $model)">
-        <ui-select-match allow-clear="true" placeholder="{{ placeholder || 'platform.placeholders.select-value' | translate }}">
-            {{ isNoItems ? ('platform.list.loading' | translate) : $select.selected.name || ('platform.list.item-not-found' | translate) }}
-        </ui-select-match>
-        <ui-select-choices repeat="x.id as x in items | filter: { name: $select.search }"
-                           refresh="fetch($select)"
-                           refresh-delay="300"
-                           when-scrolled="fetchNext($select)">
-            <span ng-bind-html="x.name | highlight: $select.search" ng-show='!isNoItems'></span>
-        </ui-select-choices>
+      <ui-select-match allow-clear="true" placeholder="{{ placeholder || 'platform.placeholders.select-value' | translate }}">
+        {{ isNoItems ? ('platform.list.loading' | translate) : $select.selected.name || ('platform.list.item-not-found' | translate) }}
+      </ui-select-match>
+      <ui-select-choices repeat="x.id as x in items | filter: { name: $select.search }"
+                         refresh="fetch($select)"
+                         refresh-delay="300"
+                         when-scrolled="fetchNext($select)">
+        <span ng-bind-html="x.name | highlight: $select.search" ng-show='!isNoItems'></span>
+      </ui-select-choices>
     </ui-select>
 </div>
