@@ -88,11 +88,10 @@ public static class DynamicPropertyValueTypeCapabilities
 
     public static void RegisterCapability(DynamicPropertyValueTypeCapability capability)
     {
-        if (Capabilities.ContainsKey(capability.ValueType))
+        if (!Capabilities.TryAdd(capability.ValueType, capability))
         {
             throw new ArgumentException($"Capability for value type {capability.ValueType} is already registered.");
         }
-        Capabilities[capability.ValueType] = capability;
     }
 
 }
