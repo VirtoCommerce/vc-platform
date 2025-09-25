@@ -21,8 +21,10 @@ public static class DynamicPropertyMetadata
 
     public static async Task<IList<DynamicProperty>> GetProperties(string objectType)
     {
-        ArgumentNullException.ThrowIfNull(SearchService,
-            "DynamicPropertySearchService is not initialized. Call DynamicPropertyMetadata.Initialize() method in your module's InitializeAsync method.");
+        if (SearchService == null)
+        {
+            throw new InvalidOperationException("DynamicPropertySearchService is not initialized. Call DynamicPropertyMetadata.Initialize() method in your module's InitializeAsync method.");
+        }
 
         var criteria = AbstractTypeFactory<DynamicPropertySearchCriteria>.TryCreateInstance();
         criteria.ObjectType = objectType;

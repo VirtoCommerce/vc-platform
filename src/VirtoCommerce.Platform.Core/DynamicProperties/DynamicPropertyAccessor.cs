@@ -24,23 +24,26 @@ public class DynamicPropertyAccessor : DynamicObject
 
     public DynamicPropertyAccessor(IHasDynamicProperties parentEntity)
     {
+        ArgumentNullException.ThrowIfNull(parentEntity);
+
         _parentObjectType = parentEntity.ObjectType;
         _connectedEntity = parentEntity;
     }
 
-    public DynamicPropertyAccessor(IDictionary<string, object> properties = null)
+    public DynamicPropertyAccessor(IDictionary<string, object> properties)
     {
-        if (properties != null)
+        ArgumentNullException.ThrowIfNull(properties);
+
+        foreach (var kvp in properties)
         {
-            foreach (var kvp in properties)
-            {
-                _properties[kvp.Key] = kvp.Value;
-            }
+            _properties[kvp.Key] = kvp.Value;
         }
     }
 
     public DynamicPropertyAccessor(string objectType, IDictionary<string, object> properties = null)
     {
+        ArgumentNullException.ThrowIfNull(objectType);
+
         _parentObjectType = objectType;
 
         if (properties != null)
@@ -110,8 +113,6 @@ public class DynamicPropertyAccessor : DynamicObject
             if (metaProperty.IsMultilingual)
             {
                 throw new NotImplementedException();
-                //var localizedArray = new List<LocalizedString>();
-                //result = localizedArray;
             }
             else
             {
@@ -341,6 +342,8 @@ public class DynamicPropertyAccessor : DynamicObject
 
     public void ConnectEntity(IHasDynamicProperties parentEntity)
     {
+        ArgumentNullException.ThrowIfNull(parentEntity);
+
         _parentObjectType = parentEntity.ObjectType;
         _connectedEntity = parentEntity;
 
@@ -348,6 +351,8 @@ public class DynamicPropertyAccessor : DynamicObject
         {
             TrySetPropertyValue(propName, _properties[propName]);
         }
+
+        _properties.Clear();
     }
 
 }
