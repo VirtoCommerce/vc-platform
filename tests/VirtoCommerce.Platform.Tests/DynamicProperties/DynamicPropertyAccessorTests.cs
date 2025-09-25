@@ -1,0 +1,303 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+using Xunit;
+
+namespace VirtoCommerce.Platform.Tests.DynamicProperties;
+
+[Trait("Category", "Unit")]
+public class DynamicPropertyAccessorTests
+{
+    private readonly IDynamicPropertySearchService _searchService;
+    public DynamicPropertyAccessorTests()
+    {
+        _searchService = new MockDynamicPropertySearchService();
+        DynamicPropertyMetadata.Initialize(_searchService);
+    }
+
+    [Fact]
+    public async Task ShouldReturn_NonEmptyProperties_ForTestEntityWithDynamicProperties()
+    {
+        // Act
+        var properties = await DynamicPropertyMetadata.GetProperties(typeof(TestEntityWithDynamicProperties).FullName);
+
+        // Assert
+        Assert.NotNull(properties);
+        Assert.NotEmpty(properties);
+    }
+
+
+    [Fact]
+    public void Access_To_Property()
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        dynamic properties = entity.DynamicPropertyAccessor;
+        properties.ShortTextFieldSingleValue = "Test Value Old";
+        Assert.Equal("Test Value Old", properties.ShortTextFieldSingleValue);
+
+        properties.ShortTextFieldSingleValue = "Test Value";
+        Assert.Equal("Test Value", properties.ShortTextFieldSingleValue);
+
+
+        // Check that DynamicProperties contains the property with correct value and type
+        var dynamicProperty = entity.DynamicProperties
+            .FirstOrDefault(p => p.Name == "ShortTextFieldSingleValue");
+
+        Assert.NotNull(dynamicProperty);
+        Assert.Equal("Test Value", dynamicProperty?.Values?.FirstOrDefault()?.Value);
+
+        // Check type
+        Assert.Equal(DynamicPropertyValueType.ShortText, dynamicProperty?.ValueType);
+    }
+
+    [Fact]
+    public void External_Access_To_Property()
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        dynamic properties = new DynamicPropertyAccessor(entity);
+
+        properties.ShortTextFieldSingleValue = "Test Value Old";
+        Assert.Equal("Test Value Old", properties.ShortTextFieldSingleValue);
+
+        properties.ShortTextFieldSingleValue = "Test Value";
+        Assert.Equal("Test Value", properties.ShortTextFieldSingleValue);
+
+
+        // Check that DynamicProperties contains the property with correct value and type
+        var dynamicProperty = entity.DynamicProperties
+            .FirstOrDefault(p => p.Name == "ShortTextFieldSingleValue");
+
+        Assert.NotNull(dynamicProperty);
+        Assert.Equal("Test Value", dynamicProperty?.Values?.FirstOrDefault()?.Value);
+
+        // Check type
+        Assert.Equal(DynamicPropertyValueType.ShortText, dynamicProperty?.ValueType);
+    }
+
+    [Fact]
+    public void Direct_Access_To_ShortTextField_MultiValue()
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        var readPropertyValue1 = entity.ShortTextField_MultiValue;
+        Assert.Empty(readPropertyValue1);
+
+        entity.ShortTextField_MultiValue = [];
+        var readPropertyValue2 = entity.ShortTextField_MultiValue;
+        Assert.Empty(readPropertyValue2);
+
+        entity.ShortTextField_MultiValue = ["Test1", "Test2"];
+        var readPropertyValue3 = entity.ShortTextField_MultiValue;
+        Assert.Equal(2, readPropertyValue3.Length);
+        Assert.Equal("Test1", readPropertyValue3[0]);
+        Assert.Equal("Test2", readPropertyValue3[1]);
+    }
+
+    [Fact]
+    public void Direct_Access_To_IntegerFieldSingleValue()
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        var readPropertyValue1 = entity.IntegerFieldSingleValue;
+        Assert.Null(readPropertyValue1);
+
+        entity.IntegerFieldSingleValue = 123;
+        var readPropertyValue2 = entity.IntegerFieldSingleValue;
+        Assert.Equal(123, readPropertyValue2);
+
+        entity.IntegerFieldSingleValue = null;
+        var readPropertyValue3 = entity.IntegerFieldSingleValue;
+        Assert.Null(readPropertyValue3);
+    }
+
+
+    [Theory]
+    [InlineData("ShortTextFieldSingleValue", DynamicPropertyValueType.ShortText, "Test Short Text Value")]
+    [InlineData("LongTextFieldSingleValue", DynamicPropertyValueType.LongText, "Test Long Long Long Text Value")]
+    [InlineData("HtmlFieldSingleValue", DynamicPropertyValueType.Html, "<p>Html Text</p>")]
+    [InlineData("IntegerFieldSingleValue", DynamicPropertyValueType.Integer, 123)]
+    [InlineData("BooleantFieldSingleValue", DynamicPropertyValueType.Boolean, true)]
+    [InlineData("BooleantFieldSingleValue", DynamicPropertyValueType.Boolean, false)]
+    [InlineData("DecimalFieldSingleValue", DynamicPropertyValueType.Decimal, 3.14)]
+    [InlineData("DateTimeFieldSingleValue", DynamicPropertyValueType.DateTime, "2025-06-13T18:40:10.6332198Z")]
+    [InlineData("ImageFieldSingleValue", DynamicPropertyValueType.Image, "https://localhost:5001/assets/images/Suitespot1.png")]
+    [InlineData("ShortTextFieldMultiValue", DynamicPropertyValueType.ShortText, new string[] { "Test Short Text Value 1", "Test Short Text Value 2" })]
+    [InlineData("LongTextFieldMultiValue", DynamicPropertyValueType.LongText, new string[] { "Test Long Long Long Text Value" })]
+    //[InlineData("HtmlFieldMultiValue", DynamicPropertyValueType.Html, new string[] { "<p>Html Text</p>", "<p>Another Html Text</p>" })]
+    [InlineData("IntegerFieldMultiValue", DynamicPropertyValueType.Integer, new int[] { 123, 345 })]
+    //[InlineData("BooleantFieldMultiValue", DynamicPropertyValueType.Boolean, new bool[] { true, false })]
+    [InlineData("DecimalFieldMultiValue", DynamicPropertyValueType.Decimal, new double[] { 3.14, 2.18 })]
+    //[InlineData("ImageFieldMultiValue", DynamicPropertyValueType.Image, new string[] { "https://localhost:5001/assets/images/Suitespot1.png" })]
+    public void Test_Set_Get_DynamicProperty_With_Simple_Value(string propertyName, DynamicPropertyValueType propertyType, object value)
+    {
+        if (propertyType == DynamicPropertyValueType.DateTime &&
+            value is string dateTimeString)
+        {
+            // Convert string to DateTime for comparison
+            value = DateTime.Parse(dateTimeString);
+        }
+
+        var entity = new TestEntityWithDynamicProperties();
+
+        var setResult = entity.DynamicPropertyAccessor.TrySetPropertyValue(propertyName, value);
+        Assert.True(setResult);
+
+        var getResult = entity.DynamicPropertyAccessor.TryGetPropertyValue(propertyName, out var resultValue);
+        Assert.True(getResult);
+
+        Assert.Equal(value, resultValue);
+
+        // Check that DynamicProperties contains the property with correct value and type
+        var dynamicProperty = entity.DynamicProperties
+            .FirstOrDefault(p => p.Name == propertyName);
+
+        Assert.NotNull(dynamicProperty);
+        Assert.Equal(propertyType, dynamicProperty?.ValueType);
+
+        // Additional validation for array values
+        if (value is Array valueArray)
+        {
+            Assert.Equal(value, dynamicProperty.Values.Select(x => x.Value).ToArray());
+        }
+        else
+        {
+            Assert.Equal(value, dynamicProperty.Values.FirstOrDefault().Value);
+        }
+    }
+
+    [Theory]
+    [InlineData("ShortTextFieldSingleValue_Localized", DynamicPropertyValueType.ShortText, "{\"Values\":{\"en-US\":\"Hello\",\"fr-FR\":\"Bonjour\"}}")]
+    [InlineData("LongTextFieldSingleValue_Localized", DynamicPropertyValueType.LongText, "{\"Values\":{\"en-US\":\"Hello\", \"fr-FR\":\"Bonjour\", \"de-DE\":\"Hallo\"}}")]
+    [InlineData("HtmlTextFieldSingleValue_Localized", DynamicPropertyValueType.Html, "{\"Values\":{\"en-US\":\"<p>Hello</p>\", \"fr-FR\":\"<p>Bonjour</p>\", \"de-DE\":\"<p>Hallo</p>\"}}")]
+
+    public void Test_Set_Get_DynamicProperty_With_Localized_Value(string propertyName, DynamicPropertyValueType propertyType, string jsonValue)
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        var value = Newtonsoft.Json.JsonConvert.DeserializeObject<LocalizedString>(jsonValue);
+
+        var setResult = entity.DynamicPropertyAccessor.TrySetPropertyValue(propertyName, value);
+        Assert.True(setResult);
+
+        var getResult = entity.DynamicPropertyAccessor.TryGetPropertyValue(propertyName, out var resultValue);
+        Assert.True(getResult);
+
+        Assert.Equal(value.Values, ((LocalizedString)resultValue).Values);
+
+        // Check that DynamicProperties contains the property with correct value and type
+        var dynamicProperty = entity.DynamicProperties
+            .FirstOrDefault(p => p.Name == propertyName);
+
+        Assert.NotNull(dynamicProperty);
+        Assert.Equal(propertyType, dynamicProperty?.ValueType);
+
+        // Additional validation for array values
+        Assert.Equal(value.Values.Count, dynamicProperty.Values.Count);
+    }
+
+    [Theory]
+    [InlineData("ShortTextField_MultiValue", DynamicPropertyValueType.ShortText, new object[] { "test1", "test2" })]
+    [InlineData("IntegerField_MultiValue", DynamicPropertyValueType.Integer, new object[] { 123, 345 })]
+    [InlineData("DecimalField_MultiValue", DynamicPropertyValueType.Decimal, new object[] { 2.18, 3.14 })]
+    public void Test_Set_Get_DynamicProperty_With_MultiValue_Value(string propertyName, DynamicPropertyValueType propertyType, object[] values)
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        var setResult = entity.DynamicPropertyAccessor.TrySetPropertyValue(propertyName, values);
+        Assert.True(setResult);
+
+        var getResult = entity.DynamicPropertyAccessor.TryGetPropertyValue(propertyName, out var resultValue);
+        Assert.True(getResult);
+
+        Assert.Equal(values, resultValue);
+
+        // Check that DynamicProperties contains the property with correct value and type
+        var dynamicProperty = entity.DynamicProperties
+            .FirstOrDefault(p => p.Name == propertyName);
+
+        Assert.NotNull(dynamicProperty);
+        Assert.Equal(propertyType, dynamicProperty?.ValueType);
+
+        // Additional validation for array values
+        Assert.Equal(values.Length, dynamicProperty.Values.Count);
+    }
+
+    [Theory]
+    [InlineData("ShortTextField_MultiValue_Localized", DynamicPropertyValueType.ShortText,
+        new object[]
+        {
+            "{\"Values\":{\"en-US\":\"Hello\",\"fr-FR\":\"Bonjour\"}}",
+            "{\"Values\":{\"en-US\":\"Hello\",\"fr-FR\":\"Bonjour\"}}" })
+        ]
+    public void Test_Set_Get_ShortTextField_MultiValue_Localized(string propertyName, DynamicPropertyValueType propertyType, object[] jsonValues)
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        var values = jsonValues
+            .Select(v => Newtonsoft.Json.JsonConvert.DeserializeObject<LocalizedString>(v.ToString()))
+            .ToArray();
+
+        var setResult = entity.DynamicPropertyAccessor.TrySetPropertyValue(propertyName, values);
+        Assert.True(setResult);
+
+        var getResult = entity.DynamicPropertyAccessor.TryGetPropertyValue(propertyName, out var resultValue);
+        Assert.True(getResult);
+
+        Assert.Equal(values, resultValue);
+
+        // Check that DynamicProperties contains the property with correct value and type
+        var dynamicProperty = entity.DynamicProperties
+            .FirstOrDefault(p => p.Name == propertyName);
+
+        Assert.NotNull(dynamicProperty);
+        Assert.Equal(propertyType, dynamicProperty?.ValueType);
+
+        // Additional validation for array values
+        Assert.Equal(values.Length, dynamicProperty.Values.Count);
+    }
+
+    [Fact]
+    public void Set_Wrong_Value_ShortTextDynamicProperty()
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        dynamic properties = entity.DynamicPropertyAccessor;
+
+        Assert.Throws<Microsoft.CSharp.RuntimeBinder.RuntimeBinderException>(() =>
+        {
+            properties.ShortTextFieldSingleValue = 123;
+        });
+    }
+
+    [Fact]
+    public void Set_Wrong_Name()
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        dynamic properties = entity.DynamicPropertyAccessor;
+
+        Assert.Throws<Microsoft.CSharp.RuntimeBinder.RuntimeBinderException>(() =>
+        {
+            properties.WrongName = 123;
+        });
+    }
+
+    [Fact]
+    public void Get_Wrong_Name()
+    {
+        var entity = new TestEntityWithDynamicProperties();
+
+        dynamic properties = entity.DynamicPropertyAccessor;
+
+        Assert.Throws<Microsoft.CSharp.RuntimeBinder.RuntimeBinderException>(() =>
+        {
+            var value = properties.WrongName;
+        });
+    }
+
+}
+
