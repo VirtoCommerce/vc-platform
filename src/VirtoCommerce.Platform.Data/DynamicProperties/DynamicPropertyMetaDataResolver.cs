@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -12,10 +13,12 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
     {
         private readonly IDynamicPropertySearchService _searchService;
         private readonly IPlatformMemoryCache _memoryCache;
-        const int _pageSize = 100;
+
+        private const int _pageSize = 100;
+
         public DynamicPropertyMetaDataResolver(
-            IDynamicPropertySearchService searchService
-            , IPlatformMemoryCache memoryCache)
+            IDynamicPropertySearchService searchService,
+            IPlatformMemoryCache memoryCache)
         {
             _searchService = searchService;
             _memoryCache = memoryCache;
@@ -23,17 +26,39 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         public virtual async Task<DynamicProperty> GetByNameAsync(string objectType, string propertyName)
         {
-            if (objectType == null)
+            ArgumentNullException.ThrowIfNull(objectType);
+            ArgumentNullException.ThrowIfNull(propertyName);
+
+            var dict = await GetPropertyDictionary();
+
+            if (dict.TryGetValue(objectType, out var innerDict))
             {
-                throw new ArgumentNullException(nameof(objectType));
-            }
-            if (propertyName == null)
-            {
-                throw new ArgumentNullException(nameof(propertyName));
+                return innerDict[propertyName];
             }
 
-            var cacheKey = CacheKey.With(GetType(), nameof(GetByNameAsync));
-            var dict = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return null;
+        }
+
+        public virtual async Task<IList<DynamicProperty>> GetAllAsync(string objectType)
+        {
+            ArgumentNullException.ThrowIfNull(objectType);
+
+            var dict = await GetPropertyDictionary();
+
+            if (dict.TryGetValue(objectType, out var innerDict))
+            {
+                return innerDict.Values.ToList();
+            }
+
+            return Array.Empty<DynamicProperty>();
+        }
+
+        // Returns: IDictionary<objectType, IDictionary<propertyName, DynamicProperty>>
+        private Task<Dictionary<string, Dictionary<string, DynamicProperty>>> GetPropertyDictionary()
+        {
+            var cacheKey = CacheKey.With(GetType(), nameof(GetPropertyDictionary));
+
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
 
@@ -45,10 +70,15 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
                 var result = await _searchService.SearchAllNoCloneAsync(criteria);
 
-                return result.Distinct().ToDictionary(x => $"{x.ObjectType}__{x.Name}", StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
+                var outer = result
+                    .Distinct()
+                    .GroupBy(x => x.ObjectType, StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.ToDictionary(p => p.Name, StringComparer.OrdinalIgnoreCase));
 
+                return outer;
             });
-            return dict[$"{objectType}__{propertyName}"];
         }
     }
 }

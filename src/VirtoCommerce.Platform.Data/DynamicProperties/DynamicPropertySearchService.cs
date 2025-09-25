@@ -22,8 +22,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             _repositoryFactory = repositoryFactory;
             _dynamicPropertyService = dynamicPropertyService;
             _memoryCache = memoryCache;
-
-            DynamicPropertyMetadata.Initialize(this);
         }
 
         public Task<DynamicPropertySearchResult> SearchAsync(DynamicPropertySearchCriteria criteria, bool clone = true)

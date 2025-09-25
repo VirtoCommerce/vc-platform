@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.DynamicProperties;
 public static class DynamicPropertyMetadata
 {
-    private static IDynamicPropertySearchService SearchService { get; set; } = null;
-    const int _pageSize = 100;
+    private static IDynamicPropertyMetaDataResolver MetaDataResolver { get; set; } = null;
 
-    public static void Initialize(IDynamicPropertySearchService searchService)
+    public static void Initialize(IDynamicPropertyMetaDataResolver metaDataResolver)
     {
-        SearchService ??= searchService;
+        MetaDataResolver ??= metaDataResolver;
     }
 
     public static Task<IList<DynamicProperty>> GetProperties<Entity>()
@@ -21,16 +19,12 @@ public static class DynamicPropertyMetadata
 
     public static async Task<IList<DynamicProperty>> GetProperties(string objectType)
     {
-        if (SearchService == null)
+        if (MetaDataResolver == null)
         {
-            throw new InvalidOperationException("DynamicPropertySearchService is not initialized. Call DynamicPropertyMetadata.Initialize() method in your module's InitializeAsync method.");
+            throw new InvalidOperationException("IDynamicPropertyMetaDataResolver is not initialized. Call DynamicPropertyMetadata.Initialize() method in your module's InitializeAsync method.");
         }
 
-        var criteria = AbstractTypeFactory<DynamicPropertySearchCriteria>.TryCreateInstance();
-        criteria.ObjectType = objectType;
-        criteria.Take = _pageSize;
-
-        var properties = await SearchService.SearchAllNoCloneAsync(criteria);
+        var properties = await MetaDataResolver.GetAllAsync(objectType);
 
         return properties;
     }
