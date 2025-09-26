@@ -112,7 +112,7 @@ public class DynamicPropertyAccessor : DynamicObject
         {
             if (metaProperty.IsMultilingual)
             {
-                throw new NotImplementedException();
+                return null; // Multilingual arrays are not supported
             }
             else
             {
@@ -120,8 +120,28 @@ public class DynamicPropertyAccessor : DynamicObject
                 var values = prop?.Values?.Select(v => v.Value).ToArray() ?? [];
 
                 var clrType = DynamicPropertyValueTypeToClrType(metaProperty);
-                result = Array.CreateInstance(clrType, values.Length);
-                Array.Copy(values, (Array)result, values.Length);
+                var array = Array.CreateInstance(clrType, values.Length);
+
+                if (clrType == typeof(decimal))
+                {
+                    for (var i = 0; i < values.Length; i++)
+                    {
+                        if (values[i] == null)
+                        {
+                            array.SetValue(null, i);
+                            continue;
+                        }
+
+                        // Convert.ChangeType handles int, float, double -> decimal automatically
+                        var converted = Convert.ChangeType(values[i], clrType);
+                        array.SetValue(converted, i);
+                    }
+                }
+                else
+                {
+                    Array.Copy(values, array, values.Length);
+                }
+                result = array;
             }
         }
         else
@@ -237,17 +257,20 @@ public class DynamicPropertyAccessor : DynamicObject
             if (metaProperty.IsMultilingual)
             {
                 var localizedString = value as LocalizedString;
-                foreach (var localizedItem in localizedString.Values)
+                if (localizedString != null)
                 {
-                    values.Add(new DynamicPropertyObjectValue
+                    foreach (var localizedItem in localizedString.Values)
                     {
-                        ObjectType = _connectedEntity.ObjectType,
-                        ObjectId = _connectedEntity.Id,
-                        PropertyId = prop.Id,
-                        PropertyName = metaProperty.Name,
-                        Locale = localizedItem.Key,
-                        Value = localizedItem.Value,
-                    });
+                        values.Add(new DynamicPropertyObjectValue
+                        {
+                            ObjectType = _connectedEntity.ObjectType,
+                            ObjectId = _connectedEntity.Id,
+                            PropertyId = prop.Id,
+                            PropertyName = metaProperty.Name,
+                            Locale = localizedItem.Key,
+                            Value = localizedItem.Value,
+                        });
+                    }
                 }
             }
             else
@@ -321,7 +344,7 @@ public class DynamicPropertyAccessor : DynamicObject
             DynamicPropertyValueType.ShortText => typeof(string),
             DynamicPropertyValueType.LongText => typeof(string),
             DynamicPropertyValueType.Integer => typeof(int),
-            DynamicPropertyValueType.Decimal => typeof(double),
+            DynamicPropertyValueType.Decimal => typeof(decimal),
             DynamicPropertyValueType.Boolean => typeof(bool),
             DynamicPropertyValueType.DateTime => typeof(DateTime),
             DynamicPropertyValueType.Html => typeof(string),

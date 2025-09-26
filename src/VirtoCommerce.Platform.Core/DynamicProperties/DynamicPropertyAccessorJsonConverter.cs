@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -11,10 +10,15 @@ public class DynamicPropertyAccessorJsonConverter : JsonConverter<DynamicPropert
     public override void WriteJson(JsonWriter writer, DynamicPropertyAccessor value, JsonSerializer serializer)
     {
         var jObject = new JObject();
-        foreach (var prop in value.GetConnectedEntity().DynamicProperties)
+
+        var properties = DynamicPropertyMetadata.GetProperties(value.GetConnectedEntity().ObjectType).GetAwaiter().GetResult();
+
+        foreach (var prop in properties)
         {
-            var propValue = prop.Values?.FirstOrDefault()?.Value;
-            jObject[prop.Name] = propValue != null ? JToken.FromObject(propValue, serializer) : JValue.CreateNull();
+            if (value.TryGetPropertyValue(prop.Name, out object result))
+            {
+                jObject[prop.Name] = result != null ? JToken.FromObject(result, serializer) : JValue.CreateNull();
+            }
         }
         jObject.WriteTo(writer);
     }

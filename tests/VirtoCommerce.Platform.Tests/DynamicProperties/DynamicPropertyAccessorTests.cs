@@ -148,7 +148,7 @@ public class DynamicPropertyAccessorTests
     //[InlineData("HtmlFieldMultiValue", DynamicPropertyValueType.Html, new string[] { "<p>Html Text</p>", "<p>Another Html Text</p>" })]
     [InlineData("IntegerFieldMultiValue", DynamicPropertyValueType.Integer, new int[] { 123, 345 })]
     //[InlineData("BooleantFieldMultiValue", DynamicPropertyValueType.Boolean, new bool[] { true, false })]
-    [InlineData("DecimalFieldMultiValue", DynamicPropertyValueType.Decimal, new double[] { 3.14, 2.18 })]
+    [InlineData("DecimalFieldMultiValue", DynamicPropertyValueType.Decimal, new string[] { "3.14", "2.18" })]
     //[InlineData("ImageFieldMultiValue", DynamicPropertyValueType.Image, new string[] { "https://localhost:5001/assets/images/Suitespot1.png" })]
     public void Test_Set_Get_DynamicProperty_With_Simple_Value(string propertyName, DynamicPropertyValueType propertyType, object value)
     {
@@ -157,6 +157,12 @@ public class DynamicPropertyAccessorTests
         {
             // Convert string to DateTime for comparison
             value = DateTime.Parse(dateTimeString);
+        }
+        else if (propertyType == DynamicPropertyValueType.Decimal &&
+            value is string[])
+        {
+            // Convert string to DateTime for comparison
+            value = (value as string[]).Select(x => decimal.Parse(x)).ToArray();
         }
 
         var entity = new TestEntityWithDynamicProperties();
@@ -220,18 +226,25 @@ public class DynamicPropertyAccessorTests
     [Theory]
     [InlineData("ShortTextField_MultiValue", DynamicPropertyValueType.ShortText, new object[] { "test1", "test2" })]
     [InlineData("IntegerField_MultiValue", DynamicPropertyValueType.Integer, new object[] { 123, 345 })]
-    [InlineData("DecimalField_MultiValue", DynamicPropertyValueType.Decimal, new object[] { 2.18, 3.14 })]
+    [InlineData("DecimalField_MultiValue", DynamicPropertyValueType.Decimal, new object[] { "2.18", "3.14" })]
     public void Test_Set_Get_DynamicProperty_With_MultiValue_Value(string propertyName, DynamicPropertyValueType propertyType, object[] values)
     {
+        object value = values;
+        if (propertyType == DynamicPropertyValueType.Decimal)
+        {
+            // Convert string to Decimal
+            value = values.Select(x => decimal.Parse(x.ToString())).ToArray();
+        }
+
         var entity = new TestEntityWithDynamicProperties();
 
-        var setResult = entity.DynamicPropertyAccessor.TrySetPropertyValue(propertyName, values);
+        var setResult = entity.DynamicPropertyAccessor.TrySetPropertyValue(propertyName, value);
         Assert.True(setResult);
 
         var getResult = entity.DynamicPropertyAccessor.TryGetPropertyValue(propertyName, out var resultValue);
         Assert.True(getResult);
 
-        Assert.Equal(values, resultValue);
+        Assert.Equal(value, resultValue);
 
         // Check that DynamicProperties contains the property with correct value and type
         var dynamicProperty = entity.DynamicProperties
