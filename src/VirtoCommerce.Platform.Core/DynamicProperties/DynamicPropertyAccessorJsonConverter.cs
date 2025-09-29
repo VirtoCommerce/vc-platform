@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -13,11 +14,11 @@ public class DynamicPropertyAccessorJsonConverter : JsonConverter<DynamicPropert
 
         var properties = DynamicPropertyMetadata.GetProperties(value.GetConnectedEntity().ObjectType).GetAwaiter().GetResult();
 
-        foreach (var prop in properties)
+        foreach (var propertyName in properties.Select(p => p.Name))
         {
-            if (value.TryGetPropertyValue(prop.Name, out object result))
+            if (value.TryGetPropertyValue(propertyName, out object result))
             {
-                jObject[prop.Name] = result != null ? JToken.FromObject(result, serializer) : JValue.CreateNull();
+                jObject[propertyName] = result != null ? JToken.FromObject(result, serializer) : JValue.CreateNull();
             }
         }
         jObject.WriteTo(writer);

@@ -88,8 +88,6 @@ public class DynamicPropertyAccessor : DynamicObject
             result = GetValueFromDisconnectedEntity(metaProperty);
         }
 
-        // TODO: Default Value Handling
-
         return result;
     }
 
@@ -363,16 +361,19 @@ public class DynamicPropertyAccessor : DynamicObject
         return _connectedEntity;
     }
 
-    public void ConnectEntity(IHasDynamicProperties parentEntity)
+    public void ConnectEntity(IHasDynamicProperties parentEntity, bool copyProperties = false)
     {
         ArgumentNullException.ThrowIfNull(parentEntity);
 
         _parentObjectType = parentEntity.ObjectType;
         _connectedEntity = parentEntity;
 
-        foreach (var propName in _properties.Keys)
+        if (copyProperties)
         {
-            TrySetPropertyValue(propName, _properties[propName]);
+            foreach (var propName in _properties.Keys)
+            {
+                TrySetPropertyValue(propName, _properties[propName]);
+            }
         }
 
         _properties.Clear();
