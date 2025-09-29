@@ -243,11 +243,11 @@ jobs:
         COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
       run: |
           if [[ "$COMMIT_MESSAGE" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; 
-        then
-          echo "result=false" >> $GITHUB_OUTPUT
-        else
-          echo "result=true" >> $GITHUB_OUTPUT
-        fi
+          then
+             echo "result=false" >> $GITHUB_OUTPUT
+          else
+             echo "result=true" >> $GITHUB_OUTPUT
+          fi
 
     - name: Publish Docker Image
       if: ${{ env.BUILD_DOCKER == 'true' }}
