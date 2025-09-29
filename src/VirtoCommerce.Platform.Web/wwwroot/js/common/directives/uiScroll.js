@@ -29,7 +29,7 @@ angular.module('platformWebApp')
                 if (!$scope.displayField) {
                     $scope.displayField = 'name';
                 }
-                if ($scope.sortField === 'undefined') {
+                if ($scope.sortField === undefined) {
                     $scope.sortField = $scope.displayField;
                 }
                 $scope.context = {
@@ -182,7 +182,7 @@ angular.module('platformWebApp')
                         $scope.isNoItems = $scope.items.length === 0;
                     }
 
-                    if ($scope.sortField === undefined) {
+                    if ($scope.sortField !== '') {
                         _.sortBy($scope.items, [$scope.sortField || 'name']);
                     }
                 }
