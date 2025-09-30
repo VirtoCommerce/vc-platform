@@ -33,7 +33,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
             if (dict.TryGetValue(objectType, out var innerDict))
             {
-                return innerDict[propertyName];
+                if (innerDict.TryGetValue(propertyName, out var dynamicProperty))
+                {
+                    return dynamicProperty;
+                }
             }
 
             return null;
