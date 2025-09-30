@@ -10,6 +10,6 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
     {
         Task<DynamicProperty> GetByNameAsync(string objectType, string propertyName);
 
-        Task<IList<DynamicProperty>> GetAllAsync(string objectType);
+        Task<IList<DynamicProperty>> SearchAllAsync(string objectType);
     }
 }

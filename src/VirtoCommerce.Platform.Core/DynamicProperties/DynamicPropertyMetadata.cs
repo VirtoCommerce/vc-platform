@@ -24,7 +24,7 @@ public static class DynamicPropertyMetadata
             throw new InvalidOperationException("IDynamicPropertyMetaDataResolver is not initialized. Call DynamicPropertyMetadata.Initialize() method in your module's InitializeAsync method.");
         }
 
-        var properties = await MetaDataResolver.GetAllAsync(objectType);
+        var properties = await MetaDataResolver.SearchAllAsync(objectType);
 
         return properties;
     }

@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             ArgumentNullException.ThrowIfNull(objectType);
             ArgumentNullException.ThrowIfNull(propertyName);
 
-            var dict = await GetPropertyDictionary();
+            var dict = await GetAllPropertiesByTypeAndName();
 
             if (dict.TryGetValue(objectType, out var innerDict))
             {
@@ -42,11 +42,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             return null;
         }
 
-        public virtual async Task<IList<DynamicProperty>> GetAllAsync(string objectType)
+        public virtual async Task<IList<DynamicProperty>> SearchAllAsync(string objectType)
         {
             ArgumentNullException.ThrowIfNull(objectType);
 
-            var dict = await GetPropertyDictionary();
+            var dict = await GetAllPropertiesByTypeAndName();
 
             if (dict.TryGetValue(objectType, out var innerDict))
             {
@@ -56,32 +56,36 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             return Array.Empty<DynamicProperty>();
         }
 
-        // Returns: IDictionary<objectType, IDictionary<propertyName, DynamicProperty>>
-        private Task<Dictionary<string, Dictionary<string, DynamicProperty>>> GetPropertyDictionary()
+        private Task<Dictionary<string, Dictionary<string, DynamicProperty>>> GetAllPropertiesByTypeAndName()
         {
-            var cacheKey = CacheKey.With(GetType(), nameof(GetPropertyDictionary));
+            var cacheKey = CacheKey.With(GetType(), nameof(GetAllPropertiesByTypeAndName));
 
             return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
 
-                var criteria = new DynamicPropertySearchCriteria
-                {
-                    Skip = 0,
-                    Take = _pageSize
-                };
-
-                var result = await _searchService.SearchAllNoCloneAsync(criteria);
-
-                var outer = result
-                    .Distinct()
-                    .GroupBy(x => x.ObjectType, StringComparer.OrdinalIgnoreCase)
-                    .ToDictionary(
-                        g => g.Key,
-                        g => g.ToDictionary(p => p.Name, StringComparer.OrdinalIgnoreCase));
-
-                return outer;
+                return await GetAllPropertiesByTypeAndNameNoCache();
             });
+        }
+
+        private async Task<Dictionary<string, Dictionary<string, DynamicProperty>>> GetAllPropertiesByTypeAndNameNoCache()
+        {
+            var criteria = new DynamicPropertySearchCriteria
+            {
+                Skip = 0,
+                Take = _pageSize
+            };
+
+            var result = await _searchService.SearchAllNoCloneAsync(criteria);
+
+            var outer = result
+                .Distinct()
+                .GroupBy(x => x.ObjectType, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.ToDictionary(p => p.Name, StringComparer.OrdinalIgnoreCase));
+
+            return outer;
         }
     }
 }
