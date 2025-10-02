@@ -18,12 +18,20 @@ angular.module('platformWebApp')
                 pageSize: '=?',
                 placeholder: '=?',
                 required: '=?',
+                displayField: '@?',
+                sortField: '@?',
                 searchplaceholder: '=?',
                 responseGroup: '=?',
                 selectedItemsPropertyName: '=?' //TODO: delete this when storeIds/etc are changed to objectIds
             },
             templateUrl: '$(Platform)/Scripts/common/directives/uiScroll.tpl.html',
             link: function ($scope, element, attrs, ngModelController) {
+                if (!$scope.displayField) {
+                    $scope.displayField = 'name';
+                }
+                if ($scope.sortField === undefined) {
+                    $scope.sortField = $scope.displayField;
+                }
                 $scope.context = {
                     modelValue: null,
                     required: getBooleanAttributeValue('required'),
@@ -172,6 +180,10 @@ angular.module('platformWebApp')
                     if (_.any(newItems)) {
                         $scope.items = $scope.items.concat(newItems);
                         $scope.isNoItems = $scope.items.length === 0;
+                    }
+
+                    if ($scope.sortField !== '') {
+                        $scope.items = _.sortBy($scope.items, $scope.sortField || 'name');
                     }
                 }
 
