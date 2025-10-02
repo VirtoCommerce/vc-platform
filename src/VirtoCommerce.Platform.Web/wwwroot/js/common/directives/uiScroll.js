@@ -183,7 +183,7 @@ angular.module('platformWebApp')
                     }
 
                     if ($scope.sortField !== '') {
-                        _.sortBy($scope.items, [$scope.sortField || 'name']);
+                        $scope.items = _.sortBy($scope.items, $scope.sortField || 'name');
                     }
                 }
 
