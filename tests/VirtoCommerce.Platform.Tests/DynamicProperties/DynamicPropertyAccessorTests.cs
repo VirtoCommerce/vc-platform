@@ -138,6 +138,7 @@ public class DynamicPropertyAccessorTests
     [InlineData("LongTextFieldSingleValue", DynamicPropertyValueType.LongText, "Test Long Long Long Text Value")]
     [InlineData("HtmlFieldSingleValue", DynamicPropertyValueType.Html, "<p>Html Text</p>")]
     [InlineData("IntegerFieldSingleValue", DynamicPropertyValueType.Integer, 123)]
+    [InlineData("IntegerFieldSingleValue", DynamicPropertyValueType.Integer, 123456L)]
     [InlineData("BooleanFieldSingleValue", DynamicPropertyValueType.Boolean, true)]
     [InlineData("BooleanFieldSingleValue", DynamicPropertyValueType.Boolean, false)]
     [InlineData("DecimalFieldSingleValue", DynamicPropertyValueType.Decimal, 3.14)]
@@ -147,6 +148,7 @@ public class DynamicPropertyAccessorTests
     [InlineData("LongTextFieldMultiValue", DynamicPropertyValueType.LongText, new string[] { "Test Long Long Long Text Value" })]
     //[InlineData("HtmlFieldMultiValue", DynamicPropertyValueType.Html, new string[] { "<p>Html Text</p>", "<p>Another Html Text</p>" })]
     [InlineData("IntegerFieldMultiValue", DynamicPropertyValueType.Integer, new int[] { 123, 345 })]
+    [InlineData("IntegerFieldMultiValue", DynamicPropertyValueType.Integer, new long[] { 123456L, 654321L })]
     //[InlineData("BooleantFieldMultiValue", DynamicPropertyValueType.Boolean, new bool[] { true, false })]
     [InlineData("DecimalFieldMultiValue", DynamicPropertyValueType.Decimal, new string[] { "3.14", "2.18" })]
     //[InlineData("ImageFieldMultiValue", DynamicPropertyValueType.Image, new string[] { "https://localhost:5001/assets/images/Suitespot1.png" })]
@@ -173,7 +175,18 @@ public class DynamicPropertyAccessorTests
         var getResult = entity.DynamicPropertyAccessor.TryGetPropertyValue(propertyName, out var resultValue);
         Assert.True(getResult);
 
-        Assert.Equal(value, resultValue);
+        if (resultValue is int[] intArray && value is long[] longArray)
+        {
+            Assert.Equal(intArray.Length, longArray.Length);
+            for (int i = 0; i < intArray.Length; i++)
+            {
+                Assert.Equal(intArray[i], longArray[i]);
+            }
+        }
+        else
+        {
+            Assert.Equal(value, resultValue);
+        }
 
         // Check that DynamicProperties contains the property with correct value and type
         var dynamicProperty = entity.DynamicProperties

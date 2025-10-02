@@ -120,7 +120,7 @@ public class DynamicPropertyAccessor : DynamicObject
                 var clrType = DynamicPropertyValueTypeToClrType(metaProperty);
                 var array = Array.CreateInstance(clrType, values.Length);
 
-                if (clrType == typeof(decimal))
+                if (clrType == typeof(decimal) || clrType == typeof(int))
                 {
                     for (var i = 0; i < values.Length; i++)
                     {
@@ -219,6 +219,7 @@ public class DynamicPropertyAccessor : DynamicObject
         // Find or create the property in the entity
         var dynamicProperties = GetConnectedEntity().DynamicProperties;
         var prop = dynamicProperties.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
+
         if (prop == null)
         {
             prop = new DynamicObjectProperty();
@@ -234,20 +235,23 @@ public class DynamicPropertyAccessor : DynamicObject
         // Create a new list of values
         var values = new List<DynamicPropertyObjectValue>();
 
-        if (metaProperty.IsArray && value is System.Collections.IEnumerable enumerable)
+        if (metaProperty.IsArray)
         {
-            foreach (var item in enumerable)
+            if (value is System.Collections.IEnumerable enumerable)
             {
-                values.Add(new DynamicPropertyObjectValue
+                foreach (var item in enumerable)
                 {
-                    ObjectType = _connectedEntity.ObjectType,
-                    ObjectId = _connectedEntity.Id,
-                    PropertyId = prop.Id,
-                    PropertyName = metaProperty.Name,
-                    ValueType = metaProperty.ValueType,
-                    Locale = null,
-                    Value = item,
-                });
+                    values.Add(new DynamicPropertyObjectValue
+                    {
+                        ObjectType = _connectedEntity.ObjectType,
+                        ObjectId = _connectedEntity.Id,
+                        PropertyId = prop.Id,
+                        PropertyName = metaProperty.Name,
+                        ValueType = metaProperty.ValueType,
+                        Locale = null,
+                        Value = item,
+                    });
+                }
             }
         }
         else
@@ -321,6 +325,11 @@ public class DynamicPropertyAccessor : DynamicObject
     protected virtual bool IsSingleValueCompatible(DynamicProperty dynamicProperty, object val)
     {
         if (dynamicProperty.ValueType == DynamicPropertyValueType.Decimal && val is decimal or double or float)
+        {
+            return true;
+        }
+
+        if (dynamicProperty.ValueType == DynamicPropertyValueType.Integer && val is int or long)
         {
             return true;
         }

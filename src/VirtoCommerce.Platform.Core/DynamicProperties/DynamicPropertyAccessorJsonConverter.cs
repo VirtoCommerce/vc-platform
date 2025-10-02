@@ -32,7 +32,16 @@ public class DynamicPropertyAccessorJsonConverter : JsonConverter<DynamicPropert
 
         foreach (var property in jObject.Properties())
         {
-            customProperties.Add(property.Name, property.Value.ToObject<object>(serializer));
+            object value;
+            if (property.Value is JArray jArray)
+            {
+                value = jArray.ToObject<List<object>>(serializer);
+            }
+            else
+            {
+                value = property.Value.ToObject<object>(serializer);
+            }
+            customProperties.Add(property.Name, value);
         }
 
         return new DynamicPropertyAccessor(customProperties);
