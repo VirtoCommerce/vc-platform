@@ -142,6 +142,8 @@ public class DynamicPropertyAccessorTests
     [InlineData("BooleanFieldSingleValue", DynamicPropertyValueType.Boolean, true)]
     [InlineData("BooleanFieldSingleValue", DynamicPropertyValueType.Boolean, false)]
     [InlineData("DecimalFieldSingleValue", DynamicPropertyValueType.Decimal, 3.14)]
+    [InlineData("DecimalFieldSingleValue", DynamicPropertyValueType.Decimal, 123)]
+    [InlineData("DecimalFieldSingleValue", DynamicPropertyValueType.Decimal, 12345L)]
     [InlineData("DateTimeFieldSingleValue", DynamicPropertyValueType.DateTime, "2025-06-13T18:40:10.6332198Z")]
     [InlineData("ImageFieldSingleValue", DynamicPropertyValueType.Image, "https://localhost:5001/assets/images/Suitespot1.png")]
     [InlineData("ShortTextFieldMultiValue", DynamicPropertyValueType.ShortText, new string[] { "Test Short Text Value 1", "Test Short Text Value 2" })]

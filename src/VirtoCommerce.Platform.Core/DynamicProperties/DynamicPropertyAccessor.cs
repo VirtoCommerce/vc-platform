@@ -324,7 +324,7 @@ public class DynamicPropertyAccessor : DynamicObject
 
     protected virtual bool IsSingleValueCompatible(DynamicProperty dynamicProperty, object val)
     {
-        if (dynamicProperty.ValueType == DynamicPropertyValueType.Decimal && val is decimal or double or float)
+        if (dynamicProperty.ValueType == DynamicPropertyValueType.Decimal && val is decimal or double or float or int or long)
         {
             return true;
         }
