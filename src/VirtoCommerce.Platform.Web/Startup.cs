@@ -724,7 +724,10 @@ namespace VirtoCommerce.Platform.Web
 
             //Json converter that resolves a meta-data for all incoming objects of DynamicObjectProperty type
             //in order to be able to pass { name: "dynPropName", value: "myVal" } in the incoming requests for dynamic properties, and do not care about meta-data loading. see more details: PT-48
-            mvcJsonOptions.Value.SerializerSettings.Converters.Add(new DynamicObjectPropertyJsonConverter(app.ApplicationServices.GetService<IDynamicPropertyMetaDataResolver>()));
+            var dynamicPropertyMetaDataResolver = app.ApplicationServices.GetService<IDynamicPropertyMetaDataResolver>();
+            mvcJsonOptions.Value.SerializerSettings.Converters.Add(new DynamicObjectPropertyJsonConverter(dynamicPropertyMetaDataResolver));
+
+            DynamicPropertyMetadata.Initialize(dynamicPropertyMetaDataResolver);
 
             //The converter is responsible for the materialization of objects, taking into account the information on overriding
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
