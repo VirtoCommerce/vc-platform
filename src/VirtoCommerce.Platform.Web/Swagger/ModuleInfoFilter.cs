@@ -90,7 +90,7 @@ public class ModuleInfoFilter : IOperationFilter, IDocumentFilter
         }
     }
 
-    private class SwaggerModule
+    private sealed class SwaggerModule
     {
         public string Id { get; init; }
         public string Title { get; init; }
