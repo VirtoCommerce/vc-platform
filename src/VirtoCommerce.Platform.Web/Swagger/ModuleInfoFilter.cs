@@ -101,7 +101,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                         Name = _platformTag,
                         Extensions = new Dictionary<string, IOpenApiExtension>
                         {
-                            { _moduleIdExtension, new OpenApiString(_platformTag) }
+                            { _moduleIdExtension, new OpenApiString(_platformId) }
                         }
                     });
                 }
