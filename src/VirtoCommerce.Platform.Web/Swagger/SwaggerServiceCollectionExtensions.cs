@@ -243,10 +243,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             foreach (var path in xmlCommentsDirectoryPaths)
             {
-                var xmlComments = Directory.GetFiles(path, "*.xml", new EnumerationOptions
-                {
-                    MatchCasing = MatchCasing.CaseInsensitive
-                });
+                var xmlComments = Directory.GetFiles(path, "*.xml", new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
                 foreach (var xmlComment in xmlComments)
                 {
                     options.IncludeXmlComments(xmlComment);
