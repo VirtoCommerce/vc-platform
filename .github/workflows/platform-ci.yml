@@ -1,5 +1,5 @@
-# v3.800.16
-# https://virtocommerce.atlassian.net/browse/VCST-3881
+# v3.800.17
+# https://virtocommerce.atlassian.net/browse/VCST-2789
 name: Platform CI
 
 on:
@@ -244,9 +244,9 @@ jobs:
       run: |
           if [[ "$COMMIT_MESSAGE" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; 
           then
-             echo "result=false" >> $GITHUB_OUTPUT
+            echo "result=false" >> $GITHUB_OUTPUT
           else
-             echo "result=true" >> $GITHUB_OUTPUT
+            echo "result=true" >> $GITHUB_OUTPUT
           fi
 
     - name: Publish Docker Image
@@ -298,19 +298,22 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.16  
+    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.17  
     with:
       installModules: 'true'
       installCustomModule: 'false'
       platformDockerTag: ${{ needs.ci.outputs.tag }}
+      vctestingRepoBranch: 'dev'
+      frontendZipUrl: 'latest'
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
+      testSecretEnvFile: ${{ secrets.VC_TESTING_MODULE_ENV_FILE }}
 
   platform-katalon-tests:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.16
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.17
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -327,7 +330,7 @@ jobs:
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.16    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.17    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
