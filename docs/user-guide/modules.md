@@ -1,6 +1,6 @@
 # Modules
 
-The Modules can be accessed only by admin user who can view view the installed modules, new updates, install new modules or remove the installed ones.
+The Modules can be accessed only by admin user who can view the installed modules, new updates, install new modules or remove the installed ones.
 
 ## View Modules
 
