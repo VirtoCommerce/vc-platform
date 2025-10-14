@@ -132,7 +132,37 @@ angular.module('platformWebApp')
                         result += '.html';
                         return result;
                     }
+                    function addJsonFormattingButton(editorOptions) {
+                        editorOptions.onLoad = function (_editor) {
+                            scope.editor = _editor;
 
+                            // Create formatting button
+                            var formatButton = angular.element('<button class="btn-format" title="Format JSON (Ctrl+Alt+F)">Format JSON</button>');
+                            formatButton.on('click', function () {
+                                scope.formatJson();
+                            });
+
+                            // Add some styling for the button
+                            formatButton.css({
+                                position: 'absolute',
+                                top: '5px',
+                                right: '5px',
+                                zIndex: '10',
+                                padding: '2px 8px',
+                                fontSize: '12px',
+                                backgroundColor: '#43b0e6',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '3px',
+                                cursor: 'pointer'
+                            });
+
+                            // Append button to editor
+                            var wrapper = angular.element(_editor.getWrapperElement());
+                            wrapper.prepend(formatButton);
+                        };
+                    }
+                  
                     function changeValueTemplate() {
                         if (scope.currentEntity.valueType === 'Html' || scope.currentEntity.valueType === 'Json') {
                             // Codemirror configuration
@@ -154,6 +184,15 @@ angular.module('platformWebApp')
                         if (scope.currentEntity.valueType === 'Json') {
                             scope.editorOptions['parserfile'] = 'javascript.js';
                             scope.editorOptions['mode'] = { name: 'javascript', json: true };
+                            scope.editorOptions['lint'] = true;
+
+                            scope.editorOptions.extraKeys = Object.assign(scope.editorOptions.extraKeys || {}, {
+                                "Ctrl-Alt-F": function (cm) {
+                                    scope.formatJson(cm);
+                                }
+                            });
+
+                            addJsonFormattingButton(scope.editorOptions);
                         }
 
                         var templateName = getTemplateName(scope.currentEntity);
@@ -247,6 +286,21 @@ angular.module('platformWebApp')
 
                         return true;
                     }
+
+                    scope.formatJson = function (cm) {
+                        cm = cm || scope.editor;
+                        if (!cm) return;
+
+                        try {
+                            var content = cm.getValue();
+                            if (!content) return;
+
+                            var formatted = JSON.stringify(JSON.parse(content), null, 2);
+                            cm.setValue(formatted);
+                        } catch (e) {
+                            console.error('JSON formatting error:', e);
+                        }
+                    };
                 }
             }
         }]);
