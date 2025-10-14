@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.DynamicProperties
@@ -8,5 +9,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
     public interface IDynamicPropertyMetaDataResolver
     {
         Task<DynamicProperty> GetByNameAsync(string objectType, string propertyName);
+
+        Task<IList<DynamicProperty>> SearchAllAsync(string objectType);
     }
 }
