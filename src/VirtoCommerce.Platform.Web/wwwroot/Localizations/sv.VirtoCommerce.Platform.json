@@ -1,0 +1,1056 @@
+{
+  "platform": {
+    "menu": {
+      "home": "Hem",
+      "browse": "Bläddra",
+      "configuration": "Konfiguration",
+      "notifications": "Notiser",
+      "more": "Mer",
+      "settings": "Inställningar",
+      "dynamic-properties": "Dynamiska egenskaper",
+      "security": "Säkerhet",
+      "modules": "Moduler",
+      "export-import": "Säkerhetskopiering och återställning",
+      "user-profile": "Användarprofil",
+      "assets": "Tillgångar",
+      "toggle-favorites": "Skift + Mellanslag för att växla favoriter",
+      "developer-tools": "Utvecklarverktyg",
+      "help": "Hjälp"
+    },
+    "navigation": {
+      "back": "Tillbaka"
+    },
+    "blades": {
+      "developer-tools": {
+        "title": "Utvecklarverktyg"
+      },
+      "system-info": {
+        "title": "Plattformsinformation",
+        "labels": {
+          "clr-version": "CLR-version",
+          "environment-name": "Miljöläge",
+          "is-64-bit-os": "64-bitars operativsystem",
+          "is-64-bit-process": "64-bitars process",
+          "database-provider": "Databasleverantör"
+        }
+      },
+      "asset-list": {
+        "title": "Tillgångshantering",
+        "bread-crumb-top": "Alla tillgångar",
+        "labels": {
+          "picture": "Bild",
+          "name": "Namn",
+          "size": "Storlek",
+          "modified": "Ändrad",
+          "actions": "Åtgärder",
+          "group": "Grupp",
+          "language": "Språk"
+        }
+      },
+      "asset-upload": {
+        "title": "Uppladdning av tillgångar",
+        "labels": {
+          "select-files": "Välj filer",
+          "drag-note": "Dra och släpp filer här",
+          "progress": "Förlopp",
+          "asset-uploaded": "Tillgång(ar) uppladdade"
+        },
+        "placeholders": {
+          "image-url": "Klistra in filens URL här"
+        }
+      },
+      "operation-list": {
+        "labels": {
+          "login": "Inloggning",
+          "details": "Detaljer",
+          "time": "Tid"
+        }
+      },
+      "dynamicObject-list": {
+        "title": "Dynamiska objekttyper",
+        "subtitle": "Välj objekttyp för att hantera dynamiska egenskaper",
+        "labels": {
+          "no-objects": "Inga objekt stöder dynamiska egenskaper ännu"
+        }
+      },
+      "dynamicProperty-detail": {
+        "title": "Hantera egenskap",
+        "subtitle": "Hantera egenskap",
+        "subtitle-new": "Ny egenskap",
+        "labels": {
+          "property-name": "Egenskapsnamn",
+          "required": "Obligatorisk",
+          "multivalue": "Flera värden",
+          "multilingual": "Flerspråkig",
+          "dictionary": "Ordbok",
+          "description": "Beskrivning",
+          "display-order": "Visningsordning",
+          "display-name": "Visningsnamn",
+          "value-type": "Värdetyp",
+          "dictionary-values": "Ordboksvärden",
+          "manage-dictionary": "Hantera ordbok",
+          "show-more-languages": "Visa fler språk",
+          "show-less-languages": "Visa färre språk"
+        },
+        "placeholders": {
+          "description": "Ange egenskapsbeskrivning",
+          "display-name": "Ange visningsnamn...",
+          "display-order": "Visningsordning"
+        },
+        "validations": {
+          "multivalue": "Egenskap med flera värden kan endast ha värdetypen KortText, Heltal eller Decimal",
+          "multilingual": "Endast text eller HTML-värden kan vara flerspråkiga",
+          "dictionary": "Endast ordböcker av värdetypen KortText stöds"
+        }
+      },
+      "dynamicProperty-list": {
+        "subtitle": "Hantera dynamiska egenskaper",
+        "labels": {
+          "no-properties": "Inga dynamiska egenskaper ännu"
+        }
+      },
+      "notifications-menu": {
+        "subtitle": "Arbeta med notissystemet"
+      },
+      "property-dictionary": {
+        "title": "Ordboksvärden",
+        "subtitle": "Hantera ordboksvärden",
+        "labels": {
+          "edit-value": "Redigera värde",
+          "new-value": "Nytt värde",
+          "dictionary-name": "Ordbokspostnamn",
+          "localized-values": "Lokaliserade värden",
+          "current-values": "Aktuella värden",
+          "name": "Namn",
+          "values": "Värden"
+        },
+        "validations": {
+          "dictionary-name-required": "Obligatoriskt",
+          "dictionary-name": "Duplicerat namn hittades",
+          "localized-values-required": "Obligatoriskt",
+          "localized-values": "Duplicerat namn hittades",
+          "dictionary": "Endast ordböcker av värdetypen KortText stöds"
+        },
+        "placeholders": {
+          "dictionary-name": "Ange namn",
+          "localized-values": "Ange värde"
+        }
+      },
+      "propertyValue-list": {
+        "title": "Dynamiska egenskaper",
+        "subtitle": "",
+        "labels": {
+          "header": "Egenskapsvärden",
+          "no-properties": "Denna enhet har inga dynamiska egenskaper ännu. Klicka på 'Typer av egenskaper' och skapa några egenskaper. Stäng och öppna om den aktuella enhetsvyn för att ladda dynamiska egenskaper"
+        }
+      },
+      "edit-array": {
+        "validations": {
+          "new-value-required": "Obligatoriskt"
+        },
+        "labels": {
+          "new-value": "Nytt värde",
+          "current-values": "Aktuella värden",
+          "values": "Värden"
+        },
+        "placeholders": {
+          "value": "Ange värde"
+        }
+      },
+      "export-main": {
+        "title": "Databackup",
+        "labels": {
+          "platform-entries": "Plattformsposter",
+          "choose-modules": "Välj moduler att säkerhetskopiera",
+          "download-url": "Hämtnings-URL",
+          "errors": "Fel",
+          "start": "Start",
+          "end": "Slut"
+        },
+        "menu": {
+          "security": {
+            "title": "Säkerhet",
+            "description": "Konton och roller"
+          },
+          "binary": {
+            "title": "Binär",
+            "description": "Binärdata"
+          },
+          "settings": {
+            "title": "Inställningar",
+            "description": "Plattformsinställningar"
+          },
+          "dynamic-props": {
+            "title": "Dynamiska egenskaper",
+            "description": "Plattformens dynamiska egenskaper"
+          }
+        }
+      },
+      "import-main": {
+        "title": "Dataåterställning",
+        "labels": {
+          "start-import": "Starta återställning",
+          "select-file": "Välj .zip-fil att återställa. Filen måste ha skapats av Virto Commerce databackup",
+          "drag-note": "Dra och släpp .zip-fil för återställning. Filen måste ha skapats av Virto Commerce databackup",
+          "upload-failed": "Uppladdning misslyckades",
+          "upload-progress": "Uppladdningsförlopp",
+          "import-progress": "Återställningsförlopp",
+          "import-finished": "Återställning slutförd",
+          "import-data-information": "Information om återställningsdata",
+          "author": "Författare",
+          "data-file-created": "Datafil skapad",
+          "created-platform-version": "Skapad i plattformsversion",
+          "platform-entries": "Plattformsposter",
+          "choose-modules": "Välj moduler att återställa",
+          "no-data": "Inga data",
+          "errors": "Fel",
+          "start": "Start",
+          "end": "Slut"
+        },
+        "menu": {
+          "security": {
+            "title": "Säkerhet",
+            "description": "Konton och roller"
+          },
+          "binary": {
+            "title": "Binär",
+            "description": "Binärdata"
+          },
+          "settings": {
+            "title": "Inställningar",
+            "description": "Plattformsinställningar"
+          },
+          "dynamic-props": {
+            "title": "Dynamiska egenskaper",
+            "description": "Plattformens dynamiska egenskaper"
+          }
+        }
+      },
+      "exportImport-main": {
+        "title": "Databackup och återställning",
+        "menu": {
+          "export": {
+            "title": "Säkerhetskopiering",
+            "description": "Data sparas till en fil för framtida återställning"
+          },
+          "import": {
+            "title": "Återställning",
+            "description": "Återställ data från en säkerhetskopieringsfil för framtida användning"
+          }
+        }
+      },
+      "resolve-result": {
+        "title": "Förhandsgranska resultat",
+        "labels": {
+          "subject": "Ämne",
+          "body": "Innehåll"
+        }
+      },
+      "module-settings-detail": {
+        "title": "Modulinställningar"
+      },
+      "module-wizard-progress-step": {
+        "title-install": "Modulinstallation",
+        "title-update": "Moduluppdatering",
+        "title-uninstall": "Modulavinstallation",
+        "labels": {
+          "start": "Start",
+          "end": "Slut",
+          "progress-messages": "Förloppsmeddelanden",
+          "process-completed": "Modulhanteringsprocessen är slutförd",
+          "restart-application": "Starta om applikationen nu eller senare"
+        }
+      },
+      "module-detail": {
+        "title": "Modulinformation",
+        "labels": {
+          "i-accept-the": "Jag accepterar",
+          "license-link": "licensen",
+          "license": "Licens",
+          "agreement": "avtalet",
+          "install-from-file": "Installera / uppdatera modul från fil",
+          "select-module-file": "Ladda upp en modul (.zip)-fil från en extern källa utanför det centrala modularkivet",
+          "upload-progress": "Uppladdningsförlopp",
+          "module-info": "Modulinfo",
+          "title": "Titel",
+          "official": "Officiell modul av {{$owner}}",
+          "owners": "Utvecklad av {{$owner}}",
+          "author": "Författare",
+          "authors": "Författare",
+          "id": "ID",
+          "version": "Version",
+          "project-information": "Projektinformation",
+          "description": "Beskrivning",
+          "platform-version": "Plattformsversion",
+          "dependencies": "Beroenden",
+          "optional-dependencies": "Valfria beroenden",
+          "tags": "Taggar",
+          "install-version": "Installera version",
+          "errors": "Fel",
+          "update-version": "Uppdatera {{id}} till"
+        }
+      },
+      "modules-main": {
+        "title": "Moduler",
+        "labels": {
+          "updates": "Uppdateringar",
+          "browse": "Bläddra",
+          "installed": "Installerade",
+          "withErrors": "Fel",
+          "advanced": "Avancerat"
+        }
+      },
+      "modules-list": {
+        "subtitle": "Modulhantering",
+        "labels": {
+          "grouping": "Visa modulpaket",
+          "ungrouped": "Övrigt",
+          "no-updates": "Inga uppdateringar hittades",
+          "no-modules": "Inga nya moduler att installera",
+          "no-installed-modules": "Inga installerade moduler hittades",
+          "icon": "Ikon",
+          "up-to-date": "Modulen är uppdaterad",
+          "update-available": "Uppdatering tillgänglig för denna modul",
+          "module": "Modul",
+          "version": "Version",
+          "author": "Författare",
+          "installed": "Installerade moduler",
+          "manual-install-warning": "Varning! Manuellt installerade moduler startar inte eftersom RefreshProbingFolderOnStart är satt till falskt"
+        }
+      },
+      "history": {
+        "title": "Systemhändelser",
+        "subtitle": "Händelsehistorik",
+        "labels": {
+          "type": "Typ",
+          "title": "Titel",
+          "created": "Skapad",
+          "description": "Beskrivning"
+        }
+      },
+      "historyDetailDefault": {
+        "title": "Händelsedetaljer",
+        "subtitle": "Händelsedetaljer",
+        "labels": {
+          "start": "Start",
+          "end": "Slut",
+          "elapsed": "Förfluten tid",
+          "errors": "Fel",
+          "stats": "Behandlade {{ processedCount }} av {{ totalCount }} poster"
+        }
+      },
+      "menuHeader": {
+        "labels": {
+          "history": "Historik",
+          "clear-recent": "Rensa alla senaste"
+        }
+      },
+      "account-changePassword": {
+        "labels": {
+          "title": "Ange ett nytt lösenord",
+          "login": "Inloggning",
+          "force-change-info": "Ditt lösenord har gått ut. Du måste <b>ändra lösenordet för att fortsätta</b> använda hanteraren",
+          "current-password": "Nuvarande lösenord",
+          "new-password": "Nytt lösenord",
+          "repeat-password": "Upprepa nytt lösenord",
+          "cancel": "Avbryt",
+          "save": "Ändra",
+          "fail": "Tyvärr, vi kunde inte återställa lösenordet för denna användare"
+        },
+        "validations": {
+          "current-password": "Obligatoriskt",
+          "new-password": "Gammalt och nytt lösenord är samma!",
+          "repeat-password": "Nya lösenord matchar inte!"
+        },
+        "placeholders": {
+          "current-password": "Ange nuvarande lösenord",
+          "new-password": "Ange nytt lösenord",
+          "repeat-password": "Upprepa nytt lösenord"
+        }
+      },
+      "account-resetPassword": {
+        "subtitle": "Ändra användarens lösenord",
+        "labels": {
+          "new-password": "Nytt lösenord",
+          "repeat-password": "Upprepa lösenord",
+          "force-password-change": "Tvinga denna användare att ändra lösenord vid nästa inloggning"
+        },
+        "validations": {
+          "repeat-password": "Nya lösenord matchar inte!",
+          "invalid-token": "Återställningslösenordstoken är ogiltig eller har gått ut",
+          "password-too-weak": "Nytt lösenord uppfyller inte en eller flera lösenordssäkerhetspolicyer:",
+          "passwordTooShort": "Lösenord måste vara {{parameter}} eller fler tecken långa",
+          "passwordRequiresUniqueChars": "Lösenord måste använda minst {{parameter}} olika tecken",
+          "passwordRequiresLower": "Lösenord måste ha minst en liten bokstav ('a'-'z')",
+          "passwordRequiresUpper": "Lösenord måste ha minst en stor bokstav ('A'-'Z')",
+          "passwordRequiresDigit": "Lösenord måste ha minst en siffra ('0'-'9')",
+          "passwordRequiresNonAlphanumeric": "Lösenord måste ha minst ett icke-alfanumeriskt tecken",
+          "recentPasswordUsed": "Du har använt detta lösenord tidigare. Välj ett annat"
+        },
+        "placeholders": {
+          "new-password": "Ange nytt lösenord",
+          "repeat-password": "Upprepa nytt lösenord"
+        }
+      },
+      "account-detail": {
+        "title-new": "Nytt konto",
+        "labels": {
+          "user-information": "Användarinformation",
+          "is-administrator": "Är administratör",
+          "account-type": "Kontotyp",
+          "login": "Inloggning",
+          "account-state": "Kontostatus",
+          "account-email": "E-post",
+          "locked-state": "Låst status",
+          "status": "Status",
+          "verified": "Verifierad",
+          "resend-link": "Skicka om länk",
+          "link-sent": "Länken har skickats",
+          "last-login-date": "Senaste inloggningsdatum"
+        },
+        "placeholders": {
+          "account-type": "Välj ...",
+          "email": "Ange e-post",
+          "user-name": "Ange användarnamn",
+          "status": "Välj ..."
+        }
+      },
+      "account-list": {
+        "title": "Användare",
+        "subtitle": "Säkerhetstjänst",
+        "labels": {
+          "name": "Namn",
+          "account-type": "Kontotyp",
+          "login": "Inloggning",
+          "state": "Status",
+          "status": "Status"
+        }
+      },
+      "account-api": {
+        "labels": {
+          "api-key": "API-nyckel",
+          "is-active": "är aktiv"
+        },
+        "placeholders": {
+          "api-key": "Ange API-nyckel"
+        }
+      },
+      "role-detail": {
+        "subtitle": "Rolldetaljer",
+        "labels": {
+          "summary": "Sammanfattning",
+          "name": "Namn",
+          "description": "Beskrivning",
+          "assigned-permissions": "Tilldelade behörigheter",
+          "permission-name": "Namn",
+          "assigned-scopes": "Tilldelade omfång",
+          "no-permissions-assigned": "Inga behörigheter tilldelade"
+        },
+        "placeholders": {
+          "name": "Ange namn",
+          "description": "Ange beskrivning"
+        }
+      },
+      "account-roles": {
+        "subtitle": "Tilldela roller",
+        "labels": {
+          "select-roles": "Välj roller att tilldela",
+          "no-roles": "Inga roller att tilldela"
+        }
+      },
+      "account-roles-list": {
+        "title": "",
+        "labels": {
+          "assigned-roles": "Tilldelade roller",
+          "no-assigned": "Inga roller tilldelade"
+        }
+      },
+      "permission-scopes": {
+        "subtitle": "Konfigurera behörighetsomfång",
+        "labels": {
+          "select-bounded-scopes": "Välj begränsade omfång",
+          "selected": "Valda",
+          "scope-name": "Omfångsnamn och parametrar",
+          "no-scopes": "Inga omfång"
+        }
+      },
+      "role-permissions": {
+        "subtitle": "Tilldela behörigheter",
+        "labels": {
+          "select-permissions": "Välj behörigheter att tilldela"
+        }
+      },
+      "new-role-wizard": {
+        "title": "Ny roll",
+        "labels": {
+          "summary": "Sammanfattning",
+          "name": "Namn",
+          "description": "Beskrivning",
+          "assign-permissions": "Tilldela behörigheter"
+        },
+        "placeholders": {
+          "name": "Ange namn",
+          "description": "Ange beskrivning"
+        }
+      },
+      "role-list": {
+        "title": "Roller",
+        "subtitle": "Säkerhetstjänst",
+        "labels": {
+          "name": "Namn"
+        }
+      },
+      "oauthapps": {
+        "labels": {
+          "clientId": "Klient-ID",
+          "displayName": "Visningsnamn",
+          "type": "Typ",
+          "clientSecret": "Klienthemlighet",
+          "assigned-permissions": "Tilldelade behörigheter",
+          "redirectUris": "Omdirigerings-URI:er",
+          "postLogoutRedirectUris": "URI:er för omdirigering efter utloggning"
+        },
+        "placeholders": {
+          "clientId": "Ange klient-ID",
+          "displayName": "Ange visningsnamn",
+          "type": "Ange typ",
+          "clientSecret": "Ange klienthemlighet"
+        }
+      },
+      "oauthapps-list": {
+        "title": "OAuth-applikationer",
+        "subtitle": "Säkerhetstjänst"
+      },
+      "oauthapps-detail": {
+        "title": "Redigera OAuth-applikation",
+        "title-new": "Skapa OAuth-applikation",
+        "subtitle": "Säkerhetstjänst",
+        "labels": {
+          "clientSecret-warning": "Varning! Du måste kopiera hemligheten nu. Den kommer att döljas efter att bladet stängs",
+          "urls": "URL:er"
+        },
+        "blades": {
+          "edit-redirectUris": {
+            "title": "Omdirigerings-URI:er",
+            "subtitle": "Hantera omdirigerings-URI:er"
+          },
+          "edit-postLogoutRedirectUris": {
+            "title": "URI:er för omdirigering efter utloggning",
+            "subtitle": "Hantera URI:er för omdirigering efter utloggning"
+          }
+        }
+      },
+      "login": {
+        "labels": {
+          "sign-in": "Logga in på {{title}} Manager",
+          "login": "Inloggning",
+          "password": "Lösenord",
+          "remember-me": "Kom ihåg mig",
+          "external-sign-in": "Logga in med {{displayName}}",
+          "forgot-password": "Glömt ditt lösenord?",
+          "log-in": "Logga in",
+          "log-in-placeholder": "Ange din e-post eller användarnamn",
+          "password-placeholder": "Ange ditt lösenord",
+          "azure-log-in-label": "Logga in på admin-sidan via Azure",
+          "password-log-in-type": "Systemanvändare",
+          "or": "eller",
+          "signing-in": "Loggar in..."
+        }
+      },
+      "forgotpassword": {
+        "title": "Glömt ditt lösenord?",
+        "labels": {
+          "login": "Inloggning eller e-post",
+          "description": "Vi kommer att skicka ett e-postmeddelande med instruktioner om hur du återställer ditt lösenord",
+          "success": "E-post med instruktioner har skickats till dig",
+          "fail": "Tyvärr, vi kunde inte återställa lösenordet för denna användare",
+          "back": "Tillbaka",
+          "submit": "Skicka",
+          "time-limit": "Du kan försöka igen om {{countdown}}",
+          "time-limit-end": "Du kan försöka igen nu"
+        },
+        "placeholders": {
+          "login-or-email": "Ange inloggning eller e-post"
+        }
+      },
+      "access-denied": {
+        "title": "Åtkomst nekad",
+        "labels": {
+          "message": "Du har inte åtkomst till denna resurs. Kontakta din administratör",
+          "button": "Logga in med andra uppgifter"
+        }
+      },
+      "resetpassword": {
+        "title": "Återställning av lösenord",
+        "labels": {
+          "success": "Ditt lösenord har återställts",
+          "fail": "Tyvärr, vi kunde inte återställa lösenordet för denna användare",
+          "submit": "Återställ",
+          "log-in": "Logga in"
+        }
+      },
+      "license": {
+        "title": "Aktuell licens",
+        "title-new": "Ny licensaktivering",
+        "license-info": "Licensinformation",
+        "license-activation": "Licensaktivering",
+        "labels": {
+          "info-running-no-license": "Denna instans av Virto Commerce körs på",
+          "info-open-source-license": "Open Source Community-licens",
+          "info0": "Att skaffa eller förnya licensen:",
+          "info1": "Skicka in ",
+          "info2": "Vi kommer att behandla din begäran och kontakta dig snart",
+          "info3": "När du får \"Aktiveringskoden\" och/eller licensfilen, fyll i ett av aktiveringsfälten nedan",
+          "info4": "Systemet visar den nya licensinformationen. Granska den och klicka på \"Aktivera\" för att bekräfta",
+          "customer": "Licens utfärdad till",
+          "type": "Typ",
+          "expiration": "Utgång",
+          "email": "Kundens e-post",
+          "request-license": "Licensbegäran",
+          "code-descr": "Ange den mottagna licensens \"Aktiveringskod\" och tryck på [Enter]. Detta är det snabbaste sättet att aktivera licensen. (Kräver internetanslutning)",
+          "file-descr": "Alternativt, ange den mottagna licensfilen. (Offline-aktivering)",
+          "upload-progress": "Uppladdningsförlopp",
+          "errors": "Aktiveringsfel"
+        },
+        "placeholders": {
+          "code": "Ange aktiveringskod"
+        }
+      },
+      "new-account-wizard": {
+        "labels": {
+          "login": "Inloggning",
+          "email": "E-post",
+          "password": "Lösenord",
+          "repeat-password": "Upprepa lösenord",
+          "assign-roles": "Tilldela roller"
+        },
+        "placeholders": {
+          "email": "Ange e-post",
+          "login": "Ange inloggning",
+          "password": "Ange nytt lösenord",
+          "repeat-password": "Upprepa nytt lösenord"
+        },
+        "validations": {
+          "repeat-password": "Angivna lösenord matchar inte!",
+          "password-too-weak": "Angivet lösenord uppfyller inte en eller flera lösenordssäkerhetspolicyer:"
+        }
+      },
+      "security-main": {
+        "title": "Säkerhet",
+        "subtitle": "Användarhantering"
+      },
+      "entitySetting-list": {
+        "title": "Inställningar"
+      },
+      "setting-dictionary": {
+        "subtitle": "Hantera ordboksvärden",
+        "labels": {
+          "new-value": "Ange värde",
+          "current-values": "Aktuella värden",
+          "value": "Värde"
+        },
+        "validations": {
+          "new-value-required": "Obligatoriskt",
+          "new-value": "Duplicerat värde hittades"
+        },
+        "placeholders": {
+          "new-value": "Ange värde"
+        }
+      },
+      "settings-detail": {
+        "title": "Inställningsvärden",
+        "hide-description": "Dölj"
+      },
+      "settingGroup-list": {
+        "title": "Inställningar",
+        "bread-crumb-top": "Alla inställningar"
+      },
+      "settings-uploader": {
+        "drag-drop-comment": "Dra och släpp fil här",
+        "or": "eller",
+        "browse-your-files": "bläddra bland dina filer"
+      },
+      "localizable-setting-value-list": {
+        "subtitle": "Hantera ordboksvärden"
+      },
+      "localizable-setting-value-details": {
+        "title": "Redigera ordboksvärde",
+        "alias": "Systemvärde"
+      },
+      "user-profile": {
+        "title": "Användarprofil",
+        "labels": {
+          "language": "Språk",
+          "language-description": "Visningsspråk. Rensa för att använda webbläsarens eller reservspråket",
+          "regional-format": "Regionalt format",
+          "regional-format-description": "Regionalt format för siffror, valuta, datum och tid. Rensa för att använda webbläsarens eller reservformatet",
+          "time-zone": "Tidszon",
+          "time-zone-description": "Aktuell användares tidszon i IANA-format (tz-databas). Välj närmaste stad i din tidszon. Rensa för att använda webbläsarens eller reservtidszonen",
+          "use-time-ago": "Använd formatet 'för en stund sedan' om möjligt",
+          "full-date-threshold-group": "Använd fullt datumformat för datum äldre än...",
+          "full-date-threshold-description": "Numeriskt värde för tidsenheter",
+          "full-date-threshold-unit-description": "Tidsenhet (t.ex. timmar eller år)"
+        },
+        "placeholders": {
+          "full-date-threshold": "Ange tröskelvärde",
+          "full-date-threshold-unit": "Välj tröskelenhet"
+        },
+        "full-date-threshold-units": {
+          "Never": "Aldrig",
+          "Seconds": "Sekunder",
+          "Minutes": "Minuter",
+          "Hours": "Timmar",
+          "Days": "Dagar",
+          "Weeks": "Veckor",
+          "Months": "Månader",
+          "Quarters": "Kvartal",
+          "Years": "År"
+        }
+      }
+    },
+    "templates": {
+      "sampleDataChoose": {
+        "labels": {
+          "choose-sample-data-type": "Välj typ av exempeldata",
+          "size": "storlek",
+          "version": "version"
+        }
+      },
+      "sampleDataInitialization": {
+        "labels": {
+          "sample-data-initialization": "Initiering av exempeldata",
+          "starting-initialization": "Startar initiering av exempeldata...",
+          "errors": "Fel",
+          "start": "Start",
+          "end": "Slut"
+        }
+      },
+      "licensing": {
+        "license-absent": "Community-licens",
+        "license-present": "{{type}}-licens, går ut {{expirationDate | amParse | date}}",
+        "community": "Kör community-utgåva, klicka för att begära en kommersiell licens",
+        "expired": "Din licens har gått ut {{expirationDate | amParse | date}}, vänligen förnya",
+        "purchase": "Köp",
+        "renew": "Förnya",
+        "expiration-date": "Utgångsdatum"
+      },
+      "password-expiry": {
+        "expire-days": "För att skydda ditt konto måste du ändra ditt lösenord <b>om {{count}} dagar.</b>",
+        "expire-today": "För att skydda ditt konto måste du ändra ditt lösenord <b>idag.</b>",
+        "change-link": "Ändra nu"
+      },
+      "modulesAutoInstallation": {
+        "labels": {
+          "module-auto-installation": "Automatisk installation av moduler",
+          "loading": "Hämtar modulinformation...",
+          "finished": "Installationen slutförd. Klicka på Starta om för att fortsätta",
+          "start": "Start",
+          "end": "Slut"
+        }
+      }
+    },
+    "widgets": {
+      "operations": {
+        "title": "Ändringar",
+        "blade-subtitle": "Ändringshistorik"
+      },
+      "dynamicProperty": {
+        "title": "Dynamiska egenskaper"
+      },
+      "entitySettings": {
+        "title": "Inställningar"
+      },
+      "accountApi": {
+        "title": "API-nyckel",
+        "blade-subtitle": "API-nyckel"
+      },
+      "accountRoles": {
+        "title": "Roller",
+        "blade-subtitle": "Hantera roller"
+      }
+    },
+    "dialogs": {
+      "folders-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera valda mappar eller filer?"
+      },
+      "properties-save": {
+        "title": "Spara ändringar",
+        "message": "Egenskaperna har ändrats. Vill du spara ändringarna?"
+      },
+      "notification-template-save": {
+        "title": "Spara ändringar",
+        "message": "Notis-mallen har ändrats. Vill du spara ändringarna?"
+      },
+      "role-save": {
+        "title": "Spara ändringar",
+        "message": "Rollen har ändrats. Vill du spara ändringarna?"
+      },
+      "roles-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera valda roller?"
+      },
+      "account-save": {
+        "title": "Spara ändringar",
+        "message": "Kontot har ändrats. Vill du spara ändringarna?"
+      },
+      "account-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera valda konton?"
+      },
+      "oauthapps-save": {
+        "title": "Spara ändringar",
+        "message": "OAuth-applikationen har ändrats. Vill du spara ändringarna?"
+      },
+      "oauthapps-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera den valda OAuth-applikationen?"
+      },
+      "dynamic-property-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera denna dynamiska egenskap?"
+      },
+      "settings-value-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera valda värden?"
+      },
+      "settings-save": {
+        "title": "Spara ändringar",
+        "message": "Inställningarna har ändrats. Vill du spara ändringarna?"
+      },
+      "settings-delete": {
+        "title": "Bekräfta radering",
+        "message": "Inställningarna har ändrats. Vill du spara ändringarna?"
+      },
+      "localizable-setting-value-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera valda ordboksvärden?"
+      },
+      "localizable-setting-value-save": {
+        "title": "Spara ändringar",
+        "message": "Detta ordboksvärde har ändrats. Vill du spara ändringarna?"
+      },
+      "email-sending-success": {
+        "title": "Sändning lyckades",
+        "message": "E-post har skickats framgångsrikt!"
+      },
+      "email-send-error": {
+        "title": "Fel vid sändning",
+        "message": "E-post har inte skickats! Fel: {{error}}"
+      },
+      "dictionary-items-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera {{quantity}} valda ordboksposter?"
+      },
+      "module-action": {
+        "title-install": "Bekräfta installation",
+        "title-update": "Bekräfta uppdatering",
+        "title-delete": "Bekräfta avinstallation",
+        "message0-install": "Du är på väg att installera:",
+        "message0-update": "Du är på väg att uppdatera:",
+        "message0-delete": "Du är på väg att avinstallera:",
+        "message1-install": "Följande beroenden kommer också att installeras:",
+        "message1-delete": "Följande beroende moduler kommer också att avinstalleras:",
+        "message2-install": "Installera val och beroenden?",
+        "message2-update": "Uppdatera val och beroenden?",
+        "message2-delete": "Avinstallera denna och ALLA beroende moduler?"
+      },
+      "module-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill avinstallera denna modul?"
+      },
+      "api-key-delete": {
+        "title": "Bekräfta radering",
+        "message": "Är du säker på att du vill radera denna API-nyckel?"
+      },
+      "app-restart": {
+        "title": "Applikationsavstängning",
+        "message": "Starta om applikationen för att tillämpa ändringar. Beroende på din värdtjänst kan applikationen starta om automatiskt eller så behöver du göra det manuellt. Är du säker på att du vill stänga applikationen nu?"
+      },
+      "error-details": {
+        "title": "Felinformation"
+      },
+      "impersonate-no-url": {
+        "title": "Inloggning å andras vägnar",
+        "message": "Butiks-URL har inte lagts till i butiksinställningarna. Kontakta administratören"
+      },
+      "asset-upload-error": {
+        "title": "Uppladdningsfel",
+        "message": "Välj en mapp! Kan inte ladda upp en fil till roten!"
+      },
+      "run-import": {
+        "title": "Bekräfta import",
+        "message": "Är du säker på att du vill importera exempeldata?"
+      },
+      "create-folder": {
+        "title": "Ett mappnamn måste följa följande namnregler:\n  Mappnamnet måste vara mellan 3 och 63 tecken långt.\n  Mappnamnet måste börja med en bokstav eller siffra och får endast innehålla bokstäver, siffror och bindestreck (-).\n  Varje bindestreck (-) måste omedelbart föregås och följas av en bokstav eller siffra; på varandra följande bindestreck är inte tillåtna.\n  Alla bokstäver i ett mappnamn måste vara små"
+      },
+      "cache-reset": {
+        "title": "Återställning av cache",
+        "confirm-reset-message": "Är du säker på att du vill återställa cachen? Denna åtgärd rensar all cachad data och kan tillfälligt påverka systemets prestanda. Bekräfta för att fortsätta",
+        "reset-successfully-message": "Cachen har återställts framgångsrikt"
+      }
+    },
+    "commands": {
+      "login-on-behalf": "Logga in å andras vägnar",
+      "cache-reset": {
+        "title": "Återställ cache",
+        "name": "Återställ cache"
+      },
+      "restart-application-title": "Starta om applikation"
+    }
+  },
+  "permissions": {
+    "platform:asset:access": "Visa tillgångar i huvudmenyn",
+    "platform:asset:delete": "Radera plattformstillgångar",
+    "platform:asset:update": "Ändra plattformstillgångar",
+    "platform:asset:create": "Ladda upp nya plattformstillgångar",
+    "platform:asset:read": "Ladda ner plattformstillgångar",
+    "platform:module:read": "Visa modulinformation",
+    "platform:module:access": "Visa moduler i huvudmenyn",
+    "platform:module:manage": "Installera/avinstallera moduler",
+    "platform:setting:read": "Läs plattformsinställningar",
+    "platform:setting:access": "Visa inställningar i huvudmenyn",
+    "platform:setting:update": "Ändra plattformsinställningar",
+    "platform:dynamic_properties:read": "Visa detaljer om dynamiska egenskaper",
+    "platform:dynamic_properties:create": "Skapa nya dynamiska egenskaper",
+    "platform:dynamic_properties:access": "Visa dynamiska egenskaper i huvudmenyn",
+    "platform:dynamic_properties:update": "Ändra dynamiska egenskaper",
+    "platform:dynamic_properties:delete": "Radera dynamiska egenskaper",
+    "platform:security:read": "Visa användar- och rolldetaljer",
+    "platform:security:create": "Skapa nya användare och roller",
+    "platform:security:access": "Visa säkerhet i huvudmenyn",
+    "platform:security:update": "Ändra användare och roller",
+    "platform:security:delete": "Radera användare och roller",
+    "platform:security:verifyEmail": "Ändra verifierat tillstånd och skicka verifieringsmail",
+    "background_jobs:manage": "Tillgång till Hangfire-konsolen",
+    "platform:exportImport:access": "Visa Säkerhetskopiering/Återställning i huvudmenyn",
+    "platform:import": "Återställ plattforms- och moduldata",
+    "platform:export": "Säkerhetskopiera plattforms- och moduldata",
+    "platform:security:loginOnBehalf": "Logga in å kundens vägnar"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "Core": {
+        "General": {
+          "Languages": {
+            "title": "Språk",
+            "description": "Lista över tillgängliga språk"
+          }
+        }
+      },
+      "ModulesAutoInstalled": {
+        "description": "Flaggan indikerar att modulerna installeras automatiskt",
+        "title": "Moduler installerade"
+      },
+      "ModulesAutoInstallState": {
+        "title": "Tillstånd för automatisk installation av moduler",
+        "description": "Aktuellt tillstånd för guiden för automatisk installation av moduler"
+      },
+      "SetupStep": {
+        "title": "Aktuellt installationssteg",
+        "description": "Aktuellt steg i installationsguiden"
+      },
+      "SampleDataState": {
+        "title": "Tillstånd för exempeldata",
+        "description": "Aktuellt tillstånd för guiden för exempeldata"
+      },
+      "SendDiagnosticData": {
+        "title": "Skicka diagnostikdata",
+        "description": "Skicka VC-plattformens diagnostikdata till VC. Kan endast inaktiveras vid köp av en licens"
+      },
+      "Platform": {
+        "Security": {
+          "AccountTypes": {
+            "description": "Ordbok för möjliga kontotyper",
+            "title": "Kontotyper"
+          },
+          "DefaultAccountType": {
+            "title": "Standardkontotyp",
+            "description": "Standardvärde för kontotyp vid skapande av ett nytt konto"
+          },
+          "DefaultAccountStatus": {
+            "title": "Standardkontostatus",
+            "description": "Standardvärde för kontostatus vid skapande av ett nytt konto"
+          },
+          "DefaultExternalAccountStatus": {
+            "title": "Standardstatus för externt konto",
+            "description": "Standardvärde för kontostatus vid skapande av ett nytt konto under extern inloggning"
+          },
+          "EnablePruneExpiredTokensJob": {
+            "description": "Aktiverar rensning av utgångna och ogiltiga token/autorisationer",
+            "title": "Rensa utgångna token"
+          },
+          "CronPruneExpiredTokensJob": {
+            "description": "Cron-uttryck för jobbet att rensa utgångna och ogiltiga token/autorisationer",
+            "title": "Cron för jobbet att rensa token"
+          },
+          "FileExtensionsBlackList": {
+            "description": "Filändelser som är förbjudna att ladda upp av plattformen (utöver 'FileExtensionsBlackList' i appsettings.json)",
+            "title": "Svart lista"
+          },
+          "FileExtensionsWhiteList": {
+            "description": "Filändelser som är tillåtna att ladda upp av plattformen (utöver 'FileExtensionsWhiteList' i appsettings.json)",
+            "title": "Vit lista"
+          }
+        },
+        "UI": {
+          "MainMenu": {
+            "State": {
+              "description": "Sparat tillstånd för huvudmenyn",
+              "title": "Sparat tillstånd för huvudmenyn"
+            }
+          },
+          "Language": {
+            "description": "Standardspråk (tvåbokstavskod från ISO 639-1, skiftlägesokänslig). Exempel: sv, de",
+            "title": "Språk"
+          },
+          "RegionalFormat": {
+            "description": "Standard regionalt format (CLDR-lokalkod, med bindestreck eller understreck som avgränsare, skiftlägesokänslig). Exempel: sv, sv_SE, sr_Cyrl, sr_Cyrl_RS",
+            "title": "Regionalt format"
+          },
+          "TimeZone": {
+            "description": "Standardtidszon (IANA-tidszonsnamn [tz-databas], exakt som i databasen, skiftlägeskänslig). Exempel: Europe/Stockholm, America/New_York",
+            "title": "Tidszon"
+          },
+          "UseTimeAgo": {
+            "description": "När satt till sant (standard), visar systemet datum i formatet 'för en stund sedan' när det är möjligt",
+            "title": "Använd formatet 'för en stund sedan' när möjligt"
+          },
+          "FullDateThreshold": {
+            "description": "Formatet 'för en stund sedan' växlar till ett fullt datumformat efter ett visst antal tidsenheter",
+            "title": "Tröskel för fullt datum"
+          },
+          "FullDateThresholdUnit": {
+            "description": "Enhet för tröskel för fullt datum",
+            "title": "Enhet för tröskel för fullt datum"
+          },
+          "Customization": {
+            "description": "JSON innehåller personaliseringsinställningar för hanterarens användargränssnitt",
+            "title": "Anpassning av hanterarens användargränssnitt"
+          },
+          "ShowMeridian": {
+            "description": "Visa tidsmeridianindikator (AM eller PM)",
+            "title": "Visa tidsmeridian"
+          }
+        },
+        "Cache": {
+          "Enabled": {
+            "description": "Denna inställning gör det möjligt att globalt aktivera och inaktivera cachning för hela plattformsapplikationen",
+            "title": "Aktivera eller inaktivera cache globalt"
+          },
+          "AbsoulteExpiration": {
+            "description": "Anger den maximala tiden som cachad data lagras i cachen. Format: [-][d.]hh:mm:ss[.fffffff]",
+            "title": "Global livstid för objekt i cache"
+          }
+        }
+      },
+      "Other": {
+        "AccountStatuses": {
+          "title": "Kontostatusar",
+          "description": "Ändra kontostatusar"
+        }
+      }
+    }
+  }
+}
