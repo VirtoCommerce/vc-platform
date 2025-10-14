@@ -85,7 +85,7 @@ angular.module('platformWebApp')
                         angular.forEach(languages, function (language) {
                             //Currently select values
                             var currentPropValues = _.filter(scope.context.currentPropValues, function (x) { return x.locale == language; });
-                            //need add empty value for single  value type
+                            //need add empty value for single value type
                             if (currentPropValues.length == 0) {
                                 scope.context.currentPropValues.push({ value: null, locale: language });
                             }
@@ -132,16 +132,16 @@ angular.module('platformWebApp')
                         result += '.html';
                         return result;
                     }
-                    
+
                     // Add JSON validation function
                     function validateJson(cm, ngModel) {
                         if (!cm) return true;
-                        
+
                         try {
                             var content = cm.getValue();
                             // Allow empty values to pass validation
                             if (!content) return true;
-                            
+
                             // Try to parse the JSON
                             JSON.parse(content);
                             // If no exception, JSON is valid
@@ -153,7 +153,7 @@ angular.module('platformWebApp')
                             return false;
                         }
                     }
-                    
+
                     function configureJsonEditorInterface(editorOptions) {
                         editorOptions.extraKeys = Object.assign(scope.editorOptions.extraKeys || {}, {
                             "Ctrl-Alt-F": function (cm) {
@@ -183,7 +183,7 @@ angular.module('platformWebApp')
 
                             // Create validation status indicator
                             var statusIndicator = angular.element('<div class="json-btn status-indicator"></div>');
-                            
+
                             // Apply common styles to both elements
                             var commonButtonStyle = {
                                 padding: '2px 8px',
@@ -194,14 +194,14 @@ angular.module('platformWebApp')
                                 boxSizing: 'border-box',
                                 border: 'none'
                             };
-                            
+
                             // Style the format button
                             formatButton.css(Object.assign({}, commonButtonStyle, {
                                 backgroundColor: '#43b0e6',
                                 color: 'white',
                                 cursor: 'pointer'
                             }));
-                            
+
                             // Style the validation indicator (initially hidden)
                             statusIndicator.css(Object.assign({}, commonButtonStyle, {
                                 backgroundColor: '#4CAF50',
@@ -210,29 +210,29 @@ angular.module('platformWebApp')
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }));
-                            
+
                             // Add both elements to the container
                             buttonContainer.append(statusIndicator);
                             buttonContainer.append(formatButton);
-                            
+
                             // Append container to editor
                             var wrapper = angular.element(_editor.getWrapperElement());
                             wrapper.prepend(buttonContainer);
-                            
+
                             // Validate JSON when editor loads and on change
-                            _editor.on("change", function() {
+                            _editor.on("change", function () {
                                 var isValid = validateJson(_editor, ngModelController);
                                 updateValidationIndicator(statusIndicator, isValid);
                             });
-                            
+
                             // Initial validation
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 var isValid = validateJson(_editor, ngModelController);
                                 updateValidationIndicator(statusIndicator, isValid);
                             }, 100);
                         };
                     }
-                    
+
                     function updateValidationIndicator(statusIndicator, isValid) {
                         if (isValid) {
                             statusIndicator.css({
@@ -248,7 +248,7 @@ angular.module('platformWebApp')
                             statusIndicator.text('Invalid JSON');
                         }
                     }
-                  
+
                     function changeValueTemplate() {
                         if (scope.currentEntity.valueType === 'Html' || scope.currentEntity.valueType === 'Json') {
                             // Codemirror configuration
@@ -270,7 +270,7 @@ angular.module('platformWebApp')
                         if (scope.currentEntity.valueType === 'Json') {
                             scope.editorOptions['parserfile'] = 'javascript.js';
                             scope.editorOptions['mode'] = { name: 'javascript', json: true };
-                            
+
                             // Add JSON lint if needed (but don't rely on it for validation)
                             if (typeof window.jsonlint !== 'undefined') {
                                 scope.editorOptions['lint'] = true;
@@ -278,9 +278,9 @@ angular.module('platformWebApp')
                             }
 
                             configureJsonEditorInterface(scope.editorOptions);
-                            
+
                             // Initialize with validation
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 if (scope.editor) {
                                     validateJson(scope.editor, ngModelController);
                                 }
@@ -312,10 +312,10 @@ angular.module('platformWebApp')
                             //Create new scope, otherwise we would destroy our directive scope
                             var newScope = scope.$new();
                             $compile(result)(newScope);
-                            
+
                             // After compile, ensure validation runs for JSON fields
                             if (scope.currentEntity.valueType === 'Json') {
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     if (scope.editor) {
                                         validateJson(scope.editor, ngModelController);
                                     }
@@ -398,7 +398,7 @@ angular.module('platformWebApp')
 
                             var formatted = JSON.stringify(JSON.parse(content), null, 2);
                             cm.setValue(formatted);
-                            
+
                             // Validate after formatting
                             validateJson(cm, ngModelController);
                         } catch (e) {
