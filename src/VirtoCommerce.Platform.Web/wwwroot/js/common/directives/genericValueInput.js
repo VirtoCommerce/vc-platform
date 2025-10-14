@@ -132,35 +132,121 @@ angular.module('platformWebApp')
                         result += '.html';
                         return result;
                     }
-                    function addJsonFormattingButton(editorOptions) {
+                    
+                    // Add JSON validation function
+                    function validateJson(cm, ngModel) {
+                        if (!cm) return true;
+                        
+                        try {
+                            var content = cm.getValue();
+                            // Allow empty values to pass validation
+                            if (!content) return true;
+                            
+                            // Try to parse the JSON
+                            JSON.parse(content);
+                            // If no exception, JSON is valid
+                            ngModel.$setValidity('json', true);
+                            return true;
+                        } catch (e) {
+                            // JSON is invalid, mark the form as invalid
+                            ngModel.$setValidity('json', false);
+                            return false;
+                        }
+                    }
+                    
+                    function configureJsonEditorInterface(editorOptions) {
+                        editorOptions.extraKeys = Object.assign(scope.editorOptions.extraKeys || {}, {
+                            "Ctrl-Alt-F": function (cm) {
+                                scope.formatJson(cm);
+                            }
+                        });
+
                         editorOptions.onLoad = function (_editor) {
                             scope.editor = _editor;
 
-                            // Create formatting button
-                            var formatButton = angular.element('<button class="btn-format" title="Format JSON (Ctrl+Alt+F)">Format JSON</button>');
-                            formatButton.on('click', function () {
-                                scope.formatJson();
-                            });
-
-                            // Add some styling for the button
-                            formatButton.css({
+                            // Create container for buttons
+                            var buttonContainer = angular.element('<div class="json-controls"></div>');
+                            buttonContainer.css({
                                 position: 'absolute',
                                 top: '5px',
                                 right: '5px',
                                 zIndex: '10',
-                                padding: '2px 8px',
-                                fontSize: '12px',
-                                backgroundColor: '#43b0e6',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '3px',
-                                cursor: 'pointer'
+                                display: 'flex',
+                                gap: '5px'
                             });
 
-                            // Append button to editor
+                            // Create formatting button
+                            var formatButton = angular.element('<button class="json-btn format-btn" title="Format JSON (Ctrl+Alt+F)">Format JSON</button>');
+                            formatButton.on('click', function () {
+                                scope.formatJson();
+                            });
+
+                            // Create validation status indicator
+                            var statusIndicator = angular.element('<div class="json-btn status-indicator"></div>');
+                            
+                            // Apply common styles to both elements
+                            var commonButtonStyle = {
+                                padding: '2px 8px',
+                                fontSize: '12px',
+                                borderRadius: '3px',
+                                height: '24px',
+                                lineHeight: '20px',
+                                boxSizing: 'border-box',
+                                border: 'none'
+                            };
+                            
+                            // Style the format button
+                            formatButton.css(Object.assign({}, commonButtonStyle, {
+                                backgroundColor: '#43b0e6',
+                                color: 'white',
+                                cursor: 'pointer'
+                            }));
+                            
+                            // Style the validation indicator (initially hidden)
+                            statusIndicator.css(Object.assign({}, commonButtonStyle, {
+                                backgroundColor: '#4CAF50',
+                                color: 'white',
+                                display: 'none',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }));
+                            
+                            // Add both elements to the container
+                            buttonContainer.append(statusIndicator);
+                            buttonContainer.append(formatButton);
+                            
+                            // Append container to editor
                             var wrapper = angular.element(_editor.getWrapperElement());
-                            wrapper.prepend(formatButton);
+                            wrapper.prepend(buttonContainer);
+                            
+                            // Validate JSON when editor loads and on change
+                            _editor.on("change", function() {
+                                var isValid = validateJson(_editor, ngModelController);
+                                updateValidationIndicator(statusIndicator, isValid);
+                            });
+                            
+                            // Initial validation
+                            setTimeout(function() {
+                                var isValid = validateJson(_editor, ngModelController);
+                                updateValidationIndicator(statusIndicator, isValid);
+                            }, 100);
                         };
+                    }
+                    
+                    function updateValidationIndicator(statusIndicator, isValid) {
+                        if (isValid) {
+                            statusIndicator.css({
+                                backgroundColor: '#4CAF50',
+                                display: 'none'
+                            });
+                            statusIndicator.text('Valid JSON');
+                        } else {
+                            statusIndicator.css({
+                                backgroundColor: '#F44336',
+                                display: 'flex'
+                            });
+                            statusIndicator.text('Invalid JSON');
+                        }
                     }
                   
                     function changeValueTemplate() {
@@ -184,15 +270,21 @@ angular.module('platformWebApp')
                         if (scope.currentEntity.valueType === 'Json') {
                             scope.editorOptions['parserfile'] = 'javascript.js';
                             scope.editorOptions['mode'] = { name: 'javascript', json: true };
-                            scope.editorOptions['lint'] = true;
+                            
+                            // Add JSON lint if needed (but don't rely on it for validation)
+                            if (typeof window.jsonlint !== 'undefined') {
+                                scope.editorOptions['lint'] = true;
+                                scope.editorOptions.gutters = ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"];
+                            }
 
-                            scope.editorOptions.extraKeys = Object.assign(scope.editorOptions.extraKeys || {}, {
-                                "Ctrl-Alt-F": function (cm) {
-                                    scope.formatJson(cm);
+                            configureJsonEditorInterface(scope.editorOptions);
+                            
+                            // Initialize with validation
+                            setTimeout(function() {
+                                if (scope.editor) {
+                                    validateJson(scope.editor, ngModelController);
                                 }
-                            });
-
-                            addJsonFormattingButton(scope.editorOptions);
+                            }, 200);
                         }
 
                         var templateName = getTemplateName(scope.currentEntity);
@@ -220,6 +312,15 @@ angular.module('platformWebApp')
                             //Create new scope, otherwise we would destroy our directive scope
                             var newScope = scope.$new();
                             $compile(result)(newScope);
+                            
+                            // After compile, ensure validation runs for JSON fields
+                            if (scope.currentEntity.valueType === 'Json') {
+                                setTimeout(function() {
+                                    if (scope.editor) {
+                                        validateJson(scope.editor, ngModelController);
+                                    }
+                                }, 200);
+                            }
                         });
                     }
 
@@ -297,6 +398,9 @@ angular.module('platformWebApp')
 
                             var formatted = JSON.stringify(JSON.parse(content), null, 2);
                             cm.setValue(formatted);
+                            
+                            // Validate after formatting
+                            validateJson(cm, ngModelController);
                         } catch (e) {
                             console.error('JSON formatting error:', e);
                         }
