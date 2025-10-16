@@ -104,7 +104,8 @@ public class DynamicPropertyAccessor : DynamicObject
     protected object GetValueFromConnectEntity(DynamicProperty metaProperty)
     {
         object result;
-        var prop = GetConnectedEntity().DynamicProperties.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
+        var dynamicProperties = GetConnectedEntity().DynamicProperties ?? [];
+        var prop = dynamicProperties.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
 
         if (metaProperty.IsArray)
         {
@@ -217,6 +218,11 @@ public class DynamicPropertyAccessor : DynamicObject
     protected void SetPropertyValueToConnectedEntity(DynamicProperty metaProperty, object value)
     {
         // Find or create the property in the entity
+        if (GetConnectedEntity().DynamicProperties == null)
+        {
+            GetConnectedEntity().DynamicProperties = [];
+        }
+
         var dynamicProperties = GetConnectedEntity().DynamicProperties;
         var prop = dynamicProperties.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
 
