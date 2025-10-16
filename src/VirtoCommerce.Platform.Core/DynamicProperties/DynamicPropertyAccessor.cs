@@ -105,7 +105,7 @@ public class DynamicPropertyAccessor : DynamicObject
     {
         object result;
         var dynamicProperties = GetConnectedEntity().DynamicProperties ?? [];
-        var prop = dynamicProperties.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
+        var prop = GetConnectedEntity().DynamicProperties?.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
 
         if (metaProperty.IsArray)
         {
