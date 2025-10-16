@@ -104,7 +104,6 @@ public class DynamicPropertyAccessor : DynamicObject
     protected object GetValueFromConnectEntity(DynamicProperty metaProperty)
     {
         object result;
-        var dynamicProperties = GetConnectedEntity().DynamicProperties ?? [];
         var prop = GetConnectedEntity().DynamicProperties?.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
 
         if (metaProperty.IsArray)
