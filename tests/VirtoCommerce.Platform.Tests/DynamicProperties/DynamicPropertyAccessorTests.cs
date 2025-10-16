@@ -359,6 +359,8 @@ public class DynamicPropertyAccessorTests
         // Should allow to read 
         dynamic properties = entity.DynamicPropertyAccessor;
         var value = properties.ShortTextFieldSingleValue;
+
+        Assert.Null(value);
     }
 
     [Fact]
