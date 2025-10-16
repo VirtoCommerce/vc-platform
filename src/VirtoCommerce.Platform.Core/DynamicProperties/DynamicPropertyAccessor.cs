@@ -220,7 +220,7 @@ public class DynamicPropertyAccessor : DynamicObject
         // Find or create the property in the entity
         if (GetConnectedEntity().DynamicProperties == null)
         {
-            GetConnectedEntity().DynamicProperties = [];
+            throw new NotSupportedException("Dynamic properties are not loaded. Please either load or initialize DynamicProperties collection.");
         }
 
         var dynamicProperties = GetConnectedEntity().DynamicProperties;

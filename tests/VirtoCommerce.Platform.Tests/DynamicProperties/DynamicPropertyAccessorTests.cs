@@ -346,5 +346,48 @@ public class DynamicPropertyAccessorTests
         });
     }
 
+
+    [Fact]
+    public void Should_Allow_Get_When_DynamicProperties_IsNull()
+    {
+        // Arrange
+        var entity = new TestEntityWithDynamicProperties
+        {
+            DynamicProperties = null // Simulate unloaded dynamic properties
+        };
+
+        // Should allow to read 
+        dynamic properties = entity.DynamicPropertyAccessor;
+        var value = properties.ShortTextFieldSingleValue;
+    }
+
+    [Fact]
+    public void Should_Throw_NotSupportedException_When_DynamicProperties_IsNull()
+    {
+        // Arrange
+        var entity = new TestEntityWithDynamicProperties
+        {
+            DynamicProperties = null // Simulate unloaded dynamic properties
+        };
+
+        // Act & Assert
+        // Using dynamic accessor should throw NotSupportedException
+        var exception1 = Assert.Throws<NotSupportedException>(() =>
+        {
+            dynamic properties = entity.DynamicPropertyAccessor;
+            properties.ShortTextFieldSingleValue = "Test Value";
+        });
+
+        Assert.Contains("Dynamic properties are not loaded", exception1.Message);
+
+
+        // Using the TrySetPropertyValue method should also throw
+        var exception2 = Assert.Throws<NotSupportedException>(() =>
+        {
+            entity.DynamicPropertyAccessor.TrySetPropertyValue("ShortTextFieldSingleValue", "Test Value");
+        });
+
+        Assert.Contains("Dynamic properties are not loaded", exception2.Message);
+    }
 }
 
