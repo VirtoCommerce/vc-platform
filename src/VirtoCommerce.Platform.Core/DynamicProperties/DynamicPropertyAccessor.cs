@@ -217,13 +217,9 @@ public class DynamicPropertyAccessor : DynamicObject
 
     protected void SetPropertyValueToConnectedEntity(DynamicProperty metaProperty, object value)
     {
-        // Find or create the property in the entity
-        if (GetConnectedEntity().DynamicProperties == null)
-        {
+        var dynamicProperties = GetConnectedEntity().DynamicProperties ??
             throw new NotSupportedException("Dynamic properties are not loaded. Please either load or initialize DynamicProperties collection.");
-        }
 
-        var dynamicProperties = GetConnectedEntity().DynamicProperties;
         var prop = dynamicProperties.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
 
         if (prop == null)
