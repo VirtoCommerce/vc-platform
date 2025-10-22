@@ -26,5 +26,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
         Task<SettingEntity[]> GetObjectSettingsByNamesAsync(string[] names, string objectType, string objectId);
 
         Task<OperationLogEntity[]> GetOperationLogsByIdsAsync(string[] ids);
+        Task DeleteOperationLogsByUserIdAsync(string userId);
     }
 }

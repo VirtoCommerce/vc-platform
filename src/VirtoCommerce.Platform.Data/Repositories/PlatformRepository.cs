@@ -108,8 +108,19 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return await OperationLogs.Where(x => ids.Contains(x.Id)).ToArrayAsync();
         }
 
+        public virtual async Task DeleteOperationLogsByUserIdAsync(string userId)
+        {
+            var logs = OperationLogs.Where(x => x.ObjectId == userId);
+
+            if (!logs.Any())
+            {
+                return;
+            }
+
+            DbContext.RemoveRange(logs);
+            await DbContext.SaveChangesAsync();
+        }
 
         #endregion
-
     }
 }
