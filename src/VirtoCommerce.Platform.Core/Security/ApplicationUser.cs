@@ -65,12 +65,6 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public virtual void Patch(ApplicationUser target)
         {
-            // If the user has already been anonymised, we do not make any changes.
-            if (IsAnonymised)
-            {
-                return;
-            }
-
             target.UserName = UserName;
             target.IsAdministrator = IsAdministrator;
             target.Email = Email;
@@ -104,12 +98,6 @@ namespace VirtoCommerce.Platform.Core.Security
             var newUser = this;
             // Gather all the changes from ApplicationUser and its possible descendants
             var result = ChangesDetector.Gather(newUser, oldUser);
-
-            // If the user is already anonymised, we do not create any events.
-            if (oldUser.IsAnonymised)
-            {
-                return result;
-            }
 
             //Next: gather the changes manually from specific properties of ApplicationUser's ancestor
             if (newUser.UserName != oldUser.UserName)
