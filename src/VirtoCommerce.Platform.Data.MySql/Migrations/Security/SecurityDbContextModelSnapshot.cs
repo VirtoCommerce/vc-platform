@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -372,6 +372,9 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsAdministrator")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsAnonymised")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("LastLoginDate")

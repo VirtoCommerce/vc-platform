@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -375,6 +375,9 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsAdministrator")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAnonymised")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastLoginDate")
