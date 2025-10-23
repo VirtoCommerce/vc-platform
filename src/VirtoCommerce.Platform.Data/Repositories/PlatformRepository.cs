@@ -112,11 +112,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
         {
             var logs = OperationLogs.Where(x => x.ObjectId == userId);
 
-            if (!logs.Any())
-            {
-                return;
-            }
-
             DbContext.RemoveRange(logs);
             await DbContext.SaveChangesAsync();
         }
