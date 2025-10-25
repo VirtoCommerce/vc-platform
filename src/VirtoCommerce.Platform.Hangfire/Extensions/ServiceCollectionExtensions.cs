@@ -1,3 +1,4 @@
+using System;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.MySql;
@@ -53,17 +54,30 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
 
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = hangfireOptions.AutomaticRetryCount });
 
-            if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer ||
-                hangfireOptions.JobStorageType == HangfireJobStorageType.Database)
+            switch (hangfireOptions.JobStorageType)
             {
-                services.AddHangfire(c => c.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
-                    .AddHangfireStorage(configuration, hangfireOptions));
-            }
-            else
-            {
-                services.AddHangfire(config => config.UseMemoryStorage());
+                case HangfireJobStorageType.SqlServer or HangfireJobStorageType.Database:
+                    services.AddHangfire(c => c.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                        .UseSimpleAssemblyNameTypeSerializer()
+                        .UseRecommendedSerializerSettings()
+                        .AddHangfireStorage(configuration, hangfireOptions));
+                    break;
+                case HangfireJobStorageType.Memory:
+                    services.AddHangfire(config => config.UseMemoryStorage());
+                    break;
+                case HangfireJobStorageType.Redis:
+                {
+                    var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
+                    if (string.IsNullOrEmpty(redisConnectionString))
+                    {
+                        throw new InvalidOperationException("RedisConnectionString must be set");
+                    }
+
+                    services.AddHangfire(config => config.UseRedisStorage(redisConnectionString, hangfireOptions.RedisStorageOptions));
+                    break;
+                }
+                default:
+                    throw new InvalidOperationException($"Unsupported Hangfire JobStorageType: {hangfireOptions.JobStorageType}");
             }
 
             return services;

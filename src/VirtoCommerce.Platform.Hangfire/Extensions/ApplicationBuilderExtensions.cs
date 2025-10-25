@@ -12,7 +12,6 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Hangfire.Middleware;
 
@@ -33,12 +32,11 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             // Therefore, we create SqlServerStorage for Hangfire manually here.
             // This way we ensure Hangfire schema will be applied to storage AFTER platform database creation.
             var hangfireOptions = appBuilder.ApplicationServices.GetRequiredService<IOptions<HangfireOptions>>().Value;
-            if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer ||
-                hangfireOptions.JobStorageType == HangfireJobStorageType.Database)
+            if (hangfireOptions.JobStorageType is HangfireJobStorageType.SqlServer or HangfireJobStorageType.Database)
             {
                 var connectionString = configuration.GetConnectionString("VirtoCommerce.Hangfire") ?? configuration.GetConnectionString("VirtoCommerce");
 
-                JobStorage storage = null;
+                JobStorage storage;
 
                 switch (databaseProvider)
                 {
@@ -58,8 +56,12 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
 
                 hangfireGlobalConfiguration.UseConsole();
             }
+            else if (hangfireOptions.JobStorageType == HangfireJobStorageType.Redis)
+            {
+                hangfireGlobalConfiguration.UseConsole();
+            }
 
-            appBuilder.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
+            appBuilder.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = [new HangfireAuthorizationHandler()] });
 
             var mvcJsonOptions = appBuilder.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
