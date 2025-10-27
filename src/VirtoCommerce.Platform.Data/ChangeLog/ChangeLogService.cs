@@ -105,7 +105,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         {
             using (var repository = _repositoryFactory())
             {
-                await repository.DeleteOperationLogsByUserIdAsync(userId);
+                await repository.DeleteOperationLogsAsync(userId, "ApplicationUser");
                 await repository.UnitOfWork.CommitAsync();
                 Reset();
             }
