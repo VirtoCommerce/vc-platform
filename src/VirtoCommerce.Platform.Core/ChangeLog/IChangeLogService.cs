@@ -7,5 +7,6 @@ namespace VirtoCommerce.Platform.Core.ChangeLog
         Task SaveChangesAsync(params OperationLog[] operationLogs);
         Task<OperationLog[]> GetByIdsAsync(string[] ids);
         Task DeleteAsync(string[] ids);
+        Task DeleteOperationLogsByUserIdAsync(string userId);
     }
 }

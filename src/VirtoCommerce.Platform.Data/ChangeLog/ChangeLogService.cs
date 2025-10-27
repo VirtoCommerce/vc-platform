@@ -100,6 +100,17 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                 Reset();
             }
         }
+
+        public virtual async Task DeleteOperationLogsByUserIdAsync(string userId)
+        {
+            using (var repository = _repositoryFactory())
+            {
+                await repository.DeleteOperationLogsByUserIdAsync(userId);
+                await repository.UnitOfWork.CommitAsync();
+                Reset();
+            }
+        }
+
         #endregion
 
     }
