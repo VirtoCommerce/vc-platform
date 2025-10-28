@@ -38,7 +38,7 @@ import 'angular-cookies';
 import 'angular-file-upload';
 import 'angular-moment';
 import 'angular-resource';
-import 'angular-ui-grid';
+import 'angular-ui-grid/ui-grid';
 import 'ui-grid-draggable-rows';
 import 'ui-select';
 import 'angular-ui-sortable';
