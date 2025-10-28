@@ -12,13 +12,21 @@ window.marked = marked;
 
 import CodeMirror from 'codemirror/lib/codemirror.js';
 window.CodeMirror = CodeMirror;
+
+import jsonlint from 'jsonlint-mod';
+window.jsonlint = jsonlint; // This line is essential
+
 import 'codemirror/mode/xml/xml.js';
 import 'codemirror/mode/gfm/gfm.js';
 import 'codemirror/mode/htmlmixed/htmlmixed.js';
 import 'codemirror/mode/markdown/markdown.js';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/mode/overlay.js';
+import 'codemirror/addon/lint/lint.js';
+import 'codemirror/addon/lint/json-lint.js';
+import 'codemirror/addon/lint/lint.css';
 import 'codemirror/lib/codemirror.css';
+
 
 import UIkit from 'uikit';
 window.UIkit = UIkit;
@@ -39,7 +47,7 @@ import 'angular-cookies';
 import 'angular-file-upload';
 import 'angular-moment';
 import 'angular-resource';
-import 'angular-ui-grid';
+import 'angular-ui-grid/ui-grid';
 import 'ui-grid-draggable-rows';
 import 'ui-select';
 import 'angular-ui-sortable';
