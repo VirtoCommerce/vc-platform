@@ -139,6 +139,9 @@ jobs:
 
     - name: Build
       run: vc-build Compile
+      env:
+        HANGFIRE_LOGIN: ${{ secrets.HANGFIRE_LOGIN}}
+        HANGFIRE_PASSWORD: ${{ secrets.HANGFIRE_PASSWORD}}
 
     - name: Unit Tests
       run: vc-build Test -skip
