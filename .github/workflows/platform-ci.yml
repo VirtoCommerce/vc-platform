@@ -103,6 +103,9 @@ jobs:
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
+      env:
+        HANGFIRE_LOGIN: ${{ secrets.HANGFIRE_LOGIN}}
+        HANGFIRE_PASSWORD: ${{ secrets.HANGFIRE_PASSWORD}}
 
     - name: Get Image Version
       uses: VirtoCommerce/vc-github-actions/get-image-version@master
