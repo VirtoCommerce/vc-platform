@@ -107,16 +107,29 @@ namespace VirtoCommerce.Platform.Web.Security
 
         private async Task<ApplicationUser> GetOrCreatePlatformUser(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)
         {
-            //Need handle the two cases
-            //first - when the VC platform user account already exists, it is just missing an external login info and
-            //second - when user does not have an account, then create a new account for them
-            var user = await _userManager.FindByNameAsync(userName);
+            // There are 3 scenarios we need to handle:
+            // 1. A VC platform user is already linked to this external login (happy path).
+            // 2. A VC platform user exists (by username / email) but is NOT yet linked to this external login.
+            // 3. No VC platform user exists at all, and (if allowed) we create one and then link it.
 
-            if (user == null && _identityOptions.User.RequireUniqueEmail && !string.IsNullOrEmpty(userEmail))
+            // 1. Try to resolve the user directly by external login first.
+            var loginOwnerUser = await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey);
+
+            var externalLoginAlreadyLinked = loginOwnerUser != null;
+            var user = loginOwnerUser;
+
+            // 2. If there's no user by external login, try resolving an existing platform user by username / email.
+            if (user == null)
             {
-                user = await _userManager.FindByEmailAsync(userEmail);
+                user = await _userManager.FindByNameAsync(userName);
+
+                if (user == null && _identityOptions.User.RequireUniqueEmail && !string.IsNullOrEmpty(userEmail))
+                {
+                    user = await _userManager.FindByEmailAsync(userEmail);
+                }
             }
 
+            // 3. If still no user, and provider is allowed to create new accounts, create a new platform user.
             if (user == null && AllowCreateNewUser(externalLoginInfo))
             {
                 user = AbstractTypeFactory<ApplicationUser>.TryCreateInstance();
@@ -132,10 +145,10 @@ namespace VirtoCommerce.Platform.Web.Security
                     await userBuilder.BuildNewUser(user, externalLoginInfo);
                 }
 
-                var result = await _userManager.CreateAsync(user);
-                if (!result.Succeeded)
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
                 {
-                    var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
+                    var joinedErrors = string.Join(Environment.NewLine, createResult.Errors.Select(x => x.Description));
                     throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
                 }
 
@@ -147,10 +160,14 @@ namespace VirtoCommerce.Platform.Web.Security
                 }
             }
 
-            if (user != null && await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey) == null)
+            // 4. If we have a user but this external login wasn't previously linked, link it now.
+            if (user != null && !externalLoginAlreadyLinked)
             {
-                // Register a new external login
-                var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
+                var newExternalLogin = new UserLoginInfo(
+                    externalLoginInfo.LoginProvider,
+                    externalLoginInfo.ProviderKey,
+                    externalLoginInfo.ProviderDisplayName);
+
                 await _userManager.AddLoginAsync(user, newExternalLogin);
             }
 
