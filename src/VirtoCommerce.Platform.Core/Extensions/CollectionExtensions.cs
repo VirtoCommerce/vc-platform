@@ -11,6 +11,11 @@ namespace VirtoCommerce.Platform.Core.Common
     /// </summary>
     public static class CollectionExtensions
     {
+        public static bool IsNullOrEmpty<T>(this ICollection<T> collection)
+        {
+            return collection == null || collection.Count == 0;
+        }
+
         /// <summary>
         /// Add a range of items to a collection.
         /// </summary>

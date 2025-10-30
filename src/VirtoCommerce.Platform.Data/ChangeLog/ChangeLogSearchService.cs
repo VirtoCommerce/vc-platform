@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
             var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
-                cacheEntry.AddExpirationToken(ChangeLogCacheRegion.CreateChangeToken()); 
+                cacheEntry.AddExpirationToken(ChangeLogCacheRegion.CreateChangeToken());
                 var searchResult = AbstractTypeFactory<ChangeLogSearchResult>.TryCreateInstance();
 
                 using (var repository = _repositoryFactory())
@@ -50,9 +50,16 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             return result;
         }
 
+        [Obsolete("Use overload with IList<SortInfo> sortInfos", DiagnosticId = "VC0011", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected virtual IQueryable<OperationLogEntity> GetQuery(IPlatformRepository repository, ChangeLogSearchCriteria criteria, IEnumerable<SortInfo> sortInfos)
         {
-            var query = repository.OperationLogs.Where(x => (criteria.StartDate == null || x.ModifiedDate >= criteria.StartDate)&& (criteria.EndDate == null || x.ModifiedDate <= criteria.EndDate));
+            var sortInfosList = sortInfos as IList<SortInfo> ?? sortInfos.ToList();
+            return GetQuery(repository, criteria, sortInfosList);
+        }
+
+        protected virtual IQueryable<OperationLogEntity> GetQuery(IPlatformRepository repository, ChangeLogSearchCriteria criteria, IList<SortInfo> sortInfos)
+        {
+            var query = repository.OperationLogs.Where(x => (criteria.StartDate == null || x.ModifiedDate >= criteria.StartDate) && (criteria.EndDate == null || x.ModifiedDate <= criteria.EndDate));
             if (!criteria.OperationTypes.IsNullOrEmpty())
             {
                 var operationTypes = criteria.OperationTypes.Select(x => x.ToString());

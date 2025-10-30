@@ -9,6 +9,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <summary>Indicates whether the specified enumerable is null or has a length of zero.</summary>
         /// <param name="data">The data to test.</param>
         /// <returns>true if the array parameter is null or has a length of zero; otherwise, false.</returns>
+        [Obsolete("Use IsNullOrEmpty<T>(this ICollection<T> collection)", DiagnosticId = "VC0011", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> data)
         {
             return data == null || !data.Any();

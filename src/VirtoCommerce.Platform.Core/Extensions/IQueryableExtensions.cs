@@ -30,7 +30,14 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
 
+        [Obsolete("Use overload with IList<SortInfo> sortInfos", DiagnosticId = "VC0011", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static IOrderedQueryable<T> OrderBySortInfos<T>(this IQueryable<T> source, IEnumerable<SortInfo> sortInfos)
+        {
+            var sortInfosList = sortInfos as IList<SortInfo> ?? sortInfos.ToList();
+            return source.OrderBySortInfos(sortInfosList);
+        }
+
+        public static IOrderedQueryable<T> OrderBySortInfos<T>(this IQueryable<T> source, IList<SortInfo> sortInfos)
         {
             if (sortInfos.IsNullOrEmpty())
             {

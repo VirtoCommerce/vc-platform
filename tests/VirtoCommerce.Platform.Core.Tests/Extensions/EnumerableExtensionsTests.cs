@@ -14,6 +14,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Extensions
         #region IsNullOrEmpty
 
         [Fact]
+        [Obsolete("Use IsNullOrEmpty<T>(this ICollection<T> collection)", DiagnosticId = "VC0011", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public void IsNullOrEmpty_Null_True()
         {
             // Arrange
@@ -27,6 +28,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Extensions
         }
 
         [Fact]
+        [Obsolete("Use IsNullOrEmpty<T>(this ICollection<T> collection)", DiagnosticId = "VC0011", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public void IsNullOrEmpty_Empty_True()
         {
             // Arrange
@@ -40,6 +42,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Extensions
         }
 
         [Fact]
+        [Obsolete("Use IsNullOrEmpty<T>(this ICollection<T> collection)", DiagnosticId = "VC0011", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public void IsNullOrEmpty_NotEmpty_False()
         {
             // Arrange
