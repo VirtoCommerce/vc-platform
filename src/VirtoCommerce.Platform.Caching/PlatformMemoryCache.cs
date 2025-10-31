@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Caching
 
         public virtual ICacheEntry CreateEntry(object key)
         {
-            var result = _memoryCache.CreateEntry(key);
+            var result = _memoryCache.CreateEntry(CacheKey.Normalize(key));
             if (result != null)
             {
                 result.RegisterPostEvictionCallback(callback: EvictionCallback);
@@ -36,12 +36,12 @@ namespace VirtoCommerce.Platform.Caching
 
         public virtual bool TryGetValue(object key, out object value)
         {
-            return _memoryCache.TryGetValue(key, out value);
+            return _memoryCache.TryGetValue(CacheKey.Normalize(key), out value);
         }
 
         public virtual void Remove(object key)
         {
-            _memoryCache.Remove(key);
+            _memoryCache.Remove(CacheKey.Normalize(key));
         }
 
 
@@ -106,7 +106,6 @@ namespace VirtoCommerce.Platform.Caching
                 _disposed = true;
             }
         }
-
 
         protected virtual void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {

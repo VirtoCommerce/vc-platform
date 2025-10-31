@@ -1,4 +1,3 @@
-using System.Threading;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Core.Caching;
@@ -10,6 +9,59 @@ namespace VirtoCommerce.Platform.Caching.Tests
     [Collection(nameof(NotThreadSafeCollection))]
     public class CancellableCacheRegionTests : MemoryCacheTestsBase
     {
+        [Fact]
+        public void ExpireTokenForKey_ShouldBeCaseInsensitive()
+        {
+            const string setKey1 = "Key1";
+            const string setKey2 = "Key2";
+            const string getKey1 = "KEY1";
+            const string getKey2 = "KEY2";
+            const string cancelKey = "keY1";
+
+            var cache = GetPlatformMemoryCache();
+
+            Assert.False(cache.TryGetValue(getKey1, out _));
+            Assert.False(cache.TryGetValue(getKey2, out _));
+
+            cache.Set(setKey1, new object(), CacheRegion.CreateChangeTokenForKey(setKey1));
+            cache.Set(setKey2, new object(), CacheRegion.CreateChangeTokenForKey(setKey2));
+
+            Assert.True(cache.TryGetValue(getKey1, out _));
+            Assert.True(cache.TryGetValue(getKey2, out _));
+
+            CacheRegion.ExpireTokenForKey(cancelKey);
+
+            Assert.False(cache.TryGetValue(getKey1, out _));
+            Assert.True(cache.TryGetValue(getKey2, out _));
+        }
+
+        [Theory]
+        [InlineData("Key1", "Key2", "KEY1", "KEY2", null, false, false)]
+        [InlineData("Key1", "Key2", "KEY1", "KEY2", "", true, true)]
+        [InlineData("Key1", "Key2", "KEY1", "KEY2", "keY1", false, true)]
+        public void CancelForKey_ShouldBeCaseInsensitive(string setKey1, string setKey2, string getKey1, string getKey2, string cancelKey, bool expectedExist1, bool expectedExist2)
+        {
+            var cache = GetPlatformMemoryCache();
+            Assert.False(cache.TryGetValue(getKey1, out _));
+            Assert.False(cache.TryGetValue(getKey2, out _));
+
+            cache.Set(setKey1, new object(), CacheRegion.CreateChangeTokenForKey(setKey1));
+            cache.Set(setKey2, new object(), CacheRegion.CreateChangeTokenForKey(setKey2));
+
+            Assert.True(cache.TryGetValue(getKey1, out _));
+            Assert.True(cache.TryGetValue(getKey2, out _));
+
+            var tokenKey = CacheRegion.GenerateRegionTokenKey(cancelKey);
+            var lowerCaseTokenKey = tokenKey.ToLowerInvariant();
+
+            Assert.NotEqual(tokenKey, lowerCaseTokenKey);
+
+            CancellableCacheRegion.CancelForKey(lowerCaseTokenKey);
+
+            Assert.Equal(expectedExist1, cache.TryGetValue(getKey1, out _));
+            Assert.Equal(expectedExist2, cache.TryGetValue(getKey2, out _));
+        }
+
         [Fact]
         public void CreateChangeTokenReturnsCompositeToken()
         {
