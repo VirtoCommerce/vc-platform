@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         {
             var sut = GetPlatformMemoryCache();
             var counter = 0;
-            Parallel.ForEach(Enumerable.Range(0, _cacheKeys.Length - 1), i =>
+            Parallel.ForEach(Enumerable.Range(0, _cacheKeys.Length), i =>
             {
                 var item = sut.GetOrCreateExclusive(_cacheKeys[i], cacheEntry =>
                 {
