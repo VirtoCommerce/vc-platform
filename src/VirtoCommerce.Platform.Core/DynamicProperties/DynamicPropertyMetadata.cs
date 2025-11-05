@@ -14,11 +14,20 @@ public static class DynamicPropertyMetadata
 
     public static Task<IList<DynamicProperty>> GetProperties<Entity>()
     {
-        return GetProperties(nameof(Entity));
+        return GetProperties(typeof(Entity).FullName);
+    }
+
+    public static Task<IList<DynamicProperty>> GetProperties(Type type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+
+        return GetProperties(type.FullName);
     }
 
     public static async Task<IList<DynamicProperty>> GetProperties(string objectType)
     {
+        ArgumentNullException.ThrowIfNull(objectType);
+
         if (MetaDataResolver == null)
         {
             throw new InvalidOperationException("IDynamicPropertyMetaDataResolver is not initialized. Call DynamicPropertyMetadata.Initialize() method in your module's InitializeAsync method.");
