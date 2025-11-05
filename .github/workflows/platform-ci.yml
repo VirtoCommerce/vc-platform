@@ -349,11 +349,14 @@ jobs:
   trivy-scan:
     # if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     needs: 'ci'
-    uses: VirtoCommerce/vc-github-actions/docker-image-vulnerability-process@VCST-923  
+    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@VCST-923  
     with:
+      assigneeAccountId: '621c47c0302c6b006af0a1cd'
+      assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'
+      imageRef: "ghcr.io/virtocommerce/platform"
+      imageTag: ${{ needs.ci.outputs.tag }}
       jiraProject: 'VDS'
       vulnerabilitySkipList: ''
-      imageRef: "ghcr.io/virtocommerce/platform:${{ needs.ci.outputs.tag }}"
     secrets:
       JIRA_USER: ${{ secrets.JIRA_USER }}
       JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
