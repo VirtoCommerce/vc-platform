@@ -182,9 +182,7 @@ jobs:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
         platformDockerTag: ${{ env.DOCKER_TAG }}
-        storefrontDockerTag: dev-linux-latest
         platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
-        storefrontImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/storefront
         installSampleData: 'false'
 
     - name: Publish Nuget
@@ -292,59 +290,70 @@ jobs:
       run: |
         echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
 
-  ui-auto-tests:
+  # ui-auto-tests:
+  #   needs: 'ci'
+  #   if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
+  #       (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
+  #   uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.13  
+  #   with:
+  #     installModules: 'true'
+  #     installCustomModule: 'false'
+  #     platformDockerTag: ${{ needs.ci.outputs.tag }}
+  #   secrets:
+  #     envPAT: ${{ secrets.REPO_TOKEN }}
+
+  # platform-katalon-tests:
+  #   needs: 'ci'
+  #   if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
+  #       (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
+  #   uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.13
+  #   with:
+  #     katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
+  #     katalonRepoBranch: 'dev'
+  #     testSuite: 'Test Suites/Modules/Platform_collection'
+  #     installModules: 'true'
+  #     installCustomModule: 'false'
+  #     platformDockerTag: ${{ needs.ci.outputs.tag }}
+  #     storefrontDockerTag: 'dev-linux-latest'
+  #   secrets:
+  #     envPAT: ${{ secrets.REPO_TOKEN }}
+  #     katalonApiKey: ${{ secrets.KATALON_API_KEY }}
+
+  # deploy-cloud:
+  #   if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
+  #   needs: ci
+  #   uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.13    
+  #   with:
+  #     releaseSource: platform
+  #     platformVer: ${{ needs.ci.outputs.version }}
+  #     platformTag: ${{ needs.ci.outputs.tag }}
+  #     jiraKeys: ${{ needs.ci.outputs.jira-keys }}
+  #     argoServer: 'argo.virtocommerce.cloud'
+  #     matrix: '{"include":${{ needs.ci.outputs.matrix }}}'
+  #   secrets: inherit
+
+  # owasp-scan:
+    # if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
+    # runs-on: ubuntu-latest
+    # needs: 
+    #   - deploy-cloud
+    # steps:
+    #   - name: OWASP ZAP Full Scan
+    #     uses: zaproxy/action-baseline@v0.14.0
+    #     with:
+    #       token: ${{ secrets.REPO_TOKEN }}
+    #       target: 'https://vcptcore-dev.govirto.com'
+    #       cmd_options: '-a -d'
+    #       # allow_issue_writing: false
+
+  trivy-scan:
+    # if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     needs: 'ci'
-    if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
-        (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.13  
+    uses: VirtoCommerce/vc-github-actions/docker-image-vulnerability-process@VCST-923  
     with:
-      installModules: 'true'
-      installCustomModule: 'false'
-      platformDockerTag: ${{ needs.ci.outputs.tag }}
+      jiraProject: 'VDS'
+      vulnerabilitySkipList: ''
+      imageRef: "ghcr.io/virtocommerce/platform:${{ needs.ci.outputs.tag }}"
     secrets:
-      envPAT: ${{ secrets.REPO_TOKEN }}
-
-  platform-katalon-tests:
-    needs: 'ci'
-    if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
-        (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.13
-    with:
-      katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
-      katalonRepoBranch: 'dev'
-      testSuite: 'Test Suites/Modules/Platform_collection'
-      installModules: 'true'
-      installCustomModule: 'false'
-      platformDockerTag: ${{ needs.ci.outputs.tag }}
-      storefrontDockerTag: 'dev-linux-latest'
-    secrets:
-      envPAT: ${{ secrets.REPO_TOKEN }}
-      katalonApiKey: ${{ secrets.KATALON_API_KEY }}
-
-
-  deploy-cloud:
-    if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
-    needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.13    
-    with:
-      releaseSource: platform
-      platformVer: ${{ needs.ci.outputs.version }}
-      platformTag: ${{ needs.ci.outputs.tag }}
-      jiraKeys: ${{ needs.ci.outputs.jira-keys }}
-      argoServer: 'argo.virtocommerce.cloud'
-      matrix: '{"include":${{ needs.ci.outputs.matrix }}}'
-    secrets: inherit
-
-  owasp-scan:
-    if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    needs: 
-      - deploy-cloud
-    steps:
-      - name: OWASP ZAP Full Scan
-        uses: zaproxy/action-baseline@v0.14.0
-        with:
-          token: ${{ secrets.REPO_TOKEN }}
-          target: 'https://vcptcore-dev.govirto.com'
-          cmd_options: '-a -d'
-          # allow_issue_writing: false
+      JIRA_USER: ${{ secrets.JIRA_USER }}
+      JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
