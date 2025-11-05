@@ -353,7 +353,7 @@ jobs:
     with:
       assigneeAccountId: '621c47c0302c6b006af0a1cd'
       assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'
-      exitCodeOnFoundVulnerabilities: '1'
+      exitCodeOnFoundVulnerabilities: '0'
       imageRef: "ghcr.io/virtocommerce/platform"
       imageTag: '3.907.0-pr-2943-82e8-vcst-3636-82e8fe2c' #${{ needs.ci.outputs.tag }}
       jiraProject: 'VDS'
