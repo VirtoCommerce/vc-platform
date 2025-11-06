@@ -13,14 +13,14 @@ public class SettingsComparisonController : Controller
 {
     [HttpGet]
     [Authorize(PlatformConstants.Security.Permissions.SettingComparison)]
-    public async Task<ActionResult<LocalizableSettingsAndLanguages>> GetEnvironments()
+    public Task<ActionResult<LocalizableSettingsAndLanguages>> GetEnvironments()
     {
         throw new System.NotImplementedException();
     }
 
     [HttpGet]
     [Authorize(PlatformConstants.Security.Permissions.SettingComparison)]
-    public async Task<ActionResult<LocalizableSettingsAndLanguages>> CompareSettings([FromQuery] IEnumerable<string> environments)
+    public Task<ActionResult<LocalizableSettingsAndLanguages>> CompareSettings([FromQuery] IEnumerable<string> environments)
     {
         throw new System.NotImplementedException();
     }
