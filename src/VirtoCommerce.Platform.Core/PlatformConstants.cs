@@ -63,6 +63,8 @@ namespace VirtoCommerce.Platform.Core
                 public const string SettingAccess = "platform:setting:access";
                 public const string SettingUpdate = "platform:setting:update";
 
+                public const string SettingComparison = "platform:setting:comparison";
+
                 public const string DeveloperToolsAccess = "platform:developer-tools:access";
 
                 public const string DynamicPropertiesQuery = "platform:dynamic_properties:read";
@@ -97,7 +99,7 @@ namespace VirtoCommerce.Platform.Core
                     ResetCache,
                     AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead,
                     ModuleQuery, ModuleAccess, ModuleManage,
-                    SettingQuery, SettingAccess, SettingUpdate,
+                    SettingQuery, SettingAccess, SettingUpdate, SettingComparison,
                     DeveloperToolsAccess,
                     DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
                     SecurityQuery, SecurityCreate, SecurityAccess, SecurityUpdate, SecurityDelete,
