@@ -104,7 +104,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("sessions/{id}/terminate")]
-        [Authorize(PlatformPermissions.SecirityRevokeToken)]
+        [Authorize(PlatformPermissions.SecurityRevokeToken)]
         public async Task<ActionResult> TerminateUserSession([FromRoute] string id)
         {
             var tokens = _tokenManager.FindByAuthorizationIdAsync(id);

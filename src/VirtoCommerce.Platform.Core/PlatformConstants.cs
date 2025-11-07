@@ -81,7 +81,7 @@ namespace VirtoCommerce.Platform.Core
                 public const string SecurityConfirmEmail = "platform:security:confirmEmail";
                 public const string SecurityGenerateToken = "platform:security:generateToken";
                 public const string SecurityVerifyToken = "platform:security:verifyToken";
-                public const string SecirityRevokeToken = "platform:security:revokeToken";
+                public const string SecurityRevokeToken = "platform:security:revokeToken";
                 public const string SecurityOAuthApplicationsCreate = "platform:security:oauth_applications:create";
                 public const string SecurityOAuthApplicationsRead = "platform:security:oauth_applications:read";
                 public const string SecurityOAuthApplicationsUpdate = "platform:security:oauth_applications:update";
@@ -102,7 +102,7 @@ namespace VirtoCommerce.Platform.Core
                     DeveloperToolsAccess,
                     DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
                     SecurityQuery, SecurityCreate, SecurityAccess, SecurityUpdate, SecurityDelete,
-                    SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken, SecirityRevokeToken,
+                    SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken, SecurityRevokeToken,
                     SecurityOAuthApplicationsCreate, SecurityOAuthApplicationsRead, SecurityOAuthApplicationsUpdate, SecurityOAuthApplicationsDelete,
                     BackgroundJobsManage,
                     PlatformExportImportAccess, PlatformImport, PlatformExport,
