@@ -23,7 +23,7 @@
     "blades": {
       "developer-tools": {
         "title": "Ferramentas de desenvolvedor"
-      },      
+      },
       "system-info": {
         "title": "Informações da plataforma",
         "labels": {
@@ -705,6 +705,13 @@
           "Quarters": "Trimestres",
           "Years": "Anos"
         }
+      },
+      "sessions-list": {
+        "title": "Sessões",
+        "labels": {
+          "ip-address": "Endereço IP",
+          "user-agent": "Agente do usuário"
+        }
       }
     },
     "templates": {
@@ -766,6 +773,9 @@
       "accountRoles": {
         "title": "Funções",
         "blade-subtitle": "Gerenciar funções"
+      },
+      "sessions": {
+        "title": "Sessões"
       }
     },
     "dialogs": {
@@ -888,6 +898,10 @@
         "title": "Cache redefinido",
         "confirm-reset-message": "Tem certeza de que deseja redefinir o cache? Esta ação limpará todos os dados armazenados em cache e poderá afetar temporariamente o desempenho do sistema. Confirme para prosseguir",
         "reset-successfully-message": "O cache foi redefinido com sucess"
+      },
+      "session-terminate": {
+        "title": "Encerrar sessão",
+        "message": "Tem certeza de que deseja encerrar esta sessão?"
       }
     },
     "commands": {
@@ -896,7 +910,8 @@
         "title": "Redefinir o cache",
         "name": "Redefinir o cache"
       },
-      "restart-application-title": "Reinicie a aplicação"
+      "restart-application-title": "Reinicie a aplicação",
+      "terminate": "Encerrar"
     }
   },
   "permissions": {

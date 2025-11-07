@@ -705,6 +705,13 @@
           "Quarters": "Kwartały",
           "Years": "Lata"
         }
+      },
+      "sessions-list": {
+        "title": "Sesje",
+        "labels": {
+          "ip-address": "Adres IP",
+          "user-agent": "Agent użytkownika"
+        }
       }
     },
     "templates": {
@@ -766,6 +773,9 @@
       "accountRoles": {
         "title": "Role",
         "blade-subtitle": "Zarządzaj rolami"
+      },
+      "sessions": {
+        "title": "Sesje"
       }
     },
     "dialogs": {
@@ -888,6 +898,10 @@
         "title": "Zresetuj pamięć podręczną",
         "confirm-reset-message": "Czy na pewno chcesz zresetować pamięć podręczną? Ta czynność spowoduje wyczyszczenie wszystkich buforowanych danych i może tymczasowo wpłynąć na wydajność systemu. Potwierdź, aby kontynuować",
         "reset-successfully-message": "Pamięć podręczna została pomyślnie zresetowana"
+      },
+      "session-terminate": {
+        "title": "Zakończ sesję",
+        "message": "Czy na pewno chcesz zakończyć tę sesję?"
       }
     },
     "commands": {
@@ -896,7 +910,8 @@
         "title": "Zresetuj pamięć podręczną",
         "name": "Zresetuj pamięć podręczn"
       },
-      "restart-application-title": "Uruchom ponownie aplikację"
+      "restart-application-title": "Uruchom ponownie aplikację",
+      "terminate": "Zakończ"
     }
   },
   "permissions": {

@@ -23,7 +23,7 @@
     "blades": {
       "developer-tools": {
         "title": "Инструменты разработчика"
-      },      
+      },
       "system-info": {
         "title": "Информация о платформе",
         "labels": {
@@ -707,6 +707,13 @@
           "Quarters": "Кварталы",
           "Years": "Годы"
         }
+      },
+      "sessions-list": {
+        "title": "Сеансы",
+        "labels": {
+          "ip-address": "IP-адрес",
+          "user-agent": "Пользовательский агент"
+        }
       }
     },
     "templates": {
@@ -768,6 +775,9 @@
       "accountRoles": {
         "title": "Роли",
         "blade-subtitle": "Управление ролями"
+      },
+      "sessions": {
+        "title": "Сеансы"
       }
     },
     "dialogs": {
@@ -890,6 +900,10 @@
         "title": "Сброс кэша",
         "confirm-reset-message": "Вы действительно хотите сбросить кэш? Это действие очистит все закешированные данные и может временно повлиять на производительность системы. Пожалуйста, подтвердите свое решение для продолжения",
         "reset-successfully-message": "Кэш был успешно сброшен"
+      },
+      "session-terminate": {
+        "title": "Завершить сеанс",
+        "message": "Вы уверены, что хотите завершить этот сеанс?"
       }
     },
     "commands": {
@@ -898,7 +912,8 @@
         "title": "Сбросить кэш",
         "name": "Сбросить кэш"
       },
-      "restart-application-title": "Перезапустить приложение"
+      "restart-application-title": "Перезапустить приложение",
+      "terminate": "Завершить"
     }
   },
   "permissions": {

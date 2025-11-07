@@ -706,6 +706,13 @@
           "Quarters": "Kvartal",
           "Years": "År"
         }
+      },
+      "sessions-list": {
+        "title": "Sessioner",
+        "labels": {
+          "ip-address": "IP-adress",
+          "user-agent": "Användaragent"
+        }
       }
     },
     "templates": {
@@ -767,6 +774,9 @@
       "accountRoles": {
         "title": "Roller",
         "blade-subtitle": "Hantera roller"
+      },
+      "sessions": {
+        "title": "Sessioner"
       }
     },
     "dialogs": {
@@ -889,6 +899,10 @@
         "title": "Återställning av cache",
         "confirm-reset-message": "Är du säker på att du vill återställa cachen? Denna åtgärd rensar all cachad data och kan tillfälligt påverka systemets prestanda. Bekräfta för att fortsätta",
         "reset-successfully-message": "Cachen har återställts framgångsrikt"
+      },
+      "session-terminate": {
+        "title": "Avsluta session",
+        "message": "Är du säker på att du vill avsluta denna session?"
       }
     },
     "commands": {
@@ -897,7 +911,8 @@
         "title": "Återställ cache",
         "name": "Återställ cache"
       },
-      "restart-application-title": "Starta om applikation"
+      "restart-application-title": "Starta om applikation",
+      "terminate": "Avsluta"
     }
   },
   "permissions": {

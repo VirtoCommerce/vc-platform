@@ -23,7 +23,7 @@
     "blades": {
       "developer-tools": {
         "title": "开发者工具"
-      },      
+      },
       "system-info": {
         "title": "平台信息",
         "labels": {
@@ -705,6 +705,13 @@
           "Quarters": "季度",
           "Years": "年"
         }
+      },
+      "sessions-list": {
+        "title": "会话",
+        "labels": {
+          "ip-address": "IP 地址",
+          "user-agent": "用户代理"
+        }
       }
     },
     "templates": {
@@ -766,6 +773,9 @@
       "accountRoles": {
         "title": "角色",
         "blade-subtitle": "管理角色"
+      },
+      "sessions": {
+        "title": "会话"
       }
     },
     "dialogs": {
@@ -888,6 +898,10 @@
         "title": "缓存重置",
         "confirm-reset-message": "确定要重置缓存吗？ 此操作将清除所有缓存的数据，并可能暂时影响系统性能。 确认继续",
         "reset-successfully-message": "缓存重置成功"
+      },
+      "session-terminate": {
+        "title": "终止会话",
+        "message": "您确定要终止此会话吗？"
       }
     },
     "commands": {
@@ -896,7 +910,8 @@
         "title": "重置缓存",
         "name": "重置缓存"
       },
-      "restart-application-title": "重新启动应用程序"
+      "restart-application-title": "重新启动应用程序",
+      "terminate": "终止"
     }
   },
   "permissions": {

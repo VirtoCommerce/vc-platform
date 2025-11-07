@@ -46,6 +46,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserApiKeyService _userApiKeyService;
         private readonly ILogger<SecurityController> _logger;
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
+        private readonly IUserSessionsSearchService _userSessionsService;
+        private readonly IOpenIddictTokenManager _tokenManager;
+        private readonly IOpenIddictAuthorizationManager _authorizationManager;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -61,7 +64,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEventPublisher eventPublisher,
             IUserApiKeyService userApiKeyService,
             ILogger<SecurityController> logger,
-            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs)
+            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs,
+            IUserSessionsSearchService userSessionsService,
+            IOpenIddictTokenManager tokenManager,
+            IOpenIddictAuthorizationManager authorizationManager)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -77,12 +83,44 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userApiKeyService = userApiKeyService;
             _logger = logger;
             _externalSigninProviderConfigs = externalSigninProviderConfigs;
+            _userSessionsService = userSessionsService;
+            _tokenManager = tokenManager;
+            _authorizationManager = authorizationManager;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
         private readonly string UserNotFound = "User not found.";
         private readonly string UserForbiddenToEdit = "It is forbidden to edit this user.";
+
+        [HttpPost]
+        [Route("sessions/search")]
+        [Authorize(PlatformPermissions.SecurityQuery)]
+        public async Task<ActionResult<UserSearchResult>> SearchUserSessions([FromBody] UserSessionSearchCriteria criteria)
+        {
+            var result = await _userSessionsService.SearchAsync(criteria);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("sessions/{id}/terminate")]
+        [Authorize(PlatformPermissions.SecirityRevokeToken)]
+        public async Task<ActionResult> TerminateUserSession([FromRoute] string id)
+        {
+            var tokens = _tokenManager.FindByAuthorizationIdAsync(id);
+            await foreach (var token in tokens)
+            {
+                await _tokenManager.TryRevokeAsync(token);
+            }
+
+            var authorization = await _authorizationManager.FindByIdAsync(id);
+            if (authorization != null)
+            {
+                await _authorizationManager.TryRevokeAsync(authorization);
+            }
+
+            return NoContent();
+        }
 
         /// <summary>
         /// Sign in with user name and password
