@@ -6,6 +6,8 @@ angular.module('platformWebApp')
                 var blade = $scope.blade;
                 blade.title = "platform.blades.sessions-list.title";
 
+                var filter = $scope.filter = {};
+
                 blade.refresh = function () {
                     blade.isLoading = true;
 
@@ -50,8 +52,6 @@ angular.module('platformWebApp')
                     }
                 ];
 
-
-                var filter = $scope.filter = {};
                 filter.criteriaChanged = function () {
                     if ($scope.pageSettings.currentPage > 1) {
                         $scope.pageSettings.currentPage = 1;

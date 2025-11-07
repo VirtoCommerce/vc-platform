@@ -12,17 +12,13 @@ namespace VirtoCommerce.Platform.Security.Services;
 public class UserSessionsSearchService : IUserSessionsSearchService
 {
     private readonly IOpenIddictTokenManager _tokenManager;
-    private readonly IOpenIddictAuthorizationManager _authorizationManager;
 
-    public UserSessionsSearchService(
-        IOpenIddictTokenManager tokenManager,
-        IOpenIddictAuthorizationManager authorizationManager)
+    public UserSessionsSearchService(IOpenIddictTokenManager tokenManager)
     {
         _tokenManager = tokenManager;
-        _authorizationManager = authorizationManager;
     }
 
-    public async Task<UserSessionSearchResult> SearchAsync(UserSessionSearchCriteria criteria, bool clone)
+    public async Task<UserSessionSearchResult> SearchAsync(UserSessionSearchCriteria criteria, bool clone = true)
     {
         var result = new UserSessionSearchResult();
 

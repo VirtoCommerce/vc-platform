@@ -47,6 +47,6 @@ public class VirtoOpenIddictEntityFrameworkCoreTokenStore : OpenIddictEntityFram
 
     protected virtual void SetUserAgent(VirtoOpenIddictEntityFrameworkCoreToken token, HttpRequest request)
     {
-        token.UserAgent = request.Headers["User-Agent"];
+        token.UserAgent = request.Headers.UserAgent;
     }
 }
