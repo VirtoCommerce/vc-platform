@@ -78,6 +78,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.TagActionsBy(api => [api.GetModuleName(provider)]);
                 c.IgnoreObsoleteActions();
                 c.DocumentFilter<ExcludeRedundantDepsFilter>();
+                c.DocumentFilter<ModuleInfoFilter>();
                 // This temporary filter removes broken "application/*+json" content-type.
                 // It seems it's some openapi/swagger bug, because Autorest fails.
                 c.OperationFilter<ConsumeFromBodyFilter>();
@@ -85,7 +86,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.OperationFilter<OptionalParametersFilter>();
                 c.OperationFilter<ArrayInQueryParametersFilter>();
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
-                c.OperationFilter<TagsFilter>();
+                c.OperationFilter<ModuleInfoFilter>();
                 c.OperationFilter<OpenIDEndpointDescriptionFilter>();
                 c.SchemaFilter<EnumSchemaFilter>();
                 c.SchemaFilter<SwaggerIgnoreFilter>();
@@ -141,7 +142,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 return true;
             }
 
-            // It's a module endpoint. 
+            // It's a module endpoint.
             var module = modules.FirstOrDefault(m => m.ModuleName.EqualsIgnoreCase(docName));
             return module != null && module.Assembly == currentAssembly;
         }
@@ -172,7 +173,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             applicationBuilder.UseSwaggerUI(c =>
             {
-                // Json Format Support 
+                // Json Format Support
                 c.SwaggerEndpoint($"./{PlatformUIDocName}/swagger.json", PlatformUIDocName);
                 c.SwaggerEndpoint($"./{PlatformDocName}/swagger.json", PlatformDocName);
 
@@ -242,7 +243,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             foreach (var path in xmlCommentsDirectoryPaths)
             {
-                var xmlComments = Directory.GetFiles(path, "*.XML");
+                var xmlComments = Directory.GetFiles(path, "*.xml", new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
                 foreach (var xmlComment in xmlComments)
                 {
                     options.IncludeXmlComments(xmlComment);

@@ -28,7 +28,7 @@
         "angular-translate-storage-local": "^2.19.0",
         "angular-ui-bootstrap": "~0.13.1",
         "angular-ui-event": "~1.0.0",
-        "angular-ui-grid": "4.10.0",
+        "angular-ui-grid": "4.12.4",
         "angular-ui-indeterminate": "~1.0.0",
         "angular-ui-mask": "~1.8.7",
         "angular-ui-scroll": "1.7.2",
@@ -762,9 +762,9 @@
       "license": "MIT"
     },
     "node_modules/angular-ui-grid": {
-      "version": "4.10.0",
-      "resolved": "https://registry.npmjs.org/angular-ui-grid/-/angular-ui-grid-4.10.0.tgz",
-      "integrity": "sha512-y0AtYkTf41JTmWc+hyl0bXYtUnjOWHu8JIhrxCx7kn9wdbOAkcfyYhV/MT2Cp0pS4gzUI1sjL0qqRyrTtKljnQ==",
+      "version": "4.12.4",
+      "resolved": "https://registry.npmjs.org/angular-ui-grid/-/angular-ui-grid-4.12.4.tgz",
+      "integrity": "sha512-CFVRxIWhF+TXGKqUoW8qWPj3l8Lq9Q2LsIpYU/0xi2xfVc/0bBN1lz5xvBE8/wotGcrJy9YlTS2k9bqjf+/Z+g==",
       "license": "MIT",
       "dependencies": {
         "angular": ">=1.4.0 1.8.x"
