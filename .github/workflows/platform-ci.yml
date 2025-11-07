@@ -64,6 +64,7 @@ jobs:
       tag: ${{ env.DOCKER_TAG }}
       matrix: ${{ steps.deployment-matrix.outputs.matrix }}
       run-e2e: ${{ steps.run-e2e.outputs.result }}
+      vulnSkipList: ${{ steps.vulnSkipList.outputs.vulnSkipList }}
 
     steps:
 
@@ -127,6 +128,19 @@ jobs:
         else
           echo "DOCKER_TAG=${{ steps.image.outputs.taggedVersion }}" >> $GITHUB_ENV
         fi;
+
+    - name: Extract vulnerabilities skip list
+      id: vulnSkipList
+      shell: pwsh
+      run: |
+        $vulnSkipList = @()
+        $skipList = (Get-Content ./trivyScan-ignore.json | ConvertFrom-Json)
+        foreach ($vulnerability in $skipList.PSObject.Properties.Name){
+          echo "Adding '$vulnerability' with '$($skipList.$vulnerability.Severity)' severity entry to trivy scan ignore list"
+          $vulnSkipList += $($skipList.$vulnerability.VulnerabilityID)
+        }
+        $stringSkipList = $vulnSkipList -join ","
+        echo "vulnSkipList=$stringSkipList" >> $env:GITHUB_OUTPUT
 
     - name: Add version suffix
       if: ${{ github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main' }}
@@ -357,7 +371,7 @@ jobs:
       imageRef: "ghcr.io/virtocommerce/platform"
       imageTag: ${{ needs.ci.outputs.tag }}
       jiraProject: 'VDS'
-      vulnerabilitySkipList: ''
+      vulnerabilitySkipList: ${{ needs.ci.outputs.vulnSkipList }}
     secrets:
       JIRA_USER: ${{ secrets.JIRA_USER }}
       JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
