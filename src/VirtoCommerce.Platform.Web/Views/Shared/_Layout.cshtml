@@ -36,7 +36,8 @@
 
 </head>
 @*DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION*@
-<body ng-class="{'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime); license = initExpiration(@(Model.License)); allowInstallModules = @($@"{Model.RefreshProbingFolder}".ToLower())">
+<body ng-class="{'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime); license = initExpiration(@(Model.License)); allowInstallModules = @($@"{Model.RefreshProbingFolder}".ToLower()); environmentName='@(Model.EnvironmentName)'; environmentTheme='@(Model.EnvironmentTheme)'; showEnvironmentBanner=@($@"{Model.ShowEnvironmentBanner}".ToLower())">
+    <vc-environment-banner environment-name="{{environmentName}}" theme="{{environmentTheme}}" ng-if="showEnvironmentBanner"></vc-environment-banner>
     @RenderBody()
 
     <partial name="_AppDependencies" />

@@ -52,6 +52,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 return Forbid();
             }
 
+            var envBannerOptions = _platformUIOptions.EnvironmentBanner ?? new EnvironmentBannerOptions();
+
             var model = new IndexModel
             {
                 PlatformVersion = new HtmlString(Core.Common.PlatformVersion.CurrentVersion.ToString()),
@@ -59,7 +61,10 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 DemoResetTime = new HtmlString(_platformOptions.DemoResetTime ?? "''"),
                 WebAnalyticsOptions = _webAnalyticsOptions,
                 RefreshProbingFolder = _localStorageModuleCatalogOptions.RefreshProbingFolderOnStart,
-                ForceWebSockets = _pushNotificationOptions.ForceWebSockets
+                ForceWebSockets = _pushNotificationOptions.ForceWebSockets,
+                ShowEnvironmentBanner = envBannerOptions.Enable,
+                EnvironmentName = new HtmlString(envBannerOptions.Name),
+                EnvironmentTheme = new HtmlString(envBannerOptions.ThemePreset)
             };
 
             var license = _licenseProvider.GetLicense();
