@@ -6,6 +6,3 @@ public class EnvironmentBannerOptions
     public string ThemePreset { get; set; }
     public string Name { get; set; }
 }
-
-
-
