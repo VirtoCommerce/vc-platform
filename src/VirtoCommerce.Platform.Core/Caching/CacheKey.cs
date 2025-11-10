@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         public static string With(Type ownerType, params string[] keys)
         {
-            return Normalize($"{ownerType.GetCacheKey()}:{string.Join("-", keys)}");
+            return $"{ownerType.GetCacheKey()}:{string.Join("-", keys)}";
         }
 
         public static object Normalize(object key)
