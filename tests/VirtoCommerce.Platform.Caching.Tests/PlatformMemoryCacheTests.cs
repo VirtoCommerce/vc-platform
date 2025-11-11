@@ -11,6 +11,29 @@ namespace VirtoCommerce.Platform.Caching.Tests
     public class PlatformMemoryCacheTests : MemoryCacheTestsBase
     {
         [Fact]
+        public void CacheKeyShouldBeCaseInsensitive()
+        {
+            const string setKey1 = "Key1";
+            const string setKey2 = "Key2";
+            const string getKey1 = "KEY1";
+            const string getKey2 = "KEY2";
+            const string removeKey = "keY1";
+
+            var cache = GetPlatformMemoryCache();
+            Assert.False(cache.TryGetValue(getKey1, out _));
+            Assert.False(cache.TryGetValue(getKey2, out _));
+
+            cache.Set(setKey1, new object(), TimeSpan.FromMinutes(1));
+            cache.Set(setKey2, new object(), TimeSpan.FromMinutes(1));
+            Assert.True(cache.TryGetValue(getKey1, out _));
+            Assert.True(cache.TryGetValue(getKey2, out _));
+
+            cache.Remove(removeKey);
+            Assert.False(cache.TryGetValue(getKey1, out _));
+            Assert.True(cache.TryGetValue(getKey2, out _));
+        }
+
+        [Fact]
         public void SetWithTokenRegistersForNotification()
         {
             var cache = GetPlatformMemoryCache();

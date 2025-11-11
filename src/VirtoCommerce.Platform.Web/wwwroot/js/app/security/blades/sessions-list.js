@@ -11,7 +11,7 @@ angular.module('platformWebApp')
                 blade.refresh = function () {
                     blade.isLoading = true;
 
-                    accounts.sessions({
+                    accounts.searchSessions({
                         userId: blade.userId,
                         keyword: filter.keyword,
                         skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
@@ -40,6 +40,23 @@ angular.module('platformWebApp')
                     dialogService.showConfirmationDialog(dialog);
                 }
 
+
+                blade.terminateAll = function () {
+                        var dialog = {
+                        id: "confirmTerminateAllSessions",
+                        title: "platform.dialogs.sessions-terminate-all.title",
+                        message: "platform.dialogs.sessions-terminate-all.message",
+                        callback: function (remove) {
+                            if (remove) {
+                                accounts.terminateAllSessions({ userId: blade.userId }, null, () => {
+                                    blade.refresh();
+                                });
+                            }
+                        }
+                    }
+                    dialogService.showConfirmationDialog(dialog);
+                }
+
                 blade.headIcon = 'fas fa-key';
 
                 blade.toolbarCommands = [
@@ -49,7 +66,14 @@ angular.module('platformWebApp')
                         canExecuteMethod: function () {
                             return true;
                         }
-                    }
+                    },
+                    {
+                        name: "platform.commands.sessions-terminate-all", icon: 'fa fa-trash',
+                        executeMethod: blade.terminateAll,
+                        canExecuteMethod: function () {
+                            return blade.currentEntities && blade.currentEntities.length;
+                        }
+                    },
                 ];
 
                 filter.criteriaChanged = function () {

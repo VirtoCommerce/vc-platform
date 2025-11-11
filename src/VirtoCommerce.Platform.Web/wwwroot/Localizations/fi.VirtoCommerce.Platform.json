@@ -708,7 +708,7 @@
         }
       },
       "sessions-list": {
-        "title": "Istunnot",
+        "title": "Aktiiviset istunnot",
         "labels": {
           "ip-address": "IP-osoite",
           "user-agent": "Käyttäjäagentti"
@@ -776,7 +776,7 @@
         "blade-subtitle": "Hallinnoi rooleja"
       },
       "sessions": {
-        "title": "Istunnot"
+        "title": "Aktiiviset istunnot"
       }
     },
     "dialogs": {
@@ -903,6 +903,10 @@
       "session-terminate": {
         "title": "Lopeta istunto",
         "message": "Haluatko varmasti lopettaa tämän istunnon?"
+      },
+      "sessions-terminate-all": {
+        "title": "Lopeta kaikki",
+        "message": "Haluatko varmasti lopettaa kaikki käyttäjäistunnot?"
       }
     },
     "commands": {
@@ -912,7 +916,8 @@
         "name": "Nollaa välimuisti"
       },
       "restart-application-title": "Käynnistä sovellus uudelleen",
-      "terminate": "Lopeta"
+      "terminate": "Lopeta",
+      "sessions-terminate-all": "Lopeta kaikki"
     }
   },
   "permissions": {

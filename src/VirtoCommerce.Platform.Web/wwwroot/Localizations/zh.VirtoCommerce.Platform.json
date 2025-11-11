@@ -707,7 +707,7 @@
         }
       },
       "sessions-list": {
-        "title": "会话",
+        "title": "活动会话",
         "labels": {
           "ip-address": "IP 地址",
           "user-agent": "用户代理"
@@ -775,7 +775,7 @@
         "blade-subtitle": "管理角色"
       },
       "sessions": {
-        "title": "会话"
+        "title": "活动会话"
       }
     },
     "dialogs": {
@@ -902,6 +902,10 @@
       "session-terminate": {
         "title": "终止会话",
         "message": "您确定要终止此会话吗？"
+      },
+      "sessions-terminate-all": {
+        "title": "终止所有",
+        "message": "您确定要终止所有用户会话吗？"
       }
     },
     "commands": {
@@ -911,7 +915,8 @@
         "name": "重置缓存"
       },
       "restart-application-title": "重新启动应用程序",
-      "terminate": "终止"
+      "terminate": "终止",
+      "sessions-terminate-all": "终止所有"
     }
   },
   "permissions": {

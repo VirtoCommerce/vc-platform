@@ -709,7 +709,7 @@
         }
       },
       "sessions-list": {
-        "title": "Сеансы",
+        "title": "Активные сеансы",
         "labels": {
           "ip-address": "IP-адрес",
           "user-agent": "Пользовательский агент"
@@ -777,7 +777,7 @@
         "blade-subtitle": "Управление ролями"
       },
       "sessions": {
-        "title": "Сеансы"
+        "title": "Активные сеансы"
       }
     },
     "dialogs": {
@@ -904,6 +904,10 @@
       "session-terminate": {
         "title": "Завершить сеанс",
         "message": "Вы уверены, что хотите завершить этот сеанс?"
+      },
+      "sessions-terminate-all": {
+        "title": "Завершить все",
+        "message": "Вы уверены, что хотите завершить все пользовательские сеансы?"
       }
     },
     "commands": {
@@ -913,7 +917,8 @@
         "name": "Сбросить кэш"
       },
       "restart-application-title": "Перезапустить приложение",
-      "terminate": "Завершить"
+      "terminate": "Завершить",
+      "sessions-terminate-all": "Завершить все"
     }
   },
   "permissions": {

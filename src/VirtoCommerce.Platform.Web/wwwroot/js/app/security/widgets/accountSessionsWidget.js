@@ -25,7 +25,7 @@ angular.module('platformWebApp')
                     return;
                 }
 
-                accounts.sessions(searchCriteria, function (data) {
+                accounts.searchSessions(searchCriteria, function (data) {
                     blade.sessionsCount = data.totalCount;
                 });
             }

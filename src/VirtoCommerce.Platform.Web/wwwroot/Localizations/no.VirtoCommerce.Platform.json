@@ -708,7 +708,7 @@
         }
       },
       "sessions-list": {
-        "title": "Økter",
+        "title": "Aktive økter",
         "labels": {
           "ip-address": "IP-adresse",
           "user-agent": "Brukeragent"
@@ -776,7 +776,7 @@
         "blade-subtitle": "Administrer roller"
       },
       "sessions": {
-        "title": "Økter"
+        "title": "Aktive økter"
       }
     },
     "dialogs": {
@@ -903,6 +903,10 @@
       "session-terminate": {
         "title": "Avslutt økt",
         "message": "Er du sikker på at du vil avslutte denne økten?"
+      },
+      "sessions-terminate-all": {
+        "title": "Avslutt alle",
+        "message": "Er du sikker på at du vil avslutte alle brukerøkter?"
       }
     },
     "commands": {
@@ -912,7 +916,8 @@
         "name": "Tilbakestill hurtigbuffer"
       },
       "restart-application-title": "Start applikasjonen på nytt",
-      "terminate": "Avslutt"
+      "terminate": "Avslutt",
+      "sessions-terminate-all": "Avslutt alle"
     }
   },
   "permissions": {

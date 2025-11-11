@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -35,8 +34,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IUserApiKeyService> _userApiKeyServiceMock;
         private readonly Mock<ILogger<SecurityController>> _logger;
         private readonly Mock<IUserSessionsSearchService> _userSessionsSearchServiceMock;
-        private readonly Mock<IOpenIddictTokenManager> _tokenManagerMock;
-        private readonly Mock<IOpenIddictAuthorizationManager> _authorizationManagerMock;
+        private readonly Mock<IUserSessionsService> _userSessionsServiceMock;
 
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
@@ -51,8 +49,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _eventPublisherMock = new Mock<IEventPublisher>();
             _userApiKeyServiceMock = new Mock<IUserApiKeyService>();
             _userSessionsSearchServiceMock = new Mock<IUserSessionsSearchService>();
-            _tokenManagerMock = new Mock<IOpenIddictTokenManager>();
-            _authorizationManagerMock = new Mock<IOpenIddictAuthorizationManager>();
+            _userSessionsServiceMock = new Mock<IUserSessionsService>();
             _logger = new Mock<ILogger<SecurityController>>();
 
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(
@@ -113,9 +110,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 userApiKeyService: _userApiKeyServiceMock.Object,
                 logger: _logger.Object,
                 externalSigninProviderConfigs: _externalSigninProviderConfigs,
-                userSessionsService: _userSessionsSearchServiceMock.Object,
-                tokenManager: _tokenManagerMock.Object,
-                authorizationManager: _authorizationManagerMock.Object);
+                userSessionsSearchService: _userSessionsSearchServiceMock.Object,
+                userSessionsService: _userSessionsServiceMock.Object);
 
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
             controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());

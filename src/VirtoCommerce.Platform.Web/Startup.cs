@@ -472,6 +472,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<Func<IOpenIddictTokenManager>>(provider =>
                 () => provider.CreateScope().ServiceProvider.GetRequiredService<IOpenIddictTokenManager>());
 
+            services.AddTransient<IUserSessionsService, UserSessionsService>();
             services.AddTransient<IUserSessionsSearchService, UserSessionsSearchService>();
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));

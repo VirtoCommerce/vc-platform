@@ -707,7 +707,7 @@
         }
       },
       "sessions-list": {
-        "title": "Sesje",
+        "title": "Aktywne sesje",
         "labels": {
           "ip-address": "Adres IP",
           "user-agent": "Agent użytkownika"
@@ -775,7 +775,7 @@
         "blade-subtitle": "Zarządzaj rolami"
       },
       "sessions": {
-        "title": "Sesje"
+        "title": "Aktywne sesje"
       }
     },
     "dialogs": {
@@ -902,6 +902,10 @@
       "session-terminate": {
         "title": "Zakończ sesję",
         "message": "Czy na pewno chcesz zakończyć tę sesję?"
+      },
+      "sessions-terminate-all": {
+        "title": "Zakończ wszystkie",
+        "message": "Czy na pewno chcesz zakończyć wszystkie sesje użytkowników?"
       }
     },
     "commands": {
@@ -911,7 +915,8 @@
         "name": "Zresetuj pamięć podręczn"
       },
       "restart-application-title": "Uruchom ponownie aplikację",
-      "terminate": "Zakończ"
+      "terminate": "Zakończ",
+      "sessions-terminate-all": "Zakończ wszystkie"
     }
   },
   "permissions": {

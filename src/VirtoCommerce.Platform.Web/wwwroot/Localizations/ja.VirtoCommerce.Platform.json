@@ -707,7 +707,7 @@
         }
       },
       "sessions-list": {
-        "title": "セッション",
+        "title": "アクティブなセッション",
         "labels": {
           "ip-address": "IPアドレス",
           "user-agent": "ユーザーエージェント"
@@ -775,7 +775,7 @@
         "blade-subtitle": "ロールの管理"
       },
       "sessions": {
-        "title": "セッション"
+        "title": "アクティブなセッション"
       }
     },
     "dialogs": {
@@ -902,6 +902,10 @@
       "session-terminate": {
         "title": "セッションを終了",
         "message": "このセッションを終了してもよろしいですか？"
+      },
+      "sessions-terminate-all": {
+        "title": "すべて終了",
+        "message": "すべてのユーザーセッションを終了してもよろしいですか？"
       }
     },
     "commands": {
@@ -911,7 +915,8 @@
         "name": "キャッシュのリセット"
       },
       "restart-application-title": "アプリケーションを再起動します",
-      "terminate": "終了"
+      "terminate": "終了",
+      "sessions-terminate-all": "すべて終了"
     }
   },
   "permissions": {

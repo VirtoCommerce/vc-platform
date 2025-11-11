@@ -708,7 +708,7 @@
         }
       },
       "sessions-list": {
-        "title": "Sessioner",
+        "title": "Aktiva sessioner",
         "labels": {
           "ip-address": "IP-adress",
           "user-agent": "Användaragent"
@@ -776,7 +776,7 @@
         "blade-subtitle": "Hantera roller"
       },
       "sessions": {
-        "title": "Sessioner"
+        "title": "Aktiva sessioner"
       }
     },
     "dialogs": {
@@ -903,6 +903,10 @@
       "session-terminate": {
         "title": "Avsluta session",
         "message": "Är du säker på att du vill avsluta denna session?"
+      },
+      "sessions-terminate-all": {
+        "title": "Avsluta alla",
+        "message": "Är du säker på att du vill avsluta alla användarsessioner?"
       }
     },
     "commands": {
@@ -912,7 +916,8 @@
         "name": "Återställ cache"
       },
       "restart-application-title": "Starta om applikation",
-      "terminate": "Avsluta"
+      "terminate": "Avsluta",
+      "sessions-terminate-all": "Avsluta alla"
     }
   },
   "permissions": {

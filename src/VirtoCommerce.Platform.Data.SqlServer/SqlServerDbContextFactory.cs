@@ -31,10 +31,10 @@ namespace VirtoCommerce.Platform.Data.SqlServer
                 db => db.MigrationsAssembly(typeof(SqlServerDataAssemblyMarker).Assembly.GetName().Name));
 
             builder.UseOpenIddict<VirtoOpenIddictEntityFrameworkCoreApplication,
-                        VirtoOpenIddictEntityFrameworkCoreAuthorization,
-                        VirtoOpenIddictEntityFrameworkCoreScope,
-                        VirtoOpenIddictEntityFrameworkCoreToken,
-                        string>();
+                VirtoOpenIddictEntityFrameworkCoreAuthorization,
+                VirtoOpenIddictEntityFrameworkCoreScope,
+                VirtoOpenIddictEntityFrameworkCoreToken,
+                string>();
 
             return new SecurityDbContext(builder.Options);
         }

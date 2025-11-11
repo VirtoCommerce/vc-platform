@@ -709,7 +709,7 @@
         }
       },
       "sessions-list": {
-        "title": "Sitzungen",
+        "title": "Aktive Sitzungen",
         "labels": {
           "ip-address": "IP-Adresse",
           "user-agent": "Benutzeragent"
@@ -777,7 +777,7 @@
         "blade-subtitle": "Rollen verwalten"
       },
       "sessions": {
-        "title": "Sitzungen"
+        "title": "Aktive Sitzungen"
       }
     },
     "dialogs": {
@@ -913,7 +913,8 @@
         "name": "Cache zurücksetzen"
       },
       "restart-application-title": "Anwendung neu starten",
-      "terminate": "Beenden"
+      "terminate": "Beenden",
+      "sessions-terminate-all": "Alle beenden"
     }
   },
   "permissions": {

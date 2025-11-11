@@ -6,4 +6,3 @@ public class UserSessionSearchCriteria : SearchCriteriaBase
 {
     public string UserId { get; set; }
 }
-

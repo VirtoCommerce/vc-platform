@@ -707,7 +707,7 @@
         }
       },
       "sessions-list": {
-        "title": "Sesiones",
+        "title": "Sesiones activas",
         "labels": {
           "ip-address": "Dirección IP",
           "user-agent": "Agente de usuario"
@@ -775,7 +775,7 @@
         "blade-subtitle": "Gestionar roles"
       },
       "sessions": {
-        "title": "Sesiones"
+        "title": "Sesiones activas"
       }
     },
     "dialogs": {
@@ -902,6 +902,10 @@
       "session-terminate": {
         "title": "Terminar sesión",
         "message": "¿Está seguro de que desea terminar esta sesión?"
+      },
+      "sessions-terminate-all": {
+        "title": "Terminar todas",
+        "message": "¿Está seguro de que desea terminar todas las sesiones de usuario?"
       }
     },
     "commands": {
@@ -911,7 +915,8 @@
         "name": "Restablecer caché"
       },
       "restart-application-title": "Reinicia la aplicación",
-      "terminate": "Terminar"
+      "terminate": "Terminar",
+      "sessions-terminate-all": "Terminar todas"
     }
   },
   "permissions": {

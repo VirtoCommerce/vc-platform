@@ -708,7 +708,7 @@
         }
       },
       "sessions-list": {
-        "title": "Sessions",
+        "title": "Active sessions",
         "labels": {
           "ip-address": "IP address",
           "user-agent": "User agent"
@@ -776,7 +776,7 @@
         "blade-subtitle": "Manage roles"
       },
       "sessions": {
-        "title": "Sessions"
+        "title": "Active sessions"
       }
     },
     "dialogs": {
@@ -903,6 +903,10 @@
       "session-terminate": {
         "title": "Terminate session",
         "message": "Are you sure you want to terminate this session?"
+      },
+      "sessions-terminate-all": {
+        "title": "Terminate all",
+        "message": "Are you sure you want to terminate all user sessions?"
       }
     },
     "commands": {
@@ -912,7 +916,8 @@
         "name": "Reset cache"
       },
       "restart-application-title": "Restart application",
-      "terminate": "Terminate"
+      "terminate": "Terminate",
+      "sessions-terminate-all": "Terminate all" 
     }
   },
   "permissions": {

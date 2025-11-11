@@ -46,9 +46,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserApiKeyService _userApiKeyService;
         private readonly ILogger<SecurityController> _logger;
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
-        private readonly IUserSessionsSearchService _userSessionsService;
-        private readonly IOpenIddictTokenManager _tokenManager;
-        private readonly IOpenIddictAuthorizationManager _authorizationManager;
+        private readonly IUserSessionsSearchService _userSessionsSearchService;
+        private readonly IUserSessionsService _userSessionsService;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -65,9 +64,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IUserApiKeyService userApiKeyService,
             ILogger<SecurityController> logger,
             IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs,
-            IUserSessionsSearchService userSessionsService,
-            IOpenIddictTokenManager tokenManager,
-            IOpenIddictAuthorizationManager authorizationManager)
+            IUserSessionsSearchService userSessionsSearchService,
+            IUserSessionsService userSessionsService)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -83,9 +81,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userApiKeyService = userApiKeyService;
             _logger = logger;
             _externalSigninProviderConfigs = externalSigninProviderConfigs;
+            _userSessionsSearchService = userSessionsSearchService;
             _userSessionsService = userSessionsService;
-            _tokenManager = tokenManager;
-            _authorizationManager = authorizationManager;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
@@ -98,7 +95,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityQuery)]
         public async Task<ActionResult<UserSearchResult>> SearchUserSessions([FromBody] UserSessionSearchCriteria criteria)
         {
-            var result = await _userSessionsService.SearchAsync(criteria);
+            var result = await _userSessionsSearchService.SearchAsync(criteria);
             return Ok(result);
         }
 
@@ -107,17 +104,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityRevokeToken)]
         public async Task<ActionResult> TerminateUserSession([FromRoute] string id)
         {
-            var tokens = _tokenManager.FindByAuthorizationIdAsync(id);
-            await foreach (var token in tokens)
-            {
-                await _tokenManager.TryRevokeAsync(token);
-            }
+            await _userSessionsService.TerminateUserSession(id);
 
-            var authorization = await _authorizationManager.FindByIdAsync(id);
-            if (authorization != null)
-            {
-                await _authorizationManager.TryRevokeAsync(authorization);
-            }
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("sessions/{userId}/terminateall")]
+        [Authorize(PlatformPermissions.SecurityRevokeToken)]
+        public async Task<ActionResult> TerminateAllUserSessions([FromRoute] string userId)
+        {
+            await _userSessionsService.TerminateAllUserSessions(userId);
 
             return NoContent();
         }

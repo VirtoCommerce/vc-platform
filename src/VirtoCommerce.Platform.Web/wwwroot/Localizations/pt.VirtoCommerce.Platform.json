@@ -707,7 +707,7 @@
         }
       },
       "sessions-list": {
-        "title": "Sessões",
+        "title": "Sessões ativas",
         "labels": {
           "ip-address": "Endereço IP",
           "user-agent": "Agente do usuário"
@@ -775,7 +775,7 @@
         "blade-subtitle": "Gerenciar funções"
       },
       "sessions": {
-        "title": "Sessões"
+        "title": "Sessões ativas"
       }
     },
     "dialogs": {
@@ -902,6 +902,10 @@
       "session-terminate": {
         "title": "Encerrar sessão",
         "message": "Tem certeza de que deseja encerrar esta sessão?"
+      },
+      "sessions-terminate-all": {
+        "title": "Encerrar todas",
+        "message": "Tem certeza de que deseja encerrar todas as sessões de usuário?"
       }
     },
     "commands": {
@@ -911,7 +915,8 @@
         "name": "Redefinir o cache"
       },
       "restart-application-title": "Reinicie a aplicação",
-      "terminate": "Encerrar"
+      "terminate": "Encerrar",
+      "sessions-terminate-all": "Encerrar todas"
     }
   },
   "permissions": {
