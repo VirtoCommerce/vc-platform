@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.sessionsListController',
-        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper',
-            function ($scope, accounts, bladeUtils, bladeNavigationService, dialogService, uiGridHelper) {
+        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper',
+            function ($scope, accounts, bladeUtils, dialogService, uiGridHelper) {
                 $scope.uiGridConstants = uiGridHelper.uiGridConstants;
                 var blade = $scope.blade;
                 blade.title = "platform.blades.sessions-list.title";
@@ -21,6 +21,10 @@ angular.module('platformWebApp')
 
                         $scope.pageSettings.totalItems = data.totalCount;
                         blade.currentEntities = data.results;
+
+                        if (blade.refreshSessinsCountCallback && angular.isFunction(blade.refreshSessinsCountCallback)) {
+                            blade.refreshSessinsCountCallback(data.totalCount);
+                        }
                     });
                 };
 

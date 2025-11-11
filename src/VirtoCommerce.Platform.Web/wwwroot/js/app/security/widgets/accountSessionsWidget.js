@@ -38,6 +38,9 @@ angular.module('platformWebApp')
                 var newBlade = {
                     id: "sessionsBlade",
                     userId: searchCriteria.userId,
+                    refreshSessinsCountCallback: function (newCount) {
+                        blade.sessionsCount = newCount;
+                    },
                     controller: 'platformWebApp.sessionsListController',
                     template: '$(Platform)/Scripts/app/security/blades/sessions-list.html'
                 };
