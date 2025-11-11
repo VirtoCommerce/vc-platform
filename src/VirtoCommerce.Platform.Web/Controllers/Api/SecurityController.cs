@@ -91,31 +91,32 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly string UserForbiddenToEdit = "It is forbidden to edit this user.";
 
         [HttpPost]
-        [Route("sessions/search")]
+        [Route("users/{userId}/sessions/search")]
         [Authorize(PlatformPermissions.SecurityQuery)]
-        public async Task<ActionResult<UserSearchResult>> SearchUserSessions([FromBody] UserSessionSearchCriteria criteria)
+        public async Task<ActionResult<UserSessionSearchResult>> SearchUserSessions([FromRoute] string userId, [FromBody] UserSessionSearchCriteria criteria)
         {
+            criteria.UserId = userId;
             var result = await _userSessionsSearchService.SearchAsync(criteria);
             return Ok(result);
         }
 
-        [HttpPost]
-        [Route("sessions/{id}/terminate")]
+        [HttpDelete]
+        [Route("users/{userId}/sessions/{id}")]
         [Authorize(PlatformPermissions.SecurityRevokeToken)]
-        public async Task<ActionResult> TerminateUserSession([FromRoute] string id)
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> TerminateUserSession([FromRoute] string userId, [FromRoute] string id)
         {
             await _userSessionsService.TerminateUserSession(id);
-
             return NoContent();
         }
 
-        [HttpPost]
-        [Route("sessions/{userId}/terminateall")]
+        [HttpDelete]
+        [Route("users/{userId}/sessions")]
         [Authorize(PlatformPermissions.SecurityRevokeToken)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> TerminateAllUserSessions([FromRoute] string userId)
         {
             await _userSessionsService.TerminateAllUserSessions(userId);
-
             return NoContent();
         }
 

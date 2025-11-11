@@ -16,8 +16,8 @@ angular.module('platformWebApp').factory('platformWebApp.accounts', ['$resource'
         deleteUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'DELETE' },
         verifyEmail: { url: 'api/platform/security/users/:userId/sendVerificationEmail', method: 'POST' },
         passwordChangeEnabled: { url: 'api/platform/security/passwordchangeenabled', method: 'GET' },
-        searchSessions: { url: 'api/platform/security/sessions/search', method: 'POST' },
-        terminateSession: { url: 'api/platform/security/sessions/:id/terminate', method: 'POST' },
-        terminateAllSessions: { url: 'api/platform/security/sessions/:userId/terminateall', method: 'POST' }
+        searchSessions: { url: 'api/platform/security/users/:userId/sessions/search', method: 'POST' },
+        terminateSession: { url: 'api/platform/security/users/:userId/sessions/:id', method: 'DELETE' },
+        terminateAllSessions: { url: 'api/platform/security/users/:userId/sessions', method: 'DELETE' }
     });
 }]);

@@ -26,15 +26,18 @@ public class UserSessionsService : IUserSessionsService
 
             await _tokenManager.TryRevokeAsync(token);
 
-            var validSessionsCount = await _tokenManager.FindByAuthorizationIdAsync(authorizationId)
-                .OfType<VirtoOpenIddictEntityFrameworkCoreToken>()
-                .Where(x => x.Type == "refresh_token")
-                .Where(x => x.Status == "valid")
-                .CountAsync();
-
-            if (validSessionsCount == 0)
+            if (authorizationId != null)
             {
-                await TerminateUserSessionGroup(authorizationId);
+                var validSessionsCount = await _tokenManager.FindByAuthorizationIdAsync(authorizationId)
+                    .OfType<VirtoOpenIddictEntityFrameworkCoreToken>()
+                    .Where(x => x.Type == "refresh_token")
+                    .Where(x => x.Status == "valid")
+                    .CountAsync();
+
+                if (validSessionsCount == 0)
+                {
+                    await TerminateUserSessionGroup(authorizationId);
+                }
             }
         }
     }

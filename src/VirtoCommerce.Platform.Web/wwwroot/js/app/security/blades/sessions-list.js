@@ -11,21 +11,23 @@ angular.module('platformWebApp')
                 blade.refresh = function () {
                     blade.isLoading = true;
 
-                    accounts.searchSessions({
-                        userId: blade.userId,
-                        keyword: filter.keyword,
-                        skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-                        take: $scope.pageSettings.itemsPerPageCount
-                    }, function (data) {
-                        blade.isLoading = false;
+                    accounts.searchSessions(
+                        { userId: blade.userId },
+                        {
+                            keyword: filter.keyword,
+                            skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                            take: $scope.pageSettings.itemsPerPageCount
+                        },
+                        function (data) {
+                            blade.isLoading = false;
 
-                        $scope.pageSettings.totalItems = data.totalCount;
-                        blade.currentEntities = data.results;
+                            $scope.pageSettings.totalItems = data.totalCount;
+                            blade.currentEntities = data.results;
 
-                        if (blade.refreshSessinsCountCallback && angular.isFunction(blade.refreshSessinsCountCallback)) {
-                            blade.refreshSessinsCountCallback(data.totalCount);
-                        }
-                    });
+                            if (blade.refreshSessionsCountCallback && angular.isFunction(blade.refreshSessionsCountCallback)) {
+                                blade.refreshSessionsCountCallback(data.totalCount);
+                            }
+                        });
                 };
 
                 $scope.terminate = function (session) {
@@ -35,7 +37,7 @@ angular.module('platformWebApp')
                         message: "platform.dialogs.session-terminate.message",
                         callback: function (remove) {
                             if (remove) {
-                                accounts.terminateSession({ id: session.id }, null, () => {
+                                accounts.terminateSession({ userId: blade.userId, id: session.id }, null, () => {
                                     blade.refresh();
                                 });
                             }
@@ -44,9 +46,8 @@ angular.module('platformWebApp')
                     dialogService.showConfirmationDialog(dialog);
                 }
 
-
                 blade.terminateAll = function () {
-                        var dialog = {
+                    var dialog = {
                         id: "confirmTerminateAllSessions",
                         title: "platform.dialogs.sessions-terminate-all.title",
                         message: "platform.dialogs.sessions-terminate-all.message",

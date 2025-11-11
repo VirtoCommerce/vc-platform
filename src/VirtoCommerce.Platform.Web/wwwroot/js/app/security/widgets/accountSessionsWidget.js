@@ -3,42 +3,42 @@ angular.module('platformWebApp')
         ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', function ($scope, bladeNavigationService, accounts) {
             var blade = $scope.widget.blade;
 
-            var searchCriteria = {
-                skip: 0,
-                take: 0
-            };
+            var userId = null;
 
             if (blade.data) {
-                searchCriteria.userId = blade.data.id
+                userId = blade.data.id
             }
             else if (blade.currentEntity) {
                 var account = _.first(blade.currentEntity.securityAccounts)
                 if (account) {
-                    searchCriteria.userId = account.id;
+                    userId = account.id;
                 }
             }
 
             function refresh() {
                 blade.sessionsCount = 0;
 
-                if (!searchCriteria.userId) {
+                if (!userId) {
                     return;
                 }
 
-                accounts.searchSessions(searchCriteria, function (data) {
-                    blade.sessionsCount = data.totalCount;
-                });
+                accounts.searchSessions(
+                    { userId: userId },
+                    { take: 0 },
+                    function (data) {
+                        blade.sessionsCount = data.totalCount;
+                    });
             }
 
             $scope.openBlade = function () {
-                if (!searchCriteria.userId) {
+                if (!userId) {
                     return;
                 }
 
                 var newBlade = {
                     id: "sessionsBlade",
-                    userId: searchCriteria.userId,
-                    refreshSessinsCountCallback: function (newCount) {
+                    userId: userId,
+                    refreshSessionsCountCallback: function (newCount) {
                         blade.sessionsCount = newCount;
                     },
                     controller: 'platformWebApp.sessionsListController',
