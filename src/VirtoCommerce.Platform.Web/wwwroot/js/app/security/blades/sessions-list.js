@@ -11,7 +11,7 @@ angular.module('platformWebApp')
                 blade.refresh = function () {
                     blade.isLoading = true;
 
-                    accounts.sessions({
+                    accounts.searchSessions({
                         userId: blade.userId,
                         keyword: filter.keyword,
                         skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,

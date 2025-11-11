@@ -18,9 +18,9 @@ public class UserSessionsSearchService : IUserSessionsSearchService
         _tokenManager = tokenManager;
     }
 
-    public async Task<UserSessionSearchResult> SearchAsync(UserSessionSearchCriteria criteria, bool clone = true)
+    public virtual async Task<UserSessionSearchResult> SearchAsync(UserSessionSearchCriteria criteria, bool clone = true)
     {
-        var result = new UserSessionSearchResult();
+        var result = AbstractTypeFactory<UserSessionSearchResult>.TryCreateInstance();
 
         var tokens = await _tokenManager.FindBySubjectAsync(criteria.UserId)
             .OfType<VirtoOpenIddictEntityFrameworkCoreToken>()
@@ -40,7 +40,7 @@ public class UserSessionsSearchService : IUserSessionsSearchService
 
             foreach (var token in tokensPage)
             {
-                var userSession = new UserSession();
+                var userSession = AbstractTypeFactory<UserSession>.TryCreateInstance();
 
                 userSession.Id = await _tokenManager.GetAuthorizationIdAsync(token);
                 userSession.CreatedDate = token.CreationDate ?? DateTime.MinValue;
@@ -55,4 +55,3 @@ public class UserSessionsSearchService : IUserSessionsSearchService
         return result;
     }
 }
-

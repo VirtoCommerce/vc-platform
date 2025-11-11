@@ -37,10 +37,10 @@ namespace VirtoCommerce.Platform.Data.MySql
                     .MigrationsAssembly(typeof(MySqlDataAssemblyMarker).Assembly.GetName().Name));
 
             builder.UseOpenIddict<VirtoOpenIddictEntityFrameworkCoreApplication,
-                        VirtoOpenIddictEntityFrameworkCoreAuthorization,
-                        VirtoOpenIddictEntityFrameworkCoreScope,
-                        VirtoOpenIddictEntityFrameworkCoreToken,
-                        string>();
+                VirtoOpenIddictEntityFrameworkCoreAuthorization,
+                VirtoOpenIddictEntityFrameworkCoreScope,
+                VirtoOpenIddictEntityFrameworkCoreToken,
+                string>();
 
             return new SecurityDbContext(builder.Options);
         }

@@ -31,10 +31,10 @@ namespace VirtoCommerce.Platform.Data.PostgreSql
                 db => db.MigrationsAssembly(typeof(PostgreSqlDataAssemblyMarker).Assembly.GetName().Name));
 
             builder.UseOpenIddict<VirtoOpenIddictEntityFrameworkCoreApplication,
-                        VirtoOpenIddictEntityFrameworkCoreAuthorization,
-                        VirtoOpenIddictEntityFrameworkCoreScope,
-                        VirtoOpenIddictEntityFrameworkCoreToken,
-                        string>();
+                VirtoOpenIddictEntityFrameworkCoreAuthorization,
+                VirtoOpenIddictEntityFrameworkCoreScope,
+                VirtoOpenIddictEntityFrameworkCoreToken,
+                string>();
 
             return new SecurityDbContext(builder.Options);
         }

@@ -3,10 +3,8 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security;
 
-public class UserSession : IEntity
+public class UserSession : Entity
 {
-    public string Id { get; set; }
-
     public DateTime CreatedDate { get; set; }
 
     public DateTime ExpirationDate { get; set; }
@@ -15,4 +13,3 @@ public class UserSession : IEntity
 
     public string UserAgent { get; set; }
 }
-
