@@ -904,6 +904,10 @@
       "session-terminate": {
         "title": "Sitzung beenden",
         "message": "Sind Sie sicher, dass Sie diese Sitzung beenden möchten?"
+      },
+      "sessions-terminate-all": {
+        "title": "Alle beenden",
+        "message": "Sind Sie sicher, dass Sie alle Benutzersitzungen beenden möchten?"
       }
     },
     "commands": {

@@ -20,7 +20,7 @@ public class UserSessionsService : IUserSessionsService
     public virtual async Task TerminateUserSession(string sessionId)
     {
         var tokenObject = await _tokenManager.FindByIdAsync(sessionId);
-        if (tokenObject != null && tokenObject is VirtoOpenIddictEntityFrameworkCoreToken token)
+        if (tokenObject is VirtoOpenIddictEntityFrameworkCoreToken token)
         {
             var authorizationId = await _tokenManager.GetAuthorizationIdAsync(token);
 
