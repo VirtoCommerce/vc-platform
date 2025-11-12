@@ -706,6 +706,13 @@
           "Quarters": "Kvartaler",
           "Years": "År"
         }
+      },
+      "sessions-list": {
+        "title": "Aktive økter",
+        "labels": {
+          "ip-address": "IP-adresse",
+          "user-agent": "Brukeragent"
+        }
       }
     },
     "templates": {
@@ -767,6 +774,9 @@
       "accountRoles": {
         "title": "Roller",
         "blade-subtitle": "Administrer roller"
+      },
+      "sessions": {
+        "title": "Aktive økter"
       }
     },
     "dialogs": {
@@ -889,6 +899,14 @@
         "title": "Tilbakestilling av hurtigbuffer",
         "confirm-reset-message": "Er du sikker på at du vil tilbakestille hurtigbufferen? Denne handlingen sletter alle bufrede data og kan midlertidig påvirke systemets ytelse. Bekreft for å fortsette",
         "reset-successfully-message": "Hurtigbufferen er tilbakestilt"
+      },
+      "session-terminate": {
+        "title": "Avslutt økt",
+        "message": "Er du sikker på at du vil avslutte denne økten?"
+      },
+      "sessions-terminate-all": {
+        "title": "Avslutt alle",
+        "message": "Er du sikker på at du vil avslutte alle brukerøkter?"
       }
     },
     "commands": {
@@ -897,7 +915,9 @@
         "title": "Tilbakestill hurtigbuffer",
         "name": "Tilbakestill hurtigbuffer"
       },
-      "restart-application-title": "Start applikasjonen på nytt"
+      "restart-application-title": "Start applikasjonen på nytt",
+      "terminate": "Avslutt",
+      "sessions-terminate-all": "Avslutt alle"
     }
   },
   "permissions": {

@@ -706,6 +706,13 @@
           "Quarters": "Neljänneksen",
           "Years": "Vuodet"
         }
+      },
+      "sessions-list": {
+        "title": "Aktiiviset istunnot",
+        "labels": {
+          "ip-address": "IP-osoite",
+          "user-agent": "Käyttäjäagentti"
+        }
       }
     },
     "templates": {
@@ -767,6 +774,9 @@
       "accountRoles": {
         "title": "Roolit",
         "blade-subtitle": "Hallinnoi rooleja"
+      },
+      "sessions": {
+        "title": "Aktiiviset istunnot"
       }
     },
     "dialogs": {
@@ -889,6 +899,14 @@
         "title": "Välimuistin nollaus",
         "confirm-reset-message": "Oletko varma, että haluat nollata välimuistin? Tämä toiminto tyhjentää kaiken välimuistiin tallennetun datan ja voi tilapäisesti vaikuttaa järjestelmän suorituskykyyn. Vahvista jatkaaksesi",
         "reset-successfully-message": "Välimuisti on nollattu onnistuneesti"
+      },
+      "session-terminate": {
+        "title": "Lopeta istunto",
+        "message": "Haluatko varmasti lopettaa tämän istunnon?"
+      },
+      "sessions-terminate-all": {
+        "title": "Lopeta kaikki",
+        "message": "Haluatko varmasti lopettaa kaikki käyttäjäistunnot?"
       }
     },
     "commands": {
@@ -897,7 +915,9 @@
         "title": "Nollaa välimuisti",
         "name": "Nollaa välimuisti"
       },
-      "restart-application-title": "Käynnistä sovellus uudelleen"
+      "restart-application-title": "Käynnistä sovellus uudelleen",
+      "terminate": "Lopeta",
+      "sessions-terminate-all": "Lopeta kaikki"
     }
   },
   "permissions": {

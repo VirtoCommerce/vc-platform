@@ -46,6 +46,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserApiKeyService _userApiKeyService;
         private readonly ILogger<SecurityController> _logger;
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
+        private readonly IUserSessionsSearchService _userSessionsSearchService;
+        private readonly IUserSessionsService _userSessionsService;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -61,7 +63,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEventPublisher eventPublisher,
             IUserApiKeyService userApiKeyService,
             ILogger<SecurityController> logger,
-            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs)
+            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs,
+            IUserSessionsSearchService userSessionsSearchService,
+            IUserSessionsService userSessionsService)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -77,12 +81,44 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userApiKeyService = userApiKeyService;
             _logger = logger;
             _externalSigninProviderConfigs = externalSigninProviderConfigs;
+            _userSessionsSearchService = userSessionsSearchService;
+            _userSessionsService = userSessionsService;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
         private readonly string UserNotFound = "User not found.";
         private readonly string UserForbiddenToEdit = "It is forbidden to edit this user.";
+
+        [HttpPost]
+        [Route("users/{userId}/sessions/search")]
+        [Authorize(PlatformPermissions.SecurityQuery)]
+        public async Task<ActionResult<UserSessionSearchResult>> SearchUserSessions([FromRoute] string userId, [FromBody] UserSessionSearchCriteria criteria)
+        {
+            criteria.UserId = userId;
+            var result = await _userSessionsSearchService.SearchAsync(criteria);
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("users/{userId}/sessions/{id}")]
+        [Authorize(PlatformPermissions.SecurityRevokeToken)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> TerminateUserSession([FromRoute] string userId, [FromRoute] string id)
+        {
+            await _userSessionsService.TerminateUserSession(id);
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("users/{userId}/sessions")]
+        [Authorize(PlatformPermissions.SecurityRevokeToken)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> TerminateAllUserSessions([FromRoute] string userId)
+        {
+            await _userSessionsService.TerminateAllUserSessions(userId);
+            return NoContent();
+        }
 
         /// <summary>
         /// Sign in with user name and password

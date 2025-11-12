@@ -705,6 +705,13 @@
           "Quarters": "Trimestres",
           "Years": "Años"
         }
+      },
+      "sessions-list": {
+        "title": "Sesiones activas",
+        "labels": {
+          "ip-address": "Dirección IP",
+          "user-agent": "Agente de usuario"
+        }
       }
     },
     "templates": {
@@ -766,6 +773,9 @@
       "accountRoles": {
         "title": "Roles",
         "blade-subtitle": "Gestionar roles"
+      },
+      "sessions": {
+        "title": "Sesiones activas"
       }
     },
     "dialogs": {
@@ -888,6 +898,14 @@
         "title": "Restablecer caché",
         "confirm-reset-message": "¿Está seguro de que desea restablecer la caché? Esta acción borrará todos los datos almacenados en caché y puede afectar temporalmente el rendimiento del sistema. Confirme para continuar",
         "reset-successfully-message": "La caché se ha restablecido con éxito"
+      },
+      "session-terminate": {
+        "title": "Terminar sesión",
+        "message": "¿Está seguro de que desea terminar esta sesión?"
+      },
+      "sessions-terminate-all": {
+        "title": "Terminar todas",
+        "message": "¿Está seguro de que desea terminar todas las sesiones de usuario?"
       }
     },
     "commands": {
@@ -896,7 +914,9 @@
         "title": "Restablecer caché",
         "name": "Restablecer caché"
       },
-      "restart-application-title": "Reinicia la aplicación"
+      "restart-application-title": "Reinicia la aplicación",
+      "terminate": "Terminar",
+      "sessions-terminate-all": "Terminar todas"
     }
   },
   "permissions": {

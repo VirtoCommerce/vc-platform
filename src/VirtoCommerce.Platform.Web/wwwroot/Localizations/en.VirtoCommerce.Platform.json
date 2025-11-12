@@ -706,6 +706,13 @@
           "Quarters": "Quarters",
           "Years": "Years"
         }
+      },
+      "sessions-list": {
+        "title": "Active sessions",
+        "labels": {
+          "ip-address": "IP address",
+          "user-agent": "User agent"
+        }
       }
     },
     "templates": {
@@ -767,6 +774,9 @@
       "accountRoles": {
         "title": "Roles",
         "blade-subtitle": "Manage roles"
+      },
+      "sessions": {
+        "title": "Active sessions"
       }
     },
     "dialogs": {
@@ -889,6 +899,14 @@
         "title": "Cache reset",
         "confirm-reset-message": "Are you sure you want to reset the cache? This action will clear all cached data and may temporarily affect system performance. Confirm to proceed",
         "reset-successfully-message": "Cache has been reset successfully"
+      },
+      "session-terminate": {
+        "title": "Terminate session",
+        "message": "Are you sure you want to terminate this session?"
+      },
+      "sessions-terminate-all": {
+        "title": "Terminate all",
+        "message": "Are you sure you want to terminate all user sessions?"
       }
     },
     "commands": {
@@ -897,7 +915,9 @@
         "title": "Reset cache",
         "name": "Reset cache"
       },
-      "restart-application-title": "Restart application"
+      "restart-application-title": "Restart application",
+      "terminate": "Terminate",
+      "sessions-terminate-all": "Terminate all"
     }
   },
   "permissions": {
