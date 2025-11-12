@@ -311,15 +311,8 @@ namespace VirtoCommerce.Platform.Web
             Log.ForContext<Startup>().Information("Getting server certificate");
             ServerCertificate = GetServerCertificate(certificateLoader);
 
-            //Create backup of token handler before default claim maps are cleared
-            // [Obsolete("Use JsonWebToken", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-            var defaultTokenHandler = new JwtSecurityTokenHandler();
-
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-
-            // register it as a singleton to use in external login providers
-            services.AddSingleton(defaultTokenHandler);
 
             authBuilder.AddJwtBearer(options =>
             {
@@ -493,7 +486,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<IDeveloperToolRegistrar, DeveloperToolRegistrar>();
 
             services.AddTransient<IExternalSignInService, ExternalSignInService>();
-            services.AddTransient<IExternalSigninService, ExternalSignInService>();
 
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
