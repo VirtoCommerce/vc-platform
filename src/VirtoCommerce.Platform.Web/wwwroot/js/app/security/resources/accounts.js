@@ -1,6 +1,6 @@
 angular.module('platformWebApp').factory('platformWebApp.accounts', ['$resource', function ($resource) {
     return $resource('api/platform/security/users/:id', { id: '@Id' }, {
-        search: { url: 'api/platform/security/users/search', method:'POST' },
+        search: { url: 'api/platform/security/users/search', method: 'POST' },
         save: { url: 'api/platform/security/users/create', method: 'POST' },
         changepassword: { url: 'api/platform/security/users/:id/changepassword', method: 'POST' },
         changeCurrentUserPassword: { url: 'api/platform/security/currentuser/changepassword', method: 'POST' },
@@ -11,10 +11,13 @@ angular.module('platformWebApp').factory('platformWebApp.accounts', ['$resource'
         locked: { url: 'api/platform/security/users/:id/locked', method: 'GET' },
         unlock: { url: 'api/platform/security/users/:id/unlock', method: 'POST' },
         lock: { url: 'api/platform/security/users/:id/lock', method: 'POST' },
-        getUserApiKeys: { url: 'api/platform/security/users/:id/apikeys', method: 'GET', isArray: true},
+        getUserApiKeys: { url: 'api/platform/security/users/:id/apikeys', method: 'GET', isArray: true },
         saveUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'POST' },
         deleteUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'DELETE' },
         verifyEmail: { url: 'api/platform/security/users/:userId/sendVerificationEmail', method: 'POST' },
-        passwordChangeEnabled: { url: 'api/platform/security/passwordchangeenabled', method: 'GET' }
+        passwordChangeEnabled: { url: 'api/platform/security/passwordchangeenabled', method: 'GET' },
+        searchSessions: { url: 'api/platform/security/users/:userId/sessions/search', method: 'POST' },
+        terminateSession: { url: 'api/platform/security/users/:userId/sessions/:id', method: 'DELETE' },
+        terminateAllSessions: { url: 'api/platform/security/users/:userId/sessions', method: 'DELETE' }
     });
 }]);

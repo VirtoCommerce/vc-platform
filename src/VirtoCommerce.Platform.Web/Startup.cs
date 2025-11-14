@@ -45,6 +45,7 @@ using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
+using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.DeveloperTools;
 using VirtoCommerce.Platform.Data.Extensions;
@@ -64,6 +65,8 @@ using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.Local;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
+using VirtoCommerce.Platform.Security.Model.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
@@ -225,7 +228,11 @@ namespace VirtoCommerce.Platform.Web
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
-                options.UseOpenIddict();
+                options.UseOpenIddict<VirtoOpenIddictEntityFrameworkCoreApplication,
+                                      VirtoOpenIddictEntityFrameworkCoreAuthorization,
+                                      VirtoOpenIddictEntityFrameworkCoreScope,
+                                      VirtoOpenIddictEntityFrameworkCoreToken,
+                                      string>();
             });
 
             if (platformOptions.UseResponseCompression)
@@ -343,6 +350,9 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
 
+            services.AddScoped<VirtoOpenIddictEntityFrameworkCoreTokenStore>();
+            services.AddScoped<VirtoOpenIddictEntityFrameworkCoreTokenStoreResolver>();
+
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
@@ -352,8 +362,15 @@ namespace VirtoCommerce.Platform.Web
                 {
                     coreBuilder.UseEntityFrameworkCore(efBuilder =>
                     {
-                        efBuilder.UseDbContext<SecurityDbContext>();
+                        efBuilder.UseDbContext<SecurityDbContext>()
+                        .ReplaceDefaultEntities<VirtoOpenIddictEntityFrameworkCoreApplication,
+                                                VirtoOpenIddictEntityFrameworkCoreAuthorization,
+                                                VirtoOpenIddictEntityFrameworkCoreScope,
+                                                VirtoOpenIddictEntityFrameworkCoreToken,
+                                                string>();
                     });
+
+                    coreBuilder.ReplaceTokenStoreResolver<VirtoOpenIddictEntityFrameworkCoreTokenStoreResolver>();
                 });
 
                 openIddictBuilder.AddServer(serverBuilder =>
@@ -447,6 +464,9 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddSingleton<Func<IOpenIddictTokenManager>>(provider =>
                 () => provider.CreateScope().ServiceProvider.GetRequiredService<IOpenIddictTokenManager>());
+
+            services.AddTransient<IUserSessionsService, UserSessionsService>();
+            services.AddTransient<IUserSessionsSearchService, UserSessionsSearchService>();
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));

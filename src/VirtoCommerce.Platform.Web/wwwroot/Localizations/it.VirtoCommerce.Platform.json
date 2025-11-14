@@ -705,6 +705,13 @@
           "Quarters": "Trimestri",
           "Years": "Anni"
         }
+      },
+      "sessions-list": {
+        "title": "Sessioni attive",
+        "labels": {
+          "ip-address": "Indirizzo IP",
+          "user-agent": "Agente utente"
+        }
       }
     },
     "templates": {
@@ -766,6 +773,9 @@
       "accountRoles": {
         "title": "Ruoli",
         "blade-subtitle": "Gestisci ruoli"
+      },
+      "sessions": {
+        "title": "Sessioni attive"
       }
     },
     "dialogs": {
@@ -888,6 +898,14 @@
         "title": "Reset della cache",
         "confirm-reset-message": "Sei sicuro di voler resettare la cache? Questa azione cancellerà tutti i dati memorizzati nella cache e potrebbe influire temporaneamente sulle prestazioni del sistema. Conferma per procedere",
         "reset-successfully-message": "La cache è stata resettata con successo"
+      },
+      "session-terminate": {
+        "title": "Termina sessione",
+        "message": "Sei sicuro di voler terminare questa sessione?"
+      },
+      "sessions-terminate-all": {
+        "title": "Termina tutte",
+        "message": "Sei sicuro di voler terminare tutte le sessioni utente?"
       }
     },
     "commands": {
@@ -896,7 +914,9 @@
         "title": "Reset della cache",
         "name": "Reset della cache"
       },
-      "restart-application-title": "Riavvia l'applicazione"
+      "restart-application-title": "Riavvia l'applicazione",
+      "terminate": "Termina",
+      "sessions-terminate-all": "Termina tutte"
     }
   },
   "permissions": {

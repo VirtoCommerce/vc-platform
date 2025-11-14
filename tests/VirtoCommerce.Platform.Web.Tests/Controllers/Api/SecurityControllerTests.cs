@@ -33,6 +33,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IEventPublisher> _eventPublisherMock;
         private readonly Mock<IUserApiKeyService> _userApiKeyServiceMock;
         private readonly Mock<ILogger<SecurityController>> _logger;
+        private readonly Mock<IUserSessionsSearchService> _userSessionsSearchServiceMock;
+        private readonly Mock<IUserSessionsService> _userSessionsServiceMock;
 
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
@@ -46,6 +48,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _roleSearchServiceMock = new Mock<IRoleSearchService>();
             _eventPublisherMock = new Mock<IEventPublisher>();
             _userApiKeyServiceMock = new Mock<IUserApiKeyService>();
+            _userSessionsSearchServiceMock = new Mock<IUserSessionsSearchService>();
+            _userSessionsServiceMock = new Mock<IUserSessionsService>();
             _logger = new Mock<ILogger<SecurityController>>();
 
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(
@@ -105,7 +109,9 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 eventPublisher: _eventPublisherMock.Object,
                 userApiKeyService: _userApiKeyServiceMock.Object,
                 logger: _logger.Object,
-                externalSigninProviderConfigs: _externalSigninProviderConfigs);
+                externalSigninProviderConfigs: _externalSigninProviderConfigs,
+                userSessionsSearchService: _userSessionsSearchServiceMock.Object,
+                userSessionsService: _userSessionsServiceMock.Object);
 
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
             controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
