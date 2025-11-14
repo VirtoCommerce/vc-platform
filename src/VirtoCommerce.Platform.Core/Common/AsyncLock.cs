@@ -41,12 +41,6 @@ namespace VirtoCommerce.Platform.Core.Common
             return new AsyncLock(key);
         }
 
-        [Obsolete("Use LockAsync()", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public Task<IDisposable> GetReleaserAsync()
-        {
-            return LockAsync();
-        }
-
         public async Task<IDisposable> LockAsync()
         {
             await GetOrCreate(_key).WaitAsync().ConfigureAwait(false);

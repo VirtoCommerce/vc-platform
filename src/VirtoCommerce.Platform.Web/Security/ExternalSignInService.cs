@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
@@ -18,7 +17,7 @@ using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
-    public class ExternalSignInService : IExternalSignInService, IExternalSigninService
+    public class ExternalSignInService : IExternalSignInService
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -43,16 +42,6 @@ namespace VirtoCommerce.Platform.Web.Security
             _settingsManager = settingsManager;
             _externalSigninProviderConfigs = externalSigninProviderConfigs;
             _userBuilders = userBuilders;
-        }
-
-        [Obsolete("Not being called. Use SignInAsync()", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public virtual async Task<string> ProcessCallbackAsync(string returnUrl, IUrlHelper urlHelper)
-        {
-            var signInResult = await SignInAsync();
-
-            return signInResult.Success && urlHelper.IsLocalUrl(returnUrl)
-                ? returnUrl
-                : urlHelper.Action("Index", "Home") ?? "/";
         }
 
         public virtual async Task<ExternalSignInResult> SignInAsync()

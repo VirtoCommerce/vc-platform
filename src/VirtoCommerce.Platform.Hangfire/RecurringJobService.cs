@@ -1,4 +1,3 @@
-// This service is functionally identical to the obsolete RecurringJobExtensions
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -9,7 +8,6 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
-using VirtoCommerce.Platform.Hangfire.Extensions;
 
 namespace VirtoCommerce.Platform.Hangfire;
 
@@ -77,11 +75,6 @@ public class RecurringJobService : IRecurringJobService, IEventHandler<ObjectSet
                 await RunOrRemoveJobAsync(settingCronJob);
             }
         }
-
-        // Temporary solution for backward compatibility
-#pragma warning disable VC0008 // Type or member is obsolete
-        await _recurringJobManager.HandleSettingChangeAsync(_settingsManager, message);
-#pragma warning restore VC0008 // Type or member is obsolete
     }
 
     private async Task RunOrRemoveJobAsync(SettingCronJob settingCronJob)

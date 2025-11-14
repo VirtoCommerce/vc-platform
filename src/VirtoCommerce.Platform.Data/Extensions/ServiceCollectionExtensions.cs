@@ -38,7 +38,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             services.AddSingleton<InProcessBus>();
             services.AddSingleton<IEventHandlerRegistrar>(x => x.GetRequiredService<InProcessBus>());
-            services.AddSingleton<IHandlerRegistrar>(x => x.GetRequiredService<InProcessBus>());
             services.AddSingleton<IEventPublisher>(x => x.GetRequiredService<InProcessBus>());
             services.AddTransient<IChangeLogService, ChangeLogService>();
             services.AddTransient<ILastModifiedDateTime, ChangeLogService>();

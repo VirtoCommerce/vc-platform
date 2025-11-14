@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.confirmDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
     angular.extend($scope, dialog);
 
@@ -96,10 +96,6 @@
 
 
     // Next methods are obsolete and have to be deleted after modules update.
-    dialogService.showAcceptanceDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_acceptDialog.tpl.html', 'platformWebApp.confirmDialogController');
-    };
-
     dialogService.showNotificationDialog = function (dialog) {
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
