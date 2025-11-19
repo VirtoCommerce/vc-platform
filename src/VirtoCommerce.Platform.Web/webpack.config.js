@@ -3,7 +3,6 @@ const path = require('path');
 const glob = require('glob');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 const rootPath = path.resolve(__dirname, 'wwwroot/dist');
 
@@ -21,7 +20,8 @@ module.exports = (env, argv) => {
         devtool: isProduction ? 'source-map' : 'eval-source-map',
         output: {
             path: rootPath,
-            filename: '[name].js'
+            filename: '[name].js',
+            clean: true
         },
         module: {
             rules: [{
@@ -79,7 +79,6 @@ module.exports = (env, argv) => {
             ],
         },
         plugins: [
-            new CleanWebpackPlugin(),
             new MiniCssExtractPlugin({
                 filename: 'style.css',
             }),
