@@ -1,6 +1,6 @@
 // webpack.config.js
 const path = require('path');
-const glob = require('glob');
+const fg = require('fast-glob');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -13,8 +13,8 @@ module.exports = (env, argv) => {
         entry: {
             vendor: ['./wwwroot/src/js/vendor.js', './wwwroot/css/themes/main/sass/main.sass'],
             app: [
-                ...glob.sync('./wwwroot/js/**/*.js'),
-                ...(isProduction ? glob.sync('./wwwroot/js/**/*.html', { nosort: true }): [])
+                ...fg.sync('./wwwroot/js/**/*.js'),
+                ...(isProduction ? fg.sync('./wwwroot/js/**/*.html') : [])
             ]
         },
         devtool: isProduction ? 'source-map' : 'eval-source-map',

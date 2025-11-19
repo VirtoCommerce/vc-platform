@@ -8,8 +8,8 @@
     "webpack:watch": "webpack --watch --mode=development"
   },
   "devDependencies": {
+    "fast-glob": "^3.3.2",
     "css-loader": "^6.5.1",
-    "glob": "~7.1.7",
     "html-loader": "^5.1.0",
     "mini-css-extract-plugin": "^2.5.1",
     "ngtemplate-loader": "^2.1.0",
@@ -21,6 +21,7 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
+    "yaml": "^2.5.1",
     "@aspnet/signalr": "~1.1.4",
     "@fortawesome/fontawesome-free": "~5.15.2",
     "@uirouter/angularjs": "~1.0.20",
@@ -66,8 +67,7 @@
     "ui-grid-draggable-rows": "~0.3.3",
     "ui-select": "~0.19.8",
     "uikit": "2.27.4",
-    "underscore": "^1.13.6",
-    "yamljs": "^0.3.0"
+    "underscore": "^1.13.6"
   },
   "webpack": {
     "stats": "verbose"
