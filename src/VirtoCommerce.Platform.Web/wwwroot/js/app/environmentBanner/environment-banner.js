@@ -38,13 +38,31 @@ angular.module('platformWebApp')
                     return host;
                 }
 
+                function createThemeStyle(theme) {
+                    switch (theme) {
+                        case 'prod':
+                            return 'prod';
+                        case 'dev':
+                            return 'dev';
+                        case 'test':
+                            return 'test';
+                        case 'staging':
+                            return 'staging';
+                        case 'demo':
+                            return 'demo';
+                    }
+
+                    return 'default';
+                }
+
+
                 function createBannerModel(env, preset) {
                     var name = (env || '').toString();
                     var host = ($window && $window.location && $window.location.hostname) || '';
                     var theme = (preset && preset.toString().toLowerCase()) || detectThemePreset(env, host);
                     return {
                         label: name || createDefaultLabel(host, theme),
-                        badgeClass: 'vc-env-badge--' + theme
+                        badgeClass: 'vc-env-badge--' + createThemeStyle(theme)
                     };
                 }
 
