@@ -1,5 +1,5 @@
-# v3.800.17
-# https://virtocommerce.atlassian.net/browse/VCST-2789
+# v3.800.19
+# https://virtocommerce.atlassian.net/browse/VCST-923
 name: Platform CI
 
 on:
@@ -64,6 +64,7 @@ jobs:
       tag: ${{ env.DOCKER_TAG }}
       matrix: ${{ steps.deployment-matrix.outputs.matrix }}
       run-e2e: ${{ steps.run-e2e.outputs.result }}
+      vulnSkipList: ${{ steps.vulnSkipList.outputs.vulnSkipList }}
 
     steps:
 
@@ -128,6 +129,25 @@ jobs:
           echo "DOCKER_TAG=${{ steps.image.outputs.taggedVersion }}" >> $GITHUB_ENV
         fi;
 
+    - name: Extract vulnerabilities skip list
+      id: vulnSkipList
+      shell: pwsh
+      run: |
+        $vulnSkipList = @()
+        if (Test-Path ./cve-ignore.json) {
+          Write-Host "'cve-ignore.json' file found"
+          $skipList = (Get-Content ./cve-ignore.json | ConvertFrom-Json)
+          foreach ($vulnerability in $skipList.PSObject.Properties.Name){
+            echo "Adding '$vulnerability' with '$($skipList.$vulnerability.Severity)' severity entry to trivy scan ignore list"
+            $vulnSkipList += $($skipList.$vulnerability.VulnerabilityID)
+          }
+          $stringSkipList = $vulnSkipList -join ","
+          echo "vulnSkipList=$stringSkipList" >> $env:GITHUB_OUTPUT
+        }
+        else {
+          Write-Warning "'cve-ignore.json' file not found. Using empty skip list."
+          echo "vulnSkipList=$vulnSkipList" >> $env:GITHUB_OUTPUT
+        }
     - name: Add version suffix
       if: ${{ github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main' }}
       uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
@@ -182,9 +202,7 @@ jobs:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
         platformDockerTag: ${{ env.DOCKER_TAG }}
-        storefrontDockerTag: dev-linux-latest
         platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
-        storefrontImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/storefront
         installSampleData: 'false'
 
     - name: Publish Nuget
@@ -298,7 +316,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.17  
+    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.19  
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -313,7 +331,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.17
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.19
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -326,11 +344,10 @@ jobs:
       envPAT: ${{ secrets.REPO_TOKEN }}
       katalonApiKey: ${{ secrets.KATALON_API_KEY }}
 
-
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.17    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.19    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
@@ -353,3 +370,19 @@ jobs:
           target: 'https://vcptcore-dev.govirto.com'
           cmd_options: '-a -d'
           # allow_issue_writing: false
+
+  trivy-scan:
+    if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
+    needs: 'ci'
+    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.19  
+    with:
+      assigneeAccountId: '621c47c0302c6b006af0a1cd'
+      assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'
+      exitCodeOnFoundVulnerabilities: '0'
+      imageRef: "ghcr.io/virtocommerce/platform"
+      imageTag: ${{ needs.ci.outputs.tag }}
+      jiraProject: 'VCST'
+      vulnerabilitySkipList: ${{ needs.ci.outputs.vulnSkipList }}
+    secrets:
+      JIRA_USER: ${{ secrets.JIRA_USER }}
+      JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}

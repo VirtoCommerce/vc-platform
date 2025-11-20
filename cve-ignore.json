@@ -1,0 +1,9 @@
+{
+    // "CVE-2025-6020": {
+    //     "VulnerabilityID": "CVE-2025-6020",
+    //     "Title": "linux-pam: Linux-pam directory Traversal",
+    //     "Description": "A flaw was found in linux-pam. The module pam_namespace may use access user-controlled paths without proper protection, allowing local users to elevate their privileges to root via multiple symlink attacks and race conditions.",
+    //     "Severity": "HIGH",
+    //     "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-6020"
+    // }
+}

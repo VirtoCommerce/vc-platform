@@ -319,6 +319,10 @@ angular.module('platformWebApp')
                 controller: 'platformWebApp.accountApiWidgetController',
                 template: '$(Platform)/Scripts/app/security/widgets/accountApiWidget.tpl.html',
             }, 'accountDetail');
+            widgetService.registerWidget({
+                controller: 'platformWebApp.accountSessionsWidgetController',
+                template: '$(Platform)/Scripts/app/security/widgets/accountSessionsWidget.html'
+            }, 'accountDetail');
 
 
             $transitions.onBefore({ to: 'workspace.**' }, function (transition) {

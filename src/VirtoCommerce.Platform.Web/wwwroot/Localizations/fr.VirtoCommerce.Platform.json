@@ -705,6 +705,13 @@
           "Quarters": "Trimestres",
           "Years": "Années"
         }
+      },
+      "sessions-list": {
+        "title": "Sessions actives",
+        "labels": {
+          "ip-address": "Adresse IP",
+          "user-agent": "Agent utilisateur"
+        }
       }
     },
     "templates": {
@@ -766,6 +773,9 @@
       "accountRoles": {
         "title": "Rôles",
         "blade-subtitle": "Gérer les rôles"
+      },
+      "sessions": {
+        "title": "Sessions actives"
       }
     },
     "dialogs": {
@@ -888,6 +898,14 @@
         "title": "Réinitialisation du cache",
         "confirm-reset-message": "Êtes-vous sûr de vouloir réinitialiser le cache? Cette action effacera toutes les données mises en cache et peut affecter temporairement les performances du système. Veuillez confirmer pour continuer",
         "reset-successfully-message": "Le cache a été réinitialisé avec succès"
+      },
+      "session-terminate": {
+        "title": "Terminer la session",
+        "message": "Êtes-vous sûr de vouloir terminer cette session ?"
+      },
+      "sessions-terminate-all": {
+        "title": "Terminer tout",
+        "message": "Êtes-vous sûr de vouloir terminer toutes les sessions utilisateur ?"
       }
     },
     "commands": {
@@ -896,7 +914,9 @@
         "title": "Réinitialiser le cache",
         "name": "Réinitialiser le cache"
       },
-      "restart-application-title": "Redémarrez l'application"
+      "restart-application-title": "Redémarrez l'application",
+      "terminate": "Terminer",
+      "sessions-terminate-all": "Terminer tout"
     }
   },
   "permissions": {
