@@ -707,6 +707,13 @@
           "Quarters": "Quartale",
           "Years": "Jahre"
         }
+      },
+      "sessions-list": {
+        "title": "Aktive Sitzungen",
+        "labels": {
+          "ip-address": "IP-Adresse",
+          "user-agent": "Benutzeragent"
+        }
       }
     },
     "templates": {
@@ -768,6 +775,9 @@
       "accountRoles": {
         "title": "Rollen",
         "blade-subtitle": "Rollen verwalten"
+      },
+      "sessions": {
+        "title": "Aktive Sitzungen"
       }
     },
     "dialogs": {
@@ -890,6 +900,14 @@
         "title": "Cache zurücksetzen",
         "confirm-reset-message": "Sind Sie sicher, dass Sie den Cache zurücksetzen möchten? Diese Aktion löscht alle zwischengespeicherten Daten und kann die Systemleistung vorübergehend beeinträchtigen. Bestätigen Sie, um fortzufahren",
         "reset-successfully-message": "Der Cache wurde erfolgreich zurückgesetzt"
+      },
+      "session-terminate": {
+        "title": "Sitzung beenden",
+        "message": "Sind Sie sicher, dass Sie diese Sitzung beenden möchten?"
+      },
+      "sessions-terminate-all": {
+        "title": "Alle beenden",
+        "message": "Sind Sie sicher, dass Sie alle Benutzersitzungen beenden möchten?"
       }
     },
     "commands": {
@@ -898,7 +916,9 @@
         "title": "Cache zurücksetzen",
         "name": "Cache zurücksetzen"
       },
-      "restart-application-title": "Anwendung neu starten"
+      "restart-application-title": "Anwendung neu starten",
+      "terminate": "Beenden",
+      "sessions-terminate-all": "Alle beenden"
     }
   },
   "permissions": {

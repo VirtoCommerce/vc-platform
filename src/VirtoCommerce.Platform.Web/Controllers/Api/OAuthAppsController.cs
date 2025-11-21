@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore.Models;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Web.Model.Security;
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class OAuthAppsController : Controller
     {
-        private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> _manager;
+        private readonly OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> _manager;
 
         private readonly ISet<string> _defaultPermissions = new HashSet<string>
         {
@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             OpenIddictConstants.Permissions.Scopes.Profile,
         };
 
-        public OAuthAppsController(OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> manager)
+        public OAuthAppsController(OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> manager)
         {
             _manager = manager;
         }

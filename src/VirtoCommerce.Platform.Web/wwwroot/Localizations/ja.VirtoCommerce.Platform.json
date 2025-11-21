@@ -705,6 +705,13 @@
           "Quarters": "四半期",
           "Years": "年"
         }
+      },
+      "sessions-list": {
+        "title": "アクティブなセッション",
+        "labels": {
+          "ip-address": "IPアドレス",
+          "user-agent": "ユーザーエージェント"
+        }
       }
     },
     "templates": {
@@ -766,6 +773,9 @@
       "accountRoles": {
         "title": "ロール",
         "blade-subtitle": "ロールの管理"
+      },
+      "sessions": {
+        "title": "アクティブなセッション"
       }
     },
     "dialogs": {
@@ -888,6 +898,14 @@
         "title": "キャッシュのリセット",
         "confirm-reset-message": "キャッシュをリセットしてもよろしいですか？ この操作により、キャッシュされたすべてのデータが消去され、システムのパフォーマンスに一時的に影響する可能性があります。 続行するには確認してください",
         "reset-successfully-message": "キャッシュが正常にリセットされました"
+      },
+      "session-terminate": {
+        "title": "セッションを終了",
+        "message": "このセッションを終了してもよろしいですか？"
+      },
+      "sessions-terminate-all": {
+        "title": "すべて終了",
+        "message": "すべてのユーザーセッションを終了してもよろしいですか？"
       }
     },
     "commands": {
@@ -896,7 +914,9 @@
         "title": "キャッシュのリセット",
         "name": "キャッシュのリセット"
       },
-      "restart-application-title": "アプリケーションを再起動します"
+      "restart-application-title": "アプリケーションを再起動します",
+      "terminate": "終了",
+      "sessions-terminate-all": "すべて終了"
     }
   },
   "permissions": {

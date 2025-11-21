@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Server.AspNetCore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
@@ -22,6 +21,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Extensions;
+using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.ActionConstraints;
 using VirtoCommerce.Platform.Web.Extensions;
@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     public class AuthorizationController : Controller
     {
-        private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> _applicationManager;
+        private readonly OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> _applicationManager;
         private readonly IdentityOptions _identityOptions;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -42,14 +42,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly List<ITokenRequestValidator> _requestValidators;
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
-        private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _tokenManager;
+        private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IExternalSignInService _externalSignInService;
         private readonly IOpenIddictAuthorizationManager _authorizationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
 
         public AuthorizationController(
-            OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager,
+            OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> applicationManager,
             IOptions<IdentityOptions> identityOptions,
             SignInManager<ApplicationUser> signInManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ITokenRequestValidator> requestValidators,
             IEnumerable<ITokenClaimProvider> claimProviders,
             IEnumerable<ITokenRequestHandler> requestHandlers,
-            OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager,
+            OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> tokenManager,
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
             IOpenIddictAuthorizationManager authorizationManager,
@@ -598,7 +598,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                    throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
         }
 
-        private async Task<(ApplicationUser user, OpenIddictEntityFrameworkCoreApplication application, List<object> authorizations)>
+        private async Task<(ApplicationUser user, VirtoOpenIddictEntityFrameworkCoreApplication application, List<object> authorizations)>
             GetUserApplicationAuthorizationsAsync(OpenIddictRequest request, ClaimsPrincipal principal)
         {
             // Retrieve the profile of the logged-in user.
@@ -635,7 +635,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private async Task<IActionResult> SignInAsync(
             OpenIddictRequest request,
             ApplicationUser user,
-            OpenIddictEntityFrameworkCoreApplication application,
+            VirtoOpenIddictEntityFrameworkCoreApplication application,
             List<object> authorizations)
         {
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
@@ -715,7 +715,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private AuthenticationTicket CreateTicket(OpenIddictEntityFrameworkCoreApplication application)
+        private AuthenticationTicket CreateTicket(VirtoOpenIddictEntityFrameworkCoreApplication application)
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
