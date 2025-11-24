@@ -31,4 +31,10 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <!-- Include icon.png from solution root into all packable projects -->
+  <!-- The file will be packaged at the root of the NuGet package -->
+  <ItemGroup Condition="'$(IsPackable)' == 'true' AND '$(MSBuildProjectName.Contains(Tests))' == false">
+    <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" PackagePath="icon.png" />
+  </ItemGroup>
 </Project>
