@@ -16,14 +16,16 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
     public class CustomPasswordValidatorTests : PlatformWebMockHelper
     {
         [Fact]
-        public Task NullPassword_ThrowsException()
+        public async Task NullPassword_ThrowsException()
         {
             // Arrange
             var userManager = SecurityMockHelper.TestCustomUserManager();
             var target = userManager.PasswordValidators.First();
 
+            var result = await target.ValidateAsync(userManager, new ApplicationUser(), null);
             // Act, Assert
-            return Assert.ThrowsAsync<ArgumentNullException>(async () => await target.ValidateAsync(userManager, new ApplicationUser(), null));
+            Assert.False(result.Succeeded);
+            Assert.Equal(6, result.Errors.Count());
         }
 
         [Theory]

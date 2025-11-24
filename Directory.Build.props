@@ -4,12 +4,12 @@
 
   <PropertyGroup>
     <Product>VirtoCommerce</Product>
-    <Copyright>Copyright © VirtoCommerce 2011-2024</Copyright>
+    <Copyright>Copyright © VirtoCommerce 2011-2026</Copyright>
     <Authors>VirtoCommerce</Authors>
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.916.0</VersionPrefix>
+    <VersionPrefix>3.1000.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <VersionSuffix Condition=" '$(VersionSuffix)' != '' AND '$(BuildNumber)' != '' ">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
     <NoWarn>$(NoWarn);S3875;S4457</NoWarn>
@@ -24,7 +24,8 @@
     <!-- Nuget Package Details -->
     <PackageVersion>$(VersionPrefix)</PackageVersion>
     <PackageVersion Condition=" '$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
-    <PackageIconUrl>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</PackageIconUrl>
+    <PackageIconUrl>icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <Description>Virto Commerce is a flexible B2B ecommerce solution that offers powerful tools for enterprise business users. https://virtocommerce.com</Description>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>

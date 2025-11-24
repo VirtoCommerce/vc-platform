@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace VirtoCommerce.Platform.Web.Swagger
@@ -11,7 +11,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            if (operation.RequestBody != null && operation.RequestBody.Content.Count > 0 && operation.RequestBody.Content.ContainsKey("application/*+json"))
+            if (operation.RequestBody != null && operation.RequestBody.Content != null 
+                && operation.RequestBody.Content.Count > 0 
+                && operation.RequestBody.Content.ContainsKey("application/*+json"))
             {
                 operation.RequestBody.Content.Remove("application/*+json");
             }

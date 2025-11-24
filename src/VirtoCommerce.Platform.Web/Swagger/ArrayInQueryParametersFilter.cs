@@ -1,5 +1,5 @@
 using System.Linq;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace VirtoCommerce.Platform.Web.Swagger
@@ -12,12 +12,32 @@ namespace VirtoCommerce.Platform.Web.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            foreach (var parameter in operation.Parameters.Where(x => (x.In == ParameterLocation.Query && x.Schema.Type == "array")))
+            for (int i = 0; i < operation.Parameters.Count; i++)
             {
-                if (!parameter.Style.HasValue)
+                var parameter = operation.Parameters[i];
+                if (parameter.In == ParameterLocation.Query
+                    && parameter.Schema.Type == JsonSchemaType.Array
+                    && !parameter.Style.HasValue)
                 {
-                    parameter.Style = ParameterStyle.Form;
-                    parameter.Explode = true;
+                    // Create a new parameter with the required Style and Explode properties
+                    // since these properties are read-only in OpenAPI v3
+                    var newParameter = new OpenApiParameter
+                    {
+                        Name = parameter.Name,
+                        In = parameter.In,
+                        Description = parameter.Description,
+                        Required = parameter.Required,
+                        Deprecated = parameter.Deprecated,
+                        AllowEmptyValue = parameter.AllowEmptyValue,
+                        Style = ParameterStyle.Form,
+                        Explode = true,
+                        AllowReserved = parameter.AllowReserved,
+                        Schema = parameter.Schema,
+                        Example = parameter.Example,
+                        Examples = parameter.Examples,
+                        Content = parameter.Content
+                    };
+                    operation.Parameters[i] = newParameter;
                 }
             }
         }

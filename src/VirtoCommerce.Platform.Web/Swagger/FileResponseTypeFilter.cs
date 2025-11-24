@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 var key = ((int)HttpStatusCode.OK).ToString();
                 // Accordingly to: https://swagger.io/docs/specification/describing-responses/#response-that-returns-a-file
                 // the type of response should have Format = "binary", Type = "string".
-                var responseSchema = new OpenApiSchema { Format = "binary", Type = "string" };
+                var responseSchema = new OpenApiSchema { Format = "binary", Type = JsonSchemaType.String };
 
                 if (operation.Responses == null)
                 {
@@ -30,12 +30,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 }
 
                 response.Description = "OK";
-                response.Content = new Dictionary<string, OpenApiMediaType>
-                {
-
-                    // TODO: (AK) ? Consider to correct content key depending on real MIME
-                    { "application/octet-stream", new OpenApiMediaType() { Schema = responseSchema } }
-                };
+                response.Content.Clear();
+                response.Content.Add("application/octet-stream", new OpenApiMediaType() { Schema = responseSchema });
             }
         }
 

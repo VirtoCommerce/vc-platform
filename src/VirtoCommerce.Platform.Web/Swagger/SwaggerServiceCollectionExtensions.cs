@@ -1,20 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Swagger;
 
@@ -88,9 +91,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
                 c.OperationFilter<ModuleInfoFilter>();
                 c.OperationFilter<OpenIDEndpointDescriptionFilter>();
-                c.SchemaFilter<EnumSchemaFilter>();
                 c.SchemaFilter<SwaggerIgnoreFilter>();
-                c.MapType<object>(() => new OpenApiSchema { Type = "object" });
+                c.MapType<object>(() => new OpenApiSchema { Type = JsonSchemaType.Object });
                 c.AddModulesXmlComments(provider);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
@@ -225,7 +227,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             var moduleAssembly = actionDescriptor?.ControllerTypeInfo.Assembly ?? Assembly.GetExecutingAssembly();
             var module = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
 
-            return module?.ModuleName ?? "Platform";
+            return module?.ModuleName ?? "VirtoCommerce.Platform";
         }
 
         /// <summary>
