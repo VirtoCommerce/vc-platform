@@ -19,5 +19,9 @@ namespace VirtoCommerce.Platform.Web.Model.Home
         public bool RefreshProbingFolder { get; internal set; } = true;
 
         public bool ForceWebSockets { get; internal set; }
+
+        public HtmlString EnvironmentName { get; internal set; }
+        public bool ShowEnvironmentBanner { get; internal set; }
+        public HtmlString EnvironmentTheme { get; internal set; }
     }
 }
