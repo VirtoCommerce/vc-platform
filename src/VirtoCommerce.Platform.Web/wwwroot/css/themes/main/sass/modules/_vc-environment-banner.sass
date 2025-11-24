@@ -1,0 +1,58 @@
+.vc-env-badge
+  position: fixed
+  top: 0px
+  left: 50%
+  transform: translateX(-50%)
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  height: 28px
+  padding: 0 14px
+  border-radius: 0 0 .5rem .5rem
+  font-size: 13px
+  line-height: 1
+  font-weight: 700
+  color: #ffffff
+  z-index: 2000
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .15)
+  pointer-events: none
+
+.vc-env-badge__label
+  white-space: nowrap
+
+.vc-env-badge__dot
+  display: none
+  border-radius: 50%
+  margin-right: 8px
+
+// Themes
+.vc-env-badge--prod
+  background-color: #EC5B5B
+  .vc-env-badge__dot
+    display: inline-block
+    animation: vc-env-pulse 1.4s infinite
+
+.vc-env-badge--staging
+  background-color: #7A5C9F
+
+.vc-env-badge--demo
+  background-color: #2B7EA8
+
+.vc-env-badge--test
+  background-color: #FC7E00
+
+.vc-env-badge--dev
+  background-color: #3E845B
+
+.vc-env-badge--default
+  background-color: #688198
+
+@keyframes vc-env-pulse
+  0%
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, .7)
+  70%
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0)
+  100%
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0)
+
+
