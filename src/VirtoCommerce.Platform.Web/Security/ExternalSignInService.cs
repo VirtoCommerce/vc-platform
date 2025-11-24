@@ -107,10 +107,14 @@ namespace VirtoCommerce.Platform.Web.Security
 
         private async Task<ApplicationUser> GetOrCreatePlatformUser(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)
         {
-            //Need handle the two cases
-            //first - when the VC platform user account already exists, it is just missing an external login info and
-            //second - when user does not have an account, then create a new account for them
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey);
+
+            if (user != null)
+            {
+                return user;
+            }
+
+            user = await _userManager.FindByNameAsync(userName);
 
             if (user == null && _identityOptions.User.RequireUniqueEmail && !string.IsNullOrEmpty(userEmail))
             {
@@ -119,37 +123,11 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (user == null && AllowCreateNewUser(externalLoginInfo))
             {
-                user = AbstractTypeFactory<ApplicationUser>.TryCreateInstance();
-                user.UserName = userName;
-                user.Email = userEmail;
-                user.EmailConfirmed = true;
-                user.UserType = await GetDefaultUserType(externalLoginInfo);
-                user.StoreId = externalLoginInfo.AuthenticationProperties.GetStoreId();
-                user.Status = await _settingsManager.GetValueAsync<string>(PlatformConstants.Settings.Security.DefaultExternalAccountStatus);
-
-                foreach (var userBuilder in _userBuilders)
-                {
-                    await userBuilder.BuildNewUser(user, externalLoginInfo);
-                }
-
-                var result = await _userManager.CreateAsync(user);
-                if (!result.Succeeded)
-                {
-                    var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
-                    throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
-                }
-
-                var roles = GetDefaultUserRoles(externalLoginInfo);
-
-                if (roles is { Length: > 0 })
-                {
-                    await _userManager.AddToRolesAsync(user, roles);
-                }
+                user = await CreateNewUserAsync(externalLoginInfo, userName, userEmail);
             }
 
-            if (user != null && await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey) == null)
+            if (user != null)
             {
-                // Register a new external login
                 var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
                 await _userManager.AddLoginAsync(user, newExternalLogin);
             }
@@ -161,6 +139,39 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
             return providerConfig?.Provider.AllowCreateNewUser == true;
+        }
+
+        private async Task<ApplicationUser> CreateNewUserAsync(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)
+        {
+            var user = AbstractTypeFactory<ApplicationUser>.TryCreateInstance();
+
+            user.UserName = userName;
+            user.Email = userEmail;
+            user.EmailConfirmed = true;
+            user.UserType = await GetDefaultUserType(externalLoginInfo);
+            user.StoreId = externalLoginInfo.AuthenticationProperties.GetStoreId();
+            user.Status = await _settingsManager.GetValueAsync<string>(PlatformConstants.Settings.Security.DefaultExternalAccountStatus);
+
+            foreach (var userBuilder in _userBuilders)
+            {
+                await userBuilder.BuildNewUser(user, externalLoginInfo);
+            }
+
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                var joinedErrors = string.Join(Environment.NewLine, createResult.Errors.Select(x => x.Description));
+                throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
+            }
+
+            var roles = GetDefaultUserRoles(externalLoginInfo);
+
+            if (roles is { Length: > 0 })
+            {
+                await _userManager.AddToRolesAsync(user, roles);
+            }
+
+            return user;
         }
 
         private async Task<string> GetDefaultUserType(ExternalLoginInfo externalLoginInfo)
