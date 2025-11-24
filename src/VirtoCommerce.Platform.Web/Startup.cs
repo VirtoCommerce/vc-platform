@@ -226,9 +226,6 @@ namespace VirtoCommerce.Platform.Web
                         break;
                 }
 
-                // TODO: NET10
-                options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
-
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
