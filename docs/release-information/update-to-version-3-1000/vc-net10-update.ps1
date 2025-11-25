@@ -152,7 +152,7 @@ function Update-Module-Manifest($moduleManifestFile) {
 
 	$dependencies = $xml.GetElementsByTagName("dependency")
 	foreach ($dependency in $dependencies) {
-		$newVersion = "3.800.0"
+		$newVersion = "3.1000.0"
 		Display-Version-Change $dependency.id $dependency.version $newVersion
 		$dependency.SetAttribute("version", $newVersion)
 	}
