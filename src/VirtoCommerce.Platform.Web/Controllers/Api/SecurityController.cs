@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ExtendedServiceProvider;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -84,6 +85,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userSessionsSearchService = userSessionsSearchService;
             _userSessionsService = userSessionsService;
         }
+
+        [Inject]
+        public ILogger<SecurityController> Logger { get; set; }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -369,6 +373,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityQuery)]
         public async Task<ActionResult<UserSearchResult>> SearchUsers([FromBody] UserSearchCriteria criteria)
         {
+            Logger?.LogInformation("Property injection: {Method}", "SecurityController.SearchUsers()");
+
             var result = await _userSearchService.SearchUsersAsync(criteria);
 
             result.Results = ReduceUsersDetails(result.Results);
