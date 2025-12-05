@@ -12,11 +12,11 @@ namespace VirtoCommerce.Platform.Web.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            for (int i = 0; i < operation.Parameters.Count; i++)
+            for (var i = 0; i < operation.Parameters.Count; i++)
             {
                 var parameter = operation.Parameters[i];
                 if (parameter.In == ParameterLocation.Query
-                    && parameter.Schema.Type == JsonSchemaType.Array
+                    && parameter.Schema?.Type == JsonSchemaType.Array
                     && !parameter.Style.HasValue)
                 {
                     // Create a new parameter with the required Style and Explode properties
