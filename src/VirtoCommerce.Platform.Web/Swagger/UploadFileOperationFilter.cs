@@ -43,9 +43,7 @@ public class UploadFileOperationFilter : IOperationFilter
         if (uploadAttribute.Required)
         {
             schema.Required ??= new HashSet<string>();
-            // No need to guard Add() with Contains(); HashSet.Add() is idempotent for duplicates.
             schema.Required.Add(filePropertyName);
-
             operation.RequestBody.Required = true;
         }
     }
