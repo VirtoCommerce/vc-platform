@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using OpenIddict.Abstractions;
@@ -23,12 +22,6 @@ namespace VirtoCommerce.Platform.Security.Extensions
             return claimsPrincipal?.SetClaimWithDestinations(ClaimTypes.AuthenticationMethod, value, destinations);
         }
 
-        [Obsolete("Use IsExternalSignIn()", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public static bool IsSsoAuthenticationMethod(this ClaimsPrincipal claimsPrincipal)
-        {
-            return claimsPrincipal.IsExternalSignIn();
-        }
-
         public static ClaimsPrincipal SetClaimWithDestinations(this ClaimsPrincipal claimsPrincipal, string type, string value, IList<string> destinations)
         {
             claimsPrincipal.SetClaim(type, value);
@@ -47,7 +40,7 @@ namespace VirtoCommerce.Platform.Security.Extensions
         public static bool IsImpersonated(this ClaimsPrincipal claimsPrincipal)
         {
             return claimsPrincipal?.HasClaim(PlatformConstants.Security.Claims.OperatorUserId) == true &&
-                claimsPrincipal?.HasClaim(PlatformConstants.Security.Claims.OperatorUserName) == true;
+                   claimsPrincipal.HasClaim(PlatformConstants.Security.Claims.OperatorUserName);
         }
     }
 }

@@ -38,9 +38,6 @@ namespace VirtoCommerce.Platform.Core.Events
         /// </summary>
         public static bool EventsSuppressed => _eventsSuppressedStorage.Value;
 
-        [Obsolete("Use SuppressEvents()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public static IDisposable SupressEvents() => SuppressEvents();
-
         /// <summary>
         /// The flag indicates that events are suppressed for the current asynchronous control flow
         /// </summary>
