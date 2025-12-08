@@ -1,8 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using VirtoCommerce.Platform.Core.Swagger;
 
 namespace VirtoCommerce.Platform.Web.Swagger;
 
@@ -46,10 +43,8 @@ public class UploadFileOperationFilter : IOperationFilter
         if (uploadAttribute.Required)
         {
             schema.Required ??= new HashSet<string>();
-            if (!schema.Required.Contains(filePropertyName))
-            {
-                schema.Required.Add(filePropertyName);
-            }
+            // No need to guard Add() with Contains(); HashSet.Add() is idempotent for duplicates.
+            schema.Required.Add(filePropertyName);
 
             operation.RequestBody.Required = true;
         }
