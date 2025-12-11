@@ -4,6 +4,7 @@ using Hangfire.MySql;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.Platform.Core;
 
 namespace VirtoCommerce.Platform.Hangfire.Extensions
 {
@@ -19,12 +20,11 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             switch (databaseProvider)
             {
                 case "PostgreSql":
-                    globalConfiguration.UsePostgreSqlStorage(
-                        configure =>
-                        {
-                            configure.UseNpgsqlConnection(connectionString);
-                        },
-                        hangfireOptions.PostgreSqlStorageOptions);
+                    var postgreSqlOptions = configuration.GetSection("PostgreSql").Get<PostgreSqlOptions>() ?? new PostgreSqlOptions();
+                    connectionString = postgreSqlOptions.EnhanceConnectionString(connectionString);
+
+                    globalConfiguration.UsePostgreSqlStorage(options =>
+                        options.UseNpgsqlConnection(connectionString), hangfireOptions.PostgreSqlStorageOptions);
                     break;
                 case "MySql":
                     globalConfiguration.UseStorage(new MySqlStorage(connectionString, hangfireOptions.MySqlStorageOptions));
@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             return globalConfiguration;
         }
 
-        public static object AddHangfire(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddHangfire(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<RecurringJobService>();
             services.AddSingleton<IRecurringJobService, RecurringJobService>();
