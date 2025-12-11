@@ -303,7 +303,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var operatorUserId = User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)?.EmptyToNull() ?? user.Id;
                 var operatorUserName = User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)?.EmptyToNull() ?? user.UserName;
 
-                var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
+                var userId = (string)openIdConnectRequest.GetParameter("user_id");
                 ApplicationUser impersonatedUser;
 
                 if (!string.IsNullOrEmpty(userId))
@@ -417,7 +417,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 // If the client application requested promptless authentication,
                 // return an error indicating that the user is not logged in.
-                if (request.HasPrompt(Prompts.None))
+                if (request.HasPromptValue(PromptValues.None))
                 {
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
@@ -450,13 +450,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // return an authorization response without displaying the consent form.
                 case ConsentTypes.Implicit:
                 case ConsentTypes.External when authorizations.Count != 0:
-                case ConsentTypes.Explicit when authorizations.Count != 0 && !request.HasPrompt(Prompts.Consent):
+                case ConsentTypes.Explicit when authorizations.Count != 0 && !request.HasPromptValue(PromptValues.Consent):
                     return await SignInAsync(request, user, application, authorizations);
 
                 // At this point, no authorization was found in the database and an error must be returned
                 // if the client application specified prompt=none in the authorization request.
-                case ConsentTypes.Explicit when request.HasPrompt(Prompts.None):
-                case ConsentTypes.Systematic when request.HasPrompt(Prompts.None):
+                case ConsentTypes.Explicit when request.HasPromptValue(PromptValues.None):
+                case ConsentTypes.Systematic when request.HasPromptValue(PromptValues.None):
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
                         properties: new AuthenticationProperties(new Dictionary<string, string>
