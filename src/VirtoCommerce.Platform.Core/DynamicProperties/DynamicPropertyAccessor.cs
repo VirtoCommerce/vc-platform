@@ -106,6 +106,10 @@ public class DynamicPropertyAccessor : DynamicObject
         object result;
         var prop = GetConnectedEntity().DynamicProperties?.FirstOrDefault(p => p.Name.Equals(metaProperty.Name, StringComparison.OrdinalIgnoreCase));
 
+        if (metaProperty.IsDictionary)
+        {
+            return null; // Dictionaries are not supported
+        }
         if (metaProperty.IsArray)
         {
             if (metaProperty.IsMultilingual)
