@@ -24,7 +24,8 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         "OpenIddict.Mvc",
         "CryptoHelper",
         "Microsoft.EntityFrameworkCore.Design",
-        "Microsoft.Win32.SystemEvents"
+        "Microsoft.Win32.SystemEvents",
+        "System.Drawing.Common"
     ];
 
     public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
