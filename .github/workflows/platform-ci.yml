@@ -185,7 +185,7 @@ jobs:
       with:
         tag: ${{ env.DOCKER_TAG }}
         imageName: 'platform'
-        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/feat/net8/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
+        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/feat/net10/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
 
     - name: Docker Login
       if: ${{ env.BUILD_DOCKER == 'true' }}
@@ -316,7 +316,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.23  
+    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@net10  
     with:
       installModules: 'true'
       installCustomModule: 'false'
