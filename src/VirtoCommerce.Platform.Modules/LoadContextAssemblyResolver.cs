@@ -95,7 +95,7 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
                         continue;
                     }
 
-                    //throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
+                    throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
                 }
 
                 if (mainAssemblyName.EqualsIgnoreCase(loadedAssembly.GetName().Name))
