@@ -48,18 +48,18 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.0.1" />
     <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
   </ItemGroup>
-
-  <!-- Keep it for VC .NET8 modules after .NET 10-->
+  
+  <!--Added to support VC modules on .NET8-->
   <ItemGroup>
-    <PackageReferences Include="Microsoft.Win32.SystemEvents" Version="10.0.0" />
-    <PackageReferences Include="Microsoft.Bcl.TimeProvider" Version="10.0.0" />
-    <PackageReferences Include="System.CodeDom" Version="10.0.0" />
-    <PackageReferences Include="System.Diagnostics.PerformanceCounter" Version="10.0.0" />
-    <PackageReferences Include="System.Drawing.Common" Version="10.0.0" />
-    <PackageReferences Include="System.Management" Version="10.0.0" />
-    <PackageReferences Include="System.Runtime.Caching" Version="10.0.0" />
-    <PackageReferences Include="System.Security.Permissions" Version="10.0.0" />
-    <PackageReferences Include="System.Windows.Extensions" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Win32.SystemEvents" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Bcl.TimeProvider" Version="10.0.0" />
+    <PackageReference Include="System.CodeDom" Version="10.0.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
+    <PackageReference Include="System.Management" Version="10.0.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="10.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="10.0.0" />
+    <PackageReference Include="System.Windows.Extensions" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
