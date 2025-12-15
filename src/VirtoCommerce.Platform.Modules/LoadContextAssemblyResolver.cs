@@ -26,7 +26,8 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         "Microsoft.EntityFrameworkCore.Design",
         "Microsoft.Win32.SystemEvents",
         "System.Drawing.Common",
-        "System.Linq.Async"
+        "System.Linq.Async",
+        "System.Runtime.Caching",
     ];
 
     public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
@@ -90,15 +91,16 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
                 var loadedAssembly = LoadAssemblyCached(dependency, loadContext);
                 if (loadedAssembly == null)
                 {
+                    continue;
                     // Temporary workaround to ensure seamless update to OpenIddictV3:
                     // skips unused OpenIddictV2 assemblies that might not be present on the machine from being loaded by modules (in Platform.Security package)
                     // will be removed later.
-                    if (_ignoredAssemblies.ContainsIgnoreCase(dependency.Name.Name))
-                    {
-                        continue;
-                    }
+                    //if (_ignoredAssemblies.ContainsIgnoreCase(dependency.Name.Name))
+                    //{
+                    //    continue;
+                    //}
 
-                    throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
+                    //throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
                 }
 
                 if (mainAssemblyName.EqualsIgnoreCase(loadedAssembly.GetName().Name))
