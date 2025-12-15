@@ -25,7 +25,8 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         "CryptoHelper",
         "Microsoft.EntityFrameworkCore.Design",
         "Microsoft.Win32.SystemEvents",
-        "System.Drawing.Common"
+        "System.Drawing.Common",
+        "System.Linq.Async"
     ];
 
     public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
