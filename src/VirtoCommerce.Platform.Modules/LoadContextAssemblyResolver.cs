@@ -157,7 +157,7 @@ namespace VirtoCommerce.Platform.Modules
         {
             // To avoid FileNotFoundException for assemblies that are included in TPA - we load them using AssemblyLoadContext.Default.LoadFromAssemblyName.
             var assemblyFileName = Path.GetFileName(managedLibrary.AppLocalPath);
-            if (TPA.ContainsAssembly(assemblyFileName))
+            if (Tpa.ContainsAssembly(assemblyFileName))
             {
                 var defaultAssembly = AssemblyLoadContext.Default.LoadFromAssemblyName(managedLibrary.Name);
                 if (defaultAssembly != null)
