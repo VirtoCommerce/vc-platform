@@ -1,20 +1,13 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Modules.AssemblyLoading
 {
-    [SuppressMessage("SonarLint", "S101", Justification = "TPA is common abbreviation for Trusted Platform Assemblies, not need to change to Pascal Case.")]
-    internal static class TPA
+    internal static class Tpa
     {
-        private static readonly string[] _TPAPaths = GetTPAList();
-
-        static TPA()
-        {
-        }
+        private static readonly HashSet<string> _tpaFileNames = GetTpaFileNames();
 
         /// <summary>
         /// Gets the list of Trusted Platform Assemblies (TPA).
@@ -24,10 +17,28 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
         /// </para>
         /// </summary>
         /// <returns>Returns the list of TPA paths.</returns>
-        static string[] GetTPAList()
+        private static HashSet<string> GetTpaFileNames()
         {
-            var tpa = (string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES");
-            return tpa.Split(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ";" : ":");
+            if (AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") is not string filePaths)
+            {
+                return [];
+            }
+
+            var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var separator = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ';' : ':';
+
+            foreach (var path in filePaths.Split(separator))
+            {
+                var fileName = Path.GetFileName(path);
+                result.Add(fileName);
+
+                // Also add resource assemblies to TPA list
+                var extension = Path.GetExtension(fileName);
+                var resourcesFileName = Path.ChangeExtension(fileName, ".resources" + extension);
+                result.Add(resourcesFileName);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -37,7 +48,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
         /// <returns>True if TPA list contains assembly with the same file name, otherwise false.</returns>
         public static bool ContainsAssembly(string assemblyFileName)
         {
-            return _TPAPaths.Any(x => x.EndsWithIgnoreCase(Path.DirectorySeparatorChar + assemblyFileName));
+            return _tpaFileNames.Contains(assemblyFileName);
         }
     }
 }
