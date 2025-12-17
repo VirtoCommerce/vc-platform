@@ -291,14 +291,14 @@ namespace VirtoCommerce.Platform.Modules
                 return;
             }
 
+            var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
+            if (targetDirectoryPath != null && !Directory.Exists(targetDirectoryPath))
+            {
+                Directory.CreateDirectory(targetDirectoryPath);
+            }
+
             try
             {
-                var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
-                if (targetDirectoryPath != null && !Directory.Exists(targetDirectoryPath))
-                {
-                    Directory.CreateDirectory(targetDirectoryPath);
-                }
-
                 File.Copy(sourceFilePath, targetFilePath, true);
             }
             catch (IOException)
