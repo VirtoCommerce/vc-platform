@@ -5,21 +5,19 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using OpenIddict.EntityFrameworkCore;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
-using VirtoCommerce.Platform.Security.Repositories;
 
 namespace VirtoCommerce.Platform.Security.OpenIddict;
 
 public class VirtoOpenIddictEntityFrameworkCoreTokenStore : OpenIddictEntityFrameworkCoreTokenStore<VirtoOpenIddictEntityFrameworkCoreToken,
      VirtoOpenIddictEntityFrameworkCoreApplication,
      VirtoOpenIddictEntityFrameworkCoreAuthorization,
-     SecurityDbContext,
      string>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public VirtoOpenIddictEntityFrameworkCoreTokenStore(
         IMemoryCache cache,
-        SecurityDbContext context,
+        IOpenIddictEntityFrameworkCoreContext context,
         IOptionsMonitor<OpenIddictEntityFrameworkCoreOptions> options,
         IHttpContextAccessor httpContextAccessor
         ) : base(cache, context, options)
@@ -27,7 +25,7 @@ public class VirtoOpenIddictEntityFrameworkCoreTokenStore : OpenIddictEntityFram
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public override async ValueTask CreateAsync(VirtoOpenIddictEntityFrameworkCoreToken token, CancellationToken cancellationToken)
+    public override ValueTask CreateAsync(VirtoOpenIddictEntityFrameworkCoreToken token, CancellationToken cancellationToken)
     {
         var httpContext = _httpContextAccessor.HttpContext;
         if (httpContext != null)
@@ -37,7 +35,7 @@ public class VirtoOpenIddictEntityFrameworkCoreTokenStore : OpenIddictEntityFram
             SetUserAgent(token, request);
         }
 
-        await base.CreateAsync(token, cancellationToken);
+        return base.CreateAsync(token, cancellationToken);
     }
 
     protected virtual void SetIp(VirtoOpenIddictEntityFrameworkCoreToken token, HttpContext httpContext)

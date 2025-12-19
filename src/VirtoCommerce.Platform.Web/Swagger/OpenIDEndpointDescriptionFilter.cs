@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 
@@ -19,28 +19,41 @@ namespace VirtoCommerce.Platform.Web.Swagger
             {
                 // In OpenAPI 3.0, form data passed thru an object schema where the object properties represent the form fields.
                 // The code below implemented as prescribed at the page https://swagger.io/docs/specification/describing-request-body/
-                operation.RequestBody = new OpenApiRequestBody();
-                operation.RequestBody.Required = true;
-                operation.RequestBody.Content = new Dictionary<string, OpenApiMediaType>();
+                // Create Properties dictionary with IOpenApiSchema interface type to avoid InvalidCastException
+                var schemaProperties = new Dictionary<string, IOpenApiSchema>
+                {
+                    { "grant_type", new OpenApiSchema() { Type = JsonSchemaType.String } },
+                    { "scope", new OpenApiSchema() { Type = JsonSchemaType.String } },
+                    { "username", new OpenApiSchema() { Type = JsonSchemaType.String } },
+                    { "password", new OpenApiSchema() { Type = JsonSchemaType.String } },
+                    { "storeId", new OpenApiSchema() { Type = JsonSchemaType.String } },
+                    { "user_id", new OpenApiSchema() { Type = JsonSchemaType.String } },
+                };
+
                 var mediaType = new OpenApiMediaType
                 {
-                    Schema = new OpenApiSchema()
+                    Schema = new OpenApiSchema
+                    {
+                        Required = new HashSet<string>(["grant_type"]),
+                        Type = JsonSchemaType.Object,
+                        Properties = schemaProperties
+                    }
                 };
-                mediaType.Schema.Type = "object";
-                mediaType.Schema.Properties = new Dictionary<string, OpenApiSchema>
+
+                // Create Content dictionary - in Microsoft.OpenAPI 2.0, Content expects Dictionary<string, OpenApiMediaType>
+                // In 3.0+, it expects Dictionary<string, IOpenApiMediaType>
+                var content = new Dictionary<string, OpenApiMediaType>
                 {
-                    { "grant_type", new OpenApiSchema() { Type = "string" } },
-                    { "scope", new OpenApiSchema() { Type = "string" } },
-                    { "username", new OpenApiSchema() { Type = "string" } },
-                    { "password", new OpenApiSchema() { Type = "string" } },
-                    { "storeId", new OpenApiSchema() { Type = "string" } },
-                    { "user_id", new OpenApiSchema() { Type = "string" } },
+                    { "application/x-www-form-urlencoded", mediaType }
                 };
-                mediaType.Schema.Required = new HashSet<string>
+
+                // Create RequestBody with Content property set during initialization
+                // since Content is read-only in OpenAPI v3
+                operation.RequestBody = new OpenApiRequestBody
                 {
-                    "grant_type"
+                    Required = true,
+                    Content = content
                 };
-                operation.RequestBody.Content.Add("application/x-www-form-urlencoded", mediaType);
             }
         }
     }

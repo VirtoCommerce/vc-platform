@@ -119,7 +119,7 @@ namespace VirtoCommerce.Platform.Web.Security
                     // Only loopback proxies are allowed by default.
                     // Clear that restriction because forwarders are enabled by explicit
                     // configuration.
-                    options.KnownNetworks.Clear();
+                    options.KnownIPNetworks.Clear();
                     options.KnownProxies.Clear();
                 });
             }

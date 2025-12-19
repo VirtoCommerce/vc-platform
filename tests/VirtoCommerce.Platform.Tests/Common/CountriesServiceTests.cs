@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Tests.Common
 
             var countries = await service.GetCountriesAsync();
 
-            Assert.Equal(249, countries.Count);
+            Assert.Equal(250, countries.Count);
         }
 
         [Theory]
