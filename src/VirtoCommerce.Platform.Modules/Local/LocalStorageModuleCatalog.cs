@@ -10,7 +10,6 @@ using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.DistributedLock;
-using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
 namespace VirtoCommerce.Platform.Modules
 {
@@ -35,9 +34,9 @@ namespace VirtoCommerce.Platform.Modules
             _probingPath = _options.ProbingPath is null ? null : Path.GetFullPath(_options.ProbingPath);
 
             _discoveryPath = _options.DiscoveryPath;
-            if (!_discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
+            if (!_discoveryPath.EndsWith(Path.DirectorySeparatorChar))
             {
-                _discoveryPath += PlatformInformation.DirectorySeparator;
+                _discoveryPath += Path.DirectorySeparatorChar;
             }
 
             // Resolve IConnectionMultiplexer as multiple services to avoid crash if the platform ran without Redis

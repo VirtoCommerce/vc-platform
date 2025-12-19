@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace VirtoCommerce.Platform.Modules.AssemblyLoading
 {
@@ -25,9 +24,8 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
             }
 
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var separator = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ';' : ':';
 
-            foreach (var path in filePaths.Split(separator))
+            foreach (var path in filePaths.Split(Path.PathSeparator))
             {
                 var fileName = Path.GetFileName(path);
                 result.Add(fileName);

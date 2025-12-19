@@ -13,5 +13,6 @@ namespace VirtoCommerce.Platform.Web.Model.Diagnostics
         public bool Is64BitProcess { get; set; }
         public string DatabaseProvider { get; set; }
         public string EnvironmentName { get; set; }
+        public string RuntimeIdentifier { get; set; }
     }
 }

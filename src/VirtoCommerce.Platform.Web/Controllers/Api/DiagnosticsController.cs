@@ -46,7 +46,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                                        .Select(x => new ModuleDescriptor(x))
                                        .ToArray();
 
-            var result = new SystemInfo()
+            var result = new SystemInfo
             {
                 PlatformVersion = platformVersion,
                 License = license,
@@ -55,9 +55,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Is64BitOperatingSystem = Environment.Is64BitOperatingSystem,
                 Is64BitProcess = Environment.Is64BitProcess,
                 DatabaseProvider = databaseProvider,
-                EnvironmentName = _webHostEnvironment.IsDevelopment() ?
-                    Environments.Development :
-                    Environments.Production
+                EnvironmentName = _webHostEnvironment.IsDevelopment()
+                    ? Environments.Development
+                    : Environments.Production,
+                RuntimeIdentifier = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.GetRuntimeIdentifier(),
             };
 
             return Ok(result);
