@@ -59,7 +59,6 @@ Microsoft.Extensions.Http.Diagnostics.dll
 Microsoft.Extensions.Http.Polly.dll
 Microsoft.Extensions.Http.Resilience.dll
 Microsoft.Extensions.Logging.AzureAppServices.dll
-
 Microsoft.Extensions.Resilience.dll
 Microsoft.Extensions.Telemetry.Abstractions.dll
 Microsoft.Extensions.Telemetry.dll
