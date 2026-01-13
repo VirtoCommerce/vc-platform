@@ -31,7 +31,9 @@ Stability is a cornerstone of this update. By leveraging the advancements in .NE
 
 1. **Install .NET 10:** Begin by ensuring that you have .NET 10 installed on your system. Follow the official installation guidelines to set up the environment for the upgrade: https://dotnet.microsoft.com/en-us/download/dotnet/10.0
 2. **Update Virto Commerce Platform to v3.1000 or later**
-3. **Update Virto Commerce Modules to latest stable release 12 and later**. We recommend update to Stable 14.
+3. **Update Customer Module to v3.1000 or later**
+4. **Update XAPI Module to v3.1000 or later**
+5. **Update other Virto Commerce Modules to [Stable Release 12](https://docs.virtocommerce.org/platform/user-guide/1.0/versions/v3-2025-S12/) and later**. 
 
 > By default, Virto Commerce Platform on .NET10 are backward compatible with previous platform stable release on .NET8 (3.800+). However, it is recommended to update custom modules to the latest versions to leverage new features and improvements.
 
@@ -62,7 +64,7 @@ These folders are created by Microsoft.EntityFrameworkCore.Design package to sup
 You can remove these two folders by modifying your .csproj file to include the following PackageReference for Microsoft.EntityFrameworkCore.Design with PrivateAssets set to all:
 
 ```xml
-<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
   <PrivateAssets>all</PrivateAssets>
   <IncludeAssets>runtime; build; native; analyzers; buildtransitive</IncludeAssets>
 </PackageReference>
@@ -91,6 +93,7 @@ Alternatively, manually download update the platform and modules to version 3.10
 ### Prerequsites
 
 1. Install Visual Studio 2026
+
 2. Install Virto Commerce CLI (vc-build)
 ```cmd
 dotnet tool install VirtoCommerce.GlobalTool  -g
@@ -100,22 +103,22 @@ or update
 dotnet tool update VirtoCommerce.GlobalTool -g
 ```
 
-2. Install dotnet-ef to version 10.0+:
+3. Install dotnet-ef to version 10.0+:
 ```cmd
-dotnet tool install --global dotnet-ef --version 10.0.0
+dotnet tool install --global dotnet-ef --version 10.0.1
 ```
 or update
 ```cmd
-dotnet tool update --global dotnet-ef --version 10.0.0
+dotnet tool update --global dotnet-ef --version 10.0.1
 ```
 
 ## Update Custom Modules
 
-If you develop a custom module, update can be required primary to update .NET dependencies.
+If you develop a custom module, we recommend updating it to the .NET10 version.
 
 ### Update Solution to NET8
 
-Download and execute the [vc-net8-update.ps1 Power Shell script](vc-net10-update.ps1) in your solution folder. 
+Download and execute the [vc-net10-update.ps1 Power Shell script](vc-net10-update.ps1) in your solution folder. 
 
 !!! info "How to enable execution of PowerShell scripts"
     Set powershell script as trusted if required, by running this power shell command:

@@ -6,10 +6,13 @@ $platformVersion = "3.1000.0"
 # Read the predefined versions from vc-references.json or create an empty object
 $predefinedVersions =  @{
 	"AutoFixture" = "4.18.1"
+    "AutoMapper" = "12.0.1"
+    "AutoMapper.Extensions.Microsoft.DependencyInjection" = "12.0.1"
 	"coverlet.collector" = "6.0.4"
 	"FluentAssertions" = "8.8.0"
 	"FluentValidation" = "12.1.1"
 	"Hangfire" = "1.8.22"
+    "MediatR" = "12.4.1"
 	"Microsoft.AspNetCore.Authentication.OpenIdConnect" = "10.0.1"
 	"Microsoft.AspNetCore.Mvc.NewtonsoftJson" = "10.0.1"
 	"Microsoft.EntityFrameworkCore" = "10.0.1"
@@ -33,6 +36,7 @@ $predefinedVersions =  @{
 	"Pomelo.EntityFrameworkCore.MySql" = "9.0.0"
 	"Swashbuckle.AspNetCore.SwaggerGen" = "10.1.0"
 	"xunit" = "2.9.3"
+    "xunit.runner.console" = "2.9.3" 
 	"xunit.runner.visualstudio" = "3.1.5"
 }
 
@@ -101,7 +105,7 @@ function Update-Latest-Packages ($projectFile) {
 		    try {
 			    $latestVersion = (Find-Package $packageName -Source https://www.nuget.org/api/v2).Version
 			
-			    if ($packageName.StartsWith("VirtoCommerce") -or ($versionPrefix.Contains("alpha") -or [System.Version]$versionPrefix -gt [System.Version]$latestVersion)) {
+			    if ($packageName.StartsWith("VirtoCommerce.")) {
 				    $latestVersion = $versionPrefix
 			    }
 			    $predefinedVersions["$packageName"] = $latestVersion
@@ -112,6 +116,28 @@ function Update-Latest-Packages ($projectFile) {
 	    }
 
 		$_.Version = $version
+
+        # Ensure Microsoft.EntityFrameworkCore.Design has PrivateAssets and IncludeAssets
+        if($packageName -eq "Microsoft.EntityFrameworkCore.Design")
+        {
+            Write-Host "Ensuring Microsoft.EntityFrameworkCore.Design PackageReference settings"
+
+            # Ensure <PrivateAssets>all</PrivateAssets>
+	        $privateAssetsNode = $packageReference.SelectSingleNode("PrivateAssets")
+	        if (-not $privateAssetsNode) {
+		        $privateAssetsNode = $xml.CreateElement("PrivateAssets")
+		        [void]$packageReference.AppendChild($privateAssetsNode)
+	        }
+	        $privateAssetsNode.InnerText = "all"
+
+	        # Ensure <IncludeAssets>runtime; build; native; analyzers; buildtransitive</IncludeAssets>
+	        $includeAssetsNode = $packageReference.SelectSingleNode("IncludeAssets")
+	        if (-not $includeAssetsNode) {
+		        $includeAssetsNode = $xml.CreateElement("IncludeAssets")
+		        [void]$packageReference.AppendChild($includeAssetsNode)
+	        }
+	        $includeAssetsNode.InnerText = "runtime; build; native; analyzers; buildtransitive"
+        }
 
 		Display-Version-Change $packageName $installedVersion $version
 	}
@@ -177,16 +203,14 @@ foreach ($csprojFile in $csprojFiles) {
 	Update-Latest-Packages $csprojFile.FullName
 }
 
-# Step 3: Update packages to the latest version
+# Step 3: Update Directory.Build.props
 Write-Host "Updating Directory.Build.props"
 $directoryBuildPropsFile = Find-File $repFolder "Directory.Build.props"
 Update-Directory-Build-Props $directoryBuildPropsFile.FullName
 
-
-# Step 3: Update module.manifest to the latest version
+# Step 4: Update module.manifest to the latest version
 Write-Host "Updating module.manifest"
 $moduleManifestFile = Find-File $srcFolder "module.manifest"
 Update-Module-Manifest $moduleManifestFile.FullName
-
 
 Write-Host "Script completed successfully."
