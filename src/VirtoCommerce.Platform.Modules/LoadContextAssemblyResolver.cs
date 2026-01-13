@@ -27,7 +27,8 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         "Microsoft.CodeAnalysis",
         "Microsoft.CodeAnalysis.CSharp",
         "Microsoft.CodeAnalysis.CSharp.Workspaces",
-        "Microsoft.CodeAnalysis.Workspaces"
+        "Microsoft.CodeAnalysis.Workspaces",
+        "Mono.TextTemplating"
     ];
 
     public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
