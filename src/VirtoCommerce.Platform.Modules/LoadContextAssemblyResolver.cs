@@ -24,7 +24,10 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         "OpenIddict.Mvc",
         "CryptoHelper",
         "Microsoft.EntityFrameworkCore.Design",
-        "Microsoft.CodeAnalysis"
+        "Microsoft.CodeAnalysis",
+        "Microsoft.CodeAnalysis.CSharp",
+        "Microsoft.CodeAnalysis.CSharp.Workspaces",
+        "Microsoft.CodeAnalysis.Workspaces"
     ];
 
     public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
