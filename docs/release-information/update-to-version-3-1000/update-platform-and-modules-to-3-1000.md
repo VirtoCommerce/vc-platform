@@ -70,6 +70,26 @@ You can remove these two folders by modifying your .csproj file to include the f
 </PackageReference>
 ```
 
+## Failed to load type for module
+
+You can get the ModuleTypeLoadingException exception after updating platform and modules to v3.1000+:
+
+```txt
+Unhandled exception. VirtoCommerce.Platform.Core.Modularity.Exceptions.ModuleTypeLoadingException: Failed to load type for module SomeModule.
+Cannot load "Microsoft.IO.RecyclableMemoryStream" for module ...
+```
+In .NET 10, Microsoft refresh and excluded some assemblies (dll) that are no longer needed.
+
+To resolve the issue you can:
+
+Option 1. Add module.keep file to your custom module project with the following content, it adds required dll into module package:
+
+```txt
+Microsoft.IO.RecyclableMemoryStream.dll
+```
+
+Option 2. Update your module to .NET 10 using instructions below. 
+
 ## Update Virto Commerce Platform and Modules to v3.1000+
 
 ### Option 1. vc-build Update command
@@ -77,7 +97,7 @@ You can remove these two folders by modifying your .csproj file to include the f
 Utilize the vc-build Update command for an automated update. This method streamlines the update process, ensuring that all components are seamlessly transitioned to the new version.
 
 ```cmd
-vc-build Update -Stable -v 14
+vc-build Update -Stable -v 12
 ```
 
 ### Option 2. Update via package.json
@@ -112,11 +132,9 @@ or update
 dotnet tool update --global dotnet-ef --version 10.0.1
 ```
 
-## Update Custom Modules
-
 If you develop a custom module, we recommend updating it to the .NET10 version.
 
-### Update Solution to NET8
+### Update Solution to NET10
 
 Download and execute the [vc-net10-update.ps1 Power Shell script](vc-net10-update.ps1) in your solution folder. 
 
