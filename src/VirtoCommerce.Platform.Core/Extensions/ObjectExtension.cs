@@ -113,5 +113,25 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             return (T)instance.Clone();
         }
+
+        public static T CloneAndClearKeys<T>(this T instance) where T : ICloneable
+        {
+            var result = instance.CloneTyped();
+
+            foreach (var entity in result.GetFlatObjectsListWithInterface<IEntity>())
+            {
+                entity.Id = null;
+
+                if (entity is IAuditable auditable)
+                {
+                    auditable.CreatedDate = default;
+                    auditable.CreatedBy = null;
+                    auditable.ModifiedDate = null;
+                    auditable.ModifiedBy = null;
+                }
+            }
+
+            return result;
+        }
     }
 }
