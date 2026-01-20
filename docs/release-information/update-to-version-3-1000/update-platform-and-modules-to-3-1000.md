@@ -31,9 +31,8 @@ Stability is a cornerstone of this update. By leveraging the advancements in .NE
 
 1. **Install .NET 10:** Begin by ensuring that you have .NET 10 installed on your system. Follow the official installation guidelines to set up the environment for the upgrade: https://dotnet.microsoft.com/en-us/download/dotnet/10.0
 2. **Update Virto Commerce Platform to v3.1000 or later**
-3. **Update Customer Module to v3.1000 or later**
-4. **Update XAPI Module to v3.1000 or later**
-5. **Update other Virto Commerce Modules to [Stable Release 12](https://docs.virtocommerce.org/platform/user-guide/1.0/versions/v3-2025-S12/) and later**. 
+3. **Update Customer Module and XAPI to v3.1000 or later**
+4. **Update other Virto Commerce Modules to [Stable Release 12](https://docs.virtocommerce.org/platform/user-guide/1.0/versions/v3-2025-S12/) and later**. 
 
 > By default, Virto Commerce Platform on .NET10 are backward compatible with previous platform stable release on .NET8 (3.800+). However, it is recommended to update custom modules to the latest versions to leverage new features and improvements.
 
@@ -88,7 +87,23 @@ Option 1. Add module.keep file to your custom module project with the following 
 Microsoft.IO.RecyclableMemoryStream.dll
 ```
 
-Option 2. Update your module to .NET 10 using instructions below. 
+Option 2. Update your module to .NET 10 using instructions below.
+
+## 415 Client Error: Unsupported Media Type
+
+Possible issue after upgrade: You may occasionally see 415 Client Error: Unsupported Media Type on store update calls like:
+
+```txt
+PATCH /api/stores/{storeId}
+```
+
+Example: /api/stores/B2B-store).
+ 
+Why it happens: On .NET 10, the JSON Patch endpoint enforces a stricter content type and expects: Content-Type: application/json-patch+json
+
+If a client sends Content-Type: application/json, the API will reject the request with 415 Unsupported Media Type.
+ 
+Fix: You should to updated API client to send the correct media type (application/json-patch+json) for PATCH requests, which should stop the 415 errors and related failures.
 
 ## Update Virto Commerce Platform and Modules to v3.1000+
 
