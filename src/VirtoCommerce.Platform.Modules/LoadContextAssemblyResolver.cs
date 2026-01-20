@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace VirtoCommerce.Platform.Modules
         private readonly ILogger _logger;
         private readonly bool _isDevelopmentEnvironment;
         private readonly Dictionary<string, Assembly> _loadedAssemblies = new();
-        private readonly Dictionary<string, List<string>> _nativePathsByName = new();
+        private readonly ConcurrentDictionary<string, List<string>> _nativePathsByName = new();
 
         private readonly IList<string> _ignoredAssemblies =
         [
@@ -266,7 +267,10 @@ namespace VirtoCommerce.Platform.Modules
                     if (NativeLibrary.TryLoad(nativePath, out var handle))
                     {
                         _logger.Debug("Succeeded");
-                        _nativePathsByName[name] = [nativePath];
+
+                        // Replace the list with a single path to avoid multiple attempts to load the same library
+                        _nativePathsByName.AddOrUpdate(name, [nativePath], (_, oldList) => oldList.Count == 1 ? oldList : [nativePath]);
+
                         return handle;
                     }
 
