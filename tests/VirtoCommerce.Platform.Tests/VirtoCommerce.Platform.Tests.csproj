@@ -1,9 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <noWarn>1591</noWarn>
+    <!-- Add common warnings to suppress and keep in sync with Directory.Build.props -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <!-- Treat NU1608 as a warning (not an error) for this project -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1608</WarningsNotAsErrors>
     <UserSecretsId>d6c1f7d4-06d1-4f4e-8c58-7a79573b50f6</UserSecretsId>
   </PropertyGroup>
 
@@ -13,15 +16,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="FluentAssertions" Version="6.12.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageReference Include="MockQueryable.Moq" Version="7.0.3" />
+    <PackageReference Include="FluentAssertions" Version="8.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="21.1.3" />
-    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
-    <PackageReference Include="xunit" Version="2.9.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+    <PackageReference Include="MockQueryable.Moq" Version="10.0.1" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="22.1.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
