@@ -316,7 +316,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@net10  
+    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.23  
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -332,7 +332,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@net10
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.23
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'

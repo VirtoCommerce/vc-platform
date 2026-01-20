@@ -40,6 +40,9 @@ Stability is a cornerstone of this update. By leveraging the advancements in .NE
 
 If you find any new breaking changes, submit an question on [Virto Commerce Community](https://www.virtocommerce.org/c/support/12).
 
+### Pomelo.EntityFrameworkCore.MySql v9.0.0
+Virto Commerce uses Pomelo.EntityFrameworkCore.MySql 9.0.0 for MySql.
+
 ### Exception is thrown when applying migrations if there are pending model changes
 
 Starting with EF Core 9.0, if the model has pending changes compared to the last migration an exception is thrown when dotnet ef database update, Migrate or MigrateAsync is called:
