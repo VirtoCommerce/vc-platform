@@ -71,7 +71,13 @@ namespace VirtoCommerce.Platform.Data.Settings
             // Scalar
             if (!string.IsNullOrEmpty(section.Value) && !section.GetChildren().Any())
             {
-                value = ConvertToSettingValue(descriptor, section.Value);
+                var convertedValue = ConvertToSettingValue(descriptor, section.Value);
+                if (convertedValue == null)
+                {
+                    return false;
+                }
+
+                value = convertedValue;
                 return true;
             }
 
@@ -83,7 +89,13 @@ namespace VirtoCommerce.Platform.Data.Settings
             }
 
             var rawComplex = ReadComplex(children);
-            value = ConvertToSettingValue(descriptor, rawComplex);
+            var convertedComplexValue = ConvertToSettingValue(descriptor, rawComplex);
+            if (convertedComplexValue == null)
+            {
+                return false;
+            }
+
+            value = convertedComplexValue;
             return true;
         }
 
@@ -148,6 +160,13 @@ namespace VirtoCommerce.Platform.Data.Settings
             if (raw is string[] arr)
             {
                 return arr.Select(x => ConvertScalar(valueType, x)).ToArray();
+            }
+
+            if (raw is object[] objectArray)
+            {
+                return objectArray
+                    .Select(item => item is string str ? ConvertScalar(valueType, str) : item)
+                    .ToArray();
             }
 
             if (raw is string s && !string.IsNullOrEmpty(s))
