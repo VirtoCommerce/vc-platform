@@ -24,21 +24,33 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         public bool TryGetForced(SettingDescriptor descriptor, string objectType, string objectId, out object value)
         {
-            return TryGet("Force", descriptor, objectType, objectId, out value);
+            return TryGet(descriptor, "Force", objectType, objectId, out value);
         }
 
         public bool TryGetDefault(SettingDescriptor descriptor, string objectType, string objectId, out object value)
         {
-            return TryGet("Default", descriptor, objectType, objectId, out value);
+            return TryGet(descriptor, "Default", objectType, objectId, out value);
         }
 
-        private bool TryGet(string bucket, SettingDescriptor descriptor, string objectType, string objectId, out object value)
+        private bool TryGet(SettingDescriptor descriptor, string bucket, string objectType, string objectId, out object value)
         {
             value = null;
             ArgumentNullException.ThrowIfNull(descriptor);
 
             var name = descriptor.Name;
 
+            if(!TryGetFromTenantAndGlobal(descriptor, bucket, objectType, objectId, name, out value))
+            {
+                // Use Simplified name without dots as fallback for environment variables and virto cloud
+                var simplifiedName = descriptor.Name.Replace(".", "_");
+                return TryGetFromTenantAndGlobal(descriptor, bucket, objectType, objectId, simplifiedName, out value);
+            }
+
+            return true;
+        }
+
+        private bool TryGetFromTenantAndGlobal(SettingDescriptor descriptor, string bucket, string objectType, string objectId, string name, out object value)
+        {
             // Tenant-specific override first
             if (!string.IsNullOrEmpty(objectType) && !string.IsNullOrEmpty(objectId))
             {
