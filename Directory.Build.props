@@ -4,12 +4,12 @@
 
   <PropertyGroup>
     <Product>VirtoCommerce</Product>
-    <Copyright>Copyright © VirtoCommerce 2011-2025</Copyright>
+    <Copyright>Copyright © VirtoCommerce 2011-2026</Copyright>
     <Authors>VirtoCommerce</Authors>
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.921.0</VersionPrefix>
+    <VersionPrefix>3.1001.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <VersionSuffix Condition=" '$(VersionSuffix)' != '' AND '$(BuildNumber)' != '' ">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
     <NoWarn>$(NoWarn);S3875;S4457</NoWarn>
@@ -24,10 +24,17 @@
     <!-- Nuget Package Details -->
     <PackageVersion>$(VersionPrefix)</PackageVersion>
     <PackageVersion Condition=" '$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
-    <PackageIconUrl>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</PackageIconUrl>
+    <PackageIconUrl>icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <Description>Virto Commerce is a flexible B2B ecommerce solution that offers powerful tools for enterprise business users. https://virtocommerce.com</Description>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <!-- Include icon.png from solution root into all packable projects -->
+  <!-- The file will be packaged at the root of the NuGet package -->
+  <ItemGroup Condition="'$(IsPackable)' == 'true' AND '$(MSBuildProjectName.Contains(Tests))' == false">
+    <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" PackagePath="icon.png" />
+  </ItemGroup>
 </Project>
