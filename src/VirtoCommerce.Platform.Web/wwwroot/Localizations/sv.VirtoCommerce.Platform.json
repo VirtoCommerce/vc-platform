@@ -659,7 +659,8 @@
       },
       "settings-detail": {
         "title": "Inställningsvärden",
-        "hide-description": "Dölj"
+        "hide-description": "Dölj",
+        "reset-to-default": "Återställ till standardvärde"
       },
       "settingGroup-list": {
         "title": "Inställningar",

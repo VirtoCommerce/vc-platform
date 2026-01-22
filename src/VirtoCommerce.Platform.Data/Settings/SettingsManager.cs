@@ -302,19 +302,25 @@ namespace VirtoCommerce.Platform.Data.Settings
                 throw new PlatformException($"Setting with name {name} is not registered");
             }
 
+            ObjectSettingEntry objectSetting = null;
+
             // Forced override from config wins (read-only)
-            if (_overrideProvider != null && _overrideProvider.TryGetForced(settingDescriptor, objectType, objectId, out var forced))
+            if (_overrideProvider != null &&
+                _overrideProvider.TryGetForced(settingDescriptor, objectType, objectId, out var forced))
             {
-                return CreateOverriddenSetting(settingDescriptor, objectType, objectId, forced, isReadOnly: true);
+                objectSetting = CreateOverriddenSetting(settingDescriptor, objectType, objectId, forced, isReadOnly: true);
+            }
+            else
+            {
+                // Otherwise load from DB (if present)
+                objectSetting = GetRegularSetting(name, dbStoredSettings, objectType, objectId);
             }
 
-            // Otherwise load from DB (if present)
-            var objectSetting = GetRegularSetting(name, dbStoredSettings, objectType, objectId);
-
-            // Apply default override only when no DB record exists for this scope
-            if (string.IsNullOrEmpty(objectSetting.Id) && _overrideProvider != null && _overrideProvider.TryGetDefault(settingDescriptor, objectType, objectId, out var @default))
+            // Apply default value override 
+            if (_overrideProvider != null &&
+                _overrideProvider.TryGetDefault(settingDescriptor, objectType, objectId, out var @default))
             {
-                ApplyOverrideValue(objectSetting, @default);
+                ApplyOverrideDefaultValue(objectSetting, @default);
             }
 
             return objectSetting;
@@ -329,19 +335,22 @@ namespace VirtoCommerce.Platform.Data.Settings
                 IsReadOnly = isReadOnly
             };
 
-            ApplyOverrideValue(entry, rawValue);
+            if (entry.IsDictionary)
+            {
+                entry.AllowedValues = rawValue as object[] ?? Array.Empty<object>();
+            }
+            else
+            {
+                entry.Value = rawValue;
+            }
+
             return entry;
         }
 
-        private static void ApplyOverrideValue(ObjectSettingEntry entry, object overrideValue)
-        {
-            if (entry.IsDictionary)
-            {
-                entry.AllowedValues = overrideValue as object[] ?? Array.Empty<object>();
-                return;
-            }
 
-            entry.Value = overrideValue;
+        private static void ApplyOverrideDefaultValue(ObjectSettingEntry entry, object defaultValue)
+        {
+            entry.DefaultValue = defaultValue;
         }
 
         protected virtual ObjectSettingEntry GetFixedSetting(string name)

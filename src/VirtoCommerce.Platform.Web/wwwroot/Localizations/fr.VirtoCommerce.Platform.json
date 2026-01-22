@@ -658,7 +658,8 @@
       },
       "settings-detail": {
         "title": "Valeurs des paramètres",
-        "hide-description": "Masquer"
+        "hide-description": "Masquer",
+        "reset-to-default": "Rétablir la valeur par défaut"
       },
       "settingGroup-list": {
         "title": "Paramètres",
