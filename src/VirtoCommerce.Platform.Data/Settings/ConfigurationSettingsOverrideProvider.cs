@@ -183,7 +183,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             if (raw is IDictionary<string, object>)
             {
-                return null;
+                return Array.Empty<object>();
             }
 
             if (raw is string s)
@@ -211,7 +211,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 return new[] { ConvertScalar(valueType, s) };
             }
 
-            return null;
+            return Array.Empty<object>();
         }
 
         private static object ConvertScalar(SettingValueType valueType, string str)
