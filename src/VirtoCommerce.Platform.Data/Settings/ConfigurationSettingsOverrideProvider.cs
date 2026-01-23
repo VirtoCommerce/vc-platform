@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             if(!TryGetFromTenantAndGlobal(descriptor, bucket, objectType, objectId, name, out value))
             {
                 // Use Simplified name without dots as fallback for environment variables and virto cloud
-                var simplifiedName = descriptor.Name.Replace(".", string.Empty);
+                var simplifiedName = descriptor.Name.Replace(".", "_");
                 return TryGetFromTenantAndGlobal(descriptor, bucket, objectType, objectId, simplifiedName, out value);
             }
 
