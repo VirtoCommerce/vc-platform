@@ -11,7 +11,7 @@
                         <label class="form-label">
                           {{ 'settings.' + data.name + '.title' | translate }}
                           <i class="form-ico fa fa-question-circle __link __lightblue" ng-click="data.descrVisible = !data.descrVisible;"></i>
-                          <i class="form-ico fa fa-rotate-left __link __blue" title="{{ 'platform.blades.settings-detail.reset-to-default' | translate }}" ng-click="resetToDefaultValue(data);" ng-if="!data.isDictionary && !data.isReadOnly && !isDefaultValue(data)"></i>
+                          <i class="form-ico fa fa-rotate-left __link __blue" title="{{ 'platform.blades.settings-detail.reset-to-default' | translate }}" ng-click="resetToDefaultValue(data);" ng-if="resetToDefaultValue && !isDefaultValue(data)"></i>
                           <a href="" ng-click="editArray(data);" ng-if="data.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
                         </label>
                         <va-generic-value-input ng-model="data" get-dictionary-values="getDictionaryValues" ng-if="!data.isDictionary && (!data.allowedValues || data.isReadOnly)"></va-generic-value-input>

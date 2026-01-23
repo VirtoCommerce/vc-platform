@@ -25,8 +25,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingsDetailContro
             }
 
             // transform to va-generic-value-input suitable structure
-            // NOTE: defaultValue can be falsy (0, false, ''), so don't use truthy check here
-            if (setting.value === undefined && setting.defaultValue !== undefined) {
+            if (!setting.value && setting.defaultValue) {
                 setting.value = setting.defaultValue;
             }
 
@@ -84,7 +83,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingsDetailContro
     }
 
     $scope.isDefaultValue = function (setting) {
-        if (!setting) {
+        if (!setting || setting.isDictionary || setting.isReadOnly) {
             return true;
         }
 

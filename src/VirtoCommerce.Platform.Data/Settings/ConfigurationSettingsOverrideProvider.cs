@@ -181,8 +181,19 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .ToArray();
             }
 
-            if (raw is string s && !string.IsNullOrEmpty(s))
+            if (raw is IDictionary<string, object>)
             {
+                return null;
+            }
+
+            if (raw is string s)
+            {
+                if (string.IsNullOrEmpty(s))
+                {
+                    // Explicit "empty" override (useful for env-vars)
+                    return Array.Empty<object>();
+                }
+
                 // Allow JSON array as string for env-vars, otherwise treat as single element
                 try
                 {
@@ -200,7 +211,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 return new[] { ConvertScalar(valueType, s) };
             }
 
-            return Array.Empty<object>();
+            return null;
         }
 
         private static object ConvertScalar(SettingValueType valueType, string str)
