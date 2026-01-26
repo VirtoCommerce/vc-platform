@@ -124,12 +124,11 @@ namespace VirtoCommerce.Platform.Web.Security
             {
                 if (providerConfig?.Provider.AllowCreateNewUser == true)
                 {
-                    platformUser = new ApplicationUser
-                    {
-                        UserName = userName,
-                        Email = userEmail,
-                        UserType = await GetDefaultUserType(externalLoginInfo)
-                    };
+                    platformUser = AbstractTypeFactory<ApplicationUser>.TryCreateInstance();
+
+                    platformUser.UserName = userName;
+                    platformUser.Email = userEmail;
+                    platformUser.UserType = await GetDefaultUserType(externalLoginInfo);
 
                     var result = await _userManager.CreateAsync(platformUser);
                     if (!result.Succeeded)
