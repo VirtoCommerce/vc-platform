@@ -26,18 +26,6 @@ public static class DbContextOptionsBuilderExtensions
             {
                 npgsqlDbContextOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
 
-                // Set command timeout
-                npgsqlDbContextOptionsBuilder.CommandTimeout(postgreSqlOptions.CommandTimeout);
-
-                // Enable retry on failure for transient errors (Azure PostgreSQL specific)
-                if (postgreSqlOptions.EnableRetryOnFailure)
-                {
-                    npgsqlDbContextOptionsBuilder.EnableRetryOnFailure(
-                        maxRetryCount: postgreSqlOptions.MaxRetryCount,
-                        maxRetryDelay: TimeSpan.FromSeconds(postgreSqlOptions.MaxRetryDelaySeconds),
-                        errorCodesToAdd: null);
-                }
-
                 npgsqlOptionsAction?.Invoke(npgsqlDbContextOptionsBuilder, configuration);
             });
     }

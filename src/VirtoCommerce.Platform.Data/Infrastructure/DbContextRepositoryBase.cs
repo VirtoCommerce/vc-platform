@@ -26,7 +26,11 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 
             var connectionDb = dbContext.Database.GetDbConnection();
             var connectionTimeout = connectionDb.ConnectionTimeout;
-            dbContext.Database.SetCommandTimeout(connectionTimeout);
+            var commandTimeout = dbContext.Database.GetCommandTimeout();
+            if (commandTimeout is null || (commandTimeout > 0 && commandTimeout < connectionTimeout))
+            {
+                dbContext.Database.SetCommandTimeout(connectionTimeout);
+            }
         }
 
 
