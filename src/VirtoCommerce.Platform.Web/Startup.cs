@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -352,8 +353,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<AuthorizationOptions>();
 
-            services.AddScoped<VirtoOpenIddictEntityFrameworkCoreTokenStore>();
-            services.AddScoped<VirtoOpenIddictEntityFrameworkCoreTokenStoreResolver>();
+            services.AddScoped<IOpenIddictTokenStore<VirtoOpenIddictEntityFrameworkCoreToken>, VirtoOpenIddictEntityFrameworkCoreTokenStore>();
 
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
@@ -372,8 +372,7 @@ namespace VirtoCommerce.Platform.Web
                                                 string>();
                     });
 
-                    coreBuilder.ReplaceTokenStoreResolver<VirtoOpenIddictEntityFrameworkCoreTokenStoreResolver>();
-                });
+               });
 
                 openIddictBuilder.AddServer(serverBuilder =>
                 {
@@ -384,18 +383,11 @@ namespace VirtoCommerce.Platform.Web
                     {
                         aspNetBuilder.EnableTokenEndpointPassthrough();
                         aspNetBuilder.EnableAuthorizationEndpointPassthrough();
-                        aspNetBuilder.EnableLogoutEndpointPassthrough();
-                        aspNetBuilder.EnableUserinfoEndpointPassthrough();
+                        aspNetBuilder.EnableEndSessionEndpointPassthrough();
+                        aspNetBuilder.EnableUserInfoEndpointPassthrough();
                         aspNetBuilder.EnableStatusCodePagesIntegration();
 
-                        // When request caching is enabled, authorization and logout requests
-                        // are stored in the distributed cache by OpenIddict and the user agent
-                        // is redirected to the same page with a single parameter (request_id).
-                        // This allows flowing large OpenID Connect requests even when using
-                        // an external authentication provider like Google, Facebook or Twitter.
-                        aspNetBuilder.EnableAuthorizationRequestCaching();
-                        aspNetBuilder.EnableLogoutRequestCaching();
-
+ 
                         // During development or when you explicitly run the platform in production mode without https,
                         // need to disable the HTTPS requirement.
                         if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
@@ -406,9 +398,9 @@ namespace VirtoCommerce.Platform.Web
 
                     // Enable the authorization, logout, token and userinfo endpoints.
                     serverBuilder.SetTokenEndpointUris("/connect/token");
-                    serverBuilder.SetUserinfoEndpointUris("/connect/userinfo");
+                    serverBuilder.SetUserInfoEndpointUris("/connect/userinfo");
                     serverBuilder.SetAuthorizationEndpointUris("/connect/authorize");
-                    serverBuilder.SetLogoutEndpointUris("/connect/logout");
+                    serverBuilder.SetEndSessionEndpointUris("/connect/logout");
 
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.
@@ -443,11 +435,11 @@ namespace VirtoCommerce.Platform.Web
                         // macOS cannot load certificate private keys without a keychain object, which requires writing to disk.
                         // Keychains are created automatically for PFX loading, and are deleted when no longer in use.
                         // Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
-                        privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet);
+                        privateKey = X509CertificateLoader.LoadPkcs12(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet);
                     }
                     else
                     {
-                        privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                        privateKey = X509CertificateLoader.LoadPkcs12(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
 
                     serverBuilder.AddSigningCertificate(privateKey);
@@ -584,7 +576,6 @@ namespace VirtoCommerce.Platform.Web
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
-            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
 
             if (Configuration.TryGetAzureAppConfigurationConnectionString(out _))
@@ -612,7 +603,6 @@ namespace VirtoCommerce.Platform.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
             }
             else
             {

@@ -96,22 +96,22 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             identityOptions ??= new Mock<IOptions<IdentityOptions>> { DefaultValue = DefaultValue.Mock };
 
             var controller = new SecurityController(
-                signInManager: _signInManagerMock.Object,
-                roleManager: _roleManagerMock.Object,
-                permissionsProvider: _permissionsProviderMock.Object,
-                userSearchService: _userSearchServiceMock.Object,
-                roleSearchService: _roleSearchServiceMock.Object,
-                securityOptions: securityOptions.Object,
-                identityOptions: identityOptions.Object,
-                userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
-                passwordOptions: passwordOptions.Object,
-                passwordLoginOptions: passwordLoginOptions.Object,
-                eventPublisher: _eventPublisherMock.Object,
-                userApiKeyService: _userApiKeyServiceMock.Object,
-                logger: _logger.Object,
-                externalSigninProviderConfigs: _externalSigninProviderConfigs,
-                userSessionsSearchService: _userSessionsSearchServiceMock.Object,
-                userSessionsService: _userSessionsServiceMock.Object);
+                _signInManagerMock.Object,
+                _roleManagerMock.Object,
+                _permissionsProviderMock.Object,
+                _userSearchServiceMock.Object,
+                _roleSearchServiceMock.Object,
+                securityOptions.Object,
+                Mock.Of<IOptions<UserOptionsExtended>>(),
+                passwordOptions.Object,
+                passwordLoginOptions.Object,
+                identityOptions.Object,
+                _eventPublisherMock.Object,
+                _userApiKeyServiceMock.Object,
+                _logger.Object,
+                _externalSigninProviderConfigs,
+                _userSessionsSearchServiceMock.Object,
+                _userSessionsServiceMock.Object);
 
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
             controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());

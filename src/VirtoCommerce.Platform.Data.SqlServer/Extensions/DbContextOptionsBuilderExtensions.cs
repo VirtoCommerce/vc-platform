@@ -25,6 +25,12 @@ public static class DbContextOptionsBuilderExtensions
                     sqlServerOptionsBuilder.UseCompatibilityLevel(compatibilityLevel.Value);
                 }
 
+                var parameterTranslationMode = configuration.GetValue<ParameterTranslationMode?>("SqlServer:ParameterTranslationMode", null);
+                if (parameterTranslationMode != null)
+                {
+                    sqlServerOptionsBuilder.UseParameterizedCollectionMode(parameterTranslationMode.Value);
+                }
+
                 sqlServerOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
                 sqlServerOptionsAction?.Invoke(sqlServerOptionsBuilder, configuration);
             });

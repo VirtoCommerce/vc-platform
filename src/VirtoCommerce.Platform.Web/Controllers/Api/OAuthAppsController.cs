@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISet<string> _defaultPermissions = new HashSet<string>
         {
             OpenIddictConstants.Permissions.Endpoints.Authorization,
-            OpenIddictConstants.Permissions.Endpoints.Logout,
+            OpenIddictConstants.Permissions.Endpoints.EndSession,
             OpenIddictConstants.Permissions.Endpoints.Token,
             OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
             OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -107,15 +107,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 criteria.Sort = "DisplayName:ASC";
             }
 
-            var apps = _manager.ListAsync(x => x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take)).ToEnumerable();
+            var apps = _manager.ListAsync(x => x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take));
 
-            var appsTasks = apps.Select(async x =>
+            var appsTasks = await apps.Select(async x =>
                 {
                     var descriptor = new OpenIddictApplicationDescriptor();
                     await _manager.PopulateAsync(descriptor, x);
                     descriptor.ClientSecret = "";
                     return descriptor;
-                }).ToList();
+                }).ToListAsync();
 
             var result = new OAuthAppSearchResult
             {

@@ -17,7 +17,7 @@ public sealed class ServerCertificate : Entity, ICloneable
         set
         {
             _PublicCertBytes = value;
-            X509Certificate = new X509Certificate2(_PublicCertBytes);
+            X509Certificate = X509CertificateLoader.LoadCertificate(_PublicCertBytes);
             SerialNumber = X509Certificate.SerialNumber;
         }
 
