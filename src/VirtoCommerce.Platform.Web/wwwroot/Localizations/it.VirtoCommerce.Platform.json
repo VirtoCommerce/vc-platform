@@ -658,7 +658,8 @@
       },
       "settings-detail": {
         "title": "Valori delle impostazioni",
-        "hide-description": "Nascondi"
+        "hide-description": "Nascondi",
+        "reset-to-default": "Ripristina valore predefinito"
       },
       "settingGroup-list": {
         "title": "Impostazioni",

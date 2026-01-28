@@ -659,7 +659,8 @@
       },
       "settings-detail": {
         "title": "Innstillingverdier",
-        "hide-description": "Skjul"
+        "hide-description": "Skjul",
+        "reset-to-default": "Tilbakestill til standardverdi"
       },
       "settingGroup-list": {
         "title": "Innstillinger",

@@ -659,7 +659,8 @@
       },
       "settings-detail": {
         "title": "Setting values",
-        "hide-description": "Hide"
+        "hide-description": "Hide",
+        "reset-to-default": "Reset to default value"
       },
       "settingGroup-list": {
         "title": "Settings",

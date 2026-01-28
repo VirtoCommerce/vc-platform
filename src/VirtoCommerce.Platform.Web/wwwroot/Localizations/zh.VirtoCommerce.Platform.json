@@ -658,7 +658,8 @@
       },
       "settings-detail": {
         "title": "设置值",
-        "hide-description": "隐藏"
+        "hide-description": "隐藏",
+        "reset-to-default": "重置为默认值"
       },
       "settingGroup-list": {
         "title": "设置",
