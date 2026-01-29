@@ -302,7 +302,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 throw new PlatformException($"Setting with name {name} is not registered");
             }
 
-            ObjectSettingEntry objectSetting = null;
+            ObjectSettingEntry objectSetting;
 
             // Forced override from config wins (read-only)
             if (_overrideProvider != null &&
@@ -320,7 +320,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             if (_overrideProvider != null &&
                 _overrideProvider.TryGetDefaultValue(settingDescriptor, objectType, objectId, out var @default))
             {
-                ApplyOverrideDefaultValue(objectSetting, @default);
+                objectSetting.DefaultValue = @default;
             }
 
             return objectSetting;
@@ -345,12 +345,6 @@ namespace VirtoCommerce.Platform.Data.Settings
             }
 
             return entry;
-        }
-
-
-        private static void ApplyOverrideDefaultValue(ObjectSettingEntry entry, object defaultValue)
-        {
-            entry.DefaultValue = defaultValue;
         }
 
         protected virtual ObjectSettingEntry GetFixedSetting(string name)

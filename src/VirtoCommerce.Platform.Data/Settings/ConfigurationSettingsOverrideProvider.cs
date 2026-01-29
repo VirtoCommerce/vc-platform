@@ -39,7 +39,7 @@ public class ConfigurationSettingsOverrideProvider : ISettingsOverrideProvider
 
         var name = descriptor.Name;
 
-        if(!TryGetFromTenantAndGlobal(descriptor, bucket, objectType, objectId, name, out value))
+        if (!TryGetFromTenantAndGlobal(descriptor, bucket, objectType, objectId, name, out value))
         {
             // Virto Cloud doesn't support dots in setting names, try replacing them with underscores
             var virtoCloudName = descriptor.Name.Replace(".", "_");
@@ -74,11 +74,6 @@ public class ConfigurationSettingsOverrideProvider : ISettingsOverrideProvider
     private static bool TryReadSectionValue(IConfigurationSection section, SettingDescriptor descriptor, out object value)
     {
         value = null;
-
-        if (section == null)
-        {
-            return false;
-        }
 
         // Scalar
         if (!string.IsNullOrEmpty(section.Value) && !section.GetChildren().Any())
@@ -154,7 +149,7 @@ public class ConfigurationSettingsOverrideProvider : ISettingsOverrideProvider
             return ConvertToDictionaryValue(descriptor.ValueType, raw);
         }
 
-        if(raw is string str)
+        if (raw is string str)
         {
             return ConvertScalar(descriptor.ValueType, str);
         }
