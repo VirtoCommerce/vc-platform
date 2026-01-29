@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    ["VirtoCommerce:Settings:CurrentValue:DefaultValue:Global:Platform.SendDiagnosticData:0"] = "true",
+                    ["VirtoCommerce:Settings:Override:CurrentValue:Global:Platform.SendDiagnosticData:0"] = "true",
                 })
                 .Build();
 
