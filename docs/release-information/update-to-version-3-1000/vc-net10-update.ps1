@@ -9,7 +9,7 @@ $predefinedVersions =  @{
     "AutoMapper" = "12.0.1"
     "AutoMapper.Extensions.Microsoft.DependencyInjection" = "12.0.1"
 	"coverlet.collector" = "6.0.4"
-	"FluentAssertions" = "8.8.0"
+	"FluentAssertions" = "7.2.0"
 	"FluentValidation" = "12.1.1"
 	"Hangfire" = "1.8.22"
     "MediatR" = "12.4.1"
@@ -127,18 +127,18 @@ function Update-Latest-Packages ($projectFile) {
             Write-Host "Ensuring Microsoft.EntityFrameworkCore.Design PackageReference settings"
 
             # Ensure <PrivateAssets>all</PrivateAssets>
-	        $privateAssetsNode = $packageReference.SelectSingleNode("PrivateAssets")
+	        $privateAssetsNode = $item.SelectSingleNode("PrivateAssets")
 	        if (-not $privateAssetsNode) {
 		        $privateAssetsNode = $xml.CreateElement("PrivateAssets")
-		        [void]$packageReference.AppendChild($privateAssetsNode)
+		        [void]$item.AppendChild($privateAssetsNode)
 	        }
 	        $privateAssetsNode.InnerText = "all"
 
 	        # Ensure <IncludeAssets>runtime; build; native; analyzers; buildtransitive</IncludeAssets>
-	        $includeAssetsNode = $packageReference.SelectSingleNode("IncludeAssets")
+	        $includeAssetsNode = $item.SelectSingleNode("IncludeAssets")
 	        if (-not $includeAssetsNode) {
 		        $includeAssetsNode = $xml.CreateElement("IncludeAssets")
-		        [void]$packageReference.AppendChild($includeAssetsNode)
+		        [void]$item.AppendChild($includeAssetsNode)
 	        }
 	        $includeAssetsNode.InnerText = "runtime; build; native; analyzers; buildtransitive"
         }
