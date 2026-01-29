@@ -177,7 +177,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .Where(s =>
                     {
                         var descriptor = _registeredSettingsByNameDict[s.Name];
-                        return descriptor != null && _overrideProvider.TryGetForced(descriptor, s.ObjectType, s.ObjectId, out _);
+                        return descriptor != null && _overrideProvider.TryGetCurrentValue(descriptor, s.ObjectType, s.ObjectId, out _);
                     })
                     .ToArray();
 
@@ -306,7 +306,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             // Forced override from config wins (read-only)
             if (_overrideProvider != null &&
-                _overrideProvider.TryGetForced(settingDescriptor, objectType, objectId, out var forced))
+                _overrideProvider.TryGetCurrentValue(settingDescriptor, objectType, objectId, out var forced))
             {
                 objectSetting = CreateOverriddenSetting(settingDescriptor, objectType, objectId, forced, isReadOnly: true);
             }
@@ -318,7 +318,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             // Apply default value override 
             if (_overrideProvider != null &&
-                _overrideProvider.TryGetDefault(settingDescriptor, objectType, objectId, out var @default))
+                _overrideProvider.TryGetDefaultValue(settingDescriptor, objectType, objectId, out var @default))
             {
                 ApplyOverrideDefaultValue(objectSetting, @default);
             }

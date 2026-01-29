@@ -16,8 +16,8 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    ["VirtoCommerce:Settings:Overrides:Force:Global:Platform.TestSetting:0"] = "1",
-                    ["VirtoCommerce:Settings:Overrides:Force:Global:Platform.TestSetting:1"] = "2",
+                    ["VirtoCommerce:Settings:Override:CurrentValue:Global:Platform.TestSetting:0"] = "1",
+                    ["VirtoCommerce:Settings:Override:CurrentValue:Global:Platform.TestSetting:1"] = "2",
                 })
                 .Build();
 
@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var provider = new ConfigurationSettingsOverrideProvider(configuration);
 
             // Act
-            var found = provider.TryGetForced(descriptor, objectType: null, objectId: null, out var value);
+            var found = provider.TryGetCurrentValue(descriptor, objectType: null, objectId: null, out var value);
 
             // Assert
             found.Should().BeTrue();
@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    ["VirtoCommerce:Settings:Overrides:Force:Global:Platform.SendDiagnosticData:0"] = "true",
+                    ["VirtoCommerce:Settings:CurrentValue:DefaultValue:Global:Platform.SendDiagnosticData:0"] = "true",
                 })
                 .Build();
 
@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var provider = new ConfigurationSettingsOverrideProvider(configuration);
 
             // Act
-            var found = provider.TryGetForced(descriptor, objectType: null, objectId: null, out var value);
+            var found = provider.TryGetCurrentValue(descriptor, objectType: null, objectId: null, out var value);
 
             // Assert
             found.Should().BeFalse();
