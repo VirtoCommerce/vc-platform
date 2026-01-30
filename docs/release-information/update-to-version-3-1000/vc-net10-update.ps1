@@ -25,7 +25,6 @@ $predefinedVersions =  @{
 	"Microsoft.Extensions.DependencyModel" = "10.0.1"
 	"Microsoft.Extensions.Logging.Abstractions" = "10.0.1"
 	"Microsoft.NET.Test.Sdk" = "18.0.1"
-	"Microsoft.SourceLink.GitHub" = "10.0.102"
 	"MockQueryable.Moq" = "10.0.1"
 	"Moq" = "4.20.72"
 	"Npgsql" = "10.0.0"
