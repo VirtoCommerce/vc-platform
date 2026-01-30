@@ -35,9 +35,7 @@ $predefinedVersions =  @{
 	"Polly" = "9.0.0"
 	"Pomelo.EntityFrameworkCore.MySql" = "9.0.0"
 	"Swashbuckle.AspNetCore.SwaggerGen" = "10.1.0"
-	"xunit" = "2.9.3"
     "xunit.v3" = "3.2.2"
-    "xunit.runner.console" = "2.9.3"
     "xunit.v3.runner.console" = "3.2.2"
 	"xunit.runner.visualstudio" = "3.1.5"
 }
