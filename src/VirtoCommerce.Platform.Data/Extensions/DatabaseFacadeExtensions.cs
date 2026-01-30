@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
         {
             var connectionTimeout = databaseFacade.GetDbConnection().ConnectionTimeout;
             var commandTimeout = databaseFacade.GetCommandTimeout();
-            if (commandTimeout is null || (commandTimeout > 0 && commandTimeout < connectionTimeout))
+            if (commandTimeout is null || (commandTimeout >= 0 && commandTimeout < connectionTimeout))
             {
                 databaseFacade.SetCommandTimeout(connectionTimeout);
             }

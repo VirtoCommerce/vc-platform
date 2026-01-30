@@ -47,6 +47,8 @@ public static class PostgreSqlOptionsExtensions
     /// <returns>Enhanced connection string</returns>
     public static string EnhanceConnectionString(this PostgreSqlOptions options, string connectionString)
     {
+        ArgumentNullException.ThrowIfNull(options);
+        
         if (string.IsNullOrEmpty(connectionString))
         {
             return connectionString ?? string.Empty;

@@ -27,12 +27,23 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 command.Transaction = context.Database.CurrentTransaction.GetDbTransaction();
             }
 
-            if (conn.State != ConnectionState.Open)
+            var wasOpen = conn.State == ConnectionState.Open;
+            if (!wasOpen)
             {
                 await conn.OpenAsync();
             }
 
-            return await command.ExecuteNonQueryAsync();
+            try
+            {
+                return await command.ExecuteNonQueryAsync();
+            }
+            finally
+            {
+                if (!wasOpen)
+                {
+                    await conn.CloseAsync();
+                }
+            }
         }
 
         public static async Task<T> ExecuteScalarAsync<T>(this DbContext context, string rawSql, params object[] parameters)
@@ -54,12 +65,23 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 command.Transaction = context.Database.CurrentTransaction.GetDbTransaction();
             }
 
-            if (conn.State != ConnectionState.Open)
+            var wasOpen = conn.State == ConnectionState.Open;
+            if (!wasOpen)
             {
                 await conn.OpenAsync();
             }
 
-            return (T)await command.ExecuteScalarAsync();
+            try
+            {
+                return (T)await command.ExecuteScalarAsync();
+            }
+            finally
+            {
+                if (!wasOpen)
+                {
+                    await conn.CloseAsync();
+                }
+            }
         }
 
         public static async Task<T[]> ExecuteArrayAsync<T>(this DbContext context, string rawSql, params object[] parameters)
@@ -81,19 +103,31 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 command.Transaction = context.Database.CurrentTransaction.GetDbTransaction();
             }
 
-            if (conn.State != ConnectionState.Open)
+            var wasOpen = conn.State == ConnectionState.Open;
+            if (!wasOpen)
             {
                 await conn.OpenAsync();
             }
 
-            var result = new List<T>();
-            await using var reader = await command.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
+            try
             {
-                result.Add(await reader.GetFieldValueAsync<T>(0));
-            }
+                var result = new List<T>();
+                await using var reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    result.Add(await reader.GetFieldValueAsync<T>(0));
+                }
 
-            return result.ToArray();
+                return [.. result];
+
+            }
+            finally
+            {
+                if (!wasOpen)
+                {
+                    await conn.CloseAsync();
+                }
+            }
         }
     }
 }
