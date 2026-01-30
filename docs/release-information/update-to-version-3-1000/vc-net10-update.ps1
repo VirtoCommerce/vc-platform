@@ -42,9 +42,13 @@ $predefinedVersions =  @{
 	"xunit.runner.visualstudio" = "3.1.5"
 }
 
-$replacedPackages =
+$replacedPackages = @{
     "xunit" = "xunit.v3"
     "xunit.runner.console" = "xunit.v3.runner.console"
+}
+
+$removedPackages = @{
+    "Microsoft.SourceLink.GitHub" = $true
 }
 
 function Save-File ($xml, $filePath) {
@@ -106,6 +110,14 @@ function Update-Latest-Packages ($projectFile) {
 		$packageName = $_.Include
 		$installedVersion = $_.Version
 		$item = $_
+
+        $removedPackage = $removedPackages.$packageName
+        if($removedPackage)
+        {
+            Write-Host "Removing package $packageName"
+            $item.ParentNode.RemoveChild($item) | Out-Null
+            return
+        }
 
         $replacedPackage = $replacedPackages.$packageName
         if($replacedPackage)
