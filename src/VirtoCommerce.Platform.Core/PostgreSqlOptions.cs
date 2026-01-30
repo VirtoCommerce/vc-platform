@@ -71,5 +71,12 @@ public class PostgreSqlOptions : IValidatableObject
                 $"MinPoolSize ({MinPoolSize}) must be less than MaxPoolSize ({MaxPoolSize})",
                 [nameof(MinPoolSize), nameof(MaxPoolSize)]);
         }
+
+        if (MinPoolSize >= HangfireMaxPoolSize)
+        {
+            yield return new ValidationResult(
+                $"MinPoolSize ({MinPoolSize}) must be less than HangfireMaxPoolSize ({HangfireMaxPoolSize})",
+                [nameof(MinPoolSize), nameof(HangfireMaxPoolSize)]);
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Npgsql;
 using VirtoCommerce.Platform.Core;
@@ -43,10 +44,12 @@ public static class PostgreSqlOptionsExtensions
     /// <param name="options">PostgreSQL options</param>
     /// <param name="connectionString">Original connection string</param>
     /// <returns>Enhanced connection string</returns>
+    [SuppressMessage("SonarAnalyzer.CSharp", "S1541:Methods and properties should not be too complex",
+        Justification = "Multiple independent property checks; each is trivial and the method remains readable")]
     public static string EnhanceConnectionString(this PostgreSqlOptions options, string? connectionString)
     {
         ArgumentNullException.ThrowIfNull(options);
-        
+
         if (string.IsNullOrEmpty(connectionString))
         {
             return connectionString ?? string.Empty;
