@@ -32,8 +32,8 @@ public class EventHandlerTests
         applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
         applicationBuilder.RegisterEventHandler<UserChangedEvent, Handler>();
 
-        await publisher.Publish(new UserLoginEvent(user: null));
-        await publisher.Publish(new UserChangedEvent(changedEntries: null));
+        await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
+        await publisher.Publish(new UserChangedEvent(changedEntries: null), TestContext.Current.CancellationToken);
 
         handler.DomainEvents.Should().BeEquivalentTo([nameof(UserLoginEvent), nameof(UserChangedEvent)]);
         handler.UserLoginEvents.Should().BeEquivalentTo([nameof(UserLoginEvent)]);
@@ -57,7 +57,7 @@ public class EventHandlerTests
 
         applicationBuilder.UnregisterEventHandler<UserLoginEvent, Handler>();
 
-        await publisher.Publish(new UserLoginEvent(user: null));
+        await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
 
         handler1.UserLoginEvents.Should().BeEmpty();
         handler2.UserLoginEvents.Should().BeEquivalentTo([nameof(UserLoginEvent)]);

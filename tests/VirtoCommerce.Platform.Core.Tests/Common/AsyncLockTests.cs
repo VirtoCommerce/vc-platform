@@ -30,7 +30,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
                            Assert.Equal(0, counter);
                        }
                    }
-               });
+               }, TestContext.Current.CancellationToken);
                 tasks.Add(task);
             }
             return Task.WhenAll(tasks);

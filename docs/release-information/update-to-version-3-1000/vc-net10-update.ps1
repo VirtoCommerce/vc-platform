@@ -25,7 +25,7 @@ $predefinedVersions =  @{
 	"Microsoft.Extensions.DependencyModel" = "10.0.1"
 	"Microsoft.Extensions.Logging.Abstractions" = "10.0.1"
 	"Microsoft.NET.Test.Sdk" = "18.0.1"
-	"Microsoft.SourceLink.GitHub" = "8.0.0"
+	"Microsoft.SourceLink.GitHub" = "10.0.102"
 	"MockQueryable.Moq" = "10.0.1"
 	"Moq" = "4.20.72"
 	"Npgsql" = "10.0.0"
@@ -36,8 +36,15 @@ $predefinedVersions =  @{
 	"Pomelo.EntityFrameworkCore.MySql" = "9.0.0"
 	"Swashbuckle.AspNetCore.SwaggerGen" = "10.1.0"
 	"xunit" = "2.9.3"
-    "xunit.runner.console" = "2.9.3" 
+    "xunit.v3" = "3.2.2"
+    "xunit.runner.console" = "2.9.3"
+    "xunit.v3.runner.console" = "3.2.2"
 	"xunit.runner.visualstudio" = "3.1.5"
+}
+
+$replacedPackages =
+    "xunit" = "xunit.v3"
+    "xunit.runner.console" = "xunit.v3.runner.console"
 }
 
 function Save-File ($xml, $filePath) {
@@ -99,6 +106,14 @@ function Update-Latest-Packages ($projectFile) {
 		$packageName = $_.Include
 		$installedVersion = $_.Version
 		$item = $_
+
+        $replacedPackage = $replacedPackages.$packageName
+        if($replacedPackage)
+        {
+            Write-Host "Replacing package $packageName with $replacedPackage"
+            $_.Include = $replacedPackage
+            $packageName = $replacedPackage
+        }
 
 		$version = $predefinedVersions.$packageName
 	    if (-not $version) {

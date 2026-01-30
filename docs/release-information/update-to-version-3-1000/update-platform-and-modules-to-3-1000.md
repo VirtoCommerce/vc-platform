@@ -174,6 +174,19 @@ This script automates several these tasks, including (of course you can do it ma
 3. Updating other third-party dependencies to the version used by Virto Commerce Platform .NET10.
 4. Updating the module.manifest file to align with the changes in .NET 10.
 
+### Remove Microsoft.SourceLink.GitHub Reference
+
+Starting with .NET 8, Source Link for the following source control providers is included in the .NET SDK and enabled by default:
+
+* GitHub or GitHub Enterprise
+* Azure Repos git repositories (formerly known as Visual Studio Team Services)
+* GitLab 12.0+ (for older versions see GitLab settings)
+* Bitbucket 4.7+ (for older versions see Bitbucket settings)
+
+If your project uses Virto Commerce 3 on .NET10 and is hosted by the above providers it does not need to reference any Source Link packages or set any build properties to include source control information in the PDB.
+
+You can remove Microsoft.SourceLink.GitHub reference from project files.
+
 ### Build Solution
 
 1. Build the solution and meticulously address any compilation errors and warnings if required. This step ensures that the solution is compatible with the updated framework.
