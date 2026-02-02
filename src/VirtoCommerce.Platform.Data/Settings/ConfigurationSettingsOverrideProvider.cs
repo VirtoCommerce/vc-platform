@@ -88,6 +88,7 @@ public class ConfigurationSettingsOverrideProvider : ISettingsOverrideProvider
             {
                 return false;
             }
+            value = convertedValue;
 
             return true;
         }
