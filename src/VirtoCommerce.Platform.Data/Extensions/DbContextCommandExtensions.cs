@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace VirtoCommerce.Platform.Data.Extensions
 {
@@ -10,74 +11,122 @@ namespace VirtoCommerce.Platform.Data.Extensions
         public static async Task<int> ExecuteNonQueryAsync(this DbContext context, string rawSql, params object[] parameters)
         {
             var conn = context.Database.GetDbConnection();
-            using (var command = conn.CreateCommand())
+            await using var command = conn.CreateCommand();
+
+            command.CommandText = rawSql;
+            if (parameters != null)
             {
-                command.CommandText = rawSql;
-                if (parameters != null)
+                foreach (var p in parameters)
                 {
-                    foreach (var p in parameters)
-                    {
-                        command.Parameters.Add(p);
-                    }
+                    command.Parameters.Add(p);
                 }
-                if (conn.State != ConnectionState.Open)
-                {
-                    await conn.OpenAsync();
-                }
+            }
+
+            if (context.Database.CurrentTransaction != null)
+            {
+                command.Transaction = context.Database.CurrentTransaction.GetDbTransaction();
+            }
+
+            var wasOpen = conn.State == ConnectionState.Open;
+            if (!wasOpen)
+            {
+                await conn.OpenAsync();
+            }
+
+            try
+            {
                 return await command.ExecuteNonQueryAsync();
+            }
+            finally
+            {
+                if (!wasOpen)
+                {
+                    await conn.CloseAsync();
+                }
             }
         }
 
         public static async Task<T> ExecuteScalarAsync<T>(this DbContext context, string rawSql, params object[] parameters)
         {
             var conn = context.Database.GetDbConnection();
-            using (var command = conn.CreateCommand())
+            await using var command = conn.CreateCommand();
+
+            command.CommandText = rawSql;
+            if (parameters != null)
             {
-                command.CommandText = rawSql;
-                if (parameters != null)
+                foreach (var p in parameters)
                 {
-                    foreach (var p in parameters)
-                    {
-                        command.Parameters.Add(p);
-                    }
+                    command.Parameters.Add(p);
                 }
-                if (conn.State != ConnectionState.Open)
-                {
-                    await conn.OpenAsync();
-                }
+            }
+
+            if (context.Database.CurrentTransaction != null)
+            {
+                command.Transaction = context.Database.CurrentTransaction.GetDbTransaction();
+            }
+
+            var wasOpen = conn.State == ConnectionState.Open;
+            if (!wasOpen)
+            {
+                await conn.OpenAsync();
+            }
+
+            try
+            {
                 return (T)await command.ExecuteScalarAsync();
+            }
+            finally
+            {
+                if (!wasOpen)
+                {
+                    await conn.CloseAsync();
+                }
             }
         }
 
         public static async Task<T[]> ExecuteArrayAsync<T>(this DbContext context, string rawSql, params object[] parameters)
         {
             var conn = context.Database.GetDbConnection();
-            using (var command = conn.CreateCommand())
+            await using var command = conn.CreateCommand();
+
+            command.CommandText = rawSql;
+            if (parameters != null)
             {
-                command.CommandText = rawSql;
-                if (parameters != null)
+                foreach (var p in parameters)
                 {
-                    foreach (var p in parameters)
-                    {
-                        command.Parameters.Add(p);
-                    }
+                    command.Parameters.Add(p);
                 }
+            }
 
-                if (conn.State != ConnectionState.Open)
-                {
-                    await conn.OpenAsync();
-                }
+            if (context.Database.CurrentTransaction != null)
+            {
+                command.Transaction = context.Database.CurrentTransaction.GetDbTransaction();
+            }
 
+            var wasOpen = conn.State == ConnectionState.Open;
+            if (!wasOpen)
+            {
+                await conn.OpenAsync();
+            }
+
+            try
+            {
                 var result = new List<T>();
-                using (var reader = await command.ExecuteReaderAsync())
+                await using var reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
-                    while (await reader.ReadAsync())
-                    {
-                        result.Add(await reader.GetFieldValueAsync<T>(0));
-                    }
+                    result.Add(await reader.GetFieldValueAsync<T>(0));
                 }
 
-                return result.ToArray();
+                return [.. result];
+
+            }
+            finally
+            {
+                if (!wasOpen)
+                {
+                    await conn.CloseAsync();
+                }
             }
         }
     }
