@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Tests.Events
                 await Task.Run(() =>
                 {
                     Assert.True(EventSuppressor.EventsSuppressed, "EventSuppressor inherits value in another thread!");
-                });
+                }, TestContext.Current.CancellationToken);
             }
 
             Assert.False(EventSuppressor.EventsSuppressed, "EventSuppressor shouldn't be active in this thread after test.");
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Tests.Events
                     await checkTask;
                 }
                 Assert.False(EventSuppressor.EventsSuppressed, "EventSuppressor shouldn't be active in this thread after test.");
-            });
+            }, TestContext.Current.CancellationToken);
 
             Assert.False(EventSuppressor.EventsSuppressed, "EventSuppressor shouldn't be active in this thread after test.");
         }

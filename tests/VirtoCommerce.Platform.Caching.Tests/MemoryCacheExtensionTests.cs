@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
                         return Task.FromResult(Interlocked.Increment(ref counter));
                     });
                     Assert.Equal(1, item);
-                });
+                }, TestContext.Current.CancellationToken);
                 tasks.Add(task);
             }
             return Task.WhenAll(tasks);
