@@ -75,7 +75,7 @@ public class ConfigurationSettingsOverrideProvider : ISettingsOverrideProvider
 
         var children = section.GetChildren().ToArray();
 
-        if (!children.Any())
+        if (children.Length == 0)
         {
             // Scalar
             if (string.IsNullOrEmpty(section.Value))
