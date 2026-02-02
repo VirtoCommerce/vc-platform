@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using VirtoCommerce.Platform.Core.Settings;
 
@@ -75,81 +73,46 @@ public class ConfigurationSettingsOverrideProvider : ISettingsOverrideProvider
     {
         value = null;
 
-        // Scalar
-        if (!string.IsNullOrEmpty(section.Value) && !section.GetChildren().Any())
+        var children = section.GetChildren().ToArray();
+
+        if (!children.Any())
         {
+            // Scalar
+            if (string.IsNullOrEmpty(section.Value))
+            {
+                return false;
+            }
+
             var convertedValue = ConvertToSettingValue(descriptor, section.Value);
             if (convertedValue == null)
             {
                 return false;
             }
 
-            value = convertedValue;
             return true;
         }
-
-        // Array/object
-        var children = section.GetChildren().ToArray();
-        if (children.Length == 0)
+        else
         {
-            return false;
+            // Complex 
+            var rawComplex = children.Select(c => c.Value).ToArray();
+            var convertedComplexValue = ConvertToSettingValue(descriptor, rawComplex);
+            if (convertedComplexValue == null)
+            {
+                return false;
+            }
+
+            value = convertedComplexValue;
+            return true;
         }
-
-        var rawComplex = ReadComplex(children);
-        var convertedComplexValue = ConvertToSettingValue(descriptor, rawComplex);
-        if (convertedComplexValue == null)
-        {
-            return false;
-        }
-
-        value = convertedComplexValue;
-        return true;
-    }
-
-    private static object ReadComplex(IConfigurationSection[] children)
-    {
-        // Array if numeric keys 0..n
-        if (children.All(c => int.TryParse(c.Key, NumberStyles.Integer, CultureInfo.InvariantCulture, out _)))
-        {
-            return children
-                .OrderBy(c => int.Parse(c.Key, CultureInfo.InvariantCulture))
-                .Select(ReadNode)
-                .ToArray();
-        }
-
-        // Object
-        var dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-        foreach (var child in children)
-        {
-            dict[child.Key] = ReadNode(child);
-        }
-        return dict;
-    }
-
-    private static object ReadNode(IConfigurationSection section)
-    {
-        if (!string.IsNullOrEmpty(section.Value) && !section.GetChildren().Any())
-        {
-            return section.Value;
-        }
-
-        var children = section.GetChildren().ToArray();
-        if (children.Length == 0)
-        {
-            return null;
-        }
-
-        return ReadComplex(children);
     }
 
     private static object ConvertToSettingValue(SettingDescriptor descriptor, object raw)
     {
         if (descriptor.IsDictionary)
         {
-            return ConvertToDictionaryValue(descriptor.ValueType, raw);
+            return ConvertToAllowedValues(descriptor.ValueType, raw);
         }
-
-        if (raw is string str)
+        else if (raw is string str)
         {
             return ConvertScalar(descriptor.ValueType, str);
         }
@@ -157,7 +120,7 @@ public class ConfigurationSettingsOverrideProvider : ISettingsOverrideProvider
         return null;
     }
 
-    private static object[] ConvertToDictionaryValue(SettingValueType valueType, object raw)
+    private static object[] ConvertToAllowedValues(SettingValueType valueType, object raw)
     {
         if (raw == null)
         {
@@ -176,34 +139,9 @@ public class ConfigurationSettingsOverrideProvider : ISettingsOverrideProvider
                 .ToArray();
         }
 
-        if (raw is IDictionary<string, object>)
-        {
-            return Array.Empty<object>();
-        }
-
         if (raw is string s)
         {
-            if (string.IsNullOrEmpty(s))
-            {
-                // Explicit "empty" override (useful for env-vars)
-                return Array.Empty<object>();
-            }
-
-            // Allow JSON array as string for env-vars, otherwise treat as single element
-            try
-            {
-                var parsed = JsonSerializer.Deserialize<string[]>(s);
-                if (parsed != null)
-                {
-                    return parsed.Select(x => ConvertScalar(valueType, x)).ToArray();
-                }
-            }
-            catch
-            {
-                // ignore
-            }
-
-            return new[] { ConvertScalar(valueType, s) };
+            return [ConvertScalar(valueType, s)];
         }
 
         return Array.Empty<object>();

@@ -306,9 +306,9 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             // Forced override from config wins (read-only)
             if (_overrideProvider != null &&
-                _overrideProvider.TryGetCurrentValue(settingDescriptor, objectType, objectId, out var forced))
+                _overrideProvider.TryGetCurrentValue(settingDescriptor, objectType, objectId, out var forcedValue))
             {
-                objectSetting = CreateOverriddenSetting(settingDescriptor, objectType, objectId, forced, isReadOnly: true);
+                objectSetting = CreateOverriddenSetting(settingDescriptor, objectType, objectId, forcedValue, isReadOnly: true);
             }
             else
             {
