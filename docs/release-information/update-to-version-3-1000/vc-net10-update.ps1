@@ -129,9 +129,13 @@ function Update-Latest-Packages ($projectFile) {
 		    try {
 			    $latestVersion = (Find-Package $packageName -Source https://www.nuget.org/api/v2).Version
 			
-			    if ($packageName.StartsWith("VirtoCommerce.")) {
+			    if ($packageName.StartsWith("VirtoCommerce.Platform")) {
+				    $latestVersion = $platformVersion
+			    }
+                elseif ($packageName.StartsWith("VirtoCommerce.")) {
 				    $latestVersion = $versionPrefix
 			    }
+
 			    $predefinedVersions["$packageName"] = $latestVersion
 			    $version = $latestVersion
 		    } catch {
