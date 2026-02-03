@@ -1,7 +1,7 @@
 # Define the target framework
 $targetFramework = "net10.0"
 $versionPrefix = "3.1000.0"
-$platformVersion = "3.1000.0"
+$platformVersion = "3.1002.0"
 
 # Read the predefined versions from vc-references.json or create an empty object
 $predefinedVersions =  @{
