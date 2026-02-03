@@ -130,6 +130,58 @@ angular.module("platformWebApp")
             });
         };
 
+        retVal.getSettingValues = function getSettingValues(setting) {
+            return setting.isDictionary ? [{ value: { id: setting.value, name: setting.value } }] : [{ id: setting.value, value: setting.value }];
+        };
+
+        function normalizeEmptyValue(value) {
+            // Treat "no value" representations as equal for reset-icon display logic.
+            // This prevents showing reset when current is '' but default is null (and vice versa).
+            return (value === undefined || value === null || value === '') ? null : value;
+        }
+
+        retVal.resetToDefaultValue = function (groups, setting) {
+            if (!setting || setting.isReadOnly) {
+                return;
+            }
+
+            // Important: `va-generic-value-input` uses `ng-model="data"` (the whole object).
+            // Mutating nested fields doesn't trigger ngModel $render(), so UI can stay stale.
+            // Replace the setting object in-place inside `blade.currentEntities[...]` to force re-render.
+            var groupKey = setting.groupName; // can be undefined -> coerces to 'undefined' key, which matches groupBy behavior
+            var group = groups && groups[groupKey];
+            var index = group ? _.findIndex(group, function (x) { return x && x.name === setting.name; }) : -1;
+
+            var newSetting = angular.copy(setting);
+            // Keep reference to allowedValues (ui-select relies on object identity within its choices list)
+            newSetting.allowedValues = setting.allowedValues;
+
+            // Keep the legacy `value` field in sync (used by some UI conditions) and
+            // the `values` array in sync (used by editors and saveChanges()).
+            newSetting.value = newSetting.defaultValue;
+
+            // For allowed-values UI (`ui-select`) we want ng-model to reference an item
+            newSetting.values = retVal.getSettingValues(newSetting);
+
+            if (group && index >= 0) {
+                group[index] = newSetting;
+            } else {
+                // Best-effort fallback (should be rare)
+                angular.extend(setting, newSetting);
+            }
+        };
+
+        retVal.isDefaultValue = function (setting) {
+            if (!setting || setting.isDictionary || setting.isReadOnly) {
+                return true;
+            }
+
+            // This blade edits scalar settings (non-dictionary). We use `values[0].value` as the effective current value
+            // because `va-generic-value-input` and `ui-select` both bind through `values`.
+            var current = setting.values && setting.values.length ? setting.values[0].value : setting.value;
+            return angular.equals(normalizeEmptyValue(current), normalizeEmptyValue(setting.defaultValue));
+        };
+
         return retVal;
     }]);
 

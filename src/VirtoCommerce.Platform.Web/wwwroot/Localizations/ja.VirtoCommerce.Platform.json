@@ -658,7 +658,8 @@
       },
       "settings-detail": {
         "title": "設定値",
-        "hide-description": "非表示"
+        "hide-description": "非表示",
+        "reset-to-default": "既定値にリセット"
       },
       "settingGroup-list": {
         "title": "設定",

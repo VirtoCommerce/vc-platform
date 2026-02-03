@@ -658,7 +658,8 @@
       },
       "settings-detail": {
         "title": "Valores de configuração",
-        "hide-description": "Ocultar"
+        "hide-description": "Ocultar",
+        "reset-to-default": "Restaurar para o valor padrão"
       },
       "settingGroup-list": {
         "title": "Configurações",
