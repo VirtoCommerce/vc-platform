@@ -12,6 +12,7 @@ $predefinedVersions =  @{
 	"FluentAssertions" = "7.2.0"
 	"FluentValidation" = "12.1.1"
 	"Hangfire" = "1.8.22"
+    "MailKit" = "4.14.1"
     "MediatR" = "12.4.1"
 	"Microsoft.AspNetCore.Authentication.OpenIdConnect" = "10.0.1"
 	"Microsoft.AspNetCore.Mvc.NewtonsoftJson" = "10.0.1"
@@ -33,6 +34,7 @@ $predefinedVersions =  @{
 	"OpenIddict.EntityFrameworkCore" = "7.2.0"
 	"Polly" = "9.0.0"
 	"Pomelo.EntityFrameworkCore.MySql" = "9.0.0"
+    "Scriban" = "6.5.2"
 	"Swashbuckle.AspNetCore.SwaggerGen" = "10.1.0"
     "xunit.v3" = "3.2.2"
     "xunit.v3.runner.console" = "3.2.2"
@@ -46,6 +48,8 @@ $replacedPackages = @{
 
 $removedPackages = @{
     "Microsoft.SourceLink.GitHub" = $true
+    "MSTest.TestAdapter" = $true
+    "MSTest.TestFramework" = $true
 }
 
 function Save-File ($xml, $filePath) {
@@ -135,6 +139,10 @@ function Update-Latest-Packages ($projectFile) {
                 elseif ($packageName.StartsWith("VirtoCommerce.")) {
 				    $latestVersion = $versionPrefix
 			    }
+                else
+                {
+                    Write-Host "*** Resolve Package $packageName latest version $latestVersion from NUGET"
+                }
 
 			    $predefinedVersions["$packageName"] = $latestVersion
 			    $version = $latestVersion
