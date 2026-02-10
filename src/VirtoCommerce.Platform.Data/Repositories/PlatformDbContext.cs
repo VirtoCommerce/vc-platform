@@ -129,7 +129,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         private static bool IsPlatformDBContextEntity(Type type)
         {
-            return type.Namespace.EndsWith(".EntityConfigurations.Data");
+            return type.Namespace != null &&
+                type.Namespace.EndsWith(".EntityConfigurations.Data");
         }
     }
 }

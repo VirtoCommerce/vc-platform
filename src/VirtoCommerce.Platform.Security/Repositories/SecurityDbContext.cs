@@ -136,7 +136,8 @@ namespace VirtoCommerce.Platform.Security.Repositories
 
         private static bool IsSecurityDBContextEntity(Type type)
         {
-            return type.Namespace.EndsWith(".EntityConfigurations.Security");
+            return type.Namespace != null &&
+                type.Namespace.EndsWith(".EntityConfigurations.Security");
         }
     }
 }
