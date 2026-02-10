@@ -113,7 +113,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             switch (Database.ProviderName)
             {
                 case "Pomelo.EntityFrameworkCore.MySql":
-                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.DataMySql"),
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.MySql"),
                         IsPlatformDBContextEntity);
                     break;
                 case "Npgsql.EntityFrameworkCore.PostgreSQL":
