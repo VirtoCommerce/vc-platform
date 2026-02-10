@@ -113,16 +113,13 @@ namespace VirtoCommerce.Platform.Data.Repositories
             switch (Database.ProviderName)
             {
                 case "Pomelo.EntityFrameworkCore.MySql":
-                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.MySql"),
-                        IsPlatformDBContextEntity);
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.MySql"), IsPlatformDBContextEntity);
                     break;
                 case "Npgsql.EntityFrameworkCore.PostgreSQL":
-                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.PostgreSql"),
-                        IsPlatformDBContextEntity);
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.PostgreSql"), IsPlatformDBContextEntity);
                     break;
                 case "Microsoft.EntityFrameworkCore.SqlServer":
-                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.SqlServer"),
-                        IsPlatformDBContextEntity);
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.SqlServer"), IsPlatformDBContextEntity);
                     break;
             }
         }
