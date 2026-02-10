@@ -9,7 +9,7 @@ public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<Appli
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
-        builder.Property(x => x.UserName).UseCollation(CaseInsensitive.CollationName);
-        builder.Property(x => x.Email).UseCollation(CaseInsensitive.CollationName);
+        builder.Property(x => x.UserName).UseCaseInsensitiveCollation();
+        builder.Property(x => x.Email).UseCaseInsensitiveCollation();
     }
 }

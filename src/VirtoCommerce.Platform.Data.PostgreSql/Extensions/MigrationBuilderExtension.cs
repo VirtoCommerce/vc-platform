@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations.Builders;
 
 namespace VirtoCommerce.Platform.Data.PostgreSql.Extensions;
 
-public static class CaseInsensitive
+public static class CollationNames
 {
-    public const string CollationName = "case_insensitive";
+    public const string CaseInsensitive = "case_insensitive";
 }
 
 public static class MigrationBuilderExtension
@@ -29,6 +29,6 @@ BEGIN
     END IF;
 END $$;
 ",
-CaseInsensitive.CollationName));
+CollationNames.CaseInsensitive));
     }
 }

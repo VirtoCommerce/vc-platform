@@ -9,6 +9,6 @@ public class RoleEntityConfiguration : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
-        builder.Property(x => x.Name).UseCollation(CaseInsensitive.CollationName);
+        builder.Property(x => x.Name).UseCaseInsensitiveCollation();
     }
 }

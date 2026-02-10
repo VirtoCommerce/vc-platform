@@ -9,6 +9,6 @@ public class DynamicPropertyEntityConfiguration : IEntityTypeConfiguration<Dynam
 {
     public void Configure(EntityTypeBuilder<DynamicPropertyEntity> builder)
     {
-        builder.Property(x => x.Name).UseCollation(CaseInsensitive.CollationName);
+        builder.Property(x => x.Name).UseCaseInsensitiveCollation();
     }
 }
