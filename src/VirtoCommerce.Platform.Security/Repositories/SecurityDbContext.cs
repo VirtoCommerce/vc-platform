@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using EntityFrameworkCore.Triggers;
@@ -92,6 +93,23 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<ServerCertificateEntity>().ToEntityTable(nameof(ServerCertificate));
             builder.Entity<ServerCertificateEntity>().Property(x => x.PrivateKeyCertPassword).HasMaxLength(Length128);
 
+            // Allows configuration for an entity type for different database types.
+            // Applies configuration from all <see cref="IEntityTypeConfiguration{TEntity}" in VirtoCommerce.Platform.Data.XXX project. /> 
+            switch (Database.ProviderName)
+            {
+                case "Pomelo.EntityFrameworkCore.MySql":
+                    builder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.DataMySql"),
+                        IsSecurityDBContextEntity);
+                    break;
+                case "Npgsql.EntityFrameworkCore.PostgreSQL":
+                    builder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.PostgreSql"),
+                        IsSecurityDBContextEntity);
+                    break;
+                case "Microsoft.EntityFrameworkCore.SqlServer":
+                    builder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.SqlServer"),
+                        IsSecurityDBContextEntity);
+                    break;
+            }
         }
 
         #region override Save*** methods to catch save events in Triggers, otherwise ApplicationUser not be catched because SecurityDbContext can't inherit DbContextWithTriggers
@@ -115,5 +133,10 @@ namespace VirtoCommerce.Platform.Security.Repositories
             return this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, acceptAllChangesOnSuccess, cancellationToken);
         }
         #endregion
+
+        private static bool IsSecurityDBContextEntity(Type type)
+        {
+            return type.Namespace.EndsWith(".EntityConfigurations.Security");
+        }
     }
 }
