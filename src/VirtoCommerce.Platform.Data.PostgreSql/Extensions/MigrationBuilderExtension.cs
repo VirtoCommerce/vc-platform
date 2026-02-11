@@ -4,15 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations.Builders;
 
 namespace VirtoCommerce.Platform.Data.PostgreSql.Extensions;
 
-public static class CollationNames
-{
-    public const string CaseInsensitive = "case_insensitive";
-}
-
 public static class MigrationBuilderExtension
 {
     /// <summary>
-    /// Creates case insensitive collation if not exists in database.
+    /// Creates case-insensitive collation if not exists in database.
     /// </summary>
     /// <param name="migrationBuilder">Migration Builder</param>
     /// <returns>OperationBuilder</returns>
