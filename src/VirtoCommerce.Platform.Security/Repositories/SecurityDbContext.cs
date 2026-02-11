@@ -98,21 +98,21 @@ namespace VirtoCommerce.Platform.Security.Repositories
             switch (Database.ProviderName)
             {
                 case "Pomelo.EntityFrameworkCore.MySql":
-                    builder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.MySql"),
-                        IsSecurityDBContextEntity);
+                    const string mySqlAssemblyName = "VirtoCommerce.Platform.Data.MySql";
+                    builder.ApplyConfigurationsFromAssembly(Assembly.Load(mySqlAssemblyName), type => IsSecurityDBContextEntity(type, mySqlAssemblyName));
                     break;
                 case "Npgsql.EntityFrameworkCore.PostgreSQL":
-                    builder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.PostgreSql"),
-                        IsSecurityDBContextEntity);
+                    const string postgreSqlAssemblyName = "VirtoCommerce.Platform.Data.PostgreSql";
+                    builder.ApplyConfigurationsFromAssembly(Assembly.Load(postgreSqlAssemblyName), type => IsSecurityDBContextEntity(type, postgreSqlAssemblyName));
                     break;
                 case "Microsoft.EntityFrameworkCore.SqlServer":
-                    builder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.SqlServer"),
-                        IsSecurityDBContextEntity);
+                    const string sqlServerAssemblyName = "VirtoCommerce.Platform.Data.SqlServer";
+                    builder.ApplyConfigurationsFromAssembly(Assembly.Load(sqlServerAssemblyName), type => IsSecurityDBContextEntity(type, sqlServerAssemblyName));
                     break;
             }
         }
 
-        #region override Save*** methods to catch save events in Triggers, otherwise ApplicationUser not be catched because SecurityDbContext can't inherit DbContextWithTriggers
+        #region override Save*** methods to catch save events in Triggers, otherwise ApplicationUser will not be caught because SecurityDbContext can't inherit DbContextWithTriggers
         public override int SaveChanges()
         {
             return this.SaveChangesWithTriggers(base.SaveChanges, acceptAllChangesOnSuccess: true);
@@ -134,10 +134,10 @@ namespace VirtoCommerce.Platform.Security.Repositories
         }
         #endregion
 
-        private static bool IsSecurityDBContextEntity(Type type)
+        private static bool IsSecurityDBContextEntity(Type type, string assemblyName)
         {
             return type.Namespace != null &&
-                type.Namespace.EndsWith(".EntityConfigurations.Security");
+                type.Namespace == $"{assemblyName}.EntityConfigurations.Security";
         }
     }
 }

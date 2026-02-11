@@ -113,21 +113,24 @@ namespace VirtoCommerce.Platform.Data.Repositories
             switch (Database.ProviderName)
             {
                 case "Pomelo.EntityFrameworkCore.MySql":
-                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.MySql"), IsPlatformDBContextEntity);
+                    const string mySqlAssemblyName = "VirtoCommerce.Platform.Data.MySql";
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.MySql"), type => IsPlatformDBContextEntity(type, mySqlAssemblyName));
                     break;
                 case "Npgsql.EntityFrameworkCore.PostgreSQL":
-                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.PostgreSql"), IsPlatformDBContextEntity);
+                    const string postgreSqlAssemblyName = "VirtoCommerce.Platform.Data.PostgreSql";
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load(postgreSqlAssemblyName), type => IsPlatformDBContextEntity(type, postgreSqlAssemblyName));
                     break;
                 case "Microsoft.EntityFrameworkCore.SqlServer":
-                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.SqlServer"), IsPlatformDBContextEntity);
+                    const string sqlServerAssemblyName = "VirtoCommerce.Platform.Data.SqlServer";
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load(sqlServerAssemblyName), type => IsPlatformDBContextEntity(type, sqlServerAssemblyName));
                     break;
             }
         }
 
-        private static bool IsPlatformDBContextEntity(Type type)
+        private static bool IsPlatformDBContextEntity(Type type, string assemblyName)
         {
             return type.Namespace != null &&
-                type.Namespace.EndsWith(".EntityConfigurations.Data");
+                type.Namespace == $"{assemblyName}.EntityConfigurations.Data";
         }
     }
 }
