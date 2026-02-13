@@ -92,13 +92,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 sampleData = sampleDataList.FirstOrDefault(x => x.Url == url);
             }
-            else
-            {
-                // Direct file mode: when SampleDataUrl points to a .zip file,
-                // SampleDataInfo has no Name, and the UI sends neither name nor url.
-                // Fall back to the first entry with a non-empty URL.
-                sampleData = sampleDataList.FirstOrDefault(x => !string.IsNullOrEmpty(x.Url));
-            }
 
             if (sampleData != null)
             {
@@ -186,7 +179,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return new List<SampleDataInfo>
                 {
-                    new() { Url = sampleDataUrl }
+                    new()
+                    {
+                        Name = Path.GetFileNameWithoutExtension(sampleDataUrl),
+                        Url = sampleDataUrl,
+                    },
                 };
             }
 
