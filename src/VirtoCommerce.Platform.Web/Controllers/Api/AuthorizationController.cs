@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.Authorization;
+using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
@@ -134,10 +135,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 var user = await _userManager.FindByNameAsync(openIdConnectRequest.Username);
 
-                // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
+                // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True.
                 if (user is null && _identityOptions.User.RequireUniqueEmail)
                 {
-                    user = await _userManager.FindByEmailAsync(openIdConnectRequest.Username);
+                    try
+                    {
+                        user = await _userManager.FindByEmailAsync(openIdConnectRequest.Username);
+                    }
+                    catch (DuplicateEmailException)
+                    {
+                        await delayedResponse.FailAsync();
+                        return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
+                    }
                 }
 
                 if (user is null)

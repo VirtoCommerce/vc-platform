@@ -19,6 +19,7 @@ using VirtoCommerce.Platform.Core.Extensions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Model.Security;
@@ -137,10 +138,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var user = await UserManager.FindByNameAsync(request.UserName);
 
-            // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
+            // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True.
             if (user == null && _identityOptions.User.RequireUniqueEmail)
             {
-                user = await UserManager.FindByEmailAsync(request.UserName);
+                try
+                {
+                    user = await UserManager.FindByEmailAsync(request.UserName);
+                }
+                catch (DuplicateEmailException)
+                {
+                    await delayedResponse.FailAsync();
+                    return Ok(SignInResult.Failed);
+                }
             }
 
             if (user == null)
@@ -417,11 +426,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityQuery)]
         public async Task<ActionResult<ApplicationUser>> GetUserByEmail([FromRoute] string email)
         {
-            var result = await UserManager.FindByEmailAsync(email);
-
-            result = ReduceUserDetails(result);
-
-            return Ok(result);
+            try
+            {
+                var result = await UserManager.FindByEmailAsync(email);
+                result = ReduceUserDetails(result);
+                return Ok(result);
+            }
+            catch (DuplicateEmailException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         /// <summary>
@@ -664,7 +678,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (user == null && _identityOptions.User.RequireUniqueEmail)
             {
-                user = await UserManager.FindByEmailAsync(loginOrEmail);
+                try
+                {
+                    user = await UserManager.FindByEmailAsync(loginOrEmail);
+                }
+                catch (DuplicateEmailException)
+                {
+                    await delayedResponse.FailAsync();
+                    return Ok();
+                }
             }
 
             // Return 200 to prevent potential user name/email harvesting
