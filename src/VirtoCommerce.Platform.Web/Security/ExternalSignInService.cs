@@ -12,7 +12,6 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -108,14 +107,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (user == null && _identityOptions.User.RequireUniqueEmail && !string.IsNullOrEmpty(userEmail))
             {
-                try
-                {
-                    user = await _userManager.FindByEmailAsync(userEmail);
-                }
-                catch (DuplicateEmailException)
-                {
-                    // Cannot resolve which account to link; fall through to create new user or return null
-                }
+                user = await _userManager.FindByEmailAsync(userEmail);
             }
 
             if (user == null && AllowCreateNewUser(externalLoginInfo))
