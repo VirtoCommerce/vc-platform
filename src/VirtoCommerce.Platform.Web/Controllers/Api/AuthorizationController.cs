@@ -181,7 +181,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(user, context);
 
-                await SetLastLoginDate(user);
+                try
+                {
+                    await SetLastLoginDate(user);
+                }
+                catch (DuplicateEmailException)
+                {
+                    await delayedResponse.FailAsync();
+                    return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
+                }
+
                 await _eventPublisher.Publish(new UserLoginEvent(user));
 
                 await delayedResponse.SucceedAsync();
