@@ -162,7 +162,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
-                context.SignInResult = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
+                try
+                {
+                    context.SignInResult = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
+                }
+                catch (DuplicateEmailException)
+                {
+                    await delayedResponse.FailAsync();
+                    return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
+                }
+
                 context.User = user.CloneTyped();
 
                 foreach (var requestValidator in _requestValidators)
