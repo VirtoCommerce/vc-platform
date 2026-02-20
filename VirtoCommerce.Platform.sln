@@ -50,6 +50,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Data
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data.SqlServer", "src\VirtoCommerce.Platform.Data.SqlServer\VirtoCommerce.Platform.Data.SqlServer.csproj", "{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtendedServiceProvider", "src\ExtendedServiceProvider\ExtendedServiceProvider.csproj", "{DB5AF8C4-C55D-1E90-8064-F217DA5FC908}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +124,10 @@ Global
 		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB5AF8C4-C55D-1E90-8064-F217DA5FC908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB5AF8C4-C55D-1E90-8064-F217DA5FC908}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB5AF8C4-C55D-1E90-8064-F217DA5FC908}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB5AF8C4-C55D-1E90-8064-F217DA5FC908}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +149,7 @@ Global
 		{9E100C75-7490-4A14-B74A-0F83CCA0C2A5} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{4826F1CB-84E6-4932-9B61-B8AF467C3A4A} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C} = {90F6E3EE-475A-4844-A4C4-078613591F81}
+		{DB5AF8C4-C55D-1E90-8064-F217DA5FC908} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01A94F38-27D1-412F-A4F4-F00991D1157C}
