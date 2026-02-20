@@ -179,7 +179,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return new List<SampleDataInfo>
                 {
-                    new() { Url = sampleDataUrl }
+                    new()
+                    {
+                        Name = Path.GetFileNameWithoutExtension(sampleDataUrl),
+                        Url = sampleDataUrl,
+                    },
                 };
             }
 
