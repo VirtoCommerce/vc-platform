@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Modules
             services.AddSingleton<IModuleInitializer, ModuleInitializer>();
             // Cannot inject IHostingEnvironment to LoadContextAssemblyResolver as IsDevelopment() is an extension method (means static) and cannot be mocked by Moq in tests
             services.AddSingleton<IAssemblyResolver, LoadContextAssemblyResolver>(provider =>
-                new LoadContextAssemblyResolver(provider.GetService<ILogger<LoadContextAssemblyResolver>>(), provider.GetService<IWebHostEnvironment>().IsDevelopment()));
+                new LoadContextAssemblyResolver(Log.ForContext<LoadContextAssemblyResolver>(), provider.GetService<IWebHostEnvironment>().IsDevelopment()));
             services.AddSingleton<IModuleManager, ModuleManager>();
             services.AddSingleton<ILocalModuleCatalog, LocalStorageModuleCatalog>();
             services.AddSingleton<IModuleCatalog>(provider => provider.GetService<ILocalModuleCatalog>());

@@ -107,8 +107,7 @@ namespace VirtoCommerce.Platform.Web
         {
             // Use temporary bootstrap logger (which will be replaced with configured version later) until DI initialization completed
             var loggerConfiguration = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.Debug();
+                .ReadFrom.Configuration(Configuration);
             Log.Logger = loggerConfiguration.CreateBootstrapLogger();
 
             Log.ForContext<Startup>().Information("Virto Commerce is loading");

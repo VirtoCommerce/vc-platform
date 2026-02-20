@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Loader;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
@@ -13,8 +16,10 @@ namespace VirtoCommerce.Platform.Modules;
 
 public class LoadContextAssemblyResolver : IAssemblyResolver
 {
-    private readonly Dictionary<string, Assembly> _loadedAssemblies = new();
+    private readonly ILogger _logger;
     private readonly bool _isDevelopmentEnvironment;
+    private readonly Dictionary<string, Assembly> _loadedAssemblies = new();
+    private readonly ConcurrentDictionary<string, List<string>> _nativePathsByName = new();
 
     private readonly IList<string> _ignoredAssemblies =
     [
@@ -37,9 +42,11 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         "System.Composition.TypedParts"
     ];
 
-    public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
+    public LoadContextAssemblyResolver(ILogger logger, bool isDevelopmentEnvironment)
     {
+        _logger = logger;
         _isDevelopmentEnvironment = isDevelopmentEnvironment;
+        AssemblyLoadContext.Default.ResolvingUnmanagedDll += ResolveNativeLibrary;
     }
 
     /// <summary>
@@ -71,10 +78,11 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         var assemblyDirectory = Path.GetDirectoryName(assemblyUri.LocalPath);
         var runtimeConfigFilePath = Path.ChangeExtension(assemblyUri.LocalPath, ".runtimeconfig.json");
 
-        return new ManagedAssemblyLoadContext()
+        return new ManagedAssemblyLoadContext
         {
+            PlatformPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
             BasePath = assemblyDirectory,
-            AdditionalProdingPath = runtimeConfigFilePath.TryGetAdditionalProbingPathFromRuntimeConfig(_isDevelopmentEnvironment, out _),
+            AdditionalProbingPaths = runtimeConfigFilePath.TryGetAdditionalProbingPathFromRuntimeConfig(_isDevelopmentEnvironment, out _),
         };
     }
 
@@ -93,6 +101,12 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         // Load all assembly references which we could get through .deps.json file
         foreach (var dependency in depsFilePath.ExtractDependenciesFromPath())
         {
+            if (dependency.IsNative)
+            {
+                RegisterNativeLibrary(dependency, loadContext);
+                continue;
+            }
+
             try
             {
                 var loadedAssembly = LoadAssemblyCached(dependency, loadContext);
@@ -101,12 +115,12 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
                     // Temporary workaround to ensure seamless update to OpenIddictV3:
                     // skips unused OpenIddictV2 assemblies that might not be present on the machine from being loaded by modules (in Platform.Security package)
                     // will be removed later.
-                    if (_ignoredAssemblies.ContainsIgnoreCase(dependency.Name.Name))
+                    if (_ignoredAssemblies.ContainsIgnoreCase(dependency.Name))
                     {
                         continue;
                     }
 
-                    throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
+                    throw GenerateAssemblyLoadException(dependency, assemblyPath);
                 }
 
                 if (mainAssemblyName.EqualsIgnoreCase(loadedAssembly.GetName().Name))
@@ -114,18 +128,18 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
                     mainAssembly = loadedAssembly;
                 }
             }
-            catch (Exception ex) when (!(ex is ModuleInitializeException))
+            catch (Exception ex) when (ex is not ModuleInitializeException)
             {
-                throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath, ex);
+                throw GenerateAssemblyLoadException(dependency, assemblyPath, ex);
             }
         }
 
         return mainAssembly;
     }
 
-    private ModuleInitializeException GenerateAssemblyLoadException(string assemblyPath, string modulePath, Exception innerException = null)
+    private static ModuleInitializeException GenerateAssemblyLoadException(Library dependency, string assemblyPath, Exception innerException = null)
     {
-        return new ModuleInitializeException($"Cannot load \"{assemblyPath}\" for module \"{modulePath}\".", innerException);
+        return new ModuleInitializeException($"Cannot load dependency '{dependency.AssetPath}' for assembly '{assemblyPath}'.", innerException);
     }
 
     /// <summary>
@@ -134,13 +148,12 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
     /// Note that only one version of assembly would be loaded and cached by AssemblyName.Name, for all other versions returns cached assembly.
     /// </para>
     /// </summary>
-    /// <param name="managedLibrary">ManagedLibrary object containing library name and paths.</param>
+    /// <param name="managedLibrary">Library object containing library name and paths.</param>
     /// <param name="loadContext">ManagedAssemblyLoadContext object.</param>
     /// <returns>Returns loaded assembly (could be cached).</returns>
-    private Assembly LoadAssemblyCached(ManagedLibrary managedLibrary, ManagedAssemblyLoadContext loadContext)
+    private Assembly LoadAssemblyCached(Library managedLibrary, ManagedAssemblyLoadContext loadContext)
     {
-        var assemblyName = managedLibrary.Name;
-        if (_loadedAssemblies.TryGetValue(assemblyName.Name, out var assembly))
+        if (_loadedAssemblies.TryGetValue(managedLibrary.Name, out var assembly))
         {
             return assembly;
         }
@@ -148,8 +161,9 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         var loadedAssembly = LoadAssemblyInternal(managedLibrary, loadContext);
         if (loadedAssembly != null)
         {
-            _loadedAssemblies.Add(assemblyName.Name, loadedAssembly);
+            _loadedAssemblies.Add(managedLibrary.Name, loadedAssembly);
         }
+
         return loadedAssembly;
     }
 
@@ -160,23 +174,18 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
     /// but avoided FileNotFoundException from LoadFromAssemblyName trying only load TPA assemblies that way.
     /// </para>
     /// </summary>
-    /// <param name="managedLibrary">ManagedLibrary object containing assembly name and paths.</param>
+    /// <param name="managedLibrary">Library object containing assembly name and paths.</param>
     /// <param name="loadContext">ManagedAssemblyLoadContext object.</param>
     /// <returns>Returns loaded assembly.</returns>
-    private Assembly LoadAssemblyInternal(ManagedLibrary managedLibrary, ManagedAssemblyLoadContext loadContext)
+    private static Assembly LoadAssemblyInternal(Library managedLibrary, ManagedAssemblyLoadContext loadContext)
     {
         // To avoid FileNotFoundException for assemblies that are included in TPA - we load them using AssemblyLoadContext.Default.LoadFromAssemblyName.
-        var assemblyFileName = Path.GetFileName(managedLibrary.AppLocalPath);
-        if (TPA.ContainsAssembly(assemblyFileName))
+        if (Tpa.ContainsAssembly(managedLibrary.FileName))
         {
-            var defaultAssembly = AssemblyLoadContext.Default.LoadFromAssemblyName(managedLibrary.Name);
-            if (defaultAssembly != null)
-            {
-                return defaultAssembly;
-            }
+            return AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(managedLibrary.Name));
         }
 
-        if (SearchForLibrary(managedLibrary, loadContext, out var path))
+        if (TryGetFullPath(managedLibrary, loadContext, out var path))
         {
             return AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
         }
@@ -184,39 +193,123 @@ public class LoadContextAssemblyResolver : IAssemblyResolver
         return null;
     }
 
-    private bool SearchForLibrary(ManagedLibrary library, ManagedAssemblyLoadContext loadContext, out string path)
+    private void RegisterNativeLibrary(Library library, ManagedAssemblyLoadContext loadContext)
     {
-        // 1. Check for in _basePath + app local path
-        var localFile = Path.Combine(loadContext.BasePath, library.AppLocalPath);
-        if (File.Exists(localFile))
+        if (!TryGetFullPath(library, loadContext, out var path))
         {
-            path = localFile;
+            return;
+        }
+
+        if (!_nativePathsByName.TryGetValue(library.Name, out var nativePaths))
+        {
+            nativePaths = [];
+            _nativePathsByName[library.Name] = nativePaths;
+        }
+
+        if (!nativePaths.Contains(path))
+        {
+            nativePaths.Add(path);
+            _logger.Debug("Registered native library: {LibraryPath}", path);
+        }
+    }
+
+    private static bool TryGetFullPath(Library library, ManagedAssemblyLoadContext loadContext, out string fullPath)
+    {
+        var paths = library.IsNative
+            ? GetNativeLibraryPaths(library, loadContext)
+            : GetManagedLibraryPaths(library, loadContext);
+
+        foreach (var path in paths.Select(Path.GetFullPath))
+        {
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+
+            fullPath = path;
             return true;
         }
 
-        // 2. Search additional probing paths
-        foreach (var searchPath in loadContext.AdditionalProdingPath)
+        fullPath = null;
+        return false;
+    }
+
+    private static IEnumerable<string> GetNativeLibraryPaths(Library library, ManagedAssemblyLoadContext loadContext)
+    {
+        yield return Path.Combine(loadContext.PlatformPath, library.AssetPath);
+
+        yield return Path.Combine(loadContext.BasePath, library.AssetPath);
+
+        foreach (var searchPath in loadContext.AdditionalProbingPaths)
         {
-            var candidate = Path.Combine(searchPath, library.AdditionalProbingPath);
-            if (File.Exists(candidate))
-            {
-                path = candidate;
-                return true;
-            }
+            yield return Path.Combine(searchPath, library.AdditionalProbingPath);
+        }
+    }
+
+    private static IEnumerable<string> GetManagedLibraryPaths(Library library, ManagedAssemblyLoadContext loadContext)
+    {
+        yield return Path.Combine(loadContext.BasePath, library.AppLocalPath);
+
+        foreach (var searchPath in loadContext.AdditionalProbingPaths)
+        {
+            yield return Path.Combine(searchPath, library.AdditionalProbingPath);
         }
 
-        // 3. Search in base path
         foreach (var ext in PlatformInformation.ManagedAssemblyExtensions)
         {
-            var local = Path.Combine(loadContext.BasePath, library.Name.Name + ext);
-            if (File.Exists(local))
+            yield return Path.Combine(loadContext.BasePath, library.Name + ext);
+        }
+    }
+
+    private IntPtr ResolveNativeLibrary(Assembly assembly, string name)
+    {
+        _logger.Debug("Resolving native library '{LibraryName}' for assembly '{AssemblyName}'", name, assembly.FullName);
+
+        if (!TryGetNativeLibraryPaths(name, out var nativePaths))
+        {
+            _logger.Debug("Not found");
+        }
+        else
+        {
+            foreach (var nativePath in nativePaths)
             {
-                path = local;
-                return true;
+                _logger.Debug("Loading '{LibraryPath}'", nativePath);
+
+                if (NativeLibrary.TryLoad(nativePath, out var handle))
+                {
+                    _logger.Debug("Succeeded");
+
+                    // Replace the list with a single path to avoid multiple attempts to load the same library
+                    _nativePathsByName.AddOrUpdate(name, [nativePath], (_, oldList) => oldList.Count == 1 ? oldList : [nativePath]);
+
+                    return handle;
+                }
+
+                _logger.Debug("Failed");
             }
         }
 
-        path = null;
+        return IntPtr.Zero;
+    }
+
+    private bool TryGetNativeLibraryPaths(string name, out List<string> nativePaths)
+    {
+        if (_nativePathsByName.TryGetValue(name, out nativePaths))
+        {
+            return true;
+        }
+
+        if (!PlatformInformation.NativeLibraryPrefixes.IsNullOrEmpty())
+        {
+            foreach (var prefix in PlatformInformation.NativeLibraryPrefixes)
+            {
+                if (!name.StartsWith(prefix) && _nativePathsByName.TryGetValue(prefix + name, out nativePaths))
+                {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 

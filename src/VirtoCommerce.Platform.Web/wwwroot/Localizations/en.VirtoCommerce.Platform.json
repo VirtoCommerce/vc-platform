@@ -31,7 +31,8 @@
           "environment-name": "Environment mode",
           "is-64-bit-os": "64-bit operating system",
           "is-64-bit-process": "64-bit process",
-          "database-provider": "Database provider"
+          "database-provider": "Database provider",
+          "runtime-identifier": "Runtime identifier"
         }
       },
       "asset-list": {
