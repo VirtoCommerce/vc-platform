@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security.Caching;
+using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 
@@ -63,7 +64,17 @@ namespace VirtoCommerce.Platform.Security
             var cacheKey = CacheKey.With(GetType(), nameof(FindByEmailAsync), email);
             return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
-                var user = await base.FindByEmailAsync(email);
+                ApplicationUser user;
+
+                try
+                {
+                    user = await base.FindByEmailAsync(email);
+                }
+                catch (InvalidOperationException ex) when (ex.StackTrace?.Contains("SingleOrDefault") == true)
+                {
+                    throw new DuplicateEmailException(email, ex);
+                }
+
                 if (user is not null)
                 {
                     await LoadUserDetailsAsync(user);
