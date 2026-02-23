@@ -67,5 +67,12 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
             Code = nameof(UnsupportedGrantType).ToSnakeCase(),
             ErrorDescription = "The specified grant type is not supported."
         };
+
+        public static TokenResponse DuplicateEmailLoginAttempt() => new()
+        {
+            Error = Errors.InvalidGrant,
+            Code = nameof(DuplicateEmailLoginAttempt).ToSnakeCase(),
+            ErrorDescription = "Multiple accounts are associated with this email. Please use your username to login."
+        };
     }
 }
