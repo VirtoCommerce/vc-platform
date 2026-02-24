@@ -19,6 +19,8 @@ namespace VirtoCommerce.Platform.Security
         /// </summary>
         private const string OperatorUserNameHeader = "VirtoCommerce-Operator-User-Name";
 
+        private const string AnonymousUserName = "http:anonymous";
+
         private static readonly AsyncLocal<string> _currentUserName = new AsyncLocal<string>();
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -35,6 +37,8 @@ namespace VirtoCommerce.Platform.Security
             var context = _httpContextAccessor.HttpContext;
             if (context != null && context.Request != null && context.User != null)
             {
+                result = AnonymousUserName;
+
                 var identity = context.User.Identity;
                 if (identity != null && identity.IsAuthenticated)
                 {
