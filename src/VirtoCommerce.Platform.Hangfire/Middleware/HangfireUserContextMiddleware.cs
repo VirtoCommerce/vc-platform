@@ -45,9 +45,9 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
         {
             string userName;
 
-            if (IsRecurringJob(filterContext))
+            if (IsRecurringJob(filterContext, out var recurringJobId))
             {
-                userName = "system:recurring:job";
+                userName = $"system:{recurringJobId}";
             }
             else
             {
@@ -64,9 +64,9 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
 
         #endregion IServerFilter Members
 
-        private static bool IsRecurringJob(PerformingContext context)
+        private static bool IsRecurringJob(PerformingContext context, out string recurringJobId)
         {
-            var recurringJobId = context.GetJobParameter<string>("RecurringJobId");
+            recurringJobId = context.GetJobParameter<string>("RecurringJobId");
             return !string.IsNullOrEmpty(recurringJobId);
         }
     }
