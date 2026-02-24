@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
-using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
 
 namespace VirtoCommerce.Platform.Data.Extensions
 {
@@ -33,13 +32,8 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
                 entry.Entity.CreatedDate = entry.Original.CreatedDate;
                 entry.Entity.CreatedBy = entry.Original.CreatedBy;
-
                 entry.Entity.ModifiedDate = currentTime;
-
-                if (userName != UNKNOWN_USERNAME)
-                {
-                    entry.Entity.ModifiedBy = userName;
-                }
+                entry.Entity.ModifiedBy = userName;
             };
 
             Triggers<IEntity>.Inserting += entry =>

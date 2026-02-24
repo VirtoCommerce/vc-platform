@@ -3,5 +3,6 @@ namespace VirtoCommerce.Platform.Data.Constants
     public static class DefaultEntityNames
     {
         public const string UNKNOWN_USERNAME = "unknown";
+        public const string SYSTEM_RECURRING_JOB = "system:recurring:job";
     }
 }
