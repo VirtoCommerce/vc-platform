@@ -47,6 +47,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public ICollection<ManifestAppInfo> Apps { get; } = new List<ManifestAppInfo>();
 
+        public string StartupType { get; private set; }
+
         public virtual ManifestModuleInfo LoadFromManifest(ModuleManifest manifest)
         {
             if (manifest == null)
@@ -93,6 +95,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Tags = manifest.Tags;
             Identity = new ModuleIdentity(Id, Version, Optional);
             ModuleType = manifest.ModuleType;
+            StartupType = manifest.StartupType;
 
             if (manifest.Groups != null)
             {
