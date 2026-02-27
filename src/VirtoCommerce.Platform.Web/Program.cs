@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,6 +41,15 @@ namespace VirtoCommerce.Platform.Web
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    // Register discovered startups before UseStartup<Startup>() so they are
+                    // available in the service collection when Startup.ConfigureServices runs.
+                    // Host-level ConfigureServices (below) executes after Startup.ConfigureServices,
+                    // so the registration must happen here.
+                    webBuilder.ConfigureServices(services =>
+                    {
+                        services.AddSingleton<IReadOnlyList<IPlatformStartup>>(platformStartups);
+                    });
+
                     webBuilder.UseStartup<Startup>();
                     webBuilder.ConfigureKestrel((_, options) => { options.Limits.MaxRequestBodySize = null; });
 
@@ -56,9 +66,6 @@ namespace VirtoCommerce.Platform.Web
                 })
                 .ConfigureServices((hostingContext, services) =>
                 {
-                    // Store discovered startups for Startup.cs to use
-                    services.AddSingleton<IReadOnlyList<IPlatformStartup>>(platformStartups);
-
                     // Invoke IPlatformStartup.ConfigureHostServices from discovered modules
                     foreach (var startup in platformStartups)
                     {

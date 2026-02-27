@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Loader;
 using VirtoCommerce.Platform.Core.Modularity;
 
@@ -34,6 +35,25 @@ namespace VirtoCommerce.Platform.Modules
             {
                 return startups;
             }
+
+            // Register a permanent handler to resolve assemblies from the probing path.
+            // This is needed because startup assemblies are loaded into the default ALC
+            // before the full module loader (LoadContextAssemblyResolver) is configured,
+            // so their transitive dependencies won't be found otherwise.
+            // The handler must remain active because startup methods (ConfigureAppConfiguration,
+            // ConfigureHostServices, etc.) are invoked later during host building and may
+            // trigger assembly loads at that point.
+            var fullProbingPath = Path.GetFullPath(probingPath);
+            AssemblyLoadContext.Default.Resolving += (context, assemblyName) =>
+            {
+                var candidatePath = Path.Combine(fullProbingPath, assemblyName.Name + ".dll");
+                if (File.Exists(candidatePath))
+                {
+                    return context.LoadFromAssemblyPath(candidatePath);
+                }
+
+                return null;
+            };
 
             foreach (var manifestFile in Directory.EnumerateFiles(discoveryPath, "module.manifest", SearchOption.AllDirectories))
             {

@@ -48,6 +48,7 @@
   
   <!--Added to support VC modules on .NET8. Should be removed after Stable14-->
   <ItemGroup>
+    <PackageReference Include="Azure.Core" Version="1.51.1" />
     <PackageReference Include="Microsoft.Win32.SystemEvents" Version="10.0.1" />
     <PackageReference Include="Microsoft.Bcl.TimeProvider" Version="10.0.1" />
     <PackageReference Include="System.CodeDom" Version="10.0.1" />
