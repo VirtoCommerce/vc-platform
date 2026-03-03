@@ -22,9 +22,27 @@ angular.module('platformWebApp').factory('platformWebApp.urlHelper', [function (
         }
     }
 
+    function getHashQueryValue(name) {
+        var hash = window.location.hash || '';
+        var queryIndex = hash.indexOf('?');
+        if (queryIndex === -1) {
+            return null;
+        }
+        var hashQuery = new URLSearchParams(hash.substring(queryIndex));
+        return hashQuery.get(name);
+    }
+
+    function isEmbeddedMode() {
+        // Check both regular query string (?EmbeddedMode=true)
+        // and hash-based query string (#!/workspace?EmbeddedMode=true)
+        return getQueryValue('EmbeddedMode') === 'true'
+            || getHashQueryValue('EmbeddedMode') === 'true';
+    }
+
     return {
         getSafeReturnUrl,
         getQueryValue,
-        isLocalUrl
+        isLocalUrl,
+        isEmbeddedMode
     };
 }]);
