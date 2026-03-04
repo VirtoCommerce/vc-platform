@@ -20,8 +20,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
             using (var file = File.OpenRead(depsFilePath))
             {
                 var deps = reader.Read(file);
-                var dependencies = ExtractDependencies(deps).ToArray();
-                return dependencies;
+                return ExtractDependencies(deps);
             }
         }
 
