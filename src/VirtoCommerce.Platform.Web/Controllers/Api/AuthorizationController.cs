@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.Authorization;
+using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
@@ -134,10 +135,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 var user = await _userManager.FindByNameAsync(openIdConnectRequest.Username);
 
-                // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
+                // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True.
                 if (user is null && _identityOptions.User.RequireUniqueEmail)
                 {
-                    user = await _userManager.FindByEmailAsync(openIdConnectRequest.Username);
+                    try
+                    {
+                        user = await _userManager.FindByEmailAsync(openIdConnectRequest.Username);
+                    }
+                    catch (DuplicateEmailException)
+                    {
+                        await delayedResponse.FailAsync();
+                        return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
+                    }
                 }
 
                 if (user is null)
@@ -153,7 +162,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
-                context.SignInResult = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
+                try
+                {
+                    context.SignInResult = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
+                }
+                catch (DuplicateEmailException)
+                {
+                    await delayedResponse.FailAsync();
+                    return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
+                }
+
                 context.User = user.CloneTyped();
 
                 foreach (var requestValidator in _requestValidators)
@@ -172,7 +190,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(user, context);
 
-                await SetLastLoginDate(user);
+                try
+                {
+                    await SetLastLoginDate(user);
+                }
+                catch (DuplicateEmailException)
+                {
+                    await delayedResponse.FailAsync();
+                    return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
+                }
+
                 await _eventPublisher.Publish(new UserLoginEvent(user));
 
                 await delayedResponse.SucceedAsync();

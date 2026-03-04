@@ -33,15 +33,18 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly IDictionary<string, IEnumerable<SettingDescriptor>> _registeredTypeSettingsByNameDict = new Dictionary<string, IEnumerable<SettingDescriptor>>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IEventPublisher _eventPublisher;
         private readonly Dictionary<string, ObjectSettingEntry> _fixedSettingsDict;
+        private readonly ISettingsOverrideProvider _overrideProvider;
 
         public SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
-            IOptions<FixedSettings> fixedSettings)
+            IOptions<FixedSettings> fixedSettings,
+            ISettingsOverrideProvider overrideProvider)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
             _eventPublisher = eventPublisher;
+            _overrideProvider = overrideProvider;
 
             _fixedSettingsDict = fixedSettings.Value.Settings?.ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase)
                                  ?? new Dictionary<string, ObjectSettingEntry>(StringComparer.OrdinalIgnoreCase);
@@ -113,7 +116,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 {
                     var objectSetting = _fixedSettingsDict.ContainsKey(name)
                         ? GetFixedSetting(name)
-                        : GetRegularSetting(name, dbStoredSettings, objectType, objectId);
+                        : GetSettingWithOverrides(name, dbStoredSettings, objectType, objectId);
 
                     resultObjectSettings.Add(objectSetting);
 
@@ -164,8 +167,50 @@ namespace VirtoCommerce.Platform.Data.Settings
                             x.ItHasValues)
                 .ToArray();
 
+            // If a setting is forced by configuration, ignore incoming value and restore to config
+            // by removing any persisted DB override for that scope.
+            // This makes "Save" idempotent and admin-friendly (no errors, value simply stays as configured).
+            var forcedSettings = Array.Empty<ObjectSettingEntry>();
+            if (_overrideProvider != null && settings.Length != 0)
+            {
+                forcedSettings = settings
+                    .Where(s =>
+                    {
+                        var descriptor = _registeredSettingsByNameDict[s.Name];
+                        return descriptor != null && _overrideProvider.TryGetCurrentValue(descriptor, s.ObjectType, s.ObjectId, out _);
+                    })
+                    .ToArray();
+
+                if (forcedSettings.Length != 0)
+                {
+                    settings = settings.Except(forcedSettings).ToArray();
+                }
+            }
+
             using (var repository = _repositoryFactory())
             {
+                // First: restore forced settings by deleting any DB overrides for that scope
+                foreach (var forced in forcedSettings)
+                {
+                    var dbSetting = await repository.Settings
+                        .Include(x => x.SettingValues)
+                        .FirstOrDefaultAsync(x => x.Name == forced.Name && x.ObjectType == forced.ObjectType && x.ObjectId == forced.ObjectId);
+
+                    if (dbSetting != null)
+                    {
+                        var descriptor = _registeredSettingsByNameDict[forced.Name];
+                        var oldEntry = dbSetting.ToModel(new ObjectSettingEntry(descriptor));
+                        repository.Remove(dbSetting);
+                        changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(oldEntry, EntryState.Deleted));
+                    }
+                }
+
+                if (forcedSettings.Length != 0)
+                {
+                    // Ensure cache invalidation for forced scope values as well
+                    ClearCache(forcedSettings);
+                }
+
                 var settingNames = settings.Select(x => x.Name).Distinct().ToArray();
 
                 var alreadyExistDbSettings = await repository.Settings
@@ -247,6 +292,59 @@ namespace VirtoCommerce.Platform.Data.Settings
             }
 
             return objectSetting;
+        }
+
+        protected virtual ObjectSettingEntry GetSettingWithOverrides(string name, List<SettingEntity> dbStoredSettings, string objectType, string objectId)
+        {
+            var settingDescriptor = _registeredSettingsByNameDict[name];
+            if (settingDescriptor == null)
+            {
+                throw new PlatformException($"Setting with name {name} is not registered");
+            }
+
+            ObjectSettingEntry objectSetting;
+
+            // Forced override from config wins (read-only)
+            if (_overrideProvider != null &&
+                _overrideProvider.TryGetCurrentValue(settingDescriptor, objectType, objectId, out var forcedValue))
+            {
+                objectSetting = CreateOverriddenSetting(settingDescriptor, objectType, objectId, forcedValue, isReadOnly: true);
+            }
+            else
+            {
+                // Otherwise load from DB (if present)
+                objectSetting = GetRegularSetting(name, dbStoredSettings, objectType, objectId);
+            }
+
+            // Apply default value override 
+            if (_overrideProvider != null &&
+                _overrideProvider.TryGetDefaultValue(settingDescriptor, objectType, objectId, out var @default))
+            {
+                objectSetting.DefaultValue = @default;
+            }
+
+            return objectSetting;
+        }
+
+        private static ObjectSettingEntry CreateOverriddenSetting(SettingDescriptor descriptor, string objectType, string objectId, object rawValue, bool isReadOnly)
+        {
+            var entry = new ObjectSettingEntry(descriptor)
+            {
+                ObjectType = objectType,
+                ObjectId = objectId,
+                IsReadOnly = isReadOnly
+            };
+
+            if (entry.IsDictionary)
+            {
+                entry.AllowedValues = rawValue as object[] ?? Array.Empty<object>();
+            }
+            else
+            {
+                entry.Value = rawValue;
+            }
+
+            return entry;
         }
 
         protected virtual ObjectSettingEntry GetFixedSetting(string name)

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 
@@ -21,6 +22,7 @@ public static class DbContextOptionsBuilderExtensions
             {
                 npgsqlDbContextOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
                 npgsqlOptionsAction?.Invoke(npgsqlDbContextOptionsBuilder, configuration);
-            });
+            })
+            .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.NoEntityTypeConfigurationsWarning));
     }
 }

@@ -660,7 +660,8 @@
       },
       "settings-detail": {
         "title": "Einstellungswerte",
-        "hide-description": "Ausblenden"
+        "hide-description": "Ausblenden",
+        "reset-to-default": "Auf Standardwert zurücksetzen"
       },
       "settingGroup-list": {
         "title": "Einstellungen",

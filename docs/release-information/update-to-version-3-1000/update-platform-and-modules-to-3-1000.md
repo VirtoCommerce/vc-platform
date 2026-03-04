@@ -16,6 +16,7 @@ Discover the exciting features and improvements introduced in .NET 10 to maximiz
 * [What's new in NET10](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview)
 * [What's new in EF 10 Core](https://learn.microsoft.com/en-us/ef/core/what-is-new/ef-core-10.0/whatsnew)
 * [What's new in ASP.NET Core 10](https://learn.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-10.0)
+* [What's New in xUnit v3?](https://xunit.net/docs/getting-started/v3/whats-new)
 
 ## Benefits
 
@@ -57,6 +58,10 @@ You can find more information about PendingModelChangesWarning warning by [follo
 
 Virto Commerce updated Microsoft.OpenApi from version 1.0.0 to 2.3.0 that includes some breaking changes. You will need to update and rebuild your custom module if you use Microsoft.OpenApi.
 You can find more information about breaking changes in Microsoft.OpenApi by [following link](https://github.com/microsoft/OpenAPI.NET/blob/main/docs/upgrade-guide-2.md).
+
+### Migrating xUnit Tests from v2 to v3
+
+[Review this migration guide](https://xunit.net/docs/getting-started/v3/migration) aims to be a comprehensive list helping developers migrate from xUnit.net v2 to v3. 
 
 ## Remove BuildHost-net472 and BuildHost-netcore
 
@@ -173,6 +178,19 @@ This script automates several these tasks, including (of course you can do it ma
 2. Updating project dependencies, including Microsoft NuGet dependencies to version 10.0.0 and VirtoCommerce NuGet dependency to version 3.1000.0 and latest.
 3. Updating other third-party dependencies to the version used by Virto Commerce Platform .NET10.
 4. Updating the module.manifest file to align with the changes in .NET 10.
+
+### Remove Microsoft.SourceLink.GitHub Reference
+
+Starting with .NET 8, Source Link for the following source control providers is included in the .NET SDK and enabled by default:
+
+* GitHub or GitHub Enterprise
+* Azure Repos git repositories (formerly known as Visual Studio Team Services)
+* GitLab 12.0+ (for older versions see GitLab settings)
+* Bitbucket 4.7+ (for older versions see Bitbucket settings)
+
+If your project uses Virto Commerce 3 on .NET10 and is hosted by the above providers it does not need to reference any Source Link packages or set any build properties to include source control information in the PDB.
+
+You can remove Microsoft.SourceLink.GitHub reference from project files.
 
 ### Build Solution
 

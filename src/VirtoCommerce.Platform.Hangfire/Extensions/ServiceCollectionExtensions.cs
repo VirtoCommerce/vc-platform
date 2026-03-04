@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             return globalConfiguration;
         }
 
-        public static object AddHangfire(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddHangfire(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<RecurringJobService>();
             services.AddSingleton<IRecurringJobService, RecurringJobService>();

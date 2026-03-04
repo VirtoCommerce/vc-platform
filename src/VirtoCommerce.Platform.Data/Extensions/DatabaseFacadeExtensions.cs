@@ -10,7 +10,11 @@ namespace VirtoCommerce.Platform.Data.Extensions
         public static void MigrateIfNotApplied(this DatabaseFacade databaseFacade, string targetMigration)
         {
             var connectionTimeout = databaseFacade.GetDbConnection().ConnectionTimeout;
-            databaseFacade.SetCommandTimeout(connectionTimeout);
+            var commandTimeout = databaseFacade.GetCommandTimeout();
+            if (commandTimeout is null)
+            {
+                databaseFacade.SetCommandTimeout(connectionTimeout);
+            }
 
             var platformMigrator = databaseFacade.GetService<IMigrator>();
             var appliedMigrations = databaseFacade.GetAppliedMigrations();

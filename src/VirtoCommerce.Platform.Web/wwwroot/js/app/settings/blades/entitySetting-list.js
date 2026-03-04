@@ -17,10 +17,13 @@ angular.module('platformWebApp').controller('platformWebApp.entitySettingListCon
             }
 
             // transform to va-generic-value-input suitable structure
-            if (setting.value == undefined && setting.defaultValue) {
+            if (setting.value == null && setting.defaultValue) {
                 setting.value = setting.defaultValue;
             }
-            setting.values = setting.isDictionary ? [{ value: { id: setting.value, name: setting.value } }] : [{ id: setting.value, value: setting.value }];
+
+
+            setting.values = settingsHelper.getSettingValues(setting);
+
             if (setting.allowedValues) {
                 setting.allowedValues = _.map(setting.allowedValues, function (x) {
                     return { value: x };
@@ -34,6 +37,14 @@ angular.module('platformWebApp').controller('platformWebApp.entitySettingListCon
         blade.origEntity = settings;
         blade.isLoading = false;
     }
+
+    $scope.resetToDefaultValue = function (setting) {
+        settingsHelper.resetToDefaultValue(blade.currentEntities, setting);
+    };
+
+    $scope.isDefaultValue = function (setting) {
+        return settingsHelper.isDefaultValue(setting);
+    };
 
     $scope.editArray = function (node) {
         var newBlade = {

@@ -1,7 +1,7 @@
 # Define the target framework
 $targetFramework = "net10.0"
 $versionPrefix = "3.1000.0"
-$platformVersion = "3.1000.0"
+$platformVersion = "3.1002.0"
 
 # Read the predefined versions from vc-references.json or create an empty object
 $predefinedVersions =  @{
@@ -9,9 +9,11 @@ $predefinedVersions =  @{
     "AutoMapper" = "12.0.1"
     "AutoMapper.Extensions.Microsoft.DependencyInjection" = "12.0.1"
 	"coverlet.collector" = "6.0.4"
-	"FluentAssertions" = "8.8.0"
+    "CsvHelper" = "33.1.0"
+	"FluentAssertions" = "7.2.0"
 	"FluentValidation" = "12.1.1"
 	"Hangfire" = "1.8.22"
+    "MailKit" = "4.14.1"
     "MediatR" = "12.4.1"
 	"Microsoft.AspNetCore.Authentication.OpenIdConnect" = "10.0.1"
 	"Microsoft.AspNetCore.Mvc.NewtonsoftJson" = "10.0.1"
@@ -25,7 +27,6 @@ $predefinedVersions =  @{
 	"Microsoft.Extensions.DependencyModel" = "10.0.1"
 	"Microsoft.Extensions.Logging.Abstractions" = "10.0.1"
 	"Microsoft.NET.Test.Sdk" = "18.0.1"
-	"Microsoft.SourceLink.GitHub" = "8.0.0"
 	"MockQueryable.Moq" = "10.0.1"
 	"Moq" = "4.20.72"
 	"Npgsql" = "10.0.0"
@@ -34,10 +35,23 @@ $predefinedVersions =  @{
 	"OpenIddict.EntityFrameworkCore" = "7.2.0"
 	"Polly" = "9.0.0"
 	"Pomelo.EntityFrameworkCore.MySql" = "9.0.0"
+    "Scriban" = "6.5.2"
 	"Swashbuckle.AspNetCore.SwaggerGen" = "10.1.0"
-	"xunit" = "2.9.3"
-    "xunit.runner.console" = "2.9.3" 
+    "xunit.v3" = "3.2.2"
+    "xunit.v3.runner.console" = "3.2.2"
 	"xunit.runner.visualstudio" = "3.1.5"
+}
+
+$replacedPackages = @{
+    "xunit" = "xunit.v3"
+    "xunit.runner.console" = "xunit.v3.runner.console"
+}
+
+$removedPackages = @{
+    "Microsoft.SourceLink.GitHub" = $true
+    "MSTest.TestAdapter" = $true
+    "MSTest.TestFramework" = $true
+    "DotNetCliToolReference" = $true
 }
 
 function Save-File ($xml, $filePath) {
@@ -100,14 +114,38 @@ function Update-Latest-Packages ($projectFile) {
 		$installedVersion = $_.Version
 		$item = $_
 
+        $removedPackage = $removedPackages.$packageName
+        if($removedPackage)
+        {
+            Write-Host "Removing package $packageName"
+            $item.ParentNode.RemoveChild($item) | Out-Null
+            return
+        }
+
+        $replacedPackage = $replacedPackages.$packageName
+        if($replacedPackage)
+        {
+            Write-Host "Replacing package $packageName with $replacedPackage"
+            $_.Include = $replacedPackage
+            $packageName = $replacedPackage
+        }
+
 		$version = $predefinedVersions.$packageName
 	    if (-not $version) {
 		    try {
 			    $latestVersion = (Find-Package $packageName -Source https://www.nuget.org/api/v2).Version
 			
-			    if ($packageName.StartsWith("VirtoCommerce.")) {
+			    if ($packageName.StartsWith("VirtoCommerce.Platform")) {
+				    $latestVersion = $platformVersion
+			    }
+                elseif ($packageName.StartsWith("VirtoCommerce.")) {
 				    $latestVersion = $versionPrefix
 			    }
+                else
+                {
+                    Write-Host "*** Resolve Package $packageName latest version $latestVersion from NUGET"
+                }
+
 			    $predefinedVersions["$packageName"] = $latestVersion
 			    $version = $latestVersion
 		    } catch {
@@ -123,18 +161,18 @@ function Update-Latest-Packages ($projectFile) {
             Write-Host "Ensuring Microsoft.EntityFrameworkCore.Design PackageReference settings"
 
             # Ensure <PrivateAssets>all</PrivateAssets>
-	        $privateAssetsNode = $packageReference.SelectSingleNode("PrivateAssets")
+	        $privateAssetsNode = $item.SelectSingleNode("PrivateAssets")
 	        if (-not $privateAssetsNode) {
 		        $privateAssetsNode = $xml.CreateElement("PrivateAssets")
-		        [void]$packageReference.AppendChild($privateAssetsNode)
+		        [void]$item.AppendChild($privateAssetsNode)
 	        }
 	        $privateAssetsNode.InnerText = "all"
 
 	        # Ensure <IncludeAssets>runtime; build; native; analyzers; buildtransitive</IncludeAssets>
-	        $includeAssetsNode = $packageReference.SelectSingleNode("IncludeAssets")
+	        $includeAssetsNode = $item.SelectSingleNode("IncludeAssets")
 	        if (-not $includeAssetsNode) {
 		        $includeAssetsNode = $xml.CreateElement("IncludeAssets")
-		        [void]$packageReference.AppendChild($includeAssetsNode)
+		        [void]$item.AppendChild($includeAssetsNode)
 	        }
 	        $includeAssetsNode.InnerText = "runtime; build; native; analyzers; buildtransitive"
         }

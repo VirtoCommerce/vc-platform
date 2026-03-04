@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
                 var task = Task.Factory.StartNew(() =>
                 {
                     Assert.True(CacheDisabler.CacheDisabled, "CacheDisabler inherits value in another thread!");
-                });
+                }, TestContext.Current.CancellationToken);
 
                 await task;
             }

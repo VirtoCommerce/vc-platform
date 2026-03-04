@@ -660,7 +660,8 @@
       },
       "settings-detail": {
         "title": "Значения настроек",
-        "hide-description": "Скрыть"
+        "hide-description": "Скрыть",
+        "reset-to-default": "Сбросить к значению по умолчанию"
       },
       "settingGroup-list": {
         "title": "Настройки",

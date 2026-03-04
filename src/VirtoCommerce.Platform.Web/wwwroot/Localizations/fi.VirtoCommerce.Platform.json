@@ -659,7 +659,8 @@
       },
       "settings-detail": {
         "title": "Asetusarvot",
-        "hide-description": "Piilota"
+        "hide-description": "Piilota",
+        "reset-to-default": "Palauta oletusarvoon"
       },
       "settingGroup-list": {
         "title": "Asetukset",

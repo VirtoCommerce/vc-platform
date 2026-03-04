@@ -40,6 +40,7 @@ Microsoft.Bcl.Cryptography.dll
 Microsoft.Bcl.HashCode.dll
 Microsoft.Bcl.TimeProvider.dll
 Microsoft.Data.SqlClient.dll
+Microsoft.Data.SqlClient.resources.dll
 Microsoft.Data.SqlClient.SNI.dll
 Microsoft.DotNet.PlatformAbstractions.dll
 Microsoft.EntityFrameworkCore.Abstractions.dll

@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -91,7 +91,8 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasColumnType("character varying(512)")
+                        .UseCollation("case_insensitive");
 
                     b.Property<string>("PropertyId")
                         .HasColumnType("character varying(128)");
@@ -188,7 +189,8 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("character varying(256)")
+                        .UseCollation("case_insensitive");
 
                     b.Property<string>("ObjectType")
                         .HasMaxLength(256)

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 
@@ -22,6 +23,7 @@ public static class DbContextOptionsBuilderExtensions
             {
                 mySqlDbContextOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
                 mySqlOptionsAction?.Invoke(mySqlDbContextOptionsBuilder, configuration);
-            });
+            })
+            .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.NoEntityTypeConfigurationsWarning));
     }
 }

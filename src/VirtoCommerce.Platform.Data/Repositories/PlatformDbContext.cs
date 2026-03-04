@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -106,6 +107,30 @@ namespace VirtoCommerce.Platform.Data.Repositories
             #region Raw license
             modelBuilder.Entity<RawLicenseEntity>().ToEntityTable("RawLicense");
             #endregion
+
+            // Allows configuration for an entity type for different database types.
+            // Applies configuration from all <see cref="IEntityTypeConfiguration{TEntity}" in VirtoCommerce.Platform.Data.XXX project. /> 
+            switch (Database.ProviderName)
+            {
+                case "Pomelo.EntityFrameworkCore.MySql":
+                    const string mySqlAssemblyName = "VirtoCommerce.Platform.Data.MySql";
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.Platform.Data.MySql"), type => IsPlatformDBContextEntity(type, mySqlAssemblyName));
+                    break;
+                case "Npgsql.EntityFrameworkCore.PostgreSQL":
+                    const string postgreSqlAssemblyName = "VirtoCommerce.Platform.Data.PostgreSql";
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load(postgreSqlAssemblyName), type => IsPlatformDBContextEntity(type, postgreSqlAssemblyName));
+                    break;
+                case "Microsoft.EntityFrameworkCore.SqlServer":
+                    const string sqlServerAssemblyName = "VirtoCommerce.Platform.Data.SqlServer";
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load(sqlServerAssemblyName), type => IsPlatformDBContextEntity(type, sqlServerAssemblyName));
+                    break;
+            }
+        }
+
+        private static bool IsPlatformDBContextEntity(Type type, string assemblyName)
+        {
+            return type.Namespace != null &&
+                type.Namespace == $"{assemblyName}.EntityConfigurations.Data";
         }
     }
 }
