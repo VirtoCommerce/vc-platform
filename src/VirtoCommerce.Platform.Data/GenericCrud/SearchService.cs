@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : ISearchService<TCriteria, TResult, TModel>
         where TCriteria : SearchCriteriaBase
         where TResult : GenericSearchResult<TModel>
-        where TModel : Entity, ICloneable
+        where TModel : IEntity, ICloneable
         where TEntity : Entity, IDataEntity<TEntity, TModel>
     {
         private readonly IPlatformMemoryCache _platformMemoryCache;

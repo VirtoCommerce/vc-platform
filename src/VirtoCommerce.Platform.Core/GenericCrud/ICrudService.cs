@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Core.GenericCrud
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface ICrudService<T>
-        where T : Entity
+        where T : IEntity
     {
         /// <summary>
         /// Returns a list of model instances for specified IDs.
