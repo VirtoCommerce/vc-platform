@@ -9,6 +9,7 @@ $predefinedVersions =  @{
     "AutoMapper" = "12.0.1"
     "AutoMapper.Extensions.Microsoft.DependencyInjection" = "12.0.1"
 	"coverlet.collector" = "6.0.4"
+    "CsvHelper" = "33.1.0"
 	"FluentAssertions" = "7.2.0"
 	"FluentValidation" = "12.1.1"
 	"Hangfire" = "1.8.22"
@@ -50,6 +51,7 @@ $removedPackages = @{
     "Microsoft.SourceLink.GitHub" = $true
     "MSTest.TestAdapter" = $true
     "MSTest.TestFramework" = $true
+    "DotNetCliToolReference" = $true
 }
 
 function Save-File ($xml, $filePath) {
