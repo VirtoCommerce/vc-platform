@@ -226,7 +226,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             foreach (var (changedEntry, i) in changedEntries.Select((x, i) => (x, i)))
             {
-                changedEntry.NewEntry = ToModel(changedEntities[i]);
+                // Update the original model in place instead of creating a new one.
+                // This ensures DB-generated values are synced back to the original model objects
+                // passed to SaveChangesAsync.
+                changedEntities[i].ToModel(changedEntry.NewEntry);
             }
 
             await AfterSaveChangesAsync(models, changedEntries);
