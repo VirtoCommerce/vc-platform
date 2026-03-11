@@ -9,6 +9,8 @@ using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.Core.TransactionFileManager;
+using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules.External;
 
 #pragma warning disable VC0014 // Type is obsolete
@@ -20,15 +22,25 @@ namespace VirtoCommerce.Platform.Modules
         private const string _packageFileExtension = ".zip";
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly IExternalModulesClient _externalClient;
+        private readonly ITransactionFileManager _fileManager;
         private readonly IExternalModuleCatalog _extModuleCatalog;
         private readonly IFileSystem _fileSystem;
+        private readonly IZipFileWrapper _zipFileWrapper;
 
-        public ModuleInstaller(IExternalModuleCatalog extModuleCatalog, IExternalModulesClient externalClient, IOptions<LocalStorageModuleCatalogOptions> localOptions, IFileSystem fileSystem)
+        public ModuleInstaller(
+            IExternalModuleCatalog extModuleCatalog,
+            IExternalModulesClient externalClient,
+            ITransactionFileManager txFileManager,
+            IOptions<LocalStorageModuleCatalogOptions> localOptions,
+            IFileSystem fileSystem,
+            IZipFileWrapper zipFileWrapper)
         {
             _extModuleCatalog = extModuleCatalog;
             _externalClient = externalClient;
             _options = localOptions.Value;
+            _fileManager = txFileManager;
             _fileSystem = fileSystem;
+            _zipFileWrapper = zipFileWrapper;
         }
 
         #region IModuleInstaller Members
@@ -72,7 +84,7 @@ namespace VirtoCommerce.Platform.Modules
                         {
                             var existModule = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().First(x => x.IsInstalled && x.Id == newModule.Id);
                             var dstModuleDir = Path.Combine(_options.DiscoveryPath, existModule.Id);
-                            ModulePackageInstaller.Uninstall(dstModuleDir);
+                            _fileManager.SafeDelete(dstModuleDir);
                             Report(progress, ProgressMessageLevel.Info, "Updating '{0}' -> '{1}'", existModule, newModule);
                             InnerInstall(newModule, progress);
                             existModule.IsInstalled = false;
@@ -131,7 +143,10 @@ namespace VirtoCommerce.Platform.Modules
                             }
                             var moduleDir = Path.Combine(_options.DiscoveryPath, uninstallingModule.Id);
                             Report(progress, ProgressMessageLevel.Info, "Deleting module {0} folder", moduleDir);
-                            ModulePackageInstaller.Uninstall(moduleDir);
+                            if (Directory.Exists(moduleDir))
+                            {
+                                _fileManager.SafeDelete(moduleDir);
+                            }
                             Report(progress, ProgressMessageLevel.Info, "'{0}' uninstalled successfully.", uninstallingModule);
                             uninstallingModule.IsInstalled = false;
                             changedModulesLog.Add(uninstallingModule);
@@ -178,10 +193,7 @@ namespace VirtoCommerce.Platform.Modules
             var dstModuleDir = Path.Combine(_options.DiscoveryPath, module.Id);
             var moduleZipPath = Path.Combine(dstModuleDir, GetModuleZipFileName(module.Id, module.Version.ToString()));
 
-            if (!Directory.Exists(dstModuleDir))
-            {
-                Directory.CreateDirectory(dstModuleDir);
-            }
+            _fileManager.CreateDirectory(dstModuleDir);
 
             // Download module archive from web
             if (Uri.IsWellFormedUriString(module.Ref, UriKind.Absolute))
@@ -200,10 +212,10 @@ namespace VirtoCommerce.Platform.Modules
                 moduleZipPath = module.Ref;
             }
 
-            // Extract the downloaded/local package using ModulePackageInstaller
+            // Extract the downloaded/local package
             if (File.Exists(moduleZipPath))
             {
-                ModulePackageInstaller.Install(moduleZipPath, dstModuleDir);
+                _zipFileWrapper.Extract(moduleZipPath, dstModuleDir);
             }
 
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);

@@ -66,7 +66,11 @@ namespace VirtoCommerce.Platform.Modules
                 {
                     if (!Modules.OfType<ManifestModuleInfo>().Contains(module))
                     {
-                        module.InitializationMode = InitializationMode.OnDemand;
+                        if (externalModuleInfos.Contains(module))
+                        {
+                            module.InitializationMode = InitializationMode.OnDemand;
+                        }
+
                         AddModule(module);
                     }
                 }

@@ -15,6 +15,11 @@ namespace VirtoCommerce.Platform.Modules;
 /// </summary>
 public static class ModuleDiscovery
 {
+    private static readonly JsonSerializerOptions _manifestJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
     /// <summary>
     /// Parse external module manifest JSON into a list of ManifestModuleInfo.
     /// Pure function - no HTTP, works on already-downloaded data.
@@ -28,7 +33,7 @@ public static class ModuleDiscovery
         ArgumentNullException.ThrowIfNull(platformVersion);
 
         var result = new List<ManifestModuleInfo>();
-        var manifests = JsonSerializer.Deserialize<List<ExternalModuleManifest>>(manifestJson);
+        var manifests = JsonSerializer.Deserialize<List<ExternalModuleManifest>>(manifestJson, _manifestJsonOptions);
 
         if (manifests == null)
         {

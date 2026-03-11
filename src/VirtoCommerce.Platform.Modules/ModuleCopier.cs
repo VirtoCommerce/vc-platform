@@ -137,49 +137,14 @@ public static class ModuleCopier
     /// </summary>
     public static bool IsCopyRequired(Architecture environment, string sourceFilePath, string targetFilePath)
     {
-        if (!File.Exists(targetFilePath))
-        {
-            return IsArchitectureCompatible(sourceFilePath, environment);
-        }
-
-        var result = new FileCompareResult
-        {
-            NewFile = false,
-        };
-
-        CompareDates(sourceFilePath, targetFilePath, result);
-        CompareVersions(sourceFilePath, targetFilePath, result);
-        CompareArchitecture(sourceFilePath, targetFilePath, environment, result);
-
-        return result.NewVersion && result.SameOrNewArchitecture ||
-               result.NewArchitecture && result.SameOrNewVersion ||
-               result.NewDate && result.SameOrNewArchitecture && result.SameOrNewVersion;
+        return IsCopyRequired(environment, sourceFilePath, targetFilePath, out _);
     }
 
     private static void CopyFile(Architecture environment, string sourceFilePath, string targetFilePath)
     {
-        if (!File.Exists(targetFilePath))
+        if (!IsCopyRequired(environment, sourceFilePath, targetFilePath, out var result))
         {
-            if (!IsArchitectureCompatible(sourceFilePath, environment))
-            {
-                return;
-            }
-        }
-        else
-        {
-            var result = new FileCompareResult();
-            CompareDates(sourceFilePath, targetFilePath, result);
-            CompareVersions(sourceFilePath, targetFilePath, result);
-            CompareArchitecture(sourceFilePath, targetFilePath, environment, result);
-
-            var shouldCopy = result.NewVersion && result.SameOrNewArchitecture ||
-                             result.NewArchitecture && result.SameOrNewVersion ||
-                             result.NewDate && result.SameOrNewArchitecture && result.SameOrNewVersion;
-
-            if (!shouldCopy)
-            {
-                return;
-            }
+            return;
         }
 
         var targetDir = Path.GetDirectoryName(targetFilePath);
@@ -194,9 +159,39 @@ public static class ModuleCopier
         }
         catch (IOException)
         {
-            // Another process may be copying the same file
-            ModuleLogger.CreateLogger(typeof(ModuleCopier)).LogWarning("Could not copy {FileName} (file in use)", Path.GetFileName(sourceFilePath));
+            // Date-only refreshes are best effort. Any other copy failure (new file/version/architecture) must fail.
+            var isDateOnlyRefresh = result.NewDate && !result.NewVersion && !result.NewArchitecture && !result.NewFile;
+            if (isDateOnlyRefresh)
+            {
+                ModuleLogger.CreateLogger(typeof(ModuleCopier)).LogWarning("Could not refresh {FileName} (file in use)", Path.GetFileName(sourceFilePath));
+            }
+            else
+            {
+                throw;
+            }
         }
+    }
+
+    private static bool IsCopyRequired(Architecture environment, string sourceFilePath, string targetFilePath, out FileCompareResult result)
+    {
+        result = new FileCompareResult
+        {
+            NewFile = !File.Exists(targetFilePath),
+        };
+
+        if (result.NewFile)
+        {
+            result.CompatibleArchitecture = IsArchitectureCompatible(sourceFilePath, environment);
+            return result.CompatibleArchitecture;
+        }
+
+        CompareDates(sourceFilePath, targetFilePath, result);
+        CompareVersions(sourceFilePath, targetFilePath, result);
+        CompareArchitecture(sourceFilePath, targetFilePath, environment, result);
+
+        return result.NewVersion && result.SameOrNewArchitecture ||
+               result.NewArchitecture && result.SameOrNewVersion ||
+               result.NewDate && result.SameOrNewArchitecture && result.SameOrNewVersion;
     }
 
     private static bool IsArchitectureCompatible(string filePath, Architecture environment)
