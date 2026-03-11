@@ -132,6 +132,8 @@ public static class PlatformStartupDiscovery
     private static Type FindTypeByName(Assembly assembly, string typeName)
     {
         return assembly.GetTypes()
-            .FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
+            .FirstOrDefault(t => t.FullName == typeName
+                || t.Name == typeName
+                || (t.AssemblyQualifiedName?.StartsWith(typeName, StringComparison.Ordinal) == true));
     }
 }
