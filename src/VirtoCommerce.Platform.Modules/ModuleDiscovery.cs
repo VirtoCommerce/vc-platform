@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -60,7 +59,7 @@ public static class ModuleDiscovery
             }
         }
 
-        ModuleLogger.CreateLogger(typeof(ModuleDiscovery)).LogInformation("Parsed {ModuleCount} modules from external manifest", result.Count);
+        ModuleLogger.CreateLogger(typeof(ModuleDiscovery)).LogDebug("Parsed {ModuleCount} modules from external manifest", result.Count);
         return result;
     }
 

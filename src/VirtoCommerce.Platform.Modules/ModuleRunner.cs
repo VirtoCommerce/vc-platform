@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
@@ -147,7 +145,7 @@ public static class ModuleRunner
             try
             {
                 count++;
-                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogInformation("Initializing {ModuleId} {ModuleVersion} ({Count}/{Total})", moduleInfo.Id, moduleInfo.Version, count, total);
+                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogDebug("Initializing {ModuleId} {ModuleVersion} ({Count}/{Total})", moduleInfo.Id, moduleInfo.Version, count, total);
 
                 var instance = CreateModuleInstance(moduleInfo);
                 moduleInfo.ModuleInstance = instance;
@@ -197,7 +195,7 @@ public static class ModuleRunner
 
             try
             {
-                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogInformation("Post-initializing {ModuleId}", moduleInfo.Id);
+                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogDebug("Post-initializing {ModuleId}", moduleInfo.Id);
                 moduleInfo.ModuleInstance.PostInitialize(appBuilder);
             }
             catch (Exception ex)

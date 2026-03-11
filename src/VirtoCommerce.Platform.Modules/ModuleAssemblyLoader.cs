@@ -91,7 +91,7 @@ public static class ModuleAssemblyLoader
             var assembly = LoadAssemblyWithReferences(assemblyUri.LocalPath);
             module.Assembly = assembly;
             module.State = ModuleState.ReadyForInitialization;
-            ModuleLogger.CreateLogger(typeof(ModuleAssemblyLoader)).LogInformation("Loaded {ModuleId} {ModuleVersion}", module.Id, module.Version);
+            ModuleLogger.CreateLogger(typeof(ModuleAssemblyLoader)).LogDebug("Loaded {ModuleId} {ModuleVersion}", module.Id, module.Version);
             return assembly;
         }
         catch (Exception ex)

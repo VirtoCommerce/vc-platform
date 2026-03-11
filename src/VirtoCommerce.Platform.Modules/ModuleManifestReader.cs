@@ -51,7 +51,7 @@ public static class ModuleManifestReader
             }
         }
 
-        ModuleLogger.CreateLogger(typeof(ModuleManifestReader)).LogInformation("Found {ModuleCount} module manifests in {DiscoveryPath}", result.Count, discoveryPath);
+        ModuleLogger.CreateLogger(typeof(ModuleManifestReader)).LogDebug("Found {ModuleCount} module manifests in {DiscoveryPath}", result.Count, discoveryPath);
         return result;
     }
 

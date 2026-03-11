@@ -67,7 +67,7 @@ public static class PlatformStartupDiscovery
 
         startups.Sort((a, b) => a.Priority.CompareTo(b.Priority));
         _startups = startups;
-        ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery)).LogInformation("Discovered {StartupCount} platform startup types", startups.Count);
+        ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery)).LogDebug("Discovered {StartupCount} platform startup types", startups.Count);
         return _startups;
     }
 
