@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
 
 namespace VirtoCommerce.Platform.Web
@@ -42,16 +40,6 @@ namespace VirtoCommerce.Platform.Web
                 Directory.CreateDirectory(probingPath);
             }
 
-            // Optional target architecture override for cross-compilation (e.g., building ARM64 image on X64)
-            // Values: X86, X64, Arm, Arm64. Default: auto-detect from current process.
-            Architecture? targetArchitecture = null;
-            var archStr = bootConfig.GetValue<string>("VirtoCommerce:TargetArchitecture", null);
-            if (!string.IsNullOrEmpty(archStr)
-                && Enum.TryParse<Architecture>(archStr, ignoreCase: true, out var parsedArch))
-            {
-                targetArchitecture = parsedArch;
-            }
-
             // Create Serilog bootstrap logger for early module loading (before DI)
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(bootConfig)
@@ -65,7 +53,7 @@ namespace VirtoCommerce.Platform.Web
 
             if (refreshProbing)
             {
-                ModuleCopier.CopyAll(discoveryPath, probingPath, modules, targetArchitecture);
+                ModuleCopier.CopyAll(discoveryPath, probingPath, modules);
             }
 
             ModuleAssemblyLoader.Initialize(isDevelopment);

@@ -130,7 +130,13 @@ namespace VirtoCommerce.Platform.Web
             services.AddSignalR().AddPushNotifications(Configuration);
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
-            services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"));
+            services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
+                    .PostConfigure(options =>
+                    {
+                        options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
+                    })
+                    .ValidateDataAnnotations();
+            services.AddOptions<ModuleSequenceBoostOptions>().Bind(Configuration.GetSection("VirtoCommerce"));
             services.AddOptions<DistributedLockOptions>().Bind(Configuration.GetSection("DistributedLock"));
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
@@ -499,10 +505,11 @@ namespace VirtoCommerce.Platform.Web
             services.AddTransient<IExternalSignInService, ExternalSignInService>();
 
             // Create module catalog adapter (needed by IHasModuleCatalog modules and DI)
-            var moduleCatalogAdapter = new LocalModuleCatalogAdapter(modules);
+            var boostOptions = Configuration.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
+            var moduleCatalogAdapter = new LocalModuleCatalogAdapter(modules, boostOptions);
 
             // Initialize modules (IModule.Initialize registers DI services)
-            ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter);
+            ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter, boostOptions);
 
             // Let IPlatformStartup implementations register application-level services
             PlatformStartupDiscovery.RunConfigureServices(
@@ -716,7 +723,8 @@ namespace VirtoCommerce.Platform.Web
 
                 // Post-initialize all modules in dependency order
                 Log.ForContext<Startup>().Information("Post initializing modules");
-                var sortedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetAllModules().ToList());
+                var postInitBoostOptions = app.ApplicationServices.GetRequiredService<IOptions<ModuleSequenceBoostOptions>>().Value;
+                var sortedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetAllModules().ToList(), postInitBoostOptions);
                 ModuleRunner.PostInitializeAll(sortedModules, app);
             });
 

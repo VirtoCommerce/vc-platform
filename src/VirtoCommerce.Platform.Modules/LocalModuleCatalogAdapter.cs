@@ -15,8 +15,8 @@ namespace VirtoCommerce.Platform.Modules;
 /// </summary>
 public class LocalModuleCatalogAdapter : ModuleCatalog, ILocalModuleCatalog
 {
-    public LocalModuleCatalogAdapter(IEnumerable<ManifestModuleInfo> modules)
-        : base(modules.Cast<ModuleInfo>(), Options.Create(new ModuleSequenceBoostOptions()))
+    public LocalModuleCatalogAdapter(IEnumerable<ManifestModuleInfo> modules, ModuleSequenceBoostOptions boostOptions = null)
+        : base(modules.Cast<ModuleInfo>(), Options.Create(boostOptions ?? new ModuleSequenceBoostOptions()))
     {
     }
 

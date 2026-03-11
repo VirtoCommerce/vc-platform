@@ -158,6 +158,8 @@ public static class ModuleCopier
 
     private static void CopyFile(Architecture environment, string sourceFilePath, string targetFilePath)
     {
+        FileCompareResult result = null;
+
         if (!File.Exists(targetFilePath))
         {
             if (!IsArchitectureCompatible(sourceFilePath, environment))
@@ -167,7 +169,7 @@ public static class ModuleCopier
         }
         else
         {
-            var result = new FileCompareResult();
+            result = new FileCompareResult();
             CompareDates(sourceFilePath, targetFilePath, result);
             CompareVersions(sourceFilePath, targetFilePath, result);
             CompareArchitecture(sourceFilePath, targetFilePath, environment, result);
@@ -194,8 +196,18 @@ public static class ModuleCopier
         }
         catch (IOException)
         {
-            // Another process may be copying the same file
-            ModuleLogger.CreateLogger(typeof(ModuleCopier)).LogWarning("Could not copy {FileName} (file in use)", Path.GetFileName(sourceFilePath));
+            // VP-3719: Swallow only for same-version date-only refresh (another process may be copying the same file).
+            // For version upgrades, architecture changes, or new files, re-throw so the failure is visible to operators.
+            if (result is { NewDate: true })
+            {
+                ModuleLogger.CreateLogger(typeof(ModuleCopier))
+                    .LogWarning("File '{TargetFile}' was not updated by '{SourceFile}' of the same version but later modified date, because probably it was used by another process",
+                        targetFilePath, sourceFilePath);
+            }
+            else
+            {
+                throw;
+            }
         }
     }
 

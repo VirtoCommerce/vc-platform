@@ -23,7 +23,9 @@ public static class ModuleRunner
     /// Sort modules by dependency order using topological sort.
     /// Modules with no dependencies come first.
     /// </summary>
-    public static IReadOnlyList<ManifestModuleInfo> SortByDependency(IReadOnlyList<ManifestModuleInfo> modules)
+    public static IReadOnlyList<ManifestModuleInfo> SortByDependency(
+        IReadOnlyList<ManifestModuleInfo> modules,
+        ModuleSequenceBoostOptions boostOptions = null)
     {
         ArgumentNullException.ThrowIfNull(modules);
 
@@ -32,7 +34,7 @@ public static class ModuleRunner
             return [];
         }
 
-        var solver = new ModuleDependencySolver(new ModuleSequenceBoostOptions());
+        var solver = new ModuleDependencySolver(boostOptions ?? new ModuleSequenceBoostOptions());
 
         foreach (var module in modules)
         {
@@ -119,12 +121,13 @@ public static class ModuleRunner
         IServiceCollection serviceCollection,
         IConfiguration configuration = null,
         IHostEnvironment hostEnvironment = null,
-        IModuleCatalog moduleCatalog = null)
+        IModuleCatalog moduleCatalog = null,
+        ModuleSequenceBoostOptions boostOptions = null)
     {
         ArgumentNullException.ThrowIfNull(modules);
         ArgumentNullException.ThrowIfNull(serviceCollection);
 
-        var sorted = SortByDependency(modules);
+        var sorted = SortByDependency(modules, boostOptions);
         var count = 0;
         var total = sorted.Count(m => m.Assembly != null && m.Errors.Count == 0);
 
