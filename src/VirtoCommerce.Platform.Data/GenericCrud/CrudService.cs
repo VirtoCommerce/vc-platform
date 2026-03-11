@@ -75,7 +75,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             using var repository = _repositoryFactory();
 
-            // Disable DBContext change tracking for better performance 
+            // Disable DBContext change tracking for better performance
             repository.DisableChangesTracking();
 
             var entities = await LoadEntities(repository, ids, responseGroup);
@@ -226,10 +226,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             foreach (var (changedEntry, i) in changedEntries.Select((x, i) => (x, i)))
             {
-                // Update the original model in place instead of creating a new one.
-                // This ensures DB-generated values are synced back to the original model objects
-                // passed to SaveChangesAsync.
-                changedEntities[i].ToModel(changedEntry.NewEntry);
+                // Sync DB-generated values back to the original model objects passed to SaveChangesAsync
+                changedEntry.NewEntry = ToModel(changedEntities[i], changedEntry.NewEntry);
             }
 
             await AfterSaveChangesAsync(models, changedEntries);
@@ -333,9 +331,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             GenericSearchCachingRegion<TModel>.ExpireRegion();
         }
 
-        protected virtual TModel ToModel(TEntity entity)
+        protected virtual TModel ToModel(TEntity entity, TModel model = null)
         {
-            return entity.ToModel();
+            return model is null ? entity.ToModel() : entity.ToModel(model);
         }
 
         protected virtual TEntity FromModel(TModel model, PrimaryKeyResolvingMap keyMap)
