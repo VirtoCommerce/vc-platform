@@ -294,17 +294,6 @@ public static class ModuleAssemblyLoader
         return IntPtr.Zero;
     }
 
-    private static string GetFileAbsoluteUri(string rootPath, string relativePath)
-    {
-        var builder = new UriBuilder
-        {
-            Host = string.Empty,
-            Scheme = Uri.UriSchemeFile,
-            Path = Path.GetFullPath(Path.Combine(rootPath, relativePath))
-        };
-        return builder.Uri.ToString();
-    }
-
     private static Uri GetFileUri(string filePath)
     {
         if (string.IsNullOrEmpty(filePath))
