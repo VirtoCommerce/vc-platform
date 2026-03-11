@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+#pragma warning disable VC0014 // Type is obsolete
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -23,7 +24,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -105,12 +105,11 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Use temporary bootstrap logger (which will be replaced with configured version later) until DI initialization completed
-            var loggerConfiguration = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration);
-            Log.Logger = loggerConfiguration.CreateBootstrapLogger();
+            // Bootstrap logger was created in Program.Main() before module loading.
+            Log.ForContext<Startup>().Information("Virto Commerce is configuring services");
 
-            Log.ForContext<Startup>().Information("Virto Commerce is loading");
+            // Module assemblies are already loaded in Program.Main() via ModuleRegistry
+            var modules = ModuleRegistry.GetAllModules().ToList();
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
@@ -131,6 +130,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddSignalR().AddPushNotifications(Configuration);
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
+            services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"));
             services.AddOptions<DistributedLockOptions>().Bind(Configuration.GetSection("DistributedLock"));
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
@@ -369,7 +369,7 @@ namespace VirtoCommerce.Platform.Web
                                                 string>();
                     });
 
-               });
+                });
 
                 openIddictBuilder.AddServer(serverBuilder =>
                 {
@@ -384,7 +384,7 @@ namespace VirtoCommerce.Platform.Web
                         aspNetBuilder.EnableUserInfoEndpointPassthrough();
                         aspNetBuilder.EnableStatusCodePagesIntegration();
 
- 
+
                         // During development or when you explicitly run the platform in production mode without https,
                         // need to disable the HTTPS requirement.
                         if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
@@ -498,16 +498,28 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddTransient<IExternalSignInService, ExternalSignInService>();
 
-            services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
-                    .PostConfigure(options =>
-                    {
-                        options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
-                    })
-                    .ValidateDataAnnotations();
+            // Create module catalog adapter (needed by IHasModuleCatalog modules and DI)
+            var moduleCatalogAdapter = new LocalModuleCatalogAdapter(modules);
 
-            services.AddOptions<ModuleSequenceBoostOptions>().Bind(Configuration.GetSection("VirtoCommerce"));
+            // Initialize modules (IModule.Initialize registers DI services)
+            ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter);
 
-            services.AddModules(mvcBuilder);
+            // Let IPlatformStartup implementations register application-level services
+            PlatformStartupDiscovery.RunConfigureServices(
+                PlatformStartupDiscovery.GetStartups(), services, Configuration);
+
+            // Register API controllers from loaded modules
+            Log.ForContext<Startup>().Information("Registering API controllers");
+            foreach (var module in modules.Where(m => m.Assembly != null && m.Errors.Count == 0))
+            {
+                mvcBuilder.AddApplicationPart(module.Assembly);
+            }
+
+            // Register backward-compat DI services
+            // (needed by UseModulesAndAppsFiles, health checks, external modules, etc.)
+            services.AddSingleton(services);
+            services.AddSingleton<ILocalModuleCatalog>(moduleCatalogAdapter);
+            services.AddSingleton<IModuleCatalog>(sp => sp.GetRequiredService<ILocalModuleCatalog>());
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
@@ -574,11 +586,6 @@ namespace VirtoCommerce.Platform.Web
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
             services.AddHttpClient();
-
-            if (Configuration.TryGetAzureAppConfigurationConnectionString(out _))
-            {
-                services.AddAzureAppConfiguration();
-            }
         }
 
         public static ServerCertificate GetServerCertificate(ICertificateLoader certificateLoader)
@@ -619,10 +626,10 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseHttpsRedirection();
 
-            if (Configuration.TryGetAzureAppConfigurationConnectionString(out _))
-            {
-                app.UseAzureAppConfiguration();
-            }
+            // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
+            PlatformStartupDiscovery.RunConfigure(
+                PlatformStartupDiscovery.GetStartups(),
+                PipelinePhase.EarlyMiddleware, app, Configuration);
 
             // Add default MimeTypes with additional bindings
             var fileExtensionsBindings = new Dictionary<string, string>
@@ -702,13 +709,23 @@ namespace VirtoCommerce.Platform.Web
 
                 app.UseAutoAccountsLockoutJob(options.Value);
 
-                // Complete modules startup and apply their migrations
-                Log.ForContext<Startup>().Information("Post initializing modules");
+                // IPlatformStartup Initialization phase (inside distributed lock, for migrations etc.)
+                PlatformStartupDiscovery.RunConfigure(
+                    PlatformStartupDiscovery.GetStartups(),
+                    PipelinePhase.Initialization, app, Configuration);
 
-                app.UseModules();
+                // Post-initialize all modules in dependency order
+                Log.ForContext<Startup>().Information("Post initializing modules");
+                var sortedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetAllModules().ToList());
+                ModuleRunner.PostInitializeAll(sortedModules, app);
             });
 
             app.UseEndpoints(SetupEndpoints);
+
+            // IPlatformStartup LateMiddleware phase (after endpoints are mapped)
+            PlatformStartupDiscovery.RunConfigure(
+                PlatformStartupDiscovery.GetStartups(),
+                PipelinePhase.LateMiddleware, app, Configuration);
 
             var toolRegistrar = app.ApplicationServices.GetService<IDeveloperToolRegistrar>();
             toolRegistrar.RegisterDeveloperTool(new DeveloperToolDescriptor
@@ -734,23 +751,17 @@ namespace VirtoCommerce.Platform.Web
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
 
-            WriteFailedModulesToLog(app, logger);
+            WriteFailedModulesToLog(logger);
 
             logger.LogInformation("Welcome to Virto Commerce {PlatformVersion}!", typeof(Startup).Assembly.GetName().Version);
         }
 
-        private static void WriteFailedModulesToLog(IApplicationBuilder app, ILogger<Startup> logger)
+        private static void WriteFailedModulesToLog(ILogger<Startup> logger)
         {
-            var localModuleCatalog = app.ApplicationServices.GetService<ILocalModuleCatalog>();
-
-            var failedModules = localModuleCatalog.Modules
-                .OfType<ManifestModuleInfo>()
-                .Where(x => !x.Errors.IsNullOrEmpty())
-                .Select(x => new { x.Id, x.Version, ErrorMessage = string.Join(";", x.Errors) });
-
-            foreach (var failedModule in failedModules)
+            foreach (var failedModule in ModuleRegistry.GetFailedModules())
             {
-                logger.LogError("Could not load module {ModuleId} {ModuleVersion}. Error: {ErrorMessage}", failedModule.Id, failedModule.Version, failedModule.ErrorMessage);
+                logger.LogError("Could not load module {ModuleId} {ModuleVersion}. Error: {ErrorMessage}",
+                    failedModule.Id, failedModule.Version, string.Join(";", failedModule.Errors));
             }
         }
 
