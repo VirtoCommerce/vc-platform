@@ -90,15 +90,19 @@ public static class ModuleDiscovery
                 {
                     continue; // Local is newer, skip external
                 }
+                // else: external is newer (update available) — add external as-is (IsInstalled=false),
+                // the installed version will be added by the second loop below
             }
 
             result.Add(extModule);
         }
 
-        // Add installed modules not found in external list
+        // Add installed modules not already in result (version-aware, matching old Except behavior).
+        // Uses Contains/Equals which compares ID + Version + VersionTag, so installed v1.0
+        // is added alongside external v1.1 for the update scenario.
         foreach (var localModule in installed)
         {
-            if (!result.Any(m => m.Id.Equals(localModule.Id, StringComparison.OrdinalIgnoreCase)))
+            if (!result.Contains(localModule))
             {
                 result.Add(localModule);
             }
