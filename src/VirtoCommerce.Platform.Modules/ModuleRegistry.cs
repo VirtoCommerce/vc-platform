@@ -32,7 +32,8 @@ public static class ModuleRegistry
             }
         }
 
-        ModuleLogger.CreateLogger(typeof(ModuleRegistry)).LogInformation("{ModuleCount} modules registered, {ErrorCount} with errors", modules.Count, modules.Count(m => m.Errors.Count > 0));
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleRegistry));
+        logger.LogInformation("{ModuleCount} modules registered, {ErrorCount} with errors", modules.Count, modules.Count(m => m.Errors.Count > 0));
     }
 
     public static bool IsInstalled(string moduleId)

@@ -29,6 +29,8 @@ public static class PlatformStartupDiscovery
     {
         var startups = new List<IPlatformStartup>();
 
+        var logger = ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery));
+
         foreach (var module in modules)
         {
             if (string.IsNullOrEmpty(module.StartupType) || module.Assembly == null)
@@ -43,31 +45,33 @@ public static class PlatformStartupDiscovery
 
                 if (startupType == null)
                 {
-                    ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery)).LogWarning("Startup type '{StartupType}' not found in {ModuleId}", module.StartupType, module.Id);
+                    logger.LogWarning("Startup type '{StartupType}' not found in {ModuleId}", module.StartupType, module.Id);
                     continue;
                 }
 
                 if (!typeof(IPlatformStartup).IsAssignableFrom(startupType))
                 {
-                    ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery)).LogWarning("Type '{StartupType}' does not implement IPlatformStartup in {ModuleId}", module.StartupType, module.Id);
+                    logger.LogWarning("Type '{StartupType}' does not implement IPlatformStartup in {ModuleId}", module.StartupType, module.Id);
                     continue;
                 }
 
                 if (Activator.CreateInstance(startupType) is IPlatformStartup instance)
                 {
                     startups.Add(instance);
-                    ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery)).LogInformation("Discovered {StartupTypeName} from {ModuleId} (priority: {Priority})", startupType.Name, module.Id, instance.Priority);
+                    logger.LogInformation("Discovered {StartupTypeName} from {ModuleId} (priority: {Priority})", startupType.Name, module.Id, instance.Priority);
                 }
             }
             catch (Exception ex)
             {
-                ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery)).LogError(ex, "Error loading startup type from {ModuleId}", module.Id);
+                logger.LogError(ex, "Error loading startup type from {ModuleId}", module.Id);
             }
         }
 
         startups.Sort((a, b) => a.Priority.CompareTo(b.Priority));
         _startups = startups;
-        ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery)).LogDebug("Discovered {StartupCount} platform startup types", startups.Count);
+
+        logger.LogDebug("Discovered {StartupCount} platform startup types", startups.Count);
+
         return _startups;
     }
 

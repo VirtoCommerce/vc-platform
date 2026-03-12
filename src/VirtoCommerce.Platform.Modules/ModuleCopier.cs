@@ -200,9 +200,9 @@ public static class ModuleCopier
             // For version upgrades, architecture changes, or new files, re-throw so the failure is visible to operators.
             if (result is { NewDate: true })
             {
-                ModuleLogger.CreateLogger(typeof(ModuleCopier))
-                    .LogWarning("File '{TargetFile}' was not updated by '{SourceFile}' of the same version but later modified date, because probably it was used by another process",
-                        targetFilePath, sourceFilePath);
+                var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
+                logger.LogWarning("File '{TargetFile}' was not updated by '{SourceFile}' of the same version but later modified date, because probably it was used by another process",
+                    targetFilePath, sourceFilePath);
             }
             else
             {

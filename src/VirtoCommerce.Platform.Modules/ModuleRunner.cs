@@ -125,6 +125,7 @@ public static class ModuleRunner
         ArgumentNullException.ThrowIfNull(modules);
         ArgumentNullException.ThrowIfNull(serviceCollection);
 
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleRunner));
         var sorted = SortByDependency(modules, boostOptions);
         var count = 0;
         var total = sorted.Count(m => m.Assembly != null && m.Errors.Count == 0);
@@ -133,7 +134,7 @@ public static class ModuleRunner
         {
             if (moduleInfo.Errors.Count > 0)
             {
-                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogWarning("Skipping {ModuleId} (has errors)", moduleInfo.Id);
+                logger.LogWarning("Skipping {ModuleId} (has errors)", moduleInfo.Id);
                 continue;
             }
 
@@ -145,7 +146,7 @@ public static class ModuleRunner
             try
             {
                 count++;
-                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogDebug("Initializing {ModuleId} {ModuleVersion} ({Count}/{Total})", moduleInfo.Id, moduleInfo.Version, count, total);
+                logger.LogDebug("Initializing {ModuleId} {ModuleVersion} ({Count}/{Total})", moduleInfo.Id, moduleInfo.Version, count, total);
 
                 var instance = CreateModuleInstance(moduleInfo);
                 moduleInfo.ModuleInstance = instance;
@@ -171,7 +172,7 @@ public static class ModuleRunner
             catch (Exception ex)
             {
                 moduleInfo.Errors.Add(ex.ToString());
-                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogError(ex, "Failed to initialize {ModuleId}", moduleInfo.Id);
+                logger.LogError(ex, "Failed to initialize {ModuleId}", moduleInfo.Id);
             }
         }
     }
@@ -186,6 +187,8 @@ public static class ModuleRunner
         ArgumentNullException.ThrowIfNull(modules);
         ArgumentNullException.ThrowIfNull(appBuilder);
 
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleRunner));
+
         foreach (var moduleInfo in modules)
         {
             if (moduleInfo.ModuleInstance == null || moduleInfo.Errors.Count > 0)
@@ -195,13 +198,13 @@ public static class ModuleRunner
 
             try
             {
-                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogDebug("Post-initializing {ModuleId}", moduleInfo.Id);
+                logger.LogDebug("Post-initializing {ModuleId}", moduleInfo.Id);
                 moduleInfo.ModuleInstance.PostInitialize(appBuilder);
             }
             catch (Exception ex)
             {
                 moduleInfo.Errors.Add(ex.ToString());
-                ModuleLogger.CreateLogger(typeof(ModuleRunner)).LogError(ex, "Failed to post-initialize {ModuleId}", moduleInfo.Id);
+                logger.LogError(ex, "Failed to post-initialize {ModuleId}", moduleInfo.Id);
             }
         }
     }

@@ -27,11 +27,12 @@ public static class ModuleManifestReader
             discoveryPath += Path.DirectorySeparatorChar;
         }
 
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleManifestReader));
         var result = new List<ManifestModuleInfo>();
 
         if (!Directory.Exists(discoveryPath))
         {
-            ModuleLogger.CreateLogger(typeof(ModuleManifestReader)).LogWarning("Discovery path not found: {DiscoveryPath}", discoveryPath);
+            logger.LogWarning("Discovery path not found: {DiscoveryPath}", discoveryPath);
             return result;
         }
 
@@ -51,7 +52,7 @@ public static class ModuleManifestReader
             }
         }
 
-        ModuleLogger.CreateLogger(typeof(ModuleManifestReader)).LogDebug("Found {ModuleCount} module manifests in {DiscoveryPath}", result.Count, discoveryPath);
+        logger.LogDebug("Found {ModuleCount} module manifests in {DiscoveryPath}", result.Count, discoveryPath);
         return result;
     }
 
@@ -85,7 +86,8 @@ public static class ModuleManifestReader
         }
         catch (Exception ex)
         {
-            ModuleLogger.CreateLogger(typeof(ModuleManifestReader)).LogError(ex, "Error reading manifest {ManifestPath}", manifestFilePath);
+            var logger = ModuleLogger.CreateLogger(typeof(ModuleManifestReader));
+            logger.LogError(ex, "Error reading manifest {ManifestPath}", manifestFilePath);
             return null;
         }
     }

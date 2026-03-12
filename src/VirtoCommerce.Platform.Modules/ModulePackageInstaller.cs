@@ -32,9 +32,10 @@ public static class ModulePackageInstaller
             Directory.CreateDirectory(targetModulePath);
         }
 
-        ModuleLogger.CreateLogger(typeof(ModulePackageInstaller)).LogInformation("Extracting {FileName} to {TargetPath}", Path.GetFileName(zipPath), targetModulePath);
+        var logger = ModuleLogger.CreateLogger(typeof(ModulePackageInstaller));
+        logger.LogInformation("Extracting {FileName} to {TargetPath}", Path.GetFileName(zipPath), targetModulePath);
         ZipFile.ExtractToDirectory(zipPath, targetModulePath, overwriteFiles: true);
-        ModuleLogger.CreateLogger(typeof(ModulePackageInstaller)).LogInformation("Successfully installed to {TargetPath}", targetModulePath);
+        logger.LogInformation("Successfully installed to {TargetPath}", targetModulePath);
     }
 
     /// <summary>
@@ -46,9 +47,10 @@ public static class ModulePackageInstaller
 
         if (Directory.Exists(modulePath))
         {
-            ModuleLogger.CreateLogger(typeof(ModulePackageInstaller)).LogInformation("Removing module directory: {ModulePath}", modulePath);
+            var logger = ModuleLogger.CreateLogger(typeof(ModulePackageInstaller));
+            logger.LogInformation("Removing module directory: {ModulePath}", modulePath);
             Directory.Delete(modulePath, recursive: true);
-            ModuleLogger.CreateLogger(typeof(ModulePackageInstaller)).LogInformation("Successfully uninstalled from {ModulePath}", modulePath);
+            logger.LogInformation("Successfully uninstalled from {ModulePath}", modulePath);
         }
     }
 

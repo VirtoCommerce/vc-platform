@@ -78,10 +78,12 @@ public static class ModuleAssemblyLoader
             return null;
         }
 
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleAssemblyLoader));
+
         var assemblyUri = GetFileUri(module.Ref);
         if (assemblyUri == null || !File.Exists(assemblyUri.LocalPath))
         {
-            ModuleLogger.CreateLogger(typeof(ModuleAssemblyLoader)).LogWarning("Assembly not found for {ModuleId}: {ModuleRef}", module.Id, module.Ref);
+            logger.LogWarning("Assembly not found for {ModuleId}: {ModuleRef}", module.Id, module.Ref);
             module.Errors.Add($"Assembly file not found: {module.Ref}");
             return null;
         }
@@ -91,12 +93,12 @@ public static class ModuleAssemblyLoader
             var assembly = LoadAssemblyWithReferences(assemblyUri.LocalPath);
             module.Assembly = assembly;
             module.State = ModuleState.ReadyForInitialization;
-            ModuleLogger.CreateLogger(typeof(ModuleAssemblyLoader)).LogDebug("Loaded {ModuleId} {ModuleVersion}", module.Id, module.Version);
+            logger.LogDebug("Loaded {ModuleId} {ModuleVersion}", module.Id, module.Version);
             return assembly;
         }
         catch (Exception ex)
         {
-            ModuleLogger.CreateLogger(typeof(ModuleAssemblyLoader)).LogError(ex, "Failed to load {ModuleId}", module.Id);
+            logger.LogError(ex, "Failed to load {ModuleId}", module.Id);
             module.Errors.Add($"Failed to load assembly: {ex.Message}");
             return null;
         }

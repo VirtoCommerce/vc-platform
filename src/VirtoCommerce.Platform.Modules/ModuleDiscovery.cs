@@ -26,6 +26,7 @@ public static class ModuleDiscovery
         ArgumentNullException.ThrowIfNull(manifestJson);
         ArgumentNullException.ThrowIfNull(platformVersion);
 
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleDiscovery));
         var result = new List<ManifestModuleInfo>();
         var manifests = JsonSerializer.Deserialize<List<ExternalModuleManifest>>(manifestJson);
 
@@ -38,7 +39,7 @@ public static class ModuleDiscovery
         {
             if (manifest.Versions == null)
             {
-                ModuleLogger.CreateLogger(typeof(ModuleDiscovery)).LogWarning("Module {ModuleId} has invalid format, missing 'versions'", manifest.Id);
+                logger.LogWarning("Module {ModuleId} has invalid format, missing 'versions'", manifest.Id);
                 continue;
             }
 
@@ -59,7 +60,7 @@ public static class ModuleDiscovery
             }
         }
 
-        ModuleLogger.CreateLogger(typeof(ModuleDiscovery)).LogDebug("Parsed {ModuleCount} modules from external manifest", result.Count);
+        logger.LogDebug("Parsed {ModuleCount} modules from external manifest", result.Count);
         return result;
     }
 
