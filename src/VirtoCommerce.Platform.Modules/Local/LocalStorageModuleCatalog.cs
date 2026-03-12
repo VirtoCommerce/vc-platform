@@ -10,7 +10,6 @@ using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.DistributedLock;
-using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
 namespace VirtoCommerce.Platform.Modules
 {
@@ -35,9 +34,9 @@ namespace VirtoCommerce.Platform.Modules
             _probingPath = _options.ProbingPath is null ? null : Path.GetFullPath(_options.ProbingPath);
 
             _discoveryPath = _options.DiscoveryPath;
-            if (!_discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
+            if (!_discoveryPath.EndsWith(Path.DirectorySeparatorChar))
             {
-                _discoveryPath += PlatformInformation.DirectorySeparator;
+                _discoveryPath += Path.DirectorySeparatorChar;
             }
 
             // Resolve IConnectionMultiplexer as multiple services to avoid crash if the platform ran without Redis
@@ -270,27 +269,20 @@ namespace VirtoCommerce.Platform.Modules
                 return;
             }
 
-            foreach (var sourceFilePath in Directory.EnumerateFiles(sourceBinPath, "*.*", SearchOption.AllDirectories))
+            foreach (var sourceFilePath in Directory.EnumerateFiles(sourceBinPath, "*", SearchOption.AllDirectories))
             {
-                var fileName = Path.GetFileName(sourceFilePath);
+                var sourceRelativeFilePath = Path.GetRelativePath(sourceBinPath, sourceFilePath);
+                var targetRelativeFilePath = _fileCopyPolicy.GetTargetRelativePath(sourceRelativeFilePath);
 
-                // Copy assembly related files except assemblies that are included in TPA list & reference assemblies
-                if (IsAssemblyRelatedFile(sourceFilePath) &&
-                    !(IsAssemblyFile(sourceFilePath) && (IsReferenceAssemblyFile(sourceFilePath) || TPA.ContainsAssembly(fileName))))
+                if (!targetRelativeFilePath.IsNullOrEmpty())
                 {
-                    // Copy localization resource files to related subfolders
-                    var targetParentPath = IsLocalizationFile(sourceFilePath)
-                        ? GetTargetLocalizationDirectoryPath(targetDirectoryPath, sourceFilePath)
-                        : targetDirectoryPath;
-
-                    var targetFilePath = Path.Combine(targetParentPath, fileName);
-
-                    CopyFile(sourceFilePath, targetFilePath, targetParentPath);
+                    var targetFilePath = Path.Combine(targetDirectoryPath, targetRelativeFilePath);
+                    CopyFile(sourceFilePath, targetFilePath);
                 }
             }
         }
 
-        private void CopyFile(string sourceFilePath, string targetFilePath, string targetDirectoryPath)
+        private void CopyFile(string sourceFilePath, string targetFilePath)
         {
             var environment = Environment.Is64BitProcess ? Architecture.X64 : Architecture.X86;
             if (!_fileCopyPolicy.IsCopyRequired(environment, sourceFilePath, targetFilePath, out var result))
@@ -298,7 +290,11 @@ namespace VirtoCommerce.Platform.Modules
                 return;
             }
 
-            Directory.CreateDirectory(targetDirectoryPath);
+            var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
+            if (targetDirectoryPath != null && !Directory.Exists(targetDirectoryPath))
+            {
+                Directory.CreateDirectory(targetDirectoryPath);
+            }
 
             try
             {
@@ -317,42 +313,6 @@ namespace VirtoCommerce.Platform.Modules
                     throw;
                 }
             }
-        }
-
-        private static string GetTargetLocalizationDirectoryPath(string targetDirectoryPath, string sourceFilePath)
-        {
-            var directoryName = GetLastDirectoryName(sourceFilePath);
-            return Path.Combine(targetDirectoryPath, directoryName);
-        }
-
-        private bool IsAssemblyRelatedFile(string path)
-        {
-            return _options.AssemblyFileExtensions.Union(_options.AssemblyServiceFileExtensions).Any(path.EndsWithIgnoreCase);
-        }
-
-        private bool IsAssemblyFile(string path)
-        {
-            return _options.AssemblyFileExtensions.Any(path.EndsWithIgnoreCase);
-        }
-
-        private bool IsReferenceAssemblyFile(string path)
-        {
-            // Workaround to avoid loading Reference Assemblies
-            // We need to rewrite platform initialization code
-            // to use correct solution with MetadataLoadContext
-            // TODO: PT-6241
-            var directoryName = GetLastDirectoryName(path);
-            return _options.ReferenceAssemblyFolders.Any(directoryName.EqualsIgnoreCase);
-        }
-
-        private static string GetLastDirectoryName(string filePath)
-        {
-            return Path.GetFileName(Path.GetDirectoryName(filePath));
-        }
-
-        private bool IsLocalizationFile(string path)
-        {
-            return _options.LocalizationFileExtensions.Any(path.EndsWithIgnoreCase);
         }
 
         private static string GetFileAbsoluteUri(string rootPath, string relativePath)
