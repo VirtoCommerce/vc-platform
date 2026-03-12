@@ -20,6 +20,9 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         i18n, modulesApi, moduleHelper, $state, bladeNavigationService, userProfile,
         settings, common, THEME_SETTINGS, webApps, urlHelper) {
 
+        // Embedded mode: hide nav-bar and header when ?EmbeddedMode=true
+        $rootScope.isEmbeddedMode = urlHelper.isEmbeddedMode();
+
         $scope.closeError = function () {
             $scope.platformError = undefined;
         };
