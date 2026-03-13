@@ -1,0 +1,19 @@
+/*
+ * Embedded Mode Overrides
+ *
+ * Applied when the platform runs in embedded mode (?EmbeddedMode=true).
+ * All rules are scoped under .vc-embedded-mode on <body> for clean isolation.
+ */
+
+.vc-embedded-mode .nav-bar {
+    display: none;
+}
+
+.vc-embedded-mode .header {
+    display: none;
+}
+
+.vc-embedded-mode article.cnt {
+    left: 0;
+    padding-top: 0;
+}
