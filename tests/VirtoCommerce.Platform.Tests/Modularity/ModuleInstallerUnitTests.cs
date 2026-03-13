@@ -10,9 +10,8 @@ using Moq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
-using VirtoCommerce.Platform.Core.TransactionFileManager;
-using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules;
+#pragma warning disable VC0014 // Type is obsolete
 using VirtoCommerce.Platform.Modules.External;
 using Xunit;
 
@@ -23,17 +22,13 @@ namespace VirtoCommerce.Platform.Tests.Modularity
     {
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly Mock<IExternalModulesClient> _externalClientMock;
-        private readonly Mock<ITransactionFileManager> _fileManagerMock;
         private readonly Mock<IExternalModuleCatalog> _extModuleCatalogMock;
-        private readonly Mock<IZipFileWrapper> _zipFileWrapperMock;
 
         public ModuleInstallerUnitTests()
         {
             _options = new LocalStorageModuleCatalogOptions { DiscoveryPath = "modules" };
             _externalClientMock = new Mock<IExternalModulesClient>();
-            _fileManagerMock = new Mock<ITransactionFileManager>();
             _extModuleCatalogMock = new Mock<IExternalModuleCatalog>();
-            _zipFileWrapperMock = new Mock<IZipFileWrapper>();
         }
 
         [Theory]
@@ -88,10 +83,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         {
             return new ModuleInstaller(_extModuleCatalogMock.Object,
                 _externalClientMock.Object,
-                _fileManagerMock.Object,
                 Options.Create(_options),
-                new MockFileSystem(),
-                _zipFileWrapperMock.Object);
+                new MockFileSystem());
         }
 
 

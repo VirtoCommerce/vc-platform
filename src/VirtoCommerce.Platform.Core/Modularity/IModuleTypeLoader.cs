@@ -5,6 +5,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// <summary>
     /// Defines the interface for moduleTypeLoaders
     /// </summary>
+    [Obsolete("Use ModuleAssemblyLoader static class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public interface IModuleTypeLoader
     {
         /// <summary>

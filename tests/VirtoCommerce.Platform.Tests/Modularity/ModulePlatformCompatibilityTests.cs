@@ -7,6 +7,7 @@ using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Modules;
 using Xunit;
 
+#pragma warning disable VC0014 // Type is obsolete
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
     [Collection("Modularity")]

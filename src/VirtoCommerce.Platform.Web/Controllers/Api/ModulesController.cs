@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+#pragma warning disable VC0014 // Type is obsolete
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
@@ -101,7 +102,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 .Select(x => new ModuleDescriptor(x))
                 .ToList();
 
-            _localModuleCatalog.Initialize();
             var localModules = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>().ToDictionary(x => x.Id);
 
             foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))

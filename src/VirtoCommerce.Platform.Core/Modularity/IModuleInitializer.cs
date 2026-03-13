@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 
 namespace VirtoCommerce.Platform.Core.Modularity
@@ -5,6 +6,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// <summary>
     /// Declares a service which initializes the modules into the application.
     /// </summary>
+    [Obsolete("Use ModuleRunner static class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public interface IModuleInitializer
     {
         /// <summary>

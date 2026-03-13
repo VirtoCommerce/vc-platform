@@ -1,13 +1,16 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Web.Extensions;
+using VirtoCommerce.Platform.Modules;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -15,6 +18,56 @@ namespace VirtoCommerce.Platform.Web
     {
         public static void Main(string[] args)
         {
+            // ====== EARLY MODULE LOADING (before host builder) ======
+            // Build minimal config to get module paths
+            var bootConfig = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            var discoveryPath = Path.GetFullPath(bootConfig.GetValue("VirtoCommerce:DiscoveryPath", "modules"));
+            var probingPath = Path.GetFullPath(bootConfig.GetValue("VirtoCommerce:ProbingPath", "app_data/modules"));
+            var refreshProbing = bootConfig.GetValue("VirtoCommerce:RefreshProbingFolderOnStart", true);
+            var isDevelopment = "Development".Equals(
+                Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
+                StringComparison.OrdinalIgnoreCase);
+
+            if (!Directory.Exists(probingPath))
+            {
+                refreshProbing = true;
+                Directory.CreateDirectory(probingPath);
+            }
+
+            // Create Serilog bootstrap logger for early module loading (before DI)
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(bootConfig)
+                .CreateBootstrapLogger();
+
+            // Provide ILoggerFactory backed by Serilog to static module classes
+            var bootstrapLoggerFactory = new SerilogLoggerFactory(Log.Logger);
+            ModuleLogger.Initialize(bootstrapLoggerFactory);
+
+            var modules = ModuleManifestReader.ReadAll(discoveryPath, probingPath);
+
+            if (refreshProbing)
+            {
+                ModuleCopier.CopyAll(discoveryPath, probingPath, modules);
+            }
+
+            ModuleAssemblyLoader.Initialize(isDevelopment);
+            foreach (var module in modules.Where(m => !string.IsNullOrEmpty(m.Ref)))
+            {
+                ModuleAssemblyLoader.LoadModule(module, probingPath);
+            }
+
+            ModuleRegistry.Initialize(modules);
+
+            // Discover IPlatformStartup implementations from loaded modules
+            PlatformStartupDiscovery.DiscoverStartups(modules);
+            // ====== END EARLY MODULE LOADING ======
+
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -31,31 +84,21 @@ namespace VirtoCommerce.Platform.Web
 
                 webBuilder.ConfigureAppConfiguration((context, configurationBuilder) =>
                 {
-                    var configuration = configurationBuilder.Build();
-
-                    // Load configuration from Azure App Configuration
-                    // Azure App Configuration will be loaded last i.e. it will override any existing sections
-                    // configuration loads all keys that have no label and keys that have label based on the environment (Development, Production etc.)
-                    if (configuration.TryGetAzureAppConfigurationConnectionString(out var connectionString))
-                    {
-                        configurationBuilder.AddAzureAppConfiguration(options =>
-                        {
-                            options
-                            .Connect(connectionString)
-                            .Select(KeyFilter.Any)
-                            .Select(KeyFilter.Any, context.HostingEnvironment.EnvironmentName)
-                            .ConfigureRefresh(refreshOptions =>
-                            {
-                                // Reload all configuration values if the "Sentinel" key value is modified
-                                refreshOptions.Register("Sentinel", refreshAll: true);
-                            });
-                        });
-                    }
+                    // Let modules add configuration sources (e.g., Azure App Configuration)
+                    PlatformStartupDiscovery.RunConfigureAppConfiguration(
+                        PlatformStartupDiscovery.GetStartups(),
+                        configurationBuilder,
+                        context.HostingEnvironment);
                 });
-
             })
             .ConfigureServices((hostingContext, services) =>
             {
+                // Let modules register host-level services
+                PlatformStartupDiscovery.RunConfigureHostServices(
+                    PlatformStartupDiscovery.GetStartups(),
+                    services,
+                    hostingContext.Configuration);
+
                 //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs
                 if (hostingContext.Configuration.GetValue("VirtoCommerce:Hangfire:UseHangfireServer", true))
                 {

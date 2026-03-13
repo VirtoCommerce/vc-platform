@@ -125,7 +125,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <summary>
         /// Reload catalog
         /// </summary>
-        public void Reload()
+        public virtual void Reload()
         {
             this.isLoaded = false;
             this.Items.Clear();

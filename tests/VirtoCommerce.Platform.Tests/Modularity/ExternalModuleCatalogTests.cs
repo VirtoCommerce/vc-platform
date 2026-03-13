@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
 using Xunit;
+#pragma warning disable VC0014 // Type is obsolete
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {

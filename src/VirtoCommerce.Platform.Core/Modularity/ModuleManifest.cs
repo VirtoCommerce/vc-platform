@@ -64,6 +64,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlElement("moduleType")]
         public string ModuleType { get; set; }
 
+        [XmlElement("startupType")]
+        public string StartupType { get; set; }
+
         [XmlArray("dependencies")]
         [XmlArrayItem("dependency")]
         public ManifestDependency[] Dependencies { get; set; }
