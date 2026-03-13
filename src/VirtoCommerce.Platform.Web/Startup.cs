@@ -23,7 +23,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -369,7 +368,7 @@ namespace VirtoCommerce.Platform.Web
                                                 string>();
                     });
 
-               });
+                });
 
                 openIddictBuilder.AddServer(serverBuilder =>
                 {
@@ -384,7 +383,7 @@ namespace VirtoCommerce.Platform.Web
                         aspNetBuilder.EnableUserInfoEndpointPassthrough();
                         aspNetBuilder.EnableStatusCodePagesIntegration();
 
- 
+
                         // During development or when you explicitly run the platform in production mode without https,
                         // need to disable the HTTPS requirement.
                         if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
@@ -512,6 +511,19 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
 
+            // Invoke IPlatformStartup.ConfigureServices from discovered startup modules
+            // Retrieve the list registered in Program.cs without calling BuildServiceProvider
+            var platformStartups = services
+                .FirstOrDefault(d => d.ServiceType == typeof(IReadOnlyList<IPlatformStartup>))
+                ?.ImplementationInstance as IReadOnlyList<IPlatformStartup>;
+            if (platformStartups != null)
+            {
+                foreach (var startup in platformStartups.OrderBy(s => s.Priority))
+                {
+                    startup.ConfigureServices(services, Configuration);
+                }
+            }
+
             // Serilog (initialize after all modules DLLs were loaded)
             services.AddSerilog((serviceProvider, loggerConfiguration) =>
             {
@@ -574,11 +586,6 @@ namespace VirtoCommerce.Platform.Web
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
             services.AddHttpClient();
-
-            if (Configuration.TryGetAzureAppConfigurationConnectionString(out _))
-            {
-                services.AddAzureAppConfiguration();
-            }
         }
 
         public static ServerCertificate GetServerCertificate(ICertificateLoader certificateLoader)
@@ -619,9 +626,14 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseHttpsRedirection();
 
-            if (Configuration.TryGetAzureAppConfigurationConnectionString(out _))
+            // Invoke IPlatformStartup.Configure for EarlyMiddleware phase (e.g., Azure App Configuration refresh)
+            var platformStartups = app.ApplicationServices.GetService<IReadOnlyList<IPlatformStartup>>();
+            if (platformStartups != null)
             {
-                app.UseAzureAppConfiguration();
+                foreach (var startup in platformStartups.Where(s => s.Phase == PipelinePhase.EarlyMiddleware).OrderBy(s => s.Priority))
+                {
+                    startup.Configure(app, Configuration);
+                }
             }
 
             // Add default MimeTypes with additional bindings
@@ -702,6 +714,15 @@ namespace VirtoCommerce.Platform.Web
 
                 app.UseAutoAccountsLockoutJob(options.Value);
 
+                // Invoke IPlatformStartup.Configure for Initialization phase (e.g., Hangfire)
+                if (platformStartups != null)
+                {
+                    foreach (var startup in platformStartups.Where(s => s.Phase == PipelinePhase.Initialization).OrderBy(s => s.Priority))
+                    {
+                        startup.Configure(app, Configuration);
+                    }
+                }
+
                 // Complete modules startup and apply their migrations
                 Log.ForContext<Startup>().Information("Post initializing modules");
 
@@ -718,7 +739,17 @@ namespace VirtoCommerce.Platform.Web
                 SortOrder = 10,
             });
 
+            // Invoke IPlatformStartup.Configure for LateMiddleware phase (e.g., Swagger)
+            if (platformStartups != null)
+            {
+                foreach (var startup in platformStartups.Where(s => s.Phase == PipelinePhase.LateMiddleware).OrderBy(s => s.Priority))
+                {
+                    startup.Configure(app, Configuration);
+                }
+            }
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
+            // TODO: Move to a dedicated IPlatformStartup module
             app.UseSwagger();
 
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
