@@ -12,7 +12,6 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Hangfire.Middleware;
 
@@ -43,6 +42,9 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
                 switch (databaseProvider)
                 {
                     case "PostgreSql":
+                        var postgreSqlOptions = appBuilder.ApplicationServices.GetService<IOptions<PostgreSqlOptions>>()?.Value ?? new PostgreSqlOptions();
+                        connectionString = postgreSqlOptions.EnhanceConnectionString(connectionString);
+
                         hangfireGlobalConfiguration.UsePostgreSqlStorage(options =>
                             options.UseNpgsqlConnection(connectionString), hangfireOptions.PostgreSqlStorageOptions);
                         break;
