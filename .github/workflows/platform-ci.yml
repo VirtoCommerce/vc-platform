@@ -354,7 +354,6 @@ jobs:
       platformVer: ${{ needs.ci.outputs.version }}
       platformTag: ${{ needs.ci.outputs.tag }}
       jiraKeys: ${{ needs.ci.outputs.jira-keys }}
-      argoServer: 'argo.virtocommerce.cloud'
       matrix: '{"include":${{ needs.ci.outputs.matrix }}}'
     secrets: inherit
 
