@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// <typeparam name="TChangingEvent">The type of *changing event</typeparam>
     /// <typeparam name="TChangedEvent">The type of *changed event</typeparam>
     public abstract class CrudService<TModel, TEntity, TChangingEvent, TChangedEvent> : ICrudService<TModel>
-        where TModel : Entity, ICloneable
+        where TModel : IEntity, ICloneable
         where TEntity : Entity, IDataEntity<TEntity, TModel>
         where TChangingEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
@@ -236,7 +236,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected virtual Task<IList<TEntity>> LoadExistingEntities(IRepository repository, IList<TModel> models)
         {
-            var ids = models.Where(x => !x.IsTransient()).Select(x => x.Id).ToList();
+            var ids = models.Where(x => !IsTransient(x)).Select(x => x.Id).ToList();
 
             return ids.Count > 0
                 ? LoadEntities(repository, ids)
@@ -251,6 +251,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual async Task CommitAsync(IRepository repository)
         {
             await repository.UnitOfWork.CommitAsync();
+        }
+
+        protected virtual bool IsTransient(IEntity entity)
+        {
+            return entity.Id == null;
         }
 
         /// <summary>
