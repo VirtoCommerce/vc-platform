@@ -232,7 +232,6 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             foreach (var (changedEntry, i) in changedEntries.Select((x, i) => (x, i)))
             {
-                // Sync database-generated values back to the original models
                 changedEntry.NewEntry = ToModel(changedEntities[i], changedEntry.NewEntry);
             }
 
