@@ -34,12 +34,6 @@ namespace VirtoCommerce.Platform.Web
                 Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
                 StringComparison.OrdinalIgnoreCase);
 
-            if (!Directory.Exists(probingPath))
-            {
-                refreshProbing = true;
-                Directory.CreateDirectory(probingPath);
-            }
-
             // Create Serilog bootstrap logger for early module loading (before DI)
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(bootConfig)
@@ -50,6 +44,12 @@ namespace VirtoCommerce.Platform.Web
             ModuleLogger.Initialize(bootstrapLoggerFactory);
 
             var modules = ModuleManifestReader.ReadAll(discoveryPath, probingPath);
+
+            if (!Directory.Exists(probingPath))
+            {
+                refreshProbing = true;
+                Directory.CreateDirectory(probingPath);
+            }
 
             if (refreshProbing)
             {
