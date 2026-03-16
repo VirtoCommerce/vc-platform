@@ -347,9 +347,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 #pragma warning restore VC0014 // Type or member is obsolete
             }
 
-            model ??= AbstractTypeFactory<TModel>.TryCreateInstance();
-
-            return entity.ToModel(model);
+            return entity.ToModel();
         }
 
         [Obsolete("Use ToModel(entity, model)", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
