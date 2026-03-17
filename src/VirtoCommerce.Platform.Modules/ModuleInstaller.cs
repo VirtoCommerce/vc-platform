@@ -11,7 +11,6 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Modules.External;
 
-#pragma warning disable VC0014 // Type is obsolete
 namespace VirtoCommerce.Platform.Modules
 {
     [Obsolete("Use ModulePackageInstaller and ModuleDiscovery classes instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]

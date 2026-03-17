@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +8,6 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
-#pragma warning disable VC0014 // Type is obsolete
 namespace VirtoCommerce.Platform.Modules
 {
     /// <summary>

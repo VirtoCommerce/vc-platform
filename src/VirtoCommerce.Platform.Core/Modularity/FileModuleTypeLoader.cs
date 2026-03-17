@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-#pragma warning disable VC0014 // Type is obsolete
 namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
