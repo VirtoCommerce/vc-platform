@@ -35,8 +35,30 @@ namespace VirtoCommerce.Platform.Web
                 StringComparison.OrdinalIgnoreCase);
 
             // Create Serilog bootstrap logger for early module loading (before DI)
+            var bootstrapEntries = new Dictionary<string, string>();
+
+            foreach (var kvp in bootConfig.GetSection("Serilog").AsEnumerable())
+            {
+                if (kvp.Value != null
+                    && !kvp.Key.StartsWith("Serilog:Using:")
+                    && !kvp.Key.StartsWith("Serilog:WriteTo:"))
+                {
+                    bootstrapEntries[kvp.Key] = kvp.Value;
+                }
+            }
+
+            // Add only platform-bundled sinks
+            bootstrapEntries["Serilog:Using:0"] = "Serilog.Sinks.Console";
+            bootstrapEntries["Serilog:Using:1"] = "Serilog.Sinks.Debug";
+            bootstrapEntries["Serilog:WriteTo:0"] = "Console";
+            bootstrapEntries["Serilog:WriteTo:1"] = "Debug";
+
+            var bootstrapSerilogConfig = new ConfigurationBuilder()
+                .AddInMemoryCollection(bootstrapEntries)
+                .Build();
+
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(bootConfig)
+                .ReadFrom.Configuration(bootstrapSerilogConfig)
                 .CreateBootstrapLogger();
 
             // Provide ILoggerFactory backed by Serilog to static module classes
