@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Reflection;
 using FluentAssertions;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
@@ -22,10 +24,30 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
 
     public class PolymorphJsonConverterTests
     {
+        public PolymorphJsonConverterTests()
+        {
+            // Reset static state before each test, to avoid interference between tests
+
+            typeof(AbstractTypeFactory<PermissionScope>)
+                .GetField("_typeInfos", BindingFlags.NonPublic | BindingFlags.Static)
+                ?.GetValue(null)
+                .As<IList>()
+                .Clear();
+
+            foreach (var fieldName in new[] { "_convertFactories", "_canConvertCache", "_createInstanceMethodsCache" })
+            {
+                typeof(PolymorphJsonConverter)
+                    .GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static)
+                    ?.GetValue(null)
+                    .As<IDictionary>()
+                    .Clear();
+            }
+        }
+
         /// <summary>
         /// Test PolymorphJsonConverter returns proper instances of overridden types
         /// </summary>
-        [Fact]        
+        [Fact]
         public void DeserializeObject_DeserializeOverridden()
         {
             AbstractTypeFactory<PermissionScope>.OverrideType<PermissionScope, PermissionScopeOverridden>();
@@ -33,7 +55,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var scopeOver = JsonConvert.DeserializeObject<PermissionScope>(jsonOver, new PolymorphJsonConverter());
             scopeOver.Should().NotBeNull();
             scopeOver.Should().BeOfType<PermissionScopeOverridden>();
-            (scopeOver as PermissionScopeOverridden).Extension.Should().Be("ext");
+            ((PermissionScopeOverridden)scopeOver).Extension.Should().Be("ext");
         }
 
 
