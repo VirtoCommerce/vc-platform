@@ -24,8 +24,8 @@ public class UserSessionsSearchService : IUserSessionsSearchService
 
         var tokens = await _tokenManager.FindBySubjectAsync(criteria.UserId)
             .OfType<VirtoOpenIddictEntityFrameworkCoreToken>()
-            .Where(x => x.Type == "refresh_token")
-            .Where(x => x.Status == "valid")
+            .Where(x => x.Type == OpenIddictConstants.TokenTypeIdentifiers.RefreshToken)
+            .Where(x => x.Status == OpenIddictConstants.Statuses.Valid)
             .OrderByDescending(x => x.CreationDate)
             .ToListAsync();
 
