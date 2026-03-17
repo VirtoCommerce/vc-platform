@@ -69,6 +69,9 @@
     "underscore": "^1.13.6",
     "yaml": "^2.5.1"
   },
+  "overrides": {
+    "serialize-javascript": "^7.0.3"
+  },
   "webpack": {
     "stats": "verbose"
   }
