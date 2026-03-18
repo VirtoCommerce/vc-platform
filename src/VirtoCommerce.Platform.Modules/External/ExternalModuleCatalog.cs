@@ -47,21 +47,21 @@ namespace VirtoCommerce.Platform.Modules
                 }
 
                 // Collect external modules from all manifest URLs
-                var externalModuleInfos = LoadModulesManifests(_options.ModulesManifestUrl).ToList();
+                var externalModules = LoadModulesManifests(_options.ModulesManifestUrl);
                 if (!_options.ExtraModulesManifestUrls.IsNullOrEmpty())
                 {
                     foreach (var extraUrl in _options.ExtraModulesManifestUrls)
                     {
-                        externalModuleInfos.AddRange(LoadModulesManifests(extraUrl));
+                        externalModules.AddRange(LoadModulesManifests(extraUrl));
                     }
-                    externalModuleInfos = externalModuleInfos.Distinct().ToList();
+                    externalModules = externalModules.Distinct().ToList();
                 }
 
                 // Merge with installed using ModuleDiscovery
-                var installedList = _installedModules.OfType<ManifestModuleInfo>().ToList();
-                var merged = ModuleDiscovery.MergeWithInstalled(externalModuleInfos, installedList);
+                var installedModules = _installedModules.OfType<ManifestModuleInfo>().ToList();
+                var mergedModules = ModuleDiscovery.MergeWithInstalled(externalModules, installedModules);
 
-                foreach (var module in merged)
+                foreach (var module in mergedModules)
                 {
                     if (!Modules.OfType<ManifestModuleInfo>().Contains(module))
                     {
@@ -124,11 +124,11 @@ namespace VirtoCommerce.Platform.Modules
 
         #endregion
 
-        private IEnumerable<ManifestModuleInfo> LoadModulesManifests(Uri manifestUrl)
+        private List<ManifestModuleInfo> LoadModulesManifests(Uri manifestUrl)
         {
             ArgumentNullException.ThrowIfNull(manifestUrl);
 
-            _logger.LogDebug("Download module manifests from " + manifestUrl);
+            _logger.LogDebug("Download module manifests from {URL}", manifestUrl);
 
             using var stream = _externalClient.OpenRead(manifestUrl);
             using var reader = new StreamReader(stream);

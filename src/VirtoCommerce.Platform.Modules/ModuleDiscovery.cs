@@ -26,14 +26,14 @@ public static class ModuleDiscovery
         ArgumentNullException.ThrowIfNull(manifestJson);
         ArgumentNullException.ThrowIfNull(platformVersion);
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModuleDiscovery));
-        var result = new List<ManifestModuleInfo>();
         var manifests = JsonSerializer.Deserialize<List<ExternalModuleManifest>>(manifestJson);
-
-        if (manifests == null)
+        if (manifests is null)
         {
-            return result;
+            return [];
         }
+
+        var result = new List<ManifestModuleInfo>();
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleDiscovery));
 
         foreach (var manifest in manifests)
         {
@@ -52,42 +52,43 @@ public static class ModuleDiscovery
 
             if (includePrerelease)
             {
-                var latestPre = GetLatestCompatibleVersion(manifest, platformVersion, prerelease: true);
-                if (latestPre != null)
+                var latestPrerelease = GetLatestCompatibleVersion(manifest, platformVersion, prerelease: true);
+                if (latestPrerelease != null)
                 {
-                    result.Add(latestPre);
+                    result.Add(latestPrerelease);
                 }
             }
         }
 
         logger.LogDebug("Parsed {ModuleCount} modules from external manifest", result.Count);
+
         return result;
     }
 
     /// <summary>
     /// Merge external modules with locally installed modules.
-    /// Returns unified list: installed modules keep their state, external modules show as available.
+    /// Returns a unified list: installed modules keep their state, external modules show as available.
     /// </summary>
     public static List<ManifestModuleInfo> MergeWithInstalled(
-        IReadOnlyList<ManifestModuleInfo> external,
-        IReadOnlyList<ManifestModuleInfo> installed)
+        IReadOnlyList<ManifestModuleInfo> externalModules,
+        IReadOnlyList<ManifestModuleInfo> installedModules)
     {
-        ArgumentNullException.ThrowIfNull(external);
-        ArgumentNullException.ThrowIfNull(installed);
+        ArgumentNullException.ThrowIfNull(externalModules);
+        ArgumentNullException.ThrowIfNull(installedModules);
 
         var result = new List<ManifestModuleInfo>();
-        var installedById = installed.ToDictionary(m => m.Id, StringComparer.OrdinalIgnoreCase);
+        var installedModulesById = installedModules.ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
 
-        foreach (var extModule in external)
+        foreach (var externalModule in externalModules)
         {
-            if (installedById.TryGetValue(extModule.Id, out var localModule))
+            if (installedModulesById.TryGetValue(externalModule.Id, out var installedModule))
             {
-                if (extModule.Equals(localModule))
+                if (externalModule.Equals(installedModule))
                 {
-                    extModule.IsInstalled = localModule.IsInstalled;
-                    extModule.Errors.AddRange(localModule.Errors);
+                    externalModule.IsInstalled = installedModule.IsInstalled;
+                    externalModule.Errors.AddRange(installedModule.Errors);
                 }
-                else if (localModule.Version > extModule.Version)
+                else if (installedModule.Version > externalModule.Version)
                 {
                     continue; // Local is newer, skip external
                 }
@@ -95,17 +96,17 @@ public static class ModuleDiscovery
                 // the installed version will be added by the second loop below
             }
 
-            result.Add(extModule);
+            result.Add(externalModule);
         }
 
         // Add installed modules not already in result (version-aware, matching old Except behavior).
         // Uses Contains/Equals which compares ID + Version + VersionTag, so installed v1.0
         // is added alongside external v1.1 for the update scenario.
-        foreach (var localModule in installed)
+        foreach (var installedModule in installedModules)
         {
-            if (!result.Contains(localModule))
+            if (!result.Contains(installedModule))
             {
-                result.Add(localModule);
+                result.Add(installedModule);
             }
         }
 
@@ -114,7 +115,7 @@ public static class ModuleDiscovery
 
     /// <summary>
     /// Validate that a module can be installed: platform version, dependencies, incompatibilities.
-    /// Returns list of error messages (empty if valid).
+    /// Returns a list of error messages (empty if valid).
     /// </summary>
     public static List<string> ValidateInstall(
         ManifestModuleInfo moduleToInstall,
@@ -134,27 +135,25 @@ public static class ModuleDiscovery
         }
 
         // Check incompatibilities
-        if (!moduleToInstall.Incompatibilities.IsNullOrEmpty())
+        if (moduleToInstall.Incompatibilities?.Count > 0)
         {
-            var installedIncompat = installedModules
-                .Where(m => m.IsInstalled)
-                .Where(m => moduleToInstall.Incompatibilities.Any(i =>
-                    i.Id.Equals(m.Id, StringComparison.OrdinalIgnoreCase) &&
-                    i.Version.IsCompatibleWith(m.Version)))
+            var installedIncompatibleModules = installedModules
+                .Where(installed => moduleToInstall.Incompatibilities.Any(incompatible =>
+                    incompatible.Id.EqualsIgnoreCase(installed.Id) &&
+                    incompatible.Version.IsCompatibleWith(installed.Version)))
                 .ToList();
 
-            if (installedIncompat.Count > 0)
+            if (installedIncompatibleModules.Count > 0)
             {
-                errors.Add($"{moduleToInstall} is incompatible with installed {string.Join(", ", installedIncompat)}");
+                errors.Add($"{moduleToInstall} is incompatible with installed {string.Join(", ", installedIncompatibleModules)}");
             }
         }
 
         // Check major version compatibility (no automated major upgrade/downgrade)
-        var alreadyInstalled = installedModules.FirstOrDefault(m =>
-            m.Id.Equals(moduleToInstall.Id, StringComparison.OrdinalIgnoreCase) && m.IsInstalled);
-        if (alreadyInstalled != null && !alreadyInstalled.Version.IsCompatibleWithBySemVer(moduleToInstall.Version))
+        var installedModule = installedModules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(moduleToInstall.Id));
+        if (installedModule != null && !installedModule.Version.IsCompatibleWithBySemVer(moduleToInstall.Version))
         {
-            var direction = alreadyInstalled.Version.Major < moduleToInstall.Version.Major ? "upgrade" : "downgrade";
+            var direction = installedModule.Version.Major < moduleToInstall.Version.Major ? "upgrade" : "downgrade";
             errors.Add($"Automated {direction} is not feasible due to major version change for {moduleToInstall}");
         }
 
@@ -173,17 +172,14 @@ public static class ModuleDiscovery
         IReadOnlyList<ManifestModuleInfo> installedModules,
         IReadOnlyCollection<string> excludeModuleIds = null)
     {
-        var errors = new List<string>();
-
         var dependingModules = installedModules
-            .Where(m => m.IsInstalled && m.DependsOn.Contains(moduleId))
-            .Where(m => excludeModuleIds == null || !excludeModuleIds.Contains(m.Id))
-            .ToList();
+            .Where(x =>
+                x.DependsOn.ContainsIgnoreCase(moduleId) &&
+                (excludeModuleIds == null || !excludeModuleIds.ContainsIgnoreCase(x.Id)));
 
-        foreach (var dep in dependingModules)
-        {
-            errors.Add($"Unable to uninstall '{moduleId}' because '{dep.Id}' depends on it");
-        }
+        var errors = dependingModules
+            .Select(x => $"Unable to uninstall '{moduleId}' because '{x.Id}' depends on it")
+            .ToList();
 
         return errors;
     }
@@ -205,6 +201,7 @@ public static class ModuleDiscovery
 
         var result = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
         result.LoadFromExternalManifest(manifest, latestVersion);
+
         return result;
     }
 }
