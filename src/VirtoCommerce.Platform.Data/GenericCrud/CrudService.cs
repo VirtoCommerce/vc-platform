@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// <typeparam name="TChangedEvent">The type of *changed event</typeparam>
     public abstract class CrudService<TModel, TEntity, TChangingEvent, TChangedEvent> : ICrudService<TModel>
         where TModel : IEntity, ICloneable
-        where TEntity : Entity, IDataEntity<TEntity, TModel>
+        where TEntity : class, IEntity, IDataEntity<TEntity, TModel>
         where TChangingEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
     {

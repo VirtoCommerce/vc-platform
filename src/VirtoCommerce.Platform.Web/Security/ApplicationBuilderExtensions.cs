@@ -1,9 +1,6 @@
 using System.Linq;
 using Hangfire;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
@@ -92,15 +89,17 @@ namespace VirtoCommerce.Platform.Web.Security
                 if (context.User.Identity?.IsAuthenticated == true &&
                     context.Request.Cookies.ContainsKey(identityCookieName))
                 {
-                    var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
-                    var user = await userManager.GetUserAsync(context.User);
+                    //var userManagerFactory = context.RequestServices.GetRequiredService<Func<UserManager<ApplicationUser>>>();
+                    //using var userManager = userManagerFactory();
 
-                    if (user != null && await userManager.IsLockedOutAsync(user))
-                    {
-                        await context.SignOutAsync(IdentityConstants.ApplicationScheme);
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        return;
-                    }
+                    //var user = await userManager.GetUserAsync(context.User);
+
+                    //if (user != null && await userManager.IsLockedOutAsync(user))
+                    //{
+                    //    await context.SignOutAsync(IdentityConstants.ApplicationScheme);
+                    //    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    //    return;
+                    //}
                 }
 
                 await next();

@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         where TCriteria : SearchCriteriaBase
         where TResult : GenericSearchResult<TModel>
         where TModel : IEntity, ICloneable
-        where TEntity : Entity, IDataEntity<TEntity, TModel>
+        where TEntity : class, IEntity, IDataEntity<TEntity, TModel>
     {
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly Func<IRepository> _repositoryFactory;
@@ -110,9 +110,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             if (criteria.Take > 0)
             {
-                result.Results = await query
-                    .OrderBySortInfos(BuildSortExpression(criteria))
-                    .ThenBy(x => x.Id)
+                var orderedQuery = await GetOrderedQueryAsync(query, criteria);
+
+                result.Results = await orderedQuery
                     .Select(x => x.Id)
                     .Skip(criteria.Skip)
                     .Take(criteria.Take)
@@ -135,6 +135,15 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             }
 
             return result;
+        }
+
+        protected virtual Task<IOrderedQueryable<TEntity>> GetOrderedQueryAsync(IQueryable<TEntity> query, TCriteria criteria)
+        {
+            var orderedQuery = query
+                    .OrderBySortInfos(BuildSortExpression(criteria))
+                    .ThenBy(x => x.Id);
+
+            return Task.FromResult(orderedQuery);
         }
 
         /// <summary>
