@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules.External;
 
-#pragma warning disable VC0014 // Type is obsolete
 namespace VirtoCommerce.Platform.Modules
 {
     public static class ServiceCollectionExtensions

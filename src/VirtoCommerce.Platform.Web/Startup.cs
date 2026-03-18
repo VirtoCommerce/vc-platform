@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-#pragma warning disable VC0014 // Type is obsolete
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -532,7 +531,10 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<IModuleCatalog>(sp => sp.GetRequiredService<ILocalModuleCatalog>());
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
+
+#pragma warning disable VC0014 // Type or member is obsolete
             services.AddExternalModules();
+#pragma warning restore VC0014 // Type or member is obsolete
 
             // Serilog (initialize after all modules DLLs were loaded)
             services.AddSerilog((serviceProvider, loggerConfiguration) =>

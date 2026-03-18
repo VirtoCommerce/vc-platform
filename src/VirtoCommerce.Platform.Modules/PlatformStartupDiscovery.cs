@@ -28,7 +28,6 @@ public static class PlatformStartupDiscovery
     public static IReadOnlyList<IPlatformStartup> DiscoverStartups(IEnumerable<ManifestModuleInfo> modules)
     {
         var startups = new List<IPlatformStartup>();
-
         var logger = ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery));
 
         foreach (var module in modules)
@@ -40,8 +39,8 @@ public static class PlatformStartupDiscovery
 
             try
             {
-                var startupType = module.Assembly.GetType(module.StartupType)
-                    ?? FindTypeByName(module.Assembly, module.StartupType);
+                var startupType = module.Assembly.GetType(module.StartupType) ??
+                                  FindTypeByName(module.Assembly, module.StartupType);
 
                 if (startupType == null)
                 {
@@ -83,45 +82,45 @@ public static class PlatformStartupDiscovery
     public static void RunConfigureAppConfiguration(
         IReadOnlyList<IPlatformStartup> startups,
         IConfigurationBuilder builder,
-        IHostEnvironment env)
+        IHostEnvironment environment)
     {
         foreach (var startup in startups)
         {
-            startup.ConfigureAppConfiguration(builder, env);
+            startup.ConfigureAppConfiguration(builder, environment);
         }
     }
 
     public static void RunConfigureHostServices(
         IReadOnlyList<IPlatformStartup> startups,
         IServiceCollection services,
-        IConfiguration config)
+        IConfiguration configuration)
     {
         foreach (var startup in startups)
         {
-            startup.ConfigureHostServices(services, config);
+            startup.ConfigureHostServices(services, configuration);
         }
     }
 
     public static void RunConfigureServices(
         IReadOnlyList<IPlatformStartup> startups,
         IServiceCollection services,
-        IConfiguration config)
+        IConfiguration configuration)
     {
         foreach (var startup in startups)
         {
-            startup.ConfigureServices(services, config);
+            startup.ConfigureServices(services, configuration);
         }
     }
 
     public static void RunConfigure(
         IReadOnlyList<IPlatformStartup> startups,
         PipelinePhase phase,
-        IApplicationBuilder app,
-        IConfiguration config)
+        IApplicationBuilder applicationBuilder,
+        IConfiguration configuration)
     {
         foreach (var startup in startups.Where(s => s.Phase == phase))
         {
-            startup.Configure(app, config);
+            startup.Configure(applicationBuilder, configuration);
         }
     }
 
@@ -136,8 +135,9 @@ public static class PlatformStartupDiscovery
     private static Type FindTypeByName(Assembly assembly, string typeName)
     {
         return assembly.GetTypes()
-            .FirstOrDefault(t => t.FullName == typeName
-                || t.Name == typeName
-                || (t.AssemblyQualifiedName?.StartsWith(typeName, StringComparison.Ordinal) == true));
+            .FirstOrDefault(x =>
+                x.FullName == typeName ||
+                x.Name == typeName ||
+                x.AssemblyQualifiedName?.StartsWith(typeName, StringComparison.Ordinal) == true);
     }
 }

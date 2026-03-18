@@ -21,10 +21,16 @@ public static class ModuleLogger
         _loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
     }
 
-    public static ILogger CreateLogger(Type type) => _loggerFactory.CreateLogger(type);
+    public static ILogger CreateLogger(Type type)
+    {
+        return _loggerFactory.CreateLogger(type);
+    }
 
     /// <summary>
     /// Reset to NullLoggerFactory (for testing).
     /// </summary>
-    public static void Reset() => _loggerFactory = NullLoggerFactory.Instance;
+    public static void Reset()
+    {
+        _loggerFactory = NullLoggerFactory.Instance;
+    }
 }
