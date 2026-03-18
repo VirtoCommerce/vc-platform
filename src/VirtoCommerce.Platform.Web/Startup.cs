@@ -356,8 +356,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
 
-            services.AddScoped<IOpenIddictTokenStore<VirtoOpenIddictEntityFrameworkCoreToken>, VirtoOpenIddictEntityFrameworkCoreTokenStore>();
-
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
@@ -458,6 +456,11 @@ namespace VirtoCommerce.Platform.Web
                     validationBuilder.UseAspNetCore();
                 });
             });
+
+            // Override the default OpenIddict EF Core token store with our custom implementation
+            // that captures IpAddress and UserAgent during token creation.
+            // Must be registered AFTER AddOpenIddict() so it overrides the default store.
+            services.AddScoped<IOpenIddictTokenStore<VirtoOpenIddictEntityFrameworkCoreToken>, VirtoOpenIddictEntityFrameworkCoreTokenStore>();
 
             services.AddSingleton<Func<IOpenIddictTokenManager>>(provider =>
                 () => provider.CreateScope().ServiceProvider.GetRequiredService<IOpenIddictTokenManager>());
