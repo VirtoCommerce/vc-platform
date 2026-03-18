@@ -36,8 +36,13 @@ public static class ModuleCopier
         ArgumentNullException.ThrowIfNull(probingPath);
         ArgumentNullException.ThrowIfNull(modules);
 
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
+
         // Resolve architecture once: explicit override or auto-detect (supports X86, X64, Arm, Arm64)
         var resolvedArch = targetArchitecture ?? RuntimeInformation.ProcessArchitecture;
+
+        logger.LogDebug("Copying modules to probing path {ProbingPath} from {DiscoveryPath}, {ModuleCount} modules, architecture: {Architecture}",
+            probingPath, discoveryPath, modules.Count, resolvedArch);
 
         if (!Directory.Exists(probingPath))
         {
@@ -55,6 +60,8 @@ public static class ModuleCopier
                 CopyModule(module.FullPhysicalPath, probingPath, resolvedArch);
             }
         }
+
+        logger.LogDebug("Module copy completed");
     }
 
     /// <summary>
@@ -67,11 +74,15 @@ public static class ModuleCopier
             return;
         }
 
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
         var sourceBinPath = Path.Combine(modulePath, "bin");
         if (!Directory.Exists(sourceBinPath))
         {
+            logger.LogDebug("No bin directory for module at {ModulePath}, skipping", modulePath);
             return;
         }
+
+        logger.LogDebug("Copying module assemblies from {SourceBinPath}", sourceBinPath);
 
         // Explicit override or auto-detect (supports X86, X64, Arm, Arm64)
         var environment = targetArchitecture ?? RuntimeInformation.ProcessArchitecture;
@@ -158,12 +169,14 @@ public static class ModuleCopier
 
     private static void CopyFile(Architecture environment, string sourceFilePath, string targetFilePath)
     {
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
         FileCompareResult result = null;
 
         if (!File.Exists(targetFilePath))
         {
             if (!IsArchitectureCompatible(sourceFilePath, environment))
             {
+                logger.LogDebug("Skipped (incompatible architecture): {SourceFile}", Path.GetFileName(sourceFilePath));
                 return;
             }
         }
@@ -182,6 +195,9 @@ public static class ModuleCopier
             {
                 return;
             }
+
+            logger.LogDebug("Updating {TargetFile}: NewVersion={NewVersion}, NewArchitecture={NewArchitecture}, NewDate={NewDate}",
+                Path.GetFileName(targetFilePath), result.NewVersion, result.NewArchitecture, result.NewDate);
         }
 
         var targetDir = Path.GetDirectoryName(targetFilePath);
@@ -200,7 +216,6 @@ public static class ModuleCopier
             // For version upgrades, architecture changes, or new files, re-throw so the failure is visible to operators.
             if (result is { NewDate: true })
             {
-                var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
                 logger.LogWarning("File '{TargetFile}' was not updated by '{SourceFile}' of the same version but later modified date, because probably it was used by another process",
                     targetFilePath, sourceFilePath);
             }
