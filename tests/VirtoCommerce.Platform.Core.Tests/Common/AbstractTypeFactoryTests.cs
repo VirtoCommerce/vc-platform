@@ -30,6 +30,11 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
     {
     }
 
+    // Separate abstract type for the "no overrides throws" test — avoids static state pollution from Car registration
+    public abstract class AbstractService
+    {
+    }
+
     public class Shape
     {
         public double Area { get; set; }
@@ -143,39 +148,39 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
     public class AbstractTypeFactoryTests
     {
         [Fact]
-        public void New_NoOverrides_CreatesBaseType()
+        public void TryCreateInstance_NoOverrides_CreatesBaseType()
         {
-            // Animal has no registrations → New() should create Animal directly
-            var result = AbstractTypeFactory<Animal>.New();
+            // Animal has no registrations → fast path via CreateDefaultInstance
+            var result = AbstractTypeFactory<Animal>.TryCreateInstance();
 
             Assert.NotNull(result);
             Assert.Equal(typeof(Animal), result.GetType());
         }
 
         [Fact]
-        public void New_WithOverride_CreatesDerivedType()
+        public void TryCreateInstance_WithOverride_CreatesDerivedType()
         {
             AbstractTypeFactory<Widget>.RegisterType<SuperWidget>();
 
-            var result = AbstractTypeFactory<Widget>.New();
+            var result = AbstractTypeFactory<Widget>.TryCreateInstance();
 
             Assert.NotNull(result);
             Assert.IsType<SuperWidget>(result);
         }
 
         [Fact]
-        public void New_AbstractBaseType_NoOverrides_Throws()
+        public void TryCreateInstance_AbstractBaseType_NoOverrides_Throws()
         {
             Assert.Throws<OperationCanceledException>(() =>
-                AbstractTypeFactory<AbstractVehicle>.New());
+                AbstractTypeFactory<AbstractService>.TryCreateInstance());
         }
 
         [Fact]
-        public void New_AbstractBaseType_WithOverride_CreatesDerivedType()
+        public void TryCreateInstance_AbstractBaseType_WithOverride_CreatesDerivedType()
         {
             AbstractTypeFactory<AbstractVehicle>.RegisterType<Car>();
 
-            var result = AbstractTypeFactory<AbstractVehicle>.New();
+            var result = AbstractTypeFactory<AbstractVehicle>.TryCreateInstance();
 
             Assert.NotNull(result);
             Assert.IsType<Car>(result);

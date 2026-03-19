@@ -46,24 +46,6 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         /// <summary>
-        /// Creates an instance of the most derived registered type, or the base type if no overrides exist.
-        /// This is the fastest creation path: when no overrides are registered, it bypasses type lookup entirely
-        /// and uses a cached compiled delegate (~5 ns vs ~180 ns for TryCreateInstance).
-        /// </summary>
-        /// <returns>An instance of the most derived type, or BaseType if no overrides are registered.</returns>
-        /// <exception cref="OperationCanceledException">Thrown when BaseType is abstract and no overrides are registered.</exception>
-        public static BaseType New()
-        {
-            if (_typeInfos.Count == 0)
-            {
-                // No overrides — create base type directly via cached delegate (no lookup needed)
-                return CreateDefaultInstance();
-            }
-
-            return TryCreateInstance();
-        }
-
-        /// <summary>
         /// Registers a new type in the factory and returns a TypeInfo instance for further configuration.
         /// </summary>
         /// <typeparam name="T">The type to be registered.</typeparam>
@@ -149,10 +131,15 @@ namespace VirtoCommerce.Platform.Core.Common
 
         /// <summary>
         /// Creates an instance of the base type using the type name.
+        /// When no overrides are registered, bypasses type lookup entirely and uses a cached compiled delegate.
         /// </summary>
         /// <returns>An instance of the base type.</returns>
         public static BaseType TryCreateInstance()
         {
+            if (_typeInfos.Count == 0)
+            {
+                return CreateDefaultInstance();
+            }
             return TryCreateInstance(typeof(BaseType).Name);
         }
 
