@@ -13,7 +13,7 @@ using VirtoCommerce.Platform.DistributedLock;
 
 namespace VirtoCommerce.Platform.Modules
 {
-    [Obsolete("Use LocalModuleCatalogAdapter with modules pre-loaded by ModuleManifestReader and ModuleAssemblyLoader instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModuleManifestReader and ModuleAssemblyLoader instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class LocalStorageModuleCatalog : ModuleCatalog, ILocalModuleCatalog
     {
         private readonly LocalStorageModuleCatalogOptions _options;

@@ -1,14 +1,13 @@
 using System;
 using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.DistributedLock;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.Licensing;
 using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
 
@@ -54,14 +53,15 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
         public static IApplicationBuilder UseModulesAndAppsFiles(this IApplicationBuilder app)
         {
-            var localModules = app.ApplicationServices.GetRequiredService<ILocalModuleCatalog>().Modules;
+            var localModules = ModuleRegistry.GetInstalledModules();
 
-            foreach (var module in localModules.OfType<ManifestModuleInfo>())
+            foreach (var module in localModules)
             {
                 // Step 1. Enables static file serving for module
+                // Disable FileSystemWatcher to prevent directory handle lock (allows module update/uninstall at runtime)
                 app.UseStaticFiles(new StaticFileOptions()
                 {
-                    FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
+                    FileProvider = new PhysicalFileProvider(module.FullPhysicalPath) { UsePollingFileWatcher = true, UseActivePolling = false },
                     RequestPath = new PathString($"/modules/$({module.ModuleName})")
                 });
 
@@ -79,13 +79,13 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
                     app.UseDefaultFiles(new DefaultFilesOptions()
                     {
-                        FileProvider = new PhysicalFileProvider(appPath),
+                        FileProvider = new PhysicalFileProvider(appPath) { UsePollingFileWatcher = true, UseActivePolling = false },
                         RequestPath = new PathString($"/apps/{moduleApp.Id}")
                     });
 
                     app.UseStaticFiles(new StaticFileOptions()
                     {
-                        FileProvider = new PhysicalFileProvider(appPath),
+                        FileProvider = new PhysicalFileProvider(appPath) { UsePollingFileWatcher = true, UseActivePolling = false },
                         RequestPath = new PathString($"/apps/{moduleApp.Id}")
                     });
                 }

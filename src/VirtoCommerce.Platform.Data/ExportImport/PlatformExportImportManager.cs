@@ -15,6 +15,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Modules;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
@@ -23,7 +24,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private const string ManifestZipEntryName = "Manifest.json";
         private const string PlatformZipEntryName = "PlatformEntries.json";
 
-        private readonly ILocalModuleCatalog _moduleCatalog;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly ISettingsManager _settingsManager;
@@ -42,7 +42,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             , ISettingsManager settingsManager
             , IDynamicPropertyService dynamicPropertyService
             , IDynamicPropertySearchService dynamicPropertySearchService
-            , ILocalModuleCatalog moduleCatalog
             , IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService
             , IDynamicPropertyDictionaryItemsSearchService dynamicPropertyDictionaryItemsSearchService
             , IUserApiKeyService userApiKeyService
@@ -52,7 +51,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             _userManager = userManager;
             _roleManager = roleManager;
             _settingsManager = settingsManager;
-            _moduleCatalog = moduleCatalog;
             _dynamicPropertyDictionaryItemsService = dynamicPropertyDictionaryItemsService;
             _dynamicPropertyDictionaryItemsSearchService = dynamicPropertyDictionaryItemsSearchService;
             _dynamicPropertySearchService = dynamicPropertySearchService;
@@ -110,7 +108,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 var manifestZipEntry = zipArchive.CreateEntry(ManifestZipEntryName, CompressionLevel.Optimal);
 
                 //After all modules exported need write export manifest part
-                using (var stream = manifestZipEntry.Open())
+                await using (var stream = await manifestZipEntry.OpenAsync())
                 {
                     exportOptions.SerializeJson(stream, GetJsonSerializer());
                 }
@@ -151,7 +149,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 return;
             }
 
-            await using var stream = platformZipEntries.Open();
+            await using var stream = await platformZipEntries.OpenAsync();
             await using var reader = new JsonTextReader(new StreamReader(stream));
             while (await reader.ReadAsync())
             {
@@ -194,9 +192,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }
         }
 
-        private async Task ImportRolesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private Task ImportRolesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeArrayWithPagingAsync<Role>(jsonSerializer, _batchSize, async items =>
+            return reader.DeserializeArrayWithPagingAsync<Role>(jsonSerializer, _batchSize, async items =>
             {
                 foreach (var role in items)
                 {
@@ -219,9 +217,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }, cancellationToken);
         }
 
-        private async Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeArrayWithPagingAsync<ApplicationUser>(jsonSerializer, _batchSize, async items =>
+            return reader.DeserializeArrayWithPagingAsync<ApplicationUser>(jsonSerializer, _batchSize, async items =>
             {
                 foreach (var user in items)
                 {
@@ -244,11 +242,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }, cancellationToken);
         }
 
-        private async Task ImportSettingsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private Task ImportSettingsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
             var moduleIds = manifest.Modules.Select(x => x.Id).ToHashSet();
 
-            await reader.DeserializeArrayWithPagingAsync<ObjectSettingEntry>(jsonSerializer, _batchSize,
+            return reader.DeserializeArrayWithPagingAsync<ObjectSettingEntry>(jsonSerializer, _batchSize,
                 items => _settingsManager.SaveObjectSettingsAsync(items.Where(x => moduleIds.Contains(x.ModuleId)).ToArray()),
                 processedCount =>
                 {
@@ -257,9 +255,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }, cancellationToken);
         }
 
-        private async Task ImportDynamicPropertiesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private Task ImportDynamicPropertiesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeArrayWithPagingAsync<DynamicProperty>(jsonSerializer, _batchSize,
+            return reader.DeserializeArrayWithPagingAsync<DynamicProperty>(jsonSerializer, _batchSize,
                 items => _dynamicPropertyService.SaveDynamicPropertiesAsync(items.ToArray()),
                 processedCount =>
                 {
@@ -268,9 +266,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }, cancellationToken);
         }
 
-        private async Task ImportDynamicPropertyDictionaryItemsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private Task ImportDynamicPropertyDictionaryItemsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeArrayWithPagingAsync<DynamicPropertyDictionaryItem>(jsonSerializer, _batchSize,
+            return reader.DeserializeArrayWithPagingAsync<DynamicPropertyDictionaryItem>(jsonSerializer, _batchSize,
                 items => _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items.ToArray()),
                 processedCount =>
                 {
@@ -279,9 +277,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }, cancellationToken);
         }
 
-        private async Task ImportUserApiKeysInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private Task ImportUserApiKeysInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeArrayWithPagingAsync<UserApiKey>(jsonSerializer, _batchSize,
+            return reader.DeserializeArrayWithPagingAsync<UserApiKey>(jsonSerializer, _batchSize,
                 items => _userApiKeyService.SaveApiKeysAsync(items.ToArray()),
                 processedCount =>
                 {
@@ -298,7 +296,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             //Create part for platform entries
             var platformEntriesPart = zipArchive.CreateEntry(PlatformZipEntryName, CompressionLevel.Optimal);
 
-            await using var partStream = platformEntriesPart.Open();
+            await using var partStream = await platformEntriesPart.OpenAsync();
             await using var sw = new StreamWriter(partStream, Encoding.UTF8);
             await using var writer = new JsonTextWriter(sw);
 
@@ -448,7 +446,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 if (moduleDescriptor != null)
                 {
                     var modulePart = zipArchive.GetEntry(moduleInfo.PartUri.TrimStart('/'));
-                    using (var modulePartStream = modulePart.Open())
+                    await using (var modulePartStream = await modulePart.OpenAsync())
                     {
                         void ModuleProgressCallback(ExportImportProgressInfo x)
                         {
@@ -515,7 +513,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                 .DefaultIfEmpty(new ExportImportOptions { HandleBinaryData = manifest.HandleBinaryData, ModuleIdentity = new ModuleIdentity(module.Id, SemanticVersion.Parse(module.Version.Trim()), module.Optional) })
                                 .FirstOrDefault(x => x.ModuleIdentity.Id == moduleDescriptor.Identity.Id);
 
-                            using (var stream = zipEntry.Open())
+                            await using (var stream = await zipEntry.OpenAsync())
                             {
                                 await exporter.ExportAsync(stream, options, ModuleProgressCallback,
                                     cancellationToken);
@@ -534,7 +532,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
         private ManifestModuleInfo[] InnerGetModulesWithInterface(Type interfaceType)
         {
-            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.ModuleInstance != null)
+            var retVal = ModuleRegistry.GetInstalledModules().Where(x => x.ModuleInstance != null)
                                         .Where(x => x.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
                                         .ToArray();
             return retVal;

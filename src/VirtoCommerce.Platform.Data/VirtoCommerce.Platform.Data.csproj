@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Platform.Caching\VirtoCommerce.Platform.Caching.csproj" />
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,24 +2,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Modules;
 
 namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
 {
     public sealed class ModulesHealthChecker : IHealthCheck
     {
-        private readonly ILocalModuleCatalog _localModuleCatalog;
-
-        public ModulesHealthChecker(ILocalModuleCatalog localModuleCatalog)
-        {
-            _localModuleCatalog = localModuleCatalog;
-        }
-
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var errorsDictionary = _localModuleCatalog.Modules
-                .OfType<ManifestModuleInfo>()
-                .Where(x => x.Errors.Any())
+            var errorsDictionary = ModuleRegistry.GetFailedModules()
                 .ToDictionary(
                     x => x.Id,
                     x => new ModulesHealthReportRecord
@@ -29,7 +20,7 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
                         Errors = x.Errors.ToArray()
                     } as object);
 
-            if (errorsDictionary.Any())
+            if (errorsDictionary.Count != 0)
             {
                 return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, "Some modules have errors", exception: null, errorsDictionary));
             }

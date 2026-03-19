@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
@@ -142,9 +140,6 @@ namespace VirtoCommerce.Platform.Web
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
             });
             services.AddOptions<SecurityHeadersOptions>().Bind(Configuration.GetSection("SecurityHeaders")).ValidateDataAnnotations();
-
-            //Get platform version from GetExecutingAssembly
-            PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
             services.AddSingleton<IFileCopyPolicy, FileCopyPolicy>();
             services.AddSingleton<IFileMetadataProvider, FileMetadataProvider>();
@@ -508,10 +503,12 @@ namespace VirtoCommerce.Platform.Web
 
             // Create module catalog adapter (needed by IHasModuleCatalog modules and DI)
             var boostOptions = Configuration.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
+#pragma warning disable VC0014 // Type or member is obsolete
             var moduleCatalogAdapter = new LocalModuleCatalogAdapter(modules, boostOptions);
+#pragma warning restore VC0014 // Type or member is obsolete
 
             // Initialize modules (IModule.Initialize registers DI services)
-            ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter, boostOptions);
+            ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, boostOptions, moduleCatalogAdapter);
 
             // Let IPlatformStartup implementations register application-level services
             PlatformStartupDiscovery.RunConfigureServices(
@@ -527,14 +524,14 @@ namespace VirtoCommerce.Platform.Web
             // Register backward-compat DI services
             // (needed by UseModulesAndAppsFiles, health checks, external modules, etc.)
             services.AddSingleton(services);
+#pragma warning disable VC0014
             services.AddSingleton<ILocalModuleCatalog>(moduleCatalogAdapter);
             services.AddSingleton<IModuleCatalog>(sp => sp.GetRequiredService<ILocalModuleCatalog>());
+#pragma warning restore VC0014
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
 
-#pragma warning disable VC0014 // Type or member is obsolete
             services.AddExternalModules();
-#pragma warning restore VC0014 // Type or member is obsolete
 
             // Serilog (initialize after all modules DLLs were loaded)
             services.AddSerilog((serviceProvider, loggerConfiguration) =>

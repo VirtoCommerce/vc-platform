@@ -33,6 +33,7 @@ public static class ModuleRunner
         }
 
         var solver = new ModuleDependencySolver(boostOptions ?? new ModuleSequenceBoostOptions());
+        var moduleNames = new HashSet<string>(modules.Select(m => m.ModuleName), StringComparer.OrdinalIgnoreCase);
 
         foreach (var module in modules)
         {
@@ -42,6 +43,13 @@ public static class ModuleRunner
             {
                 foreach (var dependency in module.DependsOn)
                 {
+                    // Only add dependency edge if the dependency is in the list
+                    // (missing/failed modules are excluded to avoid MissedModuleException)
+                    if (!moduleNames.Contains(dependency))
+                    {
+                        continue;
+                    }
+
                     var isOptional = module.Dependencies?.Any(x => x.Id == dependency && x.Optional) ?? false;
                     if (!isOptional)
                     {
@@ -119,8 +127,11 @@ public static class ModuleRunner
         IServiceCollection serviceCollection,
         IConfiguration configuration = null,
         IHostEnvironment hostEnvironment = null,
-        IModuleCatalog moduleCatalog = null,
-        ModuleSequenceBoostOptions boostOptions = null)
+        ModuleSequenceBoostOptions boostOptions = null,
+#pragma warning disable VC0014 // Type is obsolete
+        IModuleCatalog moduleCatalog = null
+#pragma warning restore VC0014
+        )
     {
         ArgumentNullException.ThrowIfNull(modules);
         ArgumentNullException.ThrowIfNull(serviceCollection);
@@ -161,10 +172,12 @@ public static class ModuleRunner
                     hasHost.HostEnvironment = hostEnvironment;
                 }
 
+#pragma warning disable VC0014 // Type or member is obsolete
                 if (instance is IHasModuleCatalog hasModuleCatalog && moduleCatalog != null)
                 {
                     hasModuleCatalog.ModuleCatalog = moduleCatalog;
                 }
+#pragma warning restore VC0014 // Type or member is obsolete
 
                 instance.Initialize(serviceCollection);
                 moduleInfo.State = ModuleState.Initialized;

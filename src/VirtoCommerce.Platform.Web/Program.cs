@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Hangfire;
@@ -24,6 +25,8 @@ namespace VirtoCommerce.Platform.Web
 
         private static void LoadModules()
         {
+            PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(typeof(Program).Assembly.Location).ProductVersion);
+
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").EmptyToNull() ?? Environments.Production;
 
             // Build minimal config to get module paths
@@ -67,6 +70,7 @@ namespace VirtoCommerce.Platform.Web
                 ModuleAssemblyLoader.LoadModule(module, probingPath);
             }
 
+            ModuleDiscovery.ValidateModules(modules, PlatformVersion.CurrentVersion);
             ModuleRegistry.Initialize(modules);
 
             // Discover IPlatformStartup implementations from loaded modules

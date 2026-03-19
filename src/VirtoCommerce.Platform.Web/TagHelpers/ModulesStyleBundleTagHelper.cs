@@ -7,10 +7,11 @@ namespace VirtoCommerce.Platform.Web.TagHelpers
 {
     public class ModulesStyleBundleTagHelper : ModulesBundleTagHelperBase
     {
-        public ModulesStyleBundleTagHelper(ILocalModuleCatalog localModuleCatalog, IOptions<LocalStorageModuleCatalogOptions> options, IPlatformMemoryCache platformMemoryCache)
-            : base(localModuleCatalog, options, platformMemoryCache)
+        public ModulesStyleBundleTagHelper(IOptions<LocalStorageModuleCatalogOptions> options, IPlatformMemoryCache platformMemoryCache)
+            : base(options, platformMemoryCache)
         {
         }
+
         protected override TagBuilder GetTagBuilder(string bundleVirtualPath, string version)
         {
             var result = new TagBuilder("link");
@@ -24,4 +25,3 @@ namespace VirtoCommerce.Platform.Web.TagHelpers
         }
     }
 }
-

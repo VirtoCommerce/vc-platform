@@ -114,6 +114,108 @@ public static class ModuleDiscovery
     }
 
     /// <summary>
+    /// Validate all loaded modules at startup: platform version compatibility, dependency version compatibility, incompatibilities.
+    /// Populates <see cref="ManifestModuleInfo.Errors"/> for each module that fails validation.
+    /// Modules with errors are skipped during initialization by <see cref="ModuleRunner"/>.
+    /// </summary>
+    public static void ValidateModules(IReadOnlyList<ManifestModuleInfo> modules, SemanticVersion platformVersion)
+    {
+        ArgumentNullException.ThrowIfNull(modules);
+        ArgumentNullException.ThrowIfNull(platformVersion);
+
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleDiscovery));
+
+        foreach (var module in modules)
+        {
+            // 1. Platform version: module target must be ≤ running platform, same major version
+            if (!module.PlatformVersion.IsCompatibleWith(platformVersion)
+                || !module.PlatformVersion.IsCompatibleWithBySemVer(platformVersion))
+            {
+                module.Errors.Add($"Module platform version {module.PlatformVersion} is incompatible with current {platformVersion}");
+            }
+
+            // 2. Incompatibilities: check no incompatible modules are installed
+            if (module.Incompatibilities != null)
+            {
+                var installedIncompatibilities = modules
+                    .Where(x => module.Incompatibilities.Any(i =>
+                        i.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase) &&
+                        i.Version.IsCompatibleWith(x.Version)))
+                    .ToList();
+
+                if (installedIncompatibilities.Count > 0)
+                {
+                    module.Errors.Add($"{module} is incompatible with installed {string.Join(", ", installedIncompatibilities)}. You should uninstall these modules first.");
+                }
+            }
+
+            // 3. Dependency version: each declared dependency must be SemVer-compatible with installed version
+            if (module.Dependencies != null)
+            {
+                foreach (var declaredDependency in module.Dependencies)
+                {
+                    if (declaredDependency.Optional)
+                    {
+                        continue;
+                    }
+
+                    var installedDependency = modules.FirstOrDefault(x => x.Id.Equals(declaredDependency.Id, StringComparison.OrdinalIgnoreCase));
+                    if (installedDependency == null)
+                    {
+                        module.Errors.Add($"Module dependency {declaredDependency.Id} {declaredDependency.Version} is not installed");
+                    }
+                    else if (!declaredDependency.Version.IsCompatibleWithBySemVer(installedDependency.Version))
+                    {
+                        module.Errors.Add($"Module dependency {declaredDependency.Id} {declaredDependency.Version} is incompatible with installed {installedDependency.Version}");
+                    }
+                }
+            }
+        }
+
+        // 4. Cascade errors to dependents: if module A failed, all modules depending on A must also fail.
+        // This prevents cryptic DI errors like "Unable to resolve IItemService" when Catalog failed but xCart still tries to initialize.
+        var failedIds = new HashSet<string>(
+            modules.Where(m => m.Errors.Count > 0).Select(m => m.Id),
+            StringComparer.OrdinalIgnoreCase);
+
+        var changed = true;
+        while (changed)
+        {
+            changed = false;
+            foreach (var module in modules.Where(m => m.Errors.Count == 0))
+            {
+                if (module.DependsOn == null)
+                {
+                    continue;
+                }
+
+                var failedDependency = module.DependsOn
+                    .Where(depId => failedIds.Contains(depId))
+                    .FirstOrDefault(depId => module.Dependencies == null
+                        || !module.Dependencies.Any(d => d.Id.Equals(depId, StringComparison.OrdinalIgnoreCase) && d.Optional));
+
+                if (failedDependency != null)
+                {
+                    module.Errors.Add($"Module skipped because its dependency '{failedDependency}' has errors");
+                    failedIds.Add(module.Id);
+                    changed = true;
+                }
+            }
+        }
+
+        var errorCount = modules.Count(m => m.Errors.Count > 0);
+        if (errorCount > 0)
+        {
+            foreach (var module in modules.Where(m => m.Errors.Count > 0))
+            {
+                logger.LogWarning("Module {ModuleId} has errors: {Errors}", module.Id, string.Join("; ", module.Errors));
+            }
+
+            logger.LogWarning("{ErrorCount} modules failed validation (including cascaded dependents)", errorCount);
+        }
+    }
+
+    /// <summary>
     /// Validate that a module can be installed: platform version, dependencies, incompatibilities.
     /// Returns a list of error messages (empty if valid).
     /// </summary>
@@ -128,8 +230,11 @@ public static class ModuleDiscovery
 
         var errors = new List<string>();
 
-        // Check platform version compatibility
-        if (!moduleToInstall.PlatformVersion.IsCompatibleWith(platformVersion))
+        // Check platform version compatibility:
+        // 1. Module target platform version must be ≤ running platform version
+        // 2. Major versions must match (no cross-major-version compatibility)
+        if (!moduleToInstall.PlatformVersion.IsCompatibleWith(platformVersion)
+            || !moduleToInstall.PlatformVersion.IsCompatibleWithBySemVer(platformVersion))
         {
             errors.Add($"Target platform version {moduleToInstall.PlatformVersion} is incompatible with current {platformVersion}");
         }
@@ -182,6 +287,116 @@ public static class ModuleDiscovery
             .ToList();
 
         return errors;
+    }
+
+    /// <summary>
+    /// Returns the given modules plus all their transitive dependencies (prerequisites), sorted in dependency order.
+    /// Walks DOWN the dependency graph. For each dependency, selects the best compatible version
+    /// from <paramref name="allAvailableModules"/> (prefers installed, then latest compatible).
+    /// </summary>
+    public static List<ManifestModuleInfo> GetDependencies(
+        IList<ManifestModuleInfo> selectedModules,
+        IList<ManifestModuleInfo> allAvailableModules)
+    {
+        ArgumentNullException.ThrowIfNull(selectedModules);
+        ArgumentNullException.ThrowIfNull(allAvailableModules);
+
+        var completeList = new List<ManifestModuleInfo>();
+        var pendingList = new List<ManifestModuleInfo>(selectedModules);
+
+        while (pendingList.Count > 0)
+        {
+            var moduleInfo = pendingList[0];
+            pendingList.RemoveAt(0);
+
+            // Resolve dependencies for this module
+            if (moduleInfo.Dependencies != null)
+            {
+                foreach (var dependency in moduleInfo.Dependencies)
+                {
+                    // Find all available versions of this dependency
+                    var candidates = allAvailableModules
+                        .Where(x => x.Id.Equals(dependency.Id, StringComparison.OrdinalIgnoreCase))
+                        .Where(x => dependency.Version.IsCompatibleWithBySemVer(x.Version))
+                        .OrderByDescending(x => x.Version)
+                        .ToList();
+
+                    // Prefer installed version, then latest compatible
+                    var resolved = candidates.FirstOrDefault(x => x.IsInstalled) ?? candidates.FirstOrDefault();
+
+                    if (resolved != null && !completeList.Contains(resolved) && !pendingList.Contains(resolved))
+                    {
+                        pendingList.Add(resolved);
+                    }
+                }
+            }
+
+            if (!completeList.Contains(moduleInfo))
+            {
+                completeList.Add(moduleInfo);
+            }
+        }
+
+        return SortByDependencyStatic(completeList);
+    }
+
+    /// <summary>
+    /// Sort modules by dependency order (topological sort). Same logic as <see cref="ModuleRunner.SortByDependency"/>
+    /// but works with a flat list without requiring ModuleSequenceBoostOptions.
+    /// </summary>
+    private static List<ManifestModuleInfo> SortByDependencyStatic(List<ManifestModuleInfo> modules)
+    {
+        if (modules.Count == 0)
+        {
+            return modules;
+        }
+
+        var solver = new ModuleDependencySolver(new ModuleSequenceBoostOptions());
+        var moduleNames = new HashSet<string>(modules.Select(m => m.ModuleName), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var module in modules)
+        {
+            solver.AddModule(module.ModuleName);
+            if (module.DependsOn != null)
+            {
+                foreach (var dep in module.DependsOn)
+                {
+                    // Only add dependency edge if the dependency is in the resolved list
+                    // (unresolved dependencies are skipped to avoid MissedModuleException)
+                    if (!moduleNames.Contains(dep))
+                    {
+                        continue;
+                    }
+
+                    var isOptional = module.Dependencies?.Any(x => x.Id == dep && x.Optional) ?? false;
+                    if (!isOptional)
+                    {
+                        solver.AddDependency(module.ModuleName, dep);
+                    }
+                }
+            }
+        }
+
+        var sortedNames = solver.Solve();
+        // Deduplicate by ModuleName (same module ID may appear with different versions in merged catalogs).
+        // Prefer installed version, then latest.
+        var modulesByName = modules
+            .GroupBy(m => m.ModuleName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(m => m.IsInstalled).ThenByDescending(m => m.Version).First(),
+                StringComparer.OrdinalIgnoreCase);
+        var result = new List<ManifestModuleInfo>(sortedNames.Length);
+
+        foreach (var name in sortedNames)
+        {
+            if (modulesByName.TryGetValue(name, out var module))
+            {
+                result.Add(module);
+            }
+        }
+
+        return result;
     }
 
     private static ManifestModuleInfo GetLatestCompatibleVersion(

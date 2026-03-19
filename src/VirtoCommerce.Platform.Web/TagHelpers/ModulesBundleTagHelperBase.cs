@@ -5,22 +5,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.TagHelpers.Internal;
 
 namespace VirtoCommerce.Platform.Web.TagHelpers
 {
     public abstract class ModulesBundleTagHelperBase : TagHelper
     {
-        private readonly ILocalModuleCatalog _localModuleCatalog;
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private FileVersionHashProvider _fileVersionProvider;
 
-        public ModulesBundleTagHelperBase(ILocalModuleCatalog localModuleCatalog, IOptions<LocalStorageModuleCatalogOptions> options, IPlatformMemoryCache platformMemoryCache)
+        public ModulesBundleTagHelperBase(IOptions<LocalStorageModuleCatalogOptions> options, IPlatformMemoryCache platformMemoryCache)
         {
-            _localModuleCatalog = localModuleCatalog;
             _platformMemoryCache = platformMemoryCache;
             _localStorageModuleCatalogOptions = options.Value;
         }
@@ -36,9 +34,10 @@ namespace VirtoCommerce.Platform.Web.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = null;
-            //It is very important to use CompleteListWithDependencies, because of this method returns modules that are sorted according to their dependencies (Topological sort)
-            //and this keep the proper order for scripts includes on the index page.
-            var sucesfullyLoadedModules = _localModuleCatalog.CompleteListWithDependencies(_localModuleCatalog.Modules).OfType<ManifestModuleInfo>().Where(x => x.State == ModuleState.Initialized && x.Errors.IsNullOrEmpty());
+
+            // Modules are sorted by dependency order (topological sort) to keep the proper order for script/style includes on the index page.
+            var sucesfullyLoadedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetInstalledModules()).Where(x => x.State == ModuleState.Initialized);
+
             foreach (var module in sucesfullyLoadedModules)
             {
                 var normalizedBundlePath = BundlePath.Replace("~/", "").Replace("\\", "/").TrimStart('/');

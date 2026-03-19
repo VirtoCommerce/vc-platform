@@ -12,6 +12,7 @@ namespace VirtoCommerce.Platform.Modules.Local;
 /// No InnerLoad — modules are already loaded by the static module system.
 /// Mutation methods (AddModule, Reload) throw NotSupportedException.
 /// </summary>
+[Obsolete("Use ModuleRegistry instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
 public class LocalModuleCatalogAdapter : ModuleCatalog, ILocalModuleCatalog
 {
     public LocalModuleCatalogAdapter(IEnumerable<ManifestModuleInfo> modules, ModuleSequenceBoostOptions boostOptions = null)
