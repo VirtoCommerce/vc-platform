@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../../src/VirtoCommerce.Platform.Core/VirtoCommerce.Platform.Core.csproj" />
+  <Project Path="VirtoCommerce.Platform.Benchmark.AbstractTypeFactory.csproj" />
+</Solution>
