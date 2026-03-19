@@ -210,7 +210,7 @@ public class ModuleManagementService : IModuleManagementService
                 .Where(x => x.DependsOn.ContainsIgnoreCase(module.Id))
                 .ToList();
 
-            if (dependingModules.Any())
+            if (dependingModules.Count > 0)
             {
                 retVal.AddRange(GetDependents(dependingModules));
             }
@@ -310,6 +310,10 @@ public class ModuleManagementService : IModuleManagementService
         if (File.Exists(moduleZipPath))
         {
             ModulePackageInstaller.Install(moduleZipPath, dstModuleDir);
+        }
+        else
+        {
+            throw new FileNotFoundException($"Module package not found: {moduleZipPath}");
         }
 
         Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);

@@ -76,7 +76,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     c.SwaggerDoc(module.ModuleName, new OpenApiInfo { Title = $"{module.Id}", Version = "v1" });
                 }
 
-                c.TagActionsBy(api => [api.GetModuleName(provider)]);
+                c.TagActionsBy(api => [api.GetModuleName()]);
                 c.IgnoreObsoleteActions();
                 c.DocumentFilter<ExcludeRedundantDepsFilter>();
                 c.DocumentFilter<ModuleInfoFilter>();
@@ -197,7 +197,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
         }
 
 
-        private static string GetModuleName(this ApiDescription api, ServiceProvider serviceProvider)
+        private static string GetModuleName(this ApiDescription api)
         {
             // ------
             // Lifted from ApiDescriptionExtensions
