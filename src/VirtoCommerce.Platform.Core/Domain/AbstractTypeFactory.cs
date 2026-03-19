@@ -68,7 +68,15 @@ namespace VirtoCommerce.Platform.Core.Common
                 throw new ArgumentNullException(nameof(type));
             }
 
-            var result = _typeInfos.FirstOrDefault(x => x.AllSubclasses.Contains(type));
+            TypeInfo<BaseType> result = null;
+            foreach (var typeInfo in _typeInfos)
+            {
+                if (typeInfo.AllSubclasses.Contains(type))
+                {
+                    result = typeInfo;
+                    break;
+                }
+            }
 
             if (result == null)
             {
@@ -281,7 +289,8 @@ namespace VirtoCommerce.Platform.Core.Common
 
         /// <summary>
         /// Creates an instance from a resolved TypeInfo with constructor arguments.
-        /// Factory takes priority over Activator when set (preserves WithFactory behavior).
+        /// Only manually set factory (via WithFactory) takes priority and ignores args.
+        /// Auto-compiled delegates are NOT used here — Activator handles args.
         /// </summary>
         private static BaseType CreateFromTypeInfo(TypeInfo<BaseType> typeInfo, object[] args)
         {
@@ -324,7 +333,16 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             // Fallback: inheritance chain scan (e.g., lookup "ShoppingCart" when "LeoShoppingCart" is registered)
-            result = _typeInfos.FirstOrDefault(x => x.IsAssignableTo(typeName));
+            // Uses a loop instead of FirstOrDefault to avoid closure allocation on typeName capture
+            result = null;
+            foreach (var typeInfo in _typeInfos)
+            {
+                if (typeInfo.IsAssignableTo(typeName))
+                {
+                    result = typeInfo;
+                    break;
+                }
+            }
 
             // Cache the result so subsequent lookups for the same name are O(1)
             if (result != null)
@@ -385,6 +403,10 @@ namespace VirtoCommerce.Platform.Core.Common
         // Separate from _factory to avoid poisoning the args path (where Activator must be used).
         private Func<BaseType> _compiledFactory;
 
+        // Cached inheritance chain — computed once in constructor, avoids repeated reflection
+        private readonly Type[] _allSubclasses;
+        private readonly string[] _inheritanceTypeNames;
+
         // Callback to notify the parent factory when TypeName changes (for index rebuild)
         internal Action OnTypeNameChanged { get; set; }
 
@@ -393,6 +415,11 @@ namespace VirtoCommerce.Platform.Core.Common
             Services = new List<object>();
             Type = type;
             TypeName = type.Name;
+
+            // Cache inheritance chain once — avoids repeated reflection and LINQ allocations
+            // in IsAssignableTo() and AllSubclasses on every lookup
+            _allSubclasses = Type.GetTypeInheritanceChainTo(typeof(BaseType)).ToArray();
+            _inheritanceTypeNames = _allSubclasses.Concat([typeof(BaseType)]).Select(x => x.Name).ToArray();
         }
 
         /// <summary>
@@ -498,19 +525,21 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns>true if the associated type is assignable to the specified type name; otherwise, false.</returns>
         public bool IsAssignableTo(string typeName)
         {
-            return Type.GetTypeInheritanceChainTo(typeof(BaseType)).Concat([typeof(BaseType)]).Any(t => typeName.EqualsIgnoreCase(t.Name));
+            // Uses cached array — zero allocations per call
+            foreach (var name in _inheritanceTypeNames)
+            {
+                if (typeName.EqualsIgnoreCase(name))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
         /// Gets all subclasses of the associated type.
         /// </summary>
-        public IEnumerable<Type> AllSubclasses
-        {
-            get
-            {
-                return Type.GetTypeInheritanceChainTo(typeof(BaseType)).ToArray();
-            }
-        }
+        public IEnumerable<Type> AllSubclasses => _allSubclasses;
 
         /// <summary>
         /// Returns the cached factory delegate, auto-compiling one if the type has a parameterless constructor.

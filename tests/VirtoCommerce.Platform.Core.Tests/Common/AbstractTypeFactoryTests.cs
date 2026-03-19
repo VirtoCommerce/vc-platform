@@ -4,145 +4,216 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Core.Tests.Common
 {
-    // Test type hierarchy — separate from other tests' types to avoid cross-test pollution
-    // (AbstractTypeFactory is static generic, so each BaseType gets its own state)
+    // Each test uses a unique base type to avoid static state pollution across tests.
+    // AbstractTypeFactory<T> is a static generic class — each T gets its own state.
 
-    public class Animal
+    // ── Base domain types (one per test scenario) ──────────────────
+
+    // For: TryCreateInstance_NoOverrides_CreatesBaseType
+    public class Product
     {
         public string Name { get; set; }
     }
 
-    public class Dog : Animal
+    // For: TryCreateInstance_WithOverride_CreatesDerivedType
+    public class CartLineItem
     {
-        public string Breed { get; set; }
+        public string Sku { get; set; }
     }
 
-    public class Labrador : Dog
-    {
-    }
-
-    public abstract class AbstractVehicle
-    {
-        public string Model { get; set; }
-    }
-
-    public class Car : AbstractVehicle
+    public class ConfigurableLineItem : CartLineItem
     {
     }
 
-    // Separate abstract type for the "no overrides throws" test — avoids static state pollution from Car registration
-    public abstract class AbstractService
+    // For: TryCreateInstance_AbstractBaseType_NoOverrides_Throws
+    public abstract class DiscountPolicy
     {
     }
 
-    public class Shape
+    // For: TryCreateInstance_AbstractBaseType_WithOverride_CreatesDerivedType
+    public abstract class PaymentMethod
     {
-        public double Area { get; set; }
+        public string Code { get; set; }
     }
 
-    public class Circle : Shape
-    {
-    }
-
-    public class Square : Shape
+    public class CreditCardPayment : PaymentMethod
     {
     }
 
-    // Separate base types for tests that need isolated factory state
-    public class Widget
+    // For: TryCreateInstance_RegisteredType_LookupByBaseTypeName
+    public class ShoppingCart
     {
         public string Id { get; set; }
     }
 
-    public class SuperWidget : Widget
+    public class CustomShoppingCart : ShoppingCart
     {
     }
 
-    public class Gadget
+    // For: TryCreateInstance_RegisteredType_LookupByDerivedTypeName
+    public class Promotion
     {
         public string Id { get; set; }
     }
 
-    public class SuperGadget : Gadget
+    public class CouponPromotion : Promotion
     {
     }
 
-    public class Tool
+    // For: OverrideType_ReplacesRegistration
+    public class TaxProvider
+    {
+        public string Region { get; set; }
+    }
+
+    public class FixedTaxProvider : TaxProvider
+    {
+    }
+
+    public class AvalaraTaxProvider : TaxProvider
+    {
+    }
+
+    // For: OverrideType_ClearsInheritanceLookupCache
+    public class PriceList
     {
         public string Id { get; set; }
     }
 
-    public class PowerTool : Tool
+    public class CustomPriceList : PriceList
     {
     }
 
-    public class Item
+    // For: TryCreateInstance_WithArgs_UsesActivator
+    public class ShipmentPackage
     {
-        public string Id { get; set; }
-    }
+        public string TrackingNumber { get; }
+        public string Carrier { get; }
 
-    public class SpecialItem : Item
-    {
-    }
-
-    public class Part
-    {
-        public string Id { get; set; }
-    }
-
-    public class CustomPart : Part
-    {
-    }
-
-    public class Record
-    {
-        public string Id { get; set; }
-    }
-
-    public class ParameterizedRecord
-    {
-        public string Id { get; }
-        public string Value { get; }
-
-        public ParameterizedRecord(string id, string value)
+        public ShipmentPackage(string trackingNumber, string carrier)
         {
-            Id = id;
-            Value = value;
+            TrackingNumber = trackingNumber;
+            Carrier = carrier;
         }
     }
 
-    // Types for WithFactory + args test (Bug 1 regression test)
-    public class Order
+    // For: WithFactory_TakesPriorityOverAutoCompiledDelegate
+    public class Catalog
+    {
+        public string Id { get; set; }
+    }
+
+    public class VirtualCatalog : Catalog
+    {
+    }
+
+    // For: WithSetupAction_CalledAfterCreation
+    public class Store
+    {
+        public string Id { get; set; }
+    }
+
+    // For: TryCreateInstance_WithDefault_ReturnsDefault_WhenTypeNotFound
+    public class Category
+    {
+        public string Name { get; set; }
+    }
+
+    // For: FindTypeInfoByName_SecondCall_UsesCache
+    public class CustomerOrder
+    {
+        public string Number { get; set; }
+    }
+
+    public class SubscriptionOrder : CustomerOrder
+    {
+    }
+
+    // For: TryCreateInstance_WithArgs_FactoryTakesPriority
+    public class Fulfillment
     {
         public string OperationType { get; set; }
     }
 
-    public class CustomOrder : Order
+    public class WarehouseFulfillment : Fulfillment
     {
     }
 
-    // Type for auto-compiled + args test (Bug 3 regression test)
-    public class Entity
+    // For: WithTypeName_UpdatesDictionaryIndex
+    public class Warehouse
     {
         public string Id { get; set; }
+    }
 
-        public Entity() { }
+    public class DropshipWarehouse : Warehouse
+    {
+    }
 
-        public Entity(string id)
+    // For: TryCreateInstance_WithArgs_NotPoisonedByPriorParameterlessCall
+    public class Address
+    {
+        public string City { get; set; }
+
+        public Address() { }
+
+        public Address(string city)
         {
-            Id = id;
+            City = city;
         }
     }
 
-    // Types for WithTypeName test (Bug 2 regression test)
-    public class Document
+    // For: WithFactory_SetToNull_FallsBackToConstructor
+    public class Notification
     {
-        public string Id { get; set; }
+        public string Channel { get; set; }
     }
 
-    public class Invoice : Document
+    public class EmailNotification : Notification
     {
     }
+
+    // For: RegisterType_AfterTryCreateInstance_InvalidatesCache
+    public class Shipment
+    {
+        public string Method { get; set; }
+    }
+
+    public class ExpressShipment : Shipment
+    {
+    }
+
+    // For: FindTypeInfoByName_DeepInheritance_ThreeLevels
+    public class Asset
+    {
+        public string Name { get; set; }
+    }
+
+    public class DigitalAsset : Asset
+    {
+    }
+
+    public class VideoAsset : DigitalAsset
+    {
+    }
+
+    // For: TryCreateInstance_TypeWithoutParameterlessCtor_Throws
+    public class DbConnection
+    {
+        public string ConnectionString { get; }
+
+        public DbConnection(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
+    }
+
+    // For: TryCreateInstance_WithDefaultAndArgs_UnknownType_ReturnsDefault
+    public class AuditEvent
+    {
+        public string Description { get; set; }
+    }
+
+    // ── Tests ──────────────────────────────────────────────────────
 
     [Trait("Category", "Unit")]
     public class AbstractTypeFactoryTests
@@ -150,205 +221,265 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         [Fact]
         public void TryCreateInstance_NoOverrides_CreatesBaseType()
         {
-            // Animal has no registrations → fast path via CreateDefaultInstance
-            var result = AbstractTypeFactory<Animal>.TryCreateInstance();
+            var result = AbstractTypeFactory<Product>.TryCreateInstance();
 
             Assert.NotNull(result);
-            Assert.Equal(typeof(Animal), result.GetType());
+            Assert.Equal(typeof(Product), result.GetType());
         }
 
         [Fact]
         public void TryCreateInstance_WithOverride_CreatesDerivedType()
         {
-            AbstractTypeFactory<Widget>.RegisterType<SuperWidget>();
+            AbstractTypeFactory<CartLineItem>.RegisterType<ConfigurableLineItem>();
 
-            var result = AbstractTypeFactory<Widget>.TryCreateInstance();
+            var result = AbstractTypeFactory<CartLineItem>.TryCreateInstance();
 
             Assert.NotNull(result);
-            Assert.IsType<SuperWidget>(result);
+            Assert.IsType<ConfigurableLineItem>(result);
         }
 
         [Fact]
         public void TryCreateInstance_AbstractBaseType_NoOverrides_Throws()
         {
             Assert.Throws<OperationCanceledException>(() =>
-                AbstractTypeFactory<AbstractService>.TryCreateInstance());
+                AbstractTypeFactory<DiscountPolicy>.TryCreateInstance());
         }
 
         [Fact]
         public void TryCreateInstance_AbstractBaseType_WithOverride_CreatesDerivedType()
         {
-            AbstractTypeFactory<AbstractVehicle>.RegisterType<Car>();
+            AbstractTypeFactory<PaymentMethod>.RegisterType<CreditCardPayment>();
 
-            var result = AbstractTypeFactory<AbstractVehicle>.TryCreateInstance();
+            var result = AbstractTypeFactory<PaymentMethod>.TryCreateInstance();
 
             Assert.NotNull(result);
-            Assert.IsType<Car>(result);
+            Assert.IsType<CreditCardPayment>(result);
         }
 
         [Fact]
         public void TryCreateInstance_RegisteredType_LookupByBaseTypeName()
         {
-            // Most common pattern: register derived, lookup by base type name
-            AbstractTypeFactory<Gadget>.RegisterType<SuperGadget>();
+            AbstractTypeFactory<ShoppingCart>.RegisterType<CustomShoppingCart>();
 
-            var result = AbstractTypeFactory<Gadget>.TryCreateInstance();
+            var result = AbstractTypeFactory<ShoppingCart>.TryCreateInstance();
 
             Assert.NotNull(result);
-            Assert.IsType<SuperGadget>(result);
+            Assert.IsType<CustomShoppingCart>(result);
         }
 
         [Fact]
         public void TryCreateInstance_RegisteredType_LookupByDerivedTypeName()
         {
-            AbstractTypeFactory<Tool>.RegisterType<PowerTool>();
+            AbstractTypeFactory<Promotion>.RegisterType<CouponPromotion>();
 
-            var result = AbstractTypeFactory<Tool>.TryCreateInstance(nameof(PowerTool));
+            var result = AbstractTypeFactory<Promotion>.TryCreateInstance(nameof(CouponPromotion));
 
             Assert.NotNull(result);
-            Assert.IsType<PowerTool>(result);
+            Assert.IsType<CouponPromotion>(result);
         }
 
         [Fact]
         public void OverrideType_ReplacesRegistration()
         {
-            AbstractTypeFactory<Shape>.RegisterType<Circle>();
+            AbstractTypeFactory<TaxProvider>.RegisterType<FixedTaxProvider>();
 
-            // Override Circle with Square
-            AbstractTypeFactory<Shape>.OverrideType<Circle, Square>();
+            AbstractTypeFactory<TaxProvider>.OverrideType<FixedTaxProvider, AvalaraTaxProvider>();
 
-            var result = AbstractTypeFactory<Shape>.TryCreateInstance();
+            var result = AbstractTypeFactory<TaxProvider>.TryCreateInstance();
 
             Assert.NotNull(result);
-            Assert.IsType<Square>(result);
+            Assert.IsType<AvalaraTaxProvider>(result);
         }
 
         [Fact]
         public void OverrideType_ClearsInheritanceLookupCache()
         {
-            AbstractTypeFactory<Item>.RegisterType<Item>();
+            AbstractTypeFactory<PriceList>.RegisterType<PriceList>();
 
-            // First call — caches "Item" → ItemTypeInfo in the index
-            var first = AbstractTypeFactory<Item>.TryCreateInstance();
-            Assert.IsType<Item>(first);
+            var first = AbstractTypeFactory<PriceList>.TryCreateInstance();
+            Assert.IsType<PriceList>(first);
 
-            // Override — should invalidate cached lookup
-            AbstractTypeFactory<Item>.OverrideType<Item, SpecialItem>();
+            AbstractTypeFactory<PriceList>.OverrideType<PriceList, CustomPriceList>();
 
-            var second = AbstractTypeFactory<Item>.TryCreateInstance();
-            Assert.IsType<SpecialItem>(second);
+            var second = AbstractTypeFactory<PriceList>.TryCreateInstance();
+            Assert.IsType<CustomPriceList>(second);
         }
 
         [Fact]
         public void TryCreateInstance_WithArgs_UsesActivator()
         {
-            AbstractTypeFactory<ParameterizedRecord>.RegisterType<ParameterizedRecord>();
+            AbstractTypeFactory<ShipmentPackage>.RegisterType<ShipmentPackage>();
 
-            var result = AbstractTypeFactory<ParameterizedRecord>.TryCreateInstance(
-                nameof(ParameterizedRecord), "test-id", "test-value");
+            var result = AbstractTypeFactory<ShipmentPackage>.TryCreateInstance(
+                nameof(ShipmentPackage), "TRACK-001", "FedEx");
 
             Assert.NotNull(result);
-            Assert.Equal("test-id", result.Id);
-            Assert.Equal("test-value", result.Value);
+            Assert.Equal("TRACK-001", result.TrackingNumber);
+            Assert.Equal("FedEx", result.Carrier);
         }
 
         [Fact]
         public void WithFactory_TakesPriorityOverAutoCompiledDelegate()
         {
-            var customFactoryCalled = false;
-            AbstractTypeFactory<Part>.RegisterType<CustomPart>()
+            var factoryCalled = false;
+            AbstractTypeFactory<Catalog>.RegisterType<VirtualCatalog>()
                 .WithFactory(() =>
                 {
-                    customFactoryCalled = true;
-                    return new CustomPart { Id = "from-factory" };
+                    factoryCalled = true;
+                    return new VirtualCatalog { Id = "virtual" };
                 });
 
-            var result = AbstractTypeFactory<Part>.TryCreateInstance();
+            var result = AbstractTypeFactory<Catalog>.TryCreateInstance();
 
-            Assert.True(customFactoryCalled);
-            Assert.IsType<CustomPart>(result);
-            Assert.Equal("from-factory", result.Id);
+            Assert.True(factoryCalled);
+            Assert.IsType<VirtualCatalog>(result);
+            Assert.Equal("virtual", result.Id);
         }
 
         [Fact]
         public void WithSetupAction_CalledAfterCreation()
         {
-            AbstractTypeFactory<Record>.RegisterType<Record>()
-                .WithSetupAction(x => x.Id = "setup-applied");
+            AbstractTypeFactory<Store>.RegisterType<Store>()
+                .WithSetupAction(x => x.Id = "default-store");
 
-            var result = AbstractTypeFactory<Record>.TryCreateInstance();
+            var result = AbstractTypeFactory<Store>.TryCreateInstance();
 
-            Assert.Equal("setup-applied", result.Id);
+            Assert.Equal("default-store", result.Id);
         }
 
         [Fact]
         public void TryCreateInstance_WithDefault_ReturnsDefault_WhenTypeNotFound()
         {
-            var defaultObj = new Animal { Name = "default" };
+            var defaultCategory = new Category { Name = "Uncategorized" };
 
-            var result = AbstractTypeFactory<Animal>.TryCreateInstance("NonExistentType", defaultObj);
+            var result = AbstractTypeFactory<Category>.TryCreateInstance("NonExistentType", defaultCategory);
 
-            Assert.Same(defaultObj, result);
+            Assert.Same(defaultCategory, result);
         }
 
         [Fact]
         public void FindTypeInfoByName_SecondCall_UsesCache()
         {
-            AbstractTypeFactory<Dog>.RegisterType<Labrador>();
+            AbstractTypeFactory<CustomerOrder>.RegisterType<SubscriptionOrder>();
 
-            // First call — fallback to inheritance scan, caches result
-            var first = AbstractTypeFactory<Dog>.FindTypeInfoByName(nameof(Dog));
-            // Second call — should hit the cached entry
-            var second = AbstractTypeFactory<Dog>.FindTypeInfoByName(nameof(Dog));
+            var first = AbstractTypeFactory<CustomerOrder>.FindTypeInfoByName(nameof(CustomerOrder));
+            var second = AbstractTypeFactory<CustomerOrder>.FindTypeInfoByName(nameof(CustomerOrder));
 
             Assert.NotNull(first);
             Assert.Same(first, second);
-            Assert.Equal(typeof(Labrador), first.Type);
+            Assert.Equal(typeof(SubscriptionOrder), first.Type);
         }
 
         [Fact]
         public void TryCreateInstance_WithArgs_FactoryTakesPriority()
         {
-            // Bug 1 regression: WithFactory must take priority even when args are passed
-            AbstractTypeFactory<Order>.RegisterType<CustomOrder>()
-                .WithFactory(() => new CustomOrder { OperationType = "CustomOrder" });
+            AbstractTypeFactory<Fulfillment>.RegisterType<WarehouseFulfillment>()
+                .WithFactory(() => new WarehouseFulfillment { OperationType = "Warehouse" });
 
-            // Call with args — Factory should still be used, args should be ignored
-            var result = AbstractTypeFactory<Order>.TryCreateInstance(nameof(CustomOrder), "ignored-arg");
+            var result = AbstractTypeFactory<Fulfillment>.TryCreateInstance(nameof(WarehouseFulfillment), "ignored-arg");
 
-            Assert.IsType<CustomOrder>(result);
-            Assert.Equal("CustomOrder", result.OperationType);
+            Assert.IsType<WarehouseFulfillment>(result);
+            Assert.Equal("Warehouse", result.OperationType);
         }
 
         [Fact]
         public void WithTypeName_UpdatesDictionaryIndex()
         {
-            // Bug 2 regression: WithTypeName must update the type name index
-            AbstractTypeFactory<Document>.RegisterType<Invoice>()
-                .WithTypeName("CustomInvoice");
+            AbstractTypeFactory<Warehouse>.RegisterType<DropshipWarehouse>()
+                .WithTypeName("DropshipCenter");
 
-            var result = AbstractTypeFactory<Document>.TryCreateInstance("CustomInvoice");
+            var result = AbstractTypeFactory<Warehouse>.TryCreateInstance("DropshipCenter");
 
             Assert.NotNull(result);
-            Assert.IsType<Invoice>(result);
+            Assert.IsType<DropshipWarehouse>(result);
         }
 
         [Fact]
         public void TryCreateInstance_WithArgs_NotPoisonedByPriorParameterlessCall()
         {
-            // Bug 3 regression: auto-compiled delegate from parameterless path
-            // must NOT be used when args are passed (args would be silently ignored)
-            AbstractTypeFactory<Entity>.RegisterType<Entity>();
+            AbstractTypeFactory<Address>.RegisterType<Address>();
 
-            // First call: parameterless — triggers auto-compilation of delegate
-            var parameterless = AbstractTypeFactory<Entity>.TryCreateInstance();
+            // Parameterless — triggers auto-compilation of delegate
+            var parameterless = AbstractTypeFactory<Address>.TryCreateInstance();
             Assert.NotNull(parameterless);
-            Assert.Null(parameterless.Id);
+            Assert.Null(parameterless.City);
 
-            // Second call: with args — must use Activator.CreateInstance(type, args), NOT the cached delegate
-            var withArgs = AbstractTypeFactory<Entity>.TryCreateInstance(nameof(Entity), "my-id");
+            // With args — must use Activator, NOT the cached delegate
+            var withArgs = AbstractTypeFactory<Address>.TryCreateInstance(nameof(Address), "Seattle");
             Assert.NotNull(withArgs);
-            Assert.Equal("my-id", withArgs.Id);
+            Assert.Equal("Seattle", withArgs.City);
+        }
+
+        // ── Gap coverage tests ─────────────────────────────────────
+
+        [Fact]
+        public void WithFactory_SetToNull_FallsBackToConstructor()
+        {
+            AbstractTypeFactory<Notification>.RegisterType<EmailNotification>()
+                .WithFactory(() => new EmailNotification { Channel = "email" });
+
+            var withFactory = AbstractTypeFactory<Notification>.TryCreateInstance();
+            Assert.Equal("email", withFactory.Channel);
+
+            // Clear factory — should fall back to parameterless constructor
+            AbstractTypeFactory<Notification>.FindTypeInfoByName(nameof(EmailNotification))
+                .WithFactory(null);
+
+            var withoutFactory = AbstractTypeFactory<Notification>.TryCreateInstance();
+            Assert.NotNull(withoutFactory);
+            Assert.Null(withoutFactory.Channel);
+        }
+
+        [Fact]
+        public void RegisterType_AfterTryCreateInstance_InvalidatesCache()
+        {
+            // TryCreateInstance with no overrides → caches _defaultFactory
+            var first = AbstractTypeFactory<Shipment>.TryCreateInstance();
+            Assert.IsType<Shipment>(first);
+
+            // Late registration — must invalidate _defaultFactory
+            AbstractTypeFactory<Shipment>.RegisterType<ExpressShipment>();
+
+            var second = AbstractTypeFactory<Shipment>.TryCreateInstance();
+            Assert.IsType<ExpressShipment>(second);
+        }
+
+        [Fact]
+        public void FindTypeInfoByName_DeepInheritance_ThreeLevels()
+        {
+            // Asset → DigitalAsset → VideoAsset (3-level chain)
+            AbstractTypeFactory<Asset>.RegisterType<VideoAsset>();
+
+            var byAsset = AbstractTypeFactory<Asset>.FindTypeInfoByName(nameof(Asset));
+            Assert.NotNull(byAsset);
+            Assert.Equal(typeof(VideoAsset), byAsset.Type);
+
+            var byDigitalAsset = AbstractTypeFactory<Asset>.FindTypeInfoByName(nameof(DigitalAsset));
+            Assert.NotNull(byDigitalAsset);
+            Assert.Equal(typeof(VideoAsset), byDigitalAsset.Type);
+
+            var byVideoAsset = AbstractTypeFactory<Asset>.FindTypeInfoByName(nameof(VideoAsset));
+            Assert.NotNull(byVideoAsset);
+            Assert.Equal(typeof(VideoAsset), byVideoAsset.Type);
+        }
+
+        [Fact]
+        public void TryCreateInstance_TypeWithoutParameterlessCtor_Throws()
+        {
+            AbstractTypeFactory<DbConnection>.RegisterType<DbConnection>();
+
+            Assert.ThrowsAny<Exception>(() =>
+                AbstractTypeFactory<DbConnection>.TryCreateInstance());
+        }
+
+        [Fact]
+        public void TryCreateInstance_WithDefaultAndArgs_UnknownType_ReturnsDefault()
+        {
+            var defaultEvent = new AuditEvent { Description = "default" };
+
+            var result = AbstractTypeFactory<AuditEvent>.TryCreateInstance("UnknownType", defaultEvent, "arg1");
+
+            Assert.Same(defaultEvent, result);
         }
     }
 }
