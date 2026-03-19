@@ -318,7 +318,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 return result;
             }
 
-            // Fallback: inheritance chain scan (e.g., lookup "ShoppingCart" when "LeoShoppingCart" is registered)
+            // Fallback: inheritance chain scan (e.g., lookup "ShoppingCart" when "CustomShoppingCart" is registered)
             // Uses a loop instead of FirstOrDefault to avoid closure allocation on typeName capture
             foreach (var typeInfo in _typeInfos)
             {
