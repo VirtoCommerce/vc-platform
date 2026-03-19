@@ -213,6 +213,28 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         public string Description { get; set; }
     }
 
+    // For: FindTypeInfoByName_NullTypeName_ReturnsNull
+    public class Review
+    {
+        public string Rating { get; set; }
+    }
+
+    // For: FindTypeInfoByName_EmptyTypeName_ReturnsNull
+    public class Wishlist
+    {
+        public string Name { get; set; }
+    }
+
+    // For: FindTypeInfoByName_CaseInsensitiveLookup
+    public class FulfillmentCenter
+    {
+        public string Id { get; set; }
+    }
+
+    public class DropshipCenter : FulfillmentCenter
+    {
+    }
+
     // ── Tests ──────────────────────────────────────────────────────
 
     [Trait("Category", "Unit")]
@@ -468,7 +490,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             AbstractTypeFactory<DbConnection>.RegisterType<DbConnection>();
 
-            Assert.ThrowsAny<Exception>(() =>
+            Assert.Throws<MissingMethodException>(() =>
                 AbstractTypeFactory<DbConnection>.TryCreateInstance());
         }
 
@@ -480,6 +502,38 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             var result = AbstractTypeFactory<AuditEvent>.TryCreateInstance("UnknownType", defaultEvent, "arg1");
 
             Assert.Same(defaultEvent, result);
+        }
+
+        [Fact]
+        public void FindTypeInfoByName_NullTypeName_ReturnsNull()
+        {
+            AbstractTypeFactory<Review>.RegisterType<Review>();
+
+            var result = AbstractTypeFactory<Review>.FindTypeInfoByName(null);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void FindTypeInfoByName_EmptyTypeName_ReturnsNull()
+        {
+            AbstractTypeFactory<Wishlist>.RegisterType<Wishlist>();
+
+            var result = AbstractTypeFactory<Wishlist>.FindTypeInfoByName(string.Empty);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void FindTypeInfoByName_CaseInsensitiveLookup()
+        {
+            AbstractTypeFactory<FulfillmentCenter>.RegisterType<DropshipCenter>()
+                .WithTypeName("DropshipCenter");
+
+            var result = AbstractTypeFactory<FulfillmentCenter>.TryCreateInstance("dropshipcenter");
+
+            Assert.NotNull(result);
+            Assert.IsType<DropshipCenter>(result);
         }
     }
 }

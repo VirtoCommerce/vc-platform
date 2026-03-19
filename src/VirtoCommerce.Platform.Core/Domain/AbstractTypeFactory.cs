@@ -13,11 +13,13 @@ namespace VirtoCommerce.Platform.Core.Common
     /// <typeparam name="BaseType"></typeparam>
     public static class AbstractTypeFactory<BaseType>
     {
+        // Registration (Add/Remove) is NOT thread-safe — callers must register types at startup before concurrent reads.
+        // Read paths (FindTypeInfoByName, TryCreateInstance) are concurrent-safe via ConcurrentDictionary + Volatile.
         private static readonly List<TypeInfo<BaseType>> _typeInfos = [];
         private static ConcurrentDictionary<string, TypeInfo<BaseType>> _typeNameIndex = new(StringComparer.OrdinalIgnoreCase);
 
         // Cached delegate for creating BaseType when no overrides are registered.
-        // Lazily compiled on first New() call via Interlocked.CompareExchange.
+        // Lazily compiled on first TryCreateInstance() call via Interlocked.CompareExchange.
         private static Func<BaseType> _defaultFactory;
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// Overrides an already registered type with a new one and returns a TypeInfo instance for further configuration.
         /// </summary>
         /// <typeparam name="OldType">The currently registered type.</typeparam>
-        /// <typeparam name="NewType">The currently registered type.</typeparam>
+        /// <typeparam name="NewType">The new type to replace the old one.</typeparam>
         /// <returns>TypeInfo instance for the overridden type.</returns>
         public static TypeInfo<BaseType> OverrideType<OldType, NewType>() where NewType : BaseType
         {
@@ -258,10 +260,9 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </summary>
         private static BaseType CreateFromTypeInfo(TypeInfo<BaseType> typeInfo)
         {
-            var factory = typeInfo.GetOrCompileFactory();
-            var result = factory != null
-                ? factory()
-                : (BaseType)Activator.CreateInstance(typeInfo.Type);
+            var factory = typeInfo.GetOrCompileFactory()
+                ?? throw new MissingMethodException($"No parameterless constructor found for type '{typeInfo.Type.FullName}'. Use WithFactory() to provide a custom factory or TryCreateInstance(typeName, args) to pass constructor arguments.");
+            var result = factory();
             typeInfo.SetupAction?.Invoke(result);
 
             return result;
@@ -338,17 +339,16 @@ namespace VirtoCommerce.Platform.Core.Common
             return result;
         }
 
+        /// <summary>
+        /// Creates an instance of BaseType directly (no overrides registered).
+        /// Callers must check IsAbstract before invoking — <see cref="CreateFallbackInstance"/> handles that.
+        /// </summary>
         private static BaseType CreateDefaultInstance()
         {
             var factory = Volatile.Read(ref _defaultFactory);
             if (factory == null)
             {
-                var baseType = typeof(BaseType);
-                if (baseType.IsAbstract)
-                {
-                    throw new OperationCanceledException($"Cannot create an instance of abstract class {baseType.Name} because no concrete type is registered in the AbstractTypeFactory and it does not have a complete implementation");
-                }
-                factory = CompileFactory(baseType);
+                factory = CompileFactory(typeof(BaseType));
                 Interlocked.CompareExchange(ref _defaultFactory, factory, null);
                 // Use the local — don't re-read _defaultFactory (avoids race with concurrent RegisterType nulling it)
             }
@@ -358,12 +358,18 @@ namespace VirtoCommerce.Platform.Core.Common
 
         private static Func<BaseType> CompileFactory(Type type)
         {
-            return Expression.Lambda<Func<BaseType>>(Expression.New(type)).Compile();
+            var ctor = type.GetConstructor(Type.EmptyTypes);
+            if (ctor == null)
+            {
+                throw new MissingMethodException(type.FullName, ".ctor");
+            }
+
+            return Expression.Lambda<Func<BaseType>>(Expression.New(ctor)).Compile();
         }
 
         /// <summary>
-        /// Rebuilds the type name index from scratch. Called on RegisterType/OverrideType
-        /// to clear any cached inheritance lookups that may now be stale.
+        /// Rebuilds the type name index from scratch. Called on RegisterType, OverrideType,
+        /// and WithTypeName to clear any cached inheritance lookups that may now be stale.
         /// </summary>
         private static void RebuildIndex()
         {
@@ -435,7 +441,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public Type MappedType { get; set; }
 
         /// <summary>
-        /// Gets or sets the mapped type that the associated type should be mapped to.
+        /// Gets or sets the collection of service objects associated with this type registration.
         /// </summary>
         public ICollection<object> Services { get; set; }
 
@@ -452,9 +458,9 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <summary>
         /// Adds the specified service to the collection of services.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="service"></param>
-        /// <returns>The setup action.</returns>
+        /// <typeparam name="T">The type of service to add.</typeparam>
+        /// <param name="service">The service instance to add.</param>
+        /// <returns>The TypeInfo instance for chaining.</returns>
         public TypeInfo<BaseType> WithService<T>(T service)
         {
             if (!Services.Contains(service))
@@ -490,10 +496,10 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         /// <summary>
-        /// Maps the associated type to the specified type.
+        /// Sets a post-creation action to be invoked on every new instance of this type.
         /// </summary>
-        /// <param name="setupAction">The setup action.</param>
-        /// <returns>The setup action.</returns>
+        /// <param name="setupAction">The action to invoke on the newly created instance.</param>
+        /// <returns>The TypeInfo instance for chaining.</returns>
         public TypeInfo<BaseType> WithSetupAction(Action<BaseType> setupAction)
         {
             SetupAction = setupAction;
@@ -502,10 +508,11 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         /// <summary>
-        /// Sets the name of the type.
+        /// Sets a custom type name for lookup via <see cref="AbstractTypeFactory{BaseType}.FindTypeInfoByName"/>.
+        /// Triggers index rebuild so the new name is immediately resolvable.
         /// </summary>
-        /// <param name="name">Sets the name of the type.</param>
-        /// <returns>Sets the name of the type.</returns>
+        /// <param name="name">The custom type name to use for lookup.</param>
+        /// <returns>The TypeInfo instance for chaining.</returns>
         public TypeInfo<BaseType> WithTypeName(string name)
         {
             TypeName = name;
