@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             Groups = moduleInfo.Groups;
             if (moduleInfo.Dependencies != null)
             {
-                Dependencies = moduleInfo.Dependencies.Select(x => new ModuleIdentity(x.Id, x.Version)).ToList();
+                Dependencies = moduleInfo.Dependencies.Select(x => new ModuleIdentity(x.Id, x.Version, x.Optional)).ToList();
             }
             ValidationErrors = moduleInfo.Errors;
         }

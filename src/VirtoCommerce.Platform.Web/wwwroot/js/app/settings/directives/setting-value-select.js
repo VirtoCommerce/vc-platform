@@ -29,8 +29,15 @@ angular.module('platformWebApp')
                             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html',
                             currentEntityId: $scope.setting,
                             isApiSave: true,
-                            parentRefresh: function () {
-                                getItems();
+                            parentRefresh: function (allowedValues, isLocalizable) {
+                                if (isLocalizable) {
+                                    getItems();
+                                }
+                                else {
+                                    localizableSettingService.getItemsAndLanguagesAsync($scope.setting).then(function () {
+                                        getItems();
+                                    });
+                                }
                             },
                         };
                         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -58,10 +65,15 @@ angular.module('platformWebApp')
             link: function (scope, element, attrs, ngModelController) {
                 scope.context = {
                     modelValue: null,
-                    multiple: angular.isDefined(attrs.multiple) && (attrs.multiple === '' || attrs.multiple.toLowerCase() === 'true'),
-                    required: angular.isDefined(attrs.required) && (attrs.required === '' || attrs.required.toLowerCase() === 'true'),
-                    allowClear: angular.isDefined(attrs.allowClear) && (attrs.allowClear === '' || attrs.allowClear.toLowerCase() === 'true'),
+                    multiple:   getBooleanAttributeValue('multiple'),
+                    required:   getBooleanAttributeValue('required'),
+                    allowClear: getBooleanAttributeValue('allowClear'),
                 };
+
+                function getBooleanAttributeValue(name) {
+                    const value = attrs[name];
+                    return angular.isDefined(value) && (value === '' || value === name || value.toLowerCase() === 'true');
+                }
 
                 scope.$watch('context.modelValue', function (newValue, oldValue) {
                     if (newValue !== oldValue) {

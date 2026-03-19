@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Primitives;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Caching
 {
@@ -60,7 +61,7 @@ namespace VirtoCommerce.Platform.Core.Caching
         // False-positive SLint warning disabled.
         // These fields really need for every class applied
         private static CancellationTokenSource _regionTokenSource = new CancellationTokenSource();
-        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _keyTokensDict = new ConcurrentDictionary<string, CancellationTokenSource>();
+        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _keyTokensDict = new(StringComparer.OrdinalIgnoreCase);
         private static IDisposable _globalTokenDisposable;
         private static readonly object _lock = new object();
 #pragma warning restore S2743 // Static fields should not be used in generic types
@@ -72,11 +73,11 @@ namespace VirtoCommerce.Platform.Core.Caching
                 {
                     return;
                 }
-                if (args.TokenKey == _regionName)
+                if (args.TokenKey.EqualsIgnoreCase(_regionName))
                 {
                     ExpireRegion(args.Propagate);
                 }
-                else if (args.TokenKey.StartsWith(_regionNamePrefix))
+                else if (args.TokenKey.StartsWithIgnoreCase(_regionNamePrefix))
                 {
                     InnerExpireTokenForKey(args.TokenKey, args.Propagate);
                 }

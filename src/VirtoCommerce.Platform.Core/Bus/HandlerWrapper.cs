@@ -8,9 +8,12 @@ using VirtoCommerce.Platform.Core.Messages;
 
 namespace VirtoCommerce.Platform.Core.Bus
 {
+    [DebuggerDisplay("{HandlerModuleName} {EventType.Name}")]
     public sealed class HandlerWrapper
     {
-        public string EventName { get; set; }
+        public Type EventType { get; set; }
+
+        public Type HandlerType { get; set; }
 
         public string HandlerModuleName { get; set; }
 
@@ -26,8 +29,9 @@ namespace VirtoCommerce.Platform.Core.Bus
                 Handler(@event, cancellationToken).GetAwaiter().GetResult();
                 stopWatch.Stop();
 
-                Logger.LogInformation($"event:{EventName} module:{HandlerModuleName} overall_elapsed:{stopWatch.ElapsedMilliseconds}");
-            });
+                Logger.LogInformation("event:{Event} module:{Handler} overall_elapsed:{Elapsed}",
+                    @event.GetType().Name, HandlerModuleName, stopWatch.ElapsedMilliseconds);
+            }, cancellationToken);
         }
     }
 }

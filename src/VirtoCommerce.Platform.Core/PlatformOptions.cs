@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Core
 
         // The public URL for license activation
         [Url]
-        public string LicenseActivationUrl { get; set; } = "https://virtocommerce.com/admin/api/licenses/activate/";
+        public string LicenseActivationUrl { get; set; } = "https://license.virtocommerce.org/api/licenses/activate/";
 
         // Local path for license file
         public string LicenseFilePath { get; set; } = "app_data/VirtoCommerce.lic";
@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Core
         // Default path to store export files
         public string DefaultExportFolder { get; set; } = "export";
 
-        public string DefaultExportFileName { get; set; } = "exported_{0:yyyyMMddHHmmss}.zip";
+        public string DefaultExportFileName { get; set; } = "vc_backup_{0:yyyyMMddHHmmss}.zip";
 
         // Local path to running process like WkhtmlToPdf
         public string ProcessesPath { get; set; }
@@ -77,5 +77,7 @@ namespace VirtoCommerce.Platform.Core
         /// Include null values when serializing Rest API objects.
         /// </summary>
         public bool IncludeOutputNullValues { get; set; } = true;
+
+        public string ApplicationCookieName { get; set; } = ".VirtoCommerce.Identity.Application";
     }
 }

@@ -10,7 +10,7 @@
         <div class="modal-window__icon-container">
             <img class="modal-window__dialog-icon" src="/images/dialogs/icon-error.svg" alt="">
         </div>
-        <div class="modal-window__dialog-message">{{ message | translate: messageValues}}</div>
+        <div class="modal-window__dialog-message" ng-bind-html="message | translate: messageValues"></div>
     </div>
 
     <div class="modal-window__footer">

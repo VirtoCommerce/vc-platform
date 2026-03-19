@@ -21,10 +21,10 @@ namespace VirtoCommerce.Platform.Caching
             SlidingExpiration = cachingOptions.CacheSlidingExpiration;
             _log = log;
         }
-        
+
         public virtual ICacheEntry CreateEntry(object key)
         {
-            var result = _memoryCache.CreateEntry(key);
+            var result = _memoryCache.CreateEntry(CacheKey.Normalize(key));
             if (result != null)
             {
                 result.RegisterPostEvictionCallback(callback: EvictionCallback);
@@ -36,12 +36,12 @@ namespace VirtoCommerce.Platform.Caching
 
         public virtual bool TryGetValue(object key, out object value)
         {
-            return _memoryCache.TryGetValue(key, out value);
+            return _memoryCache.TryGetValue(CacheKey.Normalize(key), out value);
         }
 
         public virtual void Remove(object key)
         {
-            _memoryCache.Remove(key);
+            _memoryCache.Remove(CacheKey.Normalize(key));
         }
 
 
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Caching
         {
             Dispose(true);
             // This object will be cleaned up by the Dispose method.
-            // Therefore, you should call GC.SupressFinalize to
+            // Therefore, you should call GC.SuppressFinalize to
             // take this object off the finalization queue
             // and prevent finalization code for this object
             // from executing a second time.
@@ -107,10 +107,9 @@ namespace VirtoCommerce.Platform.Caching
             }
         }
 
-        
         protected virtual void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
             _log.LogTrace($"EvictionCallback: Cache entry with key:{key} has been removed.");
-        }        
+        }
     }
 }

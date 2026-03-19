@@ -1,15 +1,16 @@
 using System.Linq;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Hangfire;
-using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 
@@ -29,15 +30,18 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public static IApplicationBuilder UseSecurityHandlers(this IApplicationBuilder appBuilder)
         {
-            var inProcessBus = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
-            inProcessBus.RegisterHandler<UserChangedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserChangedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<UserApiKeyActualizeEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserPasswordChangedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserResetPasswordEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserLoginEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserLogoutEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserRoleAddedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserRoleRemovedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
+            appBuilder.RegisterEventHandler<UserChangedEvent, UserApiKeyActualizeEventHandler>();
+
+            appBuilder.RegisterEventHandler<UserChangedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserPasswordChangedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserResetPasswordEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserChangedPasswordEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserLoginEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserLogoutEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserRoleAddedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserRoleRemovedEvent, LogChangesUserChangedEventHandler>();
+
+            appBuilder.RegisterEventHandler<UserChangedEvent, RevokeUserTokenEventHandler>();
 
             return appBuilder;
         }
@@ -49,11 +53,9 @@ namespace VirtoCommerce.Platform.Web.Security
         /// <returns></returns>
         public static IApplicationBuilder UsePruneExpiredTokensJob(this IApplicationBuilder appBuilder)
         {
-            var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
-            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
+            var recurringJobService = appBuilder.ApplicationServices.GetService<IRecurringJobService>();
 
-            recurringJobManager.WatchJobSetting(
-                settingsManager,
+            recurringJobService.WatchJobSetting(
                 new SettingCronJobBuilder()
                     .SetEnablerSetting(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob)
                     .SetCronSetting(PlatformConstants.Settings.Security.CronPruneExpiredTokensJob)
@@ -79,6 +81,30 @@ namespace VirtoCommerce.Platform.Web.Security
             {
                 RecurringJob.RemoveIfExists("AutoAccountLockoutJob");
             }
+
+            return appBuilder;
+        }
+
+        public static IApplicationBuilder UseAccountLockoutMiddleware(this IApplicationBuilder appBuilder, string identityCookieName)
+        {
+            appBuilder.Use(async (context, next) =>
+            {
+                if (context.User.Identity?.IsAuthenticated == true &&
+                    context.Request.Cookies.ContainsKey(identityCookieName))
+                {
+                    var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+                    var user = await userManager.GetUserAsync(context.User);
+
+                    if (user != null && await userManager.IsLockedOutAsync(user))
+                    {
+                        await context.SignOutAsync(IdentityConstants.ApplicationScheme);
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return;
+                    }
+                }
+
+                await next();
+            });
 
             return appBuilder;
         }

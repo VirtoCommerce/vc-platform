@@ -1,12 +1,15 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.authService', ['$http', '$rootScope', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', function ($http, $rootScope, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage) {
+    .factory('platformWebApp.authService', [
+        '$http', '$rootScope', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage',
+        function ($http, $rootScope, $interpolate, $q, $window, authDataStorage, externalSignInStorage) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
         userLogin: null,
         fullName: null,
         permissions: null,
-        isAuthenticated: false
+        isAuthenticated: false,
+        memberId: null
     };
 
     authContext.fillAuthData = function () {
@@ -103,36 +106,34 @@ angular.module('platformWebApp')
     };
 
     authContext.logout = function () {
-        var extenralSignInData = externalSignInStorage.get();
-        if (extenralSignInData && extenralSignInData.providerType) {
+        var externalSignInData = externalSignInStorage.get();
+        if (externalSignInData && externalSignInData.providerType) {
             externalSignInStorage.remove();
-            changeAuth({});
-            var url = 'externalsignin/signout?authenticationType=' + extenralSignInData.providerType;
-            $window.location.href = url
+            $window.location.href = 'externalsignin/signout?authenticationType=' + externalSignInData.providerType;
         }
         else {
             authDataStorage.clearStoredData();
-            $http.get(serviceBase + 'logout');
             changeAuth({});
+            $http.get(serviceBase + 'logout');
         }
     };
 
     authContext.checkPermission = function (permission, securityScopes) {
-        //first check admin permission
+        // First check admin permission
         // var hasPermission = $.inArray('admin', authContext.permissions) > -1;
         var hasPermission = authContext.isAdministrator;
         if (!hasPermission && permission) {
             permission = permission.trim();
-            //first check global permissions
+            // First check global permissions
             hasPermission = $.inArray(permission, authContext.permissions) > -1;
             if (!hasPermission && securityScopes) {
                 if (typeof securityScopes === 'string' || angular.isArray(securityScopes)) {
                     securityScopes = angular.isArray(securityScopes) ? securityScopes : securityScopes.split(',');
-                    //Check permissions in scope
+                    // Check permissions in scope
                     hasPermission = _.some(securityScopes, function (x) {
                         var permissionWithScope = permission + ":" + x;
                         var retVal = $.inArray(permissionWithScope, authContext.permissions) > -1;
-                        //console.log(permissionWithScope + "=" + retVal);
+                        // console.log(permissionWithScope + "=" + retVal);
                         return retVal;
                     });
                 }
@@ -146,14 +147,17 @@ angular.module('platformWebApp')
         authContext.userLogin = user.userName;
         authContext.fullName = user.userLogin;
         authContext.isAuthenticated = user.userName != null;
+        authContext.memberId = user.memberId;
 
-        //Interpolate permissions to replace some template to real value
+        // Interpolate permissions to replace some template to real value
         if (authContext.permissions) {
             authContext.permissions = _.map(authContext.permissions, function (x) {
                 return $interpolate(x)(authContext);
             });
         }
+
         $rootScope.$broadcast('loginStatusChanged', authContext);
     }
+
     return authContext;
 }]);

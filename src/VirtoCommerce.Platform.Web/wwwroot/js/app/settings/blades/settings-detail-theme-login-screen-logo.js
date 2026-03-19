@@ -50,6 +50,14 @@ angular.module('platformWebApp')
             function initializeBlade() {
                 blade.isLoading = true;
 
+                // Resolve setting group name
+                var setting = Array.isArray(blade.data) && blade.data.length > 0 ? blade.data[0] : null;
+
+                if (setting && setting.groupName) {
+                    var paths = setting.groupName.split('|');
+                    blade.groupName = paths.pop();
+                }
+
                 settingsApi.getUiCustomizationSetting(function (uiCustomizationSetting) {
                     blade.isLoading = false;
                     blade.uiCustomizationSetting = uiCustomizationSetting;

@@ -25,7 +25,9 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
         public void OnCreating(CreatingContext filterContext)
         {
             if (ContextUserName is null)
+            {
                 return;
+            }
 
             filterContext.SetJobParameter(USER_NAME, ContextUserName);
         }
@@ -41,7 +43,16 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
 
         public void OnPerforming(PerformingContext filterContext)
         {
-            var userName = filterContext.GetJobParameter<string>(USER_NAME);
+            string userName;
+
+            if (IsRecurringJob(filterContext, out var recurringJobId))
+            {
+                userName = $"system:{recurringJobId}";
+            }
+            else
+            {
+                userName = filterContext.GetJobParameter<string>(USER_NAME);
+            }
 
             _userNameResolver.SetCurrentUserName(userName);
         }
@@ -52,5 +63,11 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
         }
 
         #endregion IServerFilter Members
+
+        private static bool IsRecurringJob(PerformingContext context, out string recurringJobId)
+        {
+            recurringJobId = context.GetJobParameter<string>("RecurringJobId");
+            return !string.IsNullOrEmpty(recurringJobId);
+        }
     }
 }

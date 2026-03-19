@@ -10,7 +10,6 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Core.Localizations;
-using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.TransactionFileManager;
 using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Data.ChangeLog;
@@ -34,11 +33,11 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 
             services.AddSettings();
-            services.AddLocalization();
+            services.AddLocalizedItems();
             services.AddDynamicProperties();
 
             services.AddSingleton<InProcessBus>();
-            services.AddSingleton<IHandlerRegistrar>(x => x.GetRequiredService<InProcessBus>());
+            services.AddSingleton<IEventHandlerRegistrar>(x => x.GetRequiredService<InProcessBus>());
             services.AddSingleton<IEventPublisher>(x => x.GetRequiredService<InProcessBus>());
             services.AddTransient<IChangeLogService, ChangeLogService>();
             services.AddTransient<ILastModifiedDateTime, ChangeLogService>();
@@ -50,9 +49,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             services.AddScoped<IPlatformExportImportManager, PlatformExportImportManager>();
             services.AddSingleton<ITransactionFileManager, TransactionFileManager.TransactionFileManager>();
-
-            services.AddTransient<IEmailSender, DefaultEmailSender>();
-
 
             //Register dependencies for translation
             services.AddSingleton<ITranslationDataProvider, PlatformTranslationDataProvider>();

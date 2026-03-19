@@ -7,7 +7,7 @@ Use this guide to deploy, configure and run precompiled Virto Commerce Platform 
 ## Prerequisites
 The following prerequisites needs to be installed to deploy and run Virto Commerce.
 
-* [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0)
+* [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
 ## Install CLI
@@ -59,7 +59,7 @@ The `vc-build install` command creates a Virto Commerce platform or other artifa
 
 * Run the VirtoCommerce platform using `dotnet` CLI command
 ```console
-dotnet.exe VirtoCommerce.Platform.Web.dll
+dotnet.exe VirtoCommerce.Platform.Web.dll --urls=https://localhost:5001
 ```
 `dotnet.exe` starts Virto Commerce platform, connects to database and creates tables.
 

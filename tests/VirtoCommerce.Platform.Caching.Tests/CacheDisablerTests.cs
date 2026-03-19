@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
                 var task = Task.Factory.StartNew(() =>
                 {
                     Assert.True(CacheDisabler.CacheDisabled, "CacheDisabler inherits value in another thread!");
-                });
+                }, TestContext.Current.CancellationToken);
 
                 await task;
             }
@@ -67,7 +67,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async void NotInheritedSetAfterAsyncMethodStartsInAnotherAsyncMethod()
+        public async Task NotInheritedSetAfterAsyncMethodStartsInAnotherAsyncMethod()
         {
             Assert.False(CacheDisabler.CacheDisabled,
                 "CacheDisabler shouldn't be active in this thread before test.");

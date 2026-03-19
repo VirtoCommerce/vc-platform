@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -7,24 +6,9 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class Permission : ValueObject, ICloneable
+    public class Permission : ValueObject
     {
         private const char _scopeCharSeparator = '|';
-
-        [Obsolete("Left for backward compatibility")]
-        public string Id
-        {
-            get
-            {
-                return Name;
-            }
-#pragma warning disable S3237 // "value" parameters should be used
-            set
-#pragma warning restore S3237 // "value" parameters should be used
-            {
-                // Do not remove this empty set-accessor! It is needed for backward compatibility.
-            }
-        }
 
         public string Name { get; set; }
         /// <summary>
@@ -43,7 +27,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public static Permission TryCreateFromClaim(Claim claim, JsonSerializerSettings jsonSettings)
         {
             Permission result = null;
-            if (claim != null && claim.Type.EqualsInvariant(PlatformConstants.Security.Claims.PermissionClaimType))
+            if (claim != null && claim.Type.EqualsIgnoreCase(PlatformConstants.Security.Claims.PermissionClaimType))
             {
                 result = AbstractTypeFactory<Permission>.TryCreateInstance();
                 result.Name = claim.Value;
@@ -98,7 +82,7 @@ namespace VirtoCommerce.Platform.Core.Security
         #region ICloneable members
         public override object Clone()
         {
-            var result = MemberwiseClone() as Permission;
+            var result = (Permission)MemberwiseClone();
 
             result.AssignedScopes = AssignedScopes?.Select(x => x.Clone()).OfType<PermissionScope>().ToList();
 

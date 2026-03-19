@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
             if (!TryGetByIds<TItem>(memoryCache, keyPrefix, ids, out var result))
             {
-                using (await AsyncLock.GetLockByKey(keyPrefix).GetReleaserAsync())
+                using (await AsyncLock.GetLockByKey(keyPrefix).LockAsync())
                 {
                     if (!TryGetByIds(memoryCache, keyPrefix, ids, out result))
                     {
@@ -94,9 +94,10 @@ namespace VirtoCommerce.Platform.Core.Caching
         /// </summary>
         public static async Task<TItem> GetOrCreateExclusiveAsync<TItem>(this IMemoryCache cache, string key, Func<MemoryCacheEntryOptions, Task<TItem>> factory, bool cacheNullValue = true)
         {
+            key = CacheKey.Normalize(key);
             if (!cache.TryGetValue(key, out var result))
             {
-                using (await AsyncLock.GetLockByKey(key).GetReleaserAsync())
+                using (await AsyncLock.GetLockByKey(key).LockAsync())
                 {
                     if (!cache.TryGetValue(key, out result))
                     {
@@ -117,6 +118,7 @@ namespace VirtoCommerce.Platform.Core.Caching
         /// </summary>
         public static TItem GetOrCreateExclusive<TItem>(this IMemoryCache cache, string key, Func<MemoryCacheEntryOptions, TItem> factory, bool cacheNullValue = true)
         {
+            key = CacheKey.Normalize(key);
             if (!cache.TryGetValue(key, out var result))
             {
                 lock (_lockLookup.GetOrAdd(key, new object()))

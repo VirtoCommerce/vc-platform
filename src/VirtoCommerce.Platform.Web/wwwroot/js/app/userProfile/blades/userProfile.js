@@ -1,10 +1,13 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.userProfile.userProfileController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper',
-        'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi',
-        function ($rootScope, $scope, bladeNavigationService, settings, settingsHelper, i18n, userProfile, languages, locales, timeZones, userProfileApi) {
+    .controller('platformWebApp.userProfile.userProfileController', [
+        '$rootScope', '$scope',
+        'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones',
+        'platformWebApp.userProfileApi', 'platformWebApp.userProfileIconService',
+        function ($rootScope, $scope, i18n, userProfile, languages, locales, timeZones, userProfileApi, userProfileIconService) {
             var blade = $scope.blade;
             blade.headIcon = 'fa fa-user';
             blade.title = 'platform.blades.user-profile.title';
+            blade.iconUrl = userProfileIconService.getUserIconUrl();
 
             blade.currentLanguage = i18n.getLanguage();
             blade.currentRegionalFormat = i18n.getRegionalFormat();
@@ -53,6 +56,7 @@ angular.module('platformWebApp')
                 blade.currentTimeZone = getNameByCode($scope.timeZones, blade.currentTimeZone);
                 blade.currentTimeAgoSettings = userProfile.timeAgoSettings;
                 blade.currentTimeSettings = userProfile.timeSettings;
+                blade.currentMemberId = userProfile.memberId;
             }
 
             function isLoading() {
@@ -113,4 +117,10 @@ angular.module('platformWebApp')
                     userProfile.save();
                 }
             }
+
+            $scope.$watch(function () {
+                return userProfileIconService.iconUrlChanged;
+            }, function () {
+                blade.iconUrl = userProfileIconService.getUserIconUrl();
+            });
         }]);

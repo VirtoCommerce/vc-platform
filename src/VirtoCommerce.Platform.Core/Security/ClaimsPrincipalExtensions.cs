@@ -8,6 +8,37 @@ namespace VirtoCommerce.Platform.Core.Security
 {
     public static class ClaimsPrincipalExtensions
     {
+        public static string[] UserIdClaimTypes { get; set; } = [];
+
+        public static string[] UserNameClaimTypes { get; set; } = [];
+
+        public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.FindAnyValue(UserIdClaimTypes);
+        }
+
+        public static string GetUserName(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.FindAnyValue(UserNameClaimTypes);
+        }
+
+        public static string FindAnyValue(this ClaimsPrincipal claimsPrincipal, IList<string> claimTypes)
+        {
+            if (claimsPrincipal != null)
+            {
+                foreach (var claimType in claimTypes)
+                {
+                    var value = claimsPrincipal.FindFirstValue(claimType);
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        return value;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         public static Permission FindPermission(this ClaimsPrincipal principal, string permissionName, JsonSerializerSettings jsonSettings)
         {
             return FindPermissions(principal, permissionName, jsonSettings).FirstOrDefault();
@@ -19,14 +50,13 @@ namespace VirtoCommerce.Platform.Core.Security
             foreach (var claim in principal.Claims)
             {
                 var permission = Permission.TryCreateFromClaim(claim, jsonSettings);
-                if (permission != null && permission.Name.EqualsInvariant(permissionName))
+                if (permission != null && permission.Name.EqualsIgnoreCase(permissionName))
                 {
                     result.Add(permission);
                 }
             }
             return result;
         }
-
 
         public static bool HasGlobalPermission(this ClaimsPrincipal principal, string permissionName)
         {

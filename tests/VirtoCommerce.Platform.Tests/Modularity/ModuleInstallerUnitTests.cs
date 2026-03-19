@@ -15,12 +15,10 @@ using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
 using Xunit;
-using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
-    //the Order is needed for running separate UnitTests where static Platform.CurrentVersion is used
-    [Collection("Modularity"), Order(3)]
+    [Collection("Modularity")]
     public class ModuleInstallerUnitTests
     {
         private readonly LocalStorageModuleCatalogOptions _options;
@@ -106,8 +104,9 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var externalModulesClientMock = new Mock<IExternalModulesClient>();
             var options = Options.Create(new Mock<ExternalModuleCatalogOptions>().Object);
             var loggerMock = new Mock<ILogger<ExternalModuleCatalog>>();
+            var boostOptions = Options.Create(new ModuleSequenceBoostOptions());
 
-            var externalModuleCatalog = new ExternalModuleCatalog(localCatalogModulesMock.Object, externalModulesClientMock.Object, options, loggerMock.Object);
+            var externalModuleCatalog = new ExternalModuleCatalog(localCatalogModulesMock.Object, externalModulesClientMock.Object, options, loggerMock.Object, boostOptions);
 
             foreach (var module in installedModules)
             {

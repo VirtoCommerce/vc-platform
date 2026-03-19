@@ -1,20 +1,23 @@
-# Entity Framework Core Commands
-```
-dotnet tool install --global dotnet-ef --version 6.0.13
+# Generate Migrations
+
+## Install CLI tools for Entity Framework Core
+```cmd
+dotnet tool install --global dotnet-ef --version 10.0.1
 ```
 
-## Generate PlatformDbContext Migrations
-```
-dotnet ef migrations add Update1 --context PlatformDbContext --output-dir Migrations/Data
+or update
+
+```cmd
+dotnet tool update --global dotnet-ef --version 10.0.1
 ```
 
-## Generate SecurityDbContext Migrations
-```
-dotnet ef migrations add Update2 --context SecurityDbContext --output-dir Migrations/Security
+## Add Migration
+Select Data.<Provider> folder and run one of the following commands, depending on the required database context:
+
+```cmd
+dotnet ef migrations add <migration-name> --context PlatformDbContext
 ```
 
-## Apply Migrations**
-
-```
-dotnet ef database update
+```cmd
+dotnet ef migrations add <migration-name> --context SecurityDBContext
 ```

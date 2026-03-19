@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
@@ -29,6 +30,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class ModulesController : Controller
     {
+        private const string _managementIsDisabledMessage = "Module management is disabled.";
+
         private readonly IExternalModuleCatalog _externalModuleCatalog;
         private readonly IModuleInstaller _moduleInstaller;
         private readonly IPushNotificationManager _pushNotifier;
@@ -36,11 +39,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISettingsManager _settingsManager;
         private readonly PlatformOptions _platformOptions;
         private readonly ExternalModuleCatalogOptions _externalModuleCatalogOptions;
+        private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly IPlatformRestarter _platformRestarter;
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
+        private readonly ILocalModuleCatalog _localModuleCatalog;
 
-        public ModulesController(IExternalModuleCatalog externalModuleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, ISettingsManager settingsManager, IOptions<PlatformOptions> platformOptions, IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions, IPlatformRestarter platformRestarter)
+        public ModulesController(
+            IExternalModuleCatalog externalModuleCatalog,
+            IModuleInstaller moduleInstaller,
+            IPushNotificationManager pushNotifier,
+            IUserNameResolver userNameResolver,
+            ISettingsManager settingsManager,
+            IOptions<PlatformOptions> platformOptions,
+            IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
+            IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
+            IPlatformRestarter platformRestarter,
+            ILocalModuleCatalog localModuleCatalog)
         {
             _externalModuleCatalog = externalModuleCatalog;
             _moduleInstaller = moduleInstaller;
@@ -49,7 +64,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _settingsManager = settingsManager;
             _platformOptions = platformOptions.Value;
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
+            _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
+            _localModuleCatalog = localModuleCatalog;
         }
 
         /// <summary>
@@ -77,11 +94,48 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureModulesCatalogInitialized();
 
-            var retVal = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x => x.Id).ThenBy(x => x.Version)
-                                               .Select(x => new ModuleDescriptor(x))
-                                               .ToArray();
+            var allModules = _externalModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .OrderBy(x => x.Id)
+                .ThenBy(x => x.Version)
+                .Select(x => new ModuleDescriptor(x))
+                .ToList();
 
-            return Ok(retVal);
+            _localModuleCatalog.Initialize();
+            var localModules = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>().ToDictionary(x => x.Id);
+
+            foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))
+            {
+                module.IconUrl = localModules.TryGetValue(module.Id, out var localModule) && IconFileExists(localModule)
+                    ? localModule.IconUrl
+                    : null;
+            }
+
+            return Ok(allModules);
+        }
+
+        private static bool IconFileExists(ManifestModuleInfo module)
+        {
+            // PathString should start from "/"
+            var moduleIconUrl = module.IconUrl;
+            if (!moduleIconUrl.StartsWith('/'))
+            {
+                moduleIconUrl = "/" + moduleIconUrl;
+            }
+
+            var basePath = new PathString($"/modules/$({module.Id})");
+            var iconUrlPath = new PathString(moduleIconUrl);
+
+            if (!iconUrlPath.StartsWithSegments(basePath, out var subPath) ||
+                string.IsNullOrEmpty(subPath.Value) ||
+                !Directory.Exists(module.FullPhysicalPath))
+            {
+                return false;
+            }
+
+            using var fileProvider = new PhysicalFileProvider(module.FullPhysicalPath);
+
+            return fileProvider.GetFileInfo(subPath.Value).Exists;
         }
 
         /// <summary>
@@ -143,69 +197,108 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ModuleDescriptor>> UploadModuleArchive()
         {
             EnsureModulesCatalogInitialized();
-            ModuleDescriptor result = null;
+
+            if (!_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
+            {
+                return BadRequest(_managementIsDisabledMessage);
+            }
+
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
                 return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
             }
-            var uploadPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
-            if (!Directory.Exists(uploadPath))
+
+            var targetFilePath = await UploadFile(Request, Path.GetFullPath(_platformOptions.LocalUploadFolderPath));
+            if (targetFilePath is null)
             {
-                Directory.CreateDirectory(uploadPath);
+                return BadRequest("Cannot read file");
             }
-            string targetFilePath = null;
 
-            var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
-            var reader = new MultipartReader(boundary, HttpContext.Request.Body);
-
-            var section = await reader.ReadNextSectionAsync();
-            if (section != null)
+            var manifest = await LoadModuleManifestFromZipArchive(targetFilePath);
+            if (manifest is null)
             {
-                var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
-
-                if (hasContentDispositionHeader)
-                {
-                    if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
-                    {
-                        var fileName = contentDisposition.FileName.Value;
-                        targetFilePath = Path.Combine(uploadPath, fileName);
-
-                        using (var targetStream = System.IO.File.Create(targetFilePath))
-                        {
-                            await section.Body.CopyToAsync(targetStream);
-                        }
-
-                    }
-                }
-                using (var packageStream = System.IO.File.Open(targetFilePath, FileMode.Open))
-                using (var package = new ZipArchive(packageStream, ZipArchiveMode.Read))
-                {
-                    var entry = package.GetEntry("module.manifest");
-                    if (entry != null)
-                    {
-                        using (var manifestStream = entry.Open())
-                        {
-                            var manifest = ManifestReader.Read(manifestStream);
-                            var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                            module.LoadFromManifest(manifest);
-                            var alreadyExistModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(module));
-                            if (alreadyExistModule != null)
-                            {
-                                module = alreadyExistModule;
-                            }
-                            else
-                            {
-                                //Force dependency validation for new module
-                                _externalModuleCatalog.CompleteListWithDependencies(new[] { module }).ToList().Clear();
-                                _externalModuleCatalog.AddModule(module);
-                            }
-                            module.Ref = targetFilePath;
-                            result = new ModuleDescriptor(module);
-                        }
-                    }
-                }
+                return BadRequest("Cannot read module manifest");
             }
+
+            var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+            module.LoadFromManifest(manifest);
+            var existingModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(module));
+
+            if (existingModule != null)
+            {
+                module = existingModule;
+            }
+            else
+            {
+                //Force dependency validation for new module
+                _externalModuleCatalog.CompleteListWithDependencies([module]).ToList().Clear();
+                _externalModuleCatalog.AddModule(module);
+            }
+
+            module.Ref = targetFilePath;
+            var result = new ModuleDescriptor(module);
+
             return Ok(result);
+        }
+
+        private static async Task<string> UploadFile(HttpRequest request, string uploadFolderPath)
+        {
+            var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
+            var reader = new MultipartReader(boundary, request.Body);
+            var section = await reader.ReadNextSectionAsync();
+
+            if (section == null)
+            {
+                return null;
+            }
+
+            if (!ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition) ||
+                !MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+            {
+                return null;
+            }
+
+            var fileName = Path.GetFileName(contentDisposition.FileName.Value);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return null;
+            }
+
+            if (!Directory.Exists(uploadFolderPath))
+            {
+                Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            var targetFilePath = Path.Combine(uploadFolderPath, fileName);
+
+            await using var targetStream = System.IO.File.Create(targetFilePath);
+            await section.Body.CopyToAsync(targetStream);
+
+            return targetFilePath;
+        }
+
+        private static async Task<ModuleManifest> LoadModuleManifestFromZipArchive(string path)
+        {
+            ModuleManifest manifest = null;
+
+            try
+            {
+                await using var packageStream = System.IO.File.Open(path, FileMode.Open);
+                using var package = new ZipArchive(packageStream, ZipArchiveMode.Read);
+
+                var entry = package.GetEntry("module.manifest");
+                if (entry != null)
+                {
+                    await using var manifestStream = entry.Open();
+                    manifest = ManifestReader.Read(manifestStream);
+                }
+            }
+            catch
+            {
+                // Suppress any exceptions
+            }
+
+            return manifest;
         }
 
         /// <summary>
@@ -223,6 +316,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var options = new ModuleBackgroundJobOptions
             {
                 Action = ModuleAction.Install,
+                Modules = modules
+            };
+            var result = ScheduleJob(options);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Update modules 
+        /// </summary>
+        /// <param name="modules">modules for update</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("update")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        public ActionResult<ModulePushNotification> UpdateModules([FromBody] ModuleDescriptor[] modules)
+        {
+            EnsureModulesCatalogInitialized();
+
+            var options = new ModuleBackgroundJobOptions
+            {
+                Action = ModuleAction.Update,
                 Modules = modules
             };
             var result = ScheduleJob(options);
@@ -294,55 +408,64 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                             EnsureModulesCatalogInitialized();
 
-                            var modules = new List<ManifestModuleInfo>();
-                            var moduleVersionGroups = _externalModuleCatalog.Modules
-                                .OfType<ManifestModuleInfo>()
-                                .Where(x => x.Groups.Intersect(moduleBundles, StringComparer.OrdinalIgnoreCase).Any())
-                                .GroupBy(x => x.Id);
-
-                            //Need install only latest versions
-                            foreach (var moduleVersionGroup in moduleVersionGroups)
+                            // Skip Auto Installation if some modules already installed manually
+                            if (!_externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().Any(x => x.IsInstalled))
                             {
-                                var alreadyInstalledModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.IsInstalled && x.Id.EqualsInvariant(moduleVersionGroup.Key));
-                                //skip already installed modules
-                                if (alreadyInstalledModule == null)
-                                {
-                                    var latestVersion = moduleVersionGroup.OrderBy(x => x.Version).LastOrDefault();
-                                    if (latestVersion != null)
-                                    {
-                                        modules.Add(latestVersion);
-                                    }
-                                }
-                            }
-
-                            var modulesWithDependencies = _externalModuleCatalog.CompleteListWithDependencies(modules)
-                                .OfType<ManifestModuleInfo>()
-                                .Where(x => !x.IsInstalled)
-                                .Select(x => new ModuleDescriptor(x))
-                                .ToArray();
-
-                            if (modulesWithDependencies.Any())
-                            {
-                                var options = new ModuleBackgroundJobOptions
-                                {
-                                    Action = ModuleAction.Install,
-                                    Modules = modulesWithDependencies
-                                };
-                                //reset finished date
-                                notification.Finished = null;
-
-                                // can't use Hangfire.BackgroundJob.Enqueue(...), because Hangfire tables might be missing in new DB
-                                new Thread(() =>
-                                {
-                                    Thread.CurrentThread.IsBackground = true;
-                                    ModuleBackgroundJob(options, notification);
-                                }).Start();
+                                InstallModulesFromBundles(moduleBundles, notification);
                             }
                         }
                     }
                 }
             }
             return Ok(notification);
+        }
+
+        private void InstallModulesFromBundles(string[] moduleBundles, ModuleAutoInstallPushNotification notification)
+        {
+            var modules = new List<ManifestModuleInfo>();
+            var moduleVersionGroups = _externalModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .Where(x => x.Groups.Intersect(moduleBundles, StringComparer.OrdinalIgnoreCase).Any())
+                .GroupBy(x => x.Id);
+
+            //Need install only latest versions
+            foreach (var moduleVersionGroup in moduleVersionGroups)
+            {
+                var alreadyInstalledModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.IsInstalled && x.Id.EqualsIgnoreCase(moduleVersionGroup.Key));
+                //skip already installed modules
+                if (alreadyInstalledModule == null)
+                {
+                    var latestVersion = moduleVersionGroup.OrderBy(x => x.Version).LastOrDefault();
+                    if (latestVersion != null)
+                    {
+                        modules.Add(latestVersion);
+                    }
+                }
+            }
+
+            var modulesWithDependencies = _externalModuleCatalog.CompleteListWithDependencies(modules)
+                .OfType<ManifestModuleInfo>()
+                .Where(x => !x.IsInstalled)
+                .Select(x => new ModuleDescriptor(x))
+                .ToArray();
+
+            if (modulesWithDependencies.Any())
+            {
+                var options = new ModuleBackgroundJobOptions
+                {
+                    Action = ModuleAction.Install,
+                    Modules = modulesWithDependencies
+                };
+                //reset finished date
+                notification.Finished = null;
+
+                // can't use Hangfire.BackgroundJob.Enqueue(...), because Hangfire tables might be missing in new DB
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    ModuleBackgroundJob(options, notification);
+                }).Start();
+            }
         }
 
         /// <summary>
@@ -359,33 +482,69 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(state);
         }
 
+        [HttpGet]
+        [Route("loading-order")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        public ActionResult<string[]> GetModulesLoadingOrder()
+        {
+            EnsureModulesCatalogInitialized();
+
+            var modules = _externalModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .Where(x => x.IsInstalled)
+                .ToArray();
+
+            var loadingOrder = _externalModuleCatalog.CompleteListWithDependencies(modules)
+                .OfType<ManifestModuleInfo>()
+                .Select(x => x.Id)
+                .ToArray();
+
+            return Ok(loadingOrder);
+        }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         public void ModuleBackgroundJob(ModuleBackgroundJobOptions options, ModulePushNotification notification)
         {
             try
             {
                 notification.Started = DateTime.UtcNow;
-                var moduleInfos = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
-                                     .Where(x => options.Modules.Any(y => y.Identity.Equals(x.Identity)))
-                                     .ToArray();
-                var reportProgress = new Progress<ProgressMessage>(m =>
-                {
-                    lock (_lockObject)
-                    {
-                        notification.Description = m.Message;
-                        notification.ProgressLog.Add(m);
-                        _pushNotifier.Send(notification);
-                    }
-                });
 
-                switch (options.Action)
+                if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
                 {
-                    case ModuleAction.Install:
-                        _moduleInstaller.Install(moduleInfos, reportProgress);
-                        break;
-                    case ModuleAction.Uninstall:
-                        _moduleInstaller.Uninstall(moduleInfos, reportProgress);
-                        break;
+                    var moduleInfos = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+                        .Where(x => options.Modules.Any(y => y.Identity.Equals(x.Identity)))
+                        .ToArray();
+                    var reportProgress = new Progress<ProgressMessage>(m =>
+                    {
+                        lock (_lockObject)
+                        {
+                            notification.Description = m.Message;
+                            notification.ProgressLog.Add(m);
+                            _pushNotifier.Send(notification);
+                        }
+                    });
+
+                    switch (options.Action)
+                    {
+                        case ModuleAction.Install:
+                        case ModuleAction.Update:
+                            _moduleInstaller.Install(moduleInfos, reportProgress);
+                            break;
+                        case ModuleAction.Uninstall:
+                            _moduleInstaller.Uninstall(moduleInfos, reportProgress);
+                            break;
+                    }
+                }
+                else
+                {
+                    notification.Finished = DateTime.UtcNow;
+                    notification.Description = _managementIsDisabledMessage;
+                    notification.ProgressLog.Add(new ProgressMessage
+                    {
+                        Level = ProgressMessageLevel.Error,
+                        Message = notification.Description,
+                    });
+                    _pushNotifier.Send(notification);
                 }
             }
             catch (Exception ex)
@@ -401,12 +560,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Completed);
 
                 notification.Finished = DateTime.UtcNow;
-                notification.Description = "Installation finished.";
+                notification.Description = options.Action switch
+                {
+                    ModuleAction.Install => "Installation finished.",
+                    ModuleAction.Update => "Updating finished.",
+                    _ => "Uninstalling finished."
+                };
+
                 notification.ProgressLog.Add(new ProgressMessage
                 {
                     Level = ProgressMessageLevel.Info,
                     Message = notification.Description,
                 });
+
                 _pushNotifier.Send(notification);
             }
         }
@@ -424,7 +590,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 retVal.Add(module);
                 var dependingModules = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
                                                              .Where(x => x.IsInstalled)
-                                                             .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase))
+                                                             .Where(x => x.DependsOn.ContainsIgnoreCase(module.Id))
                                                              .ToList();
                 if (dependingModules.Any())
                 {
@@ -447,6 +613,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 case ModuleAction.Uninstall:
                     notification.Title = "Uninstall Module";
                     notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting uninstall..." });
+                    break;
+                case ModuleAction.Update:
+                    notification.Title = "Update Module";
+                    notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting update..." });
                     break;
             }
 

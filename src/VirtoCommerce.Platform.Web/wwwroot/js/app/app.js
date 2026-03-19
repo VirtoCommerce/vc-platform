@@ -5,6 +5,7 @@ angular.uppercase = function (text) {
     }
     return text;
 }
+
 angular.lowercase = function (text) {
     if (text) {
         return text.toLowerCase();
@@ -12,12 +13,15 @@ angular.lowercase = function (text) {
     return text;
 }
 
-
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
-    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps',
+    'platformWebApp.i18n', 'platformWebApp.modulesApi', 'platformWebApp.moduleHelper', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
+    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps', 'platformWebApp.urlHelper',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps) {
+        i18n, modulesApi, moduleHelper, $state, bladeNavigationService, userProfile,
+        settings, common, THEME_SETTINGS, webApps, urlHelper) {
+
+        // Embedded mode: hide nav-bar and header when ?EmbeddedMode=true
+        $rootScope.isEmbeddedMode = urlHelper.isEmbeddedMode();
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -47,7 +51,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             angular.forEach(mainMenuService.menuItems, function (menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
 
             if (authContext.isAuthenticated) {
-                modules.query().$promise.then(function (results) {
+                modulesApi.query().$promise.then(function (results) {
+                    moduleHelper.modules = results;
+                    moduleHelper.onLoaded();
+
                     var modulesWithErrors = _.filter(results, function (x) { return _.any(x.validationErrors) && x.isInstalled; });
                     if (_.any(modulesWithErrors)) {
                         $scope.platformError = {
@@ -58,7 +65,13 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + "<br/>" + x.validationErrors.join("<br/>");
                             $scope.platformError.detail += moduleErrors;
                         });
-                        $state.go('workspace.modularity');
+                        var returnUrl = urlHelper.getSafeReturnUrl();
+                        if (returnUrl) {
+                            window.location.href = returnUrl;
+                        }
+                        else {
+                            $state.go('workspace.modularity');
+                        }
                     }
                 });
 
@@ -82,10 +95,35 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         $scope.mainMenu.items = mainMenuService.menuItems;
         $scope.mainMenu.apps = [];
 
-        // load web apps
-        webApps.list({}, function (result) {
-            if (angular.isArray(result)) {
-                $scope.mainMenu.apps = result;
+        // Load web apps
+        webApps.loadApps().then(function (apps) {
+            if (angular.isArray(apps)) {
+                angular.forEach(apps, function (app) {
+                    // Ignore platform app and apps that do not support embedded mode
+                    if (!app.supportEmbeddedMode) {
+                        return;
+                    }
+
+                    // Create menu item for embedded app
+                    var menuItem = {
+                        path: `browse/${app.id}`,
+                        iconUrl: app.iconUrl,
+                        icon: 'fa fa-cube',
+                        title: app.title,
+                        priority: 100,
+                        action: function () {
+                            $state.go('workspace.embeddedApp', { appId: app.id });
+                        },
+                        permission: app.permission,
+                    };
+
+                    mainMenuService.addMenuItem(menuItem);
+                });
+
+                // Remove embedded apps from main menu items
+                $scope.mainMenu.apps = apps.filter(function (item) {
+                    return item.supportEmbeddedMode === false;
+                });
             }
         });
 
@@ -102,7 +140,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         };
 
         $scope.hasApps = function () {
-            return $scope.mainMenu.apps.length > 1;
+            return Array.isArray($scope.mainMenu.apps) && $scope.mainMenu.apps.length > 1;
         };
 
         function initializeMainMenu(profile) {
@@ -332,8 +370,13 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
             $compileProvider.debugInfoEnabled(false);
         }])
-    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver',
-        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver) {
+    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService',
+        'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache',
+        'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService',
+        'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper',
+        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
+            dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest,
+            $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper) {
 
             //Disable animation
             $animate.enabled(false);
@@ -434,8 +477,16 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                                 }
                             }
                         });
+                    } else if (!authContext.isAdministrator && !authContext.permissions?.length) {
+                        $state.go('contact-admin');
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
-                        $state.go('workspace');
+                        var returnUrl = urlHelper.getSafeReturnUrl();
+                        if (returnUrl) {
+                            window.location.href = returnUrl;
+                        }
+                        else {
+                            $state.go('workspace');
+                        }
                     }
                 }, 500);
             });

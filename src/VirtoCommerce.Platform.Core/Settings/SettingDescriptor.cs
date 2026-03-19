@@ -38,6 +38,11 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// </summary>
         public bool IsHidden { get; set; }
 
+        /// <summary>
+        /// Flag indicates that this settings is accessible for client application via XAPI. By default, false.
+        /// </summary>
+        public bool IsPublic { get; set; }
+
         public SettingValueType ValueType { get; set; }
         public object[] AllowedValues { get; set; }
         public object DefaultValue { get; set; }

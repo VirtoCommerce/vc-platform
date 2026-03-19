@@ -4,12 +4,9 @@ using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Web.Extensions;
 
 namespace VirtoCommerce.Platform.Web
@@ -23,14 +20,14 @@ namespace VirtoCommerce.Platform.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
            Host.CreateDefaultBuilder(args)
-            .ConfigureLogging((hostingContext, logging) =>
+            .ConfigureLogging((_, logging) =>
             {
                 logging.ClearProviders();
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
-                webBuilder.ConfigureKestrel((context, options) => { options.Limits.MaxRequestBodySize = null; });
+                webBuilder.ConfigureKestrel((_, options) => { options.Limits.MaxRequestBodySize = null; });
 
                 webBuilder.ConfigureAppConfiguration((context, configurationBuilder) =>
                 {
@@ -38,7 +35,7 @@ namespace VirtoCommerce.Platform.Web
 
                     // Load configuration from Azure App Configuration
                     // Azure App Configuration will be loaded last i.e. it will override any existing sections
-                    // configuration loads all keys that have no label and keys that have label based on the environment (Development, Production etc)
+                    // configuration loads all keys that have no label and keys that have label based on the environment (Development, Production etc.)
                     if (configuration.TryGetAzureAppConfigurationConnectionString(out var connectionString))
                     {
                         configurationBuilder.AddAzureAppConfiguration(options =>
@@ -59,7 +56,7 @@ namespace VirtoCommerce.Platform.Web
             })
             .ConfigureServices((hostingContext, services) =>
             {
-                //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
+                //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs
                 if (hostingContext.Configuration.GetValue("VirtoCommerce:Hangfire:UseHangfireServer", true))
                 {
                     // Add & start hangfire server immediately.
@@ -82,18 +79,6 @@ namespace VirtoCommerce.Platform.Web
                             options.WorkerCount = workerCount.Value;
                         }
                     });
-                }
-            })
-            .UseSerilog((context, services, loggerConfiguration) =>
-            {
-                // read from configuration
-                _ = loggerConfiguration.ReadFrom.Configuration(context.Configuration);
-
-                // enrich configuration from external sources
-                var configurationServices = services.GetService<IEnumerable<ILoggerConfigurationService>>();
-                foreach (var service in configurationServices)
-                {
-                    service.Configure(loggerConfiguration);
                 }
             });
     }

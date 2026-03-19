@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
@@ -27,16 +28,19 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// </summary>
     public class ModuleCatalog : IModuleCatalog
     {
+        private readonly ModuleSequenceBoostOptions _boostOptions;
         private readonly ModuleCatalogItemCollection items;
         private bool isLoaded;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleCatalog"/> class.
         /// </summary>
-        public ModuleCatalog()
+        public ModuleCatalog(IOptions<ModuleSequenceBoostOptions> boostOptions)
         {
-            this.items = new ModuleCatalogItemCollection();
-            this.items.CollectionChanged += this.ItemsCollectionChanged;
+            _boostOptions = boostOptions.Value;
+
+            items = new ModuleCatalogItemCollection();
+            items.CollectionChanged += ItemsCollectionChanged;
         }
 
         /// <summary>
@@ -44,13 +48,15 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// initial list of <see cref="ModuleInfo"/>s.
         /// </summary>
         /// <param name="modules">The initial list of modules.</param>
-        public ModuleCatalog(IEnumerable<ModuleInfo> modules)
-            : this()
+        /// <param name="boostOptions">Module boost options</param>
+        public ModuleCatalog(IEnumerable<ModuleInfo> modules, IOptions<ModuleSequenceBoostOptions> boostOptions)
+            : this(boostOptions)
         {
-            if (modules == null) throw new System.ArgumentNullException("modules");
-            foreach (ModuleInfo moduleInfo in modules)
+            ArgumentNullException.ThrowIfNull(modules);
+
+            foreach (var moduleInfo in modules)
             {
-                this.Items.Add(moduleInfo);
+                Items.Add(moduleInfo);
             }
         }
 
@@ -111,7 +117,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// Loads the catalog if necessary.
         /// </summary>
         public void Load()
-        {        
+        {
             this.InnerLoad();
             this.isLoaded = true;
         }
@@ -225,7 +231,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <returns>The same <see cref="ModuleCatalog"/> instance with the added module.</returns>
         public ModuleCatalog AddModule(Type moduleType, InitializationMode initializationMode, params string[] dependsOn)
         {
-            if (moduleType == null) throw new System.ArgumentNullException("moduleType");
+            if (moduleType == null)
+                throw new System.ArgumentNullException("moduleType");
             return this.AddModule(moduleType.Name, moduleType.AssemblyQualifiedName, initializationMode, dependsOn);
         }
 
@@ -307,7 +314,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Infos")]
         public virtual ModuleCatalog AddGroup(InitializationMode initializationMode, string refValue, params ModuleInfo[] moduleInfos)
         {
-            if (moduleInfos == null) throw new System.ArgumentNullException("moduleInfos");
+            if (moduleInfos == null)
+                throw new System.ArgumentNullException("moduleInfos");
 
             ModuleInfoGroup newGroup = new ModuleInfoGroup();
             newGroup.InitializationMode = initializationMode;
@@ -328,21 +336,26 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// </summary>
         /// <param name="modules">the.</param>
         /// <returns></returns>
-        protected static string[] SolveDependencies(IEnumerable<ModuleInfo> modules)
+        protected string[] SolveDependencies(IEnumerable<ModuleInfo> modules)
         {
-            if (modules == null) throw new System.ArgumentNullException("modules");
+            ArgumentNullException.ThrowIfNull(modules);
 
-            ModuleDependencySolver solver = new ModuleDependencySolver();
+            var solver = new ModuleDependencySolver(_boostOptions);
 
-            foreach (ModuleInfo data in modules.ToArray())
+            foreach (var data in modules.ToArray())
             {
                 solver.AddModule(data.ModuleName);
 
+                var fullDependencies = (data as ManifestModuleInfo)?.Dependencies;
                 if (data.DependsOn != null)
                 {
-                    foreach (string dependency in data.DependsOn)
+                    foreach (var dependency in data.DependsOn)
                     {
-                        solver.AddDependency(data.ModuleName, dependency);
+                        var isOptional = fullDependencies?.Any(x => x.Id == dependency && x.Optional) ?? false;
+                        if (!isOptional)
+                        {
+                            solver.AddDependency(data.ModuleName, dependency);
+                        }
                     }
                 }
             }
@@ -352,7 +365,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 return solver.Solve();
             }
 
-            return new string[0];
+            return [];
         }
 
         /// <summary>
@@ -368,7 +381,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <exception cref="System.ArgumentNullException">Throws if <paramref name="validateFor"/> is <see langword="null"/>.</exception>
         protected static void ValidateCrossGroupDependencies(IEnumerable<ModuleInfo> availableModules, IEnumerable<ModuleInfo> validateFor)
         {
-            if (validateFor == null) throw new System.ArgumentNullException("validateFor");
+            if (validateFor == null)
+                throw new System.ArgumentNullException("validateFor");
 
             var moduleNames = validateFor.Select(m => m.ModuleName).ToList();
             foreach (ModuleInfo moduleInfo in validateFor.ToArray())
@@ -462,7 +476,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             if (moduleInfo != null)
             {
                 throw new ModularityException(
-                    moduleInfo.ModuleName,$"Module {moduleInfo.ModuleName} is marked for automatic initialization when the application starts, but it depends on modules that are marked as OnDemand initialization. To fix this error, mark the dependency modules for InitializationMode=WhenAvailable, or remove this validation by extending the ModuleCatalog class.");
+                    moduleInfo.ModuleName, $"Module {moduleInfo.ModuleName} is marked for automatic initialization when the application starts, but it depends on modules that are marked as OnDemand initialization. To fix this error, mark the dependency modules for InitializationMode=WhenAvailable, or remove this validation by extending the ModuleCatalog class.");
             }
         }
 

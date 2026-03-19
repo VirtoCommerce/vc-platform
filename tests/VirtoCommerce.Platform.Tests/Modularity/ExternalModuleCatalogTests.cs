@@ -5,18 +5,17 @@ using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
 using Xunit;
-using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
-    //the Order is needed for running separate UnitTests where static Platform.CurrentVersion is used
-    [Collection("Modularity"), Order(1)]
+    [Collection("Modularity")]
     public class ExternalModuleCatalogTests
     {
         private static Mutex _mutex = new Mutex();
@@ -140,7 +139,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                         },
                     }
             };
-             
+
             //Act
             var extCatalog = CreateExternalModuleCatalog(new[] { moduleA }, includePrerelease);
             extCatalog.Load();
@@ -149,7 +148,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Assert
             var actualVersions = extCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.Id == moduleA.Id).Select(x => x.Version);
             var expectedVersions = expectedModuleVersions.Select(x => SemanticVersion.Parse(x));
-           
+
             Assert.Equal(expectedVersions, actualVersions);
 
             _mutex.ReleaseMutex();
@@ -196,15 +195,16 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
         private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests, bool includePrerelease = false)
         {
-            var localModulesCatalog = new Moq.Mock<ILocalModuleCatalog>();
+            var localModulesCatalog = new Mock<ILocalModuleCatalog>();
             localModulesCatalog.Setup(x => x.Modules).Returns(GetManifestModuleInfos(new[] { new ModuleManifest { Id = "B", Version = "1.3.0", PlatformVersion = "3.0.0" } }));
             var json = JsonConvert.SerializeObject(manifests);
-            var client = new Moq.Mock<IExternalModulesClient>();
-            client.Setup(x => x.OpenRead(Moq.It.IsAny<Uri>())).Returns(new MemoryStream(Encoding.UTF8.GetBytes(json ?? "")));
-            var logger = new Moq.Mock<ILogger<ExternalModuleCatalog>>();
+            var client = new Mock<IExternalModulesClient>();
+            client.Setup(x => x.OpenRead(It.IsAny<Uri>())).Returns(new MemoryStream(Encoding.UTF8.GetBytes(json ?? "")));
+            var logger = new Mock<ILogger<ExternalModuleCatalog>>();
 
             var options = Options.Create(new ExternalModuleCatalogOptions() { ModulesManifestUrl = new Uri("http://nowhere.mock"), IncludePrerelease = includePrerelease });
-            var result = new ExternalModuleCatalog(localModulesCatalog.Object, client.Object, options, logger.Object);
+            var boostOptions = Options.Create(new ModuleSequenceBoostOptions());
+            var result = new ExternalModuleCatalog(localModulesCatalog.Object, client.Object, options, logger.Object, boostOptions);
             return result;
         }
 

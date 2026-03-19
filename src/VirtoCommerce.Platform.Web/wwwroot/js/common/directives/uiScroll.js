@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .directive('uiScrollDropDown', [function () {
+    .directive('uiScrollDropDown', ['$translate', function ($translate) {
         const defaultPageSize = 20;
         const defaultResponseGroup = 'none';
         const defaultSelectedItemsPropertyName = 'objectIds';
@@ -18,16 +18,37 @@ angular.module('platformWebApp')
                 pageSize: '=?',
                 placeholder: '=?',
                 required: '=?',
+                displayField: '@?',
+                sortField: '@?',
+                searchplaceholder: '=?',
                 responseGroup: '=?',
                 selectedItemsPropertyName: '=?' //TODO: delete this when storeIds/etc are changed to objectIds
             },
             templateUrl: '$(Platform)/Scripts/common/directives/uiScroll.tpl.html',
             link: function ($scope, element, attrs, ngModelController) {
+                if (!$scope.displayField) {
+                    $scope.displayField = 'name';
+                }
+                if ($scope.sortField === undefined) {
+                    $scope.sortField = $scope.displayField;
+                }
                 $scope.context = {
                     modelValue: null,
-                    required: angular.isDefined(attrs.required) && (attrs.required === '' || attrs.required.toLowerCase() === 'true'),
-                    multiple: angular.isDefined(attrs.multiple) && (attrs.multiple === '' || attrs.multiple.toLowerCase() === 'true')
+                    required: getBooleanAttributeValue('required'),
+                    multiple: getBooleanAttributeValue('multiple'),
                 };
+
+                $scope.onOpenCloseFn = function (isOpen) {
+                    if (isOpen) {
+                        const input = element.find('input[type=search]');
+                        input.attr('placeholder', $scope.searchplaceholder || $translate.instant('platform.placeholders.search-keyword'));
+                    }
+                };
+
+                function getBooleanAttributeValue(name) {
+                    const value = attrs[name];
+                    return angular.isDefined(value) && (value === '' || value === name || value.toLowerCase() === 'true');
+                }
 
                 $scope.items = [];
                 $scope.isNoItems = true;
@@ -68,6 +89,9 @@ angular.module('platformWebApp')
                     $select.page = $select.page || 0;
 
                     if (lastSearchPhrase !== $select.search) {
+                        if (!$select.search) {
+                            $scope.items = [];
+                        }
                         lastSearchPhrase = $select.search;
                         $select.page = 0;
                     }
@@ -79,14 +103,7 @@ angular.module('platformWebApp')
                         responseGroup: responseGroup
                     };
 
-                    return $scope.data({ criteria: criteria }).$promise.then((x) => {
-                        join(x.results, true);
-                        $select.page++;
-
-                        if ($select.page * pageSize < x.totalCount) {
-                            $scope.$broadcast('scrollCompleted');
-                        }
-                    });
+                    return fetchInternal(criteria, $select);
                 };
 
                 $scope.$watch('context.modelValue', function (newValue, oldValue) {
@@ -100,7 +117,9 @@ angular.module('platformWebApp')
                 };
 
                 function load() {
-                    var selectedIds = $scope.context.multiple ? $scope.context.modelValue : [$scope.context.modelValue];
+                    var selectedIds = $scope.context.multiple
+                        ? $scope.context.modelValue
+                        : [$scope.context.modelValue]; // here may be array with undefined or null, but next if condition will not run without it
 
                     if ($scope.isNoItems && _.any(selectedIds)) {
                         var criteria = {
@@ -110,22 +129,49 @@ angular.module('platformWebApp')
 
                         criteria[selectedItemsPropertyName] = selectedIds;
 
-                        var result = $scope.data({ criteria: criteria });
+                        fetchInternal(criteria, null);
+                    }
+                }
 
-                        if (result.$promise) {
-                            result.$promise.then((x) => {
-                                join(x.results);
-                            });
-                        }
-                        else if (angular.isArray(result)) {
-                            join(result);
-                            $scope.paginationDisabled = true;
-                        }
+                function fetchInternal(criteria, select) {
+                    var result = $scope.data({ criteria: criteria });
+
+                    if (result.$promise) {
+                        result.$promise.then((x) => {
+                            join(x.results, true);
+                            if (select) {
+                                setActiveIndex(select);
+                                if (x.results.length > 0) {
+                                    select.page++;
+
+                                    if (select.page * pageSize < x.totalCount) {
+                                        $scope.$broadcast('scrollCompleted');
+                                    }
+                                }
+                            }
+                        });
+                    } else if (angular.isArray(result)) {
+                        join(result);
+                        setActiveIndex(select);
+                        $scope.paginationDisabled = true;
+                    }
+                    return result;
+                }
+
+                function setActiveIndex(select) {
+                    if (!select) return;
+                    var value = $scope.context.modelValue;
+                    if (!!value) {
+                        select.activeIndex = $scope.items.findIndex(function (item) {
+                            return item.id === value;
+                        });
+                    } else {
+                        select.activeIndex = 0;
                     }
                 }
 
                 function join(newItems, callFilter) {
-                    newItems = _.reject(newItems, x => _.any($scope.items, y => y.id === x.id));
+                    $scope.items = _.reject($scope.items, x => _.any(newItems, y => y.id === x.id));
 
                     if (callFilter) {
                         newItems = filterItems(newItems);
@@ -134,6 +180,10 @@ angular.module('platformWebApp')
                     if (_.any(newItems)) {
                         $scope.items = $scope.items.concat(newItems);
                         $scope.isNoItems = $scope.items.length === 0;
+                    }
+
+                    if ($scope.sortField !== '') {
+                        $scope.items = _.sortBy($scope.items, $scope.sortField || 'name');
                     }
                 }
 

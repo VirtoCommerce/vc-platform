@@ -1,0 +1,125 @@
+@using Microsoft.Extensions.Primitives
+@model VirtoCommerce.Platform.Web.Model.AuthorizeViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consent Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f7f7;
+        }
+
+        .consent-form {
+            width: 400px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+            .consent-form h2 {
+                margin: 0;
+                font-size: 1.4em;
+                color: #262626;
+            }
+
+            .consent-form p {
+                font-size: 0.9em;
+                color: #777;
+            }
+
+                .consent-form p .username {
+                    color: #626C87;
+                    font-weight: bold;
+                }
+
+        .permissions {
+            text-align: left;
+            margin: 20px 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+            .permissions label {
+                display: flex;
+                align-items: center;
+                margin: 10px 0;
+            }
+
+                .permissions label input {
+                    margin-right: 10px;
+                }
+
+        .submit-button {
+            background-color: #43b0e6;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+            .submit-button:hover {
+                background-color: #319ed4;
+            }
+
+        .cancel-button {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #888;
+            background-color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        .footer-text {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form asp-controller="Authorization" asp-action="Authorize" method="post">
+        <div class="consent-form">
+            <h2>@Model.ApplicationName</h2>
+            <p>@Model.ApplicationName wants to access your account: <span class="username">@User.Identity?.Name</span></p>
+            <p>The following permissions are requested by the above app. Please review these and consent if it is OK.</p>
+            <div class="permissions">
+                @foreach (var scope in Model.Scope.Split(' '))
+                {
+                    <label>
+                        <input type="checkbox" checked disabled>@scope
+                    </label>
+                }
+            </div>
+            @* Flow the request parameters so they can be received by the Accept/Reject actions: *@
+            @foreach (var parameter in Context.Request.HasFormContentType ?
+            (IEnumerable<KeyValuePair<string, StringValues>>)Context.Request.Form : Context.Request.Query)
+            {
+                <input type="hidden" name="@parameter.Key" value="@parameter.Value" />
+            }
+            <input type="submit" class="submit-button" name="submit.Accept" value="Submit Consent" />
+            <input type="submit" class="cancel-button" name="submit.Deny" value="Cancel" />
+            <p class="footer-text">
+                Your consent to provide access is required. If you do not approve, click Cancel, in which case no information will be shared with the app.
+            </p>
+        </div>
+    </form>
+</body>
+</html>

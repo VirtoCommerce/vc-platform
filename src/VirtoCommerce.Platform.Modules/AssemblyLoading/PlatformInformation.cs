@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Modules.AssemblyLoading
 {
@@ -11,48 +12,51 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
     {
         public static readonly string[] NativeLibraryExtensions;
         public static readonly string[] NativeLibraryPrefixes;
-        public static readonly string[] ManagedAssemblyExtensions = new[]
-        {
-                ".dll",
-                ".ni.dll",
-                ".exe",
-                ".ni.exe"
-        };
-        public static readonly string NuGetPackagesCache;
-        public static readonly char DirectorySeparator;
+
+        public static readonly string[] ManagedAssemblyExtensions =
+        [
+            ".dll",
+            ".ni.dll",
+            ".exe",
+            ".ni.exe",
+        ];
+
+        public static readonly string NuGetPackagesCache = GetNuGetPackagesPath();
+
+        [Obsolete("Use Path.DirectorySeparatorChar", DiagnosticId = "VC0012", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public static readonly char DirectorySeparator = Path.DirectorySeparatorChar;
 
         [SuppressMessage("SonarLint", "S3963", Justification = "Such conditional initialization looks better in constructor, than inlined.")]
         static PlatformInformation()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                NativeLibraryPrefixes = new[] { "" };
-                NativeLibraryExtensions = new[] { ".dll" };
-                NuGetPackagesCache = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), ".nuget", "packages");
-                DirectorySeparator = Path.DirectorySeparatorChar;
+                NativeLibraryPrefixes = [];
+                NativeLibraryExtensions = [".dll"];
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                NativeLibraryPrefixes = new[] { "", "lib", };
-                NativeLibraryExtensions = new[] { ".dylib" };
-                NuGetPackagesCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), ".nuget", "packages");
-                DirectorySeparator = Path.AltDirectorySeparatorChar;
+                NativeLibraryPrefixes = ["lib"];
+                NativeLibraryExtensions = [".dylib"];
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                NativeLibraryPrefixes = new[] { "", "lib" };
-                NativeLibraryExtensions = new[] { ".so", ".so.1" };
-                NuGetPackagesCache = Path.Combine("~", ".nuget", "packages");
-                DirectorySeparator = Path.AltDirectorySeparatorChar;
+                NativeLibraryPrefixes = ["lib"];
+                NativeLibraryExtensions = [".so", ".so.1"];
             }
             else
             {
+                NativeLibraryPrefixes = [];
+                NativeLibraryExtensions = [];
                 Debug.Fail("Unknown OS type");
-                NativeLibraryPrefixes = Array.Empty<string>();
-                NativeLibraryExtensions = Array.Empty<string>();
-                NuGetPackagesCache = string.Empty;
-                DirectorySeparator = '\0';
             }
+        }
+
+        private static string GetNuGetPackagesPath()
+        {
+            var path = Environment.GetEnvironmentVariable("NUGET_PACKAGES").EmptyToNull();
+
+            return path ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages");
         }
     }
 }

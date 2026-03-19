@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtoCommerce.Platform.Data.Repositories;
 
@@ -16,8 +17,10 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Data
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.13")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("VirtoCommerce.Platform.Data.Localizations.LocalizedItemEntity", b =>
                 {
@@ -385,6 +388,7 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Data
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("SettingId")
+                        .IsRequired()
                         .HasColumnType("varchar(128)");
 
                     b.Property<string>("ShortTextValue")
@@ -438,7 +442,8 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Data
                     b.HasOne("VirtoCommerce.Platform.Data.Model.SettingEntity", "Setting")
                         .WithMany("SettingValues")
                         .HasForeignKey("SettingId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Setting");
                 });

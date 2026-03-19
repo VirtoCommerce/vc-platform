@@ -1,0 +1,40 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Configuration;
+
+namespace VirtoCommerce.Platform.Data.SqlServer.Extensions;
+
+public static class DbContextOptionsBuilderExtensions
+{
+    /// <summary>
+    /// Configures the context to use SqlServer.
+    /// </summary>
+    public static DbContextOptionsBuilder UseSqlServerDatabase(
+        this DbContextOptionsBuilder optionsBuilder,
+        string? connectionString,
+        Type migrationsAssemblyMarkerType,
+        IConfiguration configuration,
+        Action<SqlServerDbContextOptionsBuilder, IConfiguration>? sqlServerOptionsAction = null)
+    {
+        return optionsBuilder.UseSqlServer(connectionString,
+            sqlServerOptionsBuilder =>
+            {
+                var compatibilityLevel = configuration.GetValue<int?>("SqlServer:CompatibilityLevel", null);
+                if (compatibilityLevel != null)
+                {
+                    sqlServerOptionsBuilder.UseCompatibilityLevel(compatibilityLevel.Value);
+                }
+
+                var parameterTranslationMode = configuration.GetValue<ParameterTranslationMode?>("SqlServer:ParameterTranslationMode", null);
+                if (parameterTranslationMode != null)
+                {
+                    sqlServerOptionsBuilder.UseParameterizedCollectionMode(parameterTranslationMode.Value);
+                }
+
+                sqlServerOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
+                sqlServerOptionsAction?.Invoke(sqlServerOptionsBuilder, configuration);
+            })
+            .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.NoEntityTypeConfigurationsWarning));
+    }
+}

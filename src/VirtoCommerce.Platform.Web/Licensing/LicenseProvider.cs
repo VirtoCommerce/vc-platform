@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
             using (var repository = _platformRepositoryFactory())
             {
-                rawLicenseData = repository.RawLicenses?.FirstOrDefault()?.Data;
+                rawLicenseData = repository.RawLicenses.OrderBy(x => x.Id).FirstOrDefault()?.Data;
             }
 
             var license = License.Parse(rawLicenseData, _platformOptions.LicensePublicKeyResourceName);
@@ -40,13 +40,13 @@ namespace VirtoCommerce.Platform.Web.Licensing
         {
             using (var repository = _platformRepositoryFactory())
             {
-                var rawLicense = repository.RawLicenses?.FirstOrDefault();
+                var rawLicense = repository.RawLicenses.OrderBy(x => x.Id).FirstOrDefault();
                 if (rawLicense == null)
                 {
                     rawLicense = new Data.Model.RawLicenseEntity();
                     repository.Add(rawLicense);
                 }
-                rawLicense.Data = license.RawLicense;                
+                rawLicense.Data = license.RawLicense;
                 repository.UnitOfWork.Commit();
             }
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,7 +12,6 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Repositories;
-using VirtoCommerce.Platform.Web.Security;
 
 namespace VirtoCommerce.Platform.Web.Tests.Security
 {
@@ -46,6 +46,16 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                     .ReturnsAsync(Array.Empty<UserLoginInfo>());
                 storeMock.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>(), CancellationToken.None))
                     .ReturnsAsync(IdentityResult.Success);
+                storeMock.As<IUserPasswordStore<ApplicationUser>>()
+                    .Setup(x => x.GetPasswordHashAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()))
+                    .Returns<ApplicationUser, CancellationToken>((user, _) => Task.FromResult(user.PasswordHash));
+                storeMock.As<IUserPasswordStore<ApplicationUser>>()
+                    .Setup(x => x.SetPasswordHashAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                    .Returns<ApplicationUser, string, CancellationToken>((user, hash, _) =>
+                    {
+                        user.PasswordHash = hash;
+                        return Task.CompletedTask;
+                    });
 
                 var identityOptionsMock = new Mock<IOptions<IdentityOptions>>();
                 if (identityOptions != null)
@@ -56,6 +66,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                 if (passwordHasher == null)
                 {
                     passwordHasher = new Mock<IPasswordHasher<ApplicationUser>>();
+                    passwordHasher.Setup(x => x.HashPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                        .Returns(Guid.NewGuid().ToString());
                     passwordHasher.Setup(x => x.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
                         .Returns(PasswordVerificationResult.Success);
                 }

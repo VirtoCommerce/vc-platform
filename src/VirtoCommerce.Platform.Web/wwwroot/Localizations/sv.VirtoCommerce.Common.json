@@ -1,0 +1,190 @@
+{
+  "platform": {
+    "commands": {
+      "add": "Lägg till",
+      "activate": "Aktivera",
+      "assign": "Tilldela",
+      "cancel": "Avbryt",
+      "clear": "Rensa",
+      "clear-all": "Rensa alla",
+      "clone": "Klon",
+      "close": "Stäng",
+      "confirm": "Bekräfta",
+      "copy-link": "Kopiera länk",
+      "copy": "Kopiera",
+      "create": "Skapa",
+      "cut": "Klipp ut",
+      "delete": "Ta bort",
+      "add-all": "Lägg till alla",
+      "remove-all": "Ta bort alla",
+      "download": "Hämta",
+      "edit": "Redigera",
+      "export": "Exportera",
+      "generate": "Generera",
+      "import": "Importera",
+      "import-sample-data": "Importera exempeldata",
+      "install": "Installera",
+      "grouping": "Visa grupper",
+      "ungrouping": "Dölj grupper",
+      "manage": "Hantera",
+      "more": "Mer",
+      "no": "Nej",
+      "new-folder": "Ny mapp",
+      "new-license": "Förnya licens",
+      "ok": "OK",
+      "paste": "Klistra in",
+      "pick-selected": "Välj markerade",
+      "preview": "Förhandsgranska",
+      "open-browser": "Öppna i webbläsare",
+      "redo": "Gör om",
+      "refresh": "Uppdatera",
+      "remove": "Ta bort",
+      "reset": "Återställ",
+      "restart": "Starta om",
+      "save": "Spara",
+      "send": "Skicka",
+      "select-all": "Markera alla",
+      "set-to-default": "Återställ till standard",
+      "start-export": "Starta export",
+      "settings": "Inställningar",
+      "sign-out": "Logga ut",
+      "undo": "Ångra",
+      "uninstall": "Avinstallera",
+      "unselect-all": "Avmarkera alla",
+      "update": "Uppdatera",
+      "upload": "Ladda upp",
+      "yes": "Ja",
+      "add-new-property": "Lägg till ny egenskap",
+      "manage-type-properties": "Typer av egenskaper",
+      "manage-profile": "Hantera profil",
+      "minimize": "Minimera",
+      "maximize": "Maximera",
+      "stop-sending": "Stoppa sändning",
+      "set-active": "Sätt aktiv",
+      "reject-user": "Avvisa användare",
+      "change-password": "Ändra lösenord",
+      "unlock-account": "Upplås konto",
+      "lock-account": "Lås konto",
+      "today": "Idag",
+      "time": "Tid",
+      "now": "Nu",
+      "date": "Datum",
+      "see-details": "Visa detaljer",
+      "dismiss": "Avfärda",
+      "hide-empty-property-values": "Dölj tomma värden",
+      "show-empty-property-values": "Visa tomma värden",
+      "titles": {
+        "refresh": "Uppdatera",
+        "new-folder": "Ny mapp",
+        "upload": "Ladda upp"
+      }
+    },
+    "list": {
+      "no-data": "Inga data",
+      "count": "Antal",
+      "loading": "Laddar...",
+      "item-not-found": "Fel: Hittades inte"
+    },
+    "placeholders": {
+      "n-a": "N/A",
+      "no-file": "Välj fil",
+      "search-keyword": "Sökord...",
+      "select-value": "Välj värde",
+      "select-values": "Välj värde"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Bekräfta borttagning",
+        "message": "Är du säker på att du vill ta bort markerade poster?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Kort text",
+        "description": "Textvärden under 1024 tecken"
+      },
+      "long-text": {
+        "title": "Lång text",
+        "description": "Obegränsad text utan storleksbegränsning"
+      },
+      "integer": {
+        "title": "Heltal",
+        "description": "Heltal"
+      },
+      "decimal": {
+        "title": "Decimaltal",
+        "description": "Decimaltal med precision 18 och skala 4"
+      },
+      "date-time": {
+        "title": "Datum och tid",
+        "description": "Välj datum"
+      },
+      "boolean": {
+        "title": "Boolesk",
+        "description": "Växeltyp"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "HTML-markup"
+      },
+      "undefined": {
+        "title": "Odefinierad"
+      },
+      "image": {
+        "title": "Bild",
+        "description": "Bildtyp"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "Ange kort text",
+        "secure-string": "Ange hemlig text",
+        "email": "Ange e-post",
+        "url": "Ange URL",
+        "long-text": "Ange lång text",
+        "integer": "Ange heltalsnummer",
+        "number": "Ange decimaltal",
+        "date-time": "Välj datum",
+        "short-text-multivalue": "Lägg till värde",
+        "integer-multivalue": "Lägg till heltal",
+        "number-multivalue": "Lägg till decimal",
+        "short-text-dictionary": "Välj värde",
+        "short-text-dictionary-multivalue": "Välj värde",
+        "short-text-multilang": "Ange värde",
+        "long-text-multilang": "Ange värde",
+        "short-text-multivalue-multilang": "Lägg till värde",
+        "short-text-dictionary-multilang": "Välj värde",
+        "short-text-dictionary-multivalue-multilang": "Välj värde",
+        "long-text-dictionary-multivalue-multilang": "Välj värde"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "Ange värde",
+      "required": "Detta fält är obligatoriskt",
+      "maxLength": "Detta fält får inte innehålla mer än {{number}} tecken"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Ogiltigt URI-format. Se till att URI inte har frågeparametrar"
+      }
+    },
+    "errors": {
+      "generic-error": "Fel",
+      "400": "Ogiltig förfrågan",
+      "401": "Ej behörig",
+      "403": "Nekad åtkomst",
+      "404": "Hittades inte",
+      "405": "Metod ej tillåten",
+      "406": "Ej accepterbar",
+      "407": "Proxyautentisering krävs",
+      "408": "Timeout för förfrågan",
+      "409": "Konflikt",
+      "429": "För många förfrågningar",
+      "500": "Intern serverfel",
+      "501": "Ej implementerad",
+      "502": "Felaktig gateway",
+      "503": "Tjänsten ej tillgänglig",
+      "504": "Gateway-timeout"
+    }
+  }
+}

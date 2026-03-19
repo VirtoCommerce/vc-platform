@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
@@ -32,6 +33,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IEventPublisher> _eventPublisherMock;
         private readonly Mock<IUserApiKeyService> _userApiKeyServiceMock;
         private readonly Mock<ILogger<SecurityController>> _logger;
+        private readonly Mock<IUserSessionsSearchService> _userSessionsSearchServiceMock;
+        private readonly Mock<IUserSessionsService> _userSessionsServiceMock;
 
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
@@ -45,6 +48,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _roleSearchServiceMock = new Mock<IRoleSearchService>();
             _eventPublisherMock = new Mock<IEventPublisher>();
             _userApiKeyServiceMock = new Mock<IUserApiKeyService>();
+            _userSessionsSearchServiceMock = new Mock<IUserSessionsSearchService>();
+            _userSessionsServiceMock = new Mock<IUserSessionsService>();
             _logger = new Mock<ILogger<SecurityController>>();
 
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(
@@ -90,21 +95,45 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             identityOptions ??= new Mock<IOptions<IdentityOptions>> { DefaultValue = DefaultValue.Mock };
 
-            return new SecurityController(
-                signInManager: _signInManagerMock.Object,
-                roleManager: _roleManagerMock.Object,
-                permissionsProvider: _permissionsProviderMock.Object,
-                userSearchService: _userSearchServiceMock.Object,
-                roleSearchService: _roleSearchServiceMock.Object,
-                securityOptions: securityOptions.Object,
-                identityOptions: identityOptions.Object,
-                userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
-                passwordOptions: passwordOptions.Object,
-                passwordLoginOptions: passwordLoginOptions.Object,
-                eventPublisher: _eventPublisherMock.Object,
-                userApiKeyService: _userApiKeyServiceMock.Object,
-                logger: _logger.Object,
-                externalSigninProviderConfigs: _externalSigninProviderConfigs);
+            var controller = new SecurityController(
+                _signInManagerMock.Object,
+                _roleManagerMock.Object,
+                _permissionsProviderMock.Object,
+                _userSearchServiceMock.Object,
+                _roleSearchServiceMock.Object,
+                securityOptions.Object,
+                Mock.Of<IOptions<UserOptionsExtended>>(),
+                passwordOptions.Object,
+                passwordLoginOptions.Object,
+                identityOptions.Object,
+                _eventPublisherMock.Object,
+                _userApiKeyServiceMock.Object,
+                _logger.Object,
+                _externalSigninProviderConfigs,
+                _userSessionsSearchServiceMock.Object,
+                _userSessionsServiceMock.Object);
+
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+            return controller;
+        }
+
+        private ApplicationUser SetCurrentUser(ApplicationUser currentUser)
+        {
+            if (currentUser?.UserName == null)
+            {
+                return currentUser;
+            }
+
+            _controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(
+                [new Claim("name", currentUser.UserName)], "authentication_type", "name", "role"));
+
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(userName => userName == currentUser.UserName)))
+                .ReturnsAsync(currentUser);
+
+            return currentUser;
         }
 
         #region Login
@@ -141,7 +170,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var user = _fixture.Create<ApplicationUser>();
             var request = _fixture.Create<LoginRequest>();
             _signInManagerMock
-                .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .ReturnsAsync(SignInResult.Success);
             _userManagerMock
                 .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
@@ -168,7 +197,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var user = _fixture.Create<ApplicationUser>();
             var request = _fixture.Create<LoginRequest>();
             _signInManagerMock
-                .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .ReturnsAsync(SignInResult.Success);
             _userManagerMock
                 .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
@@ -198,10 +227,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         public async Task Logout_UserFound()
         {
             // Arrange
-            var user = _fixture.Create<ApplicationUser>();
-            _userManagerMock
-                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
-                .ReturnsAsync(user);
+            var user = SetCurrentUser(_fixture.Create<ApplicationUser>());
 
             // Act
             await _controller.Logout();
@@ -453,11 +479,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 .Setup(x => x.FindByNameAsync(It.Is<string>(n => n == user.UserName)))
                 .ReturnsAsync(() => null);
 
-            var currentUser = _fixture.Create<ApplicationUser>();
-            currentUser.IsAdministrator = false;
-            _userManagerMock
-                .Setup(x => x.FindByNameAsync(It.Is<string>(n => n == null)))
-                .ReturnsAsync(currentUser);
+            SetCurrentUser(_fixture.Create<ApplicationUser>());
 
             // Act
             var actual = await _controller.ResetPassword(userName, null);
@@ -477,12 +499,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 .Setup(x => x.FindByNameAsync(It.Is<string>(n => n == user.UserName)))
                 .ReturnsAsync(user);
 
-            var currentUser = _fixture.Create<ApplicationUser>();
-            currentUser.IsAdministrator = false;
-            _userManagerMock
-                .Setup(x => x.FindByNameAsync(It.Is<string>(n => n == null)))
-                .ReturnsAsync(currentUser);
-
             var options = new Mock<IOptions<AuthorizationOptions>>();
             options.SetupGet(x => x.Value)
                 .Returns(() =>
@@ -494,6 +510,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 });
 
             _controller = CreateSecurityController(securityOptions: options);
+
+            SetCurrentUser(_fixture.Create<ApplicationUser>());
 
             // Act
             var actual = await _controller.ResetPassword(user.UserName, null);
@@ -567,12 +585,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 .Setup(x => x.FindByNameAsync(It.Is<string>(n => n == userName)))
                 .ReturnsAsync(() => null);
 
-            var currentUser = _fixture.Create<ApplicationUser>();
-            currentUser.IsAdministrator = false;
-            _userManagerMock
-                .Setup(x => x.FindByNameAsync(It.Is<string>(n => n == null)))
-                .ReturnsAsync(currentUser);
-
             var options = new Mock<IOptions<AuthorizationOptions>>();
             options.SetupGet(x => x.Value)
                 .Returns(() => new AuthorizationOptions
@@ -581,6 +593,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 });
 
             _controller = CreateSecurityController(securityOptions: options);
+
+            SetCurrentUser(_fixture.Create<ApplicationUser>());
 
             // Act
             var actual = await _controller.ChangePassword(userName, new ChangePasswordRequest { NewPassword = "new" });
@@ -596,12 +610,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             // Arrange
             const string userName = "test";
 
-            var currentUser = _fixture.Create<ApplicationUser>();
-            currentUser.IsAdministrator = false;
-            _userManagerMock
-                .Setup(x => x.FindByNameAsync(It.Is<string>(n => n == null)))
-                .ReturnsAsync(currentUser);
-
             var options = new Mock<IOptions<AuthorizationOptions>>();
             options.SetupGet(x => x.Value)
                 .Returns(() =>
@@ -613,6 +621,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 });
 
             _controller = CreateSecurityController(securityOptions: options);
+
+            SetCurrentUser(_fixture.Create<ApplicationUser>());
 
             // Act
             var actual = await _controller.ChangePassword(userName, new ChangePasswordRequest { NewPassword = "new" });

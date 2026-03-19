@@ -1,235 +1,335 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Loader;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
-namespace VirtoCommerce.Platform.Modules
+namespace VirtoCommerce.Platform.Modules;
+
+public class LoadContextAssemblyResolver : IAssemblyResolver
 {
+    private readonly ILogger _logger;
+    private readonly bool _isDevelopmentEnvironment;
+    private readonly Dictionary<string, Assembly> _loadedAssemblies = new();
+    private readonly ConcurrentDictionary<string, List<string>> _nativePathsByName = new();
 
-    public class LoadContextAssemblyResolver : IAssemblyResolver
+    private readonly IList<string> _ignoredAssemblies =
+    [
+        "AspNet.Security.OpenIdConnect.Extensions",
+        "AspNet.Security.OpenIdConnect.Primitives",
+        "AspNet.Security.OpenIdConnect.Server",
+        "OpenIddict.Mvc",
+        "CryptoHelper",
+        "Microsoft.EntityFrameworkCore.Design",
+        "Microsoft.CodeAnalysis",
+        "Microsoft.CodeAnalysis.CSharp",
+        "Microsoft.CodeAnalysis.CSharp.Workspaces",
+        "Microsoft.CodeAnalysis.Workspaces",
+        "Mono.TextTemplating",
+        "System.Composition",
+        "System.Composition.AttributedModel",
+        "System.Composition.Convention",
+        "System.Composition.Hosting",
+        "System.Composition.Runtime",
+        "System.Composition.TypedParts"
+    ];
+
+    public LoadContextAssemblyResolver(ILogger logger, bool isDevelopmentEnvironment)
     {
-        private readonly ILogger<LoadContextAssemblyResolver> _logger;
-        private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
-        private readonly bool _isDevelopmentEnvironment;
+        _logger = logger;
+        _isDevelopmentEnvironment = isDevelopmentEnvironment;
+        AssemblyLoadContext.Default.ResolvingUnmanagedDll += ResolveNativeLibrary;
+    }
 
-        private readonly IList<string> _ignoredAssemblies = new[]
-        {
-            "AspNet.Security.OpenIdConnect.Extensions",
-            "AspNet.Security.OpenIdConnect.Primitives",
-            "AspNet.Security.OpenIdConnect.Server",
-            "OpenIddict.Mvc",
-            "CryptoHelper",
-        };
+    /// <summary>
+    /// Loads specified assembly and all its nested dependencies to default AssemblyLoadContext (ALC).
+    /// </summary>
+    /// <param name="assemblyPath">The path to the assembly to load.</param>
+    /// <exception cref="ModuleInitializeException">If cannot load assembly or its dependencies.</exception>
+    public Assembly LoadAssemblyFrom(string assemblyPath)
+    {
+        var assemblyUri = GetFileUri(assemblyPath);
 
-        public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
+        if (assemblyUri == null)
         {
-            _logger = logger;
-            _isDevelopmentEnvironment = isDevelopmentEnvironment;
+            throw new ArgumentException("The argument must be a valid absolute Uri to an assembly file.", nameof(assemblyPath));
         }
 
-        /// <summary>
-        /// Loads specified assembly and all its nested dependencies to default AssemblyLoadContext (ALC).
-        /// </summary>
-        /// <param name="assemblyPath">The path to the assembly to load.</param>
-        /// <exception cref="ModuleInitializeException">If cannot load assembly or its dependencies.</exception>
-        public Assembly LoadAssemblyFrom(string assemblyPath)
+        if (!File.Exists(assemblyUri.LocalPath))
         {
-            var assemblyUri = GetFileUri(assemblyPath);
+            throw new FileNotFoundException(assemblyUri.LocalPath);
+        }
 
-            if (assemblyUri == null)
+        var assembly = LoadAssemblyWithReferences(assemblyUri.LocalPath, BuildLoadContext(assemblyUri));
+        return assembly;
+    }
+
+
+    private ManagedAssemblyLoadContext BuildLoadContext(Uri assemblyUri)
+    {
+        var assemblyDirectory = Path.GetDirectoryName(assemblyUri.LocalPath);
+        var runtimeConfigFilePath = Path.ChangeExtension(assemblyUri.LocalPath, ".runtimeconfig.json");
+
+        return new ManagedAssemblyLoadContext
+        {
+            PlatformPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+            BasePath = assemblyDirectory,
+            AdditionalProbingPaths = runtimeConfigFilePath.TryGetAdditionalProbingPathFromRuntimeConfig(_isDevelopmentEnvironment, out _),
+        };
+    }
+
+    private Assembly LoadAssemblyWithReferences(string assemblyPath, ManagedAssemblyLoadContext loadContext)
+    {
+        var depsFilePath = Path.ChangeExtension(assemblyPath, ".deps.json");
+
+        if (!File.Exists(depsFilePath))
+        {
+            throw new ModuleInitializeException($"Cannot find \".deps.json\" file for \"{assemblyPath}\".");
+        }
+
+        var mainAssemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
+        Assembly mainAssembly = null;
+
+        // Load all assembly references which we could get through .deps.json file
+        foreach (var dependency in depsFilePath.ExtractDependenciesFromPath())
+        {
+            if (dependency.IsNative)
             {
-                throw new ArgumentException("The argument must be a valid absolute Uri to an assembly file.", nameof(assemblyPath));
+                RegisterNativeLibrary(dependency, loadContext);
+                continue;
             }
 
-            if (!File.Exists(assemblyUri.LocalPath))
+            try
             {
-                throw new FileNotFoundException(assemblyUri.LocalPath);
-            }
+                var loadedAssembly = LoadAssemblyCached(dependency, loadContext);
+                if (loadedAssembly == null)
+                {
+                    // Temporary workaround to ensure seamless update to OpenIddictV3:
+                    // skips unused OpenIddictV2 assemblies that might not be present on the machine from being loaded by modules (in Platform.Security package)
+                    // will be removed later.
+                    if (_ignoredAssemblies.ContainsIgnoreCase(dependency.Name))
+                    {
+                        continue;
+                    }
 
-            var assembly = LoadAssemblyWithReferences(assemblyUri.LocalPath, BuildLoadContext(assemblyUri));
+                    throw GenerateAssemblyLoadException(dependency, assemblyPath);
+                }
+
+                if (mainAssemblyName.EqualsIgnoreCase(loadedAssembly.GetName().Name))
+                {
+                    mainAssembly = loadedAssembly;
+                }
+            }
+            catch (Exception ex) when (ex is not ModuleInitializeException)
+            {
+                throw GenerateAssemblyLoadException(dependency, assemblyPath, ex);
+            }
+        }
+
+        return mainAssembly;
+    }
+
+    private static ModuleInitializeException GenerateAssemblyLoadException(Library dependency, string assemblyPath, Exception innerException = null)
+    {
+        return new ModuleInitializeException($"Cannot load dependency '{dependency.AssetPath}' for assembly '{assemblyPath}'.", innerException);
+    }
+
+    /// <summary>
+    /// Loads assembly to AssemblyLoadContext.Default or gets it from own assembly cache.
+    /// <para>
+    /// Note that only one version of assembly would be loaded and cached by AssemblyName.Name, for all other versions returns cached assembly.
+    /// </para>
+    /// </summary>
+    /// <param name="managedLibrary">Library object containing library name and paths.</param>
+    /// <param name="loadContext">ManagedAssemblyLoadContext object.</param>
+    /// <returns>Returns loaded assembly (could be cached).</returns>
+    private Assembly LoadAssemblyCached(Library managedLibrary, ManagedAssemblyLoadContext loadContext)
+    {
+        if (_loadedAssemblies.TryGetValue(managedLibrary.Name, out var assembly))
+        {
             return assembly;
         }
 
-
-        private ManagedAssemblyLoadContext BuildLoadContext(Uri assemblyUri)
+        var loadedAssembly = LoadAssemblyInternal(managedLibrary, loadContext);
+        if (loadedAssembly != null)
         {
-            var assemblyDirectory = Path.GetDirectoryName(assemblyUri.LocalPath);
-            var runtimeConfigFilePath = Path.ChangeExtension(assemblyUri.LocalPath, ".runtimeconfig.json");
-
-            return new ManagedAssemblyLoadContext()
-            {
-                BasePath = assemblyDirectory,
-                AdditionalProdingPath = runtimeConfigFilePath.TryGetAdditionalProbingPathFromRuntimeConfig(_isDevelopmentEnvironment, out _),
-            };
+            _loadedAssemblies.Add(managedLibrary.Name, loadedAssembly);
         }
 
-        private Assembly LoadAssemblyWithReferences(string assemblyPath, ManagedAssemblyLoadContext loadContext)
-        {
-            var depsFilePath = Path.ChangeExtension(assemblyPath, ".deps.json");
+        return loadedAssembly;
+    }
 
-            if (!File.Exists(depsFilePath))
+    /// <summary>
+    /// Performs loading into AssemblyLoadContext.Default using LoadFromAssemblyName for TPA assemblies and LoadFromAssemblyPath for other dependencies.
+    /// <para>
+    /// Based on https://github.com/natemcmaster/DotNetCorePlugins/blob/8f5c28fa70f0869a1af2e2904536268f184e71de/src/Plugins/Loader/ManagedLoadContext.cs Load method,
+    /// but avoided FileNotFoundException from LoadFromAssemblyName trying only load TPA assemblies that way.
+    /// </para>
+    /// </summary>
+    /// <param name="managedLibrary">Library object containing assembly name and paths.</param>
+    /// <param name="loadContext">ManagedAssemblyLoadContext object.</param>
+    /// <returns>Returns loaded assembly.</returns>
+    private static Assembly LoadAssemblyInternal(Library managedLibrary, ManagedAssemblyLoadContext loadContext)
+    {
+        // To avoid FileNotFoundException for assemblies that are included in TPA - we load them using AssemblyLoadContext.Default.LoadFromAssemblyName.
+        if (Tpa.ContainsAssembly(managedLibrary.FileName))
+        {
+            return AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(managedLibrary.Name));
+        }
+
+        if (TryGetFullPath(managedLibrary, loadContext, out var path))
+        {
+            return AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+        }
+
+        return null;
+    }
+
+    private void RegisterNativeLibrary(Library library, ManagedAssemblyLoadContext loadContext)
+    {
+        if (!TryGetFullPath(library, loadContext, out var path))
+        {
+            return;
+        }
+
+        if (!_nativePathsByName.TryGetValue(library.Name, out var nativePaths))
+        {
+            nativePaths = [];
+            _nativePathsByName[library.Name] = nativePaths;
+        }
+
+        if (!nativePaths.Contains(path))
+        {
+            nativePaths.Add(path);
+            _logger.Debug("Registered native library: {LibraryPath}", path);
+        }
+    }
+
+    private static bool TryGetFullPath(Library library, ManagedAssemblyLoadContext loadContext, out string fullPath)
+    {
+        var paths = library.IsNative
+            ? GetNativeLibraryPaths(library, loadContext)
+            : GetManagedLibraryPaths(library, loadContext);
+
+        foreach (var path in paths.Select(Path.GetFullPath))
+        {
+            if (!File.Exists(path))
             {
-                throw new ModuleInitializeException($"Cannot find \".deps.json\" file for \"{assemblyPath}\".");
+                continue;
             }
 
-            var mainAssemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
-            Assembly mainAssembly = null;
+            fullPath = path;
+            return true;
+        }
 
-            // Load all assembly referencies which we could get through .deps.json file
-            foreach (var dependency in depsFilePath.ExtractDependenciesFromPath())
+        fullPath = null;
+        return false;
+    }
+
+    private static IEnumerable<string> GetNativeLibraryPaths(Library library, ManagedAssemblyLoadContext loadContext)
+    {
+        yield return Path.Combine(loadContext.PlatformPath, library.AssetPath);
+
+        yield return Path.Combine(loadContext.BasePath, library.AssetPath);
+
+        foreach (var searchPath in loadContext.AdditionalProbingPaths)
+        {
+            yield return Path.Combine(searchPath, library.AdditionalProbingPath);
+        }
+    }
+
+    private static IEnumerable<string> GetManagedLibraryPaths(Library library, ManagedAssemblyLoadContext loadContext)
+    {
+        yield return Path.Combine(loadContext.BasePath, library.AppLocalPath);
+
+        foreach (var searchPath in loadContext.AdditionalProbingPaths)
+        {
+            yield return Path.Combine(searchPath, library.AdditionalProbingPath);
+        }
+
+        foreach (var ext in PlatformInformation.ManagedAssemblyExtensions)
+        {
+            yield return Path.Combine(loadContext.BasePath, library.Name + ext);
+        }
+    }
+
+    private IntPtr ResolveNativeLibrary(Assembly assembly, string name)
+    {
+        _logger.Debug("Resolving native library '{LibraryName}' for assembly '{AssemblyName}'", name, assembly.FullName);
+
+        if (!TryGetNativeLibraryPaths(name, out var nativePaths))
+        {
+            _logger.Debug("Not found");
+        }
+        else
+        {
+            foreach (var nativePath in nativePaths)
             {
-                try
+                _logger.Debug("Loading '{LibraryPath}'", nativePath);
+
+                if (NativeLibrary.TryLoad(nativePath, out var handle))
                 {
-                    var loadedAssembly = LoadAssemblyCached(dependency, loadContext);
-                    if (loadedAssembly == null)
-                    {
-                        // Temprorary workaround to ensure seamless update to OpenIddictV3:
-                        // skips unsuded OpenIddictV2 assemblies that might not be present on the machine from being loaded by modules (in Platform.Security package)
-                        // will be removed later.
-                        if (_ignoredAssemblies.Contains(dependency.Name.Name, StringComparer.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
+                    _logger.Debug("Succeeded");
 
-                        throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
-                    }
+                    // Replace the list with a single path to avoid multiple attempts to load the same library
+                    _nativePathsByName.AddOrUpdate(name, [nativePath], (_, oldList) => oldList.Count == 1 ? oldList : [nativePath]);
 
-                    if (mainAssemblyName.EqualsInvariant(loadedAssembly.GetName().Name))
-                    {
-                        mainAssembly = loadedAssembly;
-                    }
+                    return handle;
                 }
-                catch (Exception ex) when (!(ex is ModuleInitializeException))
+
+                _logger.Debug("Failed");
+            }
+        }
+
+        return IntPtr.Zero;
+    }
+
+    private bool TryGetNativeLibraryPaths(string name, out List<string> nativePaths)
+    {
+        if (_nativePathsByName.TryGetValue(name, out nativePaths))
+        {
+            return true;
+        }
+
+        if (!PlatformInformation.NativeLibraryPrefixes.IsNullOrEmpty())
+        {
+            foreach (var prefix in PlatformInformation.NativeLibraryPrefixes)
+            {
+                if (!name.StartsWith(prefix) && _nativePathsByName.TryGetValue(prefix + name, out nativePaths))
                 {
-                    throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath, ex);
+                    return true;
                 }
             }
-
-            return mainAssembly;
         }
 
-        private ModuleInitializeException GenerateAssemblyLoadException(string assemblyPath, string modulePath, Exception innerException = null)
+        return false;
+    }
+
+    private static Uri GetFileUri(string filePath)
+    {
+        if (string.IsNullOrEmpty(filePath))
         {
-            return new ModuleInitializeException($"Cannot load \"{assemblyPath}\" for module \"{modulePath}\".", innerException);
-        }
-
-        /// <summary>
-        /// Loads assembly to AssemblyLoadContext.Default or gets it from own assembly cache.
-        /// <para>
-        /// Note that only one version of assembly would be loaded and cached by AssemblyName.Name, for all other versions returns cached assembly.
-        /// </para>
-        /// </summary>
-        /// <param name="managedLibrary">ManagedLibrary object containing library name and paths.</param>
-        /// <param name="loadContext">ManagedAssemblyLoadContext object.</param>
-        /// <returns>Retures loaded assembly (could be cached).</returns>
-        private Assembly LoadAssemblyCached(ManagedLibrary managedLibrary, ManagedAssemblyLoadContext loadContext)
-        {
-            var assemblyName = managedLibrary.Name;
-            if (_loadedAssemblies.ContainsKey(assemblyName.Name))
-            {
-                return _loadedAssemblies[assemblyName.Name];
-            }
-
-            var loadedAssembly = LoadAssemblyInternal(managedLibrary, loadContext);
-            if (loadedAssembly != null)
-            {
-                _loadedAssemblies.Add(assemblyName.Name, loadedAssembly);
-            }
-            return loadedAssembly;
-        }
-
-        /// <summary>
-        /// Performs loading into AssemblyLoadContext.Default using LoadFromAssemblyName for TPA assemblies and LoadFromAssemblyPath for other dependecies.
-        /// <para>
-        /// Based on https://github.com/natemcmaster/DotNetCorePlugins/blob/8f5c28fa70f0869a1af2e2904536268f184e71de/src/Plugins/Loader/ManagedLoadContext.cs Load method,
-        /// but avoided FileNotFoundException from LoadFromAssemblyName trying only load TPA assemblies that way.
-        /// </para>
-        /// </summary>
-        /// <param name="managedLibrary">ManagedLibrary object containing assembly name and paths.</param>
-        /// <param name="loadContext">ManagedAssemblyLoadContext object.</param>
-        /// <returns>Returns loaded assembly.</returns>
-        private Assembly LoadAssemblyInternal(ManagedLibrary managedLibrary, ManagedAssemblyLoadContext loadContext)
-        {
-            // To avoid FileNotFoundException for assemblies that are included in TPA - we load them using AssemblyLoadContext.Default.LoadFromAssemblyName.
-            var assemblyFileName = Path.GetFileName(managedLibrary.AppLocalPath);
-            if (TPA.ContainsAssembly(assemblyFileName))
-            {
-                var defaultAssembly = AssemblyLoadContext.Default.LoadFromAssemblyName(managedLibrary.Name);
-                if (defaultAssembly != null)
-                {
-                    return defaultAssembly;
-                }
-            }
-
-            if (SearchForLibrary(managedLibrary, loadContext, out var path))
-            {
-                return AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
-            }
-
             return null;
         }
 
-        private bool SearchForLibrary(ManagedLibrary library, ManagedAssemblyLoadContext loadContext, out string path)
+        if (!Uri.TryCreate(filePath, UriKind.Absolute, out var uri))
         {
-            // 1. Check for in _basePath + app local path
-            var localFile = Path.Combine(loadContext.BasePath, library.AppLocalPath);
-            if (File.Exists(localFile))
-            {
-                path = localFile;
-                return true;
-            }
-
-            // 2. Search additional probing paths
-            foreach (var searchPath in loadContext.AdditionalProdingPath)
-            {
-                var candidate = Path.Combine(searchPath, library.AdditionalProbingPath);
-                if (File.Exists(candidate))
-                {
-                    path = candidate;
-                    return true;
-                }
-            }
-
-            // 3. Search in base path
-            foreach (var ext in PlatformInformation.ManagedAssemblyExtensions)
-            {
-                var local = Path.Combine(loadContext.BasePath, library.Name.Name + ext);
-                if (File.Exists(local))
-                {
-                    path = local;
-                    return true;
-                }
-            }
-
-            path = null;
-            return false;
+            return null;
         }
 
-        private static Uri GetFileUri(string filePath)
+        if (!uri.IsFile)
         {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return null;
-            }
-
-            if (!Uri.TryCreate(filePath, UriKind.Absolute, out Uri uri))
-            {
-                return null;
-            }
-
-            if (!uri.IsFile)
-            {
-                return null;
-            }
-
-            return uri;
+            return null;
         }
+
+        return uri;
     }
 }

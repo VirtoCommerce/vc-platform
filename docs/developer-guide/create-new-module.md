@@ -37,8 +37,8 @@ The command calls the template engine to create the artifacts on disk based on t
 | --Author (or -A) | Your name | string | Optional| John Doe |
 | --CompanyName (or -C) | Your company name| string | Optional | VirtoCommerce |
 | --ModuleName (or -M) | Your module name | string | Optional | newModule |
-| --PlatformVersion (or -P) | Required Platform Version | string | Optional | 3.84.0 |
-| --PlatformNuGetPackageVersion (or -Pl) | Required Platform NuGet Package Version | string | Optional | 3.84.0 |
+| --PlatformVersion (or -P) | Required Platform Version | string | Optional | 3.800.0 |
+| --PlatformNuGetPackageVersion (or -Pl) | Required Platform NuGet Package Version | string | Optional | 3.800.0 |
 
 ## Build 
 Virto Commerce CLI should be used to build, test and create a module package.
@@ -71,4 +71,3 @@ If the module is installed properly, you should see the new module in the list o
 * [Essential modularity](../fundamentals/essential-modularity.md)
 * [Virto Commerce CLI](https://docs.virtocommerce.org/CLI-tools/introduction/)
 * [Virto Commerce Module Template on GitHub](https://github.com/VirtoCommerce/vc-cli-module-template)
-* [VC-Build problem on .NET 5.0 and .NET 6.0](https://www.virtocommerce.org/t/vc-build-problem-on-net-5-and-net6/276)

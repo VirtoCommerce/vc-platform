@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Security;
 using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
 
@@ -10,12 +12,14 @@ namespace VirtoCommerce.Platform.Security
         /// <summary>
         /// This header contains logined user name
         /// </summary>
-        private const string CurrentUserNameHeader = "VirtoCommerce-User-Name";
+        private const string _currentUserNameHeader = "VirtoCommerce-User-Name";
 
         /// <summary>
         /// This header contains Login-on-behalf operator user name
         /// </summary>
-        private const string OperatorUserNameHeader = "VirtoCommerce-Operator-User-Name";
+        private const string _operatorUserNameHeader = "VirtoCommerce-Operator-User-Name";
+
+        private const string _anonymousUserName = "http:anonymous";
 
         private static readonly AsyncLocal<string> _currentUserName = new AsyncLocal<string>();
 
@@ -33,18 +37,26 @@ namespace VirtoCommerce.Platform.Security
             var context = _httpContextAccessor.HttpContext;
             if (context != null && context.Request != null && context.User != null)
             {
+                result = _anonymousUserName;
+
                 var identity = context.User.Identity;
                 if (identity != null && identity.IsAuthenticated)
                 {
-                    // Login-on-behalf operator user has a priority over an actual user
-                    var userHeader = context.Request.Headers.ContainsKey(OperatorUserNameHeader) ?
-                        OperatorUserNameHeader :
-                        CurrentUserNameHeader;
+                    // Login-on-behalf operator from token
+                    result = context.User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName);
 
-                    result = context.Request.Headers[userHeader];
                     if (string.IsNullOrEmpty(result))
                     {
-                        result = identity.Name;
+                        // Login-on-behalf operator user has a priority over an actual user
+                        var userHeader = context.Request.Headers.ContainsKey(_operatorUserNameHeader) ?
+                            _operatorUserNameHeader :
+                            _currentUserNameHeader;
+
+                        result = context.Request.Headers[userHeader];
+                        if (string.IsNullOrEmpty(result))
+                        {
+                            result = identity.Name;
+                        }
                     }
                 }
             }

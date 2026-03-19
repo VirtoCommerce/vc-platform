@@ -8,10 +8,15 @@ using VirtoCommerce.Platform.Core.Security.Events;
 
 namespace VirtoCommerce.Platform.Security.Handlers
 {
-    public class LogChangesUserChangedEventHandler : IEventHandler<UserChangedEvent>, IEventHandler<UserLoginEvent>,
-                                                     IEventHandler<UserLogoutEvent>, IEventHandler<UserPasswordChangedEvent>,
-                                                     IEventHandler<UserResetPasswordEvent>, IEventHandler<UserRoleAddedEvent>,
-                                                     IEventHandler<UserRoleRemovedEvent>
+    public class LogChangesUserChangedEventHandler :
+        IEventHandler<UserChangedEvent>,
+        IEventHandler<UserLoginEvent>,
+        IEventHandler<UserLogoutEvent>,
+        IEventHandler<UserPasswordChangedEvent>,
+        IEventHandler<UserResetPasswordEvent>,
+        IEventHandler<UserChangedPasswordEvent>,
+        IEventHandler<UserRoleAddedEvent>,
+        IEventHandler<UserRoleRemovedEvent>
     {
         private readonly IChangeLogService _changeLogService;
 
@@ -64,7 +69,12 @@ namespace VirtoCommerce.Platform.Security.Handlers
 
         public virtual async Task Handle(UserResetPasswordEvent message)
         {
-            await SaveOperationLogAsync(message.UserId, "Password resets", EntryState.Modified);
+            await SaveOperationLogAsync(message.UserId, "Reset password", EntryState.Modified);
+        }
+
+        public async Task Handle(UserChangedPasswordEvent message)
+        {
+            await SaveOperationLogAsync(message.UserId, "Changed password", EntryState.Modified);
         }
 
         public virtual Task Handle(UserRoleAddedEvent message)

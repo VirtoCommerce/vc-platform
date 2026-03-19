@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
-function ($scope, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
+    .controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout', '$translate',
+function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleHelper, $timeout, $translate) {
     $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
@@ -26,92 +26,79 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    function isItemsChecked() {
-        return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
+    function forUpdateItemsChecked() {
+        return $scope.allowInstallModules && $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows()) && !_.any($scope.gridApi.selection.getSelectedRows(), function (row) { return (!row.isInstalled || !row.$alternativeVersion); });
+    }
+
+    function installedItemsChecked() {
+        return $scope.allowInstallModules && $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows()) && !_.any($scope.gridApi.selection.getSelectedRows(), function (row) { return !row.isInstalled; });
+    }
+
+    function newItemsChecked() {
+        return $scope.allowInstallModules && $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows()) && !_.any($scope.gridApi.selection.getSelectedRows(), function (row) { return row.isInstalled; });
     }
 
     // initialize blade.toolbarCommands
     switch (blade.mode) {
+        case 'browse':
+            blade.toolbarCommands = [
+                {
+                    name: "platform.commands.install", icon: 'fas fa-plus',
+                    executeMethod: function () { $scope.confirmActionInDialog('install', $scope.gridApi.selection.getSelectedRows()); },
+                    canExecuteMethod: newItemsChecked,
+                    permission: 'platform:module:manage'
+                },
+                {
+                    name: "platform.commands.update", icon: 'fa fa-arrow-up',
+                    executeMethod: function () { $scope.confirmActionInDialog('update', $scope.gridApi.selection.getSelectedRows()); },
+                    canExecuteMethod: forUpdateItemsChecked,
+                    permission: 'platform:module:manage'
+                },
+                {
+                    name: "platform.commands.uninstall", icon: 'fas fa-trash-alt',
+                    executeMethod: function () { $scope.confirmActionInDialog('uninstall', $scope.gridApi.selection.getSelectedRows()); },
+                    canExecuteMethod: installedItemsChecked,
+                    permission: 'platform:module:manage'
+                },
+                {
+                    name: "platform.commands.grouping",
+                    icon: 'fas fa-cubes',
+                    executeMethod: function () {
+                        blade.isGrouped = !blade.isGrouped;
+                        if (blade.isGrouped) {
+                            this.name = $translate.instant("platform.commands.ungrouping");
+                        }
+                        else {
+                            this.name = $translate.instant("platform.commands.grouping");
+                        }
+                    },
+                    canExecuteMethod: function () { return true; },
+                    permission: 'platform:module:view'
+                }
+            ];
+            break;
         case 'update':
-            blade.toolbarCommands = [{
-                name: "platform.commands.update", icon: 'fa fa-arrow-up',
-                executeMethod: function () { $scope.confirmActionInDialog('update', $scope.gridApi.selection.getSelectedRows()); },
-                canExecuteMethod: isItemsChecked,
-                permission: 'platform:module:manage'
-            }];
-            break;
-        case 'available':
-            blade.toolbarCommands = [{
-                name: "platform.commands.install", icon: 'fas fa-plus',
-                executeMethod: function () { $scope.confirmActionInDialog('install', $scope.gridApi.selection.getSelectedRows()); },
-                canExecuteMethod: isItemsChecked,
-                permission: 'platform:module:manage'
-            }];
-            break;
         case 'installed':
-            blade.toolbarCommands = [{
-                name: "platform.commands.uninstall", icon: 'fas fa-trash-alt',
-                executeMethod: function () { $scope.confirmActionInDialog('uninstall', $scope.gridApi.selection.getSelectedRows()); },
-                canExecuteMethod: isItemsChecked,
-                permission: 'platform:module:manage'
-            }];
+            blade.toolbarCommands = [
+                {
+                    name: "platform.commands.update", icon: 'fa fa-arrow-up',
+                    executeMethod: function () { $scope.confirmActionInDialog('update', $scope.gridApi.selection.getSelectedRows()); },
+                    canExecuteMethod: forUpdateItemsChecked,
+                    permission: 'platform:module:manage'
+                },
+                {
+                    name: "platform.commands.uninstall", icon: 'fas fa-trash-alt',
+                    executeMethod: function () { $scope.confirmActionInDialog('uninstall', $scope.gridApi.selection.getSelectedRows()); },
+                    canExecuteMethod: installedItemsChecked,
+                    permission: 'platform:module:manage'
+                }
+            ];
             break;
     }
 
     $scope.confirmActionInDialog = function (action, selection) {
-        if (_.any(selection)) {
-            bladeNavigationService.closeChildrenBlades(blade, function () {
-                blade.isLoading = true;
-
-                // eliminate duplicating nodes, if any
-                var grouped = _.groupBy(selection, 'id');
-                selection = [];
-                _.each(grouped, function (vals) {
-                    selection.push(_.last(vals));
-                });
-
-                var modulesApiMethod = action === 'uninstall' ? modules.getDependents : modules.getDependencies;
-                modulesApiMethod(selection, function (data) {
-                    blade.isLoading = false;
-
-                    var dialog = {
-                        id: "confirm",
-                        action: action,
-                        selection: selection,
-                        dependencies: data,
-                        callback: function (resume) {
-                            if (resume) {
-                                _.each(selection, function (x) {
-                                    if (!_.findWhere(data, { id: x.id })) {
-                                        data.push(x);
-                                    }
-                                });
-                                modulesApiMethod = action === 'uninstall' ? modules.uninstall : modules.install;
-                                modulesApiMethod(data, onAfterConfirmed, function (error) {
-                                    bladeNavigationService.setError('Error ' + error.status, blade);
-                                });
-                            }
-                        }
-                    }
-                    dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');
-                }, function (error) {
-                    bladeNavigationService.setError('Error ' + error.status, blade);
-                });
-            });
-        }
+        moduleHelper.performAction(action, selection, blade, false);
     }
-
-    function onAfterConfirmed(data) {
-        var newBlade = {
-            id: 'moduleInstallProgress',
-            currentEntity: data,
-            title: blade.title,
-            controller: 'platformWebApp.moduleInstallProgressController',
-            template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, blade);
-    }
-
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
@@ -122,7 +109,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                     showTreeRowHeader: false
                 });
                 break;
-            case 'available':
+            case 'browse':
                 _.extend(gridOptions, {
                     enableGroupHeaderSelection: true
                 });
@@ -132,7 +119,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
         uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
             gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
 
-            if (blade.mode === 'available') {
+            if (blade.mode === 'browse') {
                 $scope.$watch('blade.isGrouped', function (isGrouped) {
                     if (isGrouped) {
                         blade.currentEntities = moduleHelper.moduleBundles;
@@ -141,7 +128,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                         }
                         $timeout(gridApi.treeBase.expandAllRows);
                     } else {
-                        blade.currentEntities = moduleHelper.availableModules;
+                        blade.currentEntities = moduleHelper.existingModules;
                         gridApi.grouping.clearGrouping();
                     }
                 });
@@ -152,9 +139,9 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                         let parentSelected = row.isSelected;
                         _.each(row.treeNode.children, function (treeNode) {
                             if (!parentSelected) {
-                                gridApi.selection.selectRow(treeNode.row.entity);//this is unselect
+                                gridApi.selection.selectRow(treeNode.row.entity); // this is unselect
                             } else {
-                                gridApi.selection.unSelectRow(treeNode.row.entity);//this is select
+                                gridApi.selection.unSelectRow(treeNode.row.entity); // this is select
                             }
                         });
                     }
@@ -186,5 +173,6 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
         $scope.filteredEntitiesCount = visibleCount;
         return renderableRows;
     };
+
     blade.isLoading = false;
 }]);

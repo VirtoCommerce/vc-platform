@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Hangfire;
 using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore.Models;
+using VirtoCommerce.Platform.Security.Model.OpenIddict;
 
 namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
 {
@@ -11,10 +11,10 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
     /// </summary>
     public class PruneExpiredTokensJob
     {
-        private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _openIddictTokenManager;
-        private readonly OpenIddictAuthorizationManager<OpenIddictEntityFrameworkCoreAuthorization> _openIddictAuthorizationManager;
+        private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _openIddictTokenManager;
+        private readonly OpenIddictAuthorizationManager<VirtoOpenIddictEntityFrameworkCoreAuthorization> _openIddictAuthorizationManager;
 
-        public PruneExpiredTokensJob(OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> openIddictTokenManager, OpenIddictAuthorizationManager<OpenIddictEntityFrameworkCoreAuthorization> openIddictAuthorizationManager)
+        public PruneExpiredTokensJob(OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> openIddictTokenManager, OpenIddictAuthorizationManager<VirtoOpenIddictEntityFrameworkCoreAuthorization> openIddictAuthorizationManager)
         {
             _openIddictTokenManager = openIddictTokenManager;
             _openIddictAuthorizationManager = openIddictAuthorizationManager;

@@ -9,19 +9,19 @@ using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.Platform.Core.JsonConverters
 {
     public class PolymorphJsonConverter : JsonConverter
-    {  
+    {
         /// <summary>
         /// Factory methods for create instances of proper classes during deserialization
         /// </summary>
         private static readonly ConcurrentDictionary<Type, Func<JObject, object>> _convertFactories = new ConcurrentDictionary<Type, Func<JObject, object>>();
 
         /// <summary>
-        /// Cache for conversion possibility (to reduce AbstractTypeFactory calls thru reflection)
+        /// Cache for conversion possibility (to reduce AbstractTypeFactory calls via reflection)
         /// </summary>
         private static readonly ConcurrentDictionary<Type, bool> _canConvertCache = new ConcurrentDictionary<Type, bool>();
 
         /// <summary>
-        /// Cache for instance creation method infos (to reduce AbstractTypeFactory calls thru reflection)
+        /// Cache for instance creation method infos (to reduce AbstractTypeFactory calls via reflection)
         /// </summary>
         private static readonly ConcurrentDictionary<string, MethodInfo> _createInstanceMethodsCache = new ConcurrentDictionary<string, MethodInfo>();
 
@@ -44,11 +44,10 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            object result;
             var obj = JObject.Load(reader);
 
             // Create instances for overrides and discriminator-less cases
-            var factory = _convertFactories.GetOrAdd(objectType, obj2 =>
+            var factory = _convertFactories.GetOrAdd(objectType, _ =>
             {
                 var key = CacheKey.With(nameof(PolymorphJsonConverter), objectType.FullName);
                 var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(key, _ => typeof(AbstractTypeFactory<>)
@@ -58,9 +57,9 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 return tryCreateInstance?.Invoke(null, null);
             });
 
-            result = factory(obj);
-
+            var result = factory(obj);
             serializer.Populate(obj.CreateReader(), result);
+
             return result;
         }
 
@@ -70,7 +69,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             {
                 // Create discriminator-defined instances
                 var typeName = type.Name;
-                var pt = obj.GetValue(discriminator, StringComparison.InvariantCultureIgnoreCase);
+                var pt = obj.GetValue(discriminator, StringComparison.OrdinalIgnoreCase);
                 if (pt != null)
                 {
                     typeName = pt.Value<string>();
@@ -79,9 +78,9 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 var key = CacheKey.With(nameof(PolymorphJsonConverter), type.FullName, "+"/* To make a difference in keys for discriminator-specific methods */);
                 var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(key, _ => typeof(AbstractTypeFactory<>)
                     .MakeGenericType(type)
-                    .GetMethod("TryCreateInstance", new Type[] { typeof(string) }));
+                    .GetMethod("TryCreateInstance", [typeof(string)]));
 
-                var result = tryCreateInstance?.Invoke(null, new[] { typeName });
+                var result = tryCreateInstance?.Invoke(null, [typeName]);
                 if (result == null)
                 {
                     throw new NotSupportedException($"Unknown discriminator type name: {typeName}");

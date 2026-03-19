@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Extensions;
 
@@ -83,7 +84,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
             var assembly = Assembly.GetExecutingAssembly();
 
             var resourceNames = assembly.GetManifestResourceNames();
-            var fullResourceName = resourceNames.FirstOrDefault(x => x.Contains(publicKeyResourceName, StringComparison.OrdinalIgnoreCase));
+            var fullResourceName = resourceNames.FirstOrDefault(x => x.ContainsIgnoreCase(publicKeyResourceName));
 
             if (string.IsNullOrEmpty(fullResourceName))
             {

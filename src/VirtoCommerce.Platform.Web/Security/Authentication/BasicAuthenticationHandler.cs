@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
@@ -19,10 +20,9 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             IOptionsMonitor<BasicAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
-            ISystemClock clock,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
-            : base(options, logger, encoder, clock)
+            : base(options, logger, encoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                 var headerValue = values.ToString();
                 const string scheme = "Basic ";
 
-                if (headerValue != null && headerValue.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
+                if (headerValue.StartsWithIgnoreCase(scheme))
                 {
                     encodedCredentials = headerValue.Substring(scheme.Length).Trim();
                 }

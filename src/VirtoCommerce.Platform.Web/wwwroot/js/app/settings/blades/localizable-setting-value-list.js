@@ -56,7 +56,8 @@ angular.module('platformWebApp')
                 if (refreshParent && blade.parentRefresh) {
                     // Pass aliases to the parent blade for compatibility with the platform behavior
                     const aliases = _.pluck(items, 'alias');
-                    blade.parentRefresh(aliases);
+                    const isLocalizable = true;
+                    blade.parentRefresh(aliases, isLocalizable);
                 }
             }
 

@@ -1,8 +1,8 @@
-using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
@@ -26,18 +26,18 @@ namespace VirtoCommerce.Platform.Security
             //need to transform isAdministrator flag and user types into special system roles claims
             if (user.IsAdministrator)
             {
-                result.AddClaim(new Claim(Options.ClaimsIdentity.RoleClaimType, PlatformConstants.Security.SystemRoles.Administrator));
+                result.SetClaim(Options.ClaimsIdentity.RoleClaimType, PlatformConstants.Security.SystemRoles.Administrator);
             }
             else if (userType == UserType.Customer)
             {
-                result.AddClaim(new Claim(Options.ClaimsIdentity.RoleClaimType, PlatformConstants.Security.SystemRoles.Customer));
+                result.SetClaim(Options.ClaimsIdentity.RoleClaimType, PlatformConstants.Security.SystemRoles.Customer);
             }
             else if (userType == UserType.Manager)
             {
-                result.AddClaim(new Claim(Options.ClaimsIdentity.RoleClaimType, PlatformConstants.Security.SystemRoles.Manager));
+                result.SetClaim(Options.ClaimsIdentity.RoleClaimType, PlatformConstants.Security.SystemRoles.Manager);
             }
 
-            result.AddClaim(new Claim(PlatformConstants.Security.Claims.MemberIdClaimType, user.MemberId ?? string.Empty));
+            result.SetClaim(PlatformConstants.Security.Claims.MemberIdClaimType, user.MemberId ?? string.Empty);
             return result;
         }
     }

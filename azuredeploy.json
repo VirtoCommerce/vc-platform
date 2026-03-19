@@ -1,4 +1,5 @@
 {
+    // Azure API versions reference: https://learn.microsoft.com/en-us/azure/templates
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
@@ -10,7 +11,7 @@
         },
         "appServicePlanSkuName": {
             "type": "string",
-            "defaultValue": "S1",
+            "defaultValue": "B2",
             "allowedValues": [
                 "F1",
                 "D1",
@@ -75,7 +76,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2019-06-01",
+            "apiVersion": "2025-01-01",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
             "location": "[resourceGroup().location]",
@@ -83,10 +84,14 @@
                 "name": "[variables('storageType')]",
                 "tier": "Standard"
             },
-            "kind": "StorageV2"
+            "kind": "StorageV2",
+            "properties": {
+                "allowBlobPublicAccess": true,
+                "minimalTlsVersion": "TLS1_2"
+            }
         },
         {
-            "apiVersion": "2014-04-01",
+            "apiVersion": "2023-08-01",
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -97,7 +102,7 @@
             },
             "resources": [
                 {
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2023-08-01",
                     "type": "databases",
                     "name": "[parameters('appServiceName')]",
                     "location": "[resourceGroup().location]",
@@ -115,7 +120,7 @@
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
                     "location": "[resourceGroup().location]",
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2023-08-01",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
                     ],
@@ -127,7 +132,7 @@
             ]
         },
         {
-            "apiVersion": "2018-02-01",
+            "apiVersion": "2024-11-01",
             "type": "Microsoft.Web/serverfarms",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -143,7 +148,7 @@
             }
         },
         {
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2024-11-01",
             "type": "Microsoft.Web/sites",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
@@ -213,7 +218,7 @@
                             "value": "dotnet"
                         }
                     ],
-                    "netFrameworkVersion": "v6.0",
+                    "netFrameworkVersion": "v8.0",
                     "virtualApplications": [
                         {
                             "virtualPath": "/",
@@ -230,7 +235,7 @@
             },
             "resources": [
                 {
-                    "apiVersion": "2018-11-01",
+                    "apiVersion": "2024-11-01",
                     "name": "web",
                     "type": "sourcecontrols",
                     "dependsOn": [

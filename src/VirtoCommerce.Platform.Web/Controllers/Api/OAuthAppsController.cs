@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore.Models;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Web.Model.Security;
+using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -17,23 +18,28 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class OAuthAppsController : Controller
     {
-        private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> _manager;
+        private readonly OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> _manager;
 
         private readonly ISet<string> _defaultPermissions = new HashSet<string>
         {
             OpenIddictConstants.Permissions.Endpoints.Authorization,
+            OpenIddictConstants.Permissions.Endpoints.EndSession,
             OpenIddictConstants.Permissions.Endpoints.Token,
             OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
-            OpenIddictConstants.Permissions.GrantTypes.ClientCredentials
+            OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
+            OpenIddictConstants.Permissions.ResponseTypes.Code,
+            OpenIddictConstants.Permissions.Scopes.Email,
+            OpenIddictConstants.Permissions.Scopes.Profile,
         };
 
-        public OAuthAppsController(OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> manager)
+        public OAuthAppsController(OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> manager)
         {
             _manager = manager;
         }
 
         [HttpGet]
         [Route("new")]
+        [Authorize(Permissions.SecurityOAuthApplicationsCreate)]
         public ActionResult<OpenIddictApplicationDescriptor> New()
         {
             var app = new OpenIddictApplicationDescriptor
@@ -41,7 +47,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 DisplayName = "New application",
                 ClientId = Guid.NewGuid().ToString(),
                 ClientSecret = Guid.NewGuid().ToString(),
-                Type = OpenIddictConstants.ClientTypes.Confidential
+                ClientType = OpenIddictConstants.ClientTypes.Confidential,
             };
 
             app.Permissions.AddRange(_defaultPermissions);
@@ -50,6 +56,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("")]
+        [Authorize(Permissions.SecurityOAuthApplicationsUpdate)]
         public async Task<ActionResult<OpenIddictApplicationDescriptor>> SaveAsync(OpenIddictApplicationDescriptor descriptor)
         {
             descriptor.Permissions.Clear();
@@ -77,6 +84,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpDelete]
         [Route("")]
+        [Authorize(Permissions.SecurityOAuthApplicationsDelete)]
         public async Task<ActionResult> DeleteAsync([FromQuery] string[] clientIds)
         {
             var apps = await _manager.ListAsync(x => x.Where(y => clientIds.Contains(y.ClientId))).ToListAsync();
@@ -91,6 +99,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("search")]
+        [Authorize(Permissions.SecurityOAuthApplicationsRead)]
         public async Task<ActionResult<OAuthAppSearchResult>> SearchAsync(OAuthAppSearchCriteria criteria)
         {
             if (criteria.Sort.IsNullOrEmpty())
@@ -98,15 +107,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 criteria.Sort = "DisplayName:ASC";
             }
 
-            var apps = _manager.ListAsync(x => x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take)).ToEnumerable();
+            var apps = _manager.ListAsync(x => x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take));
 
-            var appsTasks = apps.Select(async x =>
+            var appsTasks = await apps.Select(async x =>
                 {
                     var descriptor = new OpenIddictApplicationDescriptor();
                     await _manager.PopulateAsync(descriptor, x);
                     descriptor.ClientSecret = "";
                     return descriptor;
-                }).ToList();
+                }).ToListAsync();
 
             var result = new OAuthAppSearchResult
             {

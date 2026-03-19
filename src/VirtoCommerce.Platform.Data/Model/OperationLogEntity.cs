@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public string OperationType { get; set; }
 
 
-        [StringLength(1024)]
+        [StringLength(2048)]
         public string Detail { get; set; }
 
         public virtual OperationLog ToModel(OperationLog operation)

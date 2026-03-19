@@ -93,7 +93,7 @@ body
 
 .swagger-section .swagger-ui-wrap ul#resources,
 .swagger-ui .opblock-tag,
-.swagger-ui .opblock-tag small
+.swagger-ui .opblock-tag small,
 .swagger-ui .opblock .opblock-summary-operation-id,
 .swagger-ui .opblock .opblock-summary-path,
 .swagger-ui .opblock .opblock-summary-path__deprecated,
@@ -126,12 +126,28 @@ body
 
 .swagger-ui .opblock-tag
 {
-    /* display: block; */
-    clear: none;
-    float: left;
+    display: block !important;
+    position: relative;
     font-weight: bold;
     font-size: 1.3em;
-    padding: 10px 0 10px 0;
+    padding: 10px 40px 10px 0;
+}
+
+.swagger-ui .opblock-tag small
+{
+    margin-top: 5px;
+    padding: 0;
+}
+
+.swagger-ui .opblock-tag small .renderedMarkdown p {
+    margin: 5px 0;
+}
+
+.swagger-ui .opblock-tag .expand-operation {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%
 }
 
 .swagger-ui .opblock
@@ -139,17 +155,17 @@ body
     border-radius: 0px;
 }
 
-.swagger-ui .opblock .opblock-summary-operation-id, 
-.swagger-ui .opblock .opblock-summary-path, 
+.swagger-ui .opblock .opblock-summary-operation-id,
+.swagger-ui .opblock .opblock-summary-path,
 .swagger-ui .opblock .opblock-summary-path__deprecated,
-.swagger-ui .opblock .opblock-summary-method 
+.swagger-ui .opblock .opblock-summary-method
 {
     font-family: 'Exo 2';
     font-weight: bold;
     font-size: 0.9em;
 }
 
-.swagger-ui .opblock .opblock-summary-method 
+.swagger-ui .opblock .opblock-summary-method
 {
     padding: 5px;
     border-radius:0;

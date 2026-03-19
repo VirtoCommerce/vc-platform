@@ -24,20 +24,36 @@ namespace VirtoCommerce.Platform.Web.Controllers
         private readonly WebAnalyticsOptions _webAnalyticsOptions;
         private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly LicenseProvider _licenseProvider;
+        private readonly PlatformUIOptions _platformUIOptions;
         private readonly ISettingsManager _settingsManager;
 
-        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions, IOptions<PushNotificationOptions> pushNotificationOptions, LicenseProvider licenseProvider, ISettingsManager settingsManager)
+        public HomeController(
+            IOptions<PlatformOptions> platformOptions,
+            IOptions<WebAnalyticsOptions> webAnalyticsOptions,
+            IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
+            IOptions<PushNotificationOptions> pushNotificationOptions,
+            IOptions<PlatformUIOptions> platformUIOptions,
+            LicenseProvider licenseProvider,
+            ISettingsManager settingsManager)
         {
             _platformOptions = platformOptions.Value;
             _webAnalyticsOptions = webAnalyticsOptions.Value;
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _pushNotificationOptions = pushNotificationOptions.Value;
+            _platformUIOptions = platformUIOptions.Value;
             _licenseProvider = licenseProvider;
             _settingsManager = settingsManager;
         }
 
         public async Task<ActionResult> Index()
         {
+            if (!_platformUIOptions.Enable)
+            {
+                return Forbid();
+            }
+
+            var envBannerOptions = _platformUIOptions.EnvironmentBanner ?? new EnvironmentBannerOptions();
+
             var model = new IndexModel
             {
                 PlatformVersion = new HtmlString(Core.Common.PlatformVersion.CurrentVersion.ToString()),
@@ -45,7 +61,10 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 DemoResetTime = new HtmlString(_platformOptions.DemoResetTime ?? "''"),
                 WebAnalyticsOptions = _webAnalyticsOptions,
                 RefreshProbingFolder = _localStorageModuleCatalogOptions.RefreshProbingFolderOnStart,
-                ForceWebSockets = _pushNotificationOptions.ForceWebSockets
+                ForceWebSockets = _pushNotificationOptions.ForceWebSockets,
+                ShowEnvironmentBanner = envBannerOptions.Enable,
+                EnvironmentName = new HtmlString(envBannerOptions.Name),
+                EnvironmentTheme = new HtmlString(envBannerOptions.ThemePreset)
             };
 
             var license = _licenseProvider.GetLicense();

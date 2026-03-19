@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Core.Bus;
+using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.DeveloperTools;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
@@ -28,7 +30,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
 
             // This is an important workaround of Hangfire initialization issues
             // The standard database schema initialization way described at the page https://docs.hangfire.io/en/latest/configuration/using-sql-server.html works on an existing database only.
-            // Therefore we create SqlServerStorage for Hangfire manually here.
+            // Therefore, we create SqlServerStorage for Hangfire manually here.
             // This way we ensure Hangfire schema will be applied to storage AFTER platform database creation.
             var hangfireOptions = appBuilder.ApplicationServices.GetRequiredService<IOptions<HangfireOptions>>().Value;
             if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer ||
@@ -41,19 +43,20 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
                 switch (databaseProvider)
                 {
                     case "PostgreSql":
-                        storage = new PostgreSqlStorage(connectionString, hangfireOptions.PostgreSqlStorageOptions);
+                        hangfireGlobalConfiguration.UsePostgreSqlStorage(options =>
+                            options.UseNpgsqlConnection(connectionString), hangfireOptions.PostgreSqlStorageOptions);
                         break;
                     case "MySql":
                         storage = new MySqlStorage(connectionString, hangfireOptions.MySqlStorageOptions);
+                        hangfireGlobalConfiguration.UseStorage(storage);
                         break;
                     default:
                         storage = new SqlServerStorage(connectionString, hangfireOptions.SqlServerStorageOptions);
+                        hangfireGlobalConfiguration.UseStorage(storage);
                         break;
                 }
 
-                hangfireGlobalConfiguration.UseStorage(storage);
                 hangfireGlobalConfiguration.UseConsole();
-
             }
 
             appBuilder.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
@@ -61,14 +64,20 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             var mvcJsonOptions = appBuilder.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
 
-            var inProcessBus = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
-            var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
-            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
-            inProcessBus.RegisterHandler<ObjectSettingChangedEvent>(async (message, token) => await recurringJobManager.HandleSettingChangeAsync(settingsManager, message));
+            appBuilder.RegisterEventHandler<ObjectSettingChangedEvent, RecurringJobService>();
 
             // Add Hangfire filters/middlewares
             var userNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<IUserNameResolver>();
             GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(userNameResolver));
+
+            var toolRegistrar = appBuilder.ApplicationServices.GetService<IDeveloperToolRegistrar>();
+            toolRegistrar.RegisterDeveloperTool(new DeveloperToolDescriptor
+            {
+                Name = "Hangfire",
+                Url = "/hangfire",
+                SortOrder = 20,
+                Permission = PlatformConstants.Security.Permissions.BackgroundJobsManage,
+            });
 
             return appBuilder;
         }

@@ -5,6 +5,6 @@ namespace VirtoCommerce.Platform.Core.Messages
 {
     public interface ICancellableHandler<in T> where T : IMessage
     {
-        Task Handle(T message, CancellationToken token = default(CancellationToken));
+        Task Handle(T message, CancellationToken cancellationToken = default);
     }
 }

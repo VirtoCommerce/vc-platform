@@ -1,0 +1,190 @@
+{
+  "platform": {
+    "commands": {
+      "add": "Legg til",
+      "activate": "Aktiver",
+      "assign": "Tildel",
+      "cancel": "Avbryt",
+      "clear": "Tøm",
+      "clear-all": "Tøm alle",
+      "clone": "Klon",
+      "close": "Lukk",
+      "confirm": "Bekreft",
+      "copy-link": "Kopier lenke",
+      "copy": "Kopier",
+      "create": "Opprett",
+      "cut": "Klipp ut",
+      "delete": "Slett",
+      "add-all": "Legg til alle",
+      "remove-all": "Slett alle",
+      "download": "Last ned",
+      "edit": "Rediger",
+      "export": "Eksporter",
+      "generate": "Generer",
+      "import": "Importer",
+      "import-sample-data": "Importer eksempeldata",
+      "install": "Installer",
+      "grouping": "Vis pakker",
+      "ungrouping": "Skjul pakker",
+      "manage": "Administrer",
+      "more": "Mer",
+      "no": "Nei",
+      "new-folder": "Ny mappe",
+      "new-license": "Forny lisens",
+      "ok": "OK",
+      "paste": "Lim inn",
+      "pick-selected": "Velg merkede",
+      "preview": "Forhåndsvisning",
+      "open-browser": "Åpne i nettleser",
+      "redo": "Gjør om",
+      "refresh": "Oppdater",
+      "remove": "Fjern",
+      "reset": "Tilbakestill",
+      "restart": "Start på nytt",
+      "save": "Lagre",
+      "send": "Send",
+      "select-all": "Velg alle",
+      "set-to-default": "Sett til standard",
+      "start-export": "Start eksport",
+      "settings": "Innstillinger",
+      "sign-out": "Logg ut",
+      "undo": "Angre",
+      "uninstall": "Avinstaller",
+      "unselect-all": "Fjern valg for alle",
+      "update": "Oppdater",
+      "upload": "Last opp",
+      "yes": "Ja",
+      "add-new-property": "Legg til ny egenskap",
+      "manage-type-properties": "Typer egenskaper",
+      "manage-profile": "Administrer profil",
+      "minimize": "Minimer",
+      "maximize": "Maksimer",
+      "stop-sending": "Stopp sending",
+      "set-active": "Sett aktiv",
+      "reject-user": "Avvis bruker",
+      "change-password": "Endre passord",
+      "unlock-account": "Lås opp konto",
+      "lock-account": "Lås konto",
+      "today": "I dag",
+      "time": "Tid",
+      "now": "Nå",
+      "date": "Dato",
+      "see-details": "Se detaljer",
+      "dismiss": "Avvis",
+      "hide-empty-property-values": "Skjul tomme verdier",
+      "show-empty-property-values": "Vis tomme verdier",
+      "titles": {
+        "refresh": "Oppdater",
+        "new-folder": "Ny mappe",
+        "upload": "Last opp"
+      }
+    },
+    "list": {
+      "no-data": "Ingen data",
+      "count": "Antall",
+      "loading": "Laster...",
+      "item-not-found": "Feil: Ikke funnet"
+    },
+    "placeholders": {
+      "n-a": "Ikke tilgjengelig",
+      "no-file": "Velg fil",
+      "search-keyword": "Søkeord...",
+      "select-value": "Velg verdi",
+      "select-values": "Velg verdi"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Bekreft sletting",
+        "message": "Er du sikker på at du vil slette valgte oppføringer?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Kort tekst",
+        "description": "Tekstverdier under 1024 tegn"
+      },
+      "long-text": {
+        "title": "Lang tekst",
+        "description": "Ubegrenset tekst uten størrelsesbegrensning"
+      },
+      "integer": {
+        "title": "Heltall",
+        "description": "Heltall"
+      },
+      "decimal": {
+        "title": "Desimaltall",
+        "description": "Desimaltall med presisjon 18 og skala 4"
+      },
+      "date-time": {
+        "title": "Dato og tid",
+        "description": "Velg dato"
+      },
+      "boolean": {
+        "title": "Boolsk",
+        "description": "Brytertype"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "HTML-merking"
+      },
+      "undefined": {
+        "title": "Udefinert"
+      },
+      "image": {
+        "title": "Bilde",
+        "description": "Bildetype"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "Skriv inn kort tekst",
+        "secure-string": "Skriv inn hemmelig tekst",
+        "email": "Skriv inn e-post",
+        "url": "Skriv inn URL",
+        "long-text": "Skriv inn lang tekst",
+        "integer": "Skriv inn heltall",
+        "number": "Skriv inn desimaltall",
+        "date-time": "Velg dato",
+        "short-text-multivalue": "Legg til verdi",
+        "integer-multivalue": "Legg til heltall",
+        "number-multivalue": "Legg til desimaltall",
+        "short-text-dictionary": "Velg verdi",
+        "short-text-dictionary-multivalue": "Velg verdi",
+        "short-text-multilang": "Skriv inn verdi",
+        "long-text-multilang": "Skriv inn verdi",
+        "short-text-multivalue-multilang": "Legg til verdi",
+        "short-text-dictionary-multilang": "Velg verdi",
+        "short-text-dictionary-multivalue-multilang": "Velg verdi",
+        "long-text-dictionary-multivalue-multilang": "Velg verdi"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "Skriv inn verdi",
+      "required": "Dette feltet er obligatorisk",
+      "maxLength": "Dette feltet kan ikke inneholde mer enn {{number}} tegn"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Ugyldig URI-format. Sørg for at URI ikke har spørringsparametere"
+      }
+    },
+    "errors": {
+      "generic-error": "Feil",
+      "400": "Ugyldig forespørsel",
+      "401": "Ikke autorisert",
+      "403": "Forbudt",
+      "404": "Ikke funnet",
+      "405": "Metode ikke tillatt",
+      "406": "Ikke akseptabel",
+      "407": "Proxy-autentisering kreves",
+      "408": "Forespørsels-timeout",
+      "409": "Konflikt",
+      "429": "For mange forespørsler",
+      "500": "Intern serverfeil",
+      "501": "Ikke implementert",
+      "502": "Dårlig gateway",
+      "503": "Tjeneste utilgjengelig",
+      "504": "Gateway-timeout"
+    }
+  }
+}

@@ -4,7 +4,7 @@ window.$ = $; // Ugly hack
 import _ from 'underscore';
 window._ = _;
 
-import YAML from 'yamljs';
+import YAML from 'yaml';
 window.YAML = YAML;
 
 import { marked } from 'marked';
@@ -12,13 +12,21 @@ window.marked = marked;
 
 import CodeMirror from 'codemirror/lib/codemirror.js';
 window.CodeMirror = CodeMirror;
+
+import jsonlint from 'jsonlint-mod';
+window.jsonlint = jsonlint; // This line is essential
+
 import 'codemirror/mode/xml/xml.js';
 import 'codemirror/mode/gfm/gfm.js';
 import 'codemirror/mode/htmlmixed/htmlmixed.js';
 import 'codemirror/mode/markdown/markdown.js';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/mode/overlay.js';
+import 'codemirror/addon/lint/lint.js';
+import 'codemirror/addon/lint/json-lint.js';
+import 'codemirror/addon/lint/lint.css';
 import 'codemirror/lib/codemirror.css';
+
 
 import UIkit from 'uikit';
 window.UIkit = UIkit;
@@ -26,7 +34,8 @@ import 'uikit/dist/js/components/htmleditor.js';
 import 'uikit/dist/css/components/htmleditor.css';
 import 'uikit/dist/css/uikit.css';
 
-import 'webpack-jquery-ui';
+import 'jquery-ui';
+import 'jquery-ui/ui/widgets/sortable';
 import 'angular';
 import '@uirouter/angularjs';
 import 'angularjs-scroll-glue';
@@ -38,7 +47,7 @@ import 'angular-cookies';
 import 'angular-file-upload';
 import 'angular-moment';
 import 'angular-resource';
-import 'angular-ui-grid';
+import 'angular-ui-grid/ui-grid';
 import 'ui-grid-draggable-rows';
 import 'ui-select';
 import 'angular-ui-sortable';

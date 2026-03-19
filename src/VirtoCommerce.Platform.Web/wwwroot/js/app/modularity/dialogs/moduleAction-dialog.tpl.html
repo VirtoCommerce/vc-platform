@@ -1,4 +1,4 @@
-﻿<div class="modal-window">
+<div class="modal-window">
     <div class="modal-window__header modal-window__header--confirm">
         <div class="modal-window__title" ng-if="action==='install'">{{ 'platform.dialogs.module-action.title-install' | translate }}</div>
         <div class="modal-window__title" ng-if="action==='update'">{{ 'platform.dialogs.module-action.title-update' | translate }}</div>
@@ -13,7 +13,7 @@
             <p ng-if="action==='update'">{{ 'platform.dialogs.module-action.message0-update' | translate }}</p>
             <p ng-if="action==='uninstall'">{{ 'platform.dialogs.module-action.message0-delete' | translate }}</p>
             <ul class="item-list-clearfix">
-                <li ng-repeat="data in selection">{{data.id}} ({{action==='update' ? data.$alternativeVersion + ' &#8658; ' : ''}}{{data.version}})</li>
+                <li ng-repeat="data in selection">{{data.id}} ({{action==='update' && data.$installedVersion ? data.$installedVersion  + ' &#8658; ' : ''}}{{data.version}})</li>
             </ul>
             <div ng-if="dependencies.length">
                 <br>

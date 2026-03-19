@@ -1,8 +1,8 @@
 const { contains } = require("underscore");
 
 angular.module('platformWebApp')
-    .controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate', 'THEME_SETTINGS',
-        function ($window, modules, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate, THEME_SETTINGS) {
+    .controller('platformWebApp.settingGroupListController', ['platformWebApp.modulesApi', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate', 'THEME_SETTINGS',
+        function (modulesApi, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate, THEME_SETTINGS) {
             var settingsTree;
             var blade = $scope.blade;
 
@@ -92,7 +92,7 @@ angular.module('platformWebApp')
                             id: 'settingsSection',
                             data: selectedSettings,
                             headIcon: node.icon || '',
-                            title: node.name || 'platform.blades.settings-detail.title',
+                            title: node.groupName || 'platform.blades.settings-detail.title',
                             disableOpenAnimation: disableOpenAnimation,
                             controller: node.controller || 'platformWebApp.settingsDetailController',
                             template: node.template || '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html',
@@ -147,7 +147,9 @@ angular.module('platformWebApp')
 
             blade.toolbarCommands = [
                 {
-                    name: "platform.commands.restart", icon: 'fa fa-bolt',
+                    name: "platform.commands.restart",
+                    title: "platform.commands.restart-application-title",
+                    icon: 'fa fa-bolt',
                     executeMethod: function () { restart(); },
                     canExecuteMethod: function () { return !blade.isLoading; },
                     permission: 'platform:module:manage'
@@ -163,7 +165,7 @@ angular.module('platformWebApp')
                         if (confirm) {
                             blade.isLoading = true;
                             try {
-                                modules.restart(function () {
+                                modulesApi.restart(function () {
                                     //$window.location.reload(); returns 400 bad request due server restarts
                                 });
                             }

@@ -26,8 +26,10 @@ angular.module("platformWebApp")
                     names.length = 0;
                     settings = {};
                     response.settings.forEach(function (setting) {
-                        names.push(setting.name);
                         settings[setting.name] = setting.items;
+                        if (setting.isLocalizable) {
+                            names.push(setting.name);
+                        }
                     });
                     languages = response.languages;
                     return response;

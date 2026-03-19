@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Core.Settings
 
         public static async Task DeepSaveSettingsAsync(this ISettingsManager manager, IHasSettings entry)
         {
-            await manager.DeepSaveSettingsAsync(new[] { entry });
+            await manager.DeepSaveSettingsAsync([entry]);
         }
         /// <summary>
         /// Deep save entity and all nested objects settings values
@@ -99,7 +99,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// </summary>
         public static async Task DeepRemoveSettingsAsync(this ISettingsManager manager, IHasSettings entry)
         {
-            await manager.DeepRemoveSettingsAsync(new[] { entry });
+            await manager.DeepRemoveSettingsAsync([entry]);
         }
 
         /// <summary>
@@ -118,18 +118,6 @@ namespace VirtoCommerce.Platform.Core.Settings
                 foDeleteSettings.AddRange(haveSettingsObjects.SelectMany(x => x.Settings).Distinct());
             }
             await manager.RemoveObjectSettingsAsync(foDeleteSettings);
-        }
-
-        [Obsolete("Use GetValue<>(SettingDescriptor)")]
-        public static TValue GetValueByDescriptor<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
-        {
-            return manager.GetValueAsync<TValue>(descriptor).GetAwaiter().GetResult();
-        }
-
-        [Obsolete("Use GetValueAsync<>(SettingDescriptor)")]
-        public static Task<TValue> GetValueByDescriptorAsync<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
-        {
-            return manager.GetValueAsync<TValue>(descriptor);
         }
 
         /// <summary>
@@ -153,18 +141,6 @@ namespace VirtoCommerce.Platform.Core.Settings
             }
 
             return manager.GetValueInternalAsync(descriptor.Name, defaultValue);
-        }
-
-        [Obsolete("Use GetValue<>(SettingDescriptor)")]
-        public static T GetValue<T>(this ISettingsManager manager, string name, T defaultValue)
-        {
-            return manager.GetValueInternalAsync(name, defaultValue).GetAwaiter().GetResult();
-        }
-
-        [Obsolete("Use GetValueAsync<>(SettingDescriptor)")]
-        public static Task<T> GetValueAsync<T>(this ISettingsManager manager, string name, T defaultValue)
-        {
-            return manager.GetValueInternalAsync(name, defaultValue);
         }
 
         private static async Task<T> GetValueInternalAsync<T>(this ISettingsManager manager, string name, T defaultValue)
@@ -196,7 +172,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         {
             var objectSetting = await manager.GetObjectSettingAsync(name);
             objectSetting.Value = value;
-            await manager.SaveObjectSettingsAsync(new[] { objectSetting });
+            await manager.SaveObjectSettingsAsync([objectSetting]);
         }
 
         public static TValue GetValue<TValue>(this IEnumerable<ObjectSettingEntry> objectSettings, SettingDescriptor descriptor)
@@ -211,16 +187,10 @@ namespace VirtoCommerce.Platform.Core.Settings
             return objectSettings.GetValueInternal(descriptor.Name, defaultValue);
         }
 
-        [Obsolete("Use GetValue<>(SettingDescriptor)", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public static T GetSettingValue<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaultValue)
-        {
-            return objectSettings.GetValueInternal(settingName, defaultValue);
-        }
-
         private static T GetValueInternal<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaultValue)
         {
             var retVal = defaultValue;
-            var setting = objectSettings.FirstOrDefault(x => x.Name.EqualsInvariant(settingName));
+            var setting = objectSettings.FirstOrDefault(x => x.Name.EqualsIgnoreCase(settingName));
             if (setting != null && setting.Value != null)
             {
                 retVal = (T)Convert.ChangeType(setting.Value, typeof(T), CultureInfo.InvariantCulture);

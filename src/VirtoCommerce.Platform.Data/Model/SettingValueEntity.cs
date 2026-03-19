@@ -108,7 +108,7 @@ namespace VirtoCommerce.Platform.Data.Model
                     return BooleanValue.ToString();
 
                 case SettingValueType.DateTime:
-                    return DateTimeValue == null ? null : DateTimeValue.Value.ToString(formatProvider);
+                    return DateTimeValue == null ? string.Empty : DateTimeValue.Value.ToString(formatProvider);
 
                 case SettingValueType.Decimal:
                     return DecimalValue.ToString(formatProvider);

@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DeveloperTools;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Swagger;
 
@@ -22,9 +25,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
 {
     public static class SwaggerServiceCollectionExtensions
     {
-        public static string platformDocName { get; } = "VirtoCommerce.Platform";
-        public static string platformUIDocName { get; } = "PlatformUI";
-        private static string oauth2SchemeName = "oauth2";
+        public static string PlatformDocName => "VirtoCommerce.Platform";
+        public static string PlatformUIDocName => "PlatformUI";
 
         /// <summary>
         /// Register swagger documents generator
@@ -68,52 +70,37 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     }
                 };
 
-                c.SwaggerDoc(platformDocName, platformInfo);
-                c.SwaggerDoc(platformUIDocName, platformInfo);
+                c.SwaggerDoc(PlatformDocName, platformInfo);
+                c.SwaggerDoc(PlatformUIDocName, platformInfo);
 
                 foreach (var module in modules)
                 {
                     c.SwaggerDoc(module.ModuleName, new OpenApiInfo { Title = $"{module.Id}", Version = "v1" });
                 }
 
-                c.TagActionsBy(api => api.GroupByModuleName(services));
+                c.TagActionsBy(api => [api.GetModuleName(provider)]);
                 c.IgnoreObsoleteActions();
                 c.DocumentFilter<ExcludeRedundantDepsFilter>();
+                c.DocumentFilter<ModuleInfoFilter>();
                 // This temporary filter removes broken "application/*+json" content-type.
                 // It seems it's some openapi/swagger bug, because Autorest fails.
                 c.OperationFilter<ConsumeFromBodyFilter>();
                 c.OperationFilter<FileResponseTypeFilter>();
                 c.OperationFilter<OptionalParametersFilter>();
                 c.OperationFilter<ArrayInQueryParametersFilter>();
-                c.OperationFilter<SecurityRequirementsOperationFilter>();
-                c.OperationFilter<TagsFilter>();
+                c.OperationFilter<UploadFileOperationFilter>();
+                c.OperationFilter<ModuleInfoFilter>();
                 c.OperationFilter<OpenIDEndpointDescriptionFilter>();
-                c.SchemaFilter<EnumSchemaFilter>();
                 c.SchemaFilter<SwaggerIgnoreFilter>();
-                c.MapType<object>(() => new OpenApiSchema { Type = "object" });
-                c.AddModulesXmlComments(services);
+                c.MapType<object>(() => new OpenApiSchema { Type = JsonSchemaType.Object });
+                c.AddModulesXmlComments(provider);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
-                c.AddSecurityDefinition(oauth2SchemeName, new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Description = "OAuth2 Resource Owner Password Grant flow",
-                    Flows = new OpenApiOAuthFlows()
-                    {
-                        Password = new OpenApiOAuthFlow()
-                        {
-                            TokenUrl = new Uri($"/connect/token", UriKind.Relative)
-                        }
-                    },
-                });
 
-                c.DocInclusionPredicate((docName, apiDesc) =>
-                {
-                    return DocInclusionPredicateCustomStrategy(modules, docName, apiDesc);
-                });
+                c.AddSecuritySchemes();
 
+                c.DocInclusionPredicate((docName, apiDesc) => DocInclusionPredicateCustomStrategy(modules, docName, apiDesc));
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-
                 c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
 
                 if (useAllOfToExtendReferenceSchemas)
@@ -124,32 +111,31 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
             // But we need this, because PlatformUI document should contain ref schema ids as type.FullName to avoid conflict with same type names in different modules.
-            // As a solution we use custom swagger generator that catches document name and generates schemaids depending on it
-            services.AddTransient<ISwaggerProvider, CustomSwaggerGenerator>();
+            // As a solution we use custom swagger generator that catches document name and generates schema ids depending on it.
+            services.AddTransient<IAsyncSwaggerProvider, CustomSwaggerGenerator>();
 
             //This is important line switches the SwaggerGenerator to use the Newtonsoft contract resolver that uses the globally registered PolymorphJsonContractResolver
             //to propagate up to the resulting OpenAPI schema the derived types instead of base domain types
             services.AddSwaggerGenNewtonsoftSupport();
-
         }
 
         private static bool DocInclusionPredicateCustomStrategy(ManifestModuleInfo[] modules, string docName, ApiDescription apiDesc)
         {
-            // It's an UI endpoint, return all to correctly build swagger UI page
-            if (docName.EqualsInvariant(platformUIDocName))
+            // It's a UI endpoint, return all to correctly build swagger UI page
+            if (docName.EqualsIgnoreCase(PlatformUIDocName))
             {
                 return true;
             }
 
             // It's a platform endpoint.
             var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
-            if (docName.EqualsInvariant(platformDocName) && currentAssembly.FullName.StartsWith(docName))
+            if (docName.EqualsIgnoreCase(PlatformDocName) && currentAssembly.FullName?.StartsWith(docName) == true)
             {
                 return true;
             }
 
-            // It's a module endpoint. 
-            var module = modules.FirstOrDefault(m => m.ModuleName.EqualsInvariant(docName));
+            // It's a module endpoint.
+            var module = modules.FirstOrDefault(m => m.ModuleName.EqualsIgnoreCase(docName));
             return module != null && module.Assembly == currentAssembly;
         }
 
@@ -168,7 +154,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             applicationBuilder.UseSwagger(c =>
             {
                 c.RouteTemplate = "docs/{documentName}/swagger.{json|yaml}";
-                c.PreSerializeFilters.Add((swagger, httpReq) =>
+                c.PreSerializeFilters.Add((_, _) =>
                 {
                 });
 
@@ -179,9 +165,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             applicationBuilder.UseSwaggerUI(c =>
             {
-                // Json Format Support 
-                c.SwaggerEndpoint($"./{platformUIDocName}/swagger.json", platformUIDocName);
-                c.SwaggerEndpoint($"./{platformDocName}/swagger.json", platformDocName);
+                // Json Format Support
+                c.SwaggerEndpoint($"./{PlatformUIDocName}/swagger.json", PlatformUIDocName);
+                c.SwaggerEndpoint($"./{PlatformDocName}/swagger.json", PlatformDocName);
 
                 foreach (var moduleId in modules.OrderBy(m => m.Id).Select(m => m.Id))
                 {
@@ -202,20 +188,20 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.DocExpansion(DocExpansion.None);
                 c.DefaultModelsExpandDepth(-1);
             });
+
+            var toolRegistrar = applicationBuilder.ApplicationServices.GetService<IDeveloperToolRegistrar>();
+            toolRegistrar.RegisterDeveloperTool(new()
+            {
+                Name = "Swagger",
+                Url = "/docs/index.html",
+                SortOrder = 30,
+            });
         }
 
 
-        /// <summary>
-        /// grouping by Module Names in the ApiDescription
-        /// with comparing Assemlies
-        /// </summary>
-        /// <param name="api"></param>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        private static IList<string> GroupByModuleName(this ApiDescription api, IServiceCollection services)
+        private static string GetModuleName(this ApiDescription api, ServiceProvider serviceProvider)
         {
-            var providerSnapshot = services.BuildServiceProvider();
-            var moduleCatalog = providerSnapshot.GetRequiredService<ILocalModuleCatalog>();
+            var moduleCatalog = serviceProvider.GetRequiredService<ILocalModuleCatalog>();
 
             // ------
             // Lifted from ApiDescriptionExtensions
@@ -229,20 +215,17 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // ------
 
             var moduleAssembly = actionDescriptor?.ControllerTypeInfo.Assembly ?? Assembly.GetExecutingAssembly();
-            var groupName = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
+            var module = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
 
-            return new List<string> { groupName != null ? groupName.ModuleName : "Platform" };
+            return module?.ModuleName ?? "VirtoCommerce.Platform";
         }
 
         /// <summary>
         /// Add Comments/Descriptions from XML-files in the ApiDescription
         /// </summary>
-        /// <param name="options"></param>
-        /// <param name="services"></param>
-        private static void AddModulesXmlComments(this SwaggerGenOptions options, IServiceCollection services)
+        private static void AddModulesXmlComments(this SwaggerGenOptions options, ServiceProvider serviceProvider)
         {
-            var provider = services.BuildServiceProvider();
-            var localStorageModuleCatalogOptions = provider.GetService<IOptions<LocalStorageModuleCatalogOptions>>().Value;
+            var localStorageModuleCatalogOptions = serviceProvider.GetService<IOptions<LocalStorageModuleCatalogOptions>>().Value;
 
             var xmlCommentsDirectoryPaths = new[]
             {
@@ -252,12 +235,69 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             foreach (var path in xmlCommentsDirectoryPaths)
             {
-                var xmlComments = Directory.GetFiles(path, "*.XML");
+                var xmlComments = Directory.GetFiles(path, "*.xml", new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
                 foreach (var xmlComment in xmlComments)
                 {
                     options.IncludeXmlComments(xmlComment);
                 }
             }
+        }
+
+        /// <summary>
+        /// Add security schemes definitions and operation filters for authentication
+        /// </summary>
+        private static void AddSecuritySchemes(this SwaggerGenOptions options)
+        {
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OAuth2,
+                Description = "OAuth2 Resource Owner Password Grant flow",
+                Flows = new OpenApiOAuthFlows
+                {
+                    ClientCredentials = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri("/connect/token", UriKind.Relative)
+                    },
+                    Password = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri("/connect/token", UriKind.Relative)
+                    }
+                },
+            });
+            options.AddSecurityDefinition("api_key", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.ApiKey,
+                Description = "API Key authentication",
+                In = ParameterLocation.Query,
+                Name = "api_key",
+            });
+            options.AddSecurityDefinition("api_key_header", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.ApiKey,
+                Description = "API Key authentication (alternative via header)",
+                In = ParameterLocation.Header,
+                Name = "api_key",
+            });
+            options.AddSecurityDefinition("http-signature", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "signature",
+                Description = "HTTP Signature authentication using Authorization header",
+            });
+            options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "basic",
+                Description = "Basic authentication using username and password",
+            });
+
+            // Register SecurityRequirementsOperationFilter for each security scheme
+            // This allows API clients to use any of the supported authentication methods
+            options.OperationFilter<SecurityRequirementsOperationFilter>(true, "oauth2");
+            options.OperationFilter<SecurityRequirementsOperationFilter>(true, "api_key");
+            options.OperationFilter<SecurityRequirementsOperationFilter>(true, "api_key_header");
+            options.OperationFilter<SecurityRequirementsOperationFilter>(true, "http-signature");
+            options.OperationFilter<SecurityRequirementsOperationFilter>(true, "basic");
         }
     }
 }

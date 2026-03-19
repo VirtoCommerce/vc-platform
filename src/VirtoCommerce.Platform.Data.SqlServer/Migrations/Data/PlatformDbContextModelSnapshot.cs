@@ -17,10 +17,10 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Data
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.13")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("VirtoCommerce.Platform.Data.Localizations.LocalizedItemEntity", b =>
                 {
@@ -392,6 +392,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Data
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SettingId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ShortTextValue")
@@ -445,7 +446,8 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Data
                     b.HasOne("VirtoCommerce.Platform.Data.Model.SettingEntity", "Setting")
                         .WithMany("SettingValues")
                         .HasForeignKey("SettingId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Setting");
                 });

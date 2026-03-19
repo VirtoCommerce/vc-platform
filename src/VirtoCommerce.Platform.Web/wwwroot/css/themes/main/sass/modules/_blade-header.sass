@@ -1,0 +1,35 @@
+.blade-header
+  box-sizing: border-box
+  position: absolute
+  display: flex
+  align-items: center
+  padding: 8px 16px
+  height: 50px
+  width: 100%
+  color: $whiteColor
+
+  &__icon
+    flex: none
+    display: flex
+    align-items: center
+    justify-content: center
+    margin: 0 12px 0 0
+    width: 30px
+    height: 30px
+    font-size: 30px
+
+  &__img
+    flex: none
+    margin: 0 12px 0 0
+    width: 30px
+    height: 30px
+    border-radius: 9999px
+    object-fit: contain
+    object-position: center
+
+  &__title
+    overflow: hidden
+    margin: 0 6px 0 0
+    font-size: 18px
+    text-overflow: ellipsis
+    white-space: nowrap

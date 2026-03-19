@@ -12,7 +12,7 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 {
     /// <summary>
-    /// This background task connects to the signalR hub (push notifications) to be able receive the notifications from other platform instances and actualize them
+    /// This background task connects to the signalR hub (push notifications) to be able to receive the notifications from other platform instances and actualize them
     /// into the local notifications storage   
     /// </summary>
     public class PushNotificationSynchronizerTask : BackgroundService
@@ -24,8 +24,10 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         private readonly ILogger<PushNotificationSynchronizerTask> _logger;
 
 
-        public PushNotificationSynchronizerTask(IPushNotificationStorage storage
-            , IOptions<PushNotificationOptions> options, ILogger<PushNotificationSynchronizerTask> logger)
+        public PushNotificationSynchronizerTask(
+            IPushNotificationStorage storage,
+            IOptions<PushNotificationOptions> options,
+            ILogger<PushNotificationSynchronizerTask> logger)
         {
             _logger = logger;
             _options = options.Value;
@@ -36,9 +38,9 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
                 jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
             })
              .WithAutomaticReconnect()
-             .WithUrl(_options.HubUrl, options =>
+             .WithUrl(_options.HubUrl, httpConnectionOptions =>
              {
-                 options.Credentials = null;
+                 httpConnectionOptions.Credentials = null;
              })
              .Build();
 
@@ -52,7 +54,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
             {
                 if (_hubConnection.State == HubConnectionState.Disconnected)
                 {
-                    //Wait until the platform being started to be able connect to the SignalR hub
+                    // Wait until the platform is started to be able to connect to the SignalR hub
                     try
                     {
                         await _hubConnection.StartAsync(stoppingToken);
@@ -61,11 +63,11 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
                     }
                     catch (Exception ex)
                     {
-                        //Wait until platform is started
-                        _logger.LogError(ex, "Could not starts connection to the server {HubUrl}", _options.HubUrl);
+                        // Raise the error to the log
+                        _logger.LogError(ex, "Could not start the connection to the server {HubUrl}", _options.HubUrl);
                     }
                 }
-                await Task.Delay(1000);
+                await Task.Delay(1000, stoppingToken);
             }
         }
 
@@ -82,10 +84,13 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
             _subscription?.Dispose();
-            await _hubConnection?.StopAsync(cancellationToken);
+
+            if (_hubConnection != null)
+            {
+                await _hubConnection.StopAsync(cancellationToken);
+            }
+
             await base.StopAsync(cancellationToken);
         }
-
-
     }
 }

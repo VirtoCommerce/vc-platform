@@ -1,10 +1,13 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', 'FileUploader', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, modules, moduleHelper, FileUploader, settings) {
+.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.moduleHelper', 'FileUploader', 'platformWebApp.settings', function ($scope, bladeNavigationService, moduleHelper, FileUploader, settings) {
     var blade = $scope.blade;
+
+    blade.headIcon = 'fa fa-cubes';
+    blade.fallbackIconUrl = '/images/module-logo.png';
 
     function initializeBlade() {
         if (blade.currentEntity.isInstalled) {
-            var canUpdate = _.any(moduleHelper.allmodules, function (x) {
+            var canUpdate = $scope.allowInstallModules && _.any(moduleHelper.modules, function (x) {
                 return x.id === blade.currentEntity.id && !x.isInstalled;
             });
 
@@ -12,7 +15,7 @@ angular.module('platformWebApp')
                 {
                     name: "platform.commands.update", icon: 'fa fa-upload',
                     executeMethod: function () {
-                        blade.currentEntity = _.last(_.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false }));
+                        blade.currentEntity = _.last(_.where(moduleHelper.modules, { id: blade.currentEntity.id, isInstalled: false }));
                         initializeBlade();
                     },
                     canExecuteMethod: function () { return canUpdate; },
@@ -23,7 +26,7 @@ angular.module('platformWebApp')
                     executeMethod: function () {
                         $scope.confirmActionInDialog('uninstall');
                     },
-                    canExecuteMethod: function () { return true; },
+                    canExecuteMethod: function () { return $scope.allowInstallModules; },
                     permission: 'platform:module:manage'
                 }
             ];
@@ -52,10 +55,24 @@ angular.module('platformWebApp')
             });
         } else {
             blade.toolbarCommands = [];
-            blade.mode = blade.currentEntity.$alternativeVersion ? 'update' : 'install';
-            $scope.availableVersions = _.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false });
+            blade.mode = blade.currentEntity.$installedVersion ? 'update' : 'install';
+            $scope.availableVersions = _.where(moduleHelper.modules, { id: blade.currentEntity.id, isInstalled: false });
             blade.isLoading = false;
         }
+    }
+
+    $scope.hasOptionalDependencies = function (dependencies) {
+        var result = _.find(dependencies, function (x) {
+            return x.optional;
+        });
+
+        return result;
+    }
+
+    $scope.isModulePresent = function (dependencyId) {
+        return _.any(moduleHelper.modules, function (x) {
+            return x.id === dependencyId;
+        });
     }
 
     $scope.formDependencyVersion = function (dependency) {
@@ -63,80 +80,16 @@ angular.module('platformWebApp')
     };
 
     $scope.openDependencyModule = function (dependency) {
-        module = _.findWhere(moduleHelper.allmodules, { id: dependency.id, version: dependency.version }) ||
-                    _.findWhere(moduleHelper.allmodules, { id: dependency.id }) ||
+        module = _.findWhere(moduleHelper.modules, { id: dependency.id, version: dependency.version }) ||
+                    _.findWhere(moduleHelper.modules, { id: dependency.id }) ||
                      module;
         blade.parentBlade.selectNode(module);
     };
 
     $scope.confirmActionInDialog = function (action) {
-        blade.isLoading = true;
-
-        //var clone = {
-        //    id: blade.currentEntity.id,
-        //    version: blade.currentEntity.version,
-        //};
         var selection = [blade.currentEntity];
-        var modulesApiMethod = action === 'uninstall' ? modules.getDependents : modules.getDependencies;
-        modulesApiMethod(selection, function (data) {
-            blade.isLoading = false;
-
-            var dialog = {
-                id: "confirmation",
-                action: action,
-                selection: selection,
-                dependencies: data,
-                callback: function (resume) {
-                    if (resume) {
-                        blade.isLoading = true;
-                        _.each(selection, function (x) {
-                            if (!_.findWhere(data, { id: x.id })) {
-                                data.push(x);
-                            }
-                        });
-
-                        switch (action) {
-                            case 'install':
-                            case 'update':
-                                modulesApiMethod = modules.install;
-                                break;
-                            case 'uninstall':
-                                modulesApiMethod = modules.uninstall;
-                                break;
-                        }
-                        modulesApiMethod(data, function (data) {
-                            // show module (un)installation progress
-                            var newBlade = {
-                                id: 'moduleInstallProgress',
-                                currentEntity: data,
-                                controller: 'platformWebApp.moduleInstallProgressController',
-                                template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
-                            };
-                            switch (action) {
-                                case 'install':
-                                    _.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-install' });
-                                    break;
-                                case 'update':
-                                    _.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-update' });
-                                    break;
-                                case 'uninstall':
-                                    _.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-uninstall' });
-                                    break;
-                            }
-                            bladeNavigationService.showBlade(newBlade, blade.parentBlade);
-                        }, function (error) {
-                            bladeNavigationService.setError('Error ' + error.status, blade);
-                        });
-                    }
-                }
-            }
-            dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, blade);
-        });
+        moduleHelper.performAction(action, selection, blade, true);
     };
-
-    blade.headIcon = 'fa fa-cubes';
 
     if (blade.mode === 'advanced') {
         // the uploader

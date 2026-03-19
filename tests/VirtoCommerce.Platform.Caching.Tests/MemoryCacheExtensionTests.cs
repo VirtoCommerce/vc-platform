@@ -16,14 +16,29 @@ namespace VirtoCommerce.Platform.Caching.Tests
     [Collection(nameof(NotThreadSafeCollection))]
     public class MemoryCacheExtensionTests : MemoryCacheTestsBase
     {
+        // Cache keys with different casing to test case insensitivity
+        private readonly string[] _cacheKeys =
+        [
+            "Abcdefghij",
+            "aBcdefghij",
+            "abCdefghij",
+            "abcDefghij",
+            "abcdEfghij",
+            "abcdeFghij",
+            "abcdefGhij",
+            "abcdefgHij",
+            "abcdefghIj",
+            "abcdefghiJ",
+        ];
+
         [Fact]
         public void GetOrCreateExclusive()
         {
-            var sut = CreateCache();
+            var sut = GetPlatformMemoryCache();
             var counter = 0;
-            Parallel.ForEach(Enumerable.Range(1, 10), i =>
+            Parallel.ForEach(Enumerable.Range(0, _cacheKeys.Length), i =>
             {
-                var item = sut.GetOrCreateExclusive("test-key", cacheEntry =>
+                var item = sut.GetOrCreateExclusive(_cacheKeys[i], cacheEntry =>
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);
                     return Interlocked.Increment(ref counter);
@@ -35,20 +50,21 @@ namespace VirtoCommerce.Platform.Caching.Tests
         [Fact]
         public Task GetOrCreateExclusiveAsync()
         {
-            var sut = CreateCache();
+            var sut = GetPlatformMemoryCache();
             var counter = 0;
             var tasks = new List<Task>();
-            for (var threadNumber = 0; threadNumber < 10; threadNumber++)
+            for (var threadNumber = 0; threadNumber < _cacheKeys.Length; threadNumber++)
             {
+                var i = threadNumber;
                 var task = Task.Run(async () =>
                 {
-                    var item = await sut.GetOrCreateExclusiveAsync("test-key", cacheEntry =>
+                    var item = await sut.GetOrCreateExclusiveAsync(_cacheKeys[i], cacheEntry =>
                     {
                         cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);
                         return Task.FromResult(Interlocked.Increment(ref counter));
                     });
                     Assert.Equal(1, item);
-                });
+                }, TestContext.Current.CancellationToken);
                 tasks.Add(task);
             }
             return Task.WhenAll(tasks);
@@ -57,11 +73,11 @@ namespace VirtoCommerce.Platform.Caching.Tests
         [Fact]
         public void Named_AsyncLock_Exclusive_Access_For_One_Thread()
         {
-            var sut = CreateCache();
+            var sut = GetPlatformMemoryCache();
             var counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), async i =>
             {
-                var releaser = await AsyncLock.GetLockByKey((i % 2).ToString()).GetReleaserAsync();
+                var releaser = await AsyncLock.GetLockByKey((i % 2).ToString()).LockAsync();
                 sut.GetOrCreate($@"test-key {i % 2}", cacheEntry =>
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);

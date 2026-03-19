@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using Moq;
+using Nager.Country;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 using Xunit;
@@ -9,14 +11,14 @@ namespace VirtoCommerce.Platform.Tests.Common
     public class CountriesServiceTests
     {
         [Fact]
-        public void CanGetCountries()
+        public async Task CanGetCountries()
         {
             var filesystemCountryService = new Mock<ICountriesService>();
             var service = new CountriesService(filesystemCountryService.Object as FileSystemCountriesService);
 
-            var countries = service.GetCountriesAsync().GetAwaiter().GetResult();
+            var countries = await service.GetCountriesAsync();
 
-            Assert.Equal(249, countries.Count);
+            Assert.Equal(250, countries.Count);
         }
 
         [Theory]
@@ -39,9 +41,18 @@ namespace VirtoCommerce.Platform.Tests.Common
         }
 
         [Theory]
-        [InlineData("-")]
         [InlineData("--")]
+        [InlineData("---")]
         public void CanThrowOnIncorrectCode(string code)
+        {
+            var filesystemCountryService = new Mock<ICountriesService>();
+            var service = new CountriesService(filesystemCountryService.Object as FileSystemCountriesService);
+            Assert.Throws<UnknownCountryException>(() => service.GetByCode(code));
+        }
+
+        [Theory]
+        [InlineData("-")]
+        public void CanThrowOnIncorrectCode2(string code)
         {
             var filesystemCountryService = new Mock<ICountriesService>();
             var service = new CountriesService(filesystemCountryService.Object as FileSystemCountriesService);

@@ -3,8 +3,8 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 ## Prerequisites
 
-* [Prerequisites for .NET 6.0 on Windows](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=net60#dependencies)
-* [.NET 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
+* [Prerequisites for .NET 8.0 on Windows](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=net80#dependencies)
+* [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
 > Please switch SQL server authentication to mixed mode
@@ -36,7 +36,7 @@ vc-build install
 ```
 Also you can specify the platform version:
 ```console
-vc-build install -platform -version 3.240.0
+vc-build install -platform -version 3.800.0
 ```
 Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/package-management.md)  for more info.
 
@@ -78,8 +78,17 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
 The output in the console will say something like:
 
 ```console
-Now listening on: http://localhost:5000
-Now listening on: https://localhost:5001
+[19:38:43] Virto Commerce is loading OK
+[19:38:45] Getting server certificate OK
+[19:38:47] Initializing module catalog OK
+[19:39:40] Loading modules OK
+[19:39:40] Registering API controllers OK
+[19:39:46] Post initializing modules
+[19:39:51 INF] Welcome to Virto Commerce 3.800.0.0!
+[19:39:51 INF] Now listening on: http://localhost:5000
+[19:39:52 INF] Application started. Press Ctrl+C to shut down.
+[19:39:52 INF] Hosting environment: Production
+...
 ```
 
 ### Run on HTTP schema
@@ -91,6 +100,12 @@ Now listening on: https://localhost:5001
 ```
 
 ### First Run
+
+The default HTTPS address and port have been removed from Kestrel in .NET 7. Users must now manually bind to HTTPS and specify the address and port explicitly, [through one of the following means](https://learn.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/7.0/https-binding-kestrel).
+
+```console
+  dotnet VirtoCommerce.Platform.Web.dll --urls=https://localhost:5000
+```
 
 * Open `https://localhost:5001` url in your browser. "Your connection is not private" might appear. Click "Advanced" and "Proceed to ...".
 Read more on removing this error and using a self-signed certificate: [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)

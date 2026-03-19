@@ -259,7 +259,7 @@ angular.module('platformWebApp')
             showConfirmationIfNeeded: showConfirmationIfNeeded,
             closeBlade: function (blade, callback, onBeforeClosing) {
                 //Need in case a copy was passed
-                blade = service.findBlade(blade.id) || blade;
+                blade = service.findBlade(blade.id, blade.navigationGroup) || blade;
 
                 // close all children
                 service.closeChildrenBlades(blade, function () {
@@ -328,10 +328,10 @@ angular.module('platformWebApp')
 
                 return service.blades[stateName];
             },
-            findBlade: function (id) {
+            findBlade: function (id, navigationGroup) {
                 var found;
                 angular.forEach(service.stateBlades(), function (blade) {
-                    if (blade.id == id) {
+                    if (blade.id == id && blade.navigationGroup == navigationGroup) {
                         found = blade;
                     }
                 });
@@ -347,11 +347,11 @@ angular.module('platformWebApp')
                 //}
                 blade.errorBody = "";
                 blade.isLoading = true;
-                blade.parentBlade = parentBlade;
                 blade.childrenBlades = [];
                 if (parentBlade) {
                     blade.headIcon = blade.headIcon || parentBlade.headIcon;
                     blade.updatePermission = blade.updatePermission || parentBlade.updatePermission;
+                    blade.navigationGroup = blade.navigationGroup || parentBlade.navigationGroup;
                 }
                 //copy securityscopes from parent blade
                 if (parentBlade != null && parentBlade.securityScopes) {
@@ -364,16 +364,19 @@ angular.module('platformWebApp')
                     }
                 }
 
-                var existingBlade = service.findBlade(blade.id);
+                var existingBlade = service.findBlade(blade.id, blade.navigationGroup);
 
                 //Show blade in previous location
                 if (existingBlade != undefined) {
+                    parentBlade = existingBlade.parentBlade;
                     //store prev blade x-index
                     blade.xindex = existingBlade.xindex;
                 } else if (!angular.isDefined(blade.xindex)) {
                     //Show blade as last one by default
                     blade.xindex = service.stateBlades().length;
                 }
+
+                blade.parentBlade = parentBlade;
 
                 var showBlade = function () {
                     if (angular.isDefined(parentBlade)) {

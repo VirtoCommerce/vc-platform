@@ -8,4 +8,6 @@ RUN apt-get update && apt-get install -y openssh-server dos2unix
 COPY wait-for-it.sh /wait-for-it.sh
 RUN dos2unix /wait-for-it.sh && chmod +x /wait-for-it.sh
 
+EXPOSE 80
+ENV ASPNETCORE_HTTP_PORTS=80
 ENTRYPOINT ["dotnet", "VirtoCommerce.Platform.Web.dll"]

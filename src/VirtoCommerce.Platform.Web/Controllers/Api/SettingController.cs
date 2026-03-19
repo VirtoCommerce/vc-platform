@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("{name}")]
-        [Authorize(PlatformConstants.Security.Permissions.SettingAccess)]
+        [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
         public async Task<ActionResult<ObjectSettingEntry>> GetGlobalSettingAsync(string name)
         {
             var result = await _settingsManager.GetObjectSettingAsync(name);
@@ -76,7 +76,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateAsync([FromBody] ObjectSettingEntry[] objectSettings)
         {
-            using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
+            using (await AsyncLock.GetLockByKey("settings").LockAsync())
             {
                 await _settingsManager.SaveObjectSettingsAsync(objectSettings);
             }

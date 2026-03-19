@@ -21,5 +21,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         [XmlElement("contentPath")]
         public string ContentPath { get; set; }
+
+        [XmlElement("supportEmbeddedMode")]
+        public bool SupportEmbeddedMode { get; set; }
     }
 }

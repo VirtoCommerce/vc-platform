@@ -1,6 +1,6 @@
 <div class="blade" ng-class="[moduleName, {'__animated': blade.animated, '__expanded': blade.isExpanded, '__maximized': blade.isMaximized, '__closing': blade.closing}]" ng-repeat="blade in blades">
     <div class="blade-wrapper" va-blade='blade'>
-        <header class="blade-head">
+        <header class="blade-head" ng-class="{'blade-head__no-toolbar': blade.hideToolbar}">
             <div class="blade-status" ng-if="blade.error || blade.isLoading" ng-class="{'__error': blade.error}">
                 <div class="status-message" ng-if="blade.error">
                     <div class="error-icon-container">
@@ -41,18 +41,17 @@
                 </ul>
             </div>
 
-            <div class="blade-t" ng-class="{'__secondary': blade.subtitle}">
-                <i class="blade-t_ico" ng-if="!blade.currentEntity.iconUrl" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'">
-                    <i></i>
-                </i>
-                <i class="blade-t_ico" ng-if="blade.currentEntity.iconUrl">
-                    <img class="title-icon" ng-src="{{ blade.currentEntity.iconUrl }}">
-                </i>
-                <p class="blade-t_head">{{ blade.title | translate: blade.titleValues }}</p>
-                <p class="blade-t_subhead">{{ blade.subtitle | translate: blade.subtitleValues }}</p>
+            <div class="blade-header">
+                <span ng-if="!blade.iconUrl && !blade.currentEntity.iconUrl" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'" class="blade-header__icon"></span>
+
+                <img ng-if="blade.iconUrl || blade.currentEntity.iconUrl" ng-src="{{ blade.iconUrl || blade.currentEntity.iconUrl }}" fallback-src="{{ blade.fallbackIconUrl }}" class="blade-header__img" />
+
+                <div class="blade-header__title">{{ blade.title | translate: blade.titleValues }}</div>
+
+                <span ng-if="pageSettings.totalItems" class="vc-badge">{{ pageSettings.totalItems | number: 0 }}</span>
             </div>
 
-            <div class="blade-toolbar">
+            <div class="blade-toolbar" ng-if="!blade.hideToolbar">
                 <ul class="menu __inline">
                     <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade), 'separator': toolbarCommand.showSeparator}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands | limitTo:toolsPerLineCount" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" ng-show="!toolbarCommand.hide(blade)" va-permission="{{toolbarCommand.permission}}" security-scopes="blade.securityScopes">
                         <button class="menu-btn" ng-attr-title="{{toolbarCommand.title | translate}}">
@@ -78,8 +77,8 @@
             <span></span>
         </div>
 
-        <div class="blade-container" ng-class="{'__loading': blade.isLoading}">
-            <ng-include src='blade.template'></ng-include>
+        <div class="blade-container" ng-class="{'__loading': blade.isLoading, '__no-toolbar': blade.hideToolbar}">
+          <ng-include src='blade.template'></ng-include>
         </div>
     </div>
 </div>

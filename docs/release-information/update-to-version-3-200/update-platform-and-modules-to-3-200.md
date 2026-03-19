@@ -1,4 +1,4 @@
-# Updating Platform and Modules to .NET 6
+# Upgrading to Virto Commerce on .NET 6
 
 ## Introduction
 
