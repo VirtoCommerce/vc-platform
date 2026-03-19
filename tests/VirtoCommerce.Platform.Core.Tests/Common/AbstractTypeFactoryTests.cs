@@ -106,6 +106,26 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         }
     }
 
+    // Types for WithFactory + args test (Bug 1 regression test)
+    public class Order
+    {
+        public string OperationType { get; set; }
+    }
+
+    public class CustomOrder : Order
+    {
+    }
+
+    // Types for WithTypeName test (Bug 2 regression test)
+    public class Document
+    {
+        public string Id { get; set; }
+    }
+
+    public class Invoice : Document
+    {
+    }
+
     [Trait("Category", "Unit")]
     public class AbstractTypeFactoryTests
     {
@@ -266,6 +286,33 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             Assert.NotNull(first);
             Assert.Same(first, second);
             Assert.Equal(typeof(Labrador), first.Type);
+        }
+
+        [Fact]
+        public void TryCreateInstance_WithArgs_FactoryTakesPriority()
+        {
+            // Bug 1 regression: WithFactory must take priority even when args are passed
+            AbstractTypeFactory<Order>.RegisterType<CustomOrder>()
+                .WithFactory(() => new CustomOrder { OperationType = "CustomOrder" });
+
+            // Call with args — Factory should still be used, args should be ignored
+            var result = AbstractTypeFactory<Order>.TryCreateInstance(nameof(CustomOrder), "ignored-arg");
+
+            Assert.IsType<CustomOrder>(result);
+            Assert.Equal("CustomOrder", result.OperationType);
+        }
+
+        [Fact]
+        public void WithTypeName_UpdatesDictionaryIndex()
+        {
+            // Bug 2 regression: WithTypeName must update the type name index
+            AbstractTypeFactory<Document>.RegisterType<Invoice>()
+                .WithTypeName("CustomInvoice");
+
+            var result = AbstractTypeFactory<Document>.TryCreateInstance("CustomInvoice");
+
+            Assert.NotNull(result);
+            Assert.IsType<Invoice>(result);
         }
     }
 }

@@ -90,7 +90,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
             if (result == null)
             {
-                result = new TypeInfo<BaseType>(type);
+                result = new TypeInfo<BaseType>(type) { OnTypeNameChanged = RebuildIndex };
                 _typeInfos.Add(result);
                 RebuildIndex();
             }
@@ -130,7 +130,7 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
-            var newTypeInfo = new TypeInfo<BaseType>(newType);
+            var newTypeInfo = new TypeInfo<BaseType>(newType) { OnTypeNameChanged = RebuildIndex };
             if (existTypeInfo != null)
             {
                 _typeInfos.Remove(existTypeInfo);
@@ -303,8 +303,16 @@ namespace VirtoCommerce.Platform.Core.Common
             var typeInfo = FindTypeInfoByName(typeName);
             if (typeInfo != null)
             {
-                // With args — must use Activator (can't cache parameterized delegates)
-                result = (BaseType)Activator.CreateInstance(typeInfo.Type, args);
+                // Factory always takes priority (preserves WithFactory behavior from original code)
+                var factory = typeInfo.Factory;
+                if (factory != null)
+                {
+                    result = factory();
+                }
+                else
+                {
+                    result = (BaseType)Activator.CreateInstance(typeInfo.Type, args);
+                }
                 typeInfo.SetupAction?.Invoke(result);
             }
             else
@@ -388,6 +396,9 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         // Backing field for Factory — supports Interlocked.CompareExchange for thread-safe lazy caching
         private Func<BaseType> _factory;
+
+        // Callback to notify the parent factory when TypeName changes (for index rebuild)
+        internal Action OnTypeNameChanged { get; set; }
 
         public TypeInfo(Type type)
         {
@@ -489,6 +500,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public TypeInfo<BaseType> WithTypeName(string name)
         {
             TypeName = name;
+            OnTypeNameChanged?.Invoke();
             return this;
         }
 
