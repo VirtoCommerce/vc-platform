@@ -377,7 +377,8 @@ namespace VirtoCommerce.Platform.Core.Common
             var newIndex = new ConcurrentDictionary<string, TypeInfo<BaseType>>(StringComparer.OrdinalIgnoreCase);
             foreach (var typeInfo in _typeInfos)
             {
-                newIndex[typeInfo.TypeName] = typeInfo;
+                // TryAdd preserves first-wins semantics matching the original FirstOrDefault behavior
+                newIndex.TryAdd(typeInfo.TypeName, typeInfo);
             }
             Volatile.Write(ref _typeNameIndex, newIndex);
         }
