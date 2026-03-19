@@ -263,7 +263,7 @@ namespace VirtoCommerce.Platform.Core.Common
             var typeInfo = FindTypeInfoByName(typeName);
             return typeInfo != null
                 ? CreateFromTypeInfo(typeInfo, args)
-                : CreateFallbackInstance(typeName, args);
+                : CreateFallbackInstance(typeName);
         }
 
         /// <summary>
@@ -295,17 +295,16 @@ namespace VirtoCommerce.Platform.Core.Common
 
         /// <summary>
         /// Fallback when no TypeInfo is found: creates BaseType directly or throws for abstract types.
+        /// Always uses the default (parameterless) constructor, ignoring args — matches original behavior.
         /// </summary>
-        private static BaseType CreateFallbackInstance(string typeName, object[] args = null)
+        private static BaseType CreateFallbackInstance(string typeName)
         {
             var baseType = typeof(BaseType);
             if (baseType.IsAbstract)
             {
                 throw new OperationCanceledException($"A type with {typeName} name is not registered in the AbstractFactory, you cannot create an instance of an abstract class {baseType.Name} because it does not have a complete implementation");
             }
-            return args != null
-                ? (BaseType)Activator.CreateInstance(baseType, args)
-                : CreateDefaultInstance();
+            return CreateDefaultInstance();
         }
 
         /// <summary>
