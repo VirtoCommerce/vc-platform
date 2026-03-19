@@ -30,8 +30,8 @@ public class UserSessionsService : IUserSessionsService
             {
                 var validSessionsCount = await _tokenManager.FindByAuthorizationIdAsync(authorizationId)
                     .OfType<VirtoOpenIddictEntityFrameworkCoreToken>()
-                    .Where(x => x.Type == "refresh_token")
-                    .Where(x => x.Status == "valid")
+                    .Where(x => x.Type == OpenIddictConstants.TokenTypeIdentifiers.RefreshToken)
+                    .Where(x => x.Status == OpenIddictConstants.Statuses.Valid)
                     .CountAsync();
 
                 if (validSessionsCount == 0)
