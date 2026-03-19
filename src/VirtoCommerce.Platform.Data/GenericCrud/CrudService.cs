@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -32,6 +33,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         private readonly IEventPublisher _eventPublisher;
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly Func<IRepository> _repositoryFactory;
+        private readonly bool _isToModelOverridden;
 
         /// <summary>
         /// Construct new CrudService
@@ -44,6 +46,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             _repositoryFactory = repositoryFactory;
             _platformMemoryCache = platformMemoryCache;
             _eventPublisher = eventPublisher;
+
+            _isToModelOverridden = GetType()
+                .GetMethod(nameof(ToModel), BindingFlags.Instance | BindingFlags.NonPublic, [typeof(TEntity)])
+                ?.DeclaringType != typeof(CrudService<TModel, TEntity, TChangingEvent, TChangedEvent>);
         }
 
         /// <summary>
@@ -75,7 +81,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             using var repository = _repositoryFactory();
 
-            // Disable DBContext change tracking for better performance 
+            // Disable DBContext change tracking for better performance
             repository.DisableChangesTracking();
 
             var entities = await LoadEntities(repository, ids, responseGroup);
@@ -91,7 +97,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual IList<TModel> ProcessModels(IList<TEntity> entities, string responseGroup)
         {
             return entities
-                ?.Select(x => ProcessModel(responseGroup, x, ToModel(x)))
+                ?.Select(x => ProcessModel(responseGroup, x, ToModel(x, model: null)))
                 .ToList();
         }
 
@@ -196,7 +202,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#detectchanges-honors-store-generated-key-values
                         repository.TrackModifiedAsAddedForNewChildEntities(originalEntity);
 
-                        var originalModel = ToModel(originalEntity);
+                        var originalModel = ToModel(originalEntity, model: null);
                         originalModels.Add(originalModel);
                         changedEntries.Add(new GenericChangedEntry<TModel>(model, originalModel, EntryState.Modified));
                         modifiedEntity.Patch(originalEntity);
@@ -226,7 +232,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             foreach (var (changedEntry, i) in changedEntries.Select((x, i) => (x, i)))
             {
-                changedEntry.NewEntry = ToModel(changedEntities[i]);
+                changedEntry.NewEntry = ToModel(changedEntities[i], changedEntry.NewEntry);
             }
 
             await AfterSaveChangesAsync(models, changedEntries);
@@ -330,6 +336,20 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             GenericSearchCachingRegion<TModel>.ExpireRegion();
         }
 
+        protected virtual TModel ToModel(TEntity entity, TModel model)
+        {
+            // Call the obsolete method temporarily if it has been overridden in a derived class, to avoid breaking changes.
+            if (_isToModelOverridden)
+            {
+#pragma warning disable VC0014 // Type or member is obsolete
+                return ToModel(entity);
+#pragma warning restore VC0014 // Type or member is obsolete
+            }
+
+            return entity.ToModel();
+        }
+
+        [Obsolete("Use ToModel(entity, model)", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected virtual TModel ToModel(TEntity entity)
         {
             return entity.ToModel();
