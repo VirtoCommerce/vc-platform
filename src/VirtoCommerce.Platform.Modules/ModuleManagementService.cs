@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Transactions;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
@@ -17,26 +18,19 @@ namespace VirtoCommerce.Platform.Modules;
 /// Caches the merged module list (external + installed) across requests.
 /// Uses static classes (ModuleDiscovery, ModulePackageInstaller, ModuleRegistry) for core logic.
 /// </summary>
-public class ModuleManagementService : IModuleManagementService
+public class ModuleManagementService(
+    IHttpClientFactory httpClientFactory,
+    IOptions<LocalStorageModuleCatalogOptions> localOptions,
+    IOptions<ExternalModuleCatalogOptions> externalOptions) : IModuleManagementService
 {
     private const string PackageFileExtension = ".zip";
 
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly LocalStorageModuleCatalogOptions _localOptions;
-    private readonly ExternalModuleCatalogOptions _externalOptions;
-    private readonly object _lockObject = new();
+    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+    private readonly LocalStorageModuleCatalogOptions _localOptions = localOptions.Value;
+    private readonly ExternalModuleCatalogOptions _externalOptions = externalOptions.Value;
+    private readonly Lock _lockObject = new();
 
     private List<ManifestModuleInfo> _mergedModules;
-
-    public ModuleManagementService(
-        IHttpClientFactory httpClientFactory,
-        IOptions<LocalStorageModuleCatalogOptions> localOptions,
-        IOptions<ExternalModuleCatalogOptions> externalOptions)
-    {
-        _httpClientFactory = httpClientFactory;
-        _localOptions = localOptions.Value;
-        _externalOptions = externalOptions.Value;
-    }
 
     public IList<ManifestModuleInfo> GetModules()
     {

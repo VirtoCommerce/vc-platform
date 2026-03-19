@@ -73,6 +73,9 @@ namespace VirtoCommerce.Platform.Web
                 ModuleCopier.CopyAll(options.DiscoveryPath, options.ProbingPath, modules, RuntimeInformation.ProcessArchitecture);
             }
 
+            var boostOptions = bootConfig.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
+            ModuleRunner.Initialize(boostOptions);
+
             var isDevelopment = environment.EqualsIgnoreCase(Environments.Development);
             ModuleLoader.Initialize(isDevelopment);
 

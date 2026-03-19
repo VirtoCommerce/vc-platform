@@ -17,13 +17,21 @@ namespace VirtoCommerce.Platform.Modules;
 /// </summary>
 public static class ModuleRunner
 {
+    private static ModuleSequenceBoostOptions _boostOptions = new();
+
+    /// <summary>
+    /// Set the boost options used by <see cref="SortByDependency"/>. Call once from Program.Main.
+    /// </summary>
+    public static void Initialize(ModuleSequenceBoostOptions boostOptions)
+    {
+        _boostOptions = boostOptions ?? new ModuleSequenceBoostOptions();
+    }
+
     /// <summary>
     /// Sort modules by dependency order using topological sort.
     /// Modules with no dependencies come first.
     /// </summary>
-    public static IReadOnlyList<ManifestModuleInfo> SortByDependency(
-        IReadOnlyList<ManifestModuleInfo> modules,
-        ModuleSequenceBoostOptions boostOptions = null)
+    public static IReadOnlyList<ManifestModuleInfo> SortByDependency(IReadOnlyList<ManifestModuleInfo> modules)
     {
         ArgumentNullException.ThrowIfNull(modules);
 
@@ -32,7 +40,7 @@ public static class ModuleRunner
             return [];
         }
 
-        var solver = new ModuleDependencySolver(boostOptions ?? new ModuleSequenceBoostOptions());
+        var solver = new ModuleDependencySolver(_boostOptions);
         var moduleNames = new HashSet<string>(modules.Select(m => m.ModuleName), StringComparer.OrdinalIgnoreCase);
 
         foreach (var module in modules)
@@ -60,7 +68,14 @@ public static class ModuleRunner
         }
 
         var sortedNames = solver.Solve();
-        var modulesByName = modules.ToDictionary(m => m.ModuleName, StringComparer.OrdinalIgnoreCase);
+        // Deduplicate by ModuleName (same module ID may appear with different versions in merged catalogs).
+        // Prefer installed version, then latest.
+        var modulesByName = modules
+            .GroupBy(m => m.ModuleName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(m => m.IsInstalled).ThenByDescending(m => m.Version).First(),
+                StringComparer.OrdinalIgnoreCase);
         var result = new List<ManifestModuleInfo>(sortedNames.Length);
 
         foreach (var name in sortedNames)
@@ -127,7 +142,6 @@ public static class ModuleRunner
         IServiceCollection serviceCollection,
         IConfiguration configuration = null,
         IHostEnvironment hostEnvironment = null,
-        ModuleSequenceBoostOptions boostOptions = null,
 #pragma warning disable VC0014 // Type is obsolete
         IModuleCatalog moduleCatalog = null
 #pragma warning restore VC0014
@@ -137,7 +151,7 @@ public static class ModuleRunner
         ArgumentNullException.ThrowIfNull(serviceCollection);
 
         var logger = ModuleLogger.CreateLogger(typeof(ModuleRunner));
-        var sorted = SortByDependency(modules, boostOptions);
+        var sorted = SortByDependency(modules);
 
         foreach (var moduleInfo in sorted)
         {

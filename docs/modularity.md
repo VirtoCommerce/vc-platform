@@ -19,12 +19,14 @@ The platform uses a **static, DI-free module loading pipeline** that runs in `Pr
 Program.Main()
  |
  |  1. Build bootstrap IConfiguration (appsettings.json + env vars)
- |  2. ModuleManifestReader.ReadAll()        -- scan module.manifest files
- |  3. ModuleCopier.CopyAll()                -- copy DLLs to probing path (if enabled)
- |  4. ModuleAssemblyLoader.Initialize()     -- register native library resolver
- |     ModuleAssemblyLoader.LoadModule()     -- load each module assembly + deps
- |  5. ModuleRegistry.Initialize()           -- populate global module index
- |  6. PlatformStartupDiscovery.DiscoverStartups()  -- find IPlatformStartup types
+ |  2. ModuleLogger.Initialize()             -- set up logging for static classes
+ |  3. ModuleManifestReader.ReadAll()        -- scan module.manifest files
+ |  4. ModuleCopier.CopyAll()                -- copy DLLs to probing path (if enabled)
+ |  5. ModuleLoader.Initialize()             -- register native library resolver
+ |     ModuleLoader.LoadModule()             -- load each module assembly + deps
+ |  6. ModuleDiscovery.ValidateModules()     -- platform version + dependency validation
+ |  7. ModuleRegistry.Initialize()           -- populate global module index
+ |  8. PlatformStartupDiscovery.DiscoverStartups()  -- find IPlatformStartup types
  |
  +--Host.CreateDefaultBuilder(args)
      |
@@ -57,6 +59,16 @@ Program.Main()
 
 All classes are in the `VirtoCommerce.Platform.Modules` namespace.
 
+### ModuleLogger
+
+Static logger factory for the module loading pipeline. Must be initialized before any other module class is used. Falls back to `NullLoggerFactory` if not initialized.
+
+| Method | Description |
+|--------|-------------|
+| `Initialize(loggerFactory)` | Set the `ILoggerFactory`. Call once from `Program.Main` before module loading. |
+| `CreateLogger(type)` | Create a logger for the given type. Used internally by all static module classes. |
+| `Reset()` | Reset to `NullLoggerFactory` (for unit tests). |
+
 ### ModuleManifestReader
 
 Scans a directory tree for `module.manifest` XML files and returns a list of `ManifestModuleInfo` objects. Pure filesystem reads with no side effects.
@@ -70,12 +82,15 @@ Modules without an `<assemblyFile>` element (manifest-only modules) are immediat
 
 ### ModuleCopier
 
-Copies module assemblies from discovery directories to the probing path. Handles version comparison, CPU architecture filtering, and file-locking conflicts.
+Copies module assemblies from discovery directories to the probing path. Handles version comparison, CPU architecture filtering, and file-locking conflicts. Delegates filtering decisions to an `IFileCopyPolicy`.
 
 | Method | Description |
 |--------|-------------|
-| `CopyAll(discoveryPath, probingPath, modules, targetArchitecture?)` | Copies platform binaries from `discoveryPath/bin`, then each module's `bin/` folder contents. When `targetArchitecture` is `null`, auto-detects from the running process. Pass an explicit value for cross-compilation. |
-| `CopyModule(modulePath, probingPath, targetArchitecture?)` | Copies a single module's binaries with smart filtering. Same architecture override semantics as `CopyAll`. |
+| `Initialize(fileCopyPolicy)` | Set the `IFileCopyPolicy` used for file comparison decisions. Must be called before `CopyAll`. |
+| `CopyAll(discoveryPath, probingPath, modules, environmentArchitecture)` | Copies each module's `bin/` folder contents to the probing path. The `environmentArchitecture` parameter (`Architecture` enum) controls which native binaries to select. |
+| `CopyModule(sourceDirectoryPath, targetDirectoryPath, environmentArchitecture)` | Copies a single module's binaries with smart filtering. |
+| `GetTargetRelativePath(sourceRelativeFilePath)` | Map a source-relative path to its target-relative path in the probing folder. Returns `null` if the file should be skipped (TPA, reference assemblies). |
+| `IsCopyRequired(sourceFilePath, targetFilePath, environmentArchitecture, out result)` | Check whether a file should be copied based on version, architecture, and date comparison. |
 
 **Copy rules:**
 
@@ -86,13 +101,13 @@ Copies module assemblies from discovery directories to the probing path. Handles
 - Flattens all other assemblies (`.dll`, `.exe`, `.pdb`, `.deps.json`, etc.) into the probing root.
 - Compares source and target by **version**, **CPU architecture**, and **file date** before copying. A file is only overwritten when the source is newer or has a better architecture match.
 
-### ModuleAssemblyLoader
+### ModuleLoader
 
 Loads module assemblies and their dependencies into the default `AssemblyLoadContext`.
 
 | Method | Description |
 |--------|-------------|
-| `Initialize(isDevelopment)` | Call once before loading any modules. Registers the native library resolver on `AssemblyLoadContext.Default`. |
+| `Initialize(isDevelopmentEnvironment)` | Call once before loading any modules. Registers the native library resolver on `AssemblyLoadContext.Default`. |
 | `LoadModule(module, probingPath)` | Loads the module's main assembly and all dependencies declared in its `.deps.json` file. Sets `module.Assembly` and `module.State` on success, or appends to `module.Errors` on failure. |
 
 **Dependency resolution order:**
@@ -110,27 +125,54 @@ Creates `IModule` instances via reflection and calls `Initialize` / `PostInitial
 
 | Method | Description |
 |--------|-------------|
-| `SortByDependency(modules)` | Topological sort using `ModuleDependencySolver`. Optional dependencies are excluded from the graph. |
+| `SortByDependency(modules, boostOptions?)` | Topological sort using `ModuleDependencySolver`. Optional dependencies and dependencies on modules not in the list are excluded from the graph. |
 | `CreateModuleInstance(moduleInfo)` | Finds the `IModule` implementation in the loaded assembly. If multiple candidates exist, matches by `ModuleType` from the manifest. |
-| `InitializeAll(modules, services, config?, env?, catalog?)` | For each module (sorted): creates instance, sets `IHasConfiguration`, `IHasHostEnvironment`, `IHasModuleCatalog` properties, then calls `IModule.Initialize(services)`. |
+| `InitializeAll(modules, services, config?, env?, boostOptions?, catalog?)` | For each module (sorted): creates instance, sets `IHasConfiguration`, `IHasHostEnvironment`, `IHasModuleCatalog` properties, then calls `IModule.Initialize(services)`. Skips modules with errors. |
 | `PostInitializeAll(modules, appBuilder)` | Calls `IModule.PostInitialize(app)` on every initialized module. |
 
 Errors are captured in `moduleInfo.Errors`; the method does not throw.
 
 ### ModuleRegistry
 
-Thread-safe global registry populated once and queried from any code path without DI.
+Thread-safe global registry populated once and queried from any code path without DI. Used by controllers, health checks, tag helpers, Swagger, and static file serving instead of `ILocalModuleCatalog`.
 
 | Method | Description |
 |--------|-------------|
-| `Initialize(modules)` | Stores the module list and builds a case-insensitive dictionary index. |
-| `GetAllModules()` | Returns all modules. |
-| `GetInstalledModules()` | Modules with no errors. |
+| `Initialize(modules)` | Stores the module list and builds a case-insensitive dictionary index. Logs module and error counts. |
+| `GetAllModules()` | Returns all modules (installed + failed). |
+| `GetInstalledModules()` | Modules with `IsInstalled = true` and no errors. |
 | `GetFailedModules()` | Modules with errors. |
 | `IsInstalled(moduleId)` | O(1) lookup. |
 | `IsInstalled(moduleId, minVersion)` | Version-aware check. |
 | `GetModule(moduleId)` | Returns `ManifestModuleInfo` or `null`. |
 | `Reset()` | Clears the registry (for unit tests). |
+
+### ModuleDiscovery
+
+Static logic for external module manifest parsing, version merging, and validation. No HTTP — works on already-downloaded data.
+
+| Method | Description |
+|--------|-------------|
+| `ParseExternalManifest(json, platformVersion, includePrerelease?)` | Parse external module manifest JSON into a list of `ManifestModuleInfo`. Selects the latest compatible stable (and optionally prerelease) version per module. |
+| `MergeWithInstalled(externalModules, installedModules)` | Merge external modules with locally installed modules. Installed modules keep their state; external modules show as available for install/update. |
+| `ValidateModules(modules, platformVersion)` | Validate all loaded modules at startup. Checks platform version, dependency versions, and incompatibilities. Populates `ManifestModuleInfo.Errors`. Cascades errors to dependents (if module A fails, all modules depending on A also fail). Optional dependencies do not cascade. |
+| `ValidateInstall(module, installedModules, platformVersion)` | Validate that a module can be installed. Returns list of error messages (empty if valid). Checks platform version, incompatibilities, and major version changes. |
+| `ValidateUninstall(moduleId, installedModules, excludeModuleIds?)` | Validate that a module can be uninstalled. Returns errors if other installed modules depend on it. `excludeModuleIds` allows batch uninstall (their dependencies are ignored). |
+| `GetDependencies(selectedModules, allAvailableModules)` | Returns the given modules plus all their transitive dependencies (prerequisites), sorted in dependency order. Walks DOWN the dependency graph. For each dependency, prefers installed version, then latest compatible. |
+
+**Validation cascade:** When `ValidateModules` finds a failed module (e.g., incompatible platform version), it propagates errors to all modules that depend on it. This prevents cryptic DI errors at runtime — the error is surfaced at startup.
+
+### ModulePackageInstaller
+
+Static operations for module installation, uninstallation, downloading, and external manifest loading. No DI.
+
+| Method | Description |
+|--------|-------------|
+| `Install(zipPath, targetModulePath)` | Extract a module ZIP file to the target directory. |
+| `Uninstall(modulePath)` | Delete a module directory. If deletion fails due to locked files (e.g., `FileSystemWatcher`), logs a warning and continues. |
+| `Download(packageUrl, targetZipPath, httpClient, options?)` | Download a module package from a URL. Supports authorization headers via `ExternalModuleCatalogOptions`. |
+| `LoadExternalModules(httpClient, options)` | Download and parse external module manifests from all configured URLs (main + extra). Returns deduplicated module list. |
+| `LoadModulesManifest(httpClient, options, manifestUrl)` | Download and parse a single external module manifest URL. |
 
 ### PlatformStartupDiscovery
 
@@ -148,7 +190,7 @@ Discovers `IPlatformStartup` implementations from loaded module assemblies and o
 
 ### LocalModuleCatalogAdapter
 
-A thin adapter that extends `ModuleCatalog` and implements `ILocalModuleCatalog`. It wraps the pre-loaded module list so that DI-dependent code (health checks, tag helpers, static file serving, Swagger) continues to work unchanged.
+A thin adapter that extends `ModuleCatalog` and implements `ILocalModuleCatalog`. It wraps the pre-loaded module list so that DI-dependent code in external modules resolving `ILocalModuleCatalog` or `IModuleCatalog` continues to work unchanged. Platform code itself uses `ModuleRegistry` directly.
 
 ```csharp
 public class LocalModuleCatalogAdapter : ModuleCatalog, ILocalModuleCatalog
@@ -159,6 +201,45 @@ public class LocalModuleCatalogAdapter : ModuleCatalog, ILocalModuleCatalog
     protected override void InnerLoad() { /* no-op */ }
 }
 ```
+
+## Module Management Service
+
+`IModuleManagementService` is a DI-registered singleton for module catalog management from the Admin UI. It merges external (from manifest URLs) and locally installed modules, caches the result, and orchestrates install/uninstall operations.
+
+Registered in DI via `services.AddSingleton<IModuleManagementService, ModuleManagementService>()`.
+
+### IModuleManagementService
+
+```csharp
+public interface IModuleManagementService
+{
+    IList<ManifestModuleInfo> GetModules();
+    void ReloadModules();
+    IList<ManifestModuleInfo> GetDependencies(IList<ManifestModuleInfo> selectedModules);
+    IList<ManifestModuleInfo> GetDependents(IList<ManifestModuleInfo> modules);
+    ManifestModuleInfo AddUploadedModule(ManifestModuleInfo module);
+    void InstallModules(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress);
+    void UninstallModules(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress);
+    IList<ManifestModuleInfo> GetAutoInstallModules(string[] moduleBundles);
+}
+```
+
+| Method | Description |
+|--------|-------------|
+| `GetModules()` | Returns merged list of external + installed modules. Lazy-loaded on first access via `ModulePackageInstaller.LoadExternalModules()` + `ModuleDiscovery.MergeWithInstalled()`. |
+| `ReloadModules()` | Clears cached modules and re-fetches from external manifest URLs. |
+| `GetDependencies(selectedModules)` | Returns selected modules + all transitive prerequisites, sorted in dependency order. Walks DOWN the graph. |
+| `GetDependents(modules)` | Returns installed modules that depend ON the given modules (reverse dependencies). Walks UP the graph. |
+| `AddUploadedModule(module)` | Add an uploaded module to the merged catalog. Validates dependencies before adding. |
+| `InstallModules(modules, progress)` | Install or update modules with `TransactionScope` rollback. Validates platform version and dependencies. Downloads ZIP, extracts to discovery path. |
+| `UninstallModules(modules, progress)` | Uninstall modules. Validates no other modules depend on them. Calls `module.Uninstall()`, deletes directory. |
+| `GetAutoInstallModules(moduleBundles)` | Get modules to auto-install from bundles, including their dependencies. Returns only modules not yet installed. |
+
+### How It Works
+
+1. **First call to `GetModules()`**: Downloads external manifests, merges with `ModuleRegistry.GetAllModules()`, caches result.
+2. **Install**: Validates → downloads ZIP → extracts via `ModulePackageInstaller.Install()` → updates `IsInstalled` flag. Rollback on failure.
+3. **Uninstall**: Validates dependents → calls `IModule.Uninstall()` → deletes directory via `ModulePackageInstaller.Uninstall()`. Rollback on failure.
 
 ## IPlatformStartup Interface
 
@@ -492,7 +573,8 @@ Or use the platform's own copier as a standalone step (the static classes can be
 ```csharp
 // Build-time helper to pre-populate probing folder
 var modules = ModuleManifestReader.ReadAll(discoveryPath, probingPath);
-ModuleCopier.CopyAll(discoveryPath, probingPath, modules);
+ModuleCopier.Initialize(new DefaultFileCopyPolicy());
+ModuleCopier.CopyAll(discoveryPath, probingPath, modules, RuntimeInformation.ProcessArchitecture);
 ```
 
 ### Kubernetes with Shared Volume
@@ -545,28 +627,26 @@ steps:
 
 ## Diagnostics
 
-### Console Output
+### Logging
 
-The static classes log to `Console.WriteLine` with prefixed tags for visibility during early startup:
+All static module classes use `ModuleLogger` (backed by `ILoggerFactory`, typically Serilog). Log output includes structured properties:
 
 ```
-[MODULES] Found 12 module manifests in /app/modules
-[COPY] Copying VirtoCommerce.CatalogModule.dll (1.0.0 -> 1.1.0)
-[COPY] Warning: Could not copy SomeLib.dll (file in use by another process)
-[LOAD] Loaded VirtoCommerce.Catalog 3.800.0
-[REGISTRY] 12 modules registered, 0 with errors
-[STARTUP] Discovered AzureAppConfigStartup from VirtoCommerce.AzureAppConfiguration (priority: -1000)
-[INIT] Initializing VirtoCommerce.Catalog 3.800.0 (1/12)
-[INIT] Post-initializing VirtoCommerce.Catalog
+[INF] ModuleManifestReader: Found 12 module manifests in /app/modules
+[DBG] ModuleCopier: Copying assemblies from /app/modules/VirtoCommerce.Catalog/bin
+[DBG] ModuleCopier: Updating VirtoCommerce.CatalogModule.dll: NewVersion=True
+[WRN] ModuleCopier: File 'SomeLib.dll' was not updated (file in use by another process)
+[DBG] ModuleLoader: Loaded VirtoCommerce.Catalog 3.800.0
+[WRN] ModuleDiscovery: Module VirtoCommerce.Broken has errors: Module platform version 3.1111.0 is incompatible...
+[WRN] ModuleDiscovery: 2 modules failed validation (including cascaded dependents)
+[INF] ModuleRegistry: Loaded modules: 12, with errors: 2
+[DBG] ModuleRunner: Initializing VirtoCommerce.Catalog 3.800.0
+[DBG] ModuleRunner: Post-initializing VirtoCommerce.Catalog
 ```
 
 ### Failed Modules
 
-After startup completes, failed modules are logged at `Error` level via Serilog:
-
-```
-Could not load module VirtoCommerce.Broken 1.0.0. Error: Assembly not found
-```
+After startup, failed modules are logged at Warning/Error level. Modules that fail validation also cascade errors to their dependents:
 
 Query failed modules programmatically:
 
@@ -593,14 +673,20 @@ The `ModulesHealthChecker` reports module health at `/health`:
 Program.Main()
     |
     v
+ModuleLogger.Initialize()       -- set up logging
+    |
+    v
 ModuleManifestReader ──> List<ManifestModuleInfo>
     |                          |
     v                          v
-ModuleCopier          ModuleAssemblyLoader
+ModuleCopier              ModuleLoader
     |                          |
     |                    sets module.Assembly
     v                          |
 (probing folder)               v
+                    ModuleDiscovery.ValidateModules()  -- platform + dep validation
+                               |
+                               v
                        ModuleRegistry  (global static index)
                                |
                                v
@@ -614,19 +700,32 @@ ConfigureAppConfiguration   ModuleRunner.InitializeAll   RunConfigure(phase)
 ConfigureHostServices       RunConfigureServices         PostInitializeAll
                             AddApplicationPart
                             LocalModuleCatalogAdapter --> DI
+
+  Admin UI (ModulesController)
+    |
+    v
+  IModuleManagementService (singleton)
+    |-- ModulePackageInstaller  (download, install, uninstall ZIPs)
+    |-- ModuleDiscovery         (merge, validate, resolve dependencies)
+    +-- ModuleRegistry          (query installed modules)
 ```
 
 ## Related Files
 
 | File | Purpose |
 |------|---------|
+| `src/VirtoCommerce.Platform.Modules/ModuleLogger.cs` | Static logger factory for module pipeline |
 | `src/VirtoCommerce.Platform.Modules/ModuleManifestReader.cs` | Manifest scanning |
 | `src/VirtoCommerce.Platform.Modules/ModuleCopier.cs` | Assembly copying |
-| `src/VirtoCommerce.Platform.Modules/ModuleAssemblyLoader.cs` | Assembly loading |
+| `src/VirtoCommerce.Platform.Modules/ModuleLoader.cs` | Assembly loading |
 | `src/VirtoCommerce.Platform.Modules/ModuleRunner.cs` | Module initialization |
 | `src/VirtoCommerce.Platform.Modules/ModuleRegistry.cs` | Global module index |
+| `src/VirtoCommerce.Platform.Modules/ModuleDiscovery.cs` | Manifest parsing, merging, validation |
+| `src/VirtoCommerce.Platform.Modules/ModulePackageInstaller.cs` | ZIP install/uninstall, download, manifest loading |
+| `src/VirtoCommerce.Platform.Modules/ModuleManagementService.cs` | Singleton service for Admin UI module management |
 | `src/VirtoCommerce.Platform.Modules/PlatformStartupDiscovery.cs` | IPlatformStartup orchestration |
 | `src/VirtoCommerce.Platform.Modules/LocalModuleCatalogAdapter.cs` | DI backward-compat bridge |
+| `src/VirtoCommerce.Platform.Core/Modularity/IModuleManagementService.cs` | Module management interface |
 | `src/VirtoCommerce.Platform.Core/Modularity/IPlatformStartup.cs` | Early startup hook interface |
 | `src/VirtoCommerce.Platform.Core/Modularity/PipelinePhase.cs` | Middleware phase enum |
 | `src/VirtoCommerce.Platform.Core/Modularity/StartupPriority.cs` | Execution order constants |

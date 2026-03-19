@@ -510,7 +510,7 @@ namespace VirtoCommerce.Platform.Web
 
             // Initialize modules (IModule.Initialize registers DI services)
             Log.ForContext<Startup>().Information("Initializing modules");
-            ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, boostOptions, moduleCatalogAdapter);
+            ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter);
 
             // Let IPlatformStartup implementations register application-level services
             PlatformStartupDiscovery.RunConfigureServices(
@@ -727,8 +727,7 @@ namespace VirtoCommerce.Platform.Web
 
                 // Post-initialize all modules in dependency order
                 Log.ForContext<Startup>().Information("Post initializing modules");
-                var postInitBoostOptions = app.ApplicationServices.GetRequiredService<IOptions<ModuleSequenceBoostOptions>>().Value;
-                var sortedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetAllModules().ToList(), postInitBoostOptions);
+                var sortedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetAllModules().ToList());
                 ModuleRunner.PostInitializeAll(sortedModules, app);
             });
 

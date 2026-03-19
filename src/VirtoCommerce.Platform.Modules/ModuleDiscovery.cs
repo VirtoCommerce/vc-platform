@@ -337,66 +337,7 @@ public static class ModuleDiscovery
             }
         }
 
-        return SortByDependencyStatic(completeList);
-    }
-
-    /// <summary>
-    /// Sort modules by dependency order (topological sort). Same logic as <see cref="ModuleRunner.SortByDependency"/>
-    /// but works with a flat list without requiring ModuleSequenceBoostOptions.
-    /// </summary>
-    private static List<ManifestModuleInfo> SortByDependencyStatic(List<ManifestModuleInfo> modules)
-    {
-        if (modules.Count == 0)
-        {
-            return modules;
-        }
-
-        var solver = new ModuleDependencySolver(new ModuleSequenceBoostOptions());
-        var moduleNames = new HashSet<string>(modules.Select(m => m.ModuleName), StringComparer.OrdinalIgnoreCase);
-
-        foreach (var module in modules)
-        {
-            solver.AddModule(module.ModuleName);
-            if (module.DependsOn != null)
-            {
-                foreach (var dep in module.DependsOn)
-                {
-                    // Only add dependency edge if the dependency is in the resolved list
-                    // (unresolved dependencies are skipped to avoid MissedModuleException)
-                    if (!moduleNames.Contains(dep))
-                    {
-                        continue;
-                    }
-
-                    var isOptional = module.Dependencies?.Any(x => x.Id == dep && x.Optional) ?? false;
-                    if (!isOptional)
-                    {
-                        solver.AddDependency(module.ModuleName, dep);
-                    }
-                }
-            }
-        }
-
-        var sortedNames = solver.Solve();
-        // Deduplicate by ModuleName (same module ID may appear with different versions in merged catalogs).
-        // Prefer installed version, then latest.
-        var modulesByName = modules
-            .GroupBy(m => m.ModuleName, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(
-                g => g.Key,
-                g => g.OrderByDescending(m => m.IsInstalled).ThenByDescending(m => m.Version).First(),
-                StringComparer.OrdinalIgnoreCase);
-        var result = new List<ManifestModuleInfo>(sortedNames.Length);
-
-        foreach (var name in sortedNames)
-        {
-            if (modulesByName.TryGetValue(name, out var module))
-            {
-                result.Add(module);
-            }
-        }
-
-        return result;
+        return ModuleRunner.SortByDependency(completeList).ToList();
     }
 
     private static ManifestModuleInfo GetLatestCompatibleVersion(
