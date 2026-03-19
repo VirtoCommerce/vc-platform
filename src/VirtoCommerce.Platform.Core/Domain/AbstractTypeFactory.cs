@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Core.Common
     public static class AbstractTypeFactory<BaseType>
     {
         private static readonly List<TypeInfo<BaseType>> _typeInfos = new List<TypeInfo<BaseType>>();
-        private static readonly ConcurrentDictionary<string, TypeInfo<BaseType>> _typeNameIndex =
+        private static ConcurrentDictionary<string, TypeInfo<BaseType>> _typeNameIndex =
             new ConcurrentDictionary<string, TypeInfo<BaseType>>(StringComparer.OrdinalIgnoreCase);
 
         // Cached delegate for creating BaseType when no overrides are registered.
@@ -219,32 +219,10 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <exception cref="OperationCanceledException"></exception>
         public static BaseType TryCreateInstance(string typeName)
         {
-            BaseType result;
             var typeInfo = FindTypeInfoByName(typeName);
-            if (typeInfo != null)
-            {
-                var factory = typeInfo.GetOrCompileFactory();
-                if (factory != null)
-                {
-                    result = factory();
-                }
-                else
-                {
-                    result = (BaseType)Activator.CreateInstance(typeInfo.Type);
-                }
-                typeInfo.SetupAction?.Invoke(result);
-            }
-            else
-            {
-                var baseType = typeof(BaseType);
-                if (baseType.IsAbstract)
-                {
-                    throw new OperationCanceledException($"A type with {typeName} name is not registered in the AbstractFactory, you cannot create an instance of an abstract class {baseType.Name} because it does not have a complete implementation");
-                }
-                result = CreateDefaultInstance();
-            }
-
-            return result;
+            return typeInfo != null
+                ? CreateFromTypeInfo(typeInfo)
+                : CreateFallbackInstance(typeName);
         }
 
         /// <summary>
@@ -256,11 +234,9 @@ namespace VirtoCommerce.Platform.Core.Common
         public static BaseType TryCreateInstance(string typeName, BaseType defaultObj)
         {
             var typeInfo = FindTypeInfoByName(typeName);
-            if (typeInfo != null)
-            {
-                return TryCreateInstance(typeName);
-            }
-            return defaultObj;
+            return typeInfo != null
+                ? CreateFromTypeInfo(typeInfo)
+                : defaultObj;
         }
 
         /// <summary>
@@ -272,16 +248,15 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns>An instance of the base type.</returns>
         public static BaseType TryCreateInstance(string typeName, BaseType defaultObj, params object[] args)
         {
-            var typeInfo = FindTypeInfoByName(typeName);
-            if (typeInfo != null)
+            if (args == null || args.Length == 0)
             {
-                if (args == null || args.Length == 0)
-                {
-                    return TryCreateInstance(typeName);
-                }
-                return TryCreateInstance(typeName, args);
+                return TryCreateInstance(typeName, defaultObj);
             }
-            return defaultObj;
+
+            var typeInfo = FindTypeInfoByName(typeName);
+            return typeInfo != null
+                ? CreateFromTypeInfo(typeInfo, args)
+                : defaultObj;
         }
 
         /// <summary>
@@ -293,39 +268,57 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <exception cref="OperationCanceledException"></exception>
         public static BaseType TryCreateInstance(string typeName, params object[] args)
         {
-            // Fast path: no args → use parameterless overload (avoids Activator)
             if (args == null || args.Length == 0)
             {
                 return TryCreateInstance(typeName);
             }
 
-            BaseType result;
             var typeInfo = FindTypeInfoByName(typeName);
-            if (typeInfo != null)
-            {
-                // Factory always takes priority (preserves WithFactory behavior from original code)
-                var factory = typeInfo.Factory;
-                if (factory != null)
-                {
-                    result = factory();
-                }
-                else
-                {
-                    result = (BaseType)Activator.CreateInstance(typeInfo.Type, args);
-                }
-                typeInfo.SetupAction?.Invoke(result);
-            }
-            else
-            {
-                var baseType = typeof(BaseType);
-                if (baseType.IsAbstract)
-                {
-                    throw new OperationCanceledException($"A type with {typeName} name is not registered in the AbstractFactory, you cannot create an instance of an abstract class {baseType.Name} because it does not have a complete implementation");
-                }
-                result = (BaseType)Activator.CreateInstance(typeof(BaseType), args);
-            }
+            return typeInfo != null
+                ? CreateFromTypeInfo(typeInfo, args)
+                : CreateFallbackInstance(typeName, args);
+        }
 
+        /// <summary>
+        /// Creates an instance from a resolved TypeInfo using the cached delegate (parameterless).
+        /// </summary>
+        private static BaseType CreateFromTypeInfo(TypeInfo<BaseType> typeInfo)
+        {
+            var factory = typeInfo.GetOrCompileFactory();
+            var result = factory != null
+                ? factory()
+                : (BaseType)Activator.CreateInstance(typeInfo.Type);
+            typeInfo.SetupAction?.Invoke(result);
             return result;
+        }
+
+        /// <summary>
+        /// Creates an instance from a resolved TypeInfo with constructor arguments.
+        /// Factory takes priority over Activator when set (preserves WithFactory behavior).
+        /// </summary>
+        private static BaseType CreateFromTypeInfo(TypeInfo<BaseType> typeInfo, object[] args)
+        {
+            var factory = typeInfo.Factory;
+            var result = factory != null
+                ? factory()
+                : (BaseType)Activator.CreateInstance(typeInfo.Type, args);
+            typeInfo.SetupAction?.Invoke(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Fallback when no TypeInfo is found: creates BaseType directly or throws for abstract types.
+        /// </summary>
+        private static BaseType CreateFallbackInstance(string typeName, object[] args = null)
+        {
+            var baseType = typeof(BaseType);
+            if (baseType.IsAbstract)
+            {
+                throw new OperationCanceledException($"A type with {typeName} name is not registered in the AbstractFactory, you cannot create an instance of an abstract class {baseType.Name} because it does not have a complete implementation");
+            }
+            return args != null
+                ? (BaseType)Activator.CreateInstance(baseType, args)
+                : CreateDefaultInstance();
         }
 
         /// <summary>
@@ -335,8 +328,11 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns>The TypeInfo instance for the specified type name.</returns>
         public static TypeInfo<BaseType> FindTypeInfoByName(string typeName)
         {
+            // Read the current index reference (may be swapped by RebuildIndex)
+            var index = Volatile.Read(ref _typeNameIndex);
+
             // O(1) direct match via concurrent dictionary
-            if (_typeNameIndex.TryGetValue(typeName, out var result))
+            if (index.TryGetValue(typeName, out var result))
             {
                 return result;
             }
@@ -347,7 +343,7 @@ namespace VirtoCommerce.Platform.Core.Common
             // Cache the result so subsequent lookups for the same name are O(1)
             if (result != null)
             {
-                _typeNameIndex.TryAdd(typeName, result);
+                index.TryAdd(typeName, result);
             }
 
             return result;
@@ -381,11 +377,13 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </summary>
         private static void RebuildIndex()
         {
-            _typeNameIndex.Clear();
+            // Atomic swap: concurrent readers see either old or new index, never an empty/partial one
+            var newIndex = new ConcurrentDictionary<string, TypeInfo<BaseType>>(StringComparer.OrdinalIgnoreCase);
             foreach (var typeInfo in _typeInfos)
             {
-                _typeNameIndex[typeInfo.TypeName] = typeInfo;
+                newIndex[typeInfo.TypeName] = typeInfo;
             }
+            Volatile.Write(ref _typeNameIndex, newIndex);
         }
     }
 
