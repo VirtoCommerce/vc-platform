@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Core.Common
             if (_typeInfos.Count == 0)
             {
                 // No overrides — create base type directly via cached delegate (no lookup needed)
-                return GetOrCompileDefaultFactory()();
+                return CreateDefaultInstance();
             }
 
             return TryCreateInstance();
@@ -241,7 +241,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 {
                     throw new OperationCanceledException($"A type with {typeName} name is not registered in the AbstractFactory, you cannot create an instance of an abstract class {baseType.Name} because it does not have a complete implementation");
                 }
-                result = GetOrCompileDefaultFactory()();
+                result = CreateDefaultInstance();
             }
 
             return result;
@@ -353,7 +353,7 @@ namespace VirtoCommerce.Platform.Core.Common
             return result;
         }
 
-        private static Func<BaseType> GetOrCompileDefaultFactory()
+        private static BaseType CreateDefaultInstance()
         {
             var factory = Volatile.Read(ref _defaultFactory);
             if (factory == null)
@@ -367,7 +367,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 Interlocked.CompareExchange(ref _defaultFactory, factory, null);
                 factory = Volatile.Read(ref _defaultFactory);
             }
-            return factory;
+            return factory();
         }
 
         private static Func<BaseType> CompileFactory(Type type)
