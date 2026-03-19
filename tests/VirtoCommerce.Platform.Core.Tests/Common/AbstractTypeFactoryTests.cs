@@ -116,6 +116,19 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
     {
     }
 
+    // Type for auto-compiled + args test (Bug 3 regression test)
+    public class Entity
+    {
+        public string Id { get; set; }
+
+        public Entity() { }
+
+        public Entity(string id)
+        {
+            Id = id;
+        }
+    }
+
     // Types for WithTypeName test (Bug 2 regression test)
     public class Document
     {
@@ -313,6 +326,24 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
 
             Assert.NotNull(result);
             Assert.IsType<Invoice>(result);
+        }
+
+        [Fact]
+        public void TryCreateInstance_WithArgs_NotPoisonedByPriorParameterlessCall()
+        {
+            // Bug 3 regression: auto-compiled delegate from parameterless path
+            // must NOT be used when args are passed (args would be silently ignored)
+            AbstractTypeFactory<Entity>.RegisterType<Entity>();
+
+            // First call: parameterless — triggers auto-compilation of delegate
+            var parameterless = AbstractTypeFactory<Entity>.TryCreateInstance();
+            Assert.NotNull(parameterless);
+            Assert.Null(parameterless.Id);
+
+            // Second call: with args — must use Activator.CreateInstance(type, args), NOT the cached delegate
+            var withArgs = AbstractTypeFactory<Entity>.TryCreateInstance(nameof(Entity), "my-id");
+            Assert.NotNull(withArgs);
+            Assert.Equal("my-id", withArgs.Id);
         }
     }
 }

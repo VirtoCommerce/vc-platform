@@ -361,7 +361,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 }
                 factory = CompileFactory(baseType);
                 Interlocked.CompareExchange(ref _defaultFactory, factory, null);
-                factory = Volatile.Read(ref _defaultFactory);
+                // Use the local — don't re-read _defaultFactory (avoids race with concurrent RegisterType nulling it)
             }
             return factory();
         }
@@ -392,8 +392,12 @@ namespace VirtoCommerce.Platform.Core.Common
     /// </summary>
     public class TypeInfo<BaseType>
     {
-        // Backing field for Factory — supports Interlocked.CompareExchange for thread-safe lazy caching
+        // Manual factory set via WithFactory() — always takes priority, including when args are passed
         private Func<BaseType> _factory;
+
+        // Auto-compiled parameterless delegate — used only for parameterless creation path.
+        // Separate from _factory to avoid poisoning the args path (where Activator must be used).
+        private Func<BaseType> _compiledFactory;
 
         // Callback to notify the parent factory when TypeName changes (for index rebuild)
         internal Action OnTypeNameChanged { get; set; }
@@ -410,9 +414,8 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </summary>
         public string TypeName { get; private set; }
         /// <summary>
-        /// Gets the factory function used to create an instance of the type.
-        /// When no factory is explicitly set via <see cref="WithFactory"/>, a compiled delegate
-        /// is auto-cached on first use for types with a parameterless constructor.
+        /// Gets the factory function explicitly set via <see cref="WithFactory"/>.
+        /// Returns null if no manual factory was set (auto-compiled delegates are not exposed here).
         /// </summary>
         public Func<BaseType> Factory => Volatile.Read(ref _factory);
         /// <summary>
@@ -529,18 +532,26 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </summary>
         internal Func<BaseType> GetOrCompileFactory()
         {
+            // Manual factory always takes priority
             var factory = Volatile.Read(ref _factory);
-            if (factory == null)
+            if (factory != null)
+            {
+                return factory;
+            }
+
+            // Auto-compiled parameterless delegate
+            var compiled = Volatile.Read(ref _compiledFactory);
+            if (compiled == null)
             {
                 var ctor = Type.GetConstructor(Type.EmptyTypes);
                 if (ctor != null)
                 {
-                    var compiled = Expression.Lambda<Func<BaseType>>(Expression.New(ctor)).Compile();
-                    Interlocked.CompareExchange(ref _factory, compiled, null);
-                    factory = Volatile.Read(ref _factory);
+                    compiled = Expression.Lambda<Func<BaseType>>(Expression.New(ctor)).Compile();
+                    Interlocked.CompareExchange(ref _compiledFactory, compiled, null);
+                    // Use the local — don't re-read the field (avoids race with concurrent reset)
                 }
             }
-            return factory;
+            return compiled;
         }
     }
 }
