@@ -92,7 +92,7 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 result = new TypeInfo<BaseType>(type);
                 _typeInfos.Add(result);
-                _typeNameIndex[result.TypeName] = result;
+                RebuildIndex();
             }
 
             // Invalidate default factory — type resolution may have changed
@@ -134,12 +134,12 @@ namespace VirtoCommerce.Platform.Core.Common
             if (existTypeInfo != null)
             {
                 _typeInfos.Remove(existTypeInfo);
-                // Remove old entry from index (by old type name)
-                _typeNameIndex.TryRemove(existTypeInfo.TypeName, out _);
             }
 
             _typeInfos.Add(newTypeInfo);
-            _typeNameIndex[newTypeInfo.TypeName] = newTypeInfo;
+
+            // Rebuild entire index — clears cached inheritance lookups that may now be stale
+            RebuildIndex();
 
             // Invalidate default factory — type resolution may have changed
             Volatile.Write(ref _defaultFactory, null);
@@ -333,8 +333,16 @@ namespace VirtoCommerce.Platform.Core.Common
                 return result;
             }
 
-            // Fallback: inheritance chain scan (rare — only when lookup by parent type name)
-            return _typeInfos.FirstOrDefault(x => x.IsAssignableTo(typeName));
+            // Fallback: inheritance chain scan (e.g., lookup "ShoppingCart" when "LeoShoppingCart" is registered)
+            result = _typeInfos.FirstOrDefault(x => x.IsAssignableTo(typeName));
+
+            // Cache the result so subsequent lookups for the same name are O(1)
+            if (result != null)
+            {
+                _typeNameIndex.TryAdd(typeName, result);
+            }
+
+            return result;
         }
 
         private static Func<BaseType> GetOrCompileDefaultFactory()
@@ -357,6 +365,19 @@ namespace VirtoCommerce.Platform.Core.Common
         private static Func<BaseType> CompileFactory(Type type)
         {
             return Expression.Lambda<Func<BaseType>>(Expression.New(type)).Compile();
+        }
+
+        /// <summary>
+        /// Rebuilds the type name index from scratch. Called on RegisterType/OverrideType
+        /// to clear any cached inheritance lookups that may now be stale.
+        /// </summary>
+        private static void RebuildIndex()
+        {
+            _typeNameIndex.Clear();
+            foreach (var typeInfo in _typeInfos)
+            {
+                _typeNameIndex[typeInfo.TypeName] = typeInfo;
+            }
         }
     }
 

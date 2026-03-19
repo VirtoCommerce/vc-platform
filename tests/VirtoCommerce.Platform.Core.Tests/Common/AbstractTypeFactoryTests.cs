@@ -1,0 +1,271 @@
+using System;
+using VirtoCommerce.Platform.Core.Common;
+using Xunit;
+
+namespace VirtoCommerce.Platform.Core.Tests.Common
+{
+    // Test type hierarchy — separate from other tests' types to avoid cross-test pollution
+    // (AbstractTypeFactory is static generic, so each BaseType gets its own state)
+
+    public class Animal
+    {
+        public string Name { get; set; }
+    }
+
+    public class Dog : Animal
+    {
+        public string Breed { get; set; }
+    }
+
+    public class Labrador : Dog
+    {
+    }
+
+    public abstract class AbstractVehicle
+    {
+        public string Model { get; set; }
+    }
+
+    public class Car : AbstractVehicle
+    {
+    }
+
+    public class Shape
+    {
+        public double Area { get; set; }
+    }
+
+    public class Circle : Shape
+    {
+    }
+
+    public class Square : Shape
+    {
+    }
+
+    // Separate base types for tests that need isolated factory state
+    public class Widget
+    {
+        public string Id { get; set; }
+    }
+
+    public class SuperWidget : Widget
+    {
+    }
+
+    public class Gadget
+    {
+        public string Id { get; set; }
+    }
+
+    public class SuperGadget : Gadget
+    {
+    }
+
+    public class Tool
+    {
+        public string Id { get; set; }
+    }
+
+    public class PowerTool : Tool
+    {
+    }
+
+    public class Item
+    {
+        public string Id { get; set; }
+    }
+
+    public class SpecialItem : Item
+    {
+    }
+
+    public class Part
+    {
+        public string Id { get; set; }
+    }
+
+    public class CustomPart : Part
+    {
+    }
+
+    public class Record
+    {
+        public string Id { get; set; }
+    }
+
+    public class ParameterizedRecord
+    {
+        public string Id { get; }
+        public string Value { get; }
+
+        public ParameterizedRecord(string id, string value)
+        {
+            Id = id;
+            Value = value;
+        }
+    }
+
+    [Trait("Category", "Unit")]
+    public class AbstractTypeFactoryTests
+    {
+        [Fact]
+        public void New_NoOverrides_CreatesBaseType()
+        {
+            // Animal has no registrations → New() should create Animal directly
+            var result = AbstractTypeFactory<Animal>.New();
+
+            Assert.NotNull(result);
+            Assert.Equal(typeof(Animal), result.GetType());
+        }
+
+        [Fact]
+        public void New_WithOverride_CreatesDerivedType()
+        {
+            AbstractTypeFactory<Widget>.RegisterType<SuperWidget>();
+
+            var result = AbstractTypeFactory<Widget>.New();
+
+            Assert.NotNull(result);
+            Assert.IsType<SuperWidget>(result);
+        }
+
+        [Fact]
+        public void New_AbstractBaseType_NoOverrides_Throws()
+        {
+            Assert.Throws<OperationCanceledException>(() =>
+                AbstractTypeFactory<AbstractVehicle>.New());
+        }
+
+        [Fact]
+        public void New_AbstractBaseType_WithOverride_CreatesDerivedType()
+        {
+            AbstractTypeFactory<AbstractVehicle>.RegisterType<Car>();
+
+            var result = AbstractTypeFactory<AbstractVehicle>.New();
+
+            Assert.NotNull(result);
+            Assert.IsType<Car>(result);
+        }
+
+        [Fact]
+        public void TryCreateInstance_RegisteredType_LookupByBaseTypeName()
+        {
+            // Most common pattern: register derived, lookup by base type name
+            AbstractTypeFactory<Gadget>.RegisterType<SuperGadget>();
+
+            var result = AbstractTypeFactory<Gadget>.TryCreateInstance();
+
+            Assert.NotNull(result);
+            Assert.IsType<SuperGadget>(result);
+        }
+
+        [Fact]
+        public void TryCreateInstance_RegisteredType_LookupByDerivedTypeName()
+        {
+            AbstractTypeFactory<Tool>.RegisterType<PowerTool>();
+
+            var result = AbstractTypeFactory<Tool>.TryCreateInstance(nameof(PowerTool));
+
+            Assert.NotNull(result);
+            Assert.IsType<PowerTool>(result);
+        }
+
+        [Fact]
+        public void OverrideType_ReplacesRegistration()
+        {
+            AbstractTypeFactory<Shape>.RegisterType<Circle>();
+
+            // Override Circle with Square
+            AbstractTypeFactory<Shape>.OverrideType<Circle, Square>();
+
+            var result = AbstractTypeFactory<Shape>.TryCreateInstance();
+
+            Assert.NotNull(result);
+            Assert.IsType<Square>(result);
+        }
+
+        [Fact]
+        public void OverrideType_ClearsInheritanceLookupCache()
+        {
+            AbstractTypeFactory<Item>.RegisterType<Item>();
+
+            // First call — caches "Item" → ItemTypeInfo in the index
+            var first = AbstractTypeFactory<Item>.TryCreateInstance();
+            Assert.IsType<Item>(first);
+
+            // Override — should invalidate cached lookup
+            AbstractTypeFactory<Item>.OverrideType<Item, SpecialItem>();
+
+            var second = AbstractTypeFactory<Item>.TryCreateInstance();
+            Assert.IsType<SpecialItem>(second);
+        }
+
+        [Fact]
+        public void TryCreateInstance_WithArgs_UsesActivator()
+        {
+            AbstractTypeFactory<ParameterizedRecord>.RegisterType<ParameterizedRecord>();
+
+            var result = AbstractTypeFactory<ParameterizedRecord>.TryCreateInstance(
+                nameof(ParameterizedRecord), "test-id", "test-value");
+
+            Assert.NotNull(result);
+            Assert.Equal("test-id", result.Id);
+            Assert.Equal("test-value", result.Value);
+        }
+
+        [Fact]
+        public void WithFactory_TakesPriorityOverAutoCompiledDelegate()
+        {
+            var customFactoryCalled = false;
+            AbstractTypeFactory<Part>.RegisterType<CustomPart>()
+                .WithFactory(() =>
+                {
+                    customFactoryCalled = true;
+                    return new CustomPart { Id = "from-factory" };
+                });
+
+            var result = AbstractTypeFactory<Part>.TryCreateInstance();
+
+            Assert.True(customFactoryCalled);
+            Assert.IsType<CustomPart>(result);
+            Assert.Equal("from-factory", result.Id);
+        }
+
+        [Fact]
+        public void WithSetupAction_CalledAfterCreation()
+        {
+            AbstractTypeFactory<Record>.RegisterType<Record>()
+                .WithSetupAction(x => x.Id = "setup-applied");
+
+            var result = AbstractTypeFactory<Record>.TryCreateInstance();
+
+            Assert.Equal("setup-applied", result.Id);
+        }
+
+        [Fact]
+        public void TryCreateInstance_WithDefault_ReturnsDefault_WhenTypeNotFound()
+        {
+            var defaultObj = new Animal { Name = "default" };
+
+            var result = AbstractTypeFactory<Animal>.TryCreateInstance("NonExistentType", defaultObj);
+
+            Assert.Same(defaultObj, result);
+        }
+
+        [Fact]
+        public void FindTypeInfoByName_SecondCall_UsesCache()
+        {
+            AbstractTypeFactory<Dog>.RegisterType<Labrador>();
+
+            // First call — fallback to inheritance scan, caches result
+            var first = AbstractTypeFactory<Dog>.FindTypeInfoByName(nameof(Dog));
+            // Second call — should hit the cached entry
+            var second = AbstractTypeFactory<Dog>.FindTypeInfoByName(nameof(Dog));
+
+            Assert.NotNull(first);
+            Assert.Same(first, second);
+            Assert.Equal(typeof(Labrador), first.Type);
+        }
+    }
+}
