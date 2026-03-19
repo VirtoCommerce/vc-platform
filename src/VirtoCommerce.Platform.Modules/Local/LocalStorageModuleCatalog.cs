@@ -13,7 +13,7 @@ using VirtoCommerce.Platform.DistributedLock;
 
 namespace VirtoCommerce.Platform.Modules
 {
-    [Obsolete("Use ModuleManifestReader and ModuleAssemblyLoader instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModuleManifestReader and ModuleLoader instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class LocalStorageModuleCatalog : ModuleCatalog, ILocalModuleCatalog
     {
         private readonly LocalStorageModuleCatalogOptions _options;
@@ -285,8 +285,7 @@ namespace VirtoCommerce.Platform.Modules
 
         private void CopyFile(string sourceFilePath, string targetFilePath)
         {
-            var environment = Environment.Is64BitProcess ? Architecture.X64 : Architecture.X86;
-            if (!_fileCopyPolicy.IsCopyRequired(environment, sourceFilePath, targetFilePath, out var result))
+            if (!_fileCopyPolicy.IsCopyRequired(sourceFilePath, targetFilePath, RuntimeInformation.ProcessArchitecture, out var result))
             {
                 return;
             }

@@ -103,7 +103,7 @@ namespace VirtoCommerce.Platform.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Bootstrap logger was created in Program.Main() before module loading.
-            Log.ForContext<Startup>().Information("Virto Commerce is configuring services");
+            Log.ForContext<Startup>().Information("Configuring services");
 
             // Module assemblies are already loaded in Program.Main() via ModuleRegistry
             var modules = ModuleRegistry.GetAllModules().ToList();
@@ -130,7 +130,8 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
                     {
-                        options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
+                        options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath);
+                        options.ProbingPath = Path.GetFullPath(options.ProbingPath);
                     })
                     .ValidateDataAnnotations();
             services.AddOptions<ModuleSequenceBoostOptions>().Bind(Configuration.GetSection("VirtoCommerce"));
@@ -508,6 +509,7 @@ namespace VirtoCommerce.Platform.Web
 #pragma warning restore VC0014 // Type or member is obsolete
 
             // Initialize modules (IModule.Initialize registers DI services)
+            Log.ForContext<Startup>().Information("Initializing modules");
             ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, boostOptions, moduleCatalogAdapter);
 
             // Let IPlatformStartup implementations register application-level services

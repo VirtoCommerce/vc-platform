@@ -138,26 +138,24 @@ public static class ModuleRunner
 
         var logger = ModuleLogger.CreateLogger(typeof(ModuleRunner));
         var sorted = SortByDependency(modules, boostOptions);
-        var count = 0;
-        var total = sorted.Count(m => m.Assembly != null && m.Errors.Count == 0);
 
         foreach (var moduleInfo in sorted)
         {
             if (moduleInfo.Errors.Count > 0)
             {
-                logger.LogWarning("Skipping {ModuleId} (has errors)", moduleInfo.Id);
+                logger.LogWarning("Skipping module {ModuleId} (has errors)", moduleInfo.Id);
                 continue;
             }
 
             if (moduleInfo.Assembly == null)
             {
+                logger.LogDebug("Skipping module {ModuleId} (no assembly)", moduleInfo.Id);
                 continue;
             }
 
             try
             {
-                count++;
-                logger.LogDebug("Initializing {ModuleId} {ModuleVersion} ({Count}/{Total})", moduleInfo.Id, moduleInfo.Version, count, total);
+                logger.LogDebug("Initializing module {ModuleId} {ModuleVersion}", moduleInfo.Id, moduleInfo.Version);
 
                 var instance = CreateModuleInstance(moduleInfo);
                 moduleInfo.ModuleInstance = instance;
@@ -185,7 +183,7 @@ public static class ModuleRunner
             catch (Exception ex)
             {
                 moduleInfo.Errors.Add(ex.ToString());
-                logger.LogError(ex, "Failed to initialize {ModuleId}", moduleInfo.Id);
+                logger.LogError(ex, "Failed to initialize module {ModuleId}", moduleInfo.Id);
             }
         }
     }
@@ -211,13 +209,13 @@ public static class ModuleRunner
 
             try
             {
-                logger.LogDebug("Post-initializing {ModuleId}", moduleInfo.Id);
+                logger.LogDebug("Post-initializing module {ModuleId}", moduleInfo.Id);
                 moduleInfo.ModuleInstance.PostInitialize(appBuilder);
             }
             catch (Exception ex)
             {
                 moduleInfo.Errors.Add(ex.ToString());
-                logger.LogError(ex, "Failed to post-initialize {ModuleId}", moduleInfo.Id);
+                logger.LogError(ex, "Failed to post-initialize module {ModuleId}", moduleInfo.Id);
             }
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -15,7 +16,7 @@ public static class ModuleRegistry
 {
     private static volatile IReadOnlyList<ManifestModuleInfo> _modules = [];
     private static volatile Dictionary<string, ManifestModuleInfo> _moduleIndex = new(StringComparer.OrdinalIgnoreCase);
-    private static readonly object _lock = new();
+    private static readonly Lock _lock = new();
 
     public static void Initialize(IReadOnlyList<ManifestModuleInfo> modules)
     {
@@ -33,7 +34,7 @@ public static class ModuleRegistry
         }
 
         var logger = ModuleLogger.CreateLogger(typeof(ModuleRegistry));
-        logger.LogInformation("{ModuleCount} modules registered, {ErrorCount} with errors", modules.Count, modules.Count(m => m.Errors.Count > 0));
+        logger.LogInformation("Loaded modules: {ModuleCount}, with errors: {ErrorCount}", modules.Count, modules.Count(m => m.Errors.Count > 0));
     }
 
     public static bool IsInstalled(string moduleId)

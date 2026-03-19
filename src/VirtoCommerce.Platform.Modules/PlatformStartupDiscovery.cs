@@ -69,7 +69,7 @@ public static class PlatformStartupDiscovery
         startups.Sort((a, b) => a.Priority.CompareTo(b.Priority));
         _startups = startups;
 
-        logger.LogDebug("Discovered {StartupCount} platform startup types", startups.Count);
+        logger.LogDebug("Platform startup extensions: {StartupCount}", startups.Count);
 
         return _startups;
     }

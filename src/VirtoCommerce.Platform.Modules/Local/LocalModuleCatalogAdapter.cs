@@ -22,7 +22,7 @@ public class LocalModuleCatalogAdapter : ModuleCatalog, ILocalModuleCatalog
 
     protected override void InnerLoad()
     {
-        // No-op: modules were already loaded by ModuleManifestReader + ModuleAssemblyLoader
+        // No-op: modules were already loaded by ModuleManifestReader + ModuleLoader
     }
 
     public override void AddModule(ModuleInfo moduleInfo)

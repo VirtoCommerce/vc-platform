@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.Modules.Local;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -37,10 +41,6 @@ namespace VirtoCommerce.Platform.Web
                 .AddEnvironmentVariables()
                 .Build();
 
-            var discoveryPath = Path.GetFullPath(bootConfig.GetValue("VirtoCommerce:DiscoveryPath", "modules"));
-            var probingPath = Path.GetFullPath(bootConfig.GetValue("VirtoCommerce:ProbingPath", "app_data/modules"));
-            var refreshProbing = bootConfig.GetValue("VirtoCommerce:RefreshProbingFolderOnStart", true);
-
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(GetLoggerConfiguration(bootConfig))
                 .CreateBootstrapLogger();
@@ -49,25 +49,36 @@ namespace VirtoCommerce.Platform.Web
             var bootstrapLoggerFactory = new SerilogLoggerFactory(Log.Logger);
             ModuleLogger.Initialize(bootstrapLoggerFactory);
 
-            var modules = ModuleManifestReader.ReadAll(discoveryPath, probingPath);
+            var options = new LocalStorageModuleCatalogOptions();
+            bootConfig.GetSection("VirtoCommerce").Bind(options);
+            options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath);
+            options.ProbingPath = Path.GetFullPath(options.ProbingPath);
 
-            if (!Directory.Exists(probingPath))
+            var refreshProbing = options.RefreshProbingFolderOnStart;
+            var modules = ModuleManifestReader.ReadAll(options.DiscoveryPath, options.ProbingPath);
+
+            if (!Directory.Exists(options.ProbingPath))
             {
+                Directory.CreateDirectory(options.ProbingPath);
                 refreshProbing = true;
-                Directory.CreateDirectory(probingPath);
             }
 
             if (refreshProbing)
             {
-                ModuleCopier.CopyAll(discoveryPath, probingPath, modules);
+                var optionsWrapper = Options.Create(options);
+                var metadataProvider = new FileMetadataProvider(optionsWrapper);
+                var policy = new FileCopyPolicy(metadataProvider, optionsWrapper);
+
+                ModuleCopier.Initialize(policy);
+                ModuleCopier.CopyAll(options.DiscoveryPath, options.ProbingPath, modules, RuntimeInformation.ProcessArchitecture);
             }
 
             var isDevelopment = environment.EqualsIgnoreCase(Environments.Development);
-            ModuleAssemblyLoader.Initialize(isDevelopment);
+            ModuleLoader.Initialize(isDevelopment);
 
             foreach (var module in modules.Where(m => !string.IsNullOrEmpty(m.Ref)))
             {
-                ModuleAssemblyLoader.LoadModule(module, probingPath);
+                ModuleLoader.LoadModule(module, options.ProbingPath);
             }
 
             ModuleDiscovery.ValidateModules(modules, PlatformVersion.CurrentVersion);

@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 namespace VirtoCommerce.Platform.Modules;
 
 /// <summary>
-/// Reads module.manifest XML files from a discovery directory.
+/// Reads module.manifest files from a discovery directory.
 /// Pure data extraction - no side effects beyond filesystem reads.
 /// Works without DI.
 /// </summary>
@@ -22,12 +22,14 @@ public static class ModuleManifestReader
     {
         ArgumentNullException.ThrowIfNull(discoveryPath);
 
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleManifestReader));
+        logger.LogInformation("Loading modules");
+
         if (!discoveryPath.EndsWith(Path.DirectorySeparatorChar))
         {
             discoveryPath += Path.DirectorySeparatorChar;
         }
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModuleManifestReader));
         var result = new List<ManifestModuleInfo>();
 
         if (!Directory.Exists(discoveryPath))
@@ -98,7 +100,7 @@ public static class ModuleManifestReader
         {
             Host = string.Empty,
             Scheme = Uri.UriSchemeFile,
-            Path = Path.GetFullPath(Path.Combine(rootPath, relativePath))
+            Path = Path.GetFullPath(Path.Combine(rootPath, relativePath)),
         };
         return builder.Uri.ToString();
     }

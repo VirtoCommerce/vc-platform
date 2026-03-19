@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
 namespace VirtoCommerce.Platform.Modules;
 
@@ -16,12 +13,14 @@ namespace VirtoCommerce.Platform.Modules;
 /// </summary>
 public static class ModuleCopier
 {
-    // Default file extension lists (from LocalStorageModuleCatalogOptions defaults)
-    private static readonly string[] _localizationExtensions = ["resources.dll"];
-    private static readonly string[] _assemblyExtensions = [".dll", ".exe"];
-    private static readonly string[] _serviceExtensions = [".pdb", ".xml", ".deps.json", ".runtimeconfig.json", ".runtimeconfig.dev.json", ".dep", ".zip"];
-    private static readonly string[] _referenceAssemblyFolders = ["ref"];
-    private static readonly string _runtimesDirectory = "runtimes" + Path.DirectorySeparatorChar;
+    private static ILogger _logger;
+    private static IFileCopyPolicy _fileCopyPolicy;
+
+    public static void Initialize(IFileCopyPolicy fileCopyPolicy)
+    {
+        _logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
+        _fileCopyPolicy = fileCopyPolicy;
+    }
 
     /// <summary>
     /// Copy all module assemblies to probingPath. Also copies platform assemblies from discoveryPath/bin.
@@ -30,62 +29,51 @@ public static class ModuleCopier
         string discoveryPath,
         string probingPath,
         IReadOnlyList<ManifestModuleInfo> modules,
-        Architecture? targetArchitecture = null)
+        Architecture environmentArchitecture)
     {
         ArgumentNullException.ThrowIfNull(discoveryPath);
         ArgumentNullException.ThrowIfNull(probingPath);
         ArgumentNullException.ThrowIfNull(modules);
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
-
-        // Resolve architecture once: explicit override or auto-detect (supports X86, X64, Arm, Arm64)
-        var resolvedArch = targetArchitecture ?? RuntimeInformation.ProcessArchitecture;
-
-        logger.LogDebug("Copying modules to probing path {ProbingPath} from {DiscoveryPath}, {ModuleCount} modules, architecture: {Architecture}",
-            probingPath, discoveryPath, modules.Count, resolvedArch);
+        _logger.LogDebug("Copying modules from {From} to {To}, count: {Count}, architecture: {Architecture}",
+            discoveryPath, probingPath, modules.Count, environmentArchitecture);
 
         if (!Directory.Exists(probingPath))
         {
             Directory.CreateDirectory(probingPath);
         }
 
-        // Copy platform assemblies
-        CopyModule(discoveryPath, probingPath, resolvedArch);
-
-        // Copy each module's assemblies
         foreach (var module in modules)
         {
             if (module.FullPhysicalPath != null)
             {
-                CopyModule(module.FullPhysicalPath, probingPath, resolvedArch);
+                CopyModule(module.FullPhysicalPath, probingPath, environmentArchitecture);
             }
         }
 
-        logger.LogDebug("Module copy completed");
+        _logger.LogDebug("Module copying completed");
     }
 
     /// <summary>
     /// Copy a single module's bin/ directory contents to the probing path.
     /// </summary>
-    public static void CopyModule(string modulePath, string probingPath, Architecture? targetArchitecture = null)
+    public static void CopyModule(string sourceDirectoryPath, string targetDirectoryPath, Architecture environmentArchitecture)
     {
-        if (modulePath == null)
+        if (sourceDirectoryPath == null)
         {
             return;
         }
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
-        var sourceBinPath = Path.Combine(modulePath, "bin");
+        var sourceBinPath = Path.Combine(sourceDirectoryPath, "bin");
         if (!Directory.Exists(sourceBinPath))
         {
-            logger.LogDebug("No bin directory for module at {ModulePath}, skipping", modulePath);
+            _logger.LogDebug("No bin directory for module at {Path}, skipping", sourceDirectoryPath);
             return;
         }
 
-        logger.LogDebug("Copying module assemblies from {SourceBinPath}", sourceBinPath);
+        _logger.LogDebug("Copying assemblies from {SourceBinPath}", sourceBinPath);
 
         // Explicit override or auto-detect (supports X86, X64, Arm, Arm64)
-        var environment = targetArchitecture ?? RuntimeInformation.ProcessArchitecture;
 
         foreach (var sourceFilePath in Directory.EnumerateFiles(sourceBinPath, "*", SearchOption.AllDirectories))
         {
@@ -97,8 +85,8 @@ public static class ModuleCopier
                 continue;
             }
 
-            var targetFilePath = Path.Combine(probingPath, targetRelativePath);
-            CopyFile(environment, sourceFilePath, targetFilePath);
+            var targetFilePath = Path.Combine(targetDirectoryPath, targetRelativePath);
+            CopyFile(sourceFilePath, targetFilePath, environmentArchitecture);
         }
     }
 
@@ -108,102 +96,23 @@ public static class ModuleCopier
     /// </summary>
     public static string GetTargetRelativePath(string sourceRelativeFilePath)
     {
-        var fileName = Path.GetFileName(sourceRelativeFilePath);
-
-        // Skip Trusted Platform Assemblies
-        if (Tpa.ContainsAssembly(fileName))
-        {
-            return null;
-        }
-
-        // Skip reference assembly directories
-        if (IsReferenceDirectory(sourceRelativeFilePath))
-        {
-            return null;
-        }
-
-        // Preserve runtimes directory structure
-        if (sourceRelativeFilePath.StartsWith(_runtimesDirectory, StringComparison.OrdinalIgnoreCase))
-        {
-            return sourceRelativeFilePath;
-        }
-
-        // Localization files: keep language folder
-        if (IsLocalizationFile(fileName))
-        {
-            return Path.Combine(GetLastDirectoryName(sourceRelativeFilePath), fileName);
-        }
-
-        // Assembly and related files: flatten to root
-        if (IsAssemblyRelatedFile(fileName))
-        {
-            return fileName;
-        }
-
-        return null;
+        return _fileCopyPolicy.GetTargetRelativePath(sourceRelativeFilePath);
     }
 
-    /// <summary>
-    /// Check if a file needs to be copied based on version, architecture, and date.
-    /// </summary>
-    public static bool IsCopyRequired(Architecture environment, string sourceFilePath, string targetFilePath)
+    private static void CopyFile(string sourceFilePath, string targetFilePath, Architecture environmentArchitecture)
     {
-        if (!File.Exists(targetFilePath))
+        if (!IsCopyRequired(sourceFilePath, targetFilePath, environmentArchitecture, out var result))
         {
-            return IsArchitectureCompatible(sourceFilePath, environment);
+            return;
         }
 
-        var result = new FileCompareResult
+        _logger.LogDebug("Updating {TargetFile}: NewVersion={NewVersion}, NewArchitecture={NewArchitecture}, NewDate={NewDate}",
+            Path.GetFileName(targetFilePath), result.NewVersion, result.NewArchitecture, result.NewDate);
+
+        var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
+        if (targetDirectoryPath != null && !Directory.Exists(targetDirectoryPath))
         {
-            NewFile = false,
-        };
-
-        CompareDates(sourceFilePath, targetFilePath, result);
-        CompareVersions(sourceFilePath, targetFilePath, result);
-        CompareArchitecture(sourceFilePath, targetFilePath, environment, result);
-
-        return result.NewVersion && result.SameOrNewArchitecture ||
-               result.NewArchitecture && result.SameOrNewVersion ||
-               result.NewDate && result.SameOrNewArchitecture && result.SameOrNewVersion;
-    }
-
-    private static void CopyFile(Architecture environment, string sourceFilePath, string targetFilePath)
-    {
-        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
-        FileCompareResult result = null;
-
-        if (!File.Exists(targetFilePath))
-        {
-            if (!IsArchitectureCompatible(sourceFilePath, environment))
-            {
-                logger.LogDebug("Skipped (incompatible architecture): {SourceFile}", Path.GetFileName(sourceFilePath));
-                return;
-            }
-        }
-        else
-        {
-            result = new FileCompareResult();
-            CompareDates(sourceFilePath, targetFilePath, result);
-            CompareVersions(sourceFilePath, targetFilePath, result);
-            CompareArchitecture(sourceFilePath, targetFilePath, environment, result);
-
-            var shouldCopy = result.NewVersion && result.SameOrNewArchitecture ||
-                             result.NewArchitecture && result.SameOrNewVersion ||
-                             result.NewDate && result.SameOrNewArchitecture && result.SameOrNewVersion;
-
-            if (!shouldCopy)
-            {
-                return;
-            }
-
-            logger.LogDebug("Updating {TargetFile}: NewVersion={NewVersion}, NewArchitecture={NewArchitecture}, NewDate={NewDate}",
-                Path.GetFileName(targetFilePath), result.NewVersion, result.NewArchitecture, result.NewDate);
-        }
-
-        var targetDir = Path.GetDirectoryName(targetFilePath);
-        if (targetDir != null && !Directory.Exists(targetDir))
-        {
-            Directory.CreateDirectory(targetDir);
+            Directory.CreateDirectory(targetDirectoryPath);
         }
 
         try
@@ -214,9 +123,9 @@ public static class ModuleCopier
         {
             // VP-3719: Swallow only for same-version date-only refresh (another process may be copying the same file).
             // For version upgrades, architecture changes, or new files, re-throw so the failure is visible to operators.
-            if (result is { NewDate: true })
+            if (result.NewDate)
             {
-                logger.LogWarning("File '{TargetFile}' was not updated by '{SourceFile}' of the same version but later modified date, because probably it was used by another process",
+                _logger.LogWarning("File '{TargetFile}' was not updated by '{SourceFile}' of the same version but later modified date, because probably it was used by another process",
                     targetFilePath, sourceFilePath);
             }
             else
@@ -226,132 +135,8 @@ public static class ModuleCopier
         }
     }
 
-    private static bool IsArchitectureCompatible(string filePath, Architecture environment)
+    public static bool IsCopyRequired(string sourceFilePath, string targetFilePath, Architecture environmentArchitecture, out FileCompareResult result)
     {
-        var arch = GetArchitecture(filePath);
-        if (arch == null)
-        {
-            return true;
-        }
-
-        return arch == environment || (arch == Architecture.X86 && environment == Architecture.X64);
-    }
-
-    private static bool IsReferenceDirectory(string relativeFilePath)
-    {
-        var dirName = GetLastDirectoryName(relativeFilePath);
-        return _referenceAssemblyFolders.Any(f => string.Equals(f, dirName, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static bool IsLocalizationFile(string fileName)
-    {
-        return _localizationExtensions.Any(ext => fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static bool IsAssemblyRelatedFile(string fileName)
-    {
-        return _assemblyExtensions.Any(ext => fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) ||
-               _serviceExtensions.Any(ext => fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static string GetLastDirectoryName(string relativeFilePath)
-    {
-        return Path.GetFileName(Path.GetDirectoryName(relativeFilePath));
-    }
-
-    private static void CompareDates(string sourceFilePath, string targetFilePath, FileCompareResult result)
-    {
-        var sourceDate = File.Exists(sourceFilePath) ? File.GetLastWriteTimeUtc(sourceFilePath) : (DateTime?)null;
-        var targetDate = File.Exists(targetFilePath) ? File.GetLastWriteTimeUtc(targetFilePath) : (DateTime?)null;
-        result.NewDate = sourceDate > targetDate;
-    }
-
-    private static void CompareVersions(string sourceFilePath, string targetFilePath, FileCompareResult result)
-    {
-        var sourceVersion = GetVersion(sourceFilePath);
-        var targetVersion = GetVersion(targetFilePath);
-        result.SameVersion = sourceVersion == targetVersion;
-        result.NewVersion = targetVersion is not null && sourceVersion > targetVersion;
-    }
-
-    private static void CompareArchitecture(string sourceFilePath, string targetFilePath, Architecture environment, FileCompareResult result)
-    {
-        var sourceArch = GetArchitecture(sourceFilePath);
-        var targetArch = GetArchitecture(targetFilePath);
-
-        result.CompatibleArchitecture = sourceArch == targetArch ||
-                                        sourceArch == environment ||
-                                        (sourceArch == Architecture.X86 && environment == Architecture.X64);
-
-        if (result.CompatibleArchitecture)
-        {
-            result.SameArchitecture = sourceArch == targetArch;
-            result.NewArchitecture = sourceArch == environment && targetArch != environment;
-        }
-    }
-
-    private static Version GetVersion(string filePath)
-    {
-        if (!File.Exists(filePath))
-        {
-            return null;
-        }
-
-        try
-        {
-            var info = FileVersionInfo.GetVersionInfo(filePath);
-            return new Version(info.FileMajorPart, info.FileMinorPart, info.FileBuildPart, info.FilePrivatePart);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private static Architecture? GetArchitecture(string filePath)
-    {
-        if (!_assemblyExtensions.Any(ext => filePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
-        {
-            return null;
-        }
-
-        var fileInfo = new FileInfo(filePath);
-        if (!fileInfo.Exists || fileInfo.Length < 0x3C + sizeof(uint))
-        {
-            return null;
-        }
-
-        try
-        {
-            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            using var reader = new BinaryReader(stream);
-
-            stream.Seek(0x3C, SeekOrigin.Begin);
-            var peOffset = reader.ReadUInt32();
-
-            if (fileInfo.Length < peOffset + sizeof(uint) + sizeof(ushort))
-            {
-                return null;
-            }
-
-            stream.Seek(peOffset, SeekOrigin.Begin);
-            if (reader.ReadUInt32() != 0x00004550) // PE signature
-            {
-                return null;
-            }
-
-            return reader.ReadUInt16() switch
-            {
-                0x8664 => Architecture.X64,
-                0xAA64 => Architecture.Arm64,
-                0x1C0 => Architecture.Arm,
-                0x14C => Architecture.X86,
-                _ => null
-            };
-        }
-        catch
-        {
-            return null;
-        }
+        return _fileCopyPolicy.IsCopyRequired(sourceFilePath, targetFilePath, environmentArchitecture, out result);
     }
 }
