@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
                         Errors = x.Errors.ToArray()
                     } as object);
 
-            if (errorsDictionary.Count != 0)
+            if (errorsDictionary.Count > 0)
             {
                 return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, "Some modules have errors", exception: null, errorsDictionary));
             }

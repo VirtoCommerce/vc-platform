@@ -178,6 +178,7 @@ public static class ModuleLoader
     /// </summary>
     private static Assembly LoadAssemblyInternal(Library managedLibrary, ManagedAssemblyLoadContext loadContext)
     {
+        // To avoid FileNotFoundException for assemblies that are included in TPA - we load them using AssemblyLoadContext.Default.LoadFromAssemblyName.
         if (Tpa.ContainsAssembly(managedLibrary.FileName))
         {
             _logger.LogTrace("Loading managed library: {Name}", managedLibrary.Name);
@@ -304,7 +305,6 @@ public static class ModuleLoader
 
         return false;
     }
-
 
     private static Uri GetFileUri(string filePath)
     {

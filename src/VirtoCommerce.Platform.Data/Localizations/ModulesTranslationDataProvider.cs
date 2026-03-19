@@ -22,13 +22,9 @@ namespace VirtoCommerce.Platform.Data.Localizations
             get
             {
                 // Get modules localization files ordered by dependency.
-                var sucesfullyLoadedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetInstalledModules())
-                    .Where(x => x.State == ModuleState.Initialized);
-
-                foreach (var manifest in sucesfullyLoadedModules.Where(x => !string.IsNullOrEmpty(x.FullPhysicalPath)))
-                {
-                    yield return Path.Combine(manifest.FullPhysicalPath, _options.ModuleTranslationFolderName);
-                }
+                return ModuleRunner.SortByDependency(ModuleRegistry.GetInstalledModules())
+                    .Where(x => x.State == ModuleState.Initialized && !string.IsNullOrEmpty(x.FullPhysicalPath))
+                    .Select(x => Path.Combine(x.FullPhysicalPath, _options.ModuleTranslationFolderName));
             }
         }
     }
