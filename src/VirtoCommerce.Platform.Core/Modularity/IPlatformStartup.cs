@@ -12,11 +12,6 @@ namespace VirtoCommerce.Platform.Core.Modularity;
 public interface IPlatformStartup
 {
     /// <summary>
-    /// Determines when <see cref="Configure"/> is called in the pipeline. 
-    /// </summary>
-    PlatformStartupConfigurePhases ConfigurePhases => PlatformStartupConfigurePhases.ExecuteSynchronized;
-
-    /// <summary>
     /// Called during Program.cs ConfigureAppConfiguration phase.
     /// Use to add configuration sources (e.g., Azure App Configuration).
     /// </summary>
@@ -35,7 +30,7 @@ public interface IPlatformStartup
     void ConfigureServices(IServiceCollection services, IConfiguration config);
 
     /// <summary>
-    /// Called during Startup.Configure at the position determined by <see cref="ConfigurePhases"/>.
+    /// Called during Startup.Configure.
     /// </summary>
     void Configure(IApplicationBuilder app, IConfiguration config);
 }

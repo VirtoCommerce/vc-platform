@@ -27,7 +27,7 @@ public static class ModuleDiscovery
         ArgumentNullException.ThrowIfNull(platformVersion);
 
         var manifests = JsonSerializer.Deserialize<List<ExternalModuleManifest>>(manifestJson);
-        if (manifests is null)
+        if (manifests.IsNullOrEmpty())
         {
             return [];
         }
@@ -128,8 +128,8 @@ public static class ModuleDiscovery
         foreach (var module in modules)
         {
             // 1. Platform version: module target must be ≤ running platform, same major version
-            if (!module.PlatformVersion.IsCompatibleWith(platformVersion)
-                || !module.PlatformVersion.IsCompatibleWithBySemVer(platformVersion))
+            if (!module.PlatformVersion.IsCompatibleWith(platformVersion) ||
+                !module.PlatformVersion.IsCompatibleWithBySemVer(platformVersion))
             {
                 module.Errors.Add($"Module platform version {module.PlatformVersion} is incompatible with current {platformVersion}");
             }
@@ -347,8 +347,9 @@ public static class ModuleDiscovery
     {
         var latestVersion = manifest.Versions
             .OrderByDescending(x => x.SemanticVersion)
-            .Where(x => x.PlatformSemanticVersion.Major == platformVersion.Major)
-            .FirstOrDefault(x => string.IsNullOrEmpty(x.VersionTag) != prerelease);
+            .FirstOrDefault(x =>
+                x.PlatformSemanticVersion.Major == platformVersion.Major &&
+                x.VersionTag.IsNullOrEmpty() != prerelease);
 
         if (latestVersion == null)
         {

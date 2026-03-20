@@ -105,6 +105,10 @@ namespace VirtoCommerce.Platform.Web
             // Bootstrap logger was created in Program.Main() before module loading.
             Log.ForContext<Startup>().Information("Configuring services");
 
+            // Let IPlatformStartup implementations register application-level services
+            PlatformStartupDiscovery.RunConfigureServices(
+                PlatformStartupDiscovery.GetStartups(), services, Configuration);
+
             // Module assemblies are already loaded in Program.Main() via ModuleRegistry
             var modules = ModuleRegistry.GetAllModules().ToList();
 
@@ -512,10 +516,6 @@ namespace VirtoCommerce.Platform.Web
             Log.ForContext<Startup>().Information("Initializing modules");
             ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter);
 
-            // Let IPlatformStartup implementations register application-level services
-            PlatformStartupDiscovery.RunConfigureServices(
-                PlatformStartupDiscovery.GetStartups(), services, Configuration);
-
             // Register API controllers from loaded modules
             Log.ForContext<Startup>().Information("Registering API controllers");
             foreach (var module in modules.Where(m => m.Assembly != null && m.Errors.Count == 0))
@@ -615,6 +615,11 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
+            PlatformStartupDiscovery.RunConfigure(
+                PlatformStartupDiscovery.GetStartups(),
+                app, Configuration);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -636,11 +641,6 @@ namespace VirtoCommerce.Platform.Web
             app.UseForwardedHeaders();
 
             app.UseHttpsRedirection();
-
-            // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
-            PlatformStartupDiscovery.RunConfigure(
-                PlatformStartupDiscovery.GetStartups(),
-                PlatformStartupConfigurePhases.EarlyMiddleware, app, Configuration);
 
             // Add default MimeTypes with additional bindings
             var fileExtensionsBindings = new Dictionary<string, string>
@@ -720,11 +720,6 @@ namespace VirtoCommerce.Platform.Web
 
                 app.UseAutoAccountsLockoutJob(options.Value);
 
-                // IPlatformStartup Initialization phase (inside distributed lock, for migrations etc.)
-                PlatformStartupDiscovery.RunConfigure(
-                    PlatformStartupDiscovery.GetStartups(),
-                    PlatformStartupConfigurePhases.ExecuteSynchronized, app, Configuration);
-
                 // Post-initialize all modules in dependency order
                 Log.ForContext<Startup>().Information("Post initializing modules");
                 var sortedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetAllModules().ToList());
@@ -732,11 +727,6 @@ namespace VirtoCommerce.Platform.Web
             });
 
             app.UseEndpoints(SetupEndpoints);
-
-            // IPlatformStartup LateMiddleware phase (after endpoints are mapped)
-            PlatformStartupDiscovery.RunConfigure(
-                PlatformStartupDiscovery.GetStartups(),
-                PlatformStartupConfigurePhases.LateMiddleware, app, Configuration);
 
             var toolRegistrar = app.ApplicationServices.GetService<IDeveloperToolRegistrar>();
             toolRegistrar.RegisterDeveloperTool(new DeveloperToolDescriptor
