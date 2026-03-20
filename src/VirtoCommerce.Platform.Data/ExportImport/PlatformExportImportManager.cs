@@ -533,8 +533,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private static ManifestModuleInfo[] InnerGetModulesWithInterface(Type interfaceType)
         {
             var retVal = ModuleRegistry.GetInstalledModules()
-                .Where(x => x.ModuleInstance != null)
-                .Where(x => x.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
+                .Where(x => x.ModuleInstance != null && x.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
                 .ToArray();
             return retVal;
         }
