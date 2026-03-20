@@ -114,11 +114,11 @@ public static class PlatformStartupDiscovery
 
     public static void RunConfigure(
         IReadOnlyList<IPlatformStartup> startups,
-        PipelinePhase phase,
+        StartupConfigurePipelinePhase phase,
         IApplicationBuilder applicationBuilder,
         IConfiguration configuration)
     {
-        foreach (var startup in startups.Where(s => s.Phase == phase))
+        foreach (var startup in startups.Where(s => s.StartupConfigurePipelinePhase == phase))
         {
             startup.Configure(applicationBuilder, configuration);
         }

@@ -3,7 +3,7 @@ namespace VirtoCommerce.Platform.Core.Modularity;
 /// <summary>
 /// Determines when IPlatformStartup.Configure() is called in the middleware pipeline.
 /// </summary>
-public enum PipelinePhase
+public enum StartupConfigurePipelinePhase
 {
     Undefined,
 

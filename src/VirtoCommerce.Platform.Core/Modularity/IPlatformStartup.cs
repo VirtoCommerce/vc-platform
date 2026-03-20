@@ -18,30 +18,30 @@ public interface IPlatformStartup
     int Priority => StartupPriority.Default;
 
     /// <summary>
-    /// Determines when <see cref="Configure"/> is called in the pipeline.
+    /// Determines when <see cref="Configure"/> is called in the pipeline. 
     /// </summary>
-    PipelinePhase Phase => PipelinePhase.Initialization;
+    StartupConfigurePipelinePhase StartupConfigurePipelinePhase => StartupConfigurePipelinePhase.Initialization;
 
     /// <summary>
     /// Called during Program.cs ConfigureAppConfiguration phase.
     /// Use to add configuration sources (e.g., Azure App Configuration).
     /// </summary>
-    void ConfigureAppConfiguration(IConfigurationBuilder builder, IHostEnvironment env) { }
+    void ConfigureAppConfiguration(IConfigurationBuilder builder, IHostEnvironment env);
 
     /// <summary>
     /// Called during Program.cs ConfigureServices phase.
     /// Use to register host-level services.
     /// </summary>
-    void ConfigureHostServices(IServiceCollection services, IConfiguration config) { }
+    void ConfigureHostServices(IServiceCollection services, IConfiguration config);
 
     /// <summary>
     /// Called during Startup.ConfigureServices after modules are loaded.
     /// Use for application-level service registration.
     /// </summary>
-    void ConfigureServices(IServiceCollection services, IConfiguration config) { }
+    void ConfigureServices(IServiceCollection services, IConfiguration config);
 
     /// <summary>
-    /// Called during Startup.Configure at the position determined by <see cref="Phase"/>.
+    /// Called during Startup.Configure at the position determined by <see cref="StartupConfigurePipelinePhase"/>.
     /// </summary>
-    void Configure(IApplicationBuilder app, IConfiguration config) { }
+    void Configure(IApplicationBuilder app, IConfiguration config);
 }
