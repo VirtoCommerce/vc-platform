@@ -60,7 +60,7 @@ public static class ModuleDiscovery
             }
         }
 
-        logger.LogDebug("Parsed {ModuleCount} modules from external manifest", result.Count);
+        logger.LogDebug("Parsed {ModuleCount} modules from the external manifest", result.Count);
 
         return result;
     }
@@ -131,16 +131,16 @@ public static class ModuleDiscovery
             if (!module.PlatformVersion.IsCompatibleWith(platformVersion) ||
                 !module.PlatformVersion.IsCompatibleWithBySemVer(platformVersion))
             {
-                module.Errors.Add($"Module platform version {module.PlatformVersion} is incompatible with current {platformVersion}");
+                module.Errors.Add($"Module requires platform version {module.PlatformVersion}, which is incompatible with current version {platformVersion}");
             }
 
-            // 2. Incompatibilities: check no incompatible modules are installed
-            if (module.Incompatibilities != null)
+            // 2. Incompatibilities: check if incompatible modules are installed
+            if (module.Incompatibilities?.Count > 0)
             {
                 var installedIncompatibilities = modules
-                    .Where(x => module.Incompatibilities.Any(i =>
-                        i.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase) &&
-                        i.Version.IsCompatibleWith(x.Version)))
+                    .Where(x => module.Incompatibilities.Any(incompatible =>
+                        incompatible.Id.EqualsIgnoreCase(x.Id) &&
+                        incompatible.Version.IsCompatibleWith(x.Version)))
                     .ToList();
 
                 if (installedIncompatibilities.Count > 0)
@@ -150,23 +150,23 @@ public static class ModuleDiscovery
             }
 
             // 3. Dependency version: each declared dependency must be SemVer-compatible with installed version
-            if (module.Dependencies != null)
+            if (module.Dependencies?.Count > 0)
             {
-                foreach (var declaredDependency in module.Dependencies)
+                foreach (var dependency in module.Dependencies)
                 {
-                    if (declaredDependency.Optional)
+                    if (dependency.Optional)
                     {
                         continue;
                     }
 
-                    var installedDependency = modules.FirstOrDefault(x => x.Id.Equals(declaredDependency.Id, StringComparison.OrdinalIgnoreCase));
+                    var installedDependency = modules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(dependency.Id));
                     if (installedDependency == null)
                     {
-                        module.Errors.Add($"Module dependency {declaredDependency.Id} {declaredDependency.Version} is not installed");
+                        module.Errors.Add($"Module dependency {dependency.Id} {dependency.Version} is not installed");
                     }
-                    else if (!declaredDependency.Version.IsCompatibleWithBySemVer(installedDependency.Version))
+                    else if (!dependency.Version.IsCompatibleWithBySemVer(installedDependency.Version))
                     {
-                        module.Errors.Add($"Module dependency {declaredDependency.Id} {declaredDependency.Version} is incompatible with installed {installedDependency.Version}");
+                        module.Errors.Add($"Module dependency {dependency.Id} {dependency.Version} is incompatible with installed {installedDependency.Version}");
                     }
                 }
             }
@@ -174,43 +174,39 @@ public static class ModuleDiscovery
 
         // 4. Cascade errors to dependents: if module A failed, all modules depending on A must also fail.
         // This prevents cryptic DI errors like "Unable to resolve IItemService" when Catalog failed but xCart still tries to initialize.
-        var failedIds = new HashSet<string>(
-            modules.Where(m => m.Errors.Count > 0).Select(m => m.Id),
-            StringComparer.OrdinalIgnoreCase);
+        var failedIds = modules
+            .Where(x => x.Errors.Count > 0)
+            .Select(x => x.Id)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         var changed = true;
         while (changed)
         {
             changed = false;
-            foreach (var module in modules.Where(m => m.Errors.Count == 0))
+            foreach (var module in modules.Where(x => x.Dependencies?.Count > 0 && x.Errors.Count == 0))
             {
-                if (module.DependsOn == null)
-                {
-                    continue;
-                }
-
-                var failedDependency = module.DependsOn
-                    .Where(depId => failedIds.Contains(depId))
-                    .FirstOrDefault(depId => module.Dependencies == null
-                        || !module.Dependencies.Any(d => d.Id.Equals(depId, StringComparison.OrdinalIgnoreCase) && d.Optional));
+                var failedDependency = module.Dependencies.FirstOrDefault(x =>
+                    !x.Optional &&
+                    failedIds.Contains(x.Id));
 
                 if (failedDependency != null)
                 {
-                    module.Errors.Add($"Module skipped because its dependency '{failedDependency}' has errors");
+                    module.Errors.Add($"Module skipped because its dependency '{failedDependency.Id}' has errors");
                     failedIds.Add(module.Id);
                     changed = true;
                 }
             }
         }
 
-        var errorCount = modules.Count(m => m.Errors.Count > 0);
+        var errorCount = 0;
+        foreach (var module in modules.Where(x => x.Errors.Count > 0))
+        {
+            errorCount++;
+            logger.LogWarning("Module {ModuleId} has errors: {Errors}", module.Id, string.Join("; ", module.Errors));
+        }
+
         if (errorCount > 0)
         {
-            foreach (var module in modules.Where(m => m.Errors.Count > 0))
-            {
-                logger.LogWarning("Module {ModuleId} has errors: {Errors}", module.Id, string.Join("; ", module.Errors));
-            }
-
             logger.LogWarning("{ErrorCount} modules failed validation (including cascaded dependents)", errorCount);
         }
     }
@@ -233,8 +229,8 @@ public static class ModuleDiscovery
         // Check platform version compatibility:
         // 1. Module target platform version must be ≤ running platform version
         // 2. Major versions must match (no cross-major-version compatibility)
-        if (!moduleToInstall.PlatformVersion.IsCompatibleWith(platformVersion)
-            || !moduleToInstall.PlatformVersion.IsCompatibleWithBySemVer(platformVersion))
+        if (!moduleToInstall.PlatformVersion.IsCompatibleWith(platformVersion) ||
+            !moduleToInstall.PlatformVersion.IsCompatibleWithBySemVer(platformVersion))
         {
             errors.Add($"Target platform version {moduleToInstall.PlatformVersion} is incompatible with current {platformVersion}");
         }
@@ -316,7 +312,7 @@ public static class ModuleDiscovery
                 {
                     // Find all available versions of this dependency
                     var candidates = allAvailableModules
-                        .Where(x => x.Id.Equals(dependency.Id, StringComparison.OrdinalIgnoreCase))
+                        .Where(x => x.Id.EqualsIgnoreCase(dependency.Id))
                         .Where(x => dependency.Version.IsCompatibleWithBySemVer(x.Version))
                         .OrderByDescending(x => x.Version)
                         .ToList();

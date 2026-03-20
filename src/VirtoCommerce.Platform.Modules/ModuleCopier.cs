@@ -16,7 +16,7 @@ public static class ModuleCopier
     private static ILogger _logger;
     private static IFileCopyPolicy _fileCopyPolicy;
 
-    private const string RebuildMarkerFileName = ".rebuild";
+    private const string _rebuildMarkerFileName = ".rebuild";
 
     public static void Initialize(IFileCopyPolicy fileCopyPolicy)
     {
@@ -30,8 +30,8 @@ public static class ModuleCopier
     /// </summary>
     public static void InvalidateProbingFolder(string probingPath)
     {
-        var markerPath = Path.Combine(probingPath, RebuildMarkerFileName);
-        File.WriteAllText(markerPath, string.Empty);
+        var markerPath = Path.Combine(probingPath, _rebuildMarkerFileName);
+        File.Create(markerPath);
 
         var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
         logger.LogInformation("Probing folder marked for rebuild on next startup");
@@ -39,13 +39,13 @@ public static class ModuleCopier
 
     /// <summary>
     /// Check for the rebuild marker and clear probing folder contents if it exists.
-    /// Preserves the directory itself (may be a symlink or have custom ACLs).
-    /// Must be called on startup before any assemblies are loaded from the probing folder.
+    /// Preserves the directory itself (it may be a symlink or have custom ACLs).
+    /// Should be called on startup before any assemblies are loaded from the probing folder.
     /// Returns true if the folder was cleaned and needs to be rebuilt.
     /// </summary>
-    public static bool RebuildProbingFolderIfNeeded(string probingPath)
+    public static bool ClearProbingFolderIfRequested(string probingPath)
     {
-        var markerPath = Path.Combine(probingPath, RebuildMarkerFileName);
+        var markerPath = Path.Combine(probingPath, _rebuildMarkerFileName);
         if (!File.Exists(markerPath))
         {
             return false;
@@ -54,22 +54,23 @@ public static class ModuleCopier
         var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
         logger.LogInformation("Rebuild marker found — clearing probing folder for clean rebuild");
 
-        var dir = new DirectoryInfo(probingPath);
-        foreach (var file in dir.EnumerateFiles())
+        foreach (var entry in new DirectoryInfo(probingPath).EnumerateFileSystemInfos())
         {
-            file.Delete();
-        }
-
-        foreach (var subDir in dir.EnumerateDirectories())
-        {
-            subDir.Delete(recursive: true);
+            if (entry is DirectoryInfo directory)
+            {
+                directory.Delete(recursive: true);
+            }
+            else
+            {
+                entry.Delete();
+            }
         }
 
         return true;
     }
 
     /// <summary>
-    /// Copy all module assemblies to probingPath. Also copies platform assemblies from discoveryPath/bin.
+    /// Copy all module assemblies to the probing folder.
     /// </summary>
     public static void CopyAll(
         string discoveryPath,

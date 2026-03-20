@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Core.Common
     /// </summary>
     public static class CollectionExtensions
     {
-        public static bool IsNullOrEmpty<T>(this IReadOnlyCollection<T> collection)
+        public static bool IsNullOrEmpty<T>(this ICollection<T> collection)
         {
             return collection == null || collection.Count == 0;
         }

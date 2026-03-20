@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IUserApiKeySearchService _userApiKeySearchService;
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
         private readonly IDynamicPropertyDictionaryItemsSearchService _dynamicPropertyDictionaryItemsSearchService;
-        private readonly IModuleService _moduleProvider;
+        private readonly IModuleService _moduleService;
 
         private readonly int _batchSize = 20;
 
@@ -46,7 +47,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             , IDynamicPropertyDictionaryItemsSearchService dynamicPropertyDictionaryItemsSearchService
             , IUserApiKeyService userApiKeyService
             , IUserApiKeySearchService userApiKeySearchService
-            , IModuleService moduleProvider)
+            , IModuleService moduleService)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _userManager = userManager;
@@ -57,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             _dynamicPropertySearchService = dynamicPropertySearchService;
             _userApiKeyService = userApiKeyService;
             _userApiKeySearchService = userApiKeySearchService;
-            _moduleProvider = moduleProvider;
+            _moduleService = moduleService;
         }
 
         #region IPlatformExportImportManager Members
@@ -68,7 +69,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             {
                 Author = author,
                 PlatformVersion = PlatformVersion.CurrentVersion.ToString(),
-                Modules = InnerGetModulesWithInterface(typeof(IImportSupport)).Select(x => new ExportModuleInfo
+                Modules = GetModulesWithImportSupport().Select(x => new ExportModuleInfo
                 {
                     Id = x.Id,
                     Version = x.Version.ToString()
@@ -444,7 +445,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             var progressInfo = new ExportImportProgressInfo();
             foreach (var moduleInfo in manifest.Modules)
             {
-                var moduleDescriptor = InnerGetModulesWithInterface(typeof(IImportSupport)).FirstOrDefault(x => x.Id == moduleInfo.Id);
+                var moduleDescriptor = GetModulesWithImportSupport().FirstOrDefault(x => x.Id == moduleInfo.Id);
                 if (moduleDescriptor != null)
                 {
                     var modulePart = zipArchive.GetEntry(moduleInfo.PartUri.TrimStart('/'));
@@ -489,7 +490,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             foreach (var module in manifest.Modules)
             {
-                var moduleDescriptor = InnerGetModulesWithInterface(typeof(IImportSupport)).FirstOrDefault(x => x.Id == module.Id);
+                var moduleDescriptor = GetModulesWithImportSupport().FirstOrDefault(x => x.Id == module.Id);
                 if (moduleDescriptor != null)
                 {
                     //Create part for module
@@ -532,12 +533,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }
         }
 
-        private ManifestModuleInfo[] InnerGetModulesWithInterface(Type interfaceType)
+        private IEnumerable<ManifestModuleInfo> GetModulesWithImportSupport()
         {
-            var retVal = _moduleProvider.GetInstalledModules()
-                .Where(x => x.ModuleInstance != null && x.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
-                .ToArray();
-            return retVal;
+            return _moduleService.GetInstalledModules().Where(x => x.ModuleInstance is IImportSupport);
         }
 
         private static JsonSerializer GetJsonSerializer()

@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Web
             var modules = ModuleManifestReader.ReadAll(options.DiscoveryPath, options.ProbingPath);
 
             // Check if a module install/uninstall occurred — clear probing folder for clean rebuild
-            if (ModuleCopier.RebuildProbingFolderIfNeeded(options.ProbingPath))
+            if (ModuleCopier.ClearProbingFolderIfRequested(options.ProbingPath))
             {
                 refreshProbing = true;
             }

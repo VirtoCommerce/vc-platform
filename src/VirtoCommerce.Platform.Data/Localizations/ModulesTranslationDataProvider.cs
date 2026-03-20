@@ -10,12 +10,12 @@ namespace VirtoCommerce.Platform.Data.Localizations
     public class ModulesTranslationDataProvider : FileSystemTranslationDataProvider
     {
         private readonly TranslationOptions _options;
-        private readonly IModuleService _moduleProvider;
+        private readonly IModuleService _moduleService;
 
-        public ModulesTranslationDataProvider(IOptions<TranslationOptions> options, IModuleService moduleProvider)
+        public ModulesTranslationDataProvider(IOptions<TranslationOptions> options, IModuleService moduleService)
         {
             _options = options.Value;
-            _moduleProvider = moduleProvider;
+            _moduleService = moduleService;
         }
 
         protected override IEnumerable<string> DiscoveryFolders
@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Data.Localizations
             get
             {
                 // Get modules localization files ordered by dependency.
-                return _moduleProvider.GetInstalledModules()
+                return _moduleService.GetInstalledModules()
                     .Where(x => x.State == ModuleState.Initialized && !string.IsNullOrEmpty(x.FullPhysicalPath))
                     .Select(x => Path.Combine(x.FullPhysicalPath, _options.ModuleTranslationFolderName));
             }

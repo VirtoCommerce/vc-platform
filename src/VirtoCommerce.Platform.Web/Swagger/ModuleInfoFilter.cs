@@ -93,6 +93,11 @@ public class ModuleInfoFilter : IOperationFilter, IDocumentFilter
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
+        if (swaggerDoc.Tags is null)
+        {
+            return;
+        }
+
         foreach (var tag in swaggerDoc.Tags)
         {
             if (_moduleById.TryGetValue(tag.Name, out var module))
