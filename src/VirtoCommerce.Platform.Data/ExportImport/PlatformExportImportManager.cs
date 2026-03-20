@@ -15,7 +15,6 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Modules;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
@@ -33,6 +32,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IUserApiKeySearchService _userApiKeySearchService;
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
         private readonly IDynamicPropertyDictionaryItemsSearchService _dynamicPropertyDictionaryItemsSearchService;
+        private readonly IModuleService _moduleProvider;
 
         private readonly int _batchSize = 20;
 
@@ -45,7 +45,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             , IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService
             , IDynamicPropertyDictionaryItemsSearchService dynamicPropertyDictionaryItemsSearchService
             , IUserApiKeyService userApiKeyService
-            , IUserApiKeySearchService userApiKeySearchService)
+            , IUserApiKeySearchService userApiKeySearchService
+            , IModuleService moduleProvider)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _userManager = userManager;
@@ -56,6 +57,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             _dynamicPropertySearchService = dynamicPropertySearchService;
             _userApiKeyService = userApiKeyService;
             _userApiKeySearchService = userApiKeySearchService;
+            _moduleProvider = moduleProvider;
         }
 
         #region IPlatformExportImportManager Members
@@ -530,9 +532,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }
         }
 
-        private static ManifestModuleInfo[] InnerGetModulesWithInterface(Type interfaceType)
+        private ManifestModuleInfo[] InnerGetModulesWithInterface(Type interfaceType)
         {
-            var retVal = ModuleRegistry.GetInstalledModules()
+            var retVal = _moduleProvider.GetInstalledModules()
                 .Where(x => x.ModuleInstance != null && x.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
                 .ToArray();
             return retVal;

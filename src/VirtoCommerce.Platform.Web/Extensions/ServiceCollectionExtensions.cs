@@ -22,6 +22,7 @@ namespace VirtoCommerce.Platform.Modules
 
             services.AddSingleton<IPlatformRestarter, ProcessPlatformRestarter>();
             services.AddSingleton<IModuleManagementService, ModuleManagementService>();
+            services.AddSingleton<IModuleService, ModuleService>();
 
             return services;
         }
