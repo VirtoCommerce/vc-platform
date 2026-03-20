@@ -16,10 +16,44 @@ public static class ModuleCopier
     private static ILogger _logger;
     private static IFileCopyPolicy _fileCopyPolicy;
 
+    private const string RebuildMarkerFileName = ".rebuild";
+
     public static void Initialize(IFileCopyPolicy fileCopyPolicy)
     {
         _logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
         _fileCopyPolicy = fileCopyPolicy;
+    }
+
+    /// <summary>
+    /// Write a marker file to the probing folder so that the next startup rebuilds it from scratch.
+    /// Called at runtime after install/uninstall when loaded assemblies are locked by the running process.
+    /// </summary>
+    public static void InvalidateProbingFolder(string probingPath)
+    {
+        var markerPath = Path.Combine(probingPath, RebuildMarkerFileName);
+        File.WriteAllText(markerPath, string.Empty);
+
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
+        logger.LogInformation("Probing folder marked for rebuild on next startup");
+    }
+
+    /// <summary>
+    /// Check for the rebuild marker and delete the probing folder if it exists.
+    /// Must be called on startup before any assemblies are loaded from the probing folder.
+    /// Returns true if the probing folder was deleted and needs to be rebuilt.
+    /// </summary>
+    public static bool RebuildProbingFolderIfNeeded(string probingPath)
+    {
+        var markerPath = Path.Combine(probingPath, RebuildMarkerFileName);
+        if (!File.Exists(markerPath))
+        {
+            return false;
+        }
+
+        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
+        logger.LogInformation("Rebuild marker found — deleting probing folder for clean rebuild");
+        Directory.Delete(probingPath, recursive: true);
+        return true;
     }
 
     /// <summary>

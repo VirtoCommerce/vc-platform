@@ -57,6 +57,9 @@ namespace VirtoCommerce.Platform.Web
             var refreshProbing = options.RefreshProbingFolderOnStart;
             var modules = ModuleManifestReader.ReadAll(options.DiscoveryPath, options.ProbingPath);
 
+            // Check if a module install/uninstall occurred — rebuild probing folder from scratch
+            ModuleCopier.RebuildProbingFolderIfNeeded(options.ProbingPath);
+
             if (!Directory.Exists(options.ProbingPath))
             {
                 Directory.CreateDirectory(options.ProbingPath);

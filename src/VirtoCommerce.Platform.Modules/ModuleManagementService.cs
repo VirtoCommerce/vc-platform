@@ -123,6 +123,7 @@ public class ModuleManagementService(
             }
 
             scope.Complete();
+            InvalidateProbingFolder();
         }
         catch (Exception ex)
         {
@@ -179,6 +180,7 @@ public class ModuleManagementService(
             }
 
             scope.Complete();
+            InvalidateProbingFolder();
         }
         catch (Exception ex)
         {
@@ -278,6 +280,11 @@ public class ModuleManagementService(
         }
 
         return result;
+    }
+
+    private void InvalidateProbingFolder()
+    {
+        ModuleCopier.InvalidateProbingFolder(_localOptions.ProbingPath);
     }
 
     private void InnerInstall(ManifestModuleInfo module, IProgress<ProgressMessage> progress)
