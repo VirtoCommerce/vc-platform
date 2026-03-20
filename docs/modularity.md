@@ -21,7 +21,7 @@ Program.Main()
  |  1. Build bootstrap IConfiguration (appsettings.json + env vars)
  |  2. ModuleLogger.Initialize()                      -- set up logging for static classes
  |  3. ModuleManifestReader.ReadAll()                 -- scan module.manifest files
- |  4. ModuleCopier.RebuildProbingFolderIfNeeded()    -- delete probing if .rebuild marker exists
+ |  4. ModuleCopier.RebuildProbingFolderIfNeeded()    -- clear probing if .rebuild marker exists
  |     ModuleCopier.CopyAll()                         -- copy DLLs to probing path (if needed)
  |  5. ModuleRunner.Initialize()                      -- store boost options for dependency sorting
  |  6. ModuleLoader.Initialize()                      -- register native library resolver
@@ -83,7 +83,7 @@ sequenceDiagram
     MR-->>P: List of ManifestModuleInfo
 
     P->>MC: RebuildProbingFolderIfNeeded(probingPath)
-    Note right of MC: Deletes probing folder if<br/>.rebuild marker exists
+    Note right of MC: Clears probing folder contents if<br/>.rebuild marker exists
 
     opt RefreshProbingFolderOnStart or probing missing
         P->>MC: Initialize(fileCopyPolicy)
@@ -249,7 +249,7 @@ sequenceDiagram
     rect rgb(255, 248, 240)
     Note over P: Next Startup — Probing Rebuild
     P->>MC: RebuildProbingFolderIfNeeded(probingPath)
-    Note right of MC: .rebuild marker found →<br/>delete entire probing folder
+    Note right of MC: .rebuild marker found →<br/>clear probing folder contents
     P->>MC: CopyAll(discoveryPath, probingPath, modules, arch)
     Note right of MC: Rebuild from scratch with<br/>correct DLL versions
     end
@@ -288,7 +288,7 @@ Copies module assemblies from discovery directories to the probing path. Handles
 |--------|-------------|
 | `Initialize(fileCopyPolicy)` | Set the `IFileCopyPolicy` used for file comparison decisions. Must be called before `CopyAll`. |
 | `InvalidateProbingFolder(probingPath)` | Write a `.rebuild` marker file inside the probing folder. Called at runtime after install/uninstall when loaded assemblies are locked by the running process. On next startup, `RebuildProbingFolderIfNeeded` will detect this marker. |
-| `RebuildProbingFolderIfNeeded(probingPath)` | Check for the `.rebuild` marker and delete the entire probing folder if found. Must be called on startup before any assemblies are loaded. Returns `true` if the folder was deleted and needs rebuilding. |
+| `RebuildProbingFolderIfNeeded(probingPath)` | Check for the `.rebuild` marker and clear all probing folder contents if found. Preserves the directory itself (may be a symlink or have custom ACLs). Must be called on startup before any assemblies are loaded. Returns `true` if the folder was cleaned and needs rebuilding. |
 | `CopyAll(discoveryPath, probingPath, modules, environmentArchitecture)` | Copies each module's `bin/` folder contents to the probing path. The `environmentArchitecture` parameter (`Architecture` enum) controls which native binaries to select. |
 | `CopyModule(sourceDirectoryPath, targetDirectoryPath, environmentArchitecture)` | Copies a single module's binaries with smart filtering. |
 | `GetTargetRelativePath(sourceRelativeFilePath)` | Map a source-relative path to its target-relative path in the probing folder. Returns `null` if the file should be skipped (TPA, reference assemblies). |
@@ -443,7 +443,7 @@ public interface IModuleManagementService
 1. **First call to `GetModules()`**: Downloads external manifests, merges with `ModuleRegistry.GetAllModules()`, caches result.
 2. **Install**: Validates → downloads ZIP → extracts via `ModulePackageInstaller.Install()` → updates `IsInstalled` flag → calls `ModuleCopier.InvalidateProbingFolder()` to write `.rebuild` marker. Rollback on failure.
 3. **Uninstall**: Validates dependents → calls `IModule.Uninstall()` → deletes directory via `ModulePackageInstaller.Uninstall()` → calls `ModuleCopier.InvalidateProbingFolder()`. Rollback on failure.
-4. **Next startup**: `ModuleCopier.RebuildProbingFolderIfNeeded()` detects the `.rebuild` marker, deletes the probing folder, and forces a clean rebuild with correct DLL versions.
+4. **Next startup**: `ModuleCopier.RebuildProbingFolderIfNeeded()` detects the `.rebuild` marker, clears all probing folder contents (preserving the directory itself for symlinks/ACLs), and forces a clean rebuild with correct DLL versions.
 
 ## IPlatformStartup Interface
 

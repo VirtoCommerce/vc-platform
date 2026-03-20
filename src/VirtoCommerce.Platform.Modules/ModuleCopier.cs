@@ -38,9 +38,10 @@ public static class ModuleCopier
     }
 
     /// <summary>
-    /// Check for the rebuild marker and delete the probing folder if it exists.
+    /// Check for the rebuild marker and clear probing folder contents if it exists.
+    /// Preserves the directory itself (may be a symlink or have custom ACLs).
     /// Must be called on startup before any assemblies are loaded from the probing folder.
-    /// Returns true if the probing folder was deleted and needs to be rebuilt.
+    /// Returns true if the folder was cleaned and needs to be rebuilt.
     /// </summary>
     public static bool RebuildProbingFolderIfNeeded(string probingPath)
     {
@@ -51,8 +52,19 @@ public static class ModuleCopier
         }
 
         var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
-        logger.LogInformation("Rebuild marker found — deleting probing folder for clean rebuild");
-        Directory.Delete(probingPath, recursive: true);
+        logger.LogInformation("Rebuild marker found — clearing probing folder for clean rebuild");
+
+        var dir = new DirectoryInfo(probingPath);
+        foreach (var file in dir.EnumerateFiles())
+        {
+            file.Delete();
+        }
+
+        foreach (var subDir in dir.EnumerateDirectories())
+        {
+            subDir.Delete(recursive: true);
+        }
+
         return true;
     }
 
