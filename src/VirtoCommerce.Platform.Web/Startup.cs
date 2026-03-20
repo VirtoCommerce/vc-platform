@@ -640,7 +640,7 @@ namespace VirtoCommerce.Platform.Web
             // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
             PlatformStartupDiscovery.RunConfigure(
                 PlatformStartupDiscovery.GetStartups(),
-                StartupConfigurePipelinePhase.EarlyMiddleware, app, Configuration);
+                PlatformStartupConfigurePhases.EarlyMiddleware, app, Configuration);
 
             // Add default MimeTypes with additional bindings
             var fileExtensionsBindings = new Dictionary<string, string>
@@ -723,7 +723,7 @@ namespace VirtoCommerce.Platform.Web
                 // IPlatformStartup Initialization phase (inside distributed lock, for migrations etc.)
                 PlatformStartupDiscovery.RunConfigure(
                     PlatformStartupDiscovery.GetStartups(),
-                    StartupConfigurePipelinePhase.Initialization, app, Configuration);
+                    PlatformStartupConfigurePhases.ExecuteSynchronized, app, Configuration);
 
                 // Post-initialize all modules in dependency order
                 Log.ForContext<Startup>().Information("Post initializing modules");
@@ -736,7 +736,7 @@ namespace VirtoCommerce.Platform.Web
             // IPlatformStartup LateMiddleware phase (after endpoints are mapped)
             PlatformStartupDiscovery.RunConfigure(
                 PlatformStartupDiscovery.GetStartups(),
-                StartupConfigurePipelinePhase.LateMiddleware, app, Configuration);
+                PlatformStartupConfigurePhases.LateMiddleware, app, Configuration);
 
             var toolRegistrar = app.ApplicationServices.GetService<IDeveloperToolRegistrar>();
             toolRegistrar.RegisterDeveloperTool(new DeveloperToolDescriptor

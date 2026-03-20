@@ -12,15 +12,9 @@ namespace VirtoCommerce.Platform.Core.Modularity;
 public interface IPlatformStartup
 {
     /// <summary>
-    /// Execution priority. Lower values run first.
-    /// Use <see cref="StartupPriority"/> constants.
-    /// </summary>
-    int Priority => StartupPriority.Default;
-
-    /// <summary>
     /// Determines when <see cref="Configure"/> is called in the pipeline. 
     /// </summary>
-    StartupConfigurePipelinePhase StartupConfigurePipelinePhase => StartupConfigurePipelinePhase.Initialization;
+    PlatformStartupConfigurePhases ConfigurePhases => PlatformStartupConfigurePhases.ExecuteSynchronized;
 
     /// <summary>
     /// Called during Program.cs ConfigureAppConfiguration phase.
@@ -41,7 +35,7 @@ public interface IPlatformStartup
     void ConfigureServices(IServiceCollection services, IConfiguration config);
 
     /// <summary>
-    /// Called during Startup.Configure at the position determined by <see cref="StartupConfigurePipelinePhase"/>.
+    /// Called during Startup.Configure at the position determined by <see cref="ConfigurePhases"/>.
     /// </summary>
     void Configure(IApplicationBuilder app, IConfiguration config);
 }

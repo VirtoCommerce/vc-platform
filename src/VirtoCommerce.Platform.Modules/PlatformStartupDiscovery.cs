@@ -57,7 +57,7 @@ public static class PlatformStartupDiscovery
                 if (Activator.CreateInstance(startupType) is IPlatformStartup instance)
                 {
                     startups.Add(instance);
-                    logger.LogInformation("Discovered {StartupTypeName} from {ModuleId} (priority: {Priority})", startupType.Name, module.Id, instance.Priority);
+                    logger.LogInformation("Discovered {StartupTypeName} from {ModuleId}", startupType.Name, module.Id);
                 }
             }
             catch (Exception ex)
@@ -66,7 +66,6 @@ public static class PlatformStartupDiscovery
             }
         }
 
-        startups.Sort((a, b) => a.Priority.CompareTo(b.Priority));
         _startups = startups;
 
         logger.LogDebug("Platform startup extensions: {StartupCount}", startups.Count);
@@ -114,11 +113,11 @@ public static class PlatformStartupDiscovery
 
     public static void RunConfigure(
         IReadOnlyList<IPlatformStartup> startups,
-        StartupConfigurePipelinePhase phase,
+        PlatformStartupConfigurePhases phase,
         IApplicationBuilder applicationBuilder,
         IConfiguration configuration)
     {
-        foreach (var startup in startups.Where(s => s.StartupConfigurePipelinePhase == phase))
+        foreach (var startup in startups.Where(s => s.ConfigurePhases.HasFlag(phase)))
         {
             startup.Configure(applicationBuilder, configuration);
         }
