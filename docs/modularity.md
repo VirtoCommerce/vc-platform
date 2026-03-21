@@ -199,31 +199,32 @@ sequenceDiagram
 
 ### Runtime Module Install / Uninstall
 
-This diagram shows the runtime flow when a module is installed or uninstalled via the Admin UI, including the `.rebuild` marker mechanism that triggers a probing folder rebuild on next startup.
+This diagram shows the runtime flow when a module is installed or uninstalled via the Admin UI, including the `.rebuild` marker mechanism that triggers a probing folder rebuild on next startup. The Admin UI sends lightweight `ModuleInstallRequest[]` payloads (id + optional version) to the new `/install/modules`, `/update/modules`, and `/uninstall/modules` endpoints. Legacy endpoints accepting `ModuleDescriptor[]` are preserved for backward compatibility with external consumers.
 
 ```mermaid
 sequenceDiagram
     autonumber
     participant UI as Admin UI
+    participant API as ModulesController
+    participant HF as Hangfire
     participant MMS as ModuleManagementService
     participant MPI as ModulePackageInstaller
     participant MC as ModuleCopier
     participant P as Program.Main (next startup)
 
     rect rgb(240, 255, 240)
-    Note over UI,MC: Install Module
-    UI->>MMS: InstallModules(modules, progress)
+    Note over UI,MC: Install / Update Module
+    UI->>API: POST /install/modules<br/>[{id, version?}, ...]
+    Note right of API: ModuleInstallRequest[] payload
+    API->>HF: Enqueue(ModuleBackgroundJob)
+    API-->>UI: ModulePushNotification
+    HF->>MMS: InstallModules(requests, progress)
     MMS->>MMS: Validate (platform version, deps)
 
-    loop Each new module
+    loop Each module
         MMS->>MPI: Download(packageUrl, zipPath, httpClient)
         MMS->>MPI: Install(zipPath, targetDir)
         Note right of MPI: Extract ZIP to discovery path
-    end
-
-    loop Each update (existing module)
-        MMS->>MPI: Uninstall(existingDir)
-        MMS->>MPI: Download + Install (new version)
     end
 
     MMS->>MC: InvalidateProbingFolder(probingPath)
@@ -232,7 +233,10 @@ sequenceDiagram
 
     rect rgb(255, 240, 240)
     Note over UI,MC: Uninstall Module
-    UI->>MMS: UninstallModules(modules, progress)
+    UI->>API: POST /uninstall/modules<br/>[{id}, ...]
+    API->>HF: Enqueue(ModuleBackgroundJob)
+    API-->>UI: ModulePushNotification
+    HF->>MMS: UninstallModules(moduleIds, progress)
     MMS->>MMS: Validate (no dependents)
 
     loop Each module
@@ -411,6 +415,18 @@ public class LocalModuleCatalogAdapter : ModuleCatalog, ILocalModuleCatalog
 
 Registered in DI via `services.AddSingleton<IModuleManagementService, ModuleManagementService>()`.
 
+### ModuleInstallRequest
+
+A lightweight DTO for install/update/uninstall requests. Replaces the heavy `ModuleDescriptor` (~20 fields) with only the two fields needed by the service layer.
+
+```csharp
+public class ModuleInstallRequest
+{
+    public string Id { get; set; }
+    public string Version { get; set; } // optional: null means "latest available"
+}
+```
+
 ### IModuleManagementService
 
 ```csharp
@@ -418,12 +434,14 @@ public interface IModuleManagementService
 {
     IList<ManifestModuleInfo> GetModules();
     void ReloadModules();
-    IList<ManifestModuleInfo> GetDependencies(IList<ManifestModuleInfo> selectedModules);
-    IList<ManifestModuleInfo> GetDependents(IList<ManifestModuleInfo> modules);
+    IList<ManifestModuleInfo> GetDependencies(IList<string> moduleIds);
+    IList<ManifestModuleInfo> GetDependents(IList<string> moduleIds);
     ManifestModuleInfo AddUploadedModule(ManifestModuleInfo module);
-    void InstallModules(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress);
-    void UninstallModules(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress);
+    void InstallModules(IList<ModuleInstallRequest> modules, IProgress<ProgressMessage> progress);
+    void UninstallModules(IList<string> moduleIds, IProgress<ProgressMessage> progress);
     IList<ManifestModuleInfo> GetAutoInstallModules(string[] moduleBundles);
+    Task<bool> ValidateModuleVersionAsync(string moduleId, string version);
+    Task<ManifestModuleInfo> RegisterCustomModuleVersionAsync(string moduleId, string version);
 }
 ```
 
@@ -431,12 +449,14 @@ public interface IModuleManagementService
 |--------|-------------|
 | `GetModules()` | Returns merged list of external + installed modules. Lazy-loaded on first access via `ModulePackageInstaller.LoadExternalModules()` + `ModuleDiscovery.MergeWithInstalled()`. |
 | `ReloadModules()` | Clears cached modules and re-fetches from external manifest URLs. |
-| `GetDependencies(selectedModules)` | Returns selected modules + all transitive prerequisites, sorted in dependency order. Walks DOWN the graph. |
-| `GetDependents(modules)` | Returns installed modules that depend ON the given modules (reverse dependencies). Walks UP the graph. |
+| `GetDependencies(moduleIds)` | Accepts module IDs. Resolves to `ManifestModuleInfo` internally (installed version preferred, then latest). Returns selected modules + all transitive prerequisites, sorted in dependency order. Walks DOWN the graph. |
+| `GetDependents(moduleIds)` | Accepts module IDs. Resolves to installed `ManifestModuleInfo` internally. Returns installed modules that depend ON the given modules (reverse dependencies). Walks UP the graph. |
 | `AddUploadedModule(module)` | Add an uploaded module to the merged catalog. Validates dependencies before adding. |
-| `InstallModules(modules, progress)` | Install or update modules with `TransactionScope` rollback. Validates platform version and dependencies. Downloads ZIP, extracts to discovery path. |
-| `UninstallModules(modules, progress)` | Uninstall modules. Validates no other modules depend on them. Calls `module.Uninstall()`, deletes directory. |
+| `InstallModules(modules, progress)` | Install or update modules. Accepts `IList<ModuleInstallRequest>` (id + optional version). Validates platform version and dependencies. Downloads ZIP, extracts to discovery path. Rollback on failure. |
+| `UninstallModules(moduleIds, progress)` | Uninstall modules by ID. Validates no other modules depend on them. Calls `module.Uninstall()`, deletes directory. |
 | `GetAutoInstallModules(moduleBundles)` | Get modules to auto-install from bundles, including their dependencies. Returns only modules not yet installed. |
+| `ValidateModuleVersionAsync(moduleId, version)` | Validate that a specific module version package exists at the download URL. Returns `true` if the package is found. |
+| `RegisterCustomModuleVersionAsync(moduleId, version)` | Validate, register, and prepare a custom module version for installation. Returns the registered `ManifestModuleInfo` if valid, or `null` if the package was not found. |
 
 ### How It Works
 
@@ -444,6 +464,40 @@ public interface IModuleManagementService
 2. **Install**: Validates → downloads ZIP → extracts via `ModulePackageInstaller.Install()` → updates `IsInstalled` flag → calls `ModuleCopier.InvalidateProbingFolder()` to write `.rebuild` marker. Rollback on failure.
 3. **Uninstall**: Validates dependents → calls `IModule.Uninstall()` → deletes directory via `ModulePackageInstaller.Uninstall()` → calls `ModuleCopier.InvalidateProbingFolder()`. Rollback on failure.
 4. **Next startup**: `ModuleCopier.RebuildProbingFolderIfNeeded()` detects the `.rebuild` marker, clears all probing folder contents (preserving the directory itself for symlinks/ACLs), and forces a clean rebuild with correct DLL versions.
+
+## Module Management REST API
+
+The `ModulesController` exposes REST endpoints for module operations. Endpoints exist in two forms: legacy endpoints accepting `ModuleDescriptor[]` (for backward compatibility with external consumers) and new lightweight endpoints accepting `ModuleInstallRequest[]` (used by the Admin UI).
+
+### Batch Endpoints
+
+| Method | Route | Request Body | Description |
+|--------|-------|-------------|-------------|
+| `POST` | `/api/platform/modules/install/modules` | `ModuleInstallRequest[]` | Install modules using lightweight requests. Used by Admin UI. |
+| `POST` | `/api/platform/modules/update/modules` | `ModuleInstallRequest[]` | Update modules using lightweight requests. Used by Admin UI. |
+| `POST` | `/api/platform/modules/uninstall/modules` | `ModuleInstallRequest[]` | Uninstall modules using lightweight requests. Used by Admin UI. |
+
+### Single-Module Endpoints
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| `POST` | `/api/platform/modules/{moduleId}/install` | Install latest available version of a module. |
+| `POST` | `/api/platform/modules/{moduleId}/versions/{version}/install` | Install a specific version of a module. Validates the package URL first. Returns `404` if the version is not found. |
+| `POST` | `/api/platform/modules/{moduleId}/uninstall` | Uninstall a module. |
+| `GET`  | `/api/platform/modules/{moduleId}/versions/{version}/validate` | Validate that a specific module version package exists at the download URL. Returns `true`/`false`. |
+
+### Other Endpoints
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| `GET`  | `/api/platform/modules` | List all modules (installed + available). |
+| `POST` | `/api/platform/modules/reload` | Re-fetch external module manifests. |
+| `POST` | `/api/platform/modules/getmissingdependencies` | Get transitive dependencies not yet installed. |
+| `POST` | `/api/platform/modules/getdependents` | Get installed modules that depend on the given modules. |
+| `POST` | `/api/platform/modules/localstorage` | Upload a module ZIP for installation. |
+| `POST` | `/api/platform/modules/restart` | Restart the web application. |
+| `POST` | `/api/platform/modules/autoinstall` | Trigger auto-install for configured module bundles. |
+| `GET`  | `/api/platform/modules/loading-order` | Get module loading order (dependency-sorted). |
 
 ## IPlatformStartup Interface
 
@@ -609,194 +663,6 @@ app_data/modules/            <-- populated at startup
   VirtoCommerce.CatalogModule.deps.json
   VirtoCommerce.OrdersModule.dll
   ...
-```
-
-### Docker Image Build (RefreshProbingFolderOnStart = false)
-
-In containerized deployments the probing folder should be pre-populated at image build time. This avoids the copy overhead at every container start and prevents write operations on read-only filesystems.
-
-**Dockerfile pattern:**
-
-```dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-WORKDIR /app
-
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-WORKDIR /src
-
-# Copy and build platform
-COPY src/ src/
-RUN dotnet publish src/VirtoCommerce.Platform.Web/VirtoCommerce.Platform.Web.csproj \
-    -c Release -o /app/publish
-
-# Install modules using vc-build or direct copy
-FROM build AS modules
-WORKDIR /modules
-
-# Option A: Use vc-build CLI to install modules
-RUN dotnet tool install -g VirtoCommerce.GlobalTool && \
-    vc-build install -modules VirtoCommerce.Catalog VirtoCommerce.Orders \
-    -DiscoveryPath /modules/discovery
-
-# Option B: Copy pre-built module packages
-# COPY modules/ /modules/discovery/
-
-# Pre-populate probing folder at build time
-# This flattens all module DLLs into a single directory
-RUN mkdir -p /modules/probing && \
-    for dir in /modules/discovery/*/bin; do \
-      cp -n "$dir"/*.dll "$dir"/*.deps.json "$dir"/*.pdb /modules/probing/ 2>/dev/null || true; \
-    done
-
-FROM base AS final
-WORKDIR /app
-COPY --from=build /app/publish .
-COPY --from=modules /modules/discovery ./modules
-COPY --from=modules /modules/probing ./app_data/modules
-
-# Disable copy phase since probing is pre-populated
-ENV VirtoCommerce__RefreshProbingFolderOnStart=false
-```
-
-**Key points:**
-
-1. The probing folder (`app_data/modules`) is populated during the Docker build, not at runtime.
-2. `RefreshProbingFolderOnStart=false` tells the platform to skip `ModuleCopier.CopyAll()`.
-3. If the probing folder does not exist at startup, the platform forces a refresh regardless of the setting.
-4. Module manifests must still be present under `DiscoveryPath` (the platform reads metadata from them).
-
-### Cross-Architecture Docker Build (TargetArchitecture)
-
-When building a Docker image for a different CPU architecture than the build machine (e.g., building an ARM64 image on an X64 CI server), use `TargetArchitecture` to tell `ModuleCopier` which native binaries to select:
-
-```dockerfile
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-# ... build platform and install modules as above ...
-
-# Pre-populate probing folder for ARM64 target, running on X64 build machine
-FROM build AS probing
-WORKDIR /app
-COPY --from=build /app/publish .
-COPY --from=modules /modules/discovery ./modules
-
-# Run the platform's copier with architecture override
-ENV VirtoCommerce__TargetArchitecture=Arm64
-ENV VirtoCommerce__RefreshProbingFolderOnStart=true
-RUN dotnet VirtoCommerce.Platform.Web.dll --copy-modules-only 2>/dev/null || true
-# OR use vc-build with the architecture flag:
-# RUN vc-build copy-modules -DiscoveryPath ./modules -ProbingPath ./app_data/modules -TargetArchitecture Arm64
-
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-arm64v8 AS final
-WORKDIR /app
-COPY --from=probing /app .
-ENV VirtoCommerce__RefreshProbingFolderOnStart=false
-```
-
-The `TargetArchitecture` setting can also be passed as an environment variable or command-line argument:
-
-```bash
-# Environment variable (double-underscore for nested keys)
-VirtoCommerce__TargetArchitecture=Arm64 dotnet run
-
-# Command-line argument
-dotnet run -- --VirtoCommerce:TargetArchitecture=Arm64
-```
-
-**How architecture filtering works:**
-
-`ModuleCopier` reads the PE header of each `.dll`/`.exe` to determine its compiled architecture (X86, X64, ARM, ARM64). A file is copied only if it is compatible with the target:
-
-- Exact architecture match is always accepted.
-- X86 binaries are accepted on X64 targets (WoW64 backward compatibility).
-- Architecture-neutral files (non-PE files like `.deps.json`, `.pdb`) are always copied.
-- When the target already has a file, the copier prefers the source if it has a newer version, a better architecture match, or a newer file date.
-
-### vc-build Integration
-
-The `vc-build` CLI tool installs modules into the discovery path. The platform's static module system is compatible with vc-build's output layout:
-
-```
-vc-build install
-  -modules VirtoCommerce.Catalog:3.800.0
-  -DiscoveryPath ./modules
-  -ProbingPath ./app_data/modules
-  -SkipDependencyInstallation false
-```
-
-**After `vc-build install`**, the discovery path contains:
-
-```
-modules/
-  VirtoCommerce.Catalog/
-    module.manifest
-    bin/
-      VirtoCommerce.CatalogModule.dll
-      VirtoCommerce.CatalogModule.deps.json
-      ...native and managed dependencies...
-```
-
-**For Docker builds**, add a probing preparation step:
-
-```bash
-# After vc-build installs modules, pre-populate probing folder
-vc-build compress -ProbingPath ./app_data/modules
-```
-
-Or use the platform's own copier as a standalone step (the static classes can be called from a build script or a small console app):
-
-```csharp
-// Build-time helper to pre-populate probing folder
-var modules = ModuleManifestReader.ReadAll(discoveryPath, probingPath);
-ModuleCopier.Initialize(new DefaultFileCopyPolicy());
-ModuleCopier.CopyAll(discoveryPath, probingPath, modules, RuntimeInformation.ProcessArchitecture);
-```
-
-### Kubernetes with Shared Volume
-
-When running multiple replicas, the probing folder can be shared via a persistent volume. Disable refresh so only one process populates it:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-spec:
-  template:
-    spec:
-      containers:
-        - name: platform
-          env:
-            - name: VirtoCommerce__RefreshProbingFolderOnStart
-              value: "false"
-          volumeMounts:
-            - name: modules
-              mountPath: /app/app_data/modules
-      volumes:
-        - name: modules
-          persistentVolumeClaim:
-            claimName: modules-pvc
-```
-
-Populate the volume once using an init container or a separate job.
-
-### CI/CD Pipeline Example
-
-```yaml
-# Azure DevOps / GitHub Actions
-steps:
-  - name: Install modules
-    run: |
-      dotnet tool install -g VirtoCommerce.GlobalTool
-      vc-build install -modules VirtoCommerce.Catalog VirtoCommerce.Orders
-
-  - name: Prepare probing folder
-    run: |
-      mkdir -p app_data/modules
-      # Copy all module DLLs to probing (same logic as ModuleCopier)
-      find modules -path '*/bin/*.dll' -exec cp -n {} app_data/modules/ \;
-      find modules -path '*/bin/*.deps.json' -exec cp -n {} app_data/modules/ \;
-
-  - name: Build Docker image
-    run: |
-      docker build -t myregistry/vc-platform:latest .
 ```
 
 ## Diagnostics

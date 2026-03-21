@@ -258,6 +258,8 @@
           "end": "结束",
           "progress-messages": "进度消息",
           "process-completed": "模块管理过程完成",
+          "completed-with-errors": "完成但有错误",
+          "detailed-log": "显示详细日志",
           "restart-application": "立即重启应用程序或稍后重启"
         }
       },
@@ -286,7 +288,12 @@
           "optional-dependencies": "可选依赖项",
           "tags": "标签",
           "install-version": "安装版本",
-          "errors": "错误"
+          "errors": "错误",
+          "use-custom-version": "使用自定义版本",
+          "use-latest-version": "使用最新版本",
+          "custom-version-checking": "检查中...",
+          "custom-version-valid": "已找到安装包",
+          "custom-version-invalid": "未找到安装包"
         }
       },
       "modules-main": {

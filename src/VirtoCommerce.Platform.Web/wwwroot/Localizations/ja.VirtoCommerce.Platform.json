@@ -258,6 +258,8 @@
           "end": "終了",
           "progress-messages": "進行メッセージ",
           "process-completed": "モジュール管理プロセスが完了しました",
+          "completed-with-errors": "エラーが発生して完了しました",
+          "detailed-log": "詳細ログを表示",
           "restart-application": "アプリケーションを今すぐ再起動するか、後で再起動してください"
         }
       },
@@ -286,7 +288,12 @@
           "optional-dependencies": "オプションの依存関係",
           "tags": "タグ",
           "install-version": "インストールバージョン",
-          "errors": "エラー"
+          "errors": "エラー",
+          "use-custom-version": "カスタムバージョンを使用",
+          "use-latest-version": "最新バージョンを使用",
+          "custom-version-checking": "確認中...",
+          "custom-version-valid": "パッケージが見つかりました",
+          "custom-version-invalid": "パッケージが見つかりません"
         }
       },
       "modules-main": {

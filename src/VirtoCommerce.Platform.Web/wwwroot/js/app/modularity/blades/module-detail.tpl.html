@@ -1,4 +1,4 @@
-<div class="blade-static __bottom __expanded" ng-if="allowInstallModules && blade.mode">
+<div class="blade-static __bottom" ng-if="allowInstallModules && blade.mode">
     <div class="form-input" ng-if="blade.currentEntity.requireLicenseAcceptance">
         <div class="form-control __checkbox">
             <label class="form-label">
@@ -9,7 +9,7 @@
             </label>
         </div>
     </div>
-    <button class="btn" ng-click="confirmActionInDialog(blade.mode)" ng-if="blade.currentEntity" ng-disabled="isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted)">
+    <button class="btn" ng-click="confirmActionInDialog(blade.mode)" ng-if="blade.currentEntity" ng-disabled="isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted) || !canInstallCustomVersion()">
         <span ng-if="blade.mode === 'install'">{{'platform.commands.install' | translate}}</span>
         <span ng-if="blade.mode === 'update'">{{'platform.commands.update' | translate}}</span>
     </button>
@@ -17,11 +17,11 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-          <div ng-if="!allowInstallModules" class="form-group form-error inner-block">
+          <div ng-if="!allowInstallModules" class="form-error">
             {{ 'platform.blades.modules-list.labels.manual-install-warning' | translate }}
           </div>
             <div ng-if="blade.mode === 'advanced'" va-permission="platform:module:manage">
-                <div class="t __divider">{{ 'platform.blades.module-detail.labels.install-from-file' | translate }}</div>
+                <!--<div class="t __divider">{{ 'platform.blades.module-detail.labels.install-from-file' | translate }}</div>-->
                 <div class="form-group" ng-if="!blade.isLoading">
                     <label class="form-label">{{ 'platform.blades.module-detail.labels.select-module-file' | translate }}</label>
                     <div class="form-input">
@@ -38,9 +38,9 @@
                 <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
             </div>
             <ul ng-if="blade.currentEntity">
-                <div class="t __divider">{{ 'platform.blades.module-detail.labels.module-info' | translate }}
+                <!--<div class="t __divider">{{ 'platform.blades.module-detail.labels.module-info' | translate }}
                     <img class="t-ico" src="/images/approval-32.png" title="{{ 'platform.blades.module-detail.labels.official' | translate: blade.currentEntity }}" ng-if="blade.currentEntity.$isOwnedByVirto" />
-                </div>
+                </div>-->
                 <ul class="list __info">
                   <li class="list-item">
                     <div class="list-t">{{ 'platform.blades.module-detail.labels.title' | translate }}</div>
@@ -103,18 +103,29 @@
                       </li>
                     </ul>
                   </li>
-                  <div class="form-group" ng-if="allowInstallModules && blade.mode">
-                    <label ng-if="blade.mode === 'install'" class="form-label">{{ 'platform.blades.module-detail.labels.install-version' | translate }}</label>
-                    <label ng-if="blade.mode === 'update'" class="form-label">{{ 'platform.blades.module-detail.labels.update-version' | translate: blade.currentEntity }}</label>
-                    <div class="form-input">
-                      <ui-select ng-model="blade.currentEntity">
-                        <ui-select-match>{{$select.selected.version}}</ui-select-match>
-                        <ui-select-choices repeat="x in availableVersions | filter: {version: $select.search}">
-                          <span ng-bind-html="x.version | highlight: $select.search"></span>
-                        </ui-select-choices>
-                      </ui-select>
+                  <li class="list-item" ng-if="allowInstallModules && blade.mode">
+                    <div class="list-t" ng-if="blade.mode === 'install'">{{ 'platform.blades.module-detail.labels.install-version' | translate }}</div>
+                    <div class="list-t" ng-if="blade.mode === 'update'">{{ 'platform.blades.module-detail.labels.update-version' | translate: blade.currentEntity }}</div>
+                    <div class="list-descr" ng-if="!useCustomVersion">
+                      {{blade.currentEntity.version}}
+                      <a class="__link" ng-click="toggleCustomVersion()" style="margin-left: 8px;">{{ 'platform.blades.module-detail.labels.use-custom-version' | translate }}</a>
                     </div>
-                  </div>
+                    <div class="list-descr" ng-if="useCustomVersion">
+                      <div class="form-input" style="margin-bottom: 4px;">
+                        <input type="text" ng-model="customVersionData.version" ng-change="onCustomVersionChanged()" placeholder="e.g. 3.1001.0" />
+                      </div>
+                      <span ng-if="customVersionState === 'checking'" style="color: #888;">
+                        <i class="fa fa-spinner fa-spin"></i> {{ 'platform.blades.module-detail.labels.custom-version-checking' | translate }}
+                      </span>
+                      <span ng-if="customVersionState === 'valid'" style="color: #5cb85c;">
+                        <i class="fa fa-check"></i> {{ 'platform.blades.module-detail.labels.custom-version-valid' | translate }}
+                      </span>
+                      <span ng-if="customVersionState === 'invalid'" style="color: #d9534f;">
+                        <i class="fa fa-times"></i> {{ 'platform.blades.module-detail.labels.custom-version-invalid' | translate }}
+                      </span>
+                      <a class="__link" ng-click="toggleCustomVersion()" style="margin-left: 8px;">{{ 'platform.blades.module-detail.labels.use-latest-version' | translate }}</a>
+                    </div>
+                  </li>
                   <li class="list-item" ng-if="blade.currentEntity.validationErrors.length">
                     <div class="list-t">{{ 'platform.blades.module-detail.labels.errors' | translate }}</div>
                     <div class="list-descr error">

@@ -258,6 +258,8 @@
           "end": "Slut",
           "progress-messages": "Förloppsmeddelanden",
           "process-completed": "Modulhanteringsprocessen är slutförd",
+          "completed-with-errors": "Slutfört med fel",
+          "detailed-log": "Visa detaljerad logg",
           "restart-application": "Starta om applikationen nu eller senare"
         }
       },
@@ -287,7 +289,12 @@
           "tags": "Taggar",
           "install-version": "Installera version",
           "errors": "Fel",
-          "update-version": "Uppdatera {{id}} till"
+          "update-version": "Uppdatera {{id}} till",
+          "use-custom-version": "Använd anpassad version",
+          "use-latest-version": "Använd senaste versionen",
+          "custom-version-checking": "Kontrollerar...",
+          "custom-version-valid": "Paket hittades",
+          "custom-version-invalid": "Paket hittades inte"
         }
       },
       "modules-main": {

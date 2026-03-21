@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Transactions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -21,13 +23,15 @@ namespace VirtoCommerce.Platform.Modules;
 public class ModuleManagementService(
     IHttpClientFactory httpClientFactory,
     IOptions<LocalStorageModuleCatalogOptions> localOptions,
-    IOptions<ExternalModuleCatalogOptions> externalOptions) : IModuleManagementService
+    IOptions<ExternalModuleCatalogOptions> externalOptions,
+    ILogger<ModuleManagementService> logger) : IModuleManagementService
 {
     private const string PackageFileExtension = ".zip";
 
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
     private readonly LocalStorageModuleCatalogOptions _localOptions = localOptions.Value;
     private readonly ExternalModuleCatalogOptions _externalOptions = externalOptions.Value;
+    private readonly ILogger<ModuleManagementService> _logger = logger;
     private readonly Lock _lockObject = new();
 
     private List<ManifestModuleInfo> _mergedModules;
@@ -48,10 +52,11 @@ public class ModuleManagementService(
         EnsureInitialized();
     }
 
-    public IList<ManifestModuleInfo> GetDependencies(IList<ManifestModuleInfo> selectedModules)
+    public IList<ManifestModuleInfo> GetDependencies(IList<string> moduleIds)
     {
         EnsureInitialized();
-        return ModuleDiscovery.GetDependencies(selectedModules, _mergedModules);
+        var modules = ResolveModulesById(moduleIds);
+        return ModuleDiscovery.GetDependencies(modules, _mergedModules);
     }
 
     public ManifestModuleInfo AddUploadedModule(ManifestModuleInfo module)
@@ -70,10 +75,122 @@ public class ModuleManagementService(
         return module;
     }
 
-    public void InstallModules(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
+    public void InstallModules(IList<ModuleInstallRequest> modules, IProgress<ProgressMessage> progress)
     {
         EnsureInitialized();
 
+        var resolved = new List<ManifestModuleInfo>();
+        foreach (var request in modules)
+        {
+            var module = ResolveModuleForInstall(request.Id, request.Version);
+            if (module != null)
+            {
+                resolved.Add(module);
+            }
+            else
+            {
+                Report(progress, ProgressMessageLevel.Error, "Module '{0}' version '{1}' not found", request.Id, request.Version ?? "latest");
+            }
+        }
+
+        if (resolved.Count > 0)
+        {
+            InstallModulesInternal(resolved, progress);
+        }
+    }
+
+    public void UninstallModules(IList<string> moduleIds, IProgress<ProgressMessage> progress)
+    {
+        EnsureInitialized();
+
+        var resolved = new List<ManifestModuleInfo>();
+        foreach (var id in moduleIds)
+        {
+            var module = _mergedModules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id) && x.IsInstalled);
+            if (module != null)
+            {
+                resolved.Add(module);
+            }
+            else
+            {
+                Report(progress, ProgressMessageLevel.Error, "Installed module '{0}' not found", id);
+            }
+        }
+
+        if (resolved.Count > 0)
+        {
+            UninstallModulesInternal(resolved, progress);
+        }
+    }
+
+    private List<ManifestModuleInfo> ResolveModulesById(IList<string> moduleIds)
+    {
+        var result = new List<ManifestModuleInfo>();
+
+        foreach (var id in moduleIds)
+        {
+            // Prefer installed version; fall back to latest available
+            var module = _mergedModules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id) && x.IsInstalled)
+                ?? _mergedModules.Where(x => x.Id.EqualsIgnoreCase(id)).OrderByDescending(x => x.Version).FirstOrDefault();
+
+            if (module != null)
+            {
+                result.Add(module);
+            }
+        }
+
+        return result;
+    }
+
+    private ManifestModuleInfo ResolveModuleForInstall(string moduleId, string version)
+    {
+        if (string.IsNullOrEmpty(version))
+        {
+            // Latest non-installed version
+            return _mergedModules
+                .Where(x => x.Id.EqualsIgnoreCase(moduleId) && !x.IsInstalled)
+                .OrderByDescending(x => x.Version)
+                .FirstOrDefault();
+        }
+
+        // Specific version — find existing or register custom
+        var identity = new ModuleIdentity(moduleId, SemanticVersion.Parse(version));
+        var existing = _mergedModules.FirstOrDefault(x => x.Identity.Equals(identity));
+        if (existing != null)
+        {
+            return existing;
+        }
+
+        // Register custom version
+        var packageUrl = BuildCustomPackageUrl(moduleId, version);
+        if (packageUrl == null)
+        {
+            return null;
+        }
+
+        var sourceModule = _mergedModules
+            .Where(x => x.Id.EqualsIgnoreCase(moduleId))
+            .OrderByDescending(x => x.Version)
+            .FirstOrDefault();
+
+        if (sourceModule == null)
+        {
+            return null;
+        }
+
+        var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+        moduleInfo.LoadFromExternalManifest(
+            new ExternalModuleManifest { Id = sourceModule.Id, Title = sourceModule.Title, Description = sourceModule.Description },
+            new ExternalModuleManifestVersion { Version = version, PackageUrl = packageUrl, PlatformVersion = PlatformVersion.CurrentVersion.ToString() });
+
+        AddUploadedModule(moduleInfo);
+        moduleInfo.Ref = packageUrl;
+
+        return moduleInfo;
+    }
+
+    private void InstallModulesInternal(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
+    {
         var isValid = true;
 
         foreach (var module in modules.Where(x => !x.IsInstalled))
@@ -136,7 +253,7 @@ public class ModuleManagementService(
         }
     }
 
-    public void UninstallModules(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
+    private void UninstallModulesInternal(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
     {
         var isValid = true;
         var modulesList = modules.ToList();
@@ -193,10 +310,19 @@ public class ModuleManagementService(
         }
     }
 
-    public IList<ManifestModuleInfo> GetDependents(IList<ManifestModuleInfo> modules)
+    public IList<ManifestModuleInfo> GetDependents(IList<string> moduleIds)
     {
         EnsureInitialized();
 
+        var modules = _mergedModules
+            .Where(x => x.IsInstalled && moduleIds.Any(id => x.Id.EqualsIgnoreCase(id)))
+            .ToList();
+
+        return GetDependentsRecursive(modules);
+    }
+
+    private List<ManifestModuleInfo> GetDependentsRecursive(IList<ManifestModuleInfo> modules)
+    {
         var retVal = new List<ManifestModuleInfo>();
         foreach (var module in modules)
         {
@@ -208,7 +334,7 @@ public class ModuleManagementService(
 
             if (dependingModules.Count > 0)
             {
-                retVal.AddRange(GetDependents(dependingModules));
+                retVal.AddRange(GetDependentsRecursive(dependingModules));
             }
         }
 
@@ -240,6 +366,84 @@ public class ModuleManagementService(
         return ModuleDiscovery.GetDependencies(modules, _mergedModules)
             .Where(x => !x.IsInstalled)
             .ToList();
+    }
+
+    public async Task<bool> ValidateModuleVersionAsync(string moduleId, string version)
+    {
+        var packageUrl = BuildCustomPackageUrl(moduleId, version);
+        return packageUrl != null && await CheckPackageExistsAsync(packageUrl);
+    }
+
+    public async Task<ManifestModuleInfo> RegisterCustomModuleVersionAsync(string moduleId, string version)
+    {
+        var packageUrl = BuildCustomPackageUrl(moduleId, version);
+        if (packageUrl == null || !await CheckPackageExistsAsync(packageUrl))
+        {
+            return null;
+        }
+
+        // Check if already registered
+        var identity = new ModuleIdentity(moduleId, SemanticVersion.Parse(version));
+        var existing = _mergedModules.FirstOrDefault(x => x.Identity.Equals(identity));
+        if (existing != null)
+        {
+            return existing;
+        }
+
+        // Find the source module to copy metadata from
+        var sourceModule = _mergedModules
+            .Where(x => x.Id.EqualsIgnoreCase(moduleId))
+            .OrderByDescending(x => x.Version)
+            .First();
+
+        var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+        moduleInfo.LoadFromExternalManifest(
+            new ExternalModuleManifest { Id = sourceModule.Id, Title = sourceModule.Title, Description = sourceModule.Description },
+            new ExternalModuleManifestVersion { Version = version, PackageUrl = packageUrl, PlatformVersion = PlatformVersion.CurrentVersion.ToString() });
+
+        AddUploadedModule(moduleInfo);
+        moduleInfo.Ref = packageUrl;
+
+        return moduleInfo;
+    }
+
+    private string BuildCustomPackageUrl(string moduleId, string version)
+    {
+        EnsureInitialized();
+
+        var module = _mergedModules
+            .Where(x => x.Id.EqualsIgnoreCase(moduleId) && !string.IsNullOrEmpty(x.Ref))
+            .OrderByDescending(x => x.Version)
+            .FirstOrDefault();
+
+        if (module == null)
+        {
+            return null;
+        }
+
+        var currentVersion = module.Version.ToString();
+        var customPackageUrl = module.Ref.Replace(currentVersion, version);
+
+        return Uri.IsWellFormedUriString(customPackageUrl, UriKind.Absolute) ? customPackageUrl : null;
+    }
+
+    private async Task<bool> CheckPackageExistsAsync(string packageUrl)
+    {
+        try
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Virto Commerce Manager");
+
+            using var request = new HttpRequestMessage(HttpMethod.Head, packageUrl);
+            using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "HEAD check failed for {PackageUrl}", packageUrl);
+            return false;
+        }
     }
 
     private void EnsureInitialized()
