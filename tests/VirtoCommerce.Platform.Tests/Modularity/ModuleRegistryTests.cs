@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
@@ -8,141 +7,157 @@ namespace VirtoCommerce.Platform.Tests.Modularity;
 
 public class ModuleRegistryTests
 {
-    public ModuleRegistryTests()
-    {
-        ModuleRegistry.Reset();
-    }
-
     [Fact]
     public void IsInstalled_ExistingModule_ReturnsTrue()
     {
-        var modules = new List<ManifestModuleInfo> { CreateModule("TestModule", "1.0.0", isInstalled: true) };
-        ModuleRegistry.Initialize(modules);
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Module1", "1.0.0", isInstalled: true),
+        ]);
 
-        Assert.True(ModuleRegistry.IsInstalled("TestModule"));
+        // Act, Assert
+        Assert.True(ModuleRegistry.IsInstalled("Module1"));
     }
 
     [Fact]
-    public void IsInstalled_MissingModule_ReturnsFalse()
+    public void IsInstalled_UnknownModule_ReturnsFalse()
     {
-        var modules = new List<ManifestModuleInfo> { CreateModule("TestModule", "1.0.0", isInstalled: true) };
-        ModuleRegistry.Initialize(modules);
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Module1", "1.0.0", isInstalled: true),
+        ]);
 
-        Assert.False(ModuleRegistry.IsInstalled("NonExistent"));
+        // Act, Assert
+        Assert.False(ModuleRegistry.IsInstalled("Unknown"));
     }
 
     [Fact]
     public void IsInstalled_NotInstalledModule_ReturnsFalse()
     {
-        var modules = new List<ManifestModuleInfo> { CreateModule("TestModule", "1.0.0", isInstalled: false) };
-        ModuleRegistry.Initialize(modules);
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Module1", "1.0.0", isInstalled: false),
+        ]);
 
-        Assert.False(ModuleRegistry.IsInstalled("TestModule"));
+        // Act, Assert
+        Assert.False(ModuleRegistry.IsInstalled("Module1"));
     }
 
     [Fact]
     public void IsInstalled_CaseInsensitive()
     {
-        var modules = new List<ManifestModuleInfo> { CreateModule("TestModule", "1.0.0", isInstalled: true) };
-        ModuleRegistry.Initialize(modules);
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Module1", "1.0.0", isInstalled: true),
+        ]);
 
-        Assert.True(ModuleRegistry.IsInstalled("testmodule"));
-        Assert.True(ModuleRegistry.IsInstalled("TESTMODULE"));
+        // Act, Assert
+        Assert.True(ModuleRegistry.IsInstalled("module1"));
+        Assert.True(ModuleRegistry.IsInstalled("MODULE1"));
     }
 
     [Fact]
     public void IsInstalled_WithMinVersion_SatisfiedVersion_ReturnsTrue()
     {
-        var modules = new List<ManifestModuleInfo> { CreateModule("TestModule", "2.5.0", isInstalled: true) };
-        ModuleRegistry.Initialize(modules);
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Module1", "2.5.0", isInstalled: true),
+        ]);
 
-        Assert.True(ModuleRegistry.IsInstalled("TestModule", "2.0.0"));
-        Assert.True(ModuleRegistry.IsInstalled("TestModule", "2.5.0"));
+        // Act, Assert
+        Assert.True(ModuleRegistry.IsInstalled("Module1", "2.0.0"));
+        Assert.True(ModuleRegistry.IsInstalled("Module1", "2.5.0"));
     }
 
     [Fact]
     public void IsInstalled_WithMinVersion_UnsatisfiedVersion_ReturnsFalse()
     {
-        var modules = new List<ManifestModuleInfo> { CreateModule("TestModule", "1.0.0", isInstalled: true) };
-        ModuleRegistry.Initialize(modules);
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Module1", "1.0.0", isInstalled: true),
+        ]);
 
-        Assert.False(ModuleRegistry.IsInstalled("TestModule", "2.0.0"));
+        // Act, Assert
+        Assert.False(ModuleRegistry.IsInstalled("Module1", "2.0.0"));
     }
 
     [Fact]
     public void GetModule_ExistingModule_ReturnsInfo()
     {
-        var module = CreateModule("TestModule", "1.0.0", isInstalled: true);
-        ModuleRegistry.Initialize([module]);
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Module1", "1.0.0", isInstalled: false),
+        ]);
 
-        var result = ModuleRegistry.GetModule("TestModule");
+        // Act
+        var result = ModuleRegistry.GetModule("Module1");
+
+        // Assert
         Assert.NotNull(result);
-        Assert.Equal("TestModule", result.Id);
+        Assert.Equal("Module1", result.Id);
     }
 
     [Fact]
-    public void GetModule_MissingModule_ReturnsNull()
+    public void GetModule_UnknownModule_ReturnsNull()
     {
-        ModuleRegistry.Initialize([]);
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Module1", "1.0.0", isInstalled: true),
+        ]);
 
-        Assert.Null(ModuleRegistry.GetModule("NonExistent"));
+        // Act, Assert
+        Assert.Null(ModuleRegistry.GetModule("Unknown"));
     }
 
     [Fact]
     public void GetAllModules_ReturnsAll()
     {
-        var modules = new List<ManifestModuleInfo>
-        {
+        // Arrange
+        ModuleRegistry.Initialize([
             CreateModule("Module1", "1.0.0", isInstalled: true),
             CreateModule("Module2", "2.0.0", isInstalled: false),
-        };
-        ModuleRegistry.Initialize(modules);
+        ]);
 
+        // Act, Assert
         Assert.Equal(2, ModuleRegistry.GetAllModules().Count);
     }
 
     [Fact]
     public void GetInstalledModules_ReturnsOnlyInstalled()
     {
-        var modules = new List<ManifestModuleInfo>
-        {
+        // Arrange
+        ModuleRegistry.Initialize([
             CreateModule("Module1", "1.0.0", isInstalled: true),
             CreateModule("Module2", "2.0.0", isInstalled: false),
             CreateModule("Module3", "3.0.0", isInstalled: true),
-        };
-        ModuleRegistry.Initialize(modules);
+        ]);
 
+        // Act
         var installed = ModuleRegistry.GetInstalledModules();
+
+        // Assert
         Assert.Equal(2, installed.Count);
     }
 
     [Fact]
-    public void GetFailedModules_ReturnsOnlyErrored()
+    public void GetFailedModules_ReturnsOnlyFailed()
     {
-        var good = CreateModule("GoodModule", "1.0.0", isInstalled: true);
-        var bad = CreateModule("BadModule", "1.0.0", isInstalled: true);
-        bad.Errors.Add("Something went wrong");
+        // Arrange
+        ModuleRegistry.Initialize([
+            CreateModule("Good", "1.0.0", isInstalled: true),
+            CreateModule("Bad", "1.0.0", isInstalled: true, error: "Something went wrong"),
+        ]);
 
-        ModuleRegistry.Initialize([good, bad]);
-
+        // Act
         var failed = ModuleRegistry.GetFailedModules();
+
+        // Assert
         Assert.Single(failed);
-        Assert.Equal("BadModule", failed[0].Id);
+        Assert.Equal("Bad", failed[0].Id);
     }
 
-    [Fact]
-    public void Reset_ClearsState()
-    {
-        ModuleRegistry.Initialize([CreateModule("TestModule", "1.0.0", isInstalled: true)]);
-        Assert.True(ModuleRegistry.IsInstalled("TestModule"));
 
-        ModuleRegistry.Reset();
-
-        Assert.False(ModuleRegistry.IsInstalled("TestModule"));
-        Assert.Empty(ModuleRegistry.GetAllModules());
-    }
-
-    private static ManifestModuleInfo CreateModule(string id, string version, bool isInstalled)
+    private static ManifestModuleInfo CreateModule(string id, string version, bool isInstalled, string error = null)
     {
         var manifest = new ModuleManifest
         {
@@ -154,6 +169,12 @@ public class ModuleRegistryTests
         var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
         moduleInfo.LoadFromManifest(manifest);
         moduleInfo.IsInstalled = isInstalled;
+
+        if (!error.IsNullOrEmpty())
+        {
+            moduleInfo.Errors.Add(error);
+        }
+
         return moduleInfo;
     }
 }

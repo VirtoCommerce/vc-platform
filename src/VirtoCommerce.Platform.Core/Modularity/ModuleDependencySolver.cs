@@ -112,17 +112,21 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// when a cycle is found in the defined dependency graph.</exception>
         public string[] Solve()
         {
-            var skip = new List<string>();
-            while (skip.Count < _dependencyMatrix.Count)
+            var processed = new List<string>();
+            var levels = new List<List<string>>();
+            while (processed.Count < _dependencyMatrix.Count)
             {
-                var leaves = FindLeaves(skip, _dependencyMatrix);
-                if (leaves.Count == 0 && skip.Count < _dependencyMatrix.Count)
+                var leaves = FindLeaves(processed, _dependencyMatrix);
+                if (leaves.Count == 0 && processed.Count < _dependencyMatrix.Count)
                 {
-                    throw new CyclicDependencyFoundException($"At least one cyclic dependency has been found in the module catalog. Cycles in the module dependencies must be avoided.");
+                    throw new CyclicDependencyFoundException("At least one cyclic dependency has been found in the module catalog. Cycles in the module dependencies are not allowed.");
                 }
-                skip.AddRange(leaves);
+                leaves.Sort(StringComparer.OrdinalIgnoreCase);
+                processed.AddRange(leaves);
+                levels.Add(leaves);
             }
-            skip.Reverse();
+            levels.Reverse();
+            var skip = levels.SelectMany(x => x).ToList();
 
             if (_boostedDependencyMatrix.Count > 0)
             {

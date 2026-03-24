@@ -94,8 +94,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Copyright = manifest.Copyright;
             Tags = manifest.Tags;
             Identity = new ModuleIdentity(Id, Version, Optional);
-            ModuleType = manifest.ModuleType;
+            AssemblyFile = manifest.AssemblyFile;
             StartupType = manifest.StartupType;
+            ModuleType = manifest.ModuleType;
 
             if (manifest.Groups != null)
             {

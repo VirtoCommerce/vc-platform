@@ -16,9 +16,8 @@ public static class ModuleManifestReader
 {
     /// <summary>
     /// Scan discoveryPath for all module.manifest files, excluding "artifacts" directories.
-    /// When probingPath is provided, sets each module's Ref to the file:// URI pointing to its assembly in the probing path.
     /// </summary>
-    public static List<ManifestModuleInfo> ReadAll(string discoveryPath, string probingPath = null)
+    public static IList<ManifestModuleInfo> ReadAll(string discoveryPath)
     {
         ArgumentNullException.ThrowIfNull(discoveryPath);
 
@@ -47,7 +46,7 @@ public static class ModuleManifestReader
                 continue;
             }
 
-            var moduleInfo = Read(manifestFile, probingPath);
+            var moduleInfo = Read(manifestFile);
             if (moduleInfo != null)
             {
                 result.Add(moduleInfo);
@@ -62,7 +61,7 @@ public static class ModuleManifestReader
     /// Read a single module.manifest file and return ManifestModuleInfo.
     /// When probingPath is provided, sets Ref to the file:// URI pointing to the assembly in the probing path.
     /// </summary>
-    public static ManifestModuleInfo Read(string manifestFilePath, string probingPath = null)
+    public static ManifestModuleInfo Read(string manifestFilePath)
     {
         ArgumentNullException.ThrowIfNull(manifestFilePath);
 
@@ -73,14 +72,9 @@ public static class ModuleManifestReader
             moduleInfo.LoadFromManifest(manifest);
             moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestFilePath);
 
-            if (string.IsNullOrEmpty(manifest.AssemblyFile))
+            if (string.IsNullOrEmpty(moduleInfo.AssemblyFile))
             {
                 moduleInfo.State = ModuleState.Initialized;
-            }
-            else if (probingPath != null)
-            {
-                // Set Ref to file:// URI pointing to assembly in probing path
-                moduleInfo.Ref = GetFileAbsoluteUri(probingPath, manifest.AssemblyFile);
             }
 
             moduleInfo.IsInstalled = true;
@@ -92,16 +86,5 @@ public static class ModuleManifestReader
             logger.LogError(ex, "Error reading manifest {ManifestPath}", manifestFilePath);
             return null;
         }
-    }
-
-    private static string GetFileAbsoluteUri(string rootPath, string relativePath)
-    {
-        var builder = new UriBuilder
-        {
-            Host = string.Empty,
-            Scheme = Uri.UriSchemeFile,
-            Path = Path.GetFullPath(Path.Combine(rootPath, relativePath)),
-        };
-        return builder.Uri.ToString();
     }
 }

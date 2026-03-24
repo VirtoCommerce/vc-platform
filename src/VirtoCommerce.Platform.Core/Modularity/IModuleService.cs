@@ -8,5 +8,5 @@ namespace VirtoCommerce.Platform.Core.Modularity;
 /// </summary>
 public interface IModuleService
 {
-    IReadOnlyList<ManifestModuleInfo> GetInstalledModules();
+    IList<ManifestModuleInfo> GetInstalledModules();
 }

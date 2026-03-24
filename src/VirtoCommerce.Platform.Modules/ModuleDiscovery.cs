@@ -18,7 +18,7 @@ public static class ModuleDiscovery
     /// Parse external module manifest JSON into a list of ManifestModuleInfo.
     /// Pure function - no HTTP, works on already-downloaded data.
     /// </summary>
-    public static List<ManifestModuleInfo> ParseExternalManifest(
+    public static IList<ManifestModuleInfo> ParseExternalManifest(
         string manifestJson,
         SemanticVersion platformVersion,
         bool includePrerelease = false)
@@ -69,9 +69,9 @@ public static class ModuleDiscovery
     /// Merge external modules with locally installed modules.
     /// Returns a unified list: installed modules keep their state, external modules show as available.
     /// </summary>
-    public static List<ManifestModuleInfo> MergeWithInstalled(
-        IReadOnlyList<ManifestModuleInfo> externalModules,
-        IReadOnlyList<ManifestModuleInfo> installedModules)
+    public static IList<ManifestModuleInfo> MergeWithInstalled(
+        IList<ManifestModuleInfo> externalModules,
+        IList<ManifestModuleInfo> installedModules)
     {
         ArgumentNullException.ThrowIfNull(externalModules);
         ArgumentNullException.ThrowIfNull(installedModules);
@@ -118,7 +118,7 @@ public static class ModuleDiscovery
     /// Populates <see cref="ManifestModuleInfo.Errors"/> for each module that fails validation.
     /// Modules with errors are skipped during initialization by <see cref="ModuleRunner"/>.
     /// </summary>
-    public static void ValidateModules(IReadOnlyList<ManifestModuleInfo> modules, SemanticVersion platformVersion)
+    public static void ValidateModules(IList<ManifestModuleInfo> modules, SemanticVersion platformVersion)
     {
         ArgumentNullException.ThrowIfNull(modules);
         ArgumentNullException.ThrowIfNull(platformVersion);
@@ -217,7 +217,7 @@ public static class ModuleDiscovery
     /// </summary>
     public static List<string> ValidateInstall(
         ManifestModuleInfo moduleToInstall,
-        IReadOnlyList<ManifestModuleInfo> installedModules,
+        IList<ManifestModuleInfo> installedModules,
         SemanticVersion platformVersion)
     {
         ArgumentNullException.ThrowIfNull(moduleToInstall);
@@ -270,8 +270,8 @@ public static class ModuleDiscovery
     /// <param name="excludeModuleIds">Optional set of module IDs also being uninstalled (their dependencies should be ignored).</param>
     public static List<string> ValidateUninstall(
         string moduleId,
-        IReadOnlyList<ManifestModuleInfo> installedModules,
-        IReadOnlyCollection<string> excludeModuleIds = null)
+        IList<ManifestModuleInfo> installedModules,
+        IList<string> excludeModuleIds = null)
     {
         var dependingModules = installedModules
             .Where(x =>
@@ -290,7 +290,7 @@ public static class ModuleDiscovery
     /// Walks DOWN the dependency graph. For each dependency, selects the best compatible version
     /// from <paramref name="allAvailableModules"/> (prefers installed, then latest compatible).
     /// </summary>
-    public static List<ManifestModuleInfo> GetDependencies(
+    public static IList<ManifestModuleInfo> GetDependencies(
         IList<ManifestModuleInfo> selectedModules,
         IList<ManifestModuleInfo> allAvailableModules)
     {
@@ -333,7 +333,7 @@ public static class ModuleDiscovery
             }
         }
 
-        return ModuleRunner.SortByDependency(completeList).ToList();
+        return ModuleRunner.SortModulesByDependency(completeList).ToList();
     }
 
     private static ManifestModuleInfo GetLatestCompatibleVersion(

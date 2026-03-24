@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -23,8 +22,6 @@ public static class ModuleLoader
 {
     private static ILogger _logger;
     private static bool _isDevelopmentEnvironment;
-    private static bool _isInitialized;
-    private static readonly Lock _initLock = new();
     private static readonly ConcurrentDictionary<string, Assembly> _loadedAssemblies = new();
     private static readonly ConcurrentDictionary<string, List<string>> _nativePathsByName = new();
 
@@ -54,17 +51,16 @@ public static class ModuleLoader
     /// </summary>
     public static void Initialize(bool isDevelopmentEnvironment)
     {
-        lock (_initLock)
-        {
-            if (_isInitialized)
-            {
-                return;
-            }
+        _logger = ModuleLogger.CreateLogger(typeof(ModuleLoader));
+        _isDevelopmentEnvironment = isDevelopmentEnvironment;
+        AssemblyLoadContext.Default.ResolvingUnmanagedDll += ResolveNativeLibrary;
+    }
 
-            _logger = ModuleLogger.CreateLogger(typeof(ModuleLoader));
-            _isDevelopmentEnvironment = isDevelopmentEnvironment;
-            AssemblyLoadContext.Default.ResolvingUnmanagedDll += ResolveNativeLibrary;
-            _isInitialized = true;
+    public static void LoadModules(IList<ManifestModuleInfo> modules, string probingPath)
+    {
+        foreach (var module in modules)
+        {
+            LoadModule(module, probingPath);
         }
     }
 
@@ -76,26 +72,30 @@ public static class ModuleLoader
     {
         ArgumentNullException.ThrowIfNull(module);
 
-        if (string.IsNullOrEmpty(module.Ref))
+        if (string.IsNullOrEmpty(module.AssemblyFile))
         {
             // No assembly reference set - a module may not have an assembly
             return null;
         }
 
-        var assemblyUri = GetFileUri(module.Ref);
-        if (assemblyUri == null || !File.Exists(assemblyUri.LocalPath))
+        var moduleAssemblyPath = Path.GetFullPath(Path.Combine(probingPath, module.AssemblyFile));
+
+        if (!File.Exists(moduleAssemblyPath))
         {
-            _logger.LogWarning("Assembly file not found for {ModuleId}: {ModuleRef}", module.Id, module.Ref);
-            module.Errors.Add($"Assembly file not found: {module.Ref}");
+            _logger.LogWarning("Assembly file not found for module {ModuleId}: {ModuleRef}", module.Id, moduleAssemblyPath);
+            module.Errors.Add($"Assembly file not found: {moduleAssemblyPath}");
             return null;
         }
+
+        module.Ref = GetFileAbsoluteUri(moduleAssemblyPath).ToString();
 
         try
         {
             _logger.LogDebug("Loading module {ModuleId} {ModuleVersion}", module.Id, module.Version);
-            var assembly = LoadAssemblyWithReferences(assemblyUri.LocalPath);
+            var assembly = LoadAssemblyWithReferences(moduleAssemblyPath);
             module.Assembly = assembly;
             module.State = ModuleState.ReadyForInitialization;
+
             return assembly;
         }
         catch (Exception ex)
@@ -306,18 +306,15 @@ public static class ModuleLoader
         return false;
     }
 
-    private static Uri GetFileUri(string filePath)
+    private static Uri GetFileAbsoluteUri(string localPath)
     {
-        if (string.IsNullOrEmpty(filePath))
+        var builder = new UriBuilder
         {
-            return null;
-        }
+            Host = string.Empty,
+            Scheme = Uri.UriSchemeFile,
+            Path = localPath,
+        };
 
-        if (!Uri.TryCreate(filePath, UriKind.Absolute, out var uri))
-        {
-            return null;
-        }
-
-        return uri.IsFile ? uri : null;
+        return builder.Uri;
     }
 }

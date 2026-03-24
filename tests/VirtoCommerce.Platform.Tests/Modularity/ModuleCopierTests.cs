@@ -1,11 +1,9 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
-using VirtoCommerce.Platform.Modules.Local;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Modularity;
@@ -16,8 +14,7 @@ public class ModuleCopierTests
 
     public ModuleCopierTests()
     {
-        var fileCopyPolicy = new FileCopyPolicy(_metadataProvider.Object, Options.Create(new LocalStorageModuleCatalogOptions()));
-        ModuleCopier.Initialize(fileCopyPolicy);
+        ModuleCopier.Initialize(new LocalStorageModuleCatalogOptions(), _metadataProvider.Object);
     }
 
     public static TheoryData<string, string> FilePathTestData => new()
@@ -77,12 +74,12 @@ public class ModuleCopierTests
         const string targetPath = @"c:\target\non_executable.xml";
 
         var sourceDate = DateTime.UtcNow;
-        AddFile(sourcePath, sourceDate, version: null, architecture: null);
+        AddFile(sourcePath, sourceDate);
 
         if (targetExists)
         {
             var targetDate = isTargetOlder == true ? sourceDate.AddDays(-1) : sourceDate;
-            AddFile(targetPath, targetDate, version: null, architecture: null);
+            AddFile(targetPath, targetDate);
         }
 
         // Act
@@ -185,7 +182,7 @@ public class ModuleCopierTests
         Assert.Equal(expectedCopyRequired, actualCopyRequired);
     }
 
-    private void AddFile(string path, DateTime date, string version, Architecture? architecture)
+    private void AddFile(string path, DateTime date, string version = null, Architecture? architecture = null)
     {
         _metadataProvider.Setup(x => x.Exists(path)).Returns(true);
         _metadataProvider.Setup(x => x.GetDate(path)).Returns(date);

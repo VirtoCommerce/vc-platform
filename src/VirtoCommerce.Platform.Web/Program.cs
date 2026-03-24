@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
@@ -49,46 +48,21 @@ namespace VirtoCommerce.Platform.Web
             var bootstrapLoggerFactory = new SerilogLoggerFactory(Log.Logger);
             ModuleLogger.Initialize(bootstrapLoggerFactory);
 
-            var options = new LocalStorageModuleCatalogOptions();
-            bootConfig.GetSection("VirtoCommerce").Bind(options);
+            var options = bootConfig.GetSection("VirtoCommerce").Get<LocalStorageModuleCatalogOptions>();
             options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath);
             options.ProbingPath = Path.GetFullPath(options.ProbingPath);
 
-            var refreshProbing = options.RefreshProbingFolderOnStart;
-            var modules = ModuleManifestReader.ReadAll(options.DiscoveryPath, options.ProbingPath);
+            var modules = ModuleManifestReader.ReadAll(options.DiscoveryPath);
 
-            // Check if a module install/uninstall occurred — clear probing folder for clean rebuild
-            if (ModuleCopier.ClearProbingFolderIfRequested(options.ProbingPath))
-            {
-                refreshProbing = true;
-            }
-
-            if (!Directory.Exists(options.ProbingPath))
-            {
-                Directory.CreateDirectory(options.ProbingPath);
-                refreshProbing = true;
-            }
-
-            if (refreshProbing)
-            {
-                var optionsWrapper = Options.Create(options);
-                var metadataProvider = new FileMetadataProvider(optionsWrapper);
-                var policy = new FileCopyPolicy(metadataProvider, optionsWrapper);
-
-                ModuleCopier.Initialize(policy);
-                ModuleCopier.CopyAll(options.DiscoveryPath, options.ProbingPath, modules, RuntimeInformation.ProcessArchitecture);
-            }
+            ModuleCopier.Initialize(options, new FileMetadataProvider());
+            ModuleCopier.Copy(modules, RuntimeInformation.ProcessArchitecture);
 
             var boostOptions = bootConfig.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
             ModuleRunner.Initialize(boostOptions);
 
             var isDevelopment = environment.EqualsIgnoreCase(Environments.Development);
             ModuleLoader.Initialize(isDevelopment);
-
-            foreach (var module in modules.Where(m => !string.IsNullOrEmpty(m.Ref)))
-            {
-                ModuleLoader.LoadModule(module, options.ProbingPath);
-            }
+            ModuleLoader.LoadModules(modules, options.ProbingPath);
 
             ModuleDiscovery.ValidateModules(modules, PlatformVersion.CurrentVersion);
             ModuleRegistry.Initialize(modules);

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -14,37 +13,28 @@ namespace VirtoCommerce.Platform.Modules;
 /// </summary>
 public static class ModuleRegistry
 {
-    private static volatile IReadOnlyList<ManifestModuleInfo> _modules = [];
-    private static volatile Dictionary<string, ManifestModuleInfo> _moduleIndex = new(StringComparer.OrdinalIgnoreCase);
-    private static readonly Lock _lock = new();
+    private static IList<ManifestModuleInfo> _modules;
+    private static Dictionary<string, ManifestModuleInfo> _modulesById;
 
-    public static void Initialize(IReadOnlyList<ManifestModuleInfo> modules)
+    public static void Initialize(IList<ManifestModuleInfo> modules)
     {
         ArgumentNullException.ThrowIfNull(modules);
 
-        lock (_lock)
-        {
-            _modules = modules;
-            _moduleIndex = new Dictionary<string, ManifestModuleInfo>(modules.Count, StringComparer.OrdinalIgnoreCase);
-
-            foreach (var module in modules)
-            {
-                _moduleIndex[module.Id] = module;
-            }
-        }
+        _modules = modules;
+        _modulesById = modules.ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
 
         var logger = ModuleLogger.CreateLogger(typeof(ModuleRegistry));
-        logger.LogInformation("Loaded modules: {ModuleCount}, with errors: {ErrorCount}", modules.Count, modules.Count(m => m.Errors.Count > 0));
+        logger.LogInformation("Loaded modules: {ModuleCount}, with errors: {ErrorCount}", modules.Count, modules.Count(x => x.Errors.Count > 0));
     }
 
     public static bool IsInstalled(string moduleId)
     {
-        return _moduleIndex.TryGetValue(moduleId, out var module) && module.IsInstalled;
+        return _modulesById.TryGetValue(moduleId, out var module) && module.IsInstalled;
     }
 
     public static bool IsInstalled(string moduleId, string minVersion)
     {
-        if (!_moduleIndex.TryGetValue(moduleId, out var module) || !module.IsInstalled)
+        if (!_modulesById.TryGetValue(moduleId, out var module) || !module.IsInstalled)
         {
             return false;
         }
@@ -55,31 +45,22 @@ public static class ModuleRegistry
 
     public static ManifestModuleInfo GetModule(string moduleId)
     {
-        _moduleIndex.TryGetValue(moduleId, out var module);
+        _modulesById.TryGetValue(moduleId, out var module);
         return module;
     }
 
-    public static IReadOnlyList<ManifestModuleInfo> GetAllModules()
+    public static IList<ManifestModuleInfo> GetAllModules()
     {
         return _modules;
     }
 
-    public static IReadOnlyList<ManifestModuleInfo> GetInstalledModules()
+    public static IList<ManifestModuleInfo> GetInstalledModules()
     {
-        return _modules.Where(m => m.IsInstalled && m.Errors.Count == 0).ToArray();
+        return _modules.Where(x => x.IsInstalled && x.Errors.Count == 0).ToList();
     }
 
-    public static IReadOnlyList<ManifestModuleInfo> GetFailedModules()
+    public static IList<ManifestModuleInfo> GetFailedModules()
     {
-        return _modules.Where(m => m.Errors.Count > 0).ToArray();
-    }
-
-    public static void Reset()
-    {
-        lock (_lock)
-        {
-            _modules = [];
-            _moduleIndex = new(StringComparer.OrdinalIgnoreCase);
-        }
+        return _modules.Where(x => x.Errors.Count > 0).ToList();
     }
 }

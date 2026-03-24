@@ -59,13 +59,13 @@ public static class ModulePackageInstaller
         try
         {
             Directory.Delete(modulePath, recursive: true);
-            logger.LogInformation("Successfully uninstalled from {ModulePath}", modulePath);
+            logger.LogInformation("Successfully removed directory {ModulePath}", modulePath);
         }
         catch (IOException ex)
         {
             // Directory may be locked by FileSystemWatcher (PhysicalFileProvider) or antivirus.
             // Log warning and continue — the new module version will overwrite files via Install().
-            logger.LogWarning("Could not fully delete {ModulePath}: {Message}. Continuing with installation.", modulePath, ex.Message);
+            logger.LogWarning("Could not fully delete directory {ModulePath}: {Message}. Continuing with installation.", modulePath, ex.Message);
         }
     }
 
@@ -97,7 +97,7 @@ public static class ModulePackageInstaller
     /// Download and parse external module manifests from all configured URLs.
     /// Collects modules from main manifest URL + extra URLs, deduplicates.
     /// </summary>
-    public static List<ManifestModuleInfo> LoadExternalModules(HttpClient httpClient, ExternalModuleCatalogOptions options)
+    public static IList<ManifestModuleInfo> LoadExternalModules(HttpClient httpClient, ExternalModuleCatalogOptions options)
     {
         ArgumentNullException.ThrowIfNull(httpClient);
         ArgumentNullException.ThrowIfNull(options);
@@ -125,7 +125,7 @@ public static class ModulePackageInstaller
     /// <summary>
     /// Download and parse a single external module manifest from a URL.
     /// </summary>
-    public static List<ManifestModuleInfo> LoadModulesManifest(HttpClient httpClient, ExternalModuleCatalogOptions options, Uri manifestUrl)
+    public static IList<ManifestModuleInfo> LoadModulesManifest(HttpClient httpClient, ExternalModuleCatalogOptions options, Uri manifestUrl)
     {
         ArgumentNullException.ThrowIfNull(manifestUrl);
 
@@ -164,16 +164,5 @@ public static class ModulePackageInstaller
         }
 
         return request;
-    }
-
-    /// <summary>
-    /// Validate that a module can be uninstalled: check no other installed modules depend on it.
-    /// Returns list of error messages (empty if valid).
-    /// </summary>
-    public static List<string> ValidateUninstall(
-        string moduleId,
-        IReadOnlyList<ManifestModuleInfo> installedModules)
-    {
-        return ModuleDiscovery.ValidateUninstall(moduleId, installedModules);
     }
 }

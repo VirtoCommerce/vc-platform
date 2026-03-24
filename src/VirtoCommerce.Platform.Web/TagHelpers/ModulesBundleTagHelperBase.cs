@@ -36,9 +36,9 @@ namespace VirtoCommerce.Platform.Web.TagHelpers
             output.TagName = null;
 
             // Modules are sorted by dependency order (topological sort) to keep the proper order for script/style includes on the index page.
-            var sucesfullyLoadedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetInstalledModules()).Where(x => x.State == ModuleState.Initialized);
+            var initializedModules = ModuleRunner.SortModulesByDependency(ModuleRegistry.GetInstalledModules()).Where(x => x.State == ModuleState.Initialized);
 
-            foreach (var module in sucesfullyLoadedModules)
+            foreach (var module in initializedModules)
             {
                 var normalizedBundlePath = BundlePath.Replace("~/", "").Replace("\\", "/").TrimStart('/');
                 var moduleBundleVirtualPath = $"/modules/$({module.ModuleName})/{normalizedBundlePath}";

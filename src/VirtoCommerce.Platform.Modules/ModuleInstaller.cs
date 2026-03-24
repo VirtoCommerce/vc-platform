@@ -98,7 +98,7 @@ namespace VirtoCommerce.Platform.Modules
         {
             var isValid = true;
             var modulesList = modules.ToList();
-            var uninstallIds = modulesList.Select(m => m.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var uninstallIds = modulesList.Select(x => x.Id).ToArray();
 
             //Dependency and version validation
             foreach (var module in modulesList)
@@ -119,7 +119,7 @@ namespace VirtoCommerce.Platform.Modules
                 {
                     try
                     {
-                        foreach (var uninstallingModule in modules)
+                        foreach (var uninstallingModule in modulesList)
                         {
                             Report(progress, ProgressMessageLevel.Info, "Uninstalling '{0}'", uninstallingModule);
                             //Call module Uninstall method

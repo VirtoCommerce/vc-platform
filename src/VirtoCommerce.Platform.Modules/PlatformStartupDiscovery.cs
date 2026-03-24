@@ -18,14 +18,14 @@ namespace VirtoCommerce.Platform.Modules;
 /// </summary>
 public static class PlatformStartupDiscovery
 {
-    private static IReadOnlyList<IPlatformStartup> _startups = Array.Empty<IPlatformStartup>();
+    private static IList<IPlatformStartup> _startups = Array.Empty<IPlatformStartup>();
 
     /// <summary>
     /// Discover IPlatformStartup implementations from already-loaded modules.
     /// Modules must have Assembly loaded and StartupType set in manifest.
     /// Returns instances sorted by Priority (ascending) and stores them internally.
     /// </summary>
-    public static IReadOnlyList<IPlatformStartup> DiscoverStartups(IEnumerable<ManifestModuleInfo> modules)
+    public static IList<IPlatformStartup> DiscoverStartups(IEnumerable<ManifestModuleInfo> modules)
     {
         var startups = new List<IPlatformStartup>();
         var logger = ModuleLogger.CreateLogger(typeof(PlatformStartupDiscovery));
@@ -76,10 +76,10 @@ public static class PlatformStartupDiscovery
     /// <summary>
     /// Get previously discovered startups.
     /// </summary>
-    public static IReadOnlyList<IPlatformStartup> GetStartups() => _startups;
+    public static IList<IPlatformStartup> GetStartups() => _startups;
 
     public static void RunConfigureAppConfiguration(
-        IReadOnlyList<IPlatformStartup> startups,
+        IList<IPlatformStartup> startups,
         IConfigurationBuilder builder,
         IHostEnvironment environment)
     {
@@ -90,7 +90,7 @@ public static class PlatformStartupDiscovery
     }
 
     public static void RunConfigureHostServices(
-        IReadOnlyList<IPlatformStartup> startups,
+        IList<IPlatformStartup> startups,
         IServiceCollection services,
         IConfiguration configuration)
     {
@@ -101,7 +101,7 @@ public static class PlatformStartupDiscovery
     }
 
     public static void RunConfigureServices(
-        IReadOnlyList<IPlatformStartup> startups,
+        IList<IPlatformStartup> startups,
         IServiceCollection services,
         IConfiguration configuration)
     {
@@ -112,7 +112,7 @@ public static class PlatformStartupDiscovery
     }
 
     public static void RunConfigure(
-        IReadOnlyList<IPlatformStartup> startups,
+        IList<IPlatformStartup> startups,
         IApplicationBuilder applicationBuilder,
         IConfiguration configuration)
     {
@@ -120,14 +120,6 @@ public static class PlatformStartupDiscovery
         {
             startup.Configure(applicationBuilder, configuration);
         }
-    }
-
-    /// <summary>
-    /// Reset internal state (for testing).
-    /// </summary>
-    public static void Reset()
-    {
-        _startups = Array.Empty<IPlatformStartup>();
     }
 
     private static Type FindTypeByName(Assembly assembly, string typeName)

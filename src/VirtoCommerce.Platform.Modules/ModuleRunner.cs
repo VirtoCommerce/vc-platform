@@ -20,7 +20,7 @@ public static class ModuleRunner
     private static ModuleSequenceBoostOptions _boostOptions = new();
 
     /// <summary>
-    /// Set the boost options used by <see cref="SortByDependency"/>. Call once from Program.Main.
+    /// Set the boost options used by <see cref="SortModulesByDependency"/>. Call once from Program.Main.
     /// </summary>
     public static void Initialize(ModuleSequenceBoostOptions boostOptions)
     {
@@ -31,7 +31,7 @@ public static class ModuleRunner
     /// Sort modules by dependency order using topological sort.
     /// Modules with no dependencies come first.
     /// </summary>
-    public static IReadOnlyList<ManifestModuleInfo> SortByDependency(IReadOnlyList<ManifestModuleInfo> modules)
+    public static IList<ManifestModuleInfo> SortModulesByDependency(IList<ManifestModuleInfo> modules)
     {
         ArgumentNullException.ThrowIfNull(modules);
 
@@ -41,7 +41,7 @@ public static class ModuleRunner
         }
 
         var solver = new ModuleDependencySolver(_boostOptions);
-        var moduleNames = new HashSet<string>(modules.Select(m => m.ModuleName), StringComparer.OrdinalIgnoreCase);
+        var moduleNames = new HashSet<string>(modules.Select(x => x.ModuleName), StringComparer.OrdinalIgnoreCase);
 
         foreach (var module in modules)
         {
@@ -71,11 +71,12 @@ public static class ModuleRunner
         // Deduplicate by ModuleName (same module ID may appear with different versions in merged catalogs).
         // Prefer installed version, then latest.
         var modulesByName = modules
-            .GroupBy(m => m.ModuleName, StringComparer.OrdinalIgnoreCase)
+            .GroupBy(x => x.ModuleName, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(
                 g => g.Key,
-                g => g.OrderByDescending(m => m.IsInstalled).ThenByDescending(m => m.Version).First(),
+                g => g.OrderByDescending(x => x.IsInstalled).ThenByDescending(x => x.Version).First(),
                 StringComparer.OrdinalIgnoreCase);
+
         var result = new List<ManifestModuleInfo>(sortedNames.Length);
 
         foreach (var name in sortedNames)
@@ -92,7 +93,7 @@ public static class ModuleRunner
     /// <summary>
     /// Create an IModule instance from a loaded assembly via reflection.
     /// </summary>
-    public static IModule CreateModuleInstance(ManifestModuleInfo moduleInfo)
+    internal static IModule CreateModuleInstance(ManifestModuleInfo moduleInfo)
     {
         ArgumentNullException.ThrowIfNull(moduleInfo);
 
@@ -137,8 +138,8 @@ public static class ModuleRunner
     /// Run Initialize on all modules in dependency order.
     /// Skips modules with errors. Sets IHasConfiguration/IHasHostEnvironment/IHasModuleCatalog properties.
     /// </summary>
-    public static void InitializeAll(
-        IReadOnlyList<ManifestModuleInfo> modules,
+    public static void InitializeModules(
+        IList<ManifestModuleInfo> modules,
         IServiceCollection serviceCollection,
         IConfiguration configuration = null,
         IHostEnvironment hostEnvironment = null,
@@ -151,9 +152,8 @@ public static class ModuleRunner
         ArgumentNullException.ThrowIfNull(serviceCollection);
 
         var logger = ModuleLogger.CreateLogger(typeof(ModuleRunner));
-        var sorted = SortByDependency(modules);
 
-        foreach (var moduleInfo in sorted)
+        foreach (var moduleInfo in modules)
         {
             if (moduleInfo.Errors.Count > 0)
             {
@@ -205,8 +205,8 @@ public static class ModuleRunner
     /// <summary>
     /// Run PostInitialize on all initialized modules.
     /// </summary>
-    public static void PostInitializeAll(
-        IReadOnlyList<ManifestModuleInfo> modules,
+    public static void PostInitializeModules(
+        IList<ManifestModuleInfo> modules,
         IApplicationBuilder appBuilder)
     {
         ArgumentNullException.ThrowIfNull(modules);

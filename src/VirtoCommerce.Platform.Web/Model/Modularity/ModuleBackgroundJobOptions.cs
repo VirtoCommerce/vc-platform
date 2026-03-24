@@ -1,6 +1,6 @@
 using VirtoCommerce.Platform.Core.Modularity;
 
-namespace VirtoCommerce.Platform.Web.Modularity;
+namespace VirtoCommerce.Platform.Web.Model.Modularity;
 
 public class ModuleBackgroundJobOptions
 {

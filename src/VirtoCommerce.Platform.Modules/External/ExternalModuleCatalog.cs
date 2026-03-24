@@ -124,7 +124,7 @@ namespace VirtoCommerce.Platform.Modules
 
         #endregion
 
-        private List<ManifestModuleInfo> LoadModulesManifests(Uri manifestUrl)
+        private IList<ManifestModuleInfo> LoadModulesManifests(Uri manifestUrl)
         {
             ArgumentNullException.ThrowIfNull(manifestUrl);
 

@@ -110,7 +110,7 @@ namespace VirtoCommerce.Platform.Web
                 PlatformStartupDiscovery.GetStartups(), services, Configuration);
 
             // Module assemblies are already loaded in Program.Main() via ModuleRegistry
-            var modules = ModuleRegistry.GetAllModules().ToList();
+            var sortedModules = ModuleRunner.SortModulesByDependency(ModuleRegistry.GetAllModules().ToList());
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
@@ -509,16 +509,16 @@ namespace VirtoCommerce.Platform.Web
             // Create module catalog adapter (needed by IHasModuleCatalog modules and DI)
             var boostOptions = Configuration.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
 #pragma warning disable VC0014 // Type or member is obsolete
-            var moduleCatalogAdapter = new LocalModuleCatalogAdapter(modules, boostOptions);
+            var moduleCatalogAdapter = new LocalModuleCatalogAdapter(sortedModules, boostOptions);
 #pragma warning restore VC0014 // Type or member is obsolete
 
             // Initialize modules (IModule.Initialize registers DI services)
             Log.ForContext<Startup>().Information("Initializing modules");
-            ModuleRunner.InitializeAll(modules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter);
+            ModuleRunner.InitializeModules(sortedModules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter);
 
             // Register API controllers from loaded modules
             Log.ForContext<Startup>().Information("Registering API controllers");
-            foreach (var module in modules.Where(m => m.Assembly != null && m.Errors.Count == 0))
+            foreach (var module in sortedModules.Where(m => m.Assembly != null && m.Errors.Count == 0))
             {
                 mvcBuilder.AddApplicationPart(module.Assembly);
             }
@@ -722,8 +722,8 @@ namespace VirtoCommerce.Platform.Web
 
                 // Post-initialize all modules in dependency order
                 Log.ForContext<Startup>().Information("Post initializing modules");
-                var sortedModules = ModuleRunner.SortByDependency(ModuleRegistry.GetAllModules().ToList());
-                ModuleRunner.PostInitializeAll(sortedModules, app);
+                var sortedModules = ModuleRunner.SortModulesByDependency(ModuleRegistry.GetAllModules().ToList());
+                ModuleRunner.PostInitializeModules(sortedModules, app);
             });
 
             app.UseEndpoints(SetupEndpoints);

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -24,6 +23,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Helpers;
 using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.Web.Model.Modularity;
 using VirtoCommerce.Platform.Web.Modularity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -109,7 +109,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Get all dependent modules for module
+        /// Get all dependent modules for a module
         /// </summary>
         /// <param name="moduleDescriptors">modules descriptors</param>
         [HttpPost]
@@ -118,10 +118,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(ModuleDescriptor[]), StatusCodes.Status200OK)]
         public ActionResult<ModuleDescriptor[]> GetDependingModules([FromBody] ModuleDescriptor[] moduleDescriptors)
         {
-            var moduleIds = moduleDescriptors.Select(x => x.Id).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
 
             var retVal = _moduleService.GetDependents(moduleIds).Distinct()
-                .Where(x => !moduleIds.Contains(x.Id, StringComparer.OrdinalIgnoreCase))
+                .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
 
@@ -138,11 +138,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(ModuleDescriptor[]), StatusCodes.Status200OK)]
         public ActionResult<ModuleDescriptor[]> GetMissingDependencies([FromBody] ModuleDescriptor[] moduleDescriptors)
         {
-            var moduleIds = moduleDescriptors.Select(x => x.Id).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
 
             var result = _moduleService.GetDependencies(moduleIds)
                 .Where(x => !x.IsInstalled)
-                .Where(x => !moduleIds.Contains(x.Id, StringComparer.OrdinalIgnoreCase))
+                .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
 
@@ -200,16 +200,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> InstallModules([FromBody] ModuleDescriptor[] modules)
         {
-            var requests = modules.Select(m => new ModuleInstallRequest(m.Id, m.Version)).ToArray();
+            var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
             return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = requests }));
         }
 
         /// <summary>
-        /// Install modules using lightweight install requests
+        /// Install modules using lightweight requests
         /// </summary>
         /// <param name="modules">module install requests (id + optional version)</param>
         [HttpPost]
-        [Route("install/modules")]
+        [Route("install/v2")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> InstallModuleRequests([FromBody] ModuleInstallRequest[] modules)
@@ -227,16 +227,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> UpdateModules([FromBody] ModuleDescriptor[] modules)
         {
-            var requests = modules.Select(m => new ModuleInstallRequest(m.Id, m.Version)).ToArray();
+            var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
             return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Update, Modules = requests }));
         }
 
         /// <summary>
-        /// Update modules using lightweight install requests
+        /// Update modules using lightweight requests
         /// </summary>
         /// <param name="modules">module install requests (id + optional version)</param>
         [HttpPost]
-        [Route("update/modules")]
+        [Route("update/v2")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> UpdateModuleRequests([FromBody] ModuleInstallRequest[] modules)
@@ -254,16 +254,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> UninstallModule([FromBody] ModuleDescriptor[] modules)
         {
-            var requests = modules.Select(m => new ModuleInstallRequest(m.Id, m.Version)).ToArray();
+            var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
             return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = requests }));
         }
 
         /// <summary>
-        /// Uninstall modules using lightweight install requests
+        /// Uninstall modules using lightweight requests
         /// </summary>
         /// <param name="modules">module install requests (id only, version ignored)</param>
         [HttpPost]
-        [Route("uninstall/modules")]
+        [Route("uninstall/v2")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> UninstallModuleRequests([FromBody] ModuleInstallRequest[] modules)
@@ -312,7 +312,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                             if (!_moduleService.GetModules().Any(x => x.IsInstalled))
                             {
-                                var autoInstallModules = _moduleService.GetAutoInstallModules(moduleBundles);
+                                var autoInstallModules = _moduleService.GetNotInstalledModulesFromGroups(moduleBundles);
                                 if (autoInstallModules.Any())
                                 {
                                     var options = new ModuleBackgroundJobOptions
@@ -444,12 +444,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
                 {
-                    var reportProgress = new Progress<ProgressMessage>(m =>
+                    var reportProgress = new Progress<ProgressMessage>(x =>
                     {
                         lock (_lockObject)
                         {
-                            notification.Description = m.Message;
-                            notification.ProgressLog.Add(m);
+                            notification.Description = x.Message;
+                            notification.ProgressLog.Add(x);
                             _pushNotifier.Send(notification);
                         }
                     });
@@ -461,7 +461,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             _moduleService.InstallModules(options.Modules, reportProgress);
                             break;
                         case ModuleAction.Uninstall:
-                            _moduleService.UninstallModules(options.Modules.Select(m => m.Id).ToList(), reportProgress);
+                            _moduleService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
                             break;
                     }
                 }
@@ -599,12 +599,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             try
             {
                 await using var packageStream = System.IO.File.Open(path, FileMode.Open);
-                using var package = new ZipArchive(packageStream, ZipArchiveMode.Read);
+                await using var package = new ZipArchive(packageStream, ZipArchiveMode.Read);
 
                 var entry = package.GetEntry("module.manifest");
                 if (entry != null)
                 {
-                    await using var manifestStream = entry.Open();
+                    await using var manifestStream = await entry.OpenAsync();
                     manifest = ManifestReader.Read(manifestStream);
                 }
             }

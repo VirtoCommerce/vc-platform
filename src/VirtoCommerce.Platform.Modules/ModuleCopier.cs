@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Modules.Local;
 
 namespace VirtoCommerce.Platform.Modules;
 
@@ -13,92 +15,89 @@ namespace VirtoCommerce.Platform.Modules;
 /// </summary>
 public static class ModuleCopier
 {
-    private static ILogger _logger;
+    private static LocalStorageModuleCatalogOptions _options;
     private static IFileCopyPolicy _fileCopyPolicy;
+    private static ILogger _logger;
 
     private const string _rebuildMarkerFileName = ".rebuild";
 
-    public static void Initialize(IFileCopyPolicy fileCopyPolicy)
+    public static void Initialize(LocalStorageModuleCatalogOptions options, IFileMetadataProvider metadataProvider)
     {
+        _options = options;
+        _fileCopyPolicy = new FileCopyPolicy(metadataProvider, Options.Create(options));
         _logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
-        _fileCopyPolicy = fileCopyPolicy;
+    }
+
+    /// <summary>
+    /// Copy all module assemblies to the probing folder.
+    /// </summary>
+    public static void Copy(IList<ManifestModuleInfo> modules, Architecture environmentArchitecture)
+    {
+        ArgumentNullException.ThrowIfNull(modules);
+
+        var probingPath = _options.ProbingPath;
+        var refreshProbing = _options.RefreshProbingFolderOnStart;
+
+        // Check if a module install/uninstall occurred — clear probing folder for clean rebuild
+        var markerPath = Path.Combine(probingPath, _rebuildMarkerFileName);
+        if (File.Exists(markerPath))
+        {
+            _logger.LogInformation("Rebuild marker found — clearing probing folder for clean rebuild");
+
+            foreach (var entry in new DirectoryInfo(probingPath).EnumerateFileSystemInfos())
+            {
+                if (entry is DirectoryInfo directory)
+                {
+                    directory.Delete(recursive: true);
+                }
+                else
+                {
+                    entry.Delete();
+                }
+            }
+
+            refreshProbing = true;
+        }
+
+        if (!Directory.Exists(probingPath))
+        {
+            Directory.CreateDirectory(probingPath);
+            refreshProbing = true;
+        }
+
+        if (refreshProbing)
+        {
+
+            _logger.LogDebug("Copying modules from {From} to {To}, count: {Count}, architecture: {Architecture}",
+                _options.DiscoveryPath, probingPath, modules.Count, environmentArchitecture);
+
+            foreach (var module in modules)
+            {
+                if (module.FullPhysicalPath != null)
+                {
+                    CopyModule(module.FullPhysicalPath, probingPath, environmentArchitecture);
+                }
+            }
+
+            _logger.LogDebug("Module copying completed");
+        }
     }
 
     /// <summary>
     /// Write a marker file to the probing folder so that the next startup rebuilds it from scratch.
     /// Called at runtime after install/uninstall when loaded assemblies are locked by the running process.
     /// </summary>
-    public static void InvalidateProbingFolder(string probingPath)
+    public static void InvalidateProbingFolder()
     {
-        var markerPath = Path.Combine(probingPath, _rebuildMarkerFileName);
+        if (!Directory.Exists(_options.ProbingPath))
+        {
+            Directory.CreateDirectory(_options.ProbingPath);
+        }
+
+        var markerPath = Path.Combine(_options.ProbingPath, _rebuildMarkerFileName);
         File.Create(markerPath);
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
-        logger.LogInformation("Probing folder marked for rebuild on next startup");
-    }
-
-    /// <summary>
-    /// Check for the rebuild marker and clear probing folder contents if it exists.
-    /// Preserves the directory itself (it may be a symlink or have custom ACLs).
-    /// Should be called on startup before any assemblies are loaded from the probing folder.
-    /// Returns true if the folder was cleaned and needs to be rebuilt.
-    /// </summary>
-    public static bool ClearProbingFolderIfRequested(string probingPath)
-    {
-        var markerPath = Path.Combine(probingPath, _rebuildMarkerFileName);
-        if (!File.Exists(markerPath))
-        {
-            return false;
-        }
-
-        var logger = ModuleLogger.CreateLogger(typeof(ModuleCopier));
-        logger.LogInformation("Rebuild marker found — clearing probing folder for clean rebuild");
-
-        foreach (var entry in new DirectoryInfo(probingPath).EnumerateFileSystemInfos())
-        {
-            if (entry is DirectoryInfo directory)
-            {
-                directory.Delete(recursive: true);
-            }
-            else
-            {
-                entry.Delete();
-            }
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Copy all module assemblies to the probing folder.
-    /// </summary>
-    public static void CopyAll(
-        string discoveryPath,
-        string probingPath,
-        IReadOnlyList<ManifestModuleInfo> modules,
-        Architecture environmentArchitecture)
-    {
-        ArgumentNullException.ThrowIfNull(discoveryPath);
-        ArgumentNullException.ThrowIfNull(probingPath);
-        ArgumentNullException.ThrowIfNull(modules);
-
-        _logger.LogDebug("Copying modules from {From} to {To}, count: {Count}, architecture: {Architecture}",
-            discoveryPath, probingPath, modules.Count, environmentArchitecture);
-
-        if (!Directory.Exists(probingPath))
-        {
-            Directory.CreateDirectory(probingPath);
-        }
-
-        foreach (var module in modules)
-        {
-            if (module.FullPhysicalPath != null)
-            {
-                CopyModule(module.FullPhysicalPath, probingPath, environmentArchitecture);
-            }
-        }
-
-        _logger.LogDebug("Module copying completed");
+        _logger.LogInformation("Probing folder marked for rebuild on next startup");
     }
 
     /// <summary>

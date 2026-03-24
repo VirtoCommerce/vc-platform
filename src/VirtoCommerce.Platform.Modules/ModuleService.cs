@@ -9,8 +9,8 @@ namespace VirtoCommerce.Platform.Modules;
 /// </summary>
 public class ModuleService : IModuleService
 {
-    public IReadOnlyList<ManifestModuleInfo> GetInstalledModules()
+    public IList<ManifestModuleInfo> GetInstalledModules()
     {
-        return ModuleRunner.SortByDependency(ModuleRegistry.GetInstalledModules());
+        return ModuleRunner.SortModulesByDependency(ModuleRegistry.GetInstalledModules());
     }
 }

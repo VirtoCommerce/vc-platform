@@ -46,7 +46,7 @@ public interface IModuleManagementService
     /// Resolves modules from the merged catalog, downloads from URL, extracts ZIP, validates dependencies.
     /// Reports progress via <paramref name="progress"/>.
     /// </summary>
-    void InstallModules(IList<ModuleInstallRequest> modules, IProgress<ProgressMessage> progress);
+    void InstallModules(IList<ModuleInstallRequest> requests, IProgress<ProgressMessage> progress);
 
     /// <summary>
     /// Uninstall modules by ID.
@@ -57,10 +57,10 @@ public interface IModuleManagementService
 
 
     /// <summary>
-    /// Get modules to auto-install from the given bundles, including their dependencies.
+    /// Get modules that belong to the requested groups, including their dependencies.
     /// Returns modules that are not yet installed.
     /// </summary>
-    IList<ManifestModuleInfo> GetAutoInstallModules(string[] moduleBundles);
+    IList<ManifestModuleInfo> GetNotInstalledModulesFromGroups(IList<string> groups);
 
     /// <summary>
     /// Validate that a specific module version package exists at the download URL.
