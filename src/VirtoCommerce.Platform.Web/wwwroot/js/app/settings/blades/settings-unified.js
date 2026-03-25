@@ -15,7 +15,9 @@ angular.module('platformWebApp')
                 modifiedOnly: false,
                 moduleId: '',
                 togglePanel: function ($event) {
-                    if ($event) { $event.stopPropagation(); }
+                    if ($event) {
+                        $event.stopPropagation();
+                    }
                     this.showPanel = !this.showPanel;
                 },
                 hasActiveFilters: function () {
@@ -95,7 +97,7 @@ angular.module('platformWebApp')
                     // Snapshot the initial values for dirty checking (after settingsHelper transform)
                     blade.origSettingValues = {};
                     _.each(blade.mergedSettings, function (s) {
-                        blade.origSettingValues[s.name] = s.values && s.values.length ? angular.copy(s.values[0].value) : angular.copy(s.value);
+                        blade.origSettingValues[s.name] = getSettingCurrentValue(s);
                     });
 
                     // Translate display names
@@ -118,6 +120,14 @@ angular.module('platformWebApp')
                 });
             };
 
+            // Helper to extract the current value from a merged setting object
+            function getSettingCurrentValue(setting) {
+                if (setting.values && setting.values.length) {
+                    return angular.copy(setting.values[0].value);
+                }
+                return angular.copy(setting.value);
+            }
+
             function mergeSchemaAndValues(schemas, values) {
                 return _.map(schemas, function (schema) {
                     var value = values[schema.name];
@@ -126,7 +136,7 @@ angular.module('platformWebApp')
                     }
 
                     // Build ObjectSettingEntry-compatible object for va-generic-value-input
-                    var setting = {
+                    return {
                         name: schema.name,
                         displayName: schema.displayName,
                         groupName: schema.groupName,
@@ -142,8 +152,6 @@ angular.module('platformWebApp')
                         value: value,
                         values: settingsHelper.getSettingValues({ isDictionary: schema.isDictionary, value: value })
                     };
-
-                    return setting;
                 });
             }
 
@@ -179,8 +187,9 @@ angular.module('platformWebApp')
                     var sorted = _.sortBy(_.values(childMap), 'name');
                     _.each(sorted, function (entry) {
                         var hasChildren = _.keys(entry.childMap).length > 0;
+                        idCounter = idCounter + 1;
                         var node = {
-                            id: 'n' + (idCounter++),
+                            id: 'n' + idCounter,
                             name: entry.name,
                             groupName: entry.groupName,
                             level: level,
@@ -214,21 +223,29 @@ angular.module('platformWebApp')
             // Check if a node is visible (all ancestors expanded + passes filter)
             $scope.isNodeVisible = function (node) {
                 // "All Settings" root node: always visible
-                if (node.id === '__all__') return true;
+                if (node.id === '__all__') {
+                    return true;
+                }
 
                 // When filters are active, hide tree nodes that have no matching settings
                 var isFiltering = blade.searchText || $scope.filter.modifiedOnly || $scope.filter.moduleId;
                 if (isFiltering && blade.visibleNodeGroups && node.groupName) {
-                    if (!blade.visibleNodeGroups[node.groupName]) return false;
+                    if (!blade.visibleNodeGroups[node.groupName]) {
+                        return false;
+                    }
                 }
 
-                if (node.level <= 1) return true; // top-level always visible (if it passed filter)
+                if (node.level <= 1) {
+                    return true; // top-level always visible (if it passed filter)
+                }
 
                 // Walk up parents to check all are expanded
                 var parentGroupName = node.parent;
                 while (parentGroupName) {
                     var parentNode = _.find(blade.flatTree, function (n) { return n.groupName === parentGroupName; });
-                    if (!parentNode || !parentNode.expanded) return false;
+                    if (!parentNode || !parentNode.expanded) {
+                        return false;
+                    }
                     parentGroupName = parentNode.parent;
                 }
                 return true;
@@ -258,14 +275,15 @@ angular.module('platformWebApp')
 
             // Check if a tree node has modified settings in its subtree
             $scope.nodeHasModified = function (node) {
-                var settings = getSettingsForGroup(node.groupName);
-                return _.any(settings, function (s) { return !settingsHelper.isDefaultValue(s); });
+                var nodeSettings = getSettingsForGroup(node.groupName);
+                return _.any(nodeSettings, function (s) { return !settingsHelper.isDefaultValue(s); });
             };
 
             function getSettingsForGroup(groupName) {
+                var groupPrefix = groupName + '|';
                 return _.filter(blade.mergedSettings, function (s) {
                     return s.groupName === groupName ||
-                        (s.groupName && s.groupName.indexOf(groupName + '|') === 0);
+                        (s.groupName && s.groupName.indexOf(groupPrefix) === 0);
                 });
             }
 
@@ -299,7 +317,7 @@ angular.module('platformWebApp')
                             return true;
                         }
                         // Search in current value
-                        var val = s.values && s.values.length ? s.values[0].value : s.value;
+                        var val = (s.values && s.values.length) ? s.values[0].value : s.value;
                         if (val != null) {
                             var valStr = (typeof val === 'object') ? JSON.stringify(val) : String(val);
                             if (valStr.toLowerCase().indexOf(search) >= 0) {
@@ -334,10 +352,11 @@ angular.module('platformWebApp')
 
                 // Filter by selected group (unless searching/filtering or when no group selected show ALL)
                 if (blade.selectedGroup && !blade.searchText) {
+                    var selectedPrefix = blade.selectedGroup.groupName + '|';
                     settings = _.filter(settings, function (s) {
                         // Show settings for the selected group and its descendants
                         return s.groupName === blade.selectedGroup.groupName ||
-                            (s.groupName && s.groupName.indexOf(blade.selectedGroup.groupName + '|') === 0);
+                            (s.groupName && s.groupName.indexOf(selectedPrefix) === 0);
                     });
                 }
 
@@ -346,7 +365,9 @@ angular.module('platformWebApp')
                 // Otherwise use full path with " > " separator to preserve hierarchy.
                 var showFullPath = !blade.selectedGroup || blade.searchText || isFiltering;
                 var grouped = _.groupBy(settings, function (s) {
-                    if (!s.groupName) return 'General';
+                    if (!s.groupName) {
+                        return 'General';
+                    }
                     if (showFullPath) {
                         return s.groupName.replace(/\|/g, ' > ');
                     }
@@ -376,9 +397,11 @@ angular.module('platformWebApp')
             $scope.setForm = function (form) { formScope = form; };
 
             function isDirty() {
-                if (!blade.origSettingValues) return false;
+                if (!blade.origSettingValues) {
+                    return false;
+                }
                 return _.any(blade.mergedSettings, function (s) {
-                    var currentVal = s.values && s.values.length ? s.values[0].value : s.value;
+                    var currentVal = (s.values && s.values.length) ? s.values[0].value : s.value;
                     var origVal = blade.origSettingValues[s.name];
                     return !angular.equals(currentVal, origVal);
                 }) && blade.hasUpdatePermission();
@@ -388,16 +411,21 @@ angular.module('platformWebApp')
                 return isDirty() && (!formScope || formScope.$valid);
             }
 
+            // Helper to get the saveable value from a merged setting
+            function getSaveableValue(setting) {
+                if (setting.isDictionary) {
+                    return (setting.values && setting.values[0]) ? setting.values[0].value.id : setting.value;
+                }
+                return (setting.values && setting.values[0]) ? setting.values[0].value : setting.value;
+            }
+
             // Save changes
             blade.saveChanges = function () {
                 blade.isLoading = true;
 
                 var changedValues = {};
                 _.each(blade.mergedSettings, function (s) {
-                    var currentVal = s.isDictionary
-                        ? (s.values && s.values[0] ? s.values[0].value.id : s.value)
-                        : (s.values && s.values[0] ? s.values[0].value : s.value);
-
+                    var currentVal = getSaveableValue(s);
                     var origVal = blade.origSettingValues[s.name];
 
                     if (!angular.equals(currentVal, origVal)) {
@@ -422,9 +450,7 @@ angular.module('platformWebApp')
                 return savePromise.then(function () {
                     // Update the snapshot so isDirty() returns false after save
                     _.each(blade.mergedSettings, function (s) {
-                        blade.origSettingValues[s.name] = s.values && s.values.length
-                            ? angular.copy(s.values[0].value)
-                            : angular.copy(s.value);
+                        blade.origSettingValues[s.name] = getSettingCurrentValue(s);
                     });
                     updateModifiedCount();
                     blade.isLoading = false;
@@ -432,11 +458,35 @@ angular.module('platformWebApp')
             };
 
             // Reset to default
+            // Note: we cannot use settingsHelper.resetToDefaultValue(blade.filteredSettings, setting)
+            // directly because filteredSettings keys are display names ("Catalog > General" or "General"),
+            // but the helper looks up by setting.groupName ("Catalog|General"). The lookup always
+            // fails, falling back to angular.extend which doesn't trigger ngModel $render().
+            // Instead, we build a temporary wrapper keyed by the raw groupName so the helper succeeds,
+            // then sync the replaced object back into mergedSettings.
             $scope.resetToDefaultValue = function (setting) {
-                settingsHelper.resetToDefaultValue(blade.filteredSettings, setting);
+                // Find the display key for this setting in filteredSettings
+                var displayKey = null;
+                _.each(blade.filteredSettings, function (groupSettings, key) {
+                    if (_.any(groupSettings, function (s) { return s.name === setting.name; })) {
+                        displayKey = key;
+                    }
+                });
 
-                // settingsHelper.resetToDefaultValue replaces the setting object with a new clone
-                // in blade.filteredSettings. We must sync that replacement into blade.mergedSettings
+                if (displayKey !== null) {
+                    // Build a temporary groups object keyed by the raw groupName
+                    // so the helper's lookup (groups[setting.groupName]) succeeds.
+                    var tempGroups = {};
+                    tempGroups[setting.groupName] = blade.filteredSettings[displayKey];
+                    settingsHelper.resetToDefaultValue(tempGroups, setting);
+                    // The helper replaced the object in tempGroups[setting.groupName],
+                    // which is the same array as blade.filteredSettings[displayKey].
+                } else {
+                    // Fallback: direct mutation
+                    settingsHelper.resetToDefaultValue({}, setting);
+                }
+
+                // Sync replaced objects from filteredSettings into mergedSettings
                 // so isDirty()/saveChanges() see the updated value.
                 _.each(blade.filteredSettings, function (groupSettings) {
                     _.each(groupSettings, function (s) {
@@ -470,6 +520,14 @@ angular.module('platformWebApp')
                 callback(setting.allowedValues);
             };
 
+            // Build tenant scope string for export document
+            function getTenantScope() {
+                if (blade.tenantType) {
+                    return 'tenant/' + blade.tenantType + '/' + blade.tenantId;
+                }
+                return 'global';
+            }
+
             // Export as JSON
             $scope.exportJson = function () {
                 var getPromise;
@@ -484,10 +542,11 @@ angular.module('platformWebApp')
                 }
 
                 getPromise.then(function (values) {
+                    var scopeStr = getTenantScope();
                     var doc = {
                         version: '1.0',
                         exportedAt: new Date().toISOString(),
-                        scope: blade.tenantType ? 'tenant/' + blade.tenantType + '/' + blade.tenantId : 'global',
+                        scope: scopeStr,
                         settings: values
                     };
 
@@ -496,7 +555,7 @@ angular.module('platformWebApp')
                     var url = URL.createObjectURL(blob);
                     var a = document.createElement('a');
                     a.href = url;
-                    a.download = 'settings-' + doc.scope.replace(/\//g, '-') + '.json';
+                    a.download = 'settings-' + scopeStr.replace(/\//g, '-') + '.json';
                     a.click();
                     URL.revokeObjectURL(url);
                 });
@@ -509,7 +568,9 @@ angular.module('platformWebApp')
                 input.accept = '.json';
                 input.onchange = function (e) {
                     var file = e.target.files[0];
-                    if (!file) return;
+                    if (!file) {
+                        return;
+                    }
 
                     var reader = new FileReader();
                     reader.onload = function (evt) {
@@ -676,8 +737,10 @@ angular.module('platformWebApp')
             // so we use $transitions.onBefore (UI-Router 1.x+) to block navigation when dirty.
             var deregisterTransitionHook = $transitions.onBefore(
                 { from: 'workspace.settingsUnified' },
-                function (transition) {
-                    if (!isDirty()) return true;
+                function () {
+                    if (!isDirty()) {
+                        return true;
+                    }
 
                     // Return a promise that resolves after user confirms
                     var deferred = $q.defer();
@@ -694,9 +757,7 @@ angular.module('platformWebApp')
                                 // Reset dirty state so onClose won't show dialog again
                                 // when the blade is re-opened via showBlade -> closeBlade
                                 _.each(blade.mergedSettings, function (s) {
-                                    blade.origSettingValues[s.name] = s.values && s.values.length
-                                        ? angular.copy(s.values[0].value)
-                                        : angular.copy(s.value);
+                                    blade.origSettingValues[s.name] = getSettingCurrentValue(s);
                                 });
                                 deferred.resolve(true);
                             }

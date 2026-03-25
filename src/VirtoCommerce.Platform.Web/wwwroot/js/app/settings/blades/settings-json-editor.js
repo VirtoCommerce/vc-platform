@@ -6,8 +6,6 @@ angular.module('platformWebApp')
             blade.headIcon = 'fa fa-code';
             blade.updatePermission = 'platform:setting:update';
 
-            var cmEditor = null;
-
             // CodeMirror options — same config as genericValueInput uses for Json valueType
             $scope.editorOptions = {
                 lineWrapping: true,
@@ -20,7 +18,6 @@ angular.module('platformWebApp')
                 foldGutter: true,
                 gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                 onLoad: function (_editor) {
-                    cmEditor = _editor;
                     injectFormatButton(_editor);
                 }
             };
@@ -122,7 +119,7 @@ angular.module('platformWebApp')
                     var doc = {
                         version: '1.0',
                         exportedAt: new Date().toISOString(),
-                        scope: blade.tenantType ? 'tenant/' + blade.tenantType + '/' + blade.tenantId : 'global',
+                        scope: blade.tenantType ? `tenant/${blade.tenantType}/${blade.tenantId}` : 'global',
                         settings: values
                     };
 
@@ -172,7 +169,9 @@ angular.module('platformWebApp')
             }
 
             function canSave() {
-                if (!isDirty()) return false;
+                if (!isDirty()) {
+                    return false;
+                }
                 try {
                     JSON.parse(blade.currentJson);
                     return true;

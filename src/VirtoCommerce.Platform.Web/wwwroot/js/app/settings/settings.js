@@ -80,6 +80,7 @@ angular.module("platformWebApp")
         toolbarService.register(breadcrumbHistoryService.getBackButtonInstance(), 'platformWebApp.settingGroupListController');
 
         // Add 'Reset cache' command to settings blade
+        var cacheResetDialogTitle = 'platform.dialogs.cache-reset.title';
         var resetCacheCommand = {
             name: 'platform.commands.cache-reset.name',
             title: 'platform.commands.cache-reset.title',
@@ -87,7 +88,7 @@ angular.module("platformWebApp")
             executeMethod: function (blade) {
                 var confirmDialog = {
                     id: "confirmCacheResetDialog",
-                    title: "platform.dialogs.cache-reset.title",
+                    title: cacheResetDialogTitle,
                     message: "platform.dialogs.cache-reset.confirm-reset-message",
                     callback: function (confirm) {
                         if (confirm) {
@@ -96,7 +97,7 @@ angular.module("platformWebApp")
                                 blade.isLoading = false;
                                 var successDialog = {
                                     id: "successCacheResetDialog",
-                                    title: "platform.dialogs.cache-reset.title",
+                                    title: cacheResetDialogTitle,
                                     message: "platform.dialogs.cache-reset.reset-successfully-message",
                                 };
                                 dialogService.showSuccessDialog(successDialog);

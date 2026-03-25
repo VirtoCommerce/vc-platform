@@ -190,22 +190,25 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             // Newtonsoft.Json (used by platform via AddNewtonsoftJson) deserializes
             // Dictionary<string, object> values as JValue/JToken.
-            // Unwrap to native .NET type first.
+            // Unwrap and return the correctly typed value directly.
+            // Important: we must return here, not fall through to the final switch,
+            // because JToken integers are extracted as long and Convert.ToInt32()
+            // would throw OverflowException for values exceeding Int32.MaxValue.
             if (value is JToken jToken)
             {
-                value = jToken.Type switch
+                return jToken.Type switch
                 {
                     JTokenType.Null or JTokenType.None => null,
                     JTokenType.Boolean => jToken.Value<bool>(),
-                    JTokenType.Integer => jToken.Value<long>(),
+                    JTokenType.Integer => valueType switch
+                    {
+                        SettingValueType.Integer or SettingValueType.PositiveInteger => jToken.Value<int>(),
+                        SettingValueType.Decimal => jToken.Value<decimal>(),
+                        _ => jToken.Value<long>()
+                    },
                     JTokenType.Float => jToken.Value<decimal>(),
                     _ => jToken.ToString()
                 };
-
-                if (value == null)
-                {
-                    return null;
-                }
             }
 
             // System.Text.Json fallback (in case STJ is used in some contexts).
