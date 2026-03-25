@@ -851,8 +851,15 @@ angular.module('platformWebApp')
             // ================================================================
 
             if (blade.isEntityMode) {
-                $scope.$watch('blade.parentBlade.currentEntity.settings', function (newSettings) {
-                    if (newSettings) {
+                // Watch for parent entity settings changes (e.g. parent reloads data).
+                // Skip the first invocation — blade.refresh() below handles initial load.
+                var entityWatchInitialized = false;
+                $scope.$watch('blade.parentBlade.currentEntity.settings', function (newSettings, oldSettings) {
+                    if (!entityWatchInitialized) {
+                        entityWatchInitialized = true;
+                        return;
+                    }
+                    if (newSettings && newSettings !== oldSettings) {
                         blade.refresh();
                     }
                 });
