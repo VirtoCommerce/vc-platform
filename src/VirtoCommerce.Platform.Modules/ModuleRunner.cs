@@ -22,7 +22,7 @@ public static class ModuleRunner
     /// <summary>
     /// Set the boost options used by <see cref="SortModulesByDependency"/>. Call once from Program.Main.
     /// </summary>
-    public static void Initialize(ModuleSequenceBoostOptions boostOptions)
+    public static void Initialize(ModuleSequenceBoostOptions boostOptions = null)
     {
         _boostOptions = boostOptions ?? new ModuleSequenceBoostOptions();
     }

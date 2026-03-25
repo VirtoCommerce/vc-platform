@@ -15,6 +15,7 @@ public class ModuleRunnerTests
     {
         // Arrange
         var modules = new List<ManifestModuleInfo>();
+        ModuleRunner.Initialize();
 
         // Act
         var sorted = ModuleRunner.SortModulesByDependency(modules);
@@ -31,6 +32,8 @@ public class ModuleRunnerTests
         {
             CreateModule("A"),
         };
+
+        ModuleRunner.Initialize();
 
         // Act
         var sorted = ModuleRunner.SortModulesByDependency(modules);
@@ -50,6 +53,8 @@ public class ModuleRunnerTests
             CreateModule("B"),
             CreateModule("C"),
         };
+
+        ModuleRunner.Initialize();
 
         // Act
         var sorted = ModuleRunner.SortModulesByDependency(modules);
@@ -71,6 +76,8 @@ public class ModuleRunnerTests
             CreateModule("C"),
         };
 
+        ModuleRunner.Initialize();
+
         // Act
         var sorted = ModuleRunner.SortModulesByDependency(modules);
 
@@ -91,6 +98,8 @@ public class ModuleRunnerTests
             CreateModule("D"),
         };
 
+        ModuleRunner.Initialize();
+
         // Act
         var sorted = ModuleRunner.SortModulesByDependency(modules);
 
@@ -110,6 +119,8 @@ public class ModuleRunnerTests
             CreateModule("B", dependencies: ["C"]),
             CreateModule("C", dependencies: ["A"]),
         };
+
+        ModuleRunner.Initialize();
 
         // Act, Assert
         Assert.Throws<CyclicDependencyFoundException>(() =>
@@ -149,6 +160,8 @@ public class ModuleRunnerTests
             CreateModule("A", [CreateDependency("B"), CreateDependency("C", isOptional: true)]),
             CreateModule("B"),
         };
+
+        ModuleRunner.Initialize();
 
         // Act
         var sorted = ModuleRunner.SortModulesByDependency(modules);
