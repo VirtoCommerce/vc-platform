@@ -815,7 +815,7 @@ angular.module('platformWebApp')
             // Navigation guard: only for global (workspace-level) mode
             if (!blade.isEntityMode) {
                 var deregisterTransitionHook = $transitions.onBefore(
-                    { from: 'workspace.settingsUnified' },
+                    { from: 'workspace.settings' },
                     function () {
                         if (!isDirty()) {
                             return true;

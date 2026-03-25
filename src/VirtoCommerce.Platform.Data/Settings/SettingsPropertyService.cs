@@ -212,8 +212,14 @@ namespace VirtoCommerce.Platform.Data.Settings
             }
 
             // System.Text.Json fallback (in case STJ is used in some contexts).
+            // JsonElement is a struct so it won't be caught by the null check above.
             if (value is JsonElement jsonElement)
             {
+                if (jsonElement.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+                {
+                    return null;
+                }
+
                 return valueType switch
                 {
                     SettingValueType.Boolean => jsonElement.GetBoolean(),

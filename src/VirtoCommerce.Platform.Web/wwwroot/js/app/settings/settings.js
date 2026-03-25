@@ -2,28 +2,12 @@ angular.module("platformWebApp")
     .config(
         ['$stateProvider', '$provide', function ($stateProvider, $provide) {
             $stateProvider
-                .state('workspace.modulesSettings', {
+                .state('workspace.settings', {
                     url: '/settings',
                     templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
                     controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                         var blade = {
                             id: 'settings',
-                            title: 'platform.blades.settingGroup-list.title',
-                            //subtitle: 'Manage settings',
-                            controller: 'platformWebApp.settingGroupListController',
-                            template: '$(Platform)/Scripts/app/settings/blades/settingGroup-list.tpl.html',
-                            isClosingDisabled: true
-                        };
-                        bladeNavigationService.showBlade(blade);
-                    }
-                    ]
-                })
-                .state('workspace.settingsUnified', {
-                    url: '/settings-unified',
-                    templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
-                    controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-                        var blade = {
-                            id: 'settingsUnified',
                             title: 'platform.blades.settings-unified.title',
                             controller: 'platformWebApp.settingsUnifiedController',
                             template: '$(Platform)/Scripts/app/settings/blades/settings-unified.tpl.html',
@@ -55,23 +39,14 @@ angular.module("platformWebApp")
     )
     .run(['platformWebApp.mainMenuService', 'platformWebApp.breadcrumbHistoryService', 'platformWebApp.changeLogApi', 'platformWebApp.toolbarService', 'platformWebApp.dialogService', '$state', function (mainMenuService, breadcrumbHistoryService, changeLogApi, toolbarService, dialogService, $state) {
         //Register module in main menu
-        //var menuItem = {
-        //    path: 'configuration/settings',
-        //    icon: 'fa fa-gears',
-        //    title: 'platform.menu.settings',
-        //    priority: 1,
-        //    action: function () { $state.go('workspace.modulesSettings'); },
-        //    permission: 'platform:setting:access'
-        //};
-        //mainMenuService.addMenuItem(menuItem);
 
         // Unified settings V2 menu item
         var unifiedMenuItem = {
-            path: 'configuration/settingsUnified',
+            path: 'configuration/settings',
             icon: 'fa fa-gears',
             title: 'platform.menu.settings',
             priority: 1,
-            action: function () { $state.go('workspace.settingsUnified'); },
+            action: function () { $state.go('workspace.settings'); },
             permission: 'platform:setting:access'
         };
         mainMenuService.addMenuItem(unifiedMenuItem);
