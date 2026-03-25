@@ -9,7 +9,87 @@ angular.module('platformWebApp')
             blade.headIcon = 'fa fa-wrench';
             blade.isExpandable = false;
 
+            // ================================================================
+            // Data Source abstraction — isolates Load/Save operations
+            // so the rest of the controller is storage-agnostic.
+            //
+            // blade.isEntityMode = true:  schema from API, values from parent entity in-memory
+            // blade.isEntityMode = false: schema + values from API, save via API
+            // ================================================================
+
+            var dataSource;
+
+            function createApiDataSource() {
+                return {
+                    loadSchema: function () {
+                        if (blade.tenantType && blade.tenantId) {
+                            return settingsV2.getTenantSchema({ tenantType: blade.tenantType, tenantId: blade.tenantId }).$promise;
+                        }
+                        return settingsV2.getGlobalSchema({}).$promise;
+                    },
+                    loadValues: function () {
+                        if (blade.tenantType && blade.tenantId) {
+                            return settingsV2.getTenantValues({ tenantType: blade.tenantType, tenantId: blade.tenantId }).$promise;
+                        }
+                        return settingsV2.getGlobalValues({}).$promise;
+                    },
+                    saveValues: function (changedValues) {
+                        var savePromise;
+                        if (blade.tenantType && blade.tenantId) {
+                            savePromise = settingsV2.saveTenantValues(
+                                { tenantType: blade.tenantType, tenantId: blade.tenantId },
+                                changedValues).$promise;
+                        } else {
+                            savePromise = settingsV2.saveGlobalValues({}, changedValues).$promise;
+                        }
+                        return savePromise;
+                    }
+                };
+            }
+
+            function createEntityDataSource() {
+                return {
+                    loadSchema: function () {
+                        // Schema always from API (need metadata like valueType, allowedValues, etc.)
+                        return settingsV2.getTenantSchema({ tenantType: blade.tenantType, tenantId: blade.tenantId }).$promise;
+                    },
+                    loadValues: function () {
+                        // Values from parent entity's in-memory settings array — no API call
+                        var parentSettings = getParentEntitySettings();
+                        var values = {};
+                        _.each(parentSettings, function (s) {
+                            values[s.name] = (s.value != null) ? s.value : s.defaultValue;
+                        });
+                        return $q.resolve(values);
+                    },
+                    saveValues: function (changedValues) {
+                        // Write back to parent entity's in-memory settings array — no API call
+                        var parentSettings = getParentEntitySettings();
+                        _.each(changedValues, function (value, name) {
+                            var parentSetting = _.find(parentSettings, function (ps) { return ps.name === name; });
+                            if (parentSetting) {
+                                parentSetting.value = value;
+                            }
+                        });
+                        return $q.resolve();
+                    }
+                };
+            }
+
+            function getParentEntitySettings() {
+                if (blade.parentBlade && blade.parentBlade.currentEntity) {
+                    return blade.parentBlade.currentEntity.settings || [];
+                }
+                return [];
+            }
+
+            // Select data source based on mode
+            dataSource = blade.isEntityMode ? createEntityDataSource() : createApiDataSource();
+
+            // ================================================================
             // Filter state (mirrors notification journal filter pattern)
+            // ================================================================
+
             $scope.filter = {
                 showPanel: false,
                 modifiedOnly: false,
@@ -45,6 +125,10 @@ angular.module('platformWebApp')
                 document.removeEventListener('click', closeFilterPanel);
             });
 
+            // ================================================================
+            // Blade state
+            // ================================================================
+
             blade.searchText = '';
             blade.treeNodes = [];
             blade.selectedGroup = null;
@@ -57,68 +141,62 @@ angular.module('platformWebApp')
             blade.modules = [];
             blade.modifiedCount = 0;
 
+            // ================================================================
+            // Load (uses dataSource)
+            // ================================================================
+
             blade.refresh = function () {
                 blade.isLoading = true;
 
-                var schemaPromise;
-                var valuesPromise;
-
-                if (blade.tenantType && blade.tenantId) {
-                    schemaPromise = settingsV2.getTenantSchema({ tenantType: blade.tenantType, tenantId: blade.tenantId }).$promise;
-                    valuesPromise = settingsV2.getTenantValues({ tenantType: blade.tenantType, tenantId: blade.tenantId }).$promise;
-                } else {
-                    schemaPromise = settingsV2.getGlobalSchema({}).$promise;
-                    valuesPromise = settingsV2.getGlobalValues({}).$promise;
-                }
-
-                $q.all([schemaPromise, valuesPromise]).then(function (results) {
-                    var schemas = results[0];
-                    var values = results[1];
-
-                    // Filter by settingNames if provided (entity settings mode)
-                    if (blade.settingNames && blade.settingNames.length) {
-                        var nameSet = {};
-                        _.each(blade.settingNames, function (n) { nameSet[n] = true; });
-                        schemas = _.filter(schemas, function (s) { return nameSet[s.name]; });
-                    }
-
-                    blade.allSchemas = schemas;
-                    blade.allValues = angular.copy(values);
-                    blade.origValues = angular.copy(values);
-
-                    // Extract unique modules for filter dropdown
-                    blade.modules = _.chain(schemas).pluck('moduleId').compact().uniq().map(function (id) {
-                        return { id: id };
-                    }).value();
-
-                    // Merge schema + values into ObjectSettingEntry-compatible objects
-                    blade.mergedSettings = mergeSchemaAndValues(schemas, values);
-
-                    // Snapshot the initial values for dirty checking (after settingsHelper transform)
-                    blade.origSettingValues = {};
-                    _.each(blade.mergedSettings, function (s) {
-                        blade.origSettingValues[s.name] = getSettingCurrentValue(s);
-                    });
-
-                    // Translate display names
-                    _.each(blade.mergedSettings, function (setting) {
-                        var translateKey = `settings.${setting.name}.title`;
-                        var result = $translate.instant(translateKey);
-                        setting.translatedName = result !== translateKey ? result : (setting.displayName || setting.name);
-                    });
-
-                    // Build flat tree for simple ng-repeat rendering
-                    buildFlatTree(blade.mergedSettings);
-
-                    // Compute modified count
-                    updateModifiedCount();
-
-                    applyFilters();
-                    blade.isLoading = false;
+                $q.all([dataSource.loadSchema(), dataSource.loadValues()]).then(function (results) {
+                    initializeBlade(results[0], results[1]);
                 }, function (error) {
                     bladeNavigationService.setError('Error ' + error.status, blade);
                 });
             };
+
+            function initializeBlade(schemas, values) {
+                // Filter by settingNames if provided (entity settings mode)
+                if (blade.settingNames && blade.settingNames.length) {
+                    var nameSet = {};
+                    _.each(blade.settingNames, function (n) { nameSet[n] = true; });
+                    schemas = _.filter(schemas, function (s) { return nameSet[s.name]; });
+                }
+
+                blade.allSchemas = schemas;
+                blade.allValues = angular.copy(values);
+                blade.origValues = angular.copy(values);
+
+                // Extract unique modules for filter dropdown
+                blade.modules = _.chain(schemas).pluck('moduleId').compact().uniq().sortBy().map(function (id) {
+                    return { id: id };
+                }).value();
+
+                // Merge schema + values into ObjectSettingEntry-compatible objects
+                blade.mergedSettings = mergeSchemaAndValues(schemas, values);
+
+                // Snapshot the initial values for dirty checking
+                blade.origSettingValues = {};
+                _.each(blade.mergedSettings, function (s) {
+                    blade.origSettingValues[s.name] = getSettingCurrentValue(s);
+                });
+
+                // Translate display names
+                _.each(blade.mergedSettings, function (setting) {
+                    var translateKey = `settings.${setting.name}.title`;
+                    var result = $translate.instant(translateKey);
+                    setting.translatedName = result !== translateKey ? result : (setting.displayName || setting.name);
+                });
+
+                // Build flat tree for simple ng-repeat rendering
+                buildFlatTree(blade.mergedSettings);
+
+                // Compute modified count
+                updateModifiedCount();
+
+                applyFilters();
+                blade.isLoading = false;
+            }
 
             // Helper to extract the current value from a merged setting object
             function getSettingCurrentValue(setting) {
@@ -135,13 +213,12 @@ angular.module('platformWebApp')
                         value = schema.defaultValue;
                     }
 
-                    // Build ObjectSettingEntry-compatible object for va-generic-value-input
                     return {
                         name: schema.name,
                         displayName: schema.displayName,
                         groupName: schema.groupName,
                         moduleId: schema.moduleId,
-                        valueType: schema.valueType, // PascalCase required: directive builds template name as 'd' + valueType + '.html'
+                        valueType: schema.valueType,
                         defaultValue: schema.defaultValue,
                         allowedValues: schema.allowedValues ? _.map(schema.allowedValues, function (v) { return { value: v }; }) : null,
                         isRequired: schema.isRequired,
@@ -155,14 +232,13 @@ angular.module('platformWebApp')
                 });
             }
 
-            // Build a flat tree array from settings GroupName paths.
-            // Uses depth-first traversal to produce correct parent-children ordering.
-            // Each node has: id, name, groupName, level, hasChildren, expanded, parent.
+            // ================================================================
+            // Tree building
+            // ================================================================
+
             function buildFlatTree(settings) {
                 var idCounter = 0;
-
-                // Step 1: build a nested tree structure
-                var rootChildren = {}; // name -> { name, groupName, childMap, ... }
+                var rootChildren = {};
 
                 _.each(settings, function (setting) {
                     var paths = (setting.groupName || 'General').split('|');
@@ -180,7 +256,6 @@ angular.module('platformWebApp')
                     });
                 });
 
-                // Step 2: depth-first flatten with correct ordering
                 var flatNodes = [];
 
                 function flatten(childMap, level, parentGroupName) {
@@ -194,7 +269,7 @@ angular.module('platformWebApp')
                             groupName: entry.groupName,
                             level: level,
                             hasChildren: hasChildren,
-                            expanded: level === 1, // top-level expanded by default
+                            expanded: level === 1,
                             parent: parentGroupName
                         };
                         flatNodes.push(node);
@@ -206,7 +281,6 @@ angular.module('platformWebApp')
 
                 flatten(rootChildren, 1, null);
 
-                // Step 3: prepend "All Settings" root node
                 var allNode = {
                     id: '__all__',
                     name: $translate.instant('platform.blades.settings-unified.all-settings') || 'All Settings',
@@ -220,14 +294,15 @@ angular.module('platformWebApp')
                 blade.flatTree = [allNode].concat(flatNodes);
             }
 
-            // Check if a node is visible (all ancestors expanded + passes filter)
+            // ================================================================
+            // Tree visibility & selection
+            // ================================================================
+
             $scope.isNodeVisible = function (node) {
-                // "All Settings" root node: always visible
                 if (node.id === '__all__') {
                     return true;
                 }
 
-                // When filters are active, hide tree nodes that have no matching settings
                 var isFiltering = blade.searchText || $scope.filter.modifiedOnly || $scope.filter.moduleId;
                 if (isFiltering && blade.visibleNodeGroups && node.groupName) {
                     if (!blade.visibleNodeGroups[node.groupName]) {
@@ -236,10 +311,9 @@ angular.module('platformWebApp')
                 }
 
                 if (node.level <= 1) {
-                    return true; // top-level always visible (if it passed filter)
+                    return true;
                 }
 
-                // Walk up parents to check all are expanded
                 var parentGroupName = node.parent;
                 while (parentGroupName) {
                     var parentNode = _.find(blade.flatTree, function (n) { return n.groupName === parentGroupName; });
@@ -251,13 +325,10 @@ angular.module('platformWebApp')
                 return true;
             };
 
-            // Select a group in the tree
             $scope.selectGroup = function (node) {
                 if (node.groupName === null) {
-                    // "All Settings" clicked
                     blade.selectedGroup = null;
                 } else if (node.hasChildren && node === blade.selectedGroup) {
-                    // Toggle expand/collapse if clicking already-selected parent
                     node.expanded = !node.expanded;
                 } else {
                     blade.selectedGroup = node;
@@ -268,12 +339,10 @@ angular.module('platformWebApp')
                 applyFilters();
             };
 
-            // Check if a setting's current value differs from default
             $scope.isModified = function (setting) {
                 return !settingsHelper.isDefaultValue(setting);
             };
 
-            // Check if a tree node has modified settings in its subtree
             $scope.nodeHasModified = function (node) {
                 var nodeSettings = getSettingsForGroup(node.groupName);
                 return _.any(nodeSettings, function (s) { return !settingsHelper.isDefaultValue(s); });
@@ -293,21 +362,21 @@ angular.module('platformWebApp')
                 }).length;
             }
 
-            // Apply all filters (search, mode, module, selected group)
+            // ================================================================
+            // Filtering
+            // ================================================================
+
             function applyFilters() {
                 var settings = blade.mergedSettings;
 
-                // Filter by module
                 if ($scope.filter.moduleId) {
                     settings = _.filter(settings, function (s) { return s.moduleId === $scope.filter.moduleId; });
                 }
 
-                // Filter by modified only
                 if ($scope.filter.modifiedOnly) {
                     settings = _.filter(settings, function (s) { return !settingsHelper.isDefaultValue(s); });
                 }
 
-                // Filter by search text (name, translated name, group, and current value)
                 if (blade.searchText) {
                     var search = blade.searchText.toLowerCase();
                     settings = _.filter(settings, function (s) {
@@ -316,7 +385,6 @@ angular.module('platformWebApp')
                             (s.groupName && s.groupName.toLowerCase().indexOf(search) >= 0)) {
                             return true;
                         }
-                        // Search in current value
                         var val = (s.values && s.values.length) ? s.values[0].value : s.value;
                         if (val != null) {
                             var valStr = (typeof val === 'object') ? JSON.stringify(val) : String(val);
@@ -328,8 +396,6 @@ angular.module('platformWebApp')
                     });
                 }
 
-                // Build set of visible tree node groupNames from filtered settings.
-                // Includes the setting's own group and all ancestor groups.
                 var visibleNodeGroups = {};
                 _.each(settings, function (s) {
                     var gn = s.groupName || 'General';
@@ -340,7 +406,6 @@ angular.module('platformWebApp')
                 });
                 blade.visibleNodeGroups = visibleNodeGroups;
 
-                // Auto-expand tree nodes when filtering is active
                 var isFiltering = blade.searchText || $scope.filter.modifiedOnly || $scope.filter.moduleId;
                 if (isFiltering) {
                     _.each(blade.flatTree, function (node) {
@@ -350,19 +415,14 @@ angular.module('platformWebApp')
                     });
                 }
 
-                // Filter by selected group (unless searching/filtering or when no group selected show ALL)
                 if (blade.selectedGroup && !blade.searchText) {
                     var selectedPrefix = blade.selectedGroup.groupName + '|';
                     settings = _.filter(settings, function (s) {
-                        // Show settings for the selected group and its descendants
                         return s.groupName === blade.selectedGroup.groupName ||
                             (s.groupName && s.groupName.indexOf(selectedPrefix) === 0);
                     });
                 }
 
-                // Group settings for fieldset rendering.
-                // When a specific group is selected, use last segment (parent context is clear from tree).
-                // Otherwise use full path with " > " separator to preserve hierarchy.
                 var showFullPath = !blade.selectedGroup || blade.searchText || isFiltering;
                 var grouped = _.groupBy(settings, function (s) {
                     if (!s.groupName) {
@@ -379,20 +439,14 @@ angular.module('platformWebApp')
                 blade.visibleGroupNames = _.keys(grouped).sort();
             }
 
-            // Watch search text changes
-            $scope.$watch('blade.searchText', function () {
-                applyFilters();
-            });
+            $scope.$watch('blade.searchText', function () { applyFilters(); });
+            $scope.$watch('filter.modifiedOnly', function () { applyFilters(); });
+            $scope.$watch('filter.moduleId', function () { applyFilters(); });
 
-            $scope.$watch('filter.modifiedOnly', function () {
-                applyFilters();
-            });
-
-            $scope.$watch('filter.moduleId', function () {
-                applyFilters();
-            });
-
+            // ================================================================
             // Dirty checking
+            // ================================================================
+
             var formScope;
             $scope.setForm = function (form) { formScope = form; };
 
@@ -411,7 +465,6 @@ angular.module('platformWebApp')
                 return isDirty() && (!formScope || formScope.$valid);
             }
 
-            // Helper to get the saveable value from a merged setting
             function getSaveableValue(setting) {
                 if (setting.isDictionary) {
                     return (setting.values && setting.values[0]) ? setting.values[0].value.id : setting.value;
@@ -419,53 +472,49 @@ angular.module('platformWebApp')
                 return (setting.values && setting.values[0]) ? setting.values[0].value : setting.value;
             }
 
-            // Save changes
-            blade.saveChanges = function () {
-                blade.isLoading = true;
-
+            function getChangedValues() {
                 var changedValues = {};
                 _.each(blade.mergedSettings, function (s) {
                     var currentVal = getSaveableValue(s);
                     var origVal = blade.origSettingValues[s.name];
-
                     if (!angular.equals(currentVal, origVal)) {
                         changedValues[s.name] = currentVal;
                     }
                 });
+                return changedValues;
+            }
 
+            function updateOrigSnapshot() {
+                _.each(blade.mergedSettings, function (s) {
+                    blade.origSettingValues[s.name] = getSettingCurrentValue(s);
+                });
+            }
+
+            // ================================================================
+            // Save (uses dataSource)
+            // ================================================================
+
+            blade.saveChanges = function () {
+                blade.isLoading = true;
+
+                var changedValues = getChangedValues();
                 if (Object.keys(changedValues).length === 0) {
                     blade.isLoading = false;
                     return $q.resolve();
                 }
 
-                var savePromise;
-                if (blade.tenantType && blade.tenantId) {
-                    savePromise = settingsV2.saveTenantValues(
-                        { tenantType: blade.tenantType, tenantId: blade.tenantId },
-                        changedValues).$promise;
-                } else {
-                    savePromise = settingsV2.saveGlobalValues({}, changedValues).$promise;
-                }
-
-                return savePromise.then(function () {
-                    // Update the snapshot so isDirty() returns false after save
-                    _.each(blade.mergedSettings, function (s) {
-                        blade.origSettingValues[s.name] = getSettingCurrentValue(s);
-                    });
+                return dataSource.saveValues(changedValues).then(function () {
+                    updateOrigSnapshot();
                     updateModifiedCount();
                     blade.isLoading = false;
                 });
             };
 
+            // ================================================================
             // Reset to default
-            // Note: we cannot use settingsHelper.resetToDefaultValue(blade.filteredSettings, setting)
-            // directly because filteredSettings keys are display names ("Catalog > General" or "General"),
-            // but the helper looks up by setting.groupName ("Catalog|General"). The lookup always
-            // fails, falling back to angular.extend which doesn't trigger ngModel $render().
-            // Instead, we build a temporary wrapper keyed by the raw groupName so the helper succeeds,
-            // then sync the replaced object back into mergedSettings.
+            // ================================================================
+
             $scope.resetToDefaultValue = function (setting) {
-                // Find the display key for this setting in filteredSettings
                 var displayKey = null;
                 _.each(blade.filteredSettings, function (groupSettings, key) {
                     if (_.any(groupSettings, function (s) { return s.name === setting.name; })) {
@@ -474,20 +523,14 @@ angular.module('platformWebApp')
                 });
 
                 if (displayKey !== null) {
-                    // Build a temporary groups object keyed by the raw groupName
-                    // so the helper's lookup (groups[setting.groupName]) succeeds.
                     var tempGroups = {};
                     tempGroups[setting.groupName] = blade.filteredSettings[displayKey];
                     settingsHelper.resetToDefaultValue(tempGroups, setting);
-                    // The helper replaced the object in tempGroups[setting.groupName],
-                    // which is the same array as blade.filteredSettings[displayKey].
                 } else {
-                    // Fallback: direct mutation
                     settingsHelper.resetToDefaultValue({}, setting);
                 }
 
                 // Sync replaced objects from filteredSettings into mergedSettings
-                // so isDirty()/saveChanges() see the updated value.
                 _.each(blade.filteredSettings, function (groupSettings) {
                     _.each(groupSettings, function (s) {
                         var idx = _.findIndex(blade.mergedSettings, function (m) { return m.name === s.name; });
@@ -504,7 +547,10 @@ angular.module('platformWebApp')
                 return settingsHelper.isDefaultValue(setting);
             };
 
-            // Edit dictionary values
+            // ================================================================
+            // Dictionary editor
+            // ================================================================
+
             $scope.editArray = function (node) {
                 var newBlade = {
                     id: 'settingDetailChild',
@@ -515,12 +561,14 @@ angular.module('platformWebApp')
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
-            // Description toggle
             $scope.getDictionaryValues = function (setting, callback) {
                 callback(setting.allowedValues);
             };
 
-            // Build tenant scope string for export document
+            // ================================================================
+            // Export / Import / Edit as JSON
+            // ================================================================
+
             function getTenantScope() {
                 if (blade.tenantType) {
                     return `tenant/${blade.tenantType}/${blade.tenantId}`;
@@ -528,7 +576,6 @@ angular.module('platformWebApp')
                 return 'global';
             }
 
-            // Export as JSON
             $scope.exportJson = function () {
                 var getPromise;
                 if (blade.tenantType && blade.tenantId) {
@@ -561,7 +608,6 @@ angular.module('platformWebApp')
                 });
             };
 
-            // Import from JSON
             $scope.importJson = function () {
                 var input = document.createElement('input');
                 input.type = 'file';
@@ -587,15 +633,7 @@ angular.module('platformWebApp')
                                     callback: function (confirm) {
                                         if (confirm) {
                                             blade.isLoading = true;
-                                            var savePromise;
-                                            if (blade.tenantType && blade.tenantId) {
-                                                savePromise = settingsV2.saveTenantValues(
-                                                    { tenantType: blade.tenantType, tenantId: blade.tenantId },
-                                                    settingsToImport).$promise;
-                                            } else {
-                                                savePromise = settingsV2.saveGlobalValues({}, settingsToImport).$promise;
-                                            }
-                                            savePromise.then(function () {
+                                            dataSource.saveValues(settingsToImport).then(function () {
                                                 blade.refresh();
                                             });
                                         }
@@ -616,7 +654,6 @@ angular.module('platformWebApp')
                 input.click();
             };
 
-            // Edit as JSON
             $scope.editAsJson = function () {
                 var newBlade = {
                     id: 'settingsJsonEditor',
@@ -630,58 +667,92 @@ angular.module('platformWebApp')
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
+            // ================================================================
+            // OK/Cancel for entity mode
+            // ================================================================
+
+            if (blade.isEntityMode) {
+                $scope.saveChanges = function () {
+                    if (!blade.hasUpdatePermission()) {
+                        return;
+                    }
+                    var changedValues = getChangedValues();
+                    dataSource.saveValues(changedValues);
+                    $scope.bladeClose();
+                };
+
+                $scope.cancelChanges = function () {
+                    $scope.bladeClose();
+                };
+            }
+
+            // ================================================================
             // Toolbar
-            blade.toolbarCommands = [
-                {
+            // ================================================================
+
+            blade.toolbarCommands = [];
+
+            if (!blade.isEntityMode) {
+                blade.toolbarCommands.push({
                     name: 'platform.commands.save',
                     icon: 'fas fa-save',
                     executeMethod: blade.saveChanges,
                     canExecuteMethod: canSave
-                },
-                {
-                    name: 'platform.commands.reset',
-                    icon: 'fa fa-undo',
-                    executeMethod: function () {
-                        blade.refresh();
-                    },
-                    canExecuteMethod: isDirty
-                },
-                {
-                    name: 'platform.blades.settings-unified.export-json',
-                    icon: 'fa fa-download',
-                    executeMethod: function () { $scope.exportJson(); },
-                    canExecuteMethod: function () { return !blade.isLoading; }
-                },
-                {
-                    name: 'platform.blades.settings-unified.import-json',
-                    icon: 'fa fa-upload',
-                    executeMethod: function () { $scope.importJson(); },
-                    canExecuteMethod: function () { return !blade.isLoading; },
-                    permission: 'platform:setting:update'
-                },
-                {
-                    name: 'platform.blades.settings-unified.edit-json',
-                    icon: 'fa fa-code',
-                    executeMethod: function () { $scope.editAsJson(); },
-                    canExecuteMethod: function () { return !blade.isLoading; },
-                    showSeparator: true
-                },
-                {
+                });
+            }
+
+            blade.toolbarCommands.push({
+                name: 'platform.commands.reset',
+                icon: 'fa fa-undo',
+                executeMethod: function () { blade.refresh(); },
+                canExecuteMethod: isDirty
+            });
+
+            blade.toolbarCommands.push({
+                name: 'platform.blades.settings-unified.export-json',
+                icon: 'fa fa-download',
+                executeMethod: function () { $scope.exportJson(); },
+                canExecuteMethod: function () { return !blade.isLoading; }
+            });
+
+            blade.toolbarCommands.push({
+                name: 'platform.blades.settings-unified.import-json',
+                icon: 'fa fa-upload',
+                executeMethod: function () { $scope.importJson(); },
+                canExecuteMethod: function () { return !blade.isLoading; },
+                permission: 'platform:setting:update'
+            });
+
+            blade.toolbarCommands.push({
+                name: 'platform.blades.settings-unified.edit-json',
+                icon: 'fa fa-code',
+                executeMethod: function () { $scope.editAsJson(); },
+                canExecuteMethod: function () { return !blade.isLoading; },
+                showSeparator: !blade.isEntityMode
+            });
+
+            if (!blade.isEntityMode) {
+                blade.toolbarCommands.push({
                     name: 'platform.commands.cache-reset.name',
                     title: 'platform.commands.cache-reset.title',
                     icon: 'fa fa-eraser',
                     executeMethod: function () { resetCache(); },
                     canExecuteMethod: function () { return !blade.isLoading; },
                     permission: 'cache:reset'
-                },
-                {
+                });
+
+                blade.toolbarCommands.push({
                     name: 'platform.commands.restart',
                     icon: 'fa fa-bolt',
                     executeMethod: function () { restart(); },
                     canExecuteMethod: function () { return !blade.isLoading; },
                     permission: 'platform:module:manage'
-                }
-            ];
+                });
+            }
+
+            // ================================================================
+            // Restart / Reset cache (global mode only)
+            // ================================================================
 
             function restart() {
                 var dialog = {
@@ -727,52 +798,70 @@ angular.module('platformWebApp')
                 dialogService.showWarningDialog(confirmDialog);
             }
 
+            // ================================================================
+            // Blade close / navigation guard
+            // ================================================================
+
             blade.onClose = function (closeCallback) {
-                bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, blade.saveChanges, closeCallback,
-                    'platform.dialogs.settings-delete.title', 'platform.dialogs.settings-delete.message');
+                if (blade.isEntityMode) {
+                    // Entity mode: suppress confirmation — parent entity handles its own save flow
+                    closeCallback();
+                } else {
+                    bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, blade.saveChanges, closeCallback,
+                        'platform.dialogs.settings-delete.title', 'platform.dialogs.settings-delete.message');
+                }
             };
 
-            // Intercept navigation away from this workspace (e.g. main menu click).
-            // Root blades with isClosingDisabled don't trigger onClose,
-            // so we use $transitions.onBefore (UI-Router 1.x+) to block navigation when dirty.
-            var deregisterTransitionHook = $transitions.onBefore(
-                { from: 'workspace.settingsUnified' },
-                function () {
-                    if (!isDirty()) {
-                        return true;
-                    }
-
-                    // Return a promise that resolves after user confirms
-                    var deferred = $q.defer();
-                    var dialog = {
-                        id: 'confirmSettingsNavAway',
-                        title: $translate.instant('platform.dialogs.settings-delete.title'),
-                        message: $translate.instant('platform.dialogs.settings-delete.message'),
-                        callback: function (userChoseYes) {
-                            if (userChoseYes) {
-                                blade.saveChanges().then(function () {
-                                    deferred.resolve(true);
-                                });
-                            } else {
-                                // Reset dirty state so onClose won't show dialog again
-                                // when the blade is re-opened via showBlade -> closeBlade
-                                _.each(blade.mergedSettings, function (s) {
-                                    blade.origSettingValues[s.name] = getSettingCurrentValue(s);
-                                });
-                                deferred.resolve(true);
-                            }
+            // Navigation guard: only for global (workspace-level) mode
+            if (!blade.isEntityMode) {
+                var deregisterTransitionHook = $transitions.onBefore(
+                    { from: 'workspace.settingsUnified' },
+                    function () {
+                        if (!isDirty()) {
+                            return true;
                         }
-                    };
-                    dialogService.showConfirmationDialog(dialog);
-                    return deferred.promise;
-                }
-            );
-            // Clean up transition hook when scope is destroyed
-            $scope.$on('$destroy', function () {
-                deregisterTransitionHook();
-            });
 
+                        var deferred = $q.defer();
+                        var dialog = {
+                            id: 'confirmSettingsNavAway',
+                            title: $translate.instant('platform.dialogs.settings-delete.title'),
+                            message: $translate.instant('platform.dialogs.settings-delete.message'),
+                            callback: function (userChoseYes) {
+                                if (userChoseYes) {
+                                    blade.saveChanges().then(function () {
+                                        deferred.resolve(true);
+                                    });
+                                } else {
+                                    updateOrigSnapshot();
+                                    deferred.resolve(true);
+                                }
+                            }
+                        };
+                        dialogService.showConfirmationDialog(dialog);
+                        return deferred.promise;
+                    }
+                );
+                $scope.$on('$destroy', function () {
+                    deregisterTransitionHook();
+                });
+            }
+
+            // ================================================================
+            // Watch parent entity settings (entity mode only)
+            // ================================================================
+
+            if (blade.isEntityMode) {
+                $scope.$watch('blade.parentBlade.currentEntity.settings', function (newSettings) {
+                    if (newSettings) {
+                        blade.refresh();
+                    }
+                });
+            }
+
+            // ================================================================
             // Initialize
+            // ================================================================
+
             blade.refresh();
         }
     ]);

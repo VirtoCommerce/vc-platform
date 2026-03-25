@@ -7,6 +7,7 @@ Settings V2 introduces a modernized settings experience inspired by Visual Studi
 - **Unified Settings Blade** -- single wide blade with left tree navigation + right properties panel
 - **Clean REST API** -- separates schema from values, returns only modified values
 - **Global / Tenant scoping** -- URL path-based scope (`/global/` or `/tenant/{type}/{id}/`)
+- **Data Source abstraction** -- clean isolation between API mode (global/tenant) and Entity mode (in-memory parent entity)
 - **JSON import/export** -- save and load settings as JSON document files
 - **Inline JSON editor** -- edit all settings as raw JSON with CodeMirror (syntax highlighting, folding, validation)
 - **Reusable blade** -- same controller works for global settings, store settings, payment settings, and custom entities
@@ -42,6 +43,8 @@ Settings scope is expressed in the URL path:
 
 Internally, `tenantType`/`tenantId` map to the existing `objectType`/`objectId` parameters in `ISettingsManager`. For tenant scope, the schema endpoint returns only settings registered for that type via `ISettingsRegistrar.RegisterSettingsForType()`.
 
+The `tenantType` is the **short type name** (e.g., `"Store"`), extracted from the fully-qualified .NET type name (e.g., `"VirtoCommerce.StoreModule.Core.Model.Store"`) by splitting on `.` and taking the last segment.
+
 ### Client-Side Group Tree
 
 The schema response is a **flat array** of property descriptors. The client builds the navigation tree by splitting each setting's `GroupName` on `|`.
@@ -53,6 +56,26 @@ Catalog
 ```
 
 The tree is rendered as a flat list with indentation (no recursive `ng-include`), using `padding-left` per depth level. An "All Settings" root node is prepended. When filters are active, only tree nodes containing matching settings (and their ancestors) are shown.
+
+### Data Source Pattern
+
+The controller uses a **Data Source abstraction** to cleanly isolate load/save operations. Two modes are supported:
+
+| Mode | `isEntityMode` | Schema source | Values source | Save target |
+|------|---------------|---------------|---------------|-------------|
+| **API mode** | `false` | REST API | REST API | REST API |
+| **Entity mode** | `true` | REST API | Parent entity in-memory | Parent entity in-memory |
+
+Each data source implements three methods:
+```javascript
+{
+    loadSchema: function() -> Promise<schemas[]>,
+    loadValues: function() -> Promise<{ name: value }>,
+    saveValues: function(changedValues) -> Promise
+}
+```
+
+The rest of the controller (merge, tree building, filtering, dirty checking) is completely storage-agnostic.
 
 ---
 
@@ -225,7 +248,7 @@ POST /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/values
 
 **Response `400/500`** on validation error (e.g., unknown setting name).
 
-**Value Type Conversion:** The service automatically converts incoming JSON values to the correct .NET type based on the setting's `ValueType`. Newtonsoft `JToken` and System.Text.Json `JsonElement` are both handled.
+**Value Type Conversion:** The service automatically converts incoming JSON values to the correct .NET type based on the setting's `ValueType`. Newtonsoft `JToken` and System.Text.Json `JsonElement` are both handled. Integer values use the correct target width (`int` for Integer/PositiveInteger, `long` otherwise) to prevent overflow.
 
 ---
 
@@ -339,7 +362,7 @@ Implementation that delegates to existing `ISettingsManager` and `ISettingsRegis
 
 - `GetSchemaAsync` -- iterates `AllRegisteredSettings`, maps to `SettingPropertySchema`, filters by criteria (hidden settings excluded, keyword search on Name/DisplayName/GroupName). For tenant scope, intersects with `GetSettingsForType(tenantType)`.
 - `GetValuesAsync` -- loads all setting values via `GetObjectSettingsAsync(names, tenantType, tenantId)`. Returns `Dictionary<Name, Value>` with case-insensitive key matching. When `modifiedOnly=true`, compares each value against `DefaultValue` using string comparison.
-- `SaveValuesAsync` -- resolves each dictionary key to a registered `SettingDescriptor` (throws on unknown names). Converts values via `ConvertValue()` which handles Newtonsoft `JToken` and System.Text.Json `JsonElement` unwrapping. Creates `ObjectSettingEntry` objects and calls `SaveObjectSettingsAsync`.
+- `SaveValuesAsync` -- resolves each dictionary key to a registered `SettingDescriptor` (throws on unknown names). Converts values via `ConvertValue()` which handles Newtonsoft `JToken` and System.Text.Json `JsonElement` unwrapping with correct integer width. Creates `ObjectSettingEntry` objects and calls `SaveObjectSettingsAsync`.
 
 **`SettingsV2Controller`** (`VirtoCommerce.Platform.Web.Controllers.Api`)
 
@@ -353,11 +376,27 @@ The existing `SettingController` at `api/platform/settings` is **completely unch
 
 ## Frontend Architecture
 
+### Data Source Abstraction
+
+The controller creates a data source object at initialization based on `blade.isEntityMode`:
+
+**API Data Source** (`isEntityMode = false`):
+- `loadSchema()` -- calls `GET .../schema`
+- `loadValues()` -- calls `GET .../values`
+- `saveValues(changed)` -- calls `POST .../values`
+
+**Entity Data Source** (`isEntityMode = true`):
+- `loadSchema()` -- calls `GET .../tenant/{type}/{id}/schema` (schema always from API)
+- `loadValues()` -- reads `blade.parentBlade.currentEntity.settings` array, converts to `{ name: value }` dict (no API call)
+- `saveValues(changed)` -- writes values back to parent entity's in-memory settings array (no API call)
+
+All other controller logic (merge, tree, filters, dirty checking) is storage-agnostic and works identically in both modes.
+
 ### Unified Settings Blade
 
 Controller: `platformWebApp.settingsUnifiedController`
 
-The blade loads data in two parallel API calls (`getSchema` + `getValues`), then merges schema and values client-side into `ObjectSettingEntry`-compatible objects that the existing `va-generic-value-input` directive can render without changes.
+The blade calls `dataSource.loadSchema()` and `dataSource.loadValues()` in parallel, then merges schema and values client-side into `ObjectSettingEntry`-compatible objects that `va-generic-value-input` can render without changes.
 
 **Layout:**
 
@@ -397,7 +436,7 @@ The filter follows the notification journal filter pattern (`.settings-filter-*`
 
 - **Filter button** opens a popup panel with:
   - **Modified Only** toggle (checkbox with switch style) -- shows count of modified settings
-  - **Module** dropdown -- filter by owning module
+  - **Module** dropdown (sorted alphabetically) -- filter by owning module
   - **Clear filters** link
   - Active filter badge indicator (blue dot) on button
 - **Search input** filters by keyword across: setting Name, translated display name, GroupName, and **current value** (including stringified JSON values)
@@ -416,6 +455,8 @@ Opens as a child blade showing all modified settings in the Settings Document fo
 
 ### Toolbar Commands
 
+**API mode** (global settings):
+
 | Command | Icon | Permission | Description |
 |---------|------|-----------|-------------|
 | Save | `fas fa-save` | `platform:setting:update` | POST only dirty entries as `{ name: value }` |
@@ -423,16 +464,27 @@ Opens as a child blade showing all modified settings in the Settings Document fo
 | Export JSON | `fa fa-download` | -- | Download modified settings as document file |
 | Import JSON | `fa fa-upload` | `platform:setting:update` | Upload JSON file, confirm, apply via POST |
 | Edit as JSON | `fa fa-code` | -- | Open CodeMirror JSON editor child blade |
-| *delimiter* | | | |
-| Restart | `fa fa-bolt` | `platform:module:manage` | Restart application |
+| *separator* | | | |
 | Reset cache | `fa fa-eraser` | `cache:reset` | Clear platform cache |
+| Restart | `fa fa-bolt` | `platform:module:manage` | Restart application |
+
+**Entity mode** (store/entity settings):
+
+| Command | Icon | Description |
+|---------|------|-------------|
+| Reset | `fa fa-undo` | Revert to loaded values |
+| Export JSON | `fa fa-download` | Download modified settings |
+| Import JSON | `fa fa-upload` | Upload and apply settings |
+| Edit as JSON | `fa fa-code` | Open JSON editor |
+
+In entity mode, **Save**, **Reset cache**, and **Restart** are hidden. The blade shows an **OK/Cancel** footer instead -- OK writes changes back to the parent entity's in-memory settings, Cancel closes without changes.
 
 ### Dirty Tracking & Navigation Guard
 
-- `isDirty()` compares each setting's current `values[0].value` against a snapshot taken at load time
+- `isDirty()` compares each setting's current `values[0].value` against a snapshot taken at load time via `getSettingCurrentValue()`
 - Save button is disabled when not dirty or form is invalid
-- `blade.onClose` uses `showConfirmationIfNeeded` for standard blade close
-- `$transitions.onBefore` hook intercepts UI-Router state changes away from `workspace.settingsUnified` -- shows save/discard dialog. On discard, resets the dirty snapshot so re-opening doesn't trigger a stale dialog.
+- **API mode:** `blade.onClose` uses `showConfirmationIfNeeded` for standard blade close. `$transitions.onBefore` hook intercepts UI-Router state changes away from `workspace.settingsUnified` -- shows save/discard dialog. On discard, resets the dirty snapshot via `updateOrigSnapshot()` so re-opening doesn't trigger a stale dialog.
+- **Entity mode:** `blade.onClose` skips confirmation (parent entity handles its own save flow). No navigation guard hook.
 
 ### Blade Reusability
 
@@ -440,10 +492,10 @@ The unified blade accepts parameters for different contexts:
 
 | Parameter | Type | Purpose |
 |-----------|------|---------|
-| `blade.tenantType` | string | Tenant scope type (e.g., `"Store"`) |
+| `blade.tenantType` | string | Short tenant type name (e.g., `"Store"`) |
 | `blade.tenantId` | string | Tenant instance ID |
 | `blade.settingNames` | string[] | Limit visible settings to specific names |
-| `blade.isSavingToParentObject` | bool | Show OK/Cancel footer, save to parent entity |
+| `blade.isEntityMode` | bool | Use entity data source (in-memory parent entity) instead of API |
 
 **Global settings** (main menu route):
 ```javascript
@@ -457,15 +509,43 @@ var blade = {
 
 **Store settings** (entity widget):
 ```javascript
+// entitySettingsWidget.js extracts tenantType from the entity's
+// fully-qualified objectType (or typeName as fallback):
+// "VirtoCommerce.StoreModule.Core.Model.Store" -> "Store"
 var blade = {
     id: 'entitySettingList',
-    tenantType: 'Store',
-    tenantId: storeId,
-    settingNames: _.pluck(entity.settings, 'name'),
-    isSavingToParentObject: true,
+    tenantType: getTenantType(),   // "Store"
+    tenantId: getTenantId(),       // entity.id
+    settingNames: getSettingNames(), // _.pluck(entity.settings, 'name')
+    isEntityMode: true,
+    isExpandable: true,
     controller: 'platformWebApp.settingsUnifiedController',
     template: '$(Platform)/Scripts/app/settings/blades/settings-unified.tpl.html'
 };
+```
+
+The entity widget uses helper functions to safely extract blade parameters:
+
+```javascript
+function getEntity() {
+    return blade.currentEntity || {};
+}
+
+function getTenantType() {
+    var fullType = getEntity().objectType || getEntity().typeName;
+    if (!fullType) { return undefined; }
+    var parts = fullType.split('.');
+    return parts[parts.length - 1];
+}
+
+function getTenantId() {
+    return getEntity().id;
+}
+
+function getSettingNames() {
+    var settings = getEntity().settings;
+    return settings ? _.pluck(settings, 'name') : undefined;
+}
 ```
 
 ---
@@ -480,7 +560,7 @@ Styles are in `_settings-unified.sass` (compiled into the platform's main theme 
 | `.settings-unified-layout` | Flexbox two-panel container |
 | `.settings-tree-panel` | Left tree panel (300px, scrollable) |
 | `.settings-properties-panel` | Right properties panel (flex, 600px min, 18px legend font) |
-| `.stree-*` | Tree node, arrow, text, modified dot |
+| `.stree-*` | Tree node (14px font), arrow, text, modified dot |
 | `.settings-property-modified` | Blue dot indicator on modified property labels |
 | `.__settings-unified` | Blade content width override (960px default, 1300px max when maximized) |
 
@@ -504,16 +584,17 @@ Styles are in `_settings-unified.sass` (compiled into the platform's main theme 
 - `ISettingsPropertyService` / `SettingsPropertyService`
 - `SettingPropertySchema` DTO
 - `SettingsPropertySearchCriteria`
-- Unified settings blade (controller + template + JSON editor)
+- Unified settings blade with Data Source abstraction (controller + template + JSON editor)
 - `_settings-unified.sass` styles
 - `settingsV2.js` Angular resource
 - New `workspace.settingsUnified` UI-Router state
+- Updated `entitySettingsWidget.js` with tenant type extraction helpers
 
 ### Migration path
 
 1. V2 API and UI ship alongside V1 -- zero breaking changes
 2. Main menu "Settings" points to unified blade; old route (`workspace.modulesSettings`) still accessible
-3. Entity settings widgets can opt-in to new blade by changing controller/template reference
+3. Entity settings widget now opens the unified blade with `isEntityMode: true`
 4. In a future major version, V1 blade and old endpoints can be deprecated
 
 ---
@@ -547,4 +628,5 @@ Styles are in `_settings-unified.sass` (compiled into the platform's main theme 
 |------|--------|
 | `ServiceCollectionExtensions.cs` | Register `ISettingsPropertyService` -> `SettingsPropertyService` |
 | `settings.js` | Add `workspace.settingsUnified` route, register scripts, toolbar commands, update main menu |
+| `entitySettingsWidget.js` | Use unified blade with `isEntityMode`, tenant type extraction helpers |
 | `_module.sass` | Import `_settings-unified` |

@@ -55,22 +55,22 @@ angular.module("platformWebApp")
     )
     .run(['platformWebApp.mainMenuService', 'platformWebApp.breadcrumbHistoryService', 'platformWebApp.changeLogApi', 'platformWebApp.toolbarService', 'platformWebApp.dialogService', '$state', function (mainMenuService, breadcrumbHistoryService, changeLogApi, toolbarService, dialogService, $state) {
         //Register module in main menu
-        var menuItem = {
-            path: 'configuration/settings',
-            icon: 'fa fa-gears',
-            title: 'platform.menu.settings',
-            priority: 1,
-            action: function () { $state.go('workspace.modulesSettings'); },
-            permission: 'platform:setting:access'
-        };
-        mainMenuService.addMenuItem(menuItem);
+        //var menuItem = {
+        //    path: 'configuration/settings',
+        //    icon: 'fa fa-gears',
+        //    title: 'platform.menu.settings',
+        //    priority: 1,
+        //    action: function () { $state.go('workspace.modulesSettings'); },
+        //    permission: 'platform:setting:access'
+        //};
+        //mainMenuService.addMenuItem(menuItem);
 
         // Unified settings V2 menu item
         var unifiedMenuItem = {
             path: 'configuration/settingsUnified',
-            icon: 'fa fa-sliders',
-            title: 'platform.menu.settings-unified',
-            priority: 2,
+            icon: 'fa fa-gears',
+            title: 'platform.menu.settings',
+            priority: 1,
             action: function () { $state.go('workspace.settingsUnified'); },
             permission: 'platform:setting:access'
         };
