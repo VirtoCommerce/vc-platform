@@ -156,6 +156,8 @@ angular.module('platformWebApp')
                 modulesApiMethod(selection, function (data) {
                     blade.isLoading = false;
 
+                    sortByIdIgnoreCase(data);
+
                     var dialog = {
                         id: "confirm",
                         action: action,
@@ -175,7 +177,12 @@ angular.module('platformWebApp')
                                 // apply the action
                                 var apiActionDescriptor = getApiActionDescriptor(action);
                                 if (apiActionDescriptor.method) {
-                                    var payload = _.map(data, function(m) { return { id: m.id, version: m.version }; });
+                                    var payload = _.map(data, function (x) {
+                                        return { id: x.id, version: x.version };
+                                    });
+
+                                    sortByIdIgnoreCase(payload);
+
                                     apiActionDescriptor.method(payload, function (progressData) {
                                         blade.isLoading = false;
                                         // show module (un)installation progress
@@ -200,6 +207,12 @@ angular.module('platformWebApp')
                     bladeNavigationService.setError('Error ' + error.status, blade);
                 });
             }
+        }
+
+        function sortByIdIgnoreCase(modules) {
+            modules.sort(function (a, b) {
+                return a.id.localeCompare(b.id);
+            });
         }
 
         function getApiActionDescriptor(action) {

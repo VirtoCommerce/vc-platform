@@ -1,9 +1,10 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
 
-namespace VirtoCommerce.Platform.Modules
+namespace VirtoCommerce.Platform.Web.Extensions
 {
     public static class ServiceCollectionExtensions
     {

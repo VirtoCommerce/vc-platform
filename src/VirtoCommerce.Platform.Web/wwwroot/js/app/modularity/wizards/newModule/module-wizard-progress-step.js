@@ -82,7 +82,7 @@ angular.module('platformWebApp').controller('platformWebApp.moduleInstallProgres
                             //$window.location.reload(); returns 400 bad request due server restarts
                         });
                     }
-                    catch (err){
+                    catch (err) {
                     }
                     finally {
                         // delay initial start for 3 seconds

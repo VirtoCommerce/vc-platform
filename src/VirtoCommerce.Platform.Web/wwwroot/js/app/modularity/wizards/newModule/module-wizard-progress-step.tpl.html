@@ -9,11 +9,11 @@
             <!-- Header: title + status icon + timestamp -->
             <div class="module-progress-header">
                 <div class="module-progress-title">
-                    <i class="fa" ng-class="{
+                    <span class="fa" ng-class="{
                         'fa-spinner fa-spin': !blade.currentEntity.finished,
                         'fa-check-circle module-progress-icon--success': blade.currentEntity.finished && blade.currentEntity.errorCount === 0,
                         'fa-exclamation-circle module-progress-icon--error': blade.currentEntity.finished && blade.currentEntity.errorCount > 0
-                    }"></i>
+                    }"></span>
                     <span>{{blade.currentEntity.title}}</span>
                 </div>
                 <div class="module-progress-time" ng-if="blade.currentEntity.created">
@@ -29,7 +29,7 @@
 
             <!-- Determinate progress bar with counter -->
             <div class="module-progress-bar-container" ng-if="progressStats.total > 0">
-                <div class="progress-bar __aqua" ng-style="{'width': progressStats.percent + '%'}" style="margin: 0; transition: width 0.3s ease;"></div>
+                <div class="progress-bar __aqua" ng-style="{'width': progressStats.percent + '%', 'animation-play-state': blade.currentEntity.finished ? 'paused' : 'running'}" style="margin: 0; transition: width 0.3s ease;"></div>
                 <span class="module-progress-counter">{{progressStats.completed}} / {{progressStats.total}}</span>
             </div>
             <!-- Indeterminate bar when no modules detected yet -->
@@ -48,13 +48,13 @@
                         'module-progress-item--pending': item.status === 'pending'
                      }">
                     <div class="module-progress-item-header">
-                        <i class="fa module-progress-item-icon"
+                        <span class="fa module-progress-item-icon"
                            ng-class="{
                                'fa-check-circle': item.status === 'done',
                                'fa-times-circle': item.status === 'error',
                                'fa-spinner fa-spin': item.status === 'active',
                                'fa-circle-o': item.status === 'pending'
-                           }"></i>
+                           }"></span>
                         <span class="module-progress-item-name">{{item.name}}</span>
                     </div>
                     <!--<div class="module-progress-item-messages" ng-if="item.status === 'active' || item.status === 'error'">
@@ -70,7 +70,7 @@
             <div class="module-progress-summary" ng-if="blade.currentEntity.finished">
                 <div class="module-progress-summary-banner"
                      ng-class="{'module-progress-summary--success': blade.currentEntity.errorCount === 0, 'module-progress-summary--error': blade.currentEntity.errorCount > 0}">
-                    <i class="fa" ng-class="{'fa-check-circle': blade.currentEntity.errorCount === 0, 'fa-exclamation-triangle': blade.currentEntity.errorCount > 0}"></i>
+                    <span class="fa" ng-class="{'fa-check-circle': blade.currentEntity.errorCount === 0, 'fa-exclamation-triangle': blade.currentEntity.errorCount > 0}"></span>
                     <span ng-if="blade.currentEntity.errorCount === 0">
                         {{ 'platform.blades.module-wizard-progress-step.labels.process-completed' | translate }}
                     </span>
@@ -86,7 +86,7 @@
             <!-- Collapsible detailed log -->
             <div class="module-progress-log-toggle">
                 <a ng-click="showDetailedLog = !showDetailedLog">
-                    <i class="fa" ng-class="{'fa-chevron-right': !showDetailedLog, 'fa-chevron-down': showDetailedLog}"></i>
+                    <span class="fa" ng-class="{'fa-chevron-right': !showDetailedLog, 'fa-chevron-down': showDetailedLog}"></span>
                     {{ 'platform.blades.module-wizard-progress-step.labels.detailed-log' | translate }}
                 </a>
             </div>

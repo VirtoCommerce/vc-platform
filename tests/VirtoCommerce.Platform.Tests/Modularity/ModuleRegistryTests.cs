@@ -78,6 +78,7 @@ public class ModuleRegistryTests
         ]);
 
         // Act, Assert
+        Assert.False(ModuleRegistry.IsInstalled("Module1", "1.1.0"));
         Assert.False(ModuleRegistry.IsInstalled("Module1", "2.0.0"));
     }
 

@@ -250,14 +250,6 @@ public static class ModuleDiscovery
             }
         }
 
-        // Check major version compatibility (no automated major upgrade/downgrade)
-        var installedModule = installedModules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(moduleToInstall.Id));
-        if (installedModule != null && !installedModule.Version.IsCompatibleWithBySemVer(moduleToInstall.Version))
-        {
-            var direction = installedModule.Version.Major < moduleToInstall.Version.Major ? "upgrade" : "downgrade";
-            errors.Add($"Automated {direction} is not feasible due to major version change for {moduleToInstall}");
-        }
-
         return errors;
     }
 
