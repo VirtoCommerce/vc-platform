@@ -102,7 +102,7 @@ angular.module('platformWebApp')
 
                     // Translate display names
                     _.each(blade.mergedSettings, function (setting) {
-                        var translateKey = 'settings.' + setting.name + '.title';
+                        var translateKey = `settings.${setting.name}.title`;
                         var result = $translate.instant(translateKey);
                         setting.translatedName = result !== translateKey ? result : (setting.displayName || setting.name);
                     });
@@ -523,7 +523,7 @@ angular.module('platformWebApp')
             // Build tenant scope string for export document
             function getTenantScope() {
                 if (blade.tenantType) {
-                    return 'tenant/' + blade.tenantType + '/' + blade.tenantId;
+                    return `tenant/${blade.tenantType}/${blade.tenantId}`;
                 }
                 return 'global';
             }
@@ -555,7 +555,7 @@ angular.module('platformWebApp')
                     var url = URL.createObjectURL(blob);
                     var a = document.createElement('a');
                     a.href = url;
-                    a.download = 'settings-' + scopeStr.replace(/\//g, '-') + '.json';
+                    a.download = `settings-${scopeStr.replace(/\//g, '-')}.json`;
                     a.click();
                     URL.revokeObjectURL(url);
                 });
@@ -583,7 +583,7 @@ angular.module('platformWebApp')
                                 var dialog = {
                                     id: 'confirmImportSettings',
                                     title: 'platform.blades.settings-unified.import-confirm-title',
-                                    message: 'Apply ' + count + ' settings from imported file?',
+                                    message: `Apply ${count} settings from imported file?`,
                                     callback: function (confirm) {
                                         if (confirm) {
                                             blade.isLoading = true;
