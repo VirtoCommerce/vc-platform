@@ -91,50 +91,6 @@ public static class ModuleRunner
     }
 
     /// <summary>
-    /// Create an IModule instance from a loaded assembly via reflection.
-    /// </summary>
-    internal static IModule CreateModuleInstance(ManifestModuleInfo moduleInfo)
-    {
-        ArgumentNullException.ThrowIfNull(moduleInfo);
-
-        if (moduleInfo.Assembly == null)
-        {
-            throw new ModuleInitializeException($"Assembly not loaded for module {moduleInfo.Id}");
-        }
-
-        var moduleTypes = moduleInfo.Assembly.GetTypes()
-            .Where(x => typeof(IModule).IsAssignableFrom(x) && !x.IsAbstract)
-            .ToArray();
-
-        if (moduleTypes.Length == 0)
-        {
-            throw new ModuleInitializeException($"No IModule implementation found in assembly {moduleInfo.Assembly.FullName}");
-        }
-
-        Type moduleType;
-        if (moduleTypes.Length == 1)
-        {
-            moduleType = moduleTypes[0];
-        }
-        else
-        {
-            moduleType = moduleTypes.FirstOrDefault(x => x.AssemblyQualifiedName?.StartsWith(moduleInfo.ModuleType) == true);
-            if (moduleType == null)
-            {
-                throw new ModuleInitializeException($"Cannot resolve IModule type '{moduleInfo.ModuleType}' from assembly {moduleInfo.Assembly.FullName}");
-            }
-        }
-
-        if (Activator.CreateInstance(moduleType) is not IModule instance)
-        {
-            throw new ModuleInitializeException($"Failed to create instance of {moduleType.FullName}");
-        }
-
-        instance.ModuleInfo = moduleInfo;
-        return instance;
-    }
-
-    /// <summary>
     /// Run Initialize on all modules in dependency order.
     /// Skips modules with errors. Sets IHasConfiguration/IHasHostEnvironment/IHasModuleCatalog properties.
     /// </summary>
@@ -232,5 +188,52 @@ public static class ModuleRunner
                 logger.LogError(ex, "Failed to post-initialize module {ModuleId}", moduleInfo.Id);
             }
         }
+    }
+
+
+    /// <summary>
+    /// Create an IModule instance from a loaded assembly via reflection.
+    /// </summary>
+    internal static IModule CreateModuleInstance(ManifestModuleInfo moduleInfo)
+    {
+        ArgumentNullException.ThrowIfNull(moduleInfo);
+
+        if (moduleInfo.Assembly == null)
+        {
+            throw new ModuleInitializeException($"Assembly not loaded for module {moduleInfo.Id}");
+        }
+
+        var moduleTypes = moduleInfo.Assembly.GetTypes()
+            .Where(x => typeof(IModule).IsAssignableFrom(x) && !x.IsAbstract)
+            .ToArray();
+
+        if (moduleTypes.Length == 0)
+        {
+            throw new ModuleInitializeException($"No IModule implementation found in assembly {moduleInfo.Assembly.FullName}");
+        }
+
+        Type moduleType;
+
+        if (moduleTypes.Length == 1)
+        {
+            moduleType = moduleTypes[0];
+        }
+        else
+        {
+            moduleType = moduleTypes.FirstOrDefault(x => x.AssemblyQualifiedName?.StartsWith(moduleInfo.ModuleType) == true);
+            if (moduleType == null)
+            {
+                throw new ModuleInitializeException($"Cannot resolve IModule type '{moduleInfo.ModuleType}' from assembly {moduleInfo.Assembly.FullName}");
+            }
+        }
+
+        if (Activator.CreateInstance(moduleType) is not IModule instance)
+        {
+            throw new ModuleInitializeException($"Failed to create instance of {moduleType.FullName}");
+        }
+
+        instance.ModuleInfo = moduleInfo;
+
+        return instance;
     }
 }
