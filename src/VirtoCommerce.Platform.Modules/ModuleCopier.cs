@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Modules;
 public static class ModuleCopier
 {
     private static LocalStorageModuleCatalogOptions _options;
-    private static IFileCopyPolicy _fileCopyPolicy;
+    private static FileCopyPolicy _fileCopyPolicy;
     private static ILogger _logger;
 
     private const string _rebuildMarkerFileName = ".rebuild";
@@ -95,7 +95,7 @@ public static class ModuleCopier
         }
 
         var markerPath = Path.Combine(_options.ProbingPath, _rebuildMarkerFileName);
-        File.Create(markerPath);
+        File.WriteAllBytes(markerPath, Array.Empty<byte>());
 
         _logger.LogInformation("Probing folder marked for rebuild on next startup");
     }

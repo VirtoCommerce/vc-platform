@@ -322,29 +322,24 @@ public class ModuleManagementService(
     {
         EnsureInitialized();
 
-        var modules = _mergedModules
-            .Where(x => x.IsInstalled && moduleIds.Any(id => x.Id.EqualsIgnoreCase(id)))
-            .ToList();
-
-        return GetDependentsRecursive(modules);
-    }
-
-    private List<ManifestModuleInfo> GetDependentsRecursive(IList<ManifestModuleInfo> modules)
-    {
         var result = new List<ManifestModuleInfo>();
+        var queue = new Queue<ManifestModuleInfo>(_mergedModules.Where(x => x.IsInstalled && moduleIds.ContainsIgnoreCase(x.Id)));
+        var visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var module in modules)
+        while (queue.Count > 0)
         {
+            var module = queue.Dequeue();
+
+            if (!visited.Add(module.Id))
+            {
+                continue;
+            }
+
             result.Add(module);
 
-            var dependingModules = _mergedModules
-                .Where(x => x.IsInstalled)
-                .Where(x => x.DependsOn.ContainsIgnoreCase(module.Id))
-                .ToList();
-
-            if (dependingModules.Count > 0)
+            foreach (var dependent in _mergedModules.Where(x => x.IsInstalled && x.DependsOn.ContainsIgnoreCase(module.Id)))
             {
-                result.AddRange(GetDependentsRecursive(dependingModules));
+                queue.Enqueue(dependent);
             }
         }
 
