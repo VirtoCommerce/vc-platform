@@ -7,6 +7,7 @@
       "notifications": "Notiser",
       "more": "Mer",
       "settings": "Inställningar",
+      "settings-unified": "Inställningar (Enhetlig)",
       "dynamic-properties": "Dynamiska egenskaper",
       "security": "Säkerhet",
       "modules": "Moduler",
@@ -665,6 +666,27 @@
       "settingGroup-list": {
         "title": "Inställningar",
         "bread-crumb-top": "Alla inställningar"
+      },
+      "settings-unified": {
+        "title": "Inställningar",
+        "all-settings": "Alla inställningar",
+        "filter": "Filter",
+        "filter-show": "Visa",
+        "filter-all": "Alla inställningar",
+        "filter-modified": "Endast ändrade",
+        "filter-modified-only": "Visa endast ändrade",
+        "filter-module": "Modul",
+        "filter-all-modules": "Alla moduler",
+        "filter-clear": "Rensa filter",
+        "no-settings": "Inga inställningar matchar de aktuella filtren.",
+        "export-json": "Exportera JSON",
+        "import-json": "Importera JSON",
+        "edit-json": "Redigera som JSON",
+        "import-confirm-title": "Importera inställningar"
+      },
+      "settings-json-editor": {
+        "title": "Redigera inställningar som JSON",
+        "format-json": "Formatera JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Dra och släpp fil här",

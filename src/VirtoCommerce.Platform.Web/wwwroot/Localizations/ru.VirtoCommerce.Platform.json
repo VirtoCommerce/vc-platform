@@ -7,6 +7,7 @@
       "notifications": "Уведомления",
       "more": "Ещё",
       "settings": "Настройки",
+      "settings-unified": "Настройки (Единые)",
       "dynamic-properties": "Динамические свойства",
       "security": "Безопасность",
       "modules": "Модули",
@@ -666,6 +667,27 @@
       "settingGroup-list": {
         "title": "Настройки",
         "bread-crumb-top": "Все настройки"
+      },
+      "settings-unified": {
+        "title": "Настройки",
+        "all-settings": "Все настройки",
+        "filter": "Фильтр",
+        "filter-show": "Показать",
+        "filter-all": "Все настройки",
+        "filter-modified": "Только изменённые",
+        "filter-modified-only": "Показать только изменённые",
+        "filter-module": "Модуль",
+        "filter-all-modules": "Все модули",
+        "filter-clear": "Сбросить фильтры",
+        "no-settings": "Нет настроек, соответствующих текущим фильтрам.",
+        "export-json": "Экспорт JSON",
+        "import-json": "Импорт JSON",
+        "edit-json": "Редактировать как JSON",
+        "import-confirm-title": "Импорт настроек"
+      },
+      "settings-json-editor": {
+        "title": "Редактировать настройки как JSON",
+        "format-json": "Форматировать JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Перетащите файл сюда",

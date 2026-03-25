@@ -7,6 +7,7 @@
       "notifications": "Powiadomienia",
       "more": "Więcej",
       "settings": "Ustawienia",
+      "settings-unified": "Ustawienia (Zunifikowane)",
       "dynamic-properties": "Właściwości dynamiczne",
       "security": "Bezpieczeństwo",
       "modules": "Moduły",
@@ -664,6 +665,27 @@
       "settingGroup-list": {
         "title": "Ustawienia",
         "bread-crumb-top": "Wszystkie ustawienia"
+      },
+      "settings-unified": {
+        "title": "Ustawienia",
+        "all-settings": "Wszystkie ustawienia",
+        "filter": "Filtr",
+        "filter-show": "Pokaż",
+        "filter-all": "Wszystkie ustawienia",
+        "filter-modified": "Tylko zmienione",
+        "filter-modified-only": "Pokaż tylko zmienione",
+        "filter-module": "Moduł",
+        "filter-all-modules": "Wszystkie moduły",
+        "filter-clear": "Wyczyść filtry",
+        "no-settings": "Żadne ustawienia nie odpowiadają bieżącym filtrom.",
+        "export-json": "Eksportuj JSON",
+        "import-json": "Importuj JSON",
+        "edit-json": "Edytuj jako JSON",
+        "import-confirm-title": "Importuj ustawienia"
+      },
+      "settings-json-editor": {
+        "title": "Edytuj ustawienia jako JSON",
+        "format-json": "Formatuj JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Przeciągnij i upuść plik tutaj",

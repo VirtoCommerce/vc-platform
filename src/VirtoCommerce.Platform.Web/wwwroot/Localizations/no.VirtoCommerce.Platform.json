@@ -7,6 +7,7 @@
       "notifications": "Varsler",
       "more": "Mer",
       "settings": "Innstillinger",
+      "settings-unified": "Innstillinger (Samlet)",
       "dynamic-properties": "Dynamiske egenskaper",
       "security": "Sikkerhet",
       "modules": "Moduler",
@@ -665,6 +666,27 @@
       "settingGroup-list": {
         "title": "Innstillinger",
         "bread-crumb-top": "Alle innstillinger"
+      },
+      "settings-unified": {
+        "title": "Innstillinger",
+        "all-settings": "Alle innstillinger",
+        "filter": "Filter",
+        "filter-show": "Vis",
+        "filter-all": "Alle innstillinger",
+        "filter-modified": "Kun endrede",
+        "filter-modified-only": "Vis kun endrede",
+        "filter-module": "Modul",
+        "filter-all-modules": "Alle moduler",
+        "filter-clear": "Fjern filtre",
+        "no-settings": "Ingen innstillinger samsvarer med gjeldende filtre.",
+        "export-json": "Eksporter JSON",
+        "import-json": "Importer JSON",
+        "edit-json": "Rediger som JSON",
+        "import-confirm-title": "Importer innstillinger"
+      },
+      "settings-json-editor": {
+        "title": "Rediger innstillinger som JSON",
+        "format-json": "Formater JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Dra og slipp fil her",

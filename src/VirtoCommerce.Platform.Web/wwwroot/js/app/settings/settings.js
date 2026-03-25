@@ -17,6 +17,21 @@ angular.module("platformWebApp")
                         bladeNavigationService.showBlade(blade);
                     }
                     ]
+                })
+                .state('workspace.settingsUnified', {
+                    url: '/settings-unified',
+                    templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
+                    controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+                        var blade = {
+                            id: 'settingsUnified',
+                            title: 'platform.blades.settings-unified.title',
+                            controller: 'platformWebApp.settingsUnifiedController',
+                            template: '$(Platform)/Scripts/app/settings/blades/settings-unified.tpl.html',
+                            isClosingDisabled: true
+                        };
+                        bladeNavigationService.showBlade(blade);
+                    }
+                    ]
                 });
 
             $provide.decorator('platformWebApp.bladeNavigationService', [
@@ -49,6 +64,17 @@ angular.module("platformWebApp")
             permission: 'platform:setting:access'
         };
         mainMenuService.addMenuItem(menuItem);
+
+        // Unified settings V2 menu item
+        var unifiedMenuItem = {
+            path: 'configuration/settingsUnified',
+            icon: 'fa fa-sliders',
+            title: 'platform.menu.settings-unified',
+            priority: 2,
+            action: function () { $state.go('workspace.settingsUnified'); },
+            permission: 'platform:setting:access'
+        };
+        mainMenuService.addMenuItem(unifiedMenuItem);
 
         // register back-button
         toolbarService.register(breadcrumbHistoryService.getBackButtonInstance(), 'platformWebApp.settingGroupListController');

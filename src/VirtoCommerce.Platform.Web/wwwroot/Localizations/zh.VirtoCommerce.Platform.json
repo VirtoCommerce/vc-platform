@@ -7,6 +7,7 @@
       "notifications": "通知",
       "more": "更多",
       "settings": "设置",
+      "settings-unified": "设置 (统一)",
       "dynamic-properties": "动态属性",
       "security": "安全",
       "modules": "模块",
@@ -664,6 +665,27 @@
       "settingGroup-list": {
         "title": "设置",
         "bread-crumb-top": "所有设置"
+      },
+      "settings-unified": {
+        "title": "设置",
+        "all-settings": "所有设置",
+        "filter": "筛选",
+        "filter-show": "显示",
+        "filter-all": "所有设置",
+        "filter-modified": "仅已修改",
+        "filter-modified-only": "仅显示已修改",
+        "filter-module": "模块",
+        "filter-all-modules": "所有模块",
+        "filter-clear": "清除筛选",
+        "no-settings": "没有设置匹配当前筛选条件。",
+        "export-json": "导出 JSON",
+        "import-json": "导入 JSON",
+        "edit-json": "以 JSON 编辑",
+        "import-confirm-title": "导入设置"
+      },
+      "settings-json-editor": {
+        "title": "以 JSON 编辑设置",
+        "format-json": "格式化 JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "将文件拖放到此处",
