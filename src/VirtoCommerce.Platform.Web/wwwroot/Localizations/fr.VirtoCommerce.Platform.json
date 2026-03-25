@@ -931,6 +931,11 @@
         "message": "Êtes-vous sûr de vouloir terminer toutes les sessions utilisateur ?"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Effacer les filtres"
+      }
+    },
     "commands": {
       "login-on-behalf": "Se connecter au nom de",
       "cache-reset": {

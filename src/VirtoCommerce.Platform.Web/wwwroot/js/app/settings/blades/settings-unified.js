@@ -87,43 +87,24 @@ angular.module('platformWebApp')
             dataSource = blade.isEntityMode ? createEntityDataSource() : createApiDataSource();
 
             // ================================================================
-            // Filter state (mirrors notification journal filter pattern)
+            // Filter state (panel toggle & outside-click handled by va-filter-panel directive)
             // ================================================================
 
             $scope.filter = {
-                showPanel: false,
                 modifiedOnly: false,
                 moduleId: '',
-                togglePanel: function ($event) {
-                    if ($event) {
-                        $event.stopPropagation();
-                    }
-                    this.showPanel = !this.showPanel;
-                },
                 hasActiveFilters: function () {
                     return this.modifiedOnly || this.moduleId !== '';
                 },
                 clearFilters: function () {
                     this.modifiedOnly = false;
                     this.moduleId = '';
-                    this.showPanel = false;
                     applyFilters();
                 },
                 criteriaChanged: function () {
                     applyFilters();
                 }
             };
-
-            // Close filter panel on outside click
-            var closeFilterPanel = function () {
-                if ($scope.filter.showPanel) {
-                    $scope.$apply(function () { $scope.filter.showPanel = false; });
-                }
-            };
-            document.addEventListener('click', closeFilterPanel);
-            $scope.$on('$destroy', function () {
-                document.removeEventListener('click', closeFilterPanel);
-            });
 
             // ================================================================
             // Blade state

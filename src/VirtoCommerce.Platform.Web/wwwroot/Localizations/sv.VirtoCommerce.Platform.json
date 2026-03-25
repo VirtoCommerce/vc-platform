@@ -932,6 +932,11 @@
         "message": "Är du säker på att du vill avsluta alla användarsessioner?"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Rensa filter"
+      }
+    },
     "commands": {
       "login-on-behalf": "Logga in å andras vägnar",
       "cache-reset": {

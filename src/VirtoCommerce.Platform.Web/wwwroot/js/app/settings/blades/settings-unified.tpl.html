@@ -1,39 +1,26 @@
 <div class="blade-static">
     <div class="form-group" style="display: flex; align-items: center;">
-        <div class="settings-filter-wrap">
-            <button type="button" class="btn __settings-filter"
-                    ng-class="{'__active': filter.hasActiveFilters()}"
-                    ng-click="filter.togglePanel($event)"
-                    title="{{ 'platform.blades.settings-unified.filter' | translate }}">
-                <i class="fa fa-sliders"></i>
-                <span class="settings-filter-badge" ng-if="filter.hasActiveFilters()"></span>
-            </button>
-            <div class="settings-filter-panel" ng-if="filter.showPanel" ng-click="$event.stopPropagation()">
-                <div class="settings-filter-panel__row">
-                    <span class="settings-filter-panel__label">{{ 'platform.blades.settings-unified.filter-modified-only' | translate }} ({{blade.modifiedCount}})</span>
-                    <label class="form-label __switch" style="margin: 0;">
-                        <input type="checkbox" ng-model="filter.modifiedOnly" ng-change="filter.criteriaChanged()">
-                        <span class="switch"></span>
-                    </label>
-                </div>
-                <div class="settings-filter-panel__row">
-                    <span class="settings-filter-panel__label">{{ 'platform.blades.settings-unified.filter-module' | translate }}</span>
-                    <select class="settings-filter-panel__select" ng-model="filter.moduleId" ng-change="filter.criteriaChanged()">
-                        <option value="">{{ 'platform.blades.settings-unified.filter-all-modules' | translate }}</option>
-                        <option ng-repeat="m in blade.modules" value="{{m.id}}">{{m.id}}</option>
-                    </select>
-                </div>
-                <div class="settings-filter-panel__row __clear" ng-if="filter.hasActiveFilters()">
-                    <a href="" ng-click="filter.clearFilters()">{{ 'platform.blades.settings-unified.filter-clear' | translate }}</a>
-                </div>
+        <va-filter-panel
+            has-active-filters="filter.hasActiveFilters()"
+            on-clear-filters="filter.clearFilters()"
+            search-text="blade.searchText"
+            filter-title="{{ 'platform.blades.settings-unified.filter' | translate }}">
+            <!-- Settings-specific filter rows (transcluded into the panel) -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.settings-unified.filter-modified-only' | translate }} ({{blade.modifiedCount}})</span>
+                <label class="form-label __switch" style="margin: 0;">
+                    <input type="checkbox" ng-model="filter.modifiedOnly" ng-change="filter.criteriaChanged()">
+                    <span class="switch"></span>
+                </label>
             </div>
-        </div>
-        <div class="form-input __search">
-            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText">
-            <button class="btn __other" style="position: relative; right: 35px;">
-                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText=''"></i>
-            </button>
-        </div>
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.settings-unified.filter-module' | translate }}</span>
+                <select class="va-filter-panel__select" ng-model="filter.moduleId" ng-change="filter.criteriaChanged()">
+                    <option value="">{{ 'platform.blades.settings-unified.filter-all-modules' | translate }}</option>
+                    <option ng-repeat="m in blade.modules" value="{{m.id}}">{{m.id}}</option>
+                </select>
+            </div>
+        </va-filter-panel>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="blade.isEntityMode" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'"></div>

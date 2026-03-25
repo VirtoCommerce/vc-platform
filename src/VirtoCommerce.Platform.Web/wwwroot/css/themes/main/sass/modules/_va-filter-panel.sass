@@ -1,0 +1,101 @@
+// Reusable filter panel directive (va-filter-panel)
+// Provides: filter button with badge, popup panel with rows, search input
+// Used by: settings-unified blade, notification journal, and other blades
+
+.va-filter-bar
+    display: flex
+    align-items: center
+
+.va-filter-wrap
+    position: relative
+    margin-right: 6px
+    margin-top: 2px
+
+.btn.__va-filter
+    height: 34px
+    margin-top: -2px
+    font-size: 16px
+    border: 1px solid #ddd
+    border-radius: 3px
+    display: flex
+    align-items: center
+    justify-content: center
+    background: transparent
+    color: #999
+    position: relative
+    padding: 0 8px
+    cursor: pointer
+    &:hover
+        color: #555
+        border-color: #bbb
+    &.__active
+        background: #e8f0fe
+        color: #1a73e8
+        border-color: #1a73e8
+
+.va-filter-badge
+    position: absolute
+    top: 4px
+    right: 4px
+    width: 7px
+    height: 7px
+    border-radius: 50%
+    background: #1a73e8
+
+.va-filter-panel
+    position: absolute
+    top: 100%
+    left: 0
+    margin-top: 4px
+    min-width: 260px
+    background: #fff
+    border: 1px solid #ddd
+    border-radius: 4px
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)
+    padding: 12px 16px
+    z-index: 1000
+
+.va-filter-panel__row
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding: 8px 0
+    &:not(:last-child)
+        border-bottom: 1px solid #f0f0f0
+    &.__clear
+        justify-content: flex-start
+        padding-top: 12px
+        a
+            color: #1a73e8
+            font-size: 13px
+            text-decoration: none
+            &:hover
+                text-decoration: underline
+
+.va-filter-panel__label
+    font-size: 13px
+    color: #333
+    min-width: 60px
+
+.va-filter-panel__select
+    width: 160px
+    padding: 4px 8px
+    border: 1px solid #ddd
+    border-radius: 3px
+    font-size: 13px
+    color: #333
+    background: #fff
+    &:focus
+        border-color: #1a73e8
+        outline: none
+
+.va-filter-panel__date-input
+    width: 140px
+    padding: 4px 8px
+    border: 1px solid #ddd
+    border-radius: 3px
+    font-size: 13px
+    color: #333
+    &:focus
+        border-color: #1a73e8
+        outline: none

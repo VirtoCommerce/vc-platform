@@ -933,6 +933,11 @@
         "message": "Sind Sie sicher, dass Sie alle Benutzersitzungen beenden möchten?"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Filter zurücksetzen"
+      }
+    },
     "commands": {
       "login-on-behalf": "Im Namen von anmelden",
       "cache-reset": {

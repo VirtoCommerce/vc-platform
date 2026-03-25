@@ -426,21 +426,37 @@ The blade calls `dataSource.loadSchema()` and `dataSource.loadValues()` in paral
 - **Right panel (600px+ flex):** Property list grouped by full `GroupName` path (with ` > ` separator). Uses existing `va-generic-value-input`, `ui-select`, and dictionary editor. Blue dot indicator next to modified property labels. Reset-to-default button on modified properties.
 - **Blade sizing:** Default width 960px. Maximizable up to 1300px.
 
-### Filter UI
+### Filter UI — Reusable `<va-filter-panel>` Directive
 
-The filter follows the notification journal filter pattern (`.settings-filter-*` CSS classes):
+The filter bar uses the platform's reusable `<va-filter-panel>` directive (`wwwroot/js/common/directives/filterPanel.js`). The directive renders the common shell — button with active badge, popup panel container, "Clear filters" link, and search input. Module-specific filter controls are injected via **AngularJS transclusion**.
 
+```html
+<va-filter-panel
+    has-active-filters="filter.hasActiveFilters()"
+    on-clear-filters="filter.clearFilters()"
+    search-text="blade.searchText">
+    <!-- Transcluded: settings-specific rows -->
+    <div class="va-filter-panel__row">...</div>
+</va-filter-panel>
 ```
-[Filter button] [Search keyword input]
-```
 
-- **Filter button** opens a popup panel with:
-  - **Modified Only** toggle (checkbox with switch style) -- shows count of modified settings
-  - **Module** dropdown (sorted alphabetically) -- filter by owning module
-  - **Clear filters** link
-  - Active filter badge indicator (blue dot) on button
-- **Search input** filters by keyword across: setting Name, translated display name, GroupName, and **current value** (including stringified JSON values)
-- When filters are active, tree nodes are automatically filtered to show only groups containing matching settings (plus their ancestors), and matching groups are auto-expanded
+**Directive scope bindings:**
+
+| Binding | Type | Description |
+|---------|------|-------------|
+| `has-active-filters` | `&` (expression) | Consumer returns `true` when filters are active (drives badge + clear link) |
+| `on-clear-filters` | `&` (callback) | Consumer resets its filter model |
+| `search-text` | `=?` (two-way) | Keyword search binding |
+| `hide-search` | `=?` (bool) | Hide the search input |
+| `filter-title` | `@?` (string) | Tooltip for the filter button |
+
+**Settings blade uses** these transcluded rows:
+- **Modified Only** toggle (checkbox with switch style) — shows count of modified settings
+- **Module** dropdown (sorted alphabetically) — filter by owning module
+
+**Search input** filters by keyword across: setting Name, translated display name, GroupName, and **current value** (including stringified JSON values). When filters are active, tree nodes are automatically filtered to show only groups containing matching settings (plus their ancestors), and matching groups are auto-expanded.
+
+**Other modules** (e.g., Notifications) can use the same directive with their own transcluded rows (status dropdown, date range, etc.) — no CSS or JS duplication needed.
 
 ### JSON Editor Blade
 
@@ -552,11 +568,26 @@ function getSettingNames() {
 
 ## CSS Architecture
 
-Styles are in `_settings-unified.sass` (compiled into the platform's main theme bundle):
+Styles are split across two SASS modules (compiled into the platform's main theme bundle):
+
+**`_va-filter-panel.sass`** — Reusable filter directive styles (shared by all blades):
 
 | Class prefix | Purpose |
 |-------------|---------|
-| `.settings-filter-*` | Filter button, badge, popup panel (mirrors `.journal-filter-*` from notification module) |
+| `.va-filter-bar` | Flex container for filter + search |
+| `.va-filter-wrap` | Relative positioning wrapper for button + panel |
+| `.btn.__va-filter` | Filter toggle button with active state |
+| `.va-filter-badge` | Blue dot indicator on button |
+| `.va-filter-panel` | Popup panel (absolute, shadow, z-index) |
+| `.va-filter-panel__row` | Flex row (label + control, border separator) |
+| `.va-filter-panel__label` | Row label text |
+| `.va-filter-panel__select` | Dropdown control |
+| `.va-filter-panel__date-input` | Date input control |
+
+**`_settings-unified.sass`** — Settings blade-specific styles:
+
+| Class prefix | Purpose |
+|-------------|---------|
 | `.settings-unified-layout` | Flexbox two-panel container |
 | `.settings-tree-panel` | Left tree panel (300px, scrollable) |
 | `.settings-properties-panel` | Right properties panel (flex, 600px min, 18px legend font) |
@@ -585,7 +616,8 @@ Styles are in `_settings-unified.sass` (compiled into the platform's main theme 
 - `SettingPropertySchema` DTO
 - `SettingsPropertySearchCriteria`
 - Unified settings blade with Data Source abstraction (controller + template + JSON editor)
-- `_settings-unified.sass` styles
+- Reusable `<va-filter-panel>` directive (`filterPanel.js` + `.tpl.html` + `_va-filter-panel.sass`)
+- `_settings-unified.sass` styles (layout/tree/property only — filter styles in shared directive)
 - `settingsV2.js` Angular resource
 - New `workspace.settingsUnified` UI-Router state
 - Updated `entitySettingsWidget.js` with tenant type extraction helpers
@@ -615,6 +647,9 @@ Styles are in `_settings-unified.sass` (compiled into the platform's main theme 
 
 | File | Location |
 |------|----------|
+| `filterPanel.js` | `wwwroot/js/common/directives/` (reusable directive) |
+| `filterPanel.tpl.html` | `wwwroot/js/common/directives/` (directive template) |
+| `_va-filter-panel.sass` | `wwwroot/css/themes/main/sass/modules/` (shared filter styles) |
 | `settingsV2.js` | `wwwroot/js/app/settings/resources/` |
 | `settings-unified.js` | `wwwroot/js/app/settings/blades/` |
 | `settings-unified.tpl.html` | `wwwroot/js/app/settings/blades/` |
@@ -629,4 +664,4 @@ Styles are in `_settings-unified.sass` (compiled into the platform's main theme 
 | `ServiceCollectionExtensions.cs` | Register `ISettingsPropertyService` -> `SettingsPropertyService` |
 | `settings.js` | Add `workspace.settingsUnified` route, register scripts, toolbar commands, update main menu |
 | `entitySettingsWidget.js` | Use unified blade with `isEntityMode`, tenant type extraction helpers |
-| `_module.sass` | Import `_settings-unified` |
+| `main.sass` | Import `_va-filter-panel` before `_settings-unified` |

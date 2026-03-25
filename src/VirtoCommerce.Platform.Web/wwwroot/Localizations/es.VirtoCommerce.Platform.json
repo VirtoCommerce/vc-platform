@@ -931,6 +931,11 @@
         "message": "¿Está seguro de que desea terminar todas las sesiones de usuario?"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Limpiar filtros"
+      }
+    },
     "commands": {
       "login-on-behalf": "Iniciar sesión en nombre de",
       "cache-reset": {

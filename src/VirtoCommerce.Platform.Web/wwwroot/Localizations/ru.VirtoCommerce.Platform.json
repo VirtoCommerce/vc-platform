@@ -933,6 +933,11 @@
         "message": "Вы уверены, что хотите завершить все пользовательские сеансы?"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Сбросить фильтры"
+      }
+    },
     "commands": {
       "login-on-behalf": "Войти от имени",
       "cache-reset": {

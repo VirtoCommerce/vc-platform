@@ -932,6 +932,11 @@
         "message": "Er du sikker på at du vil avslutte alle brukerøkter?"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Fjern filtre"
+      }
+    },
     "commands": {
       "login-on-behalf": "Logg inn på vegne av",
       "cache-reset": {

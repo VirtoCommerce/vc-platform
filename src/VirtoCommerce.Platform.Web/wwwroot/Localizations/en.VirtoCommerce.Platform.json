@@ -933,6 +933,11 @@
         "message": "Are you sure you want to terminate all user sessions?"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Clear filters"
+      }
+    },
     "commands": {
       "login-on-behalf": "Login on behalf",
       "cache-reset": {
