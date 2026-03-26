@@ -28,8 +28,10 @@ public static class ModuleRunner
     }
 
     /// <summary>
-    /// Sort modules by dependency order using topological sort.
-    /// Modules with no dependencies come first.
+    /// Sort modules by dependency order, layer by layer.
+    /// Modules with no dependencies come first, then those depending on the first group, and so on.
+    /// Within each layer modules are sorted by id; boosted modules come first within their layer.
+    /// Throws <see cref="CyclicDependencyFoundException"/> when a cycle is detected.
     /// </summary>
     public static IList<ManifestModuleInfo> SortModulesByDependency(IList<ManifestModuleInfo> modules)
     {
@@ -40,50 +42,39 @@ public static class ModuleRunner
             return [];
         }
 
-        var solver = new ModuleDependencySolver(_boostOptions);
-        var moduleNames = new HashSet<string>(modules.Select(x => x.ModuleName), StringComparer.OrdinalIgnoreCase);
+        var ignoreCase = StringComparer.OrdinalIgnoreCase;
+        var boostedIds = new HashSet<string>(_boostOptions.ModuleSequenceBoost ?? [], ignoreCase);
 
-        foreach (var module in modules)
-        {
-            solver.AddModule(module.ModuleName);
-
-            if (module.DependsOn != null)
-            {
-                foreach (var dependency in module.DependsOn)
-                {
-                    // Only add dependency edge if the dependency is in the list
-                    // (missing/failed modules are excluded to avoid MissedModuleException)
-                    if (!moduleNames.Contains(dependency))
-                    {
-                        continue;
-                    }
-
-                    var isOptional = module.Dependencies?.Any(x => x.Id == dependency && x.Optional) ?? false;
-                    if (!isOptional)
-                    {
-                        solver.AddDependency(module.ModuleName, dependency);
-                    }
-                }
-            }
-        }
-
-        var sortedNames = solver.Solve();
-        // Deduplicate by ModuleName (same module ID may appear with different versions in merged catalogs).
-        // Prefer installed version, then latest.
-        var modulesByName = modules
-            .GroupBy(x => x.ModuleName, StringComparer.OrdinalIgnoreCase)
+        // Deduplicate by ID: prefer installed version, then latest.
+        var remaining = modules
+            .GroupBy(x => x.Id, ignoreCase)
             .ToDictionary(
                 g => g.Key,
                 g => g.OrderByDescending(x => x.IsInstalled).ThenByDescending(x => x.Version).First(),
-                StringComparer.OrdinalIgnoreCase);
+                ignoreCase);
 
-        var result = new List<ManifestModuleInfo>(sortedNames.Length);
+        var allIds = remaining.Keys.ToHashSet(ignoreCase);
+        var resultIds = new HashSet<string>(ignoreCase);
+        var result = new List<ManifestModuleInfo>(remaining.Count);
 
-        foreach (var name in sortedNames)
+        while (remaining.Count > 0)
         {
-            if (modulesByName.TryGetValue(name, out var module))
+            var layer = remaining.Values
+                .Where(x => x.Dependencies.All(d => resultIds.Contains(d.Id) || !allIds.Contains(d.Id)))
+                .OrderBy(x => boostedIds.Contains(x.Id) ? 0 : 1)
+                .ThenBy(x => x.Id, ignoreCase)
+                .ToList();
+
+            if (layer.Count == 0)
+            {
+                throw new CyclicDependencyFoundException("At least one cyclic dependency has been found in the module catalog. Cycles in the module dependencies are not allowed.");
+            }
+
+            foreach (var module in layer)
             {
                 result.Add(module);
+                resultIds.Add(module.Id);
+                remaining.Remove(module.Id);
             }
         }
 

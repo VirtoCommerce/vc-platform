@@ -10,6 +10,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// Used by ModuleInitializer to get the load sequence
     /// for the modules to load according to their dependencies.
     /// </summary>
+    [Obsolete("Use ModuleRunner.SortModulesByDependency().", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ModuleDependencySolver
     {
         private readonly ListDictionary<string, string> _dependencyMatrix = [];
@@ -112,21 +113,17 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// when a cycle is found in the defined dependency graph.</exception>
         public string[] Solve()
         {
-            var processed = new List<string>();
-            var levels = new List<List<string>>();
-            while (processed.Count < _dependencyMatrix.Count)
+            var skip = new List<string>();
+            while (skip.Count < _dependencyMatrix.Count)
             {
-                var leaves = FindLeaves(processed, _dependencyMatrix);
-                if (leaves.Count == 0 && processed.Count < _dependencyMatrix.Count)
+                var leaves = FindLeaves(skip, _dependencyMatrix);
+                if (leaves.Count == 0 && skip.Count < _dependencyMatrix.Count)
                 {
-                    throw new CyclicDependencyFoundException("At least one cyclic dependency has been found in the module catalog. Cycles in the module dependencies are not allowed.");
+                    throw new CyclicDependencyFoundException($"At least one cyclic dependency has been found in the module catalog. Cycles in the module dependencies must be avoided.");
                 }
-                leaves.Sort(StringComparer.OrdinalIgnoreCase);
-                processed.AddRange(leaves);
-                levels.Add(leaves);
+                skip.AddRange(leaves);
             }
-            levels.Reverse();
-            var skip = levels.SelectMany(x => x).ToList();
+            skip.Reverse();
 
             if (_boostedDependencyMatrix.Count > 0)
             {

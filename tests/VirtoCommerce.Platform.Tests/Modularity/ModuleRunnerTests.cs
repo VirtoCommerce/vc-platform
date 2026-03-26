@@ -21,7 +21,7 @@ public class ModuleRunnerTests
         var sorted = ModuleRunner.SortModulesByDependency(modules);
 
         // Assert
-        Assert.Empty(sorted);
+        Assert.Equal(modules.Count, sorted.Count);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class ModuleRunnerTests
         var sorted = ModuleRunner.SortModulesByDependency(modules);
 
         // Assert
-        Assert.Single(sorted);
+        Assert.Equal(modules.Count, sorted.Count);
         Assert.Equal("A", sorted[0].ModuleName);
     }
 
@@ -60,7 +60,7 @@ public class ModuleRunnerTests
         var sorted = ModuleRunner.SortModulesByDependency(modules);
 
         // Assert
-        Assert.Equal(3, sorted.Count);
+        Assert.Equal(modules.Count, sorted.Count);
         Assert.Equal("A B C", string.Join(" ", sorted.Select(x => x.ModuleName)));
     }
 
@@ -82,6 +82,7 @@ public class ModuleRunnerTests
         var sorted = ModuleRunner.SortModulesByDependency(modules);
 
         // Assert
+        Assert.Equal(modules.Count, sorted.Count);
         Assert.Equal("C B A", string.Join(" ", sorted.Select(x => x.ModuleName)));
     }
 
@@ -104,8 +105,82 @@ public class ModuleRunnerTests
         var sorted = ModuleRunner.SortModulesByDependency(modules);
 
         // Assert
-        Assert.Equal(4, sorted.Count);
+        Assert.Equal(modules.Count, sorted.Count);
         Assert.Equal("D B C A", string.Join(" ", sorted.Select(x => x.ModuleName)));
+    }
+
+    [Fact]
+    public void SortByDependency_MissingDependency_NoErrors()
+    {
+        // Arrange
+        var modules = new List<ManifestModuleInfo>
+        {
+            CreateModule("A", dependencies: ["B", "D"]),
+            CreateModule("B", dependencies: ["C"]),
+            CreateModule("C"),
+        };
+
+        ModuleRunner.Initialize();
+
+        // Act
+        var sorted = ModuleRunner.SortModulesByDependency(modules);
+
+        // Assert
+        Assert.Equal(modules.Count, sorted.Count);
+        Assert.Equal("C B A", string.Join(" ", sorted.Select(x => x.ModuleName)));
+        Assert.True(sorted.All(x => x.Errors.Count == 0));
+    }
+
+    [Fact]
+    public void SortByDependency_OptionalDependency_CorrectOrder()
+    {
+        // Arrange
+        var modules = new List<ManifestModuleInfo>
+        {
+            CreateModule("A", dependencies: ["C"]),
+            CreateModule("B", dependencies: [CreateDependency("C", isOptional: true)]),
+            CreateModule("C"),
+        };
+
+        ModuleRunner.Initialize();
+
+        // Act
+        var sorted = ModuleRunner.SortModulesByDependency(modules);
+
+        // Assert
+        Assert.Equal(modules.Count, sorted.Count);
+        Assert.Equal("C A B", string.Join(" ", sorted.Select(x => x.ModuleName)));
+    }
+
+    [Fact]
+    public void SortByDependency_Boost_CorrectOrder()
+    {
+        // Arrange
+        var modules = new List<ManifestModuleInfo>
+        {
+            CreateModule("A", dependencies: ["D"]),
+            CreateModule("B", dependencies: ["D"]),
+            CreateModule("C", dependencies: ["D"]),
+            CreateModule("D", dependencies: ["F"]),
+            CreateModule("E", dependencies: ["F"]),
+            CreateModule("F"),
+        };
+
+        // Act
+        var normal = ModuleRunner.SortModulesByDependency(modules);
+
+        ModuleRunner.Initialize(new ModuleSequenceBoostOptions
+        {
+            ModuleSequenceBoost = ["B", "C"],
+        });
+
+        var boosted = ModuleRunner.SortModulesByDependency(modules);
+
+        // Assert
+        Assert.Equal(modules.Count, normal.Count);
+        Assert.Equal(modules.Count, boosted.Count);
+        Assert.Equal("F D E A B C", string.Join(" ", normal.Select(x => x.ModuleName)));
+        Assert.Equal("F D E B C A", string.Join(" ", boosted.Select(x => x.ModuleName)));
     }
 
     [Fact]
@@ -125,50 +200,6 @@ public class ModuleRunnerTests
         // Act, Assert
         Assert.Throws<CyclicDependencyFoundException>(() =>
             ModuleRunner.SortModulesByDependency(modules));
-    }
-
-    [Fact]
-    public void SortByDependency_Boost_CorrectOrder()
-    {
-        // Arrange
-        var modules = new List<ManifestModuleInfo>
-        {
-            CreateModule("A"),
-            CreateModule("B"),
-            CreateModule("C"),
-        };
-
-        ModuleRunner.Initialize(new ModuleSequenceBoostOptions
-        {
-            ModuleSequenceBoost = ["B"],
-        });
-
-        // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
-
-        // Assert
-        Assert.Equal(3, sorted.Count);
-        Assert.Equal("B A C", string.Join(" ", sorted.Select(x => x.ModuleName)));
-    }
-
-    [Fact]
-    public void SortByDependency_MissingOptionalDependency_NoErrors()
-    {
-        // Arrange
-        var modules = new List<ManifestModuleInfo>
-        {
-            CreateModule("A", [CreateDependency("B"), CreateDependency("C", isOptional: true)]),
-            CreateModule("B"),
-        };
-
-        ModuleRunner.Initialize();
-
-        // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
-
-        // Assert
-        Assert.Equal(2, sorted.Count);
-        Assert.Equal("B A", string.Join(" ", sorted.Select(x => x.ModuleName)));
     }
 
 
