@@ -917,7 +917,7 @@
       "delete-confirm": {
         "warning": "警告：此更改是永久性的，无法撤销。应用此更改可能会导致数据丢失。",
         "message": "以下数据将被删除：",
-        "instruction": "请输入"yes"以删除："
+        "instruction": "请输入\"yes\"以删除："
       }
     },
     "commands": {
