@@ -678,6 +678,7 @@
         "filter-module": "Modul",
         "filter-all-modules": "Alle moduler",
         "filter-clear": "Fjern filtre",
+        "filter-show-tenant": "Vis leietakeregenskaper",
         "no-settings": "Ingen innstillinger samsvarer med gjeldende filtre.",
         "export-json": "Eksporter JSON",
         "import-json": "Importer JSON",

@@ -20,6 +20,13 @@
                     <option ng-repeat="m in blade.modules" value="{{m.id}}">{{m.id}}</option>
                 </select>
             </div>
+            <!--<div class="va-filter-panel__row" ng-if="!blade.isEntityMode">
+                <span class="va-filter-panel__label">{{ 'platform.blades.settings-unified.filter-show-tenant' | translate }}</span>
+                <label class="form-label __switch" style="margin: 0;">
+                    <input type="checkbox" ng-model="filter.showTenantProperties" ng-change="filter.criteriaChanged()">
+                    <span class="switch"></span>
+                </label>
+            </div>-->
         </va-filter-panel>
     </div>
 </div>
@@ -54,6 +61,9 @@
                             <label class="form-label">
                                 <span class="settings-property-modified" ng-if="!isDefaultValue(data)"></span>
                                 {{ data.translatedName }}
+                                <span class="settings-property-tenant-badge"
+                                      ng-if="!blade.isEntityMode && data.assignedToTenants.length"
+                                      title="Assigned to: {{data.assignedToTenants.join(', ')}}">{{data.assignedToTenants.join(', ')}}</span>
                                 <i class="form-ico fa fa-question-circle __link __lightblue" ng-click="data.descrVisible = !data.descrVisible;"></i>
                                 <i class="form-ico fa fa-rotate-left __link __blue"
                                    title="{{ 'platform.blades.settings-detail.reset-to-default' | translate }}"

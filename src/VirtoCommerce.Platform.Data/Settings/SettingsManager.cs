@@ -69,6 +69,29 @@ namespace VirtoCommerce.Platform.Data.Settings
             return _registeredTypeSettingsByNameDict[typeName] ?? [];
         }
 
+        public IDictionary<string, string[]> GetSettingTypeAssignments()
+        {
+            var result = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var kvp in _registeredTypeSettingsByNameDict)
+            {
+                var typeName = kvp.Key;
+                var settings = kvp.Value ?? [];
+
+                foreach (var setting in settings)
+                {
+                    if (!result.TryGetValue(setting.Name, out var types))
+                    {
+                        types = [];
+                        result[setting.Name] = types;
+                    }
+                    types.Add(typeName);
+                }
+            }
+
+            return result.ToDictionary(x => x.Key, x => x.Value.ToArray(), StringComparer.OrdinalIgnoreCase);
+        }
+
         public IEnumerable<SettingDescriptor> AllRegisteredSettings => _registeredSettingsByNameDict.Values;
 
         public void RegisterSettings(IEnumerable<SettingDescriptor> settings, string moduleId = null)

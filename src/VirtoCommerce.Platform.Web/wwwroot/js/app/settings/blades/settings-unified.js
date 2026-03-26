@@ -93,12 +93,14 @@ angular.module('platformWebApp')
             $scope.filter = {
                 modifiedOnly: false,
                 moduleId: '',
+                showTenantProperties: false,
                 hasActiveFilters: function () {
-                    return this.modifiedOnly || this.moduleId !== '';
+                    return this.modifiedOnly || this.moduleId !== '' || this.showTenantProperties;
                 },
                 clearFilters: function () {
                     this.modifiedOnly = false;
                     this.moduleId = '';
+                    this.showTenantProperties = false;
                     applyFilters();
                 },
                 criteriaChanged: function () {
@@ -207,6 +209,7 @@ angular.module('platformWebApp')
                         isDictionary: schema.isDictionary,
                         isLocalizable: schema.isLocalizable,
                         restartRequired: schema.restartRequired,
+                        assignedToTenants: schema.assignedToTenants || [],
                         value: value,
                         values: settingsHelper.getSettingValues({ isDictionary: schema.isDictionary, value: value })
                     };
@@ -350,6 +353,13 @@ angular.module('platformWebApp')
             function applyFilters() {
                 var settings = blade.mergedSettings;
 
+                // In global mode, hide tenant-assigned properties unless filter is on
+                if (!blade.isEntityMode && !$scope.filter.showTenantProperties) {
+                    settings = _.filter(settings, function (s) {
+                        return !s.assignedToTenants || s.assignedToTenants.length === 0;
+                    });
+                }
+
                 if ($scope.filter.moduleId) {
                     settings = _.filter(settings, function (s) { return s.moduleId === $scope.filter.moduleId; });
                 }
@@ -423,6 +433,7 @@ angular.module('platformWebApp')
             $scope.$watch('blade.searchText', function () { applyFilters(); });
             $scope.$watch('filter.modifiedOnly', function () { applyFilters(); });
             $scope.$watch('filter.moduleId', function () { applyFilters(); });
+            $scope.$watch('filter.showTenantProperties', function () { applyFilters(); });
 
             // ================================================================
             // Dirty checking

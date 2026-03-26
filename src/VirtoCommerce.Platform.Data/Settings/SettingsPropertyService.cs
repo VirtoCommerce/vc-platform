@@ -60,7 +60,10 @@ namespace VirtoCommerce.Platform.Data.Settings
             // Sort by group then name
             query = query.OrderBy(x => x.GroupName).ThenBy(x => x.Name);
 
-            var result = query.Select(descriptor => MapToSchema(descriptor, tenantType)).ToList();
+            // Build type assignment map once for all descriptors
+            var typeAssignments = _settingsManager.GetSettingTypeAssignments();
+
+            var result = query.Select(descriptor => MapToSchema(descriptor, tenantType, typeAssignments)).ToList();
 
             return Task.FromResult<IReadOnlyList<SettingPropertySchema>>(result);
         }
@@ -142,7 +145,10 @@ namespace VirtoCommerce.Platform.Data.Settings
             return _settingsManager.AllRegisteredSettings.Where(x => !x.IsHidden);
         }
 
-        private SettingPropertySchema MapToSchema(SettingDescriptor descriptor, string tenantType)
+        private SettingPropertySchema MapToSchema(
+            SettingDescriptor descriptor,
+            string tenantType,
+            IDictionary<string, string[]> typeAssignments)
         {
             var isReadOnly = _overrideProvider.TryGetCurrentValue(descriptor, tenantType, null, out _);
 
@@ -159,7 +165,8 @@ namespace VirtoCommerce.Platform.Data.Settings
                 IsReadOnly = isReadOnly,
                 IsDictionary = descriptor.IsDictionary,
                 IsLocalizable = descriptor.IsLocalizable,
-                RestartRequired = descriptor.RestartRequired
+                RestartRequired = descriptor.RestartRequired,
+                AssignedToTenants = typeAssignments.TryGetValue(descriptor.Name, out var types) ? types : []
             };
         }
 

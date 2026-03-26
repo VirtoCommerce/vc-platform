@@ -677,6 +677,7 @@
         "filter-module": "モジュール",
         "filter-all-modules": "すべてのモジュール",
         "filter-clear": "フィルターをクリア",
+        "filter-show-tenant": "テナントプロパティを表示",
         "no-settings": "現在のフィルターに一致する設定はありません。",
         "export-json": "JSONエクスポート",
         "import-json": "JSONインポート",

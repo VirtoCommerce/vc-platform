@@ -677,6 +677,7 @@
         "filter-module": "Module",
         "filter-all-modules": "Tous les modules",
         "filter-clear": "Effacer les filtres",
+        "filter-show-tenant": "Afficher les propriétés du locataire",
         "no-settings": "Aucun paramètre ne correspond aux filtres actuels.",
         "export-json": "Exporter JSON",
         "import-json": "Importer JSON",

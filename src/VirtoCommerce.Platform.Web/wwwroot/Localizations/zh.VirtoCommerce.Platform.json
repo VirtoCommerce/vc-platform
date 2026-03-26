@@ -677,6 +677,7 @@
         "filter-module": "模块",
         "filter-all-modules": "所有模块",
         "filter-clear": "清除筛选",
+        "filter-show-tenant": "显示租户属性",
         "no-settings": "没有设置匹配当前筛选条件。",
         "export-json": "导出 JSON",
         "import-json": "导入 JSON",

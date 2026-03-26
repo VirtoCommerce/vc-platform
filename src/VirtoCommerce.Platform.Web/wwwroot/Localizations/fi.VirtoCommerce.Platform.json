@@ -678,6 +678,7 @@
         "filter-module": "Moduuli",
         "filter-all-modules": "Kaikki moduulit",
         "filter-clear": "Tyhjennä suodattimet",
+        "filter-show-tenant": "Näytä vuokralaisen ominaisuudet",
         "no-settings": "Yksikään asetus ei vastaa nykyisiä suodattimia.",
         "export-json": "Vie JSON",
         "import-json": "Tuo JSON",

@@ -47,5 +47,11 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// Application restart is needed after changing this setting
         /// </summary>
         public bool RestartRequired { get; set; }
+
+        /// <summary>
+        /// Tenant types this setting is registered for via RegisterSettingsForType
+        /// (e.g., ["Store"]). Empty array if global-only.
+        /// </summary>
+        public string[] AssignedToTenants { get; set; } = [];
     }
 }
