@@ -714,8 +714,6 @@ Styles are split across two SASS modules (compiled into the platform's main them
 3. Entity settings widget now opens the unified blade with `isEntityMode: true`
 4. In a future major version, V1 blade and old endpoints can be deprecated
 
----
-
 ## Files Reference
 
 ### New Backend Files
