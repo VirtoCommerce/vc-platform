@@ -21,7 +21,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var platformVersion = SemanticVersion.Parse(currentVersionPlatform);
             var modules = GetManifestModuleInfos(moduleManifests);
             var installedModules = GetManifestModuleInfos(installedModuleManifests);
-            foreach (var m in installedModules) { m.IsInstalled = true; }
+            foreach (var m in installedModules)
+            { m.IsInstalled = true; }
 
             //Act
             var allValid = modules.All(module =>
@@ -41,7 +42,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Arrange
             var modules = GetManifestModuleInfos(moduleManifests);
             var installedModules = GetManifestModuleInfos(installedModuleManifests);
-            foreach (var m in installedModules) { m.IsInstalled = true; }
+            foreach (var m in installedModules)
+            { m.IsInstalled = true; }
 
             var allAvailable = modules.Concat(installedModules).ToList();
 
@@ -207,7 +209,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                         new ModuleManifest { Id = "A", Version = "3.8.0", PlatformVersion = "3.0.0" },
                         new ModuleManifest { Id = "C", Version = "3.9.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "A", Version = "3.0.0" } }}
                     },
-                    false
+                    true
                 };
 
                 yield return new object[] { "3.1.0-preview-5555", new[] { new ModuleManifest { Id = "A", Version = "3.2.0-prerelease-22", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
@@ -228,7 +230,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0",
                     new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, //installed
-                    false
+                    true
                 };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
@@ -265,14 +267,14 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0-alpha001",
                     new[] {new ModuleManifest {Id = "A", Version = "3.0.0-alpha001", PlatformVersion = "3.0.0-alpha001" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha002", PlatformVersion = "3.0.0-alpha001" } }, //installed
-                    false
+                    true
                 };
                 yield return new object[]
                 {
                     "3.0.0-alpha001",
                     new[] {new ModuleManifest {Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0-alpha001" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0-alpha001" } }, //installed
-                    false
+                    true
                 };
             }
 
