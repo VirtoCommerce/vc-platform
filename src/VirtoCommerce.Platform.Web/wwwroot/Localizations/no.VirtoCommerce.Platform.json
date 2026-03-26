@@ -907,13 +907,11 @@
       },
       "session-terminate": {
         "title": "Avslutt økt",
-        "message": "Er du sikker på at du vil avslutte denne økten?",
-        "session": "{{count}} økt(er)"
+        "message": "Er du sikker på at du vil avslutte denne økten?"
       },
       "sessions-terminate-all": {
         "title": "Avslutt alle",
-        "message": "Er du sikker på at du vil avslutte alle brukerøkter?",
-        "session": "{{count}} økt(er)"
+        "message": "Er du sikker på at du vil avslutte alle brukerøkter?"
       },
       "delete-confirm": {
         "warning": "ADVARSEL: Denne endringen er permanent og kan ikke angres. Å bruke denne endringen kan føre til tap av data.",

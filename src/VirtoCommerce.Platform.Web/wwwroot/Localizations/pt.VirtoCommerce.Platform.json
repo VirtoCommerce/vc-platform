@@ -906,13 +906,11 @@
       },
       "session-terminate": {
         "title": "Encerrar sessão",
-        "message": "Tem certeza de que deseja encerrar esta sessão?",
-        "session": "{{count}} sessão(ões)"
+        "message": "Tem certeza de que deseja encerrar esta sessão?"
       },
       "sessions-terminate-all": {
         "title": "Encerrar todas",
-        "message": "Tem certeza de que deseja encerrar todas as sessões de usuário?",
-        "session": "{{count}} sessão(ões)"
+        "message": "Tem certeza de que deseja encerrar todas as sessões de usuário?"
       },
       "delete-confirm": {
         "warning": "AVISO: Esta alteração é permanente e não pode ser desfeita. A aplicação desta alteração pode resultar na perda de dados.",

@@ -907,13 +907,11 @@
       },
       "session-terminate": {
         "title": "Lopeta istunto",
-        "message": "Haluatko varmasti lopettaa tämän istunnon?",
-        "session": "{{count}} istunto(a)"
+        "message": "Haluatko varmasti lopettaa tämän istunnon?"
       },
       "sessions-terminate-all": {
         "title": "Lopeta kaikki",
-        "message": "Haluatko varmasti lopettaa kaikki käyttäjäistunnot?",
-        "session": "{{count}} istunto(a)"
+        "message": "Haluatko varmasti lopettaa kaikki käyttäjäistunnot?"
       },
       "delete-confirm": {
         "warning": "VAROITUS: Tämä muutos on pysyvä eikä sitä voi perua. Muutoksen toteuttaminen voi johtaa tietojen menetykseen.",

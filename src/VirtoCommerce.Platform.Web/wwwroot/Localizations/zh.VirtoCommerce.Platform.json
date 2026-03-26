@@ -906,13 +906,11 @@
       },
       "session-terminate": {
         "title": "终止会话",
-        "message": "您确定要终止此会话吗？",
-        "session": "{{count}} 个会话"
+        "message": "您确定要终止此会话吗？"
       },
       "sessions-terminate-all": {
         "title": "终止所有",
-        "message": "您确定要终止所有用户会话吗？",
-        "session": "{{count}} 个会话"
+        "message": "您确定要终止所有用户会话吗？"
       },
       "delete-confirm": {
         "warning": "警告：此更改是永久性的，无法撤销。应用此更改可能会导致数据丢失。",

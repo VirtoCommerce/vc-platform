@@ -907,13 +907,11 @@
       },
       "session-terminate": {
         "title": "Avsluta session",
-        "message": "Är du säker på att du vill avsluta denna session?",
-        "session": "{{count}} session(er)"
+        "message": "Är du säker på att du vill avsluta denna session?"
       },
       "sessions-terminate-all": {
         "title": "Avsluta alla",
-        "message": "Är du säker på att du vill avsluta alla användarsessioner?",
-        "session": "{{count}} session(er)"
+        "message": "Är du säker på att du vill avsluta alla användarsessioner?"
       },
       "delete-confirm": {
         "warning": "VARNING: Denna ändring är permanent och kan inte ångras. Att tillämpa denna ändring kan leda till dataförlust.",

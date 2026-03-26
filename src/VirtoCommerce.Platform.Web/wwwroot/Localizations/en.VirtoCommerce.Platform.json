@@ -908,13 +908,11 @@
       },
       "session-terminate": {
         "title": "Terminate session",
-        "message": "Are you sure you want to terminate this session?",
-        "session": "{{count}} session(s)"
+        "message": "Are you sure you want to terminate this session?"
       },
       "sessions-terminate-all": {
         "title": "Terminate all",
-        "message": "Are you sure you want to terminate all user sessions?",
-        "session": "{{count}} session(s)"
+        "message": "Are you sure you want to terminate all user sessions?"
       },
       "delete-confirm": {
         "warning": "WARNING: This change is permanent and cannot be undone. Applying this change may result in data loss.",

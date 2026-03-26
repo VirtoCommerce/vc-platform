@@ -906,13 +906,11 @@
       },
       "session-terminate": {
         "title": "Termina sessione",
-        "message": "Sei sicuro di voler terminare questa sessione?",
-        "session": "{{count}} sessione(i)"
+        "message": "Sei sicuro di voler terminare questa sessione?"
       },
       "sessions-terminate-all": {
         "title": "Termina tutte",
-        "message": "Sei sicuro di voler terminare tutte le sessioni utente?",
-        "session": "{{count}} sessione(i)"
+        "message": "Sei sicuro di voler terminare tutte le sessioni utente?"
       },
       "delete-confirm": {
         "warning": "AVVISO: Questa modifica è permanente e non può essere annullata. L'applicazione di questa modifica può comportare la perdita di dati.",

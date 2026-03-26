@@ -12,7 +12,7 @@
         </div>
         <div class="modal-window__message-container">
             <div class="modal-window__dialog-message"><b>{{ 'platform.dialogs.delete-confirm.warning' | translate }}</b></div>
-            <div class="modal-window__dialog-message" ng-if="name && !data.length">{{ message | translate: messageValues }} '{{ name }}'?</div>
+            <div class="modal-window__dialog-message" ng-if="name && !data.length">{{ message | translate: messageValues }} '{{ name }}'</div>
             <div class="modal-window__dialog-message" ng-if="data.length">{{ 'platform.dialogs.delete-confirm.message' | translate }}</div>
             <div class="modal-window__dialog-message" ng-if="data.length">
                 <ul>

@@ -906,18 +906,16 @@
       },
       "session-terminate": {
         "title": "Zakończ sesję",
-        "message": "Czy na pewno chcesz zakończyć tę sesję?",
-        "session": "{{count}} sesja(e)"
+        "message": "Czy na pewno chcesz zakończyć tę sesję?"
       },
       "sessions-terminate-all": {
         "title": "Zakończ wszystkie",
-        "message": "Czy na pewno chcesz zakończyć wszystkie sesje użytkowników?",
-        "session": "{{count}} sesja(e)"
+        "message": "Czy na pewno chcesz zakończyć wszystkie sesje użytkowników?"
       },
       "delete-confirm": {
         "warning": "OSTRZEŻENIE: Ta zmiana jest trwała i nie można jej cofnąć. Zastosowanie tej zmiany może spowodować utratę danych.",
         "message": "Następujące dane zostaną usunięte:",
-        "instruction": "Wpisz „yes", aby usunąć:"
+        "instruction": "Wpisz 'yes', aby usunąć:"
       }
     },
     "commands": {

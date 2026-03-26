@@ -906,13 +906,11 @@
       },
       "session-terminate": {
         "title": "Terminar sesión",
-        "message": "¿Está seguro de que desea terminar esta sesión?",
-        "session": "{{count}} sesión(es)"
+        "message": "¿Está seguro de que desea terminar esta sesión?"
       },
       "sessions-terminate-all": {
         "title": "Terminar todas",
-        "message": "¿Está seguro de que desea terminar todas las sesiones de usuario?",
-        "session": "{{count}} sesión(es)"
+        "message": "¿Está seguro de que desea terminar todas las sesiones de usuario?"
       },
       "delete-confirm": {
         "warning": "ADVERTENCIA: Este cambio es permanente y no se puede deshacer. Aplicar este cambio puede provocar la pérdida de datos.",
