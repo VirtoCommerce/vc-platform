@@ -45,6 +45,7 @@ angular.module('platformWebApp')
                 id: "confirmDelete",
                 title: "platform.dialogs.api-key-delete.title",
                 message: "platform.dialogs.api-key-delete.message",
+                name: blade.currentEntity.name || blade.currentEntity.id,
                 callback: function (remove) {
                     if (remove) {
                         accounts.deleteUserApiKey({ ids: blade.currentEntity.id });
@@ -52,7 +53,7 @@ angular.module('platformWebApp')
                     }
                 }
             }
-            dialogService.showConfirmationDialog(dialog);
+            dialogService.showDeleteConfirmationDialog(dialog);
         }
 
         blade.headIcon = 'fas fa-key';
