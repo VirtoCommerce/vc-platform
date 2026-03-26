@@ -10,7 +10,8 @@ angular.module('platformWebApp')
                 searchText: '=?',
                 hideSearch: '=?',
                 searchPlaceholder: '@?',
-                filterTitle: '@?'
+                filterTitle: '@?',
+                hideFilter: '=?'
             },
             link: function (scope, element) {
                 scope.showPanel = false;

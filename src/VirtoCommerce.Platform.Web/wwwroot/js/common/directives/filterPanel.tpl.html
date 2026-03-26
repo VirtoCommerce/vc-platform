@@ -1,5 +1,5 @@
 <div class="va-filter-bar">
-    <div class="va-filter-wrap">
+    <div class="va-filter-wrap" ng-if="!hideFilter">
         <button type="button" class="btn __va-filter"
                 ng-class="{'__active': hasActiveFilters()}"
                 ng-click="togglePanel($event)"

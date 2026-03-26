@@ -1,15 +1,30 @@
 // Reusable filter panel directive (va-filter-panel)
 // Provides: filter button with badge, popup panel with rows, search input
 // Used by: settings-unified blade, notification journal, and other blades
+//
+// Width control:
+//   By default the filter bar stretches to 100% of its container.
+//   Override on the host element to constrain it:
+//     <va-filter-panel style="width: 400px"> — fixed width (e.g. settings blade)
+//     <va-filter-panel style="width: 100%">  — full width (default, e.g. users blade)
+
+va-filter-panel
+    display: block
+    width: 100%
 
 .va-filter-bar
     display: flex
     align-items: center
+    width: 100%
+    > .form-input.__search
+        flex: 1 1 auto
+        min-width: 0
 
 .va-filter-wrap
     position: relative
     margin-right: 6px
     margin-top: 2px
+    flex-shrink: 0
 
 .btn.__va-filter
     height: 34px
@@ -23,7 +38,7 @@
     background: transparent
     color: #999
     position: relative
-    padding: 0 8px
+    padding: 0 11px
     cursor: pointer
     &:hover
         color: #555

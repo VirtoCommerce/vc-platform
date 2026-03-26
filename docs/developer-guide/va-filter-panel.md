@@ -66,6 +66,7 @@ That's it. The directive handles panel toggle, badge indicator, outside-click-to
 | `hide-search` | `=?` (bool) | No | Set to `true` to hide the built-in search input. Default: `false`. |
 | `search-placeholder` | `@?` (string) | No | Custom placeholder text for the search input. Default: localized "Search keyword..." |
 | `filter-title` | `@?` (string) | No | Tooltip text for the filter button. |
+| `hide-filter` | `=?` (bool) | No | Set to `true` to hide the filter button and popup panel entirely. Useful for blades that only need the search input without any filter controls. Default: `false`. |
 
 ### Transclusion
 
@@ -331,6 +332,27 @@ filter.criteriaChanged = function () {
 - Remove `.journal-filter-*` CSS from `Content/css/styles.css` (lines 1-157)
 - Remove `filter.showPanel`, `filter.togglePanel` from the controller
 - Remove the `angular.element(document).on('click', closePanel)` block from the controller
+
+### Search-Only (No Filter Button)
+
+Use `hide-filter="true"` when a blade only needs a keyword search with no filter controls (e.g., the Role list blade):
+
+```html
+<va-filter-panel
+    hide-filter="true"
+    search-text="blade.searchText">
+</va-filter-panel>
+```
+
+```javascript
+blade.searchText = '';
+$scope.$watch('blade.searchText', function (newVal, oldVal) {
+    if (newVal !== oldVal) {
+        filter.keyword = newVal;
+        filter.criteriaChanged();
+    }
+});
+```
 
 ### Filter-Only (No Search)
 
