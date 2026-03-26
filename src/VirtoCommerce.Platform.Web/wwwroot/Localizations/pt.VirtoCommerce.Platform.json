@@ -678,6 +678,7 @@
         "filter-all-modules": "Todos os módulos",
         "filter-clear": "Limpar filtros",
         "filter-show-tenant": "Mostrar propriedades do inquilino",
+        "copy-link": "Copiar link para a seção",
         "no-settings": "Nenhuma configuração corresponde aos filtros atuais.",
         "export-json": "Exportar JSON",
         "import-json": "Importar JSON",

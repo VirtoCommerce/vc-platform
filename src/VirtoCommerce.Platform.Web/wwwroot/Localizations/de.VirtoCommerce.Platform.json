@@ -680,6 +680,7 @@
         "filter-all-modules": "Alle Module",
         "filter-clear": "Filter zurücksetzen",
         "filter-show-tenant": "Mandanteneigenschaften anzeigen",
+        "copy-link": "Link zum Abschnitt kopieren",
         "no-settings": "Keine Einstellungen entsprechen den aktuellen Filtern.",
         "export-json": "JSON exportieren",
         "import-json": "JSON importieren",

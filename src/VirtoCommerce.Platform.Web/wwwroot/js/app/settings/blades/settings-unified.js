@@ -1,9 +1,9 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.settingsUnifiedController', [
-        '$scope', '$q', '$translate', '$transitions', 'platformWebApp.settingsV2', 'platformWebApp.settings.helper',
+        '$scope', '$q', '$translate', '$transitions', '$state', '$stateParams', 'platformWebApp.settingsV2', 'platformWebApp.settings.helper',
         'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modulesApi',
         'platformWebApp.changeLogApi', 'platformWebApp.WaitForRestart', '$timeout',
-        function ($scope, $q, $translate, $transitions, settingsV2, settingsHelper, bladeNavigationService, dialogService, modulesApi, changeLogApi, waitForRestart, $timeout) {
+        function ($scope, $q, $translate, $transitions, $state, $stateParams, settingsV2, settingsHelper, bladeNavigationService, dialogService, modulesApi, changeLogApi, waitForRestart, $timeout) {
             var blade = $scope.blade;
             blade.updatePermission = 'platform:setting:update';
             blade.headIcon = 'fa fa-wrench';
@@ -179,6 +179,11 @@ angular.module('platformWebApp')
 
                 applyFilters();
                 blade.isLoading = false;
+
+                // Deep link: scroll to target section or setting from URL params.
+                // The blade defaults to "All Settings" with all properties visible,
+                // so no tree selection or ancestor expansion is needed — just scroll.
+                scrollToDeepLink();
             }
 
             // Helper to extract the current value from a merged setting object
@@ -428,6 +433,17 @@ angular.module('platformWebApp')
 
                 blade.filteredSettings = grouped;
                 blade.visibleGroupNames = _.keys(grouped).sort();
+
+                // Build reverse map: display group name → raw groupName (for deep link data attributes)
+                blade.filteredSettingsGroupMap = {};
+                _.each(settings, function (s) {
+                    var displayKey = !s.groupName
+                        ? 'General'
+                        : showFullPath
+                            ? s.groupName.replace(/\|/g, ' > ')
+                            : s.groupName.split('|').pop();
+                    blade.filteredSettingsGroupMap[displayKey] = s.groupName;
+                });
             }
 
             $scope.$watch('blade.searchText', function () { applyFilters(); });
@@ -555,6 +571,40 @@ angular.module('platformWebApp')
 
             $scope.getDictionaryValues = function (setting, callback) {
                 callback(setting.allowedValues);
+            };
+
+            // ================================================================
+            // Deep linking & Copy link
+            // ================================================================
+
+            function scrollToDeepLink() {
+                if (!$stateParams.group && !$stateParams.setting) {
+                    return;
+                }
+                // Wait for DOM to render after digest cycle
+                $timeout(function () {
+                    var scrollTarget = null;
+                    if ($stateParams.setting) {
+                        scrollTarget = document.querySelector('[data-setting-name="' + $stateParams.setting + '"]');
+                    } else if ($stateParams.group) {
+                        scrollTarget = document.querySelector('[data-group-name="' + $stateParams.group + '"]');
+                    }
+                    if (scrollTarget) {
+                        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        angular.element(scrollTarget).addClass('__highlight');
+                        $timeout(function () {
+                            angular.element(scrollTarget).removeClass('__highlight');
+                        }, 2000);
+                    }
+                }, 300);
+            }
+
+            $scope.copyGroupLink = function (groupName) {
+                if (!groupName) {
+                    return;
+                }
+                var url = $state.href('workspace.settings', { group: groupName }, { absolute: true });
+                navigator.clipboard.writeText(url);
             };
 
             // ================================================================

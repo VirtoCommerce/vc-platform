@@ -3,7 +3,7 @@ angular.module("platformWebApp")
         ['$stateProvider', '$provide', function ($stateProvider, $provide) {
             $stateProvider
                 .state('workspace.settings', {
-                    url: '/settings',
+                    url: '/settings?group&setting',
                     templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
                     controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                         var blade = {

@@ -679,6 +679,7 @@
         "filter-all-modules": "Alla moduler",
         "filter-clear": "Rensa filter",
         "filter-show-tenant": "Visa hyresgästegenskaper",
+        "copy-link": "Kopiera länk till avsnitt",
         "no-settings": "Inga inställningar matchar de aktuella filtren.",
         "export-json": "Exportera JSON",
         "import-json": "Importera JSON",

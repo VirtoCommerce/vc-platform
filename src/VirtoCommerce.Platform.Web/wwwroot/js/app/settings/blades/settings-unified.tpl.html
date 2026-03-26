@@ -55,9 +55,12 @@
                     <div ng-if="blade.visibleGroupNames.length === 0" class="form-group">
                         <span class="form-label">{{ 'platform.blades.settings-unified.no-settings' | translate }}</span>
                     </div>
-                    <fieldset ng-repeat="groupName in blade.visibleGroupNames">
-                        <legend>{{groupName}}</legend>
-                        <div class="list __info form-group" ng-repeat="data in blade.filteredSettings[groupName]">
+                    <fieldset ng-repeat="groupName in blade.visibleGroupNames" data-group-name="{{blade.filteredSettingsGroupMap[groupName]}}">
+                        <legend>{{groupName}}<i class="fa fa-link settings-copy-link"
+                               ng-if="!blade.isEntityMode"
+                               title="{{ 'platform.blades.settings-unified.copy-link' | translate }}"
+                               ng-click="copyGroupLink(blade.filteredSettingsGroupMap[groupName])"></i></legend>
+                        <div class="list __info form-group" ng-repeat="data in blade.filteredSettings[groupName]" data-setting-name="{{data.name}}">
                             <label class="form-label">
                                 <span class="settings-property-modified" ng-if="!isDefaultValue(data)"></span>
                                 {{ data.translatedName }}

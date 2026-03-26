@@ -12,6 +12,9 @@ Settings V2 introduces a modernized settings experience inspired by Visual Studi
 - **Inline JSON editor** -- edit all settings as raw JSON with CodeMirror (syntax highlighting, folding, validation)
 - **Reusable blade** -- same controller works for global settings, store settings, payment settings, and custom entities
 - **Filter & search** -- filter popup (modified only, by module) + keyword search across names, values, and groups
+- **Tenant property labels** -- in global view, settings assigned to tenants (e.g., Store) show a gray badge and can be hidden via filter
+- **Deep linking** -- shareable URLs that scroll to a specific section or property (`?group=...&setting=...`)
+- **Copy link** -- hover over a section legend to copy a direct link to clipboard
 - **Dirty tracking** -- unsaved changes prompt on navigation, save button disabled until changes detected
 - **Backward compatible** -- existing v1 API and UI remain fully functional
 
@@ -129,7 +132,8 @@ GET /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/schema
     "isReadOnly": false,
     "isDictionary": true,
     "isLocalizable": false,
-    "restartRequired": false
+    "restartRequired": false,
+    "assignedToTenants": []
   },
   {
     "name": "VirtoCommerce.Search.IndexingJobs.Enable",
@@ -143,7 +147,8 @@ GET /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/schema
     "isReadOnly": false,
     "isDictionary": false,
     "isLocalizable": false,
-    "restartRequired": true
+    "restartRequired": true,
+    "assignedToTenants": []
   },
   {
     "name": "VirtoCommerce.Store.EnablePriceRounding",
@@ -157,7 +162,8 @@ GET /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/schema
     "isReadOnly": false,
     "isDictionary": false,
     "isLocalizable": false,
-    "restartRequired": false
+    "restartRequired": false,
+    "assignedToTenants": ["Store"]
   }
 ]
 ```
@@ -178,6 +184,7 @@ GET /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/schema
 | `isDictionary` | bool | Setting is an editable dictionary (list of values) |
 | `isLocalizable` | bool | Values can be localized |
 | `restartRequired` | bool | Application restart needed after change |
+| `assignedToTenants` | string[] | Tenant types this setting is registered for via `RegisterSettingsForType` (e.g., `["Store"]`). Empty array if global-only. |
 
 ---
 
@@ -495,6 +502,33 @@ Opens as a child blade showing all modified settings in the Settings Document fo
 
 In entity mode, **Save**, **Reset cache**, and **Restart** are hidden. The blade shows an **OK/Cancel** footer instead -- OK writes changes back to the parent entity's in-memory settings, Cancel closes without changes.
 
+### Deep Linking & Copy Link
+
+The settings blade supports URL-based deep linking via query parameters on the `workspace.settings` state:
+
+```
+#!/workspace/settings?group=VirtoCommerce.Search%7CIndexing
+#!/workspace/settings?setting=VirtoCommerce.Search.IndexingJobs.CronExpression
+#!/workspace/settings?group=Catalog%7CGeneral&setting=Catalog.ImageCategories
+```
+
+| Parameter | Purpose |
+|-----------|---------|
+| `group` | Pipe-delimited GroupName — scrolls to section legend |
+| `setting` | Setting Name — scrolls to specific property (hidden/programmatic, for use by external modules) |
+
+On load, the controller reads `$stateParams`, waits for DOM render, then calls `scrollIntoView()` on the matching `data-group-name` or `data-setting-name` element with a 2-second yellow highlight animation.
+
+**Copy link icon:** Each section legend shows a link icon on hover. Clicking it copies the absolute URL (with `?group=...`) to the clipboard via `navigator.clipboard.writeText()`. The icon uses `$state.href('workspace.settings', { group: groupName }, { absolute: true })` to generate the URL.
+
+### Tenant Property Labels (Global Mode)
+
+In global settings view, properties registered for tenant types via `RegisterSettingsForType()` display a gray pill badge (e.g., `Store`) next to the property label. The schema API returns `assignedToTenants` (e.g., `["Store"]`) for each property.
+
+By default, tenant-assigned properties are **hidden** in global view. A "Show tenant properties" toggle in the filter popup reveals them. This prevents clutter from store-specific settings in the global settings list.
+
+In entity mode, the toggle and badges are hidden (all properties are relevant to that entity).
+
 ### Dirty Tracking & Navigation Guard
 
 - `isDirty()` compares each setting's current `values[0].value` against a snapshot taken at load time via `getSettingCurrentValue()`
@@ -593,6 +627,9 @@ Styles are split across two SASS modules (compiled into the platform's main them
 | `.settings-properties-panel` | Right properties panel (flex, 600px min, 18px legend font) |
 | `.stree-*` | Tree node (14px font), arrow, text, modified dot |
 | `.settings-property-modified` | Blue dot indicator on modified property labels |
+| `.settings-property-tenant-badge` | Gray pill badge showing tenant type (e.g., "Store") |
+| `.settings-copy-link` | Link icon on section legends (visible on hover) |
+| `.__highlight` | Yellow fade animation for deep link scroll targets |
 | `.__settings-unified` | Blade content width override (960px default, 1300px max when maximized) |
 
 ---
@@ -619,8 +656,10 @@ Styles are split across two SASS modules (compiled into the platform's main them
 - Reusable `<va-filter-panel>` directive (`filterPanel.js` + `.tpl.html` + `_va-filter-panel.sass`)
 - `_settings-unified.sass` styles (layout/tree/property only — filter styles in shared directive)
 - `settingsV2.js` Angular resource
-- New `workspace.settingsUnified` UI-Router state
+- New `workspace.settings` UI-Router state with `?group&setting` deep link params
 - Updated `entitySettingsWidget.js` with tenant type extraction helpers
+- `ISettingsRegistrar.GetSettingTenants()` for tenant assignment lookup
+- `SettingPropertySchema.AssignedToTenants` field
 
 ### Migration path
 
@@ -662,6 +701,8 @@ Styles are split across two SASS modules (compiled into the platform's main them
 | File | Change |
 |------|--------|
 | `ServiceCollectionExtensions.cs` | Register `ISettingsPropertyService` -> `SettingsPropertyService` |
-| `settings.js` | Add `workspace.settingsUnified` route, register scripts, toolbar commands, update main menu |
+| `ISettingsRegistrar.cs` | Add `GetSettingTenants()` method |
+| `SettingsManager.cs` | Implement `GetSettingTenants()` |
+| `settings.js` | Add `workspace.settings` route with `?group&setting` params, register scripts, toolbar commands, update main menu |
 | `entitySettingsWidget.js` | Use unified blade with `isEntityMode`, tenant type extraction helpers |
 | `main.sass` | Import `_va-filter-panel` before `_settings-unified` |

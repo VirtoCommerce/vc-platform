@@ -678,6 +678,7 @@
         "filter-all-modules": "Tutti i moduli",
         "filter-clear": "Cancella filtri",
         "filter-show-tenant": "Mostra propriétà tenant",
+        "copy-link": "Copia collegamento alla sezione",
         "no-settings": "Nessuna impostazione corrisponde ai filtri attuali.",
         "export-json": "Esporta JSON",
         "import-json": "Importa JSON",

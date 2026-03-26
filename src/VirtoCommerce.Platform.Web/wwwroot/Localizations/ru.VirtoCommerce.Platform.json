@@ -680,6 +680,7 @@
         "filter-all-modules": "Все модули",
         "filter-clear": "Сбросить фильтры",
         "filter-show-tenant": "Показать свойства арендатора",
+        "copy-link": "Копировать ссылку на раздел",
         "no-settings": "Нет настроек, соответствующих текущим фильтрам.",
         "export-json": "Экспорт JSON",
         "import-json": "Импорт JSON",

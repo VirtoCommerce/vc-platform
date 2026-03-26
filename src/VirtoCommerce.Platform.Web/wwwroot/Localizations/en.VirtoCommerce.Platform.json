@@ -680,6 +680,7 @@
         "filter-all-modules": "All Modules",
         "filter-clear": "Clear filters",
         "filter-show-tenant": "Show tenant properties",
+        "copy-link": "Copy link to section",
         "no-settings": "No settings match the current filters.",
         "export-json": "Export JSON",
         "import-json": "Import JSON",
