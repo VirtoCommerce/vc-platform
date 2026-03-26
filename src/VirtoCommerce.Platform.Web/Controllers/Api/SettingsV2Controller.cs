@@ -68,17 +68,28 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Update global settings values
+        /// Update global settings values.
+        /// When replaceAll is true, the dictionary is the complete set of desired modifications —
+        /// any currently-modified setting not in the dictionary is reset to its default value.
+        /// An empty dictionary with replaceAll=true resets all settings to defaults.
         /// </summary>
         [HttpPost("global/values")]
         [Authorize(PlatformConstants.Security.Permissions.SettingUpdate)]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SaveGlobalValues(
-            [FromBody] Dictionary<string, object> values)
+            [FromBody] Dictionary<string, object> values,
+            [FromQuery] bool replaceAll = false)
         {
+            if ((values == null || values.Count == 0) && !replaceAll)
+            {
+                return BadRequest("Request body must be a non-empty JSON object");
+            }
+
+            values ??= new Dictionary<string, object>();
+
             using (await AsyncLock.GetLockByKey("settings").LockAsync())
             {
-                await _settingsPropertyService.SaveValuesAsync(values);
+                await _settingsPropertyService.SaveValuesAsync(values, replaceAll: replaceAll);
             }
 
             return NoContent();
@@ -89,13 +100,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         #region Tenant endpoints
 
         /// <summary>
-        /// Get tenant settings schema (metadata only, no values)
+        /// Get tenant settings schema (metadata only, no values).
+        /// Schema depends only on tenantType registration, not on a specific tenant instance.
         /// </summary>
-        [HttpGet("tenant/{tenantType}/{tenantId}/schema")]
+        [HttpGet("tenant/{tenantType}/schema")]
         [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
         public async Task<ActionResult<IReadOnlyList<SettingPropertySchema>>> GetTenantSchema(
             string tenantType,
-            string tenantId,
             [FromQuery] string moduleId = null,
             [FromQuery] string keyword = null)
         {
@@ -122,7 +133,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Update tenant settings values
+        /// Update tenant settings values.
+        /// When replaceAll is true, the dictionary is the complete set of desired modifications —
+        /// any currently-modified setting not in the dictionary is reset to its default value.
         /// </summary>
         [HttpPost("tenant/{tenantType}/{tenantId}/values")]
         [Authorize(PlatformConstants.Security.Permissions.SettingUpdate)]
@@ -130,11 +143,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult> SaveTenantValues(
             string tenantType,
             string tenantId,
-            [FromBody] Dictionary<string, object> values)
+            [FromBody] Dictionary<string, object> values,
+            [FromQuery] bool replaceAll = false)
         {
+            if ((values == null || values.Count == 0) && !replaceAll)
+            {
+                return BadRequest("Request body must be a non-empty JSON object");
+            }
+
+            values ??= new Dictionary<string, object>();
+
             using (await AsyncLock.GetLockByKey("settings").LockAsync())
             {
-                await _settingsPropertyService.SaveValuesAsync(values, tenantType, tenantId);
+                await _settingsPropertyService.SaveValuesAsync(values, tenantType, tenantId, replaceAll);
             }
 
             return NoContent();

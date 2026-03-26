@@ -2,7 +2,7 @@
 
 ## Overview
 
-Settings V2 introduces a modernized settings experience inspired by Visual Studio 2026 Options dialog:
+Settings V2 introduces a modernized settings experience:
 
 - **Unified Settings Blade** -- single wide blade with left tree navigation + right properties panel
 - **Clean REST API** -- separates schema from values, returns only modified values
@@ -44,7 +44,7 @@ Settings scope is expressed in the URL path:
 | Global | `/api/platform/settings/v2/global/...` | `objectType=null, objectId=null` |
 | Tenant | `/api/platform/settings/v2/tenant/{tenantType}/{tenantId}/...` | `objectType=tenantType, objectId=tenantId` |
 
-Internally, `tenantType`/`tenantId` map to the existing `objectType`/`objectId` parameters in `ISettingsManager`. For tenant scope, the schema endpoint returns only settings registered for that type via `ISettingsRegistrar.RegisterSettingsForType()`.
+Internally, `tenantType`/`tenantId` map to the existing `objectType`/`objectId` parameters in `ISettingsManager`. The schema endpoint only requires `tenantType` (schema depends on type registration, not a specific instance). The values endpoints require both `tenantType` and `tenantId`.
 
 The `tenantType` is the **short type name** (e.g., `"Store"`), extracted from the fully-qualified .NET type name (e.g., `"VirtoCommerce.StoreModule.Core.Model.Store"`) by splitting on `.` and taking the last segment.
 
@@ -106,7 +106,7 @@ Returns property schema (metadata only, no values).
 **Endpoints:**
 ```
 GET /api/platform/settings/v2/global/schema
-GET /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/schema
+GET /api/platform/settings/v2/tenant/{tenantType}/schema
 ```
 
 **Query Parameters:**
@@ -233,15 +233,26 @@ Only settings whose current value differs from their schema `defaultValue` are r
 
 ### POST .../values
 
-Update property values. Send only the settings you want to change.
+Update property values. Two modes are supported:
+
+- **Merge mode** (default): only settings in the dictionary are updated. Other settings are untouched.
+- **Replace mode** (`replaceAll=true`): the dictionary is the complete set of desired modifications. Any currently-modified setting NOT in the dictionary is reset to its default value (DB row deleted). An empty dictionary resets all settings to defaults.
 
 **Endpoints:**
 ```
 POST /api/platform/settings/v2/global/values
+POST /api/platform/settings/v2/global/values?replaceAll=true
 POST /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/values
+POST /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/values?replaceAll=true
 ```
 
-**Request Body:**
+**Query Parameters:**
+
+| Param | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `replaceAll` | bool | No | `false` | When `true`, treat the dict as the complete set — reset absent modified settings to default |
+
+**Request Body (merge mode — update 3 settings):**
 
 ```json
 {
@@ -251,7 +262,29 @@ POST /api/platform/settings/v2/tenant/{tenantType}/{tenantId}/values
 }
 ```
 
+**Request Body (replace mode — keep only 1 modification, reset everything else):**
+
+```
+POST /api/platform/settings/v2/global/values?replaceAll=true
+```
+```json
+{
+  "VirtoCommerce.Search.IndexingJobs.Enable": false
+}
+```
+
+**Request Body (replace mode — reset ALL settings to defaults):**
+
+```
+POST /api/platform/settings/v2/global/values?replaceAll=true
+```
+```json
+{}
+```
+
 **Response `204 No Content`** on success.
+
+**Response `400`** when body is empty/null without `replaceAll=true`.
 
 **Response `400/500`** on validation error (e.g., unknown setting name).
 
@@ -301,7 +334,9 @@ For export/import/maintenance, settings values are wrapped in a JSON document en
 
 **Export flow:** `GET /values?modifiedOnly=true` -> client wraps in envelope -> browser file download.
 
-**Import flow:** User uploads `.json` file -> client extracts `settings` dict -> confirmation dialog -> `POST /values`.
+**Import flow:** User uploads `.json` file -> client extracts `settings` dict -> confirmation dialog -> `POST /values?replaceAll=true`. The file represents the complete set of desired modifications — any modified setting absent from the file is reset to default.
+
+**Edit as JSON flow:** Opens a CodeMirror editor with the current modified settings in document format. On save, sends `POST /values?replaceAll=true` — removing a property from the JSON resets it to default. Clearing `settings: {}` resets all to defaults.
 
 ---
 
@@ -469,12 +504,25 @@ The filter bar uses the platform's reusable `<va-filter-panel>` directive (`wwwr
 
 Controller: `platformWebApp.settingsJsonEditorController`
 
-Opens as a child blade showing all modified settings in the Settings Document format. Uses CodeMirror (same as the platform's Json value type editor) with:
+Opens as a child blade showing settings in the Settings Document format. Uses CodeMirror (same as the platform's Json value type editor) with:
 
 - Syntax highlighting, line numbers, code folding
 - **Format JSON** button (top-right, also `Ctrl+Alt+F`)
 - **JSON validation indicator** (red "Invalid JSON" / hidden when valid)
 - Save/Reset toolbar commands with dirty checking
+
+**Two operating modes:**
+
+| | API mode | Entity (in-memory) mode |
+|---|---|---|
+| **Load** | `GET /values?modifiedOnly=true` from REST API | Serialized from parent blade's `mergedSettings` (no API call) |
+| **What's shown** | All server-persisted modified values | All non-default properties + properties changed in current session |
+| **Save** | `POST /values?replaceAll=true` to REST API | Callback to parent blade's `onSaveJson(settingsDict)` |
+| **Remove property** | Resets to default (DB row deleted via `replaceAll`) | Resets to `defaultValue` in-memory |
+| **Empty `settings: {}`** | Resets ALL settings to defaults | Resets ALL settings to defaults in-memory |
+| **UI refresh** | Parent blade calls `blade.refresh()` | Parent replaces setting objects in `mergedSettings` to trigger `ngModel.$render()` |
+
+**Entity mode details:** When saving from the JSON editor, the parent blade iterates all `mergedSettings`. Properties present in the JSON dict get the new value. Properties **absent** from the dict are reset to `defaultValue`. Each setting object is cloned and replaced (not mutated) to force `va-generic-value-input` re-render, and `filteredSettings` is synced with the replacements.
 
 ### Toolbar Commands
 
@@ -485,7 +533,7 @@ Opens as a child blade showing all modified settings in the Settings Document fo
 | Save | `fas fa-save` | `platform:setting:update` | POST only dirty entries as `{ name: value }` |
 | Reset | `fa fa-undo` | -- | Revert to loaded values (re-fetches from API) |
 | Export JSON | `fa fa-download` | -- | Download modified settings as document file |
-| Import JSON | `fa fa-upload` | `platform:setting:update` | Upload JSON file, confirm, apply via POST |
+| Import JSON | `fa fa-upload` | `platform:setting:update` | Upload JSON file, confirm, apply via POST with `replaceAll=true` |
 | Edit as JSON | `fa fa-code` | -- | Open CodeMirror JSON editor child blade |
 | *separator* | | | |
 | Reset cache | `fa fa-eraser` | `cache:reset` | Clear platform cache |
@@ -496,11 +544,9 @@ Opens as a child blade showing all modified settings in the Settings Document fo
 | Command | Icon | Description |
 |---------|------|-------------|
 | Reset | `fa fa-undo` | Revert to loaded values |
-| Export JSON | `fa fa-download` | Download modified settings |
-| Import JSON | `fa fa-upload` | Upload and apply settings |
-| Edit as JSON | `fa fa-code` | Open JSON editor |
+| Edit as JSON | `fa fa-code` | Open in-memory JSON editor (shows non-default + dirty properties) |
 
-In entity mode, **Save**, **Reset cache**, and **Restart** are hidden. The blade shows an **OK/Cancel** footer instead -- OK writes changes back to the parent entity's in-memory settings, Cancel closes without changes.
+In entity mode, **Save**, **Export JSON**, **Import JSON**, **Reset cache**, and **Restart** are hidden. The blade shows an **OK/Cancel** footer instead -- OK writes changes back to the parent entity's in-memory settings, Cancel closes without changes. Export/Import are hidden because they would require API calls, breaking the in-memory contract.
 
 ### Deep Linking & Copy Link
 

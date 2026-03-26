@@ -1,10 +1,20 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.settingsJsonEditorController', [
-        '$scope', 'platformWebApp.settingsV2', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
-        function ($scope, settingsV2, bladeNavigationService, dialogService) {
+        '$scope', '$timeout', 'platformWebApp.settingsV2', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
+        function ($scope, $timeout, settingsV2, bladeNavigationService, dialogService) {
             var blade = $scope.blade;
             blade.headIcon = 'fa fa-code';
             blade.updatePermission = 'platform:setting:update';
+
+            // Two modes:
+            // 1. API mode (default): loads from API, saves via API with replaceAll=true
+            //    Requires: blade.tenantType/tenantId (optional) + blade.parentRefresh
+            // 2. In-memory mode: data provided by parent blade, saves via callback
+            //    Requires: blade.settingsData (JSON string) + blade.onSaveJson(settingsDict)
+            var isInMemoryMode = !!blade.settingsData;
+
+            var cmEditor = null;
+            var changeHandler = null;
 
             // CodeMirror options — same config as genericValueInput uses for Json valueType
             $scope.editorOptions = {
@@ -18,18 +28,16 @@ angular.module('platformWebApp')
                 foldGutter: true,
                 gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                 onLoad: function (_editor) {
+                    cmEditor = _editor;
                     injectFormatButton(_editor);
                 }
             };
 
-            // Add JSON lint if available
             if (typeof window.jsonlint !== 'undefined') {
                 $scope.editorOptions.lint = true;
                 $scope.editorOptions.gutters = ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"];
             }
 
-            // Inject Format JSON button + validation indicator into CodeMirror wrapper
-            // (same pattern as genericValueInput for Json properties)
             function injectFormatButton(_editor) {
                 var wrapper = angular.element(_editor.getWrapperElement());
                 wrapper.css('position', 'relative');
@@ -44,7 +52,6 @@ angular.module('platformWebApp')
                     gap: '5px'
                 });
 
-                // Validation status indicator
                 var statusIndicator = angular.element('<div class="json-btn status-indicator"></div>');
                 var commonStyle = {
                     padding: '2px 8px',
@@ -63,7 +70,6 @@ angular.module('platformWebApp')
                     justifyContent: 'center'
                 }));
 
-                // Format button
                 var formatBtn = angular.element('<button class="json-btn format-btn" title="Format JSON (Ctrl+Alt+F)">Format JSON</button>');
                 formatBtn.css(angular.extend({}, commonStyle, {
                     backgroundColor: '#43b0e6',
@@ -79,11 +85,11 @@ angular.module('platformWebApp')
                 container.append(formatBtn);
                 wrapper.prepend(container);
 
-                // Validate on change
-                _editor.on('change', function () {
+                changeHandler = function () {
                     updateIndicator(statusIndicator, _editor);
-                });
-                setTimeout(function () {
+                };
+                _editor.on('change', changeHandler);
+                $timeout(function () {
                     updateIndicator(statusIndicator, _editor);
                 }, 100);
             }
@@ -91,7 +97,10 @@ angular.module('platformWebApp')
             function updateIndicator(indicator, editor) {
                 try {
                     var content = editor.getValue();
-                    if (!content) { indicator.css('display', 'none'); return; }
+                    if (!content) {
+                        indicator.css('display', 'none');
+                        return;
+                    }
                     JSON.parse(content);
                     indicator.css({ backgroundColor: '#4CAF50', display: 'none' });
                     indicator.text('Valid JSON');
@@ -101,9 +110,27 @@ angular.module('platformWebApp')
                 }
             }
 
-            blade.refresh = function () {
-                blade.isLoading = true;
+            $scope.$on('$destroy', function () {
+                if (cmEditor && changeHandler) {
+                    cmEditor.off('change', changeHandler);
+                }
+            });
 
+            // ================================================================
+            // Load
+            // ================================================================
+
+            blade.refresh = function () {
+                if (isInMemoryMode) {
+                    // Data provided by parent — no API call
+                    blade.origJson = blade.settingsData;
+                    blade.currentJson = angular.copy(blade.origJson);
+                    blade.isLoading = false;
+                    return;
+                }
+
+                // API mode: load modified values from server
+                blade.isLoading = true;
                 var getPromise;
                 if (blade.tenantType && blade.tenantId) {
                     getPromise = settingsV2.getTenantValues({
@@ -119,7 +146,7 @@ angular.module('platformWebApp')
                     var doc = {
                         version: '1.0',
                         exportedAt: new Date().toISOString(),
-                        scope: blade.tenantType ? `tenant/${blade.tenantType}/${blade.tenantId}` : 'global',
+                        scope: blade.tenantType ? 'tenant/' + blade.tenantType + '/' + blade.tenantId : 'global',
                         settings: values
                     };
 
@@ -129,20 +156,33 @@ angular.module('platformWebApp')
                 });
             };
 
+            // ================================================================
+            // Save
+            // ================================================================
+
             blade.saveChanges = function () {
                 try {
                     var doc = JSON.parse(blade.currentJson);
                     var settingsToSave = doc.settings || doc;
 
-                    blade.isLoading = true;
+                    if (isInMemoryMode) {
+                        // In-memory mode: pass parsed settings back to parent via callback
+                        if (blade.onSaveJson) {
+                            blade.onSaveJson(settingsToSave);
+                        }
+                        blade.origJson = blade.currentJson;
+                        return;
+                    }
 
+                    // API mode: save with replaceAll=true
+                    blade.isLoading = true;
                     var savePromise;
                     if (blade.tenantType && blade.tenantId) {
                         savePromise = settingsV2.saveTenantValues(
-                            { tenantType: blade.tenantType, tenantId: blade.tenantId },
+                            { tenantType: blade.tenantType, tenantId: blade.tenantId, replaceAll: true },
                             settingsToSave).$promise;
                     } else {
-                        savePromise = settingsV2.saveGlobalValues({}, settingsToSave).$promise;
+                        savePromise = settingsV2.saveGlobalValues({ replaceAll: true }, settingsToSave).$promise;
                     }
 
                     savePromise.then(function () {

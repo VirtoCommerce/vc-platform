@@ -23,7 +23,7 @@ angular.module('platformWebApp')
                 return {
                     loadSchema: function () {
                         if (blade.tenantType && blade.tenantId) {
-                            return settingsV2.getTenantSchema({ tenantType: blade.tenantType, tenantId: blade.tenantId }).$promise;
+                            return settingsV2.getTenantSchema({ tenantType: blade.tenantType }).$promise;
                         }
                         return settingsV2.getGlobalSchema({}).$promise;
                     },
@@ -34,15 +34,12 @@ angular.module('platformWebApp')
                         return settingsV2.getGlobalValues({}).$promise;
                     },
                     saveValues: function (changedValues) {
-                        var savePromise;
                         if (blade.tenantType && blade.tenantId) {
-                            savePromise = settingsV2.saveTenantValues(
+                            return settingsV2.saveTenantValues(
                                 { tenantType: blade.tenantType, tenantId: blade.tenantId },
                                 changedValues).$promise;
-                        } else {
-                            savePromise = settingsV2.saveGlobalValues({}, changedValues).$promise;
                         }
-                        return savePromise;
+                        return settingsV2.saveGlobalValues({}, changedValues).$promise;
                     }
                 };
             }
@@ -50,11 +47,9 @@ angular.module('platformWebApp')
             function createEntityDataSource() {
                 return {
                     loadSchema: function () {
-                        // Schema always from API (need metadata like valueType, allowedValues, etc.)
-                        return settingsV2.getTenantSchema({ tenantType: blade.tenantType, tenantId: blade.tenantId }).$promise;
+                        return settingsV2.getTenantSchema({ tenantType: blade.tenantType }).$promise;
                     },
                     loadValues: function () {
-                        // Values from parent entity's in-memory settings array — no API call
                         var parentSettings = getParentEntitySettings();
                         var values = {};
                         _.each(parentSettings, function (s) {
@@ -63,7 +58,6 @@ angular.module('platformWebApp')
                         return $q.resolve(values);
                     },
                     saveValues: function (changedValues) {
-                        // Write back to parent entity's in-memory settings array — no API call
                         var parentSettings = getParentEntitySettings();
                         _.each(changedValues, function (value, name) {
                             var parentSetting = _.find(parentSettings, function (ps) { return ps.name === name; });
@@ -83,24 +77,23 @@ angular.module('platformWebApp')
                 return [];
             }
 
-            // Select data source based on mode
             dataSource = blade.isEntityMode ? createEntityDataSource() : createApiDataSource();
 
             // ================================================================
             // Filter state (panel toggle & outside-click handled by va-filter-panel directive)
             // ================================================================
 
-            $scope.filter = {
+            var filter = $scope.filter = {
                 modifiedOnly: false,
                 moduleId: '',
                 showTenantProperties: false,
                 hasActiveFilters: function () {
-                    return this.modifiedOnly || this.moduleId !== '' || this.showTenantProperties;
+                    return filter.modifiedOnly || filter.moduleId !== '' || filter.showTenantProperties;
                 },
                 clearFilters: function () {
-                    this.modifiedOnly = false;
-                    this.moduleId = '';
-                    this.showTenantProperties = false;
+                    filter.modifiedOnly = false;
+                    filter.moduleId = '';
+                    filter.showTenantProperties = false;
                     applyFilters();
                 },
                 criteriaChanged: function () {
@@ -128,18 +121,31 @@ angular.module('platformWebApp')
             // Load (uses dataSource)
             // ================================================================
 
+            var refreshGeneration = 0; // race condition guard
+
             blade.refresh = function () {
                 blade.isLoading = true;
+                var thisGeneration = ++refreshGeneration;
 
                 $q.all([dataSource.loadSchema(), dataSource.loadValues()]).then(function (results) {
+                    // Ignore stale results if a newer refresh was started
+                    if (thisGeneration !== refreshGeneration) {
+                        return;
+                    }
                     initializeBlade(results[0], results[1]);
                 }, function (error) {
-                    bladeNavigationService.setError('Error ' + error.status, blade);
+                    if (thisGeneration !== refreshGeneration) {
+                        return;
+                    }
+                    var msg = (error.data && error.data.message) ? error.data.message : ('Error ' + error.status);
+                    bladeNavigationService.setError(msg, blade);
                 });
             };
 
             function initializeBlade(schemas, values) {
-                // Filter by settingNames if provided (entity settings mode)
+                // Strip $resource metadata from values
+                values = angular.copy(values);
+
                 if (blade.settingNames && blade.settingNames.length) {
                     var nameSet = {};
                     _.each(blade.settingNames, function (n) { nameSet[n] = true; });
@@ -150,50 +156,40 @@ angular.module('platformWebApp')
                 blade.allValues = angular.copy(values);
                 blade.origValues = angular.copy(values);
 
-                // Extract unique modules for filter dropdown
                 blade.modules = _.chain(schemas).pluck('moduleId').compact().uniq().sortBy().map(function (id) {
                     return { id: id };
                 }).value();
 
-                // Merge schema + values into ObjectSettingEntry-compatible objects
                 blade.mergedSettings = mergeSchemaAndValues(schemas, values);
 
-                // Snapshot the initial values for dirty checking.
-                // Uses getSaveableValue() so the snapshot format matches what getChangedValues() compares.
-                // (Dictionary settings store { id, name } in values[0].value but save as just the id string.)
+                // Snapshot using getSaveableValue so format matches getChangedValues comparison
                 blade.origSettingValues = {};
                 _.each(blade.mergedSettings, function (s) {
                     blade.origSettingValues[s.name] = angular.copy(getSaveableValue(s));
                 });
 
-                // Translate display names
                 _.each(blade.mergedSettings, function (setting) {
-                    var translateKey = `settings.${setting.name}.title`;
+                    var translateKey = 'settings.' + setting.name + '.title';
                     var result = $translate.instant(translateKey);
                     setting.translatedName = result !== translateKey ? result : (setting.displayName || setting.name);
                 });
 
-                // Build flat tree for simple ng-repeat rendering
                 buildFlatTree(blade.mergedSettings);
-
-                // Compute modified count
                 updateModifiedCount();
-
                 applyFilters();
                 blade.isLoading = false;
 
-                // Deep link: scroll to target section or setting from URL params.
-                // The blade defaults to "All Settings" with all properties visible,
-                // so no tree selection or ancestor expansion is needed — just scroll.
                 scrollToDeepLink();
             }
 
-            // Helper to extract the current value from a merged setting object
-            function getSettingCurrentValue(setting) {
-                if (setting.values && setting.values.length) {
-                    return angular.copy(setting.values[0].value);
+            function getSaveableValue(setting) {
+                if (setting.isDictionary) {
+                    if (setting.values && setting.values[0] && setting.values[0].value) {
+                        return setting.values[0].value.id;
+                    }
+                    return setting.value;
                 }
-                return angular.copy(setting.value);
+                return (setting.values && setting.values[0]) ? setting.values[0].value : setting.value;
             }
 
             function mergeSchemaAndValues(schemas, values) {
@@ -226,6 +222,9 @@ angular.module('platformWebApp')
             // ================================================================
             // Tree building
             // ================================================================
+
+            // Lookup map: groupName -> node (for O(1) parent lookups in isNodeVisible)
+            var nodeByGroupName = {};
 
             function buildFlatTree(settings) {
                 var idCounter = 0;
@@ -283,6 +282,14 @@ angular.module('platformWebApp')
                 };
 
                 blade.flatTree = [allNode].concat(flatNodes);
+
+                // Build O(1) lookup map for parent traversal
+                nodeByGroupName = {};
+                _.each(blade.flatTree, function (node) {
+                    if (node.groupName) {
+                        nodeByGroupName[node.groupName] = node;
+                    }
+                });
             }
 
             // ================================================================
@@ -294,7 +301,7 @@ angular.module('platformWebApp')
                     return true;
                 }
 
-                var isFiltering = blade.searchText || $scope.filter.modifiedOnly || $scope.filter.moduleId;
+                var isFiltering = blade.searchText || filter.modifiedOnly || filter.moduleId;
                 if (isFiltering && blade.visibleNodeGroups && node.groupName) {
                     if (!blade.visibleNodeGroups[node.groupName]) {
                         return false;
@@ -305,9 +312,10 @@ angular.module('platformWebApp')
                     return true;
                 }
 
+                // Walk up parents using O(1) lookup map
                 var parentGroupName = node.parent;
                 while (parentGroupName) {
-                    var parentNode = _.find(blade.flatTree, function (n) { return n.groupName === parentGroupName; });
+                    var parentNode = nodeByGroupName[parentGroupName];
                     if (!parentNode || !parentNode.expanded) {
                         return false;
                     }
@@ -334,9 +342,11 @@ angular.module('platformWebApp')
                 return !settingsHelper.isDefaultValue(setting);
             };
 
+            // Pre-computed map: groupName -> hasModified (updated in updateModifiedCount)
+            var modifiedGroupMap = {};
+
             $scope.nodeHasModified = function (node) {
-                var nodeSettings = getSettingsForGroup(node.groupName);
-                return _.any(nodeSettings, function (s) { return !settingsHelper.isDefaultValue(s); });
+                return !!modifiedGroupMap[node.groupName];
             };
 
             function getSettingsForGroup(groupName) {
@@ -348,9 +358,22 @@ angular.module('platformWebApp')
             }
 
             function updateModifiedCount() {
-                blade.modifiedCount = _.filter(blade.mergedSettings, function (s) {
-                    return !settingsHelper.isDefaultValue(s);
-                }).length;
+                var count = 0;
+                modifiedGroupMap = {};
+
+                _.each(blade.mergedSettings, function (s) {
+                    if (!settingsHelper.isDefaultValue(s)) {
+                        count++;
+                        // Mark this group and all ancestor groups as having modified settings
+                        var gn = s.groupName || 'General';
+                        var segments = gn.split('|');
+                        for (var i = 1; i <= segments.length; i++) {
+                            modifiedGroupMap[segments.slice(0, i).join('|')] = true;
+                        }
+                    }
+                });
+
+                blade.modifiedCount = count;
             }
 
             // ================================================================
@@ -361,17 +384,17 @@ angular.module('platformWebApp')
                 var settings = blade.mergedSettings;
 
                 // In global mode, hide tenant-assigned properties unless filter is on
-                if (!blade.isEntityMode && !$scope.filter.showTenantProperties) {
+                if (!blade.isEntityMode && !filter.showTenantProperties) {
                     settings = _.filter(settings, function (s) {
                         return !s.assignedToTenants || s.assignedToTenants.length === 0;
                     });
                 }
 
-                if ($scope.filter.moduleId) {
-                    settings = _.filter(settings, function (s) { return s.moduleId === $scope.filter.moduleId; });
+                if (filter.moduleId) {
+                    settings = _.filter(settings, function (s) { return s.moduleId === filter.moduleId; });
                 }
 
-                if ($scope.filter.modifiedOnly) {
+                if (filter.modifiedOnly) {
                     settings = _.filter(settings, function (s) { return !settingsHelper.isDefaultValue(s); });
                 }
 
@@ -404,7 +427,7 @@ angular.module('platformWebApp')
                 });
                 blade.visibleNodeGroups = visibleNodeGroups;
 
-                var isFiltering = blade.searchText || $scope.filter.modifiedOnly || $scope.filter.moduleId;
+                var isFiltering = blade.searchText || filter.modifiedOnly || filter.moduleId;
                 if (isFiltering) {
                     _.each(blade.flatTree, function (node) {
                         if (node.hasChildren && node.groupName && visibleNodeGroups[node.groupName]) {
@@ -436,7 +459,7 @@ angular.module('platformWebApp')
                 blade.filteredSettings = grouped;
                 blade.visibleGroupNames = _.keys(grouped).sort();
 
-                // Build reverse map: display group name → raw groupName (for deep link data attributes)
+                // Build reverse map: display group name -> raw groupName (for deep link data attributes)
                 blade.filteredSettingsGroupMap = {};
                 _.each(settings, function (s) {
                     var displayKey = !s.groupName
@@ -448,10 +471,11 @@ angular.module('platformWebApp')
                 });
             }
 
-            $scope.$watch('blade.searchText', function () { applyFilters(); });
-            $scope.$watch('filter.modifiedOnly', function () { applyFilters(); });
-            $scope.$watch('filter.moduleId', function () { applyFilters(); });
-            $scope.$watch('filter.showTenantProperties', function () { applyFilters(); });
+            // Use $watch only for blade.searchText (typed by user, no ng-change available).
+            // All other filter changes go through filter.criteriaChanged() via ng-change in template.
+            $scope.$watch('blade.searchText', function () {
+                applyFilters();
+            });
 
             // ================================================================
             // Dirty checking
@@ -473,13 +497,6 @@ angular.module('platformWebApp')
 
             function canSave() {
                 return isDirty() && (!formScope || formScope.$valid);
-            }
-
-            function getSaveableValue(setting) {
-                if (setting.isDictionary) {
-                    return (setting.values && setting.values[0]) ? setting.values[0].value.id : setting.value;
-                }
-                return (setting.values && setting.values[0]) ? setting.values[0].value : setting.value;
             }
 
             function getChangedValues() {
@@ -517,6 +534,10 @@ angular.module('platformWebApp')
                     updateOrigSnapshot();
                     updateModifiedCount();
                     blade.isLoading = false;
+                }, function (error) {
+                    blade.isLoading = false;
+                    var msg = (error && error.data && error.data.message) ? error.data.message : 'Save failed';
+                    bladeNavigationService.setError(msg, blade);
                 });
             };
 
@@ -583,13 +604,16 @@ angular.module('platformWebApp')
                 if (!$stateParams.group && !$stateParams.setting) {
                     return;
                 }
-                // Wait for DOM to render after digest cycle
                 $timeout(function () {
                     var scrollTarget = null;
-                    if ($stateParams.setting) {
-                        scrollTarget = document.querySelector('[data-setting-name="' + $stateParams.setting + '"]');
-                    } else if ($stateParams.group) {
-                        scrollTarget = document.querySelector('[data-group-name="' + $stateParams.group + '"]');
+                    var settingParam = $stateParams.setting;
+                    var groupParam = $stateParams.group;
+
+                    if (settingParam) {
+                        // Use CSS.escape to prevent selector injection from URL params
+                        scrollTarget = document.querySelector('[data-setting-name="' + CSS.escape(settingParam) + '"]');
+                    } else if (groupParam) {
+                        scrollTarget = document.querySelector('[data-group-name="' + CSS.escape(groupParam) + '"]');
                     }
                     if (scrollTarget) {
                         scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -606,8 +630,29 @@ angular.module('platformWebApp')
                     return;
                 }
                 var url = $state.href('workspace.settings', { group: groupName }, { absolute: true });
-                navigator.clipboard.writeText(url);
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).catch(function () {
+                        fallbackCopyToClipboard(url);
+                    });
+                } else {
+                    fallbackCopyToClipboard(url);
+                }
             };
+
+            function fallbackCopyToClipboard(text) {
+                var textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                } catch (e) {
+                    // silent fallback failure
+                }
+                document.body.removeChild(textarea);
+            }
 
             // ================================================================
             // Export / Import / Edit as JSON
@@ -615,7 +660,7 @@ angular.module('platformWebApp')
 
             function getTenantScope() {
                 if (blade.tenantType) {
-                    return `tenant/${blade.tenantType}/${blade.tenantId}`;
+                    return 'tenant/' + blade.tenantType + '/' + blade.tenantId;
                 }
                 return 'global';
             }
@@ -646,9 +691,12 @@ angular.module('platformWebApp')
                     var url = URL.createObjectURL(blob);
                     var a = document.createElement('a');
                     a.href = url;
-                    a.download = `settings-${scopeStr.replace(/\//g, '-')}.json`;
+                    a.download = 'settings-' + scopeStr.replace(/\//g, '-') + '.json';
                     a.click();
                     URL.revokeObjectURL(url);
+                }, function (error) {
+                    var msg = (error && error.data && error.data.message) ? error.data.message : 'Export failed';
+                    bladeNavigationService.setError(msg, blade);
                 });
             };
 
@@ -673,12 +721,23 @@ angular.module('platformWebApp')
                                 var dialog = {
                                     id: 'confirmImportSettings',
                                     title: 'platform.blades.settings-unified.import-confirm-title',
-                                    message: `Apply ${count} settings from imported file?`,
+                                    message: $translate.instant('platform.blades.settings-unified.import-confirm-message', { count: count }),
                                     callback: function (confirm) {
                                         if (confirm) {
                                             blade.isLoading = true;
-                                            dataSource.saveValues(settingsToImport).then(function () {
+                                            // Import uses replaceAll=true: the file is the complete set of modifications
+                                            var importPromise;
+                                            if (blade.tenantType && blade.tenantId) {
+                                                importPromise = settingsV2.saveTenantValues(
+                                                    { tenantType: blade.tenantType, tenantId: blade.tenantId, replaceAll: true },
+                                                    settingsToImport).$promise;
+                                            } else {
+                                                importPromise = settingsV2.saveGlobalValues({ replaceAll: true }, settingsToImport).$promise;
+                                            }
+                                            importPromise.then(function () {
                                                 blade.refresh();
+                                            }, function () {
+                                                blade.isLoading = false;
                                             });
                                         }
                                     }
@@ -702,12 +761,72 @@ angular.module('platformWebApp')
                 var newBlade = {
                     id: 'settingsJsonEditor',
                     title: 'platform.blades.settings-json-editor.title',
-                    tenantType: blade.tenantType,
-                    tenantId: blade.tenantId,
-                    parentRefresh: blade.refresh,
                     controller: 'platformWebApp.settingsJsonEditorController',
                     template: '$(Platform)/Scripts/app/settings/blades/settings-json-editor.tpl.html'
                 };
+
+                if (blade.isEntityMode) {
+                    // In-memory mode: serialize current settings to JSON, save via callback.
+                    // Include all non-default properties (matching the blue dot indicator)
+                    // plus any properties the user changed in the current session.
+                    var currentValues = {};
+                    _.each(blade.mergedSettings, function (s) {
+                        var val = getSaveableValue(s);
+                        var isNonDefault = !settingsHelper.isDefaultValue(s);
+                        var isDirtyInSession = !angular.equals(val, blade.origSettingValues[s.name]);
+                        if (isNonDefault || isDirtyInSession) {
+                            currentValues[s.name] = val;
+                        }
+                    });
+                    var doc = {
+                        version: '1.0',
+                        scope: 'entity',
+                        settings: currentValues
+                    };
+                    newBlade.settingsData = JSON.stringify(doc, null, 2);
+                    newBlade.onSaveJson = function (settingsDict) {
+                        // Apply parsed JSON values back into mergedSettings.
+                        // Properties in the dict get their new value.
+                        // Properties NOT in the dict are reset to defaultValue.
+                        // We replace each object in mergedSettings (not just mutate)
+                        // to force va-generic-value-input's ngModel.$render().
+                        for (var i = 0; i < blade.mergedSettings.length; i++) {
+                            var s = blade.mergedSettings[i];
+                            var newValue;
+                            if (settingsDict.hasOwnProperty(s.name)) {
+                                newValue = settingsDict[s.name];
+                            } else {
+                                // Not in JSON — reset to default
+                                newValue = s.defaultValue;
+                            }
+
+                            // Clone + replace to trigger UI re-render
+                            var updated = angular.copy(s);
+                            updated.allowedValues = s.allowedValues; // preserve object identity for ui-select
+                            updated.value = newValue;
+                            updated.values = settingsHelper.getSettingValues({ isDictionary: updated.isDictionary, value: newValue });
+                            blade.mergedSettings[i] = updated;
+                        }
+                        updateModifiedCount();
+                        applyFilters();
+
+                        // Sync replaced objects into filteredSettings for display
+                        _.each(blade.filteredSettings, function (groupSettings, key) {
+                            for (var j = 0; j < groupSettings.length; j++) {
+                                var replacement = _.find(blade.mergedSettings, function (m) { return m.name === groupSettings[j].name; });
+                                if (replacement && replacement !== groupSettings[j]) {
+                                    groupSettings[j] = replacement;
+                                }
+                            }
+                        });
+                    };
+                } else {
+                    // API mode: editor loads/saves via REST API
+                    newBlade.tenantType = blade.tenantType;
+                    newBlade.tenantId = blade.tenantId;
+                    newBlade.parentRefresh = blade.refresh;
+                }
+
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
@@ -721,8 +840,9 @@ angular.module('platformWebApp')
                         return;
                     }
                     var changedValues = getChangedValues();
-                    dataSource.saveValues(changedValues);
-                    $scope.bladeClose();
+                    dataSource.saveValues(changedValues).then(function () {
+                        $scope.bladeClose();
+                    });
                 };
 
                 $scope.cancelChanges = function () {
@@ -752,21 +872,24 @@ angular.module('platformWebApp')
                 canExecuteMethod: isDirty
             });
 
-            blade.toolbarCommands.push({
-                name: 'platform.blades.settings-unified.export-json',
-                icon: 'fa fa-download',
-                executeMethod: function () { $scope.exportJson(); },
-                canExecuteMethod: function () { return !blade.isLoading; }
-            });
+            if (!blade.isEntityMode) {
+                blade.toolbarCommands.push({
+                    name: 'platform.blades.settings-unified.export-json',
+                    icon: 'fa fa-download',
+                    executeMethod: function () { $scope.exportJson(); },
+                    canExecuteMethod: function () { return !blade.isLoading; }
+                });
 
-            blade.toolbarCommands.push({
-                name: 'platform.blades.settings-unified.import-json',
-                icon: 'fa fa-upload',
-                executeMethod: function () { $scope.importJson(); },
-                canExecuteMethod: function () { return !blade.isLoading; },
-                permission: 'platform:setting:update'
-            });
+                blade.toolbarCommands.push({
+                    name: 'platform.blades.settings-unified.import-json',
+                    icon: 'fa fa-upload',
+                    executeMethod: function () { $scope.importJson(); },
+                    canExecuteMethod: function () { return !blade.isLoading; },
+                    permission: 'platform:setting:update'
+                });
+            }
 
+            // Edit as JSON available in both modes (API mode: loads from API; entity mode: in-memory)
             blade.toolbarCommands.push({
                 name: 'platform.blades.settings-unified.edit-json',
                 icon: 'fa fa-code',
@@ -808,7 +931,9 @@ angular.module('platformWebApp')
                             blade.isLoading = true;
                             try {
                                 modulesApi.restart(function () { });
-                            } catch (err) { }
+                            } catch (err) {
+                                // restart may fail transiently
+                            }
                             finally {
                                 $timeout(function () { }, 3000).then(function () {
                                     return waitForRestart(1000);
@@ -848,7 +973,6 @@ angular.module('platformWebApp')
 
             blade.onClose = function (closeCallback) {
                 if (blade.isEntityMode) {
-                    // Entity mode: suppress confirmation — parent entity handles its own save flow
                     closeCallback();
                 } else {
                     bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, blade.saveChanges, closeCallback,
@@ -856,7 +980,6 @@ angular.module('platformWebApp')
                 }
             };
 
-            // Navigation guard: only for global (workspace-level) mode
             if (!blade.isEntityMode) {
                 var deregisterTransitionHook = $transitions.onBefore(
                     { from: 'workspace.settings' },
@@ -895,8 +1018,6 @@ angular.module('platformWebApp')
             // ================================================================
 
             if (blade.isEntityMode) {
-                // Watch for parent entity settings changes (e.g. parent reloads data).
-                // Skip the first invocation — blade.refresh() below handles initial load.
                 var entityWatchInitialized = false;
                 $scope.$watch('blade.parentBlade.currentEntity.settings', function (newSettings, oldSettings) {
                     if (!entityWatchInitialized) {

@@ -28,11 +28,14 @@ namespace VirtoCommerce.Platform.Core.Settings
 
         /// <summary>
         /// Updates property values from a flat { Name: Value } dictionary.
-        /// Only settings included in the dictionary are updated.
+        /// When replaceAll is false (default), only settings in the dictionary are updated (merge/patch).
+        /// When replaceAll is true, the dictionary is the complete set of desired modifications —
+        /// any currently-modified setting NOT in the dictionary is reset to its default value.
         /// </summary>
         Task SaveValuesAsync(
             Dictionary<string, object> values,
             string tenantType = null,
-            string tenantId = null);
+            string tenantId = null,
+            bool replaceAll = false);
     }
 }

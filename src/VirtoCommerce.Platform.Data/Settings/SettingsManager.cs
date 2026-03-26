@@ -34,6 +34,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly IEventPublisher _eventPublisher;
         private readonly Dictionary<string, ObjectSettingEntry> _fixedSettingsDict;
         private readonly ISettingsOverrideProvider _overrideProvider;
+        private volatile IDictionary<string, string[]> _cachedTypeAssignments;
 
         public SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
@@ -62,6 +63,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 settings = existTypeSettings.Concat(settings).Distinct().ToList();
             }
             _registeredTypeSettingsByNameDict[typeName] = settings;
+            _cachedTypeAssignments = null; // invalidate cache
         }
 
         public IEnumerable<SettingDescriptor> GetSettingsForType(string typeName)
@@ -71,6 +73,12 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         public IDictionary<string, string[]> GetSettingTypeAssignments()
         {
+            var cached = _cachedTypeAssignments;
+            if (cached != null)
+            {
+                return cached;
+            }
+
             var result = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var kvp in _registeredTypeSettingsByNameDict)
@@ -89,7 +97,9 @@ namespace VirtoCommerce.Platform.Data.Settings
                 }
             }
 
-            return result.ToDictionary(x => x.Key, x => x.Value.ToArray(), StringComparer.OrdinalIgnoreCase);
+            cached = result.ToDictionary(x => x.Key, x => x.Value.ToArray(), StringComparer.OrdinalIgnoreCase);
+            _cachedTypeAssignments = cached;
+            return cached;
         }
 
         public IEnumerable<SettingDescriptor> AllRegisteredSettings => _registeredSettingsByNameDict.Values;

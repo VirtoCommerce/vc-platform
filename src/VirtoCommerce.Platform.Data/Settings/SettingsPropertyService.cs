@@ -108,13 +108,15 @@ namespace VirtoCommerce.Platform.Data.Settings
         public async Task SaveValuesAsync(
             Dictionary<string, object> values,
             string tenantType = null,
-            string tenantId = null)
+            string tenantId = null,
+            bool replaceAll = false)
         {
             ArgumentNullException.ThrowIfNull(values);
 
             var allDescriptors = _settingsManager.AllRegisteredSettings
                 .ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase);
 
+            var typeAssignments = _settingsManager.GetSettingTypeAssignments();
             var settingsToSave = new List<ObjectSettingEntry>();
 
             foreach (var kvp in values)
@@ -122,6 +124,15 @@ namespace VirtoCommerce.Platform.Data.Settings
                 if (!allDescriptors.TryGetValue(kvp.Key, out var descriptor))
                 {
                     throw new InvalidOperationException($"Unknown setting: '{kvp.Key}'");
+                }
+
+                // Validate scope: tenant-assigned settings should only be saved with a tenant scope,
+                // and global-only settings should not be saved with a tenant scope
+                var isAssignedToTenant = typeAssignments.ContainsKey(kvp.Key);
+                if (!string.IsNullOrEmpty(tenantType) && !isAssignedToTenant)
+                {
+                    throw new InvalidOperationException(
+                        $"Setting '{kvp.Key}' is not registered for tenant type '{tenantType}'");
                 }
 
                 var entry = new ObjectSettingEntry(descriptor)
@@ -134,6 +145,31 @@ namespace VirtoCommerce.Platform.Data.Settings
                 settingsToSave.Add(entry);
             }
 
+            // replaceAll mode: the incoming dict is the complete set of desired modifications.
+            // Any currently-modified setting NOT in the dict should be reset to default (DB row deleted).
+            if (replaceAll)
+            {
+                var currentModified = await GetValuesAsync(tenantType, tenantId, modifiedOnly: true);
+                var incomingNames = new HashSet<string>(values.Keys, StringComparer.OrdinalIgnoreCase);
+
+                var settingsToReset = currentModified.Keys
+                    .Where(name => !incomingNames.Contains(name))
+                    .Select(name =>
+                    {
+                        allDescriptors.TryGetValue(name, out var desc);
+                        return desc != null
+                            ? new ObjectSettingEntry(desc) { ObjectType = tenantType, ObjectId = tenantId }
+                            : null;
+                    })
+                    .Where(x => x != null)
+                    .ToList();
+
+                if (settingsToReset.Count > 0)
+                {
+                    await _settingsManager.RemoveObjectSettingsAsync(settingsToReset);
+                }
+            }
+
             if (settingsToSave.Count > 0)
             {
                 await _settingsManager.SaveObjectSettingsAsync(settingsToSave);
@@ -144,7 +180,8 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             if (!string.IsNullOrEmpty(tenantType))
             {
-                return _settingsManager.GetSettingsForType(tenantType);
+                return _settingsManager.GetSettingsForType(tenantType)
+                    .Where(x => !x.IsHidden);
             }
 
             // Global scope: exclude settings assigned to any tenant

@@ -10,12 +10,5 @@ namespace VirtoCommerce.Platform.Core.Settings
         Task<IEnumerable<ObjectSettingEntry>> GetObjectSettingsAsync(IEnumerable<string> names, string objectType = null, string objectId = null);
         Task SaveObjectSettingsAsync(IEnumerable<ObjectSettingEntry> objectSettings);
         Task RemoveObjectSettingsAsync(IEnumerable<ObjectSettingEntry> objectSettings);
-
-        /// <summary>
-        /// Returns a map of setting name to tenant type names the setting is registered for
-        /// via <see cref="ISettingsRegistrar.RegisterSettingsForType"/>.
-        /// </summary>
-        IDictionary<string, string[]> GetSettingTypeAssignments();
-
     }
 }
