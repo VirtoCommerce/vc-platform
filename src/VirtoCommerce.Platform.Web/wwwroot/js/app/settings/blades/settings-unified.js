@@ -578,6 +578,10 @@ angular.module('platformWebApp')
                 var newBlade = {
                     id: 'settingDetailChild',
                     currentEntityId: node.name,
+                    // isApiSave tells the dictionary controller to load/save via the v1 API
+                    // (settingsApi.get/update). Without this flag, it watches
+                    // parentBlade.currentEntities which doesn't exist in the unified blade.
+                    isApiSave: true,
                     controller: 'platformWebApp.settingDictionaryController',
                     template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
                 };
