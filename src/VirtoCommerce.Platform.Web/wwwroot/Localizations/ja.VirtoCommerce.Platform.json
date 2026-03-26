@@ -782,7 +782,8 @@
     "dialogs": {
       "folders-delete": {
         "title": "削除の確認",
-        "message": "選択したフォルダまたはファイルを削除してもよろしいですか？"
+        "message": "選択したフォルダまたはファイルを削除してもよろしいですか？",
+        "asset": "{{count}} 件のアセット"
       },
       "properties-save": {
         "title": "変更の保存",
@@ -798,7 +799,8 @@
       },
       "roles-delete": {
         "title": "削除の確認",
-        "message": "選択したロールを削除してもよろしいですか？"
+        "message": "選択したロールを削除してもよろしいですか？",
+        "role": "{{count}} 件のロール"
       },
       "account-save": {
         "title": "変更の保存",
@@ -806,7 +808,8 @@
       },
       "account-delete": {
         "title": "削除の確認",
-        "message": "選択したアカウントを削除してもよろしいですか？"
+        "message": "選択したアカウントを削除してもよろしいですか？",
+        "account": "{{count}} 件のアカウント"
       },
       "oauthapps-save": {
         "title": "変更の保存",
@@ -814,7 +817,8 @@
       },
       "oauthapps-delete": {
         "title": "削除の確認",
-        "message": "選択したOAuthアプリケーションを削除してもよろしいですか？"
+        "message": "次のOAuthアプリケーションが削除されます:",
+        "application": "{{count}} 件のOAuthアプリケーション"
       },
       "dynamic-property-delete": {
         "title": "削除の確認",
@@ -871,7 +875,7 @@
       },
       "api-key-delete": {
         "title": "削除の確認",
-        "message": "このAPIキーを削除してもよろしいですか？"
+        "message": "次のAPIキーが削除されます:"
       },
       "app-restart": {
         "title": "アプリケーションのシャットダウン",
@@ -902,11 +906,18 @@
       },
       "session-terminate": {
         "title": "セッションを終了",
-        "message": "このセッションを終了してもよろしいですか？"
+        "message": "このセッションを終了してもよろしいですか？",
+        "session": "{{count}} 件のセッション"
       },
       "sessions-terminate-all": {
         "title": "すべて終了",
-        "message": "すべてのユーザーセッションを終了してもよろしいですか？"
+        "message": "すべてのユーザーセッションを終了してもよろしいですか？",
+        "session": "{{count}} 件のセッション"
+      },
+      "delete-confirm": {
+        "warning": "警告: この変更は永久的で、元に戻すことはできません。この変更を適用すると、データが失われる可能性があります。",
+        "message": "次のデータが削除されます:",
+        "instruction": "削除するには「yes」と入力してください:"
       }
     },
     "commands": {

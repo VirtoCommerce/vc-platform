@@ -784,7 +784,8 @@
     "dialogs": {
       "folders-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie die ausgewählten Ordner oder Dateien löschen möchten?"
+        "message": "Sind Sie sicher, dass Sie die ausgewählten Ordner oder Dateien löschen möchten?",
+        "asset": "{{count}} Asset(s)"
       },
       "properties-save": {
         "title": "Änderungen speichern",
@@ -800,7 +801,8 @@
       },
       "roles-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie die ausgewählten Rollen löschen möchten?"
+        "message": "Sind Sie sicher, dass Sie die ausgewählten Rollen löschen möchten?",
+        "role": "{{count}} Rolle(n)"
       },
       "account-save": {
         "title": "Änderungen speichern",
@@ -808,7 +810,8 @@
       },
       "account-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie die ausgewählten Konten löschen möchten?"
+        "message": "Sind Sie sicher, dass Sie die ausgewählten Konten löschen möchten?",
+        "account": "{{count}} Konto/Konten"
       },
       "oauthapps-save": {
         "title": "Änderungen speichern",
@@ -816,7 +819,8 @@
       },
       "oauthapps-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie die ausgewählte OAuth-Anwendung löschen möchten?"
+        "message": "Die folgende OAuth-Anwendung wird gelöscht:",
+        "application": "{{count}} OAuth-Anwendung(en)"
       },
       "dynamic-property-delete": {
         "title": "Löschen bestätigen",
@@ -873,7 +877,7 @@
       },
       "api-key-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie diesen API-Schlüssel löschen möchten?"
+        "message": "Der folgende API-Schlüssel wird gelöscht:"
       },
       "app-restart": {
         "title": "Anwendungsbeendigung",
@@ -904,11 +908,18 @@
       },
       "session-terminate": {
         "title": "Sitzung beenden",
-        "message": "Sind Sie sicher, dass Sie diese Sitzung beenden möchten?"
+        "message": "Sind Sie sicher, dass Sie diese Sitzung beenden möchten?",
+        "session": "{{count}} Sitzung(en)"
       },
       "sessions-terminate-all": {
         "title": "Alle beenden",
-        "message": "Sind Sie sicher, dass Sie alle Benutzersitzungen beenden möchten?"
+        "message": "Sind Sie sicher, dass Sie alle Benutzersitzungen beenden möchten?",
+        "session": "{{count}} Sitzung(en)"
+      },
+      "delete-confirm": {
+        "warning": "WARNUNG: Diese Änderung ist dauerhaft und kann nicht rückgängig gemacht werden. Das Anwenden dieser Änderung kann zu Datenverlust führen.",
+        "message": "Die folgenden Daten werden gelöscht:",
+        "instruction": "Geben Sie 'yes' ein, um zu löschen:"
       }
     },
     "commands": {

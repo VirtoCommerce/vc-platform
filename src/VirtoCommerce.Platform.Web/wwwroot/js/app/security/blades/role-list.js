@@ -43,7 +43,9 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
         var dialog = {
             id: "confirmDeleteItem",
             title: "platform.dialogs.roles-delete.title",
-            message: "platform.dialogs.roles-delete.message",
+            data: [
+                { key: 'platform.dialogs.roles-delete.role', count: selection.length }
+            ],
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
@@ -57,7 +59,7 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
                 }
             }
         }
-        dialogService.showConfirmationDialog(dialog);
+        dialogService.showDeleteConfirmationDialog(dialog);
     }
 
     function closeChildrenBlades() {

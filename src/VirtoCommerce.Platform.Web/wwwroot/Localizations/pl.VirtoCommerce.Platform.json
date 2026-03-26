@@ -782,7 +782,8 @@
     "dialogs": {
       "folders-delete": {
         "title": "Potwierdzenie usunięcia",
-        "message": "Czy na pewno chcesz usunąć wybrane foldery lub pliki?"
+        "message": "Czy na pewno chcesz usunąć wybrane foldery lub pliki?",
+        "asset": "{{count}} zasób(ów)"
       },
       "properties-save": {
         "title": "Zapisz zmiany",
@@ -798,7 +799,8 @@
       },
       "roles-delete": {
         "title": "Potwierdzenie usunięcia",
-        "message": "Czy na pewno chcesz usunąć wybrane role?"
+        "message": "Czy na pewno chcesz usunąć wybrane role?",
+        "role": "{{count}} rola(e)"
       },
       "account-save": {
         "title": "Zapisz zmiany",
@@ -806,7 +808,8 @@
       },
       "account-delete": {
         "title": "Potwierdzenie usunięcia",
-        "message": "Czy na pewno chcesz usunąć wybrane konta?"
+        "message": "Czy na pewno chcesz usunąć wybrane konta?",
+        "account": "{{count}} konto(a)"
       },
       "oauthapps-save": {
         "title": "Zapisz zmiany",
@@ -814,7 +817,8 @@
       },
       "oauthapps-delete": {
         "title": "Potwierdzenie usunięcia",
-        "message": "Czy na pewno chcesz usunąć wybraną aplikację OAuth?"
+        "message": "Następująca aplikacja OAuth zostanie usunięta:",
+        "application": "{{count}} aplikacja(e) OAuth"
       },
       "dynamic-property-delete": {
         "title": "Potwierdzenie usunięcia",
@@ -871,7 +875,7 @@
       },
       "api-key-delete": {
         "title": "Potwierdzenie usunięcia",
-        "message": "Czy na pewno chcesz usunąć ten klucz API?"
+        "message": "Następujący klucz API zostanie usunięty:"
       },
       "app-restart": {
         "title": "Zamknięcie aplikacji",
@@ -902,11 +906,18 @@
       },
       "session-terminate": {
         "title": "Zakończ sesję",
-        "message": "Czy na pewno chcesz zakończyć tę sesję?"
+        "message": "Czy na pewno chcesz zakończyć tę sesję?",
+        "session": "{{count}} sesja(e)"
       },
       "sessions-terminate-all": {
         "title": "Zakończ wszystkie",
-        "message": "Czy na pewno chcesz zakończyć wszystkie sesje użytkowników?"
+        "message": "Czy na pewno chcesz zakończyć wszystkie sesje użytkowników?",
+        "session": "{{count}} sesja(e)"
+      },
+      "delete-confirm": {
+        "warning": "OSTRZEŻENIE: Ta zmiana jest trwała i nie można jej cofnąć. Zastosowanie tej zmiany może spowodować utratę danych.",
+        "message": "Następujące dane zostaną usunięte:",
+        "instruction": "Wpisz „yes", aby usunąć:"
       }
     },
     "commands": {

@@ -34,7 +34,9 @@ angular.module('platformWebApp')
                     var dialog = {
                         id: "confirmTerminateSession",
                         title: "platform.dialogs.session-terminate.title",
-                        message: "platform.dialogs.session-terminate.message",
+                        data: [
+                            { key: 'platform.dialogs.session-terminate.session', count: 1 }
+                        ],
                         callback: function (remove) {
                             if (remove) {
                                 accounts.terminateSession({ userId: blade.userId, id: session.id }, null, () => {
@@ -43,14 +45,16 @@ angular.module('platformWebApp')
                             }
                         }
                     }
-                    dialogService.showConfirmationDialog(dialog);
+                    dialogService.showDeleteConfirmationDialog(dialog);
                 }
 
                 blade.terminateAll = function () {
                     var dialog = {
                         id: "confirmTerminateAllSessions",
                         title: "platform.dialogs.sessions-terminate-all.title",
-                        message: "platform.dialogs.sessions-terminate-all.message",
+                        data: [
+                            { key: 'platform.dialogs.sessions-terminate-all.session', count: blade.currentEntities.length }
+                        ],
                         callback: function (remove) {
                             if (remove) {
                                 accounts.terminateAllSessions({ userId: blade.userId }, null, () => {
@@ -59,7 +63,7 @@ angular.module('platformWebApp')
                             }
                         }
                     }
-                    dialogService.showConfirmationDialog(dialog);
+                    dialogService.showDeleteConfirmationDialog(dialog);
                 }
 
                 blade.headIcon = 'fas fa-key';

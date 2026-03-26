@@ -783,7 +783,8 @@
     "dialogs": {
       "folders-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette valgte mapper eller filer?"
+        "message": "Er du sikker på at du vil slette valgte mapper eller filer?",
+        "asset": "{{count}} ressurs(er)"
       },
       "properties-save": {
         "title": "Lagre endringer",
@@ -799,7 +800,8 @@
       },
       "roles-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette valgte roller?"
+        "message": "Er du sikker på at du vil slette valgte roller?",
+        "role": "{{count}} rolle(r)"
       },
       "account-save": {
         "title": "Lagre endringer",
@@ -807,7 +809,8 @@
       },
       "account-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette valgte kontoer?"
+        "message": "Er du sikker på at du vil slette valgte kontoer?",
+        "account": "{{count}} konto(er)"
       },
       "oauthapps-save": {
         "title": "Lagre endringer",
@@ -815,7 +818,8 @@
       },
       "oauthapps-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette den valgte OAuth-applikasjonen?"
+        "message": "Følgende OAuth-applikasjon vil bli slettet:",
+        "application": "{{count}} OAuth-applikasjon(er)"
       },
       "dynamic-property-delete": {
         "title": "Bekreft sletting",
@@ -872,7 +876,7 @@
       },
       "api-key-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette denne API-nøkkelen?"
+        "message": "Følgende API-nøkkel vil bli slettet:"
       },
       "app-restart": {
         "title": "Applikasjonsavslutning",
@@ -903,11 +907,18 @@
       },
       "session-terminate": {
         "title": "Avslutt økt",
-        "message": "Er du sikker på at du vil avslutte denne økten?"
+        "message": "Er du sikker på at du vil avslutte denne økten?",
+        "session": "{{count}} økt(er)"
       },
       "sessions-terminate-all": {
         "title": "Avslutt alle",
-        "message": "Er du sikker på at du vil avslutte alle brukerøkter?"
+        "message": "Er du sikker på at du vil avslutte alle brukerøkter?",
+        "session": "{{count}} økt(er)"
+      },
+      "delete-confirm": {
+        "warning": "ADVARSEL: Denne endringen er permanent og kan ikke angres. Å bruke denne endringen kan føre til tap av data.",
+        "message": "Følgende data vil bli slettet:",
+        "instruction": "Skriv \"yes\" for å slette:"
       }
     },
     "commands": {
