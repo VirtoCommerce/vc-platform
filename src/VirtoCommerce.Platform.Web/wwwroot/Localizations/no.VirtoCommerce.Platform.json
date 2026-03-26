@@ -684,7 +684,8 @@
         "export-json": "Eksporter JSON",
         "import-json": "Importer JSON",
         "edit-json": "Rediger som JSON",
-        "import-confirm-title": "Importer innstillinger"
+        "import-confirm-title": "Importer innstillinger",
+        "import-confirm-message": "Bruk {{count}} innstillinger fra importert fil?"
       },
       "settings-json-editor": {
         "title": "Rediger innstillinger som JSON",

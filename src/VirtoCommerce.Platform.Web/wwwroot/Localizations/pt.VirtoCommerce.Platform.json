@@ -683,7 +683,8 @@
         "export-json": "Exportar JSON",
         "import-json": "Importar JSON",
         "edit-json": "Editar como JSON",
-        "import-confirm-title": "Importar configurações"
+        "import-confirm-title": "Importar configurações",
+        "import-confirm-message": "Aplicar {{count}} configuracoes do arquivo importado?"
       },
       "settings-json-editor": {
         "title": "Editar configurações como JSON",

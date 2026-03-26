@@ -683,7 +683,8 @@
         "export-json": "导出 JSON",
         "import-json": "导入 JSON",
         "edit-json": "以 JSON 编辑",
-        "import-confirm-title": "导入设置"
+        "import-confirm-title": "导入设置",
+        "import-confirm-message": "从导入的文件中应用{{count}}个设置？"
       },
       "settings-json-editor": {
         "title": "以 JSON 编辑设置",

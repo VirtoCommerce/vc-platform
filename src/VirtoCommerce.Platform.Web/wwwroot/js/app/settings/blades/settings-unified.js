@@ -137,7 +137,7 @@ angular.module('platformWebApp')
                     if (thisGeneration !== refreshGeneration) {
                         return;
                     }
-                    var msg = (error.data && error.data.message) ? error.data.message : ('Error ' + error.status);
+                    var msg = (error.data && error.data.message) ? error.data.message : `Error ${error.status}`;
                     bladeNavigationService.setError(msg, blade);
                 });
             };
@@ -252,9 +252,9 @@ angular.module('platformWebApp')
                     var sorted = _.sortBy(_.values(childMap), 'name');
                     _.each(sorted, function (entry) {
                         var hasChildren = _.keys(entry.childMap).length > 0;
-                        idCounter = idCounter + 1;
+                        idCounter += 1;
                         var node = {
-                            id: 'n' + idCounter,
+                            id: `n${idCounter}`,
                             name: entry.name,
                             groupName: entry.groupName,
                             level: level,
@@ -348,14 +348,6 @@ angular.module('platformWebApp')
             $scope.nodeHasModified = function (node) {
                 return !!modifiedGroupMap[node.groupName];
             };
-
-            function getSettingsForGroup(groupName) {
-                var groupPrefix = groupName + '|';
-                return _.filter(blade.mergedSettings, function (s) {
-                    return s.groupName === groupName ||
-                        (s.groupName && s.groupName.indexOf(groupPrefix) === 0);
-                });
-            }
 
             function updateModifiedCount() {
                 var count = 0;
@@ -611,9 +603,9 @@ angular.module('platformWebApp')
 
                     if (settingParam) {
                         // Use CSS.escape to prevent selector injection from URL params
-                        scrollTarget = document.querySelector('[data-setting-name="' + CSS.escape(settingParam) + '"]');
+                        scrollTarget = document.querySelector(`[data-setting-name="${CSS.escape(settingParam)}"]`);
                     } else if (groupParam) {
-                        scrollTarget = document.querySelector('[data-group-name="' + CSS.escape(groupParam) + '"]');
+                        scrollTarget = document.querySelector(`[data-group-name="${CSS.escape(groupParam)}"]`);
                     }
                     if (scrollTarget) {
                         scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -660,7 +652,7 @@ angular.module('platformWebApp')
 
             function getTenantScope() {
                 if (blade.tenantType) {
-                    return 'tenant/' + blade.tenantType + '/' + blade.tenantId;
+                    return `tenant/${blade.tenantType}/${blade.tenantId}`;
                 }
                 return 'global';
             }
@@ -691,7 +683,7 @@ angular.module('platformWebApp')
                     var url = URL.createObjectURL(blob);
                     var a = document.createElement('a');
                     a.href = url;
-                    a.download = 'settings-' + scopeStr.replace(/\//g, '-') + '.json';
+                    a.download = `settings-${scopeStr.replace(/\//g, '-')}.json`;
                     a.click();
                     URL.revokeObjectURL(url);
                 }, function (error) {
@@ -747,7 +739,7 @@ angular.module('platformWebApp')
                                 dialogService.showNotificationDialog({
                                     id: 'importError',
                                     title: 'Import Error',
-                                    message: 'Invalid JSON file: ' + err.message
+                                    message: `Invalid JSON file: ${err.message}`
                                 });
                             }
                         });

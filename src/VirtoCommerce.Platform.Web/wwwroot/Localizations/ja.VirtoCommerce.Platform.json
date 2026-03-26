@@ -683,7 +683,8 @@
         "export-json": "JSONエクスポート",
         "import-json": "JSONインポート",
         "edit-json": "JSONとして編集",
-        "import-confirm-title": "設定のインポート"
+        "import-confirm-title": "設定のインポート",
+        "import-confirm-message": "インポートファイルから{{count}}件の設定を適用しますか？"
       },
       "settings-json-editor": {
         "title": "JSONとして設定を編集",

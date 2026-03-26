@@ -146,7 +146,7 @@ angular.module('platformWebApp')
                     var doc = {
                         version: '1.0',
                         exportedAt: new Date().toISOString(),
-                        scope: blade.tenantType ? 'tenant/' + blade.tenantType + '/' + blade.tenantId : 'global',
+                        scope: blade.tenantType ? `tenant/${blade.tenantType}/${blade.tenantId}` : 'global',
                         settings: values
                     };
 

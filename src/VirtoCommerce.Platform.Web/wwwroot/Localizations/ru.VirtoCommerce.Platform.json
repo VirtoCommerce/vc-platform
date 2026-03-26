@@ -685,7 +685,8 @@
         "export-json": "Экспорт JSON",
         "import-json": "Импорт JSON",
         "edit-json": "Редактировать как JSON",
-        "import-confirm-title": "Импорт настроек"
+        "import-confirm-title": "Импорт настроек",
+        "import-confirm-message": "Применить {{count}} настроек из импортированного файла?"
       },
       "settings-json-editor": {
         "title": "Редактировать настройки как JSON",

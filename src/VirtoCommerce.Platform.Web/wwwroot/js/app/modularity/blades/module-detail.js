@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.moduleHelper', 'FileUploader', 'platformWebApp.settings', function ($scope, bladeNavigationService, moduleHelper, FileUploader, settings) {
+.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.moduleHelper', 'FileUploader', function ($scope, bladeNavigationService, moduleHelper, FileUploader) {
     var blade = $scope.blade;
 
     blade.headIcon = 'fa fa-cubes';

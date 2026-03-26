@@ -684,7 +684,8 @@
         "export-json": "Vie JSON",
         "import-json": "Tuo JSON",
         "edit-json": "Muokkaa JSON-muodossa",
-        "import-confirm-title": "Tuo asetukset"
+        "import-confirm-title": "Tuo asetukset",
+        "import-confirm-message": "Ota kayttoon {{count}} asetusta tuodusta tiedostosta?"
       },
       "settings-json-editor": {
         "title": "Muokkaa asetuksia JSON-muodossa",
