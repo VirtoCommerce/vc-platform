@@ -39,12 +39,20 @@ namespace VirtoCommerce.Platform.Data.Settings
                 query = query.Where(x => x.ModuleId == criteria.ModuleId);
             }
 
-            // For tenant scope, also include settings registered for that type
+            // Build type assignment map once (needed for both filtering and schema mapping)
+            var typeAssignments = _settingsManager.GetSettingTypeAssignments();
+
             if (!string.IsNullOrEmpty(tenantType))
             {
+                // Tenant scope: only settings registered for that type
                 var typeSettings = _settingsManager.GetSettingsForType(tenantType);
                 var typeSettingNames = new HashSet<string>(typeSettings.Select(x => x.Name), StringComparer.OrdinalIgnoreCase);
                 query = query.Where(x => typeSettingNames.Contains(x.Name));
+            }
+            else
+            {
+                // Global scope: exclude settings assigned to any tenant
+                query = query.Where(x => !typeAssignments.ContainsKey(x.Name));
             }
 
             // Keyword search
@@ -59,9 +67,6 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             // Sort by group then name
             query = query.OrderBy(x => x.GroupName).ThenBy(x => x.Name);
-
-            // Build type assignment map once for all descriptors
-            var typeAssignments = _settingsManager.GetSettingTypeAssignments();
 
             var result = query.Select(descriptor => MapToSchema(descriptor, tenantType, typeAssignments)).ToList();
 
@@ -142,7 +147,10 @@ namespace VirtoCommerce.Platform.Data.Settings
                 return _settingsManager.GetSettingsForType(tenantType);
             }
 
-            return _settingsManager.AllRegisteredSettings.Where(x => !x.IsHidden);
+            // Global scope: exclude settings assigned to any tenant
+            var typeAssignments = _settingsManager.GetSettingTypeAssignments();
+            return _settingsManager.AllRegisteredSettings
+                .Where(x => !x.IsHidden && !typeAssignments.ContainsKey(x.Name));
         }
 
         private SettingPropertySchema MapToSchema(

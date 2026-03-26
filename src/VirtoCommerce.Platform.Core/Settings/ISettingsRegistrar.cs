@@ -22,11 +22,5 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// <param name="typeName"></param>
         /// <returns></returns>
         IEnumerable<SettingDescriptor> GetSettingsForType(string typeName);
-
-        /// <summary>
-        /// Returns a map of setting name to tenant type names the setting is registered for
-        /// via <see cref="RegisterSettingsForType"/>.
-        /// </summary>
-        IDictionary<string, string[]> GetSettingTypeAssignments();
     }
 }

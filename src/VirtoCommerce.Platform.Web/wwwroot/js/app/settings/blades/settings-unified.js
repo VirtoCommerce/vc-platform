@@ -158,10 +158,12 @@ angular.module('platformWebApp')
                 // Merge schema + values into ObjectSettingEntry-compatible objects
                 blade.mergedSettings = mergeSchemaAndValues(schemas, values);
 
-                // Snapshot the initial values for dirty checking
+                // Snapshot the initial values for dirty checking.
+                // Uses getSaveableValue() so the snapshot format matches what getChangedValues() compares.
+                // (Dictionary settings store { id, name } in values[0].value but save as just the id string.)
                 blade.origSettingValues = {};
                 _.each(blade.mergedSettings, function (s) {
-                    blade.origSettingValues[s.name] = getSettingCurrentValue(s);
+                    blade.origSettingValues[s.name] = angular.copy(getSaveableValue(s));
                 });
 
                 // Translate display names
@@ -463,7 +465,7 @@ angular.module('platformWebApp')
                     return false;
                 }
                 return _.any(blade.mergedSettings, function (s) {
-                    var currentVal = (s.values && s.values.length) ? s.values[0].value : s.value;
+                    var currentVal = getSaveableValue(s);
                     var origVal = blade.origSettingValues[s.name];
                     return !angular.equals(currentVal, origVal);
                 }) && blade.hasUpdatePermission();
@@ -494,7 +496,7 @@ angular.module('platformWebApp')
 
             function updateOrigSnapshot() {
                 _.each(blade.mergedSettings, function (s) {
-                    blade.origSettingValues[s.name] = getSettingCurrentValue(s);
+                    blade.origSettingValues[s.name] = angular.copy(getSaveableValue(s));
                 });
             }
 
