@@ -670,12 +670,15 @@ angular.module('platformWebApp')
                 }
 
                 getPromise.then(function (values) {
+                    // angular.copy strips $resource's $$-prefixed properties ($promise, $resolved)
+                    // that create circular references and would cause JSON.stringify to throw.
+                    var cleanValues = angular.copy(values);
                     var scopeStr = getTenantScope();
                     var doc = {
                         version: '1.0',
                         exportedAt: new Date().toISOString(),
                         scope: scopeStr,
-                        settings: values
+                        settings: cleanValues
                     };
 
                     var json = JSON.stringify(doc, null, 2);
