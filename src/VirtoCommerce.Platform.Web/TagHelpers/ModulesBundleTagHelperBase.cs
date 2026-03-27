@@ -6,19 +6,20 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.TagHelpers.Internal;
 
 namespace VirtoCommerce.Platform.Web.TagHelpers
 {
     public abstract class ModulesBundleTagHelperBase : TagHelper
     {
+        private readonly IModuleService _moduleService;
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private FileVersionHashProvider _fileVersionProvider;
 
-        protected ModulesBundleTagHelperBase(IOptions<LocalStorageModuleCatalogOptions> options, IPlatformMemoryCache platformMemoryCache)
+        protected ModulesBundleTagHelperBase(IModuleService moduleService, IOptions<LocalStorageModuleCatalogOptions> options, IPlatformMemoryCache platformMemoryCache)
         {
+            _moduleService = moduleService;
             _platformMemoryCache = platformMemoryCache;
             _localStorageModuleCatalogOptions = options.Value;
         }
@@ -36,7 +37,7 @@ namespace VirtoCommerce.Platform.Web.TagHelpers
             output.TagName = null;
 
             // Modules are sorted by dependency order (topological sort) to keep the proper order for script/style includes on the index page.
-            var initializedModules = ModuleRunner.SortModulesByDependency(ModuleRegistry.GetInstalledModules()).Where(x => x.State == ModuleState.Initialized);
+            var initializedModules = _moduleService.GetInstalledModules().Where(x => x.State == ModuleState.Initialized);
 
             foreach (var module in initializedModules)
             {

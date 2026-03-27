@@ -5,13 +5,9 @@ using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Web.TagHelpers
 {
-    public class ModulesStyleBundleTagHelper : ModulesBundleTagHelperBase
+    public class ModulesStyleBundleTagHelper(IModuleService moduleService, IOptions<LocalStorageModuleCatalogOptions> options, IPlatformMemoryCache platformMemoryCache)
+        : ModulesBundleTagHelperBase(moduleService, options, platformMemoryCache)
     {
-        public ModulesStyleBundleTagHelper(IOptions<LocalStorageModuleCatalogOptions> options, IPlatformMemoryCache platformMemoryCache)
-            : base(options, platformMemoryCache)
-        {
-        }
-
         protected override TagBuilder GetTagBuilder(string bundleVirtualPath, string version)
         {
             var result = new TagBuilder("link");
