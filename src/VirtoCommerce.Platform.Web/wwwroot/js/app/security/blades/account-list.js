@@ -4,6 +4,88 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
 
+    // --- Filter state (must be initialized before blade.refresh) ---
+
+    function computeDateRange() {
+        if (filter.datePreset === 'custom') {
+            return;
+        }
+        var now = new Date();
+        var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        filter.loginStartDate = null;
+        filter.loginEndDate = null;
+
+        switch (filter.datePreset) {
+            case 'today':
+                filter.loginStartDate = startOfToday;
+                break;
+            case 'yesterday':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 86400000);
+                filter.loginEndDate = startOfToday;
+                break;
+            case 'last7':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 7 * 86400000);
+                break;
+            case 'last30':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 30 * 86400000);
+                break;
+            default:
+                break;
+        }
+    }
+
+    var filter = $scope.filter = {
+        keyword: '',
+        onlyLocked: false,
+        emailNotConfirmed: false,
+        userType: '',
+        status: '',
+        role: '',
+        datePreset: '',
+        loginStartDate: null,
+        loginEndDate: null,
+
+        hasActiveFilters: function () {
+            return filter.onlyLocked ||
+                   filter.emailNotConfirmed ||
+                   filter.userType ||
+                   filter.status ||
+                   filter.role ||
+                   filter.datePreset;
+        },
+
+        clearFilters: function () {
+            filter.onlyLocked = false;
+            filter.emailNotConfirmed = false;
+            filter.userType = '';
+            filter.status = '';
+            filter.role = '';
+            filter.datePreset = '';
+            filter.loginStartDate = null;
+            filter.loginEndDate = null;
+            filter.criteriaChanged();
+        },
+
+        criteriaChanged: function () {
+            computeDateRange();
+            if ($scope.pageSettings.currentPage > 1) {
+                $scope.pageSettings.currentPage = 1;
+            } else {
+                blade.refresh();
+            }
+        }
+    };
+
+    blade.searchText = '';
+    $scope.$watch('blade.searchText', function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+            filter.keyword = newVal;
+            filter.criteriaChanged();
+        }
+    });
+
+    // --- Blade operations ---
+
     blade.refresh = function () {
         blade.isLoading = true;
 
@@ -118,7 +200,8 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         }
     ];
 
-    // Load filter options
+    // --- Load filter options ---
+
     blade.accountTypes = [];
     blade.accountStatuses = [];
     blade.roles = [];
@@ -131,6 +214,8 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
     });
     roles.search({ take: 1000 }, function (data) {
         blade.roles = data.results || [];
+    }, function (error) {
+        console.error('Failed to load roles:', error);
     });
 
     blade.datePresets = [
@@ -141,84 +226,6 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         { label: 'platform.blades.account-list.filter.date-last30', value: 'last30' },
         { label: 'platform.blades.account-list.filter.date-custom', value: 'custom' }
     ];
-
-    function computeDateRange() {
-        if (filter.datePreset === 'custom') {
-            return;
-        }
-        var now = new Date();
-        var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        filter.loginStartDate = null;
-        filter.loginEndDate = null;
-
-        switch (filter.datePreset) {
-            case 'today':
-                filter.loginStartDate = startOfToday;
-                break;
-            case 'yesterday':
-                filter.loginStartDate = new Date(startOfToday.getTime() - 86400000);
-                filter.loginEndDate = startOfToday;
-                break;
-            case 'last7':
-                filter.loginStartDate = new Date(startOfToday.getTime() - 7 * 86400000);
-                break;
-            case 'last30':
-                filter.loginStartDate = new Date(startOfToday.getTime() - 30 * 86400000);
-                break;
-            default:
-                break;
-        }
-    }
-
-    var filter = $scope.filter = {
-        keyword: '',
-        onlyLocked: false,
-        emailNotConfirmed: false,
-        userType: '',
-        status: '',
-        role: '',
-        datePreset: '',
-        loginStartDate: null,
-        loginEndDate: null,
-
-        hasActiveFilters: function () {
-            return filter.onlyLocked ||
-                   filter.emailNotConfirmed ||
-                   filter.userType ||
-                   filter.status ||
-                   filter.role ||
-                   filter.datePreset;
-        },
-
-        clearFilters: function () {
-            filter.onlyLocked = false;
-            filter.emailNotConfirmed = false;
-            filter.userType = '';
-            filter.status = '';
-            filter.role = '';
-            filter.datePreset = '';
-            filter.loginStartDate = null;
-            filter.loginEndDate = null;
-            filter.criteriaChanged();
-        },
-
-        criteriaChanged: function () {
-            computeDateRange();
-            if ($scope.pageSettings.currentPage > 1) {
-                $scope.pageSettings.currentPage = 1;
-            } else {
-                blade.refresh();
-            }
-        }
-    };
-
-    blade.searchText = '';
-    $scope.$watch('blade.searchText', function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-            filter.keyword = newVal;
-            filter.criteriaChanged();
-        }
-    });
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {

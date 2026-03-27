@@ -82,7 +82,7 @@ namespace VirtoCommerce.Platform.Security.Services
 
             if (criteria.OnlyLocked)
             {
-                query = query.Where(x => x.LockoutEnd != null && x.LockoutEnd > DateTime.UtcNow);
+                query = query.Where(x => x.LockoutEnabled && x.LockoutEnd != null && x.LockoutEnd > DateTime.UtcNow);
             }
 
             if (criteria.EmailConfirmed.HasValue)
