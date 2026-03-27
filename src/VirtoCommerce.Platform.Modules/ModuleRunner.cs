@@ -67,7 +67,13 @@ public static class ModuleRunner
 
             if (layer.Count == 0)
             {
-                throw new CyclicDependencyFoundException("At least one cyclic dependency has been found in the module catalog. Cycles in the module dependencies are not allowed.");
+                foreach (var module in remaining.Values.OrderBy(x => x.Id))
+                {
+                    module.Errors.Add("This module either has a loop in the dependencies or it depends on a module with such a loop.");
+                    result.Add(module);
+                }
+
+                break;
             }
 
             foreach (var module in layer)
