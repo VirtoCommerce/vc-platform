@@ -426,6 +426,24 @@
           "login": "Login",
           "state": "State",
           "status": "Status"
+        },
+        "filter": {
+          "title": "Filters",
+          "all": "All",
+          "locked-only": "Locked accounts",
+          "not-verified": "Email not verified",
+          "account-type": "Account type",
+          "status": "Status",
+          "role": "Role",
+          "last-login": "Last login",
+          "date-any": "Any time",
+          "date-today": "Today",
+          "date-yesterday": "Yesterday",
+          "date-last7": "Last 7 days",
+          "date-last30": "Last 30 days",
+          "date-custom": "Custom range",
+          "date-from": "From",
+          "date-to": "To"
         }
       },
       "account-api": {

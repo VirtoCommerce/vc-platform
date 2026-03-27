@@ -68,14 +68,51 @@ namespace VirtoCommerce.Platform.Security.Services
                 query = query.Where(x => x.UserRoles.Any(r => rolesIds.Contains(r.RoleId)));
             }
 
+#pragma warning disable VC0014 // Obsolete LasLoginDate kept for backward compatibility
             if (criteria.LasLoginDate != null && criteria.LasLoginDate != default(DateTime))
             {
                 query = query.Where(x => x.LastLoginDate != null && x.LastLoginDate <= criteria.LasLoginDate);
             }
+#pragma warning restore VC0014
 
             if (criteria.OnlyUnlocked)
             {
                 query = query.Where(x => x.LockoutEnabled && (x.LockoutEnd == null || x.LockoutEnd <= DateTime.UtcNow));
+            }
+
+            if (criteria.OnlyLocked)
+            {
+                query = query.Where(x => x.LockoutEnd != null && x.LockoutEnd > DateTime.UtcNow);
+            }
+
+            if (criteria.EmailConfirmed.HasValue)
+            {
+                query = query.Where(x => x.EmailConfirmed == criteria.EmailConfirmed.Value);
+            }
+
+            if (!string.IsNullOrEmpty(criteria.UserType))
+            {
+                query = query.Where(x => x.UserType == criteria.UserType);
+            }
+
+            if (!string.IsNullOrEmpty(criteria.Status))
+            {
+                query = query.Where(x => x.Status == criteria.Status);
+            }
+
+            if (!string.IsNullOrEmpty(criteria.StoreId))
+            {
+                query = query.Where(x => x.StoreId == criteria.StoreId);
+            }
+
+            if (criteria.LoginStartDate != null && criteria.LoginStartDate != default(DateTime))
+            {
+                query = query.Where(x => x.LastLoginDate != null && x.LastLoginDate >= criteria.LoginStartDate);
+            }
+
+            if (criteria.LoginEndDate != null && criteria.LoginEndDate != default(DateTime))
+            {
+                query = query.Where(x => x.LastLoginDate != null && x.LastLoginDate <= criteria.LoginEndDate);
             }
 
             result.TotalCount = await query.CountAsync();
