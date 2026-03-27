@@ -116,6 +116,14 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
         }
     };
 
+    blade.searchText = '';
+    $scope.$watch('blade.searchText', function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+            filter.keyword = newVal;
+            filter.criteriaChanged();
+        }
+    });
+
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
         uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
