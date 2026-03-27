@@ -11,6 +11,6 @@ public class ModuleService : IModuleService
 {
     public IList<ManifestModuleInfo> GetInstalledModules()
     {
-        return ModuleRunner.SortModulesByDependency(ModuleRegistry.GetInstalledModules());
+        return ModuleRegistry.GetInstalledModules();
     }
 }

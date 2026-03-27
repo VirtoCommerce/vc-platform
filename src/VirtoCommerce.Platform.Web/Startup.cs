@@ -110,7 +110,7 @@ namespace VirtoCommerce.Platform.Web
                 PlatformStartupDiscovery.GetStartups(), services, Configuration);
 
             // Module assemblies are already loaded in Program.Main() via ModuleRegistry
-            var sortedModules = ModuleRunner.SortModulesByDependency(ModuleRegistry.GetAllModules().ToList());
+            var sortedModules = ModuleRegistry.GetAllModules();
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
@@ -722,7 +722,7 @@ namespace VirtoCommerce.Platform.Web
 
                 // Post-initialize all modules in dependency order
                 Log.ForContext<Startup>().Information("Post initializing modules");
-                var sortedModules = ModuleRunner.SortModulesByDependency(ModuleRegistry.GetAllModules().ToList());
+                var sortedModules = ModuleRegistry.GetAllModules();
                 ModuleRunner.PostInitializeModules(sortedModules, app);
             });
 

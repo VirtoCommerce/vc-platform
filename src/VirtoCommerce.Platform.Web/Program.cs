@@ -48,17 +48,17 @@ namespace VirtoCommerce.Platform.Web
             var bootstrapLoggerFactory = new SerilogLoggerFactory(Log.Logger);
             ModuleLogger.Initialize(bootstrapLoggerFactory);
 
+            var boostOptions = bootConfig.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
+            ModuleRunner.Initialize(boostOptions);
+
             var options = bootConfig.GetSection("VirtoCommerce").Get<LocalStorageModuleCatalogOptions>();
             options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath);
             options.ProbingPath = Path.GetFullPath(options.ProbingPath);
 
-            var modules = ModuleManifestReader.ReadAll(options.DiscoveryPath);
+            var modules = ModuleRunner.SortModulesByDependency(ModuleManifestReader.ReadAll(options.DiscoveryPath));
 
             ModuleCopier.Initialize(options, new FileMetadataProvider());
             ModuleCopier.Copy(modules, RuntimeInformation.ProcessArchitecture);
-
-            var boostOptions = bootConfig.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
-            ModuleRunner.Initialize(boostOptions);
 
             var isDevelopment = environment.EqualsIgnoreCase(Environments.Development);
             ModuleLoader.Initialize(isDevelopment);
