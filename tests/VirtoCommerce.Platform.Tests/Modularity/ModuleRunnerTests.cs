@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Modules;
 using Xunit;
 
@@ -187,19 +186,31 @@ public class ModuleRunnerTests
     public void SortByDependency_Cycle_ThrowException()
     {
         // Arrange
-        // A -> B -> C -> A
         var modules = new List<ManifestModuleInfo>
         {
             CreateModule("A", dependencies: ["B"]),
             CreateModule("B", dependencies: ["C"]),
             CreateModule("C", dependencies: ["A"]),
+            CreateModule("D"),
+            CreateModule("E", dependencies: ["C"]),
         };
 
         ModuleRunner.Initialize();
 
-        // Act, Assert
-        Assert.Throws<CyclicDependencyFoundException>(() =>
-            ModuleRunner.SortModulesByDependency(modules));
+        // Act
+        var sorted = ModuleRunner.SortModulesByDependency(modules);
+
+        // Assert
+        Assert.Equal(modules.Count, sorted.Count);
+        Assert.Equal("D A B C E", string.Join(" ", sorted.Select(x => x.ModuleName)));
+
+        Assert.Empty(sorted[0].Errors);
+
+        foreach (var module in sorted.Skip(1))
+        {
+            Assert.Single(module.Errors);
+            Assert.Equal("This module either has a loop in the dependencies or it depends on a module with such a loop.", module.Errors.Single());
+        }
     }
 
 
