@@ -53,7 +53,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
         public static IApplicationBuilder UseModulesAndAppsFiles(this IApplicationBuilder app)
         {
-            var localModules = ModuleRegistry.GetInstalledModules();
+            var localModules = ModuleBootstrapper.Instance.GetInstalledModules();
 
             foreach (var module in localModules)
             {

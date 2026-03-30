@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
@@ -13,6 +14,9 @@ namespace VirtoCommerce.Platform.Tests.Modularity
     [Collection("Modularity")]
     public class ModuleInstallerUnitTests
     {
+        private readonly ModuleBootstrapper _bootstrapper = new(
+            NullLoggerFactory.Instance,
+            new LocalStorageModuleCatalogOptions());
         [Theory]
         [ClassData(typeof(ModularityTestData))]
         public void ValidateInstall_ChecksCompatibility(string currentVersionPlatform, ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool isInstallable)
@@ -27,7 +31,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Act
             var allValid = modules.All(module =>
             {
-                var errors = ModuleDiscovery.ValidateInstall(module, installedModules, platformVersion);
+                var errors = _bootstrapper.ValidateInstall(module, installedModules, platformVersion);
                 return errors.Count == 0;
             });
 
@@ -48,7 +52,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var allAvailable = modules.Concat(installedModules).ToList();
 
             //Act
-            var result = ModuleDiscovery.GetDependencies(modules, allAvailable);
+            var result = _bootstrapper.GetDependencies(modules, allAvailable);
 
             //Assert — check if any declared dependency is NOT resolved in the result
             var allDeclaredDeps = modules

@@ -106,11 +106,10 @@ namespace VirtoCommerce.Platform.Web
             Log.ForContext<Startup>().Information("Configuring services");
 
             // Let IPlatformStartup implementations register application-level services
-            PlatformStartupDiscovery.RunConfigureServices(
-                PlatformStartupDiscovery.GetStartups(), services, Configuration);
+            ModuleBootstrapper.Instance.RunConfigureServices(services, Configuration);
 
-            // Module assemblies are already loaded in Program.Main() via ModuleRegistry
-            var sortedModules = ModuleRegistry.GetAllModules();
+            // Module assemblies are already loaded in Program.Main() via ModuleBootstrapper
+            var sortedModules = ModuleBootstrapper.Instance.GetModules();
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
@@ -514,7 +513,7 @@ namespace VirtoCommerce.Platform.Web
 
             // Initialize modules (IModule.Initialize registers DI services)
             Log.ForContext<Startup>().Information("Initializing modules");
-            ModuleRunner.InitializeModules(sortedModules, services, Configuration, WebHostEnvironment, moduleCatalogAdapter);
+            ModuleBootstrapper.Instance.InitializeModules(services, Configuration, WebHostEnvironment, moduleCatalogAdapter);
 
             // Register API controllers from loaded modules
             Log.ForContext<Startup>().Information("Registering API controllers");
@@ -616,9 +615,7 @@ namespace VirtoCommerce.Platform.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
-            PlatformStartupDiscovery.RunConfigure(
-                PlatformStartupDiscovery.GetStartups(),
-                app, Configuration);
+            ModuleBootstrapper.Instance.RunConfigure(app, Configuration);
 
             if (env.IsDevelopment())
             {
@@ -722,8 +719,7 @@ namespace VirtoCommerce.Platform.Web
 
                 // Post-initialize all modules in dependency order
                 Log.ForContext<Startup>().Information("Post initializing modules");
-                var sortedModules = ModuleRegistry.GetAllModules();
-                ModuleRunner.PostInitializeModules(sortedModules, app);
+                ModuleBootstrapper.Instance.PostInitializeModules(app);
             });
 
             app.UseEndpoints(SetupEndpoints);
@@ -759,7 +755,7 @@ namespace VirtoCommerce.Platform.Web
 
         private static void WriteFailedModulesToLog(ILogger<Startup> logger)
         {
-            foreach (var failedModule in ModuleRegistry.GetFailedModules())
+            foreach (var failedModule in ModuleBootstrapper.Instance.GetFailedModules())
             {
                 logger.LogError("Could not load module {ModuleId} {ModuleVersion}. Error: {ErrorMessage}",
                     failedModule.Id, failedModule.Version, string.Join(";", failedModule.Errors));

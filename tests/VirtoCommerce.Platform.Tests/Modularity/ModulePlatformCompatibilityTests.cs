@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
@@ -9,6 +10,10 @@ namespace VirtoCommerce.Platform.Tests.Modularity
     [Collection("Modularity")]
     public class ModulePlatformCompatibilityTests
     {
+        private readonly ModuleBootstrapper _bootstrapper = new(
+            NullLoggerFactory.Instance,
+            new LocalStorageModuleCatalogOptions());
+
         [Theory]
         [InlineData("3.1.0", "3.61.0", false)]
         [InlineData("3.61.0", "3.61.0", false)]
@@ -22,7 +27,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var module = new ManifestModuleInfo().LoadFromManifest(
                 new ModuleManifest { PlatformVersion = targetPlatformVersion, Id = "Fake", Version = "0.0.0" });
 
-            var errors = ModuleDiscovery.ValidateInstall(module, [], platformVersion);
+            var errors = _bootstrapper.ValidateInstall(module, [], platformVersion);
 
             Assert.Equal(violation, errors.Count > 0);
         }
@@ -38,7 +43,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var module = new ManifestModuleInfo().LoadFromManifest(
                 new ModuleManifest { PlatformVersion = modulePlatformVersion, Id = "TestModule", Version = "1.0.0" });
 
-            ModuleDiscovery.ValidateModules([module], platformVersion);
+            _bootstrapper.ValidateModulesInternal([module], platformVersion);
 
             Assert.Equal(hasError, module.Errors.Count > 0);
         }
@@ -56,7 +61,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     Dependencies = [new ManifestDependency { Id = "VirtoCommerce.Assets", Version = "3.1111.0" }],
                 });
 
-            ModuleDiscovery.ValidateModules([module], platformVersion);
+            _bootstrapper.ValidateModulesInternal([module], platformVersion);
 
             Assert.Single(module.Errors);
             Assert.Contains("VirtoCommerce.Assets", module.Errors.First());
@@ -78,7 +83,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     Dependencies = [new ManifestDependency { Id = "VirtoCommerce.Assets", Version = "3.1111.0" }],
                 });
 
-            ModuleDiscovery.ValidateModules([module, dependency], platformVersion);
+            _bootstrapper.ValidateModulesInternal([module, dependency], platformVersion);
 
             Assert.Single(module.Errors);
             Assert.Contains("incompatible", module.Errors.First());
@@ -99,7 +104,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     Dependencies = [new ManifestDependency { Id = "VirtoCommerce.Assets", Version = "3.200.0" }],
                 });
 
-            ModuleDiscovery.ValidateModules([module, dependency], platformVersion);
+            _bootstrapper.ValidateModulesInternal([module, dependency], platformVersion);
 
             Assert.Empty(module.Errors);
         }
@@ -117,7 +122,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     Dependencies = [new ManifestDependency { Id = "VirtoCommerce.Optional", Version = "3.0.0", Optional = true }],
                 });
 
-            ModuleDiscovery.ValidateModules([module], platformVersion);
+            _bootstrapper.ValidateModulesInternal([module], platformVersion);
 
             Assert.Empty(module.Errors);
         }
@@ -139,7 +144,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     Dependencies = [new ManifestDependency { Id = "VirtoCommerce.Catalog", Version = "3.800.0" }],
                 });
 
-            ModuleDiscovery.ValidateModules([catalog, xCart], platformVersion);
+            _bootstrapper.ValidateModulesInternal([catalog, xCart], platformVersion);
 
             Assert.NotEmpty(catalog.Errors);
             Assert.Contains("platform version", catalog.Errors.First());
@@ -172,7 +177,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     Dependencies = [new ManifestDependency { Id = "B", Version = "1.0.0" }],
                 });
 
-            ModuleDiscovery.ValidateModules([a, b, c], platformVersion);
+            _bootstrapper.ValidateModulesInternal([a, b, c], platformVersion);
 
             Assert.NotEmpty(a.Errors);
             Assert.NotEmpty(b.Errors);
@@ -197,7 +202,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     Dependencies = [new ManifestDependency { Id = "A", Version = "1.0.0", Optional = true }],
                 });
 
-            ModuleDiscovery.ValidateModules([a, b], platformVersion);
+            _bootstrapper.ValidateModulesInternal([a, b], platformVersion);
 
             Assert.NotEmpty(a.Errors);
             Assert.Empty(b.Errors);

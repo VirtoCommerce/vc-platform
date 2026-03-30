@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
             services.AddSingleton<IPlatformRestarter, ProcessPlatformRestarter>();
             services.AddSingleton<IModuleManagementService, ModuleManagementService>();
-            services.AddSingleton<IModuleService, ModuleService>();
+            services.AddSingleton<IModuleService>(ModuleBootstrapper.Instance);
 
             return services;
         }

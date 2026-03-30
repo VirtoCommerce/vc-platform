@@ -18,7 +18,7 @@ public class AppsController : ControllerBase
     [HttpGet]
     public IEnumerable<AppDescriptor> GetApps()
     {
-        var apps = ModuleRegistry.GetInstalledModules()
+        var apps = ModuleBootstrapper.Instance.GetInstalledModules()
             .SelectMany(x => x.Apps)
             .Select(x => new AppDescriptor(x))
             .OrderBy(x => x.Title)

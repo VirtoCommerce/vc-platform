@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
 using Xunit;
@@ -25,8 +26,11 @@ public class ModuleManifestReaderTests : IDisposable
     [Fact]
     public void ReadAll_NonExistentDirectory_ReturnsEmpty()
     {
+        // Arrange
+        var bootstrapper = CreateBootstrapper("/nonexistent/path/modules");
+
         // Act
-        var result = ModuleManifestReader.ReadAll("/nonexistent/path/modules");
+        var result = bootstrapper.ReadLocalManifests();
 
         // Assert
         Assert.Empty(result);
@@ -35,8 +39,11 @@ public class ModuleManifestReaderTests : IDisposable
     [Fact]
     public void ReadAll_EmptyDirectory_ReturnsEmpty()
     {
+        // Arrange
+        var bootstrapper = CreateBootstrapper(_discoveryPath);
+
         // Act
-        var result = ModuleManifestReader.ReadAll(_discoveryPath);
+        var result = bootstrapper.ReadLocalManifests();
 
         // Assert
         Assert.Empty(result);
@@ -59,9 +66,10 @@ public class ModuleManifestReaderTests : IDisposable
             """;
 
         SaveManifest(manifestContent, "Test.Module");
+        var bootstrapper = CreateBootstrapper(_discoveryPath);
 
         // Act
-        var result = ModuleManifestReader.ReadAll(_discoveryPath);
+        var result = bootstrapper.ReadLocalManifests();
 
         // Assert
         Assert.Single(result);
@@ -86,9 +94,10 @@ public class ModuleManifestReaderTests : IDisposable
 
         SaveManifest(manifestContent, "Module1");
         SaveManifest(manifestContent, "Module2");
+        var bootstrapper = CreateBootstrapper(_discoveryPath);
 
         // Act
-        var result = ModuleManifestReader.ReadAll(_discoveryPath);
+        var result = bootstrapper.ReadLocalManifests();
 
         // Assert
         Assert.Equal(2, result.Count);
@@ -110,9 +119,10 @@ public class ModuleManifestReaderTests : IDisposable
 
         SaveManifest(manifestContent, "Test.Module");
         SaveManifest(manifestContent, Path.Combine("Test.Module", "artifacts", "publish"));
+        var bootstrapper = CreateBootstrapper(_discoveryPath);
 
         // Act
-        var result = ModuleManifestReader.ReadAll(_discoveryPath);
+        var result = bootstrapper.ReadLocalManifests();
 
         // Assert
         Assert.Single(result);
@@ -134,9 +144,10 @@ public class ModuleManifestReaderTests : IDisposable
             """;
 
         SaveManifest(manifestContent, "Test.Module");
+        var bootstrapper = CreateBootstrapper(_discoveryPath);
 
         // Act
-        var modules = ModuleManifestReader.ReadAll(_discoveryPath);
+        var modules = bootstrapper.ReadLocalManifests();
 
         // Assert
         Assert.Single(modules);
@@ -166,9 +177,10 @@ public class ModuleManifestReaderTests : IDisposable
             """;
 
         var manifestPath = SaveManifest(manifestContent, "Test.Module");
+        var bootstrapper = CreateBootstrapper(_discoveryPath);
 
         // Act
-        var module = ModuleManifestReader.Read(manifestPath);
+        var module = bootstrapper.ReadManifest(manifestPath);
 
         // Assert
         Assert.NotNull(module);
@@ -180,6 +192,12 @@ public class ModuleManifestReaderTests : IDisposable
         Assert.True(module.IsInstalled);
     }
 
+
+    private static ModuleBootstrapper CreateBootstrapper(string discoveryPath)
+    {
+        var options = new LocalStorageModuleCatalogOptions { DiscoveryPath = discoveryPath };
+        return new ModuleBootstrapper(NullLoggerFactory.Instance, options);
+    }
 
     private string SaveManifest(string manifestContent, string directoryName)
     {

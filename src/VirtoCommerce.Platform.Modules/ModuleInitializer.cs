@@ -160,7 +160,7 @@ namespace VirtoCommerce.Platform.Modules
 
         /// <summary>
         /// Uses the container to resolve a new <see cref="IModule"/> by specifying its <see cref="Type"/>.
-        /// Delegates to <see cref="ModuleRunner.CreateModuleInstance"/> for the core logic.
+        /// Delegates to <see cref="ModuleBootstrapper.CreateModuleInstance"/> for the core logic.
         /// </summary>
         /// <param name="moduleInfo">The module to create.</param>
         /// <returns>A new instance of the module specified by <paramref name="moduleInfo"/>.</returns>
@@ -171,7 +171,7 @@ namespace VirtoCommerce.Platform.Modules
                 throw new ArgumentNullException(nameof(moduleInfo));
             }
 
-            return ModuleRunner.CreateModuleInstance(moduleInfo as ManifestModuleInfo);
+            return ModuleBootstrapper.CreateModuleInstance(moduleInfo as ManifestModuleInfo);
         }
     }
 }

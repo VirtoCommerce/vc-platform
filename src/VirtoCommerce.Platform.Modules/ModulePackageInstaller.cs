@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 
@@ -34,10 +33,7 @@ public static class ModulePackageInstaller
             Directory.CreateDirectory(targetModulePath);
         }
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModulePackageInstaller));
-        logger.LogInformation("Extracting {FileName} to {TargetPath}", Path.GetFileName(zipPath), targetModulePath);
         ZipFile.ExtractToDirectory(zipPath, targetModulePath, overwriteFiles: true);
-        logger.LogInformation("Successfully installed to {TargetPath}", targetModulePath);
     }
 
     /// <summary>
@@ -53,19 +49,14 @@ public static class ModulePackageInstaller
             return;
         }
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModulePackageInstaller));
-        logger.LogInformation("Removing module directory: {ModulePath}", modulePath);
-
         try
         {
             Directory.Delete(modulePath, recursive: true);
-            logger.LogInformation("Successfully removed directory {ModulePath}", modulePath);
         }
-        catch (IOException ex)
+        catch (IOException)
         {
             // Directory may be locked by FileSystemWatcher (PhysicalFileProvider) or antivirus.
-            // Log warning and continue — the new module version will overwrite files via Install().
-            logger.LogWarning("Could not fully delete directory {ModulePath}: {Message}. Continuing with installation.", modulePath, ex.Message);
+            // Continue — the new module version will overwrite files via Install().
         }
     }
 
@@ -79,9 +70,6 @@ public static class ModulePackageInstaller
         ArgumentNullException.ThrowIfNull(targetZipPath);
         ArgumentNullException.ThrowIfNull(httpClient);
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModulePackageInstaller));
-        logger.LogInformation("Downloading {PackageUrl}", packageUrl);
-
         var request = CreateHttpRequest(HttpMethod.Get, packageUrl, options);
         using var response = httpClient.Send(request, HttpCompletionOption.ResponseHeadersRead);
         response.EnsureSuccessStatusCode();
@@ -89,8 +77,6 @@ public static class ModulePackageInstaller
         using var responseStream = response.Content.ReadAsStream();
         using var fileStream = File.Create(targetZipPath);
         responseStream.CopyTo(fileStream);
-
-        logger.LogInformation("Downloaded to {TargetZipPath}", targetZipPath);
     }
 
     /// <summary>
@@ -129,9 +115,6 @@ public static class ModulePackageInstaller
     {
         ArgumentNullException.ThrowIfNull(manifestUrl);
 
-        var logger = ModuleLogger.CreateLogger(typeof(ModulePackageInstaller));
-        logger.LogDebug("Downloading module manifest from {Url}", manifestUrl);
-
         var request = CreateHttpRequest(HttpMethod.Get, manifestUrl, options);
         using var response = httpClient.Send(request, HttpCompletionOption.ResponseHeadersRead);
         response.EnsureSuccessStatusCode();
@@ -140,7 +123,7 @@ public static class ModulePackageInstaller
         using var reader = new StreamReader(stream);
         var json = reader.ReadToEnd();
 
-        return ModuleDiscovery.ParseExternalManifest(json, PlatformVersion.CurrentVersion, options.IncludePrerelease);
+        return ModuleBootstrapper.Instance.ParseExternalManifest(json, PlatformVersion.CurrentVersion, options.IncludePrerelease);
     }
 
     private static HttpRequestMessage CreateHttpRequest(HttpMethod method, Uri url, ExternalModuleCatalogOptions options)

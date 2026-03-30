@@ -1,9 +1,10 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.Modules.Local;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Modularity;
@@ -11,10 +12,12 @@ namespace VirtoCommerce.Platform.Tests.Modularity;
 public class ModuleCopierTests
 {
     private readonly Mock<IFileMetadataProvider> _metadataProvider = new();
+    private readonly FileCopyPolicy _fileCopyPolicy;
 
     public ModuleCopierTests()
     {
-        ModuleCopier.Initialize(new LocalStorageModuleCatalogOptions(), _metadataProvider.Object);
+        var options = Options.Create(new LocalStorageModuleCatalogOptions());
+        _fileCopyPolicy = new FileCopyPolicy(_metadataProvider.Object, options);
     }
 
     public static TheoryData<string, string> FilePathTestData => new()
@@ -51,7 +54,7 @@ public class ModuleCopierTests
         sourcePath = sourcePath.Replace('/', Path.DirectorySeparatorChar);
 
         // Act
-        var actualTargetPath = ModuleCopier.GetTargetRelativePath(sourcePath);
+        var actualTargetPath = _fileCopyPolicy.GetTargetRelativePath(sourcePath);
 
         // Make tests independent of DirectorySeparatorChar
         actualTargetPath = actualTargetPath?.Replace(Path.DirectorySeparatorChar, '/');
@@ -83,7 +86,7 @@ public class ModuleCopierTests
         }
 
         // Act
-        var actualCopyRequired = ModuleCopier.IsCopyRequired(sourcePath, targetPath, Architecture.X64, out _);
+        var actualCopyRequired = _fileCopyPolicy.IsCopyRequired(sourcePath, targetPath, Architecture.X64, out _);
 
         // Assert
         Assert.Equal(expectedCopyRequired, actualCopyRequired);
@@ -121,7 +124,7 @@ public class ModuleCopierTests
         }
 
         // Act
-        var actualCopyRequired = ModuleCopier.IsCopyRequired(sourcePath, targetPath, Architecture.X64, out _);
+        var actualCopyRequired = _fileCopyPolicy.IsCopyRequired(sourcePath, targetPath, Architecture.X64, out _);
 
         // Assert
         Assert.Equal(expectedCopyRequired, actualCopyRequired);
@@ -176,7 +179,7 @@ public class ModuleCopierTests
         }
 
         // Act
-        var actualCopyRequired = ModuleCopier.IsCopyRequired(sourcePath, targetPath, environmentArchitecture, out _);
+        var actualCopyRequired = _fileCopyPolicy.IsCopyRequired(sourcePath, targetPath, environmentArchitecture, out _);
 
         // Assert
         Assert.Equal(expectedCopyRequired, actualCopyRequired);

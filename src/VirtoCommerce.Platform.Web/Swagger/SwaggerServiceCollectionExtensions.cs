@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             }
 
             var provider = services.BuildServiceProvider();
-            var modules = ModuleRegistry.GetInstalledModules().Where(m => m.ModuleInstance != null).ToArray();
+            var modules = ModuleBootstrapper.Instance.GetInstalledModules().Where(m => m.ModuleInstance != null).ToArray();
 
             services.AddSwaggerGen(c =>
             {
@@ -158,7 +158,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             });
 
-            var modules = ModuleRegistry.GetInstalledModules().Where(m => m.ModuleInstance != null).ToArray();
+            var modules = ModuleBootstrapper.Instance.GetInstalledModules().Where(m => m.ModuleInstance != null).ToArray();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             applicationBuilder.UseSwaggerUI(c =>
@@ -211,7 +211,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // ------
 
             var moduleAssembly = actionDescriptor?.ControllerTypeInfo.Assembly ?? Assembly.GetExecutingAssembly();
-            var module = ModuleRegistry.GetInstalledModules().FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
+            var module = ModuleBootstrapper.Instance.GetInstalledModules().FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
 
             return module?.ModuleName ?? "VirtoCommerce.Platform";
         }

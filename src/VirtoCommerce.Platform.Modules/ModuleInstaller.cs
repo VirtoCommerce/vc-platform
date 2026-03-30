@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Modules
             foreach (var module in modules.Where(x => !x.IsInstalled))
             {
                 var allInstalledModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToList();
-                var errors = ModuleDiscovery.ValidateInstall(module, allInstalledModules, PlatformVersion.CurrentVersion);
+                var errors = ModuleBootstrapper.Instance.ValidateInstall(module, allInstalledModules, PlatformVersion.CurrentVersion);
                 foreach (var error in errors)
                 {
                     Report(progress, ProgressMessageLevel.Error, error);
@@ -104,7 +104,7 @@ namespace VirtoCommerce.Platform.Modules
             foreach (var module in modulesList)
             {
                 var installedModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToList();
-                var errors = ModuleDiscovery.ValidateUninstall(module.Id, installedModules, uninstallIds);
+                var errors = ModuleBootstrapper.Instance.ValidateUninstall(module.Id, installedModules, uninstallIds);
                 foreach (var error in errors)
                 {
                     Report(progress, ProgressMessageLevel.Error, error);

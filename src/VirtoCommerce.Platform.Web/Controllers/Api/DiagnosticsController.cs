@@ -41,7 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var databaseProvider = _configuration.GetValue("DatabaseProvider", "SqlServer");
 
 
-            var installedModules = ModuleRegistry.GetInstalledModules().OrderBy(x => x.Id)
+            var installedModules = ModuleBootstrapper.Instance.GetInstalledModules().OrderBy(x => x.Id)
                                        .Select(x => new ModuleDescriptor(x))
                                        .ToArray();
 
@@ -72,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public ActionResult<ModuleDescriptor[]> GetModulesErrors()
         {
-            var result = ModuleRegistry.GetFailedModules()
+            var result = ModuleBootstrapper.Instance.GetFailedModules()
                 .OrderBy(x => x.Id)
                 .ThenBy(x => x.Version)
                 .Select(x => new ModuleDescriptor(x))

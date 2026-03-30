@@ -96,7 +96,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 .Select(x => new ModuleDescriptor(x))
                 .ToList();
 
-            var localModules = ModuleRegistry.GetAllModules().ToDictionary(x => x.Id);
+            var localModules = ModuleBootstrapper.Instance.GetModules().ToDictionary(x => x.Id);
 
             foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))
             {

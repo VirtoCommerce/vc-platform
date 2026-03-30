@@ -14,7 +14,6 @@ using Serilog.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
-using VirtoCommerce.Platform.Modules.Local;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -44,31 +43,18 @@ namespace VirtoCommerce.Platform.Web
                 .ReadFrom.Configuration(GetLoggerConfiguration(bootConfig))
                 .CreateBootstrapLogger();
 
-            // Provide ILoggerFactory backed by Serilog to static module classes
-            var bootstrapLoggerFactory = new SerilogLoggerFactory(Log.Logger);
-            ModuleLogger.Initialize(bootstrapLoggerFactory);
-
+            var loggerFactory = new SerilogLoggerFactory(Log.Logger);
             var boostOptions = bootConfig.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
-            ModuleRunner.Initialize(boostOptions);
-
             var options = bootConfig.GetSection("VirtoCommerce").Get<LocalStorageModuleCatalogOptions>();
             options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath);
             options.ProbingPath = Path.GetFullPath(options.ProbingPath);
 
-            var modules = ModuleRunner.SortModulesByDependency(ModuleManifestReader.ReadAll(options.DiscoveryPath));
-
-            ModuleCopier.Initialize(options, new FileMetadataProvider());
-            ModuleCopier.Copy(modules, RuntimeInformation.ProcessArchitecture);
-
             var isDevelopment = environment.EqualsIgnoreCase(Environments.Development);
-            ModuleLoader.Initialize(isDevelopment);
-            ModuleLoader.LoadModules(modules, options.ProbingPath);
 
-            ModuleDiscovery.ValidateModules(modules, PlatformVersion.CurrentVersion);
-            ModuleRegistry.Initialize(modules);
-
-            // Discover IPlatformStartup implementations from loaded modules
-            PlatformStartupDiscovery.DiscoverStartups(modules);
+            ModuleBootstrapper.Instance = new ModuleBootstrapper(loggerFactory, options, boostOptions)
+                .Discover(PlatformVersion.CurrentVersion)
+                .Copy(RuntimeInformation.ProcessArchitecture)
+                .Load(isDevelopment);
         }
 
         private static IConfigurationRoot GetLoggerConfiguration(IConfigurationRoot bootConfig)
@@ -112,8 +98,7 @@ namespace VirtoCommerce.Platform.Web
                     webBuilder.ConfigureAppConfiguration((context, configurationBuilder) =>
                     {
                         // Let modules add configuration sources (e.g., Azure App Configuration)
-                        PlatformStartupDiscovery.RunConfigureAppConfiguration(
-                            PlatformStartupDiscovery.GetStartups(),
+                        ModuleBootstrapper.Instance.RunConfigureAppConfiguration(
                             configurationBuilder,
                             context.HostingEnvironment);
                     });
@@ -121,19 +106,13 @@ namespace VirtoCommerce.Platform.Web
                 .ConfigureServices((hostingContext, services) =>
                 {
                     // Let modules register host-level services
-                    PlatformStartupDiscovery.RunConfigureHostServices(
-                        PlatformStartupDiscovery.GetStartups(),
+                    ModuleBootstrapper.Instance.RunConfigureHostServices(
                         services,
                         hostingContext.Configuration);
 
                     //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs
                     if (hostingContext.Configuration.GetValue("VirtoCommerce:Hangfire:UseHangfireServer", true))
                     {
-                        // Add & start hangfire server immediately.
-                        // We do this there after all services initialize, to have dependencies in hangfire tasks correctly resolved.
-                        // Hangfire uses the ASP.NET HostedServices to host job background processing tasks.
-                        // According to the official documentation https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-3.1&tabs=visual-studio#ihostedservice-interface,
-                        // in order to change running hosted services after the app's pipeline, we need to place AddHangfireServer here instead of Startup.
                         services.AddHangfireServer(options =>
                         {
                             var queues = hostingContext.Configuration.GetSection("VirtoCommerce:Hangfire:Queues").Get<List<string>>();

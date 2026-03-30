@@ -50,7 +50,7 @@ public class ModuleInfoFilter : IOperationFilter, IDocumentFilter
     /// </summary>
     public ModuleInfoFilter()
     {
-        var modules = ModuleRegistry.GetInstalledModules()
+        var modules = ModuleBootstrapper.Instance.GetInstalledModules()
             .Where(x => x.ModuleInstance != null)
             .Select(x =>
                 new SwaggerModule

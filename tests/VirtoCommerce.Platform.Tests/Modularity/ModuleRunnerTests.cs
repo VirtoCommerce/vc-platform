@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
@@ -9,15 +10,21 @@ namespace VirtoCommerce.Platform.Tests.Modularity;
 
 public class ModuleRunnerTests
 {
+    private readonly ModuleBootstrapper _bootstrapper;
+
+    public ModuleRunnerTests()
+    {
+        _bootstrapper = CreateBootstrapper();
+    }
+
     [Fact]
     public void SortByDependency_EmptyList_ReturnsEmpty()
     {
         // Arrange
         var modules = new List<ManifestModuleInfo>();
-        ModuleRunner.Initialize();
 
         // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
+        var sorted = _bootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, sorted.Count);
@@ -32,10 +39,8 @@ public class ModuleRunnerTests
             CreateModule("A"),
         };
 
-        ModuleRunner.Initialize();
-
         // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
+        var sorted = _bootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, sorted.Count);
@@ -53,10 +58,8 @@ public class ModuleRunnerTests
             CreateModule("C"),
         };
 
-        ModuleRunner.Initialize();
-
         // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
+        var sorted = _bootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, sorted.Count);
@@ -75,10 +78,8 @@ public class ModuleRunnerTests
             CreateModule("C"),
         };
 
-        ModuleRunner.Initialize();
-
         // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
+        var sorted = _bootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, sorted.Count);
@@ -98,10 +99,8 @@ public class ModuleRunnerTests
             CreateModule("D"),
         };
 
-        ModuleRunner.Initialize();
-
         // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
+        var sorted = _bootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, sorted.Count);
@@ -119,10 +118,8 @@ public class ModuleRunnerTests
             CreateModule("C"),
         };
 
-        ModuleRunner.Initialize();
-
         // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
+        var sorted = _bootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, sorted.Count);
@@ -141,10 +138,8 @@ public class ModuleRunnerTests
             CreateModule("C"),
         };
 
-        ModuleRunner.Initialize();
-
         // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
+        var sorted = _bootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, sorted.Count);
@@ -166,14 +161,14 @@ public class ModuleRunnerTests
         };
 
         // Act
-        var normal = ModuleRunner.SortModulesByDependency(modules);
+        var normal = _bootstrapper.SortModulesByDependency(modules);
 
-        ModuleRunner.Initialize(new ModuleSequenceBoostOptions
+        var boostedBootstrapper = CreateBootstrapper(new ModuleSequenceBoostOptions
         {
             ModuleSequenceBoost = ["B", "C"],
         });
 
-        var boosted = ModuleRunner.SortModulesByDependency(modules);
+        var boosted = boostedBootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, normal.Count);
@@ -195,10 +190,8 @@ public class ModuleRunnerTests
             CreateModule("E", dependencies: ["C"]),
         };
 
-        ModuleRunner.Initialize();
-
         // Act
-        var sorted = ModuleRunner.SortModulesByDependency(modules);
+        var sorted = _bootstrapper.SortModulesByDependency(modules);
 
         // Assert
         Assert.Equal(modules.Count, sorted.Count);
@@ -213,6 +206,14 @@ public class ModuleRunnerTests
         }
     }
 
+
+    private static ModuleBootstrapper CreateBootstrapper(ModuleSequenceBoostOptions boostOptions = null)
+    {
+        return new ModuleBootstrapper(
+            NullLoggerFactory.Instance,
+            new LocalStorageModuleCatalogOptions(),
+            boostOptions);
+    }
 
     private static ManifestModuleInfo CreateModule(string id, string[] dependencies = null)
     {

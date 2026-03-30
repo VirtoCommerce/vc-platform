@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Modules
 
                 // Merge with installed using ModuleDiscovery
                 var installedModules = _installedModules.OfType<ManifestModuleInfo>().ToList();
-                var mergedModules = ModuleDiscovery.MergeWithInstalled(externalModules, installedModules);
+                var mergedModules = ModuleBootstrapper.Instance.MergeWithInstalled(externalModules, installedModules);
 
                 foreach (var module in mergedModules)
                 {
@@ -134,7 +134,7 @@ namespace VirtoCommerce.Platform.Modules
             using var reader = new StreamReader(stream);
             var json = reader.ReadToEnd();
 
-            return ModuleDiscovery.ParseExternalManifest(json, PlatformVersion.CurrentVersion, _options.IncludePrerelease);
+            return ModuleBootstrapper.Instance.ParseExternalManifest(json, PlatformVersion.CurrentVersion, _options.IncludePrerelease);
         }
 
         protected override void ValidateDependencyGraph()

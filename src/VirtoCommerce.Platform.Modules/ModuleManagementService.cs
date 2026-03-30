@@ -53,7 +53,7 @@ public class ModuleManagementService(
     {
         EnsureInitialized();
         var modules = ResolveModulesById(moduleIds);
-        return ModuleDiscovery.GetDependencies(modules, _mergedModules);
+        return ModuleBootstrapper.Instance.GetDependencies(modules, _mergedModules);
     }
 
     public ManifestModuleInfo AddUploadedModule(ManifestModuleInfo module)
@@ -67,7 +67,7 @@ public class ModuleManagementService(
         }
 
         // Force dependency validation
-        ModuleDiscovery.GetDependencies([module], _mergedModules);
+        ModuleBootstrapper.Instance.GetDependencies([module], _mergedModules);
         _mergedModules.Add(module);
 
         return module;
@@ -194,11 +194,11 @@ public class ModuleManagementService(
     private void InstallModulesInternal(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
     {
         var failed = false;
-        var installedModules = ModuleRegistry.GetAllModules();
+        var installedModules = ModuleBootstrapper.Instance.GetModules();
 
         foreach (var module in modules.Where(x => !x.IsInstalled))
         {
-            var errors = ModuleDiscovery.ValidateInstall(module, installedModules, PlatformVersion.CurrentVersion);
+            var errors = ModuleBootstrapper.Instance.ValidateInstall(module, installedModules, PlatformVersion.CurrentVersion);
             foreach (var error in errors)
             {
                 Report(progress, ProgressMessageLevel.Error, error);
@@ -232,7 +232,7 @@ public class ModuleManagementService(
 
             foreach (var module in modulesToUpdate)
             {
-                var existingModule = ModuleRegistry.GetModule(module.Id);
+                var existingModule = ModuleBootstrapper.Instance.GetModule(module.Id);
                 var modulePath = Path.Combine(_localOptions.DiscoveryPath, existingModule.Id);
                 ModulePackageInstaller.Uninstall(modulePath);
                 Report(progress, ProgressMessageLevel.Info, "Updating '{0}' -> '{1}'", existingModule, module);
@@ -262,11 +262,11 @@ public class ModuleManagementService(
     {
         var failed = false;
         var uninstallIds = modules.Select(x => x.Id).ToArray();
-        var installedModules = ModuleRegistry.GetAllModules();
+        var installedModules = ModuleBootstrapper.Instance.GetModules();
 
         foreach (var module in modules)
         {
-            var errors = ModuleDiscovery.ValidateUninstall(module.Id, installedModules, uninstallIds);
+            var errors = ModuleBootstrapper.Instance.ValidateUninstall(module.Id, installedModules, uninstallIds);
             foreach (var error in errors)
             {
                 Report(progress, ProgressMessageLevel.Error, error);
@@ -369,7 +369,7 @@ public class ModuleManagementService(
             }
         }
 
-        return ModuleDiscovery.GetDependencies(modules, _mergedModules)
+        return ModuleBootstrapper.Instance.GetDependencies(modules, _mergedModules)
             .Where(x => !x.IsInstalled)
             .ToList();
     }
@@ -470,8 +470,8 @@ public class ModuleManagementService(
 
             var httpClient = httpClientFactory.CreateClient();
             var externalModules = ModulePackageInstaller.LoadExternalModules(httpClient, _externalOptions);
-            var installedModules = ModuleRegistry.GetAllModules();
-            _mergedModules = ModuleDiscovery.MergeWithInstalled(externalModules, installedModules);
+            var installedModules = ModuleBootstrapper.Instance.GetModules();
+            _mergedModules = ModuleBootstrapper.Instance.MergeWithInstalled(externalModules, installedModules);
         }
     }
 
@@ -481,7 +481,7 @@ public class ModuleManagementService(
 
         try
         {
-            hasMissingDependencies = ModuleDiscovery.GetDependencies([module], _mergedModules)
+            hasMissingDependencies = ModuleBootstrapper.Instance.GetDependencies([module], _mergedModules)
                 .Where(x => !x.IsInstalled)
                 .Except(dependenciesToIgnore)
                 .Any();
@@ -497,7 +497,7 @@ public class ModuleManagementService(
 
     private static void InvalidateProbingFolder()
     {
-        ModuleCopier.InvalidateProbingFolder();
+        ModuleBootstrapper.Instance.InvalidateProbingFolder();
     }
 
     private void InstallModule(ManifestModuleInfo module, IProgress<ProgressMessage> progress)

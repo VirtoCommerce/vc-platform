@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
@@ -9,6 +10,10 @@ namespace VirtoCommerce.Platform.Tests.Modularity;
 
 public class ModuleDiscoveryTests
 {
+    private readonly ModuleBootstrapper _bootstrapper = new(
+        NullLoggerFactory.Instance,
+        new LocalStorageModuleCatalogOptions());
+
     [Fact]
     public void ValidateInstall_CompatiblePlatformVersion_NoErrors()
     {
@@ -16,7 +21,7 @@ public class ModuleDiscoveryTests
         var module = CreateModule("TestModule", "1.0.0", platformVersion: "3.0.0");
         var installedModules = new List<ManifestModuleInfo>();
 
-        var errors = ModuleDiscovery.ValidateInstall(module, installedModules, platformVersion);
+        var errors = _bootstrapper.ValidateInstall(module, installedModules, platformVersion);
 
         Assert.Empty(errors);
     }
@@ -28,7 +33,7 @@ public class ModuleDiscoveryTests
         var module = CreateModule("TestModule", "1.0.0", platformVersion: "4.0.0");
         var installedModules = new List<ManifestModuleInfo>();
 
-        var errors = ModuleDiscovery.ValidateInstall(module, installedModules, platformVersion);
+        var errors = _bootstrapper.ValidateInstall(module, installedModules, platformVersion);
 
         Assert.Single(errors);
         Assert.Equal("Target platform version 4.0.0 is incompatible with current 3.800.0", errors[0]);
@@ -46,7 +51,7 @@ public class ModuleDiscoveryTests
             CreateModule("OldModule", "1.0.0", platformVersion: "3.0.0", isInstalled: true),
         };
 
-        var errors = ModuleDiscovery.ValidateInstall(module, installedModules, platformVersion);
+        var errors = _bootstrapper.ValidateInstall(module, installedModules, platformVersion);
 
         Assert.Single(errors);
         Assert.Equal("NewModule:1.0.0 is incompatible with installed OldModule:1.0.0", errors[0]);
@@ -61,7 +66,7 @@ public class ModuleDiscoveryTests
             CreateModule("ModuleB", "1.0.0", isInstalled: true),
         };
 
-        var errors = ModuleDiscovery.ValidateUninstall("ModuleA", installedModules);
+        var errors = _bootstrapper.ValidateUninstall("ModuleA", installedModules);
 
         Assert.Empty(errors);
     }
@@ -74,7 +79,7 @@ public class ModuleDiscoveryTests
 
         var installedModules = new List<ManifestModuleInfo> { moduleA, moduleB };
 
-        var errors = ModuleDiscovery.ValidateUninstall("ModuleA", installedModules);
+        var errors = _bootstrapper.ValidateUninstall("ModuleA", installedModules);
 
         Assert.Single(errors);
         Assert.Equal("Unable to uninstall 'ModuleA' because 'ModuleB' depends on it", errors[0]);
@@ -93,7 +98,7 @@ public class ModuleDiscoveryTests
             CreateModule("ModuleA", "1.0.0", isInstalled: true),
         };
 
-        var merged = ModuleDiscovery.MergeWithInstalled(externalModules, installedModules);
+        var merged = _bootstrapper.MergeWithInstalled(externalModules, installedModules);
 
         // Both should be present (external newer + installedModules)
         Assert.Equivalent(externalModules.Concat(installedModules), merged);
@@ -112,7 +117,7 @@ public class ModuleDiscoveryTests
             CreateModule("ModuleA", "2.0.0", isInstalled: true),
         };
 
-        var merged = ModuleDiscovery.MergeWithInstalled(externalModules, installedModules);
+        var merged = _bootstrapper.MergeWithInstalled(externalModules, installedModules);
 
         // External version should be skipped, installedModules should be present
         Assert.Single(merged);
@@ -128,7 +133,7 @@ public class ModuleDiscoveryTests
             CreateModule("LocalOnly", "1.0.0", isInstalled: true),
         };
 
-        var merged = ModuleDiscovery.MergeWithInstalled(externalModules, installedModules);
+        var merged = _bootstrapper.MergeWithInstalled(externalModules, installedModules);
 
         Assert.Single(merged);
         Assert.Equal("LocalOnly", merged[0].Id);

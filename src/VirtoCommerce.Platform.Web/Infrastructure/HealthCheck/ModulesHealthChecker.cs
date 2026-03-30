@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
     {
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var errorsDictionary = ModuleRegistry.GetFailedModules()
+            var errorsDictionary = ModuleBootstrapper.Instance.GetFailedModules()
                 .ToDictionary(
                     x => x.Id,
                     x => new ModulesHealthReportRecord
