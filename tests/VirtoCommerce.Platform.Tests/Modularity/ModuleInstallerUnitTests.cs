@@ -1,19 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Modularity.Exceptions;
-using VirtoCommerce.Platform.Core.TransactionFileManager;
-using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules;
-using VirtoCommerce.Platform.Modules.External;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
@@ -21,60 +13,57 @@ namespace VirtoCommerce.Platform.Tests.Modularity
     [Collection("Modularity")]
     public class ModuleInstallerUnitTests
     {
-        private readonly LocalStorageModuleCatalogOptions _options;
-        private readonly Mock<IExternalModulesClient> _externalClientMock;
-        private readonly Mock<ITransactionFileManager> _fileManagerMock;
-        private readonly Mock<IExternalModuleCatalog> _extModuleCatalogMock;
-        private readonly Mock<IZipFileWrapper> _zipFileWrapperMock;
-
-        public ModuleInstallerUnitTests()
-        {
-            _options = new LocalStorageModuleCatalogOptions { DiscoveryPath = "modules" };
-            _externalClientMock = new Mock<IExternalModulesClient>();
-            _fileManagerMock = new Mock<ITransactionFileManager>();
-            _extModuleCatalogMock = new Mock<IExternalModuleCatalog>();
-            _zipFileWrapperMock = new Mock<IZipFileWrapper>();
-        }
-
         [Theory]
         [ClassData(typeof(ModularityTestData))]
-        public void Install_Release_Installed(string currentVersionPlatform, ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool isInstalled)
+        public void ValidateInstall_ChecksCompatibility(string currentVersionPlatform, ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool isInstallable)
         {
             //Arrange
-            PlatformVersion.CurrentVersion = SemanticVersion.Parse(currentVersionPlatform);
-            var progress = new Progress<ProgressMessage>();
-
+            var platformVersion = SemanticVersion.Parse(currentVersionPlatform);
             var modules = GetManifestModuleInfos(moduleManifests);
             var installedModules = GetManifestModuleInfos(installedModuleManifests);
-
-            _extModuleCatalogMock.Setup(x => x.Modules)
-                .Returns(installedModules.Select(x => { x.IsInstalled = true; return x; }));
-
-            var service = GetModuleInstaller();
+            foreach (var m in installedModules)
+            { m.IsInstalled = true; }
 
             //Act
-            service.Install(modules, progress);
+            var allValid = modules.All(module =>
+            {
+                var errors = ModuleDiscovery.ValidateInstall(module, installedModules, platformVersion);
+                return errors.Count == 0;
+            });
 
             //Assert
-            modules.All(x => x.IsInstalled).Should().Be(isInstalled);
+            allValid.Should().Be(isInstallable);
         }
 
         [Theory]
         [ClassData(typeof(DepencencyTestData))]
-        public void MissedModuleDependencyTest(ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool hasMissedModuleException)
+        public void GetDependencies_DetectsMissingDeps(ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool hasMissingDependency)
         {
             //Arrange
             var modules = GetManifestModuleInfos(moduleManifests);
-            var service = GetExternalModuleCatalog(installedModuleManifests);
+            var installedModules = GetManifestModuleInfos(installedModuleManifests);
+            foreach (var m in installedModules)
+            { m.IsInstalled = true; }
+
+            var allAvailable = modules.Concat(installedModules).ToList();
 
             //Act
-            var exception = Record.Exception(() => service.CompleteListWithDependencies(modules).Any());
+            var result = ModuleDiscovery.GetDependencies(modules, allAvailable);
 
-            //Assert
-            Assert.Equal(exception is MissedModuleException, hasMissedModuleException);
+            //Assert — check if any declared dependency is NOT resolved in the result
+            var allDeclaredDeps = modules
+                .Where(m => m.Dependencies != null)
+                .SelectMany(m => m.Dependencies)
+                .Select(d => d.Id)
+                .Distinct(StringComparer.OrdinalIgnoreCase);
+
+            var resolvedIds = result.Select(r => r.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var hasMissing = allDeclaredDeps.Any(depId => !resolvedIds.Contains(depId));
+
+            hasMissing.Should().Be(hasMissingDependency);
         }
 
-        private ManifestModuleInfo[] GetManifestModuleInfos(ModuleManifest[] moduleManifests)
+        private static ManifestModuleInfo[] GetManifestModuleInfos(ModuleManifest[] moduleManifests)
         {
             return moduleManifests.Select(x =>
             {
@@ -82,38 +71,6 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                 module.LoadFromManifest(x);
                 return module;
             }).ToArray();
-        }
-
-        private ModuleInstaller GetModuleInstaller()
-        {
-            return new ModuleInstaller(_extModuleCatalogMock.Object,
-                _externalClientMock.Object,
-                _fileManagerMock.Object,
-                Options.Create(_options),
-                new MockFileSystem(),
-                _zipFileWrapperMock.Object);
-        }
-
-
-        private IExternalModuleCatalog GetExternalModuleCatalog(ModuleManifest[] installedModuleManifests)
-        {
-            var installedModules = GetManifestModuleInfos(installedModuleManifests).Select(x => { x.IsInstalled = true; return x; }).ToList();
-            var localCatalogModulesMock = new Mock<ILocalModuleCatalog>();
-            localCatalogModulesMock.Setup(x => x.Modules).Returns(installedModules);
-
-            var externalModulesClientMock = new Mock<IExternalModulesClient>();
-            var options = Options.Create(new Mock<ExternalModuleCatalogOptions>().Object);
-            var loggerMock = new Mock<ILogger<ExternalModuleCatalog>>();
-            var boostOptions = Options.Create(new ModuleSequenceBoostOptions());
-
-            var externalModuleCatalog = new ExternalModuleCatalog(localCatalogModulesMock.Object, externalModulesClientMock.Object, options, loggerMock.Object, boostOptions);
-
-            foreach (var module in installedModules)
-            {
-                externalModuleCatalog.AddModule(module);
-            }
-
-            return externalModuleCatalog;
         }
 
         class ModularityTestData : IEnumerable<object[]>
@@ -252,7 +209,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                         new ModuleManifest { Id = "A", Version = "3.8.0", PlatformVersion = "3.0.0" },
                         new ModuleManifest { Id = "C", Version = "3.9.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "A", Version = "3.0.0" } }}
                     },
-                    false
+                    true
                 };
 
                 yield return new object[] { "3.1.0-preview-5555", new[] { new ModuleManifest { Id = "A", Version = "3.2.0-prerelease-22", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
@@ -273,7 +230,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0",
                     new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, //installed
-                    false
+                    true
                 };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
@@ -310,14 +267,14 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0-alpha001",
                     new[] {new ModuleManifest {Id = "A", Version = "3.0.0-alpha001", PlatformVersion = "3.0.0-alpha001" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha002", PlatformVersion = "3.0.0-alpha001" } }, //installed
-                    false
+                    true
                 };
                 yield return new object[]
                 {
                     "3.0.0-alpha001",
                     new[] {new ModuleManifest {Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0-alpha001" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0-alpha001" } }, //installed
-                    false
+                    true
                 };
             }
 
@@ -340,7 +297,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     },
                     //installed
                     Array.Empty<ModuleManifest>(),
-                    //has missed module exception
+                    //has missing dependency
                     true
                 };
                 yield return new object[]

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
@@ -22,6 +22,8 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Helpers;
+using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.Web.Model.Modularity;
 using VirtoCommerce.Platform.Web.Modularity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -32,8 +34,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private const string _managementIsDisabledMessage = "Module management is disabled.";
 
-        private readonly IExternalModuleCatalog _externalModuleCatalog;
-        private readonly IModuleInstaller _moduleInstaller;
+        private readonly IModuleManagementService _moduleService;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
         private readonly ISettingsManager _settingsManager;
@@ -41,13 +42,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ExternalModuleCatalogOptions _externalModuleCatalogOptions;
         private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly IPlatformRestarter _platformRestarter;
+        private readonly ILogger<ModulesController> _logger;
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
-        private readonly ILocalModuleCatalog _localModuleCatalog;
 
         public ModulesController(
-            IExternalModuleCatalog externalModuleCatalog,
-            IModuleInstaller moduleInstaller,
+            IModuleManagementService moduleService,
             IPushNotificationManager pushNotifier,
             IUserNameResolver userNameResolver,
             ISettingsManager settingsManager,
@@ -55,10 +55,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
             IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
             IPlatformRestarter platformRestarter,
-            ILocalModuleCatalog localModuleCatalog)
+            ILogger<ModulesController> logger)
         {
-            _externalModuleCatalog = externalModuleCatalog;
-            _moduleInstaller = moduleInstaller;
+            _moduleService = moduleService;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
             _settingsManager = settingsManager;
@@ -66,43 +65,38 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
-            _localModuleCatalog = localModuleCatalog;
+            _logger = logger;
         }
 
         /// <summary>
-        /// Reload  modules
+        /// Reload modules
         /// </summary>
-        /// <returns></returns>
         [HttpPost]
         [Route("reload")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleQuery)]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public ActionResult ReloadModules()
         {
-            _externalModuleCatalog.Reload();
+            _moduleService.ReloadModules();
             return NoContent();
         }
 
         /// <summary>
         /// Get installed modules
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleQuery)]
+        [ProducesResponseType(typeof(ModuleDescriptor[]), StatusCodes.Status200OK)]
         public ActionResult<ModuleDescriptor[]> GetModules()
         {
-            EnsureModulesCatalogInitialized();
-
-            var allModules = _externalModuleCatalog.Modules
-                .OfType<ManifestModuleInfo>()
+            var allModules = _moduleService.GetModules()
                 .OrderBy(x => x.Id)
                 .ThenBy(x => x.Version)
                 .Select(x => new ModuleDescriptor(x))
                 .ToList();
 
-            _localModuleCatalog.Initialize();
-            var localModules = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>().ToDictionary(x => x.Id);
+            var localModules = ModuleRegistry.GetAllModules().ToDictionary(x => x.Id);
 
             foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))
             {
@@ -114,75 +108,43 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(allModules);
         }
 
-        private static bool IconFileExists(ManifestModuleInfo module)
-        {
-            // PathString should start from "/"
-            var moduleIconUrl = module.IconUrl;
-            if (!moduleIconUrl.StartsWith('/'))
-            {
-                moduleIconUrl = "/" + moduleIconUrl;
-            }
-
-            var basePath = new PathString($"/modules/$({module.Id})");
-            var iconUrlPath = new PathString(moduleIconUrl);
-
-            if (!iconUrlPath.StartsWithSegments(basePath, out var subPath) ||
-                string.IsNullOrEmpty(subPath.Value) ||
-                !Directory.Exists(module.FullPhysicalPath))
-            {
-                return false;
-            }
-
-            using var fileProvider = new PhysicalFileProvider(module.FullPhysicalPath);
-
-            return fileProvider.GetFileInfo(subPath.Value).Exists;
-        }
-
         /// <summary>
-        /// Get all dependent modules for module
+        /// Get all dependent modules for a module
         /// </summary>
         /// <param name="moduleDescriptors">modules descriptors</param>
-        /// <returns></returns>
         [HttpPost]
         [Route("getdependents")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleQuery)]
+        [ProducesResponseType(typeof(ModuleDescriptor[]), StatusCodes.Status200OK)]
         public ActionResult<ModuleDescriptor[]> GetDependingModules([FromBody] ModuleDescriptor[] moduleDescriptors)
         {
-            EnsureModulesCatalogInitialized();
+            var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
 
-            var modules = _externalModuleCatalog.Modules
-                .OfType<ManifestModuleInfo>()
-                .Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x)
-                .ToList();
+            var retVal = _moduleService.GetDependents(moduleIds).Distinct()
+                .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
+                .Select(x => new ModuleDescriptor(x))
+                .ToArray();
 
-            var retVal = GetDependingModulesRecursive(modules).Distinct()
-                                                              .Except(modules)
-                                                              .Select(x => new ModuleDescriptor(x))
-                                                              .ToArray();
             return Ok(retVal);
         }
 
         /// <summary>
-        /// Returns a flat expanded  list of modules that depend on passed modules
+        /// Returns a flat expanded list of modules that depend on passed modules
         /// </summary>
         /// <param name="moduleDescriptors">modules descriptors</param>
-        /// <returns></returns>
         [HttpPost]
         [Route("getmissingdependencies")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleQuery)]
+        [ProducesResponseType(typeof(ModuleDescriptor[]), StatusCodes.Status200OK)]
         public ActionResult<ModuleDescriptor[]> GetMissingDependencies([FromBody] ModuleDescriptor[] moduleDescriptors)
         {
-            EnsureModulesCatalogInitialized();
-            var modules = _externalModuleCatalog.Modules
-                                        .OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x)
-                                        .ToList();
+            var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
 
-            var result = _externalModuleCatalog.CompleteListWithDependencies(modules)
-                                       .OfType<ManifestModuleInfo>()
-                                       .Where(x => !x.IsInstalled)
-                                       .Except(modules)
-                                       .Select(x => new ModuleDescriptor(x))
-                                       .ToArray();
+            var result = _moduleService.GetDependencies(moduleIds)
+                .Where(x => !x.IsInstalled)
+                .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
+                .Select(x => new ModuleDescriptor(x))
+                .ToArray();
 
             return Ok(result);
         }
@@ -190,14 +152,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Upload module package for installation or update
         /// </summary>
-        /// <returns></returns>
         [HttpPost]
         [Route("localstorage")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModuleDescriptor), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ModuleDescriptor>> UploadModuleArchive()
         {
-            EnsureModulesCatalogInitialized();
-
             if (!_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
             {
                 return BadRequest(_managementIsDisabledMessage);
@@ -222,152 +183,97 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
             module.LoadFromManifest(manifest);
-            var existingModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(module));
 
-            if (existingModule != null)
-            {
-                module = existingModule;
-            }
-            else
-            {
-                //Force dependency validation for new module
-                _externalModuleCatalog.CompleteListWithDependencies([module]).ToList().Clear();
-                _externalModuleCatalog.AddModule(module);
-            }
-
+            module = _moduleService.AddUploadedModule(module);
             module.Ref = targetFilePath;
-            var result = new ModuleDescriptor(module);
 
-            return Ok(result);
-        }
-
-        private static async Task<string> UploadFile(HttpRequest request, string uploadFolderPath)
-        {
-            var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
-            var reader = new MultipartReader(boundary, request.Body);
-            var section = await reader.ReadNextSectionAsync();
-
-            if (section == null)
-            {
-                return null;
-            }
-
-            if (!ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition) ||
-                !MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
-            {
-                return null;
-            }
-
-            var fileName = Path.GetFileName(contentDisposition.FileName.Value);
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return null;
-            }
-
-            if (!Directory.Exists(uploadFolderPath))
-            {
-                Directory.CreateDirectory(uploadFolderPath);
-            }
-
-            var targetFilePath = Path.Combine(uploadFolderPath, fileName);
-
-            await using var targetStream = System.IO.File.Create(targetFilePath);
-            await section.Body.CopyToAsync(targetStream);
-
-            return targetFilePath;
-        }
-
-        private static async Task<ModuleManifest> LoadModuleManifestFromZipArchive(string path)
-        {
-            ModuleManifest manifest = null;
-
-            try
-            {
-                await using var packageStream = System.IO.File.Open(path, FileMode.Open);
-                using var package = new ZipArchive(packageStream, ZipArchiveMode.Read);
-
-                var entry = package.GetEntry("module.manifest");
-                if (entry != null)
-                {
-                    await using var manifestStream = entry.Open();
-                    manifest = ManifestReader.Read(manifestStream);
-                }
-            }
-            catch
-            {
-                // Suppress any exceptions
-            }
-
-            return manifest;
+            return Ok(new ModuleDescriptor(module));
         }
 
         /// <summary>
-        /// Install modules 
+        /// Install modules
         /// </summary>
         /// <param name="modules">modules for install</param>
-        /// <returns></returns>
         [HttpPost]
         [Route("install")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> InstallModules([FromBody] ModuleDescriptor[] modules)
         {
-            EnsureModulesCatalogInitialized();
-
-            var options = new ModuleBackgroundJobOptions
-            {
-                Action = ModuleAction.Install,
-                Modules = modules
-            };
-            var result = ScheduleJob(options);
-            return Ok(result);
+            var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = requests }));
         }
 
         /// <summary>
-        /// Update modules 
+        /// Install modules using lightweight requests
+        /// </summary>
+        /// <param name="modules">module install requests (id + optional version)</param>
+        [HttpPost]
+        [Route("install/v2")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
+        public ActionResult<ModulePushNotification> InstallModuleRequests([FromBody] ModuleInstallRequest[] modules)
+        {
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = modules }));
+        }
+
+        /// <summary>
+        /// Update modules
         /// </summary>
         /// <param name="modules">modules for update</param>
-        /// <returns></returns>
         [HttpPost]
         [Route("update")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> UpdateModules([FromBody] ModuleDescriptor[] modules)
         {
-            EnsureModulesCatalogInitialized();
+            var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Update, Modules = requests }));
+        }
 
-            var options = new ModuleBackgroundJobOptions
-            {
-                Action = ModuleAction.Update,
-                Modules = modules
-            };
-            var result = ScheduleJob(options);
-            return Ok(result);
+        /// <summary>
+        /// Update modules using lightweight requests
+        /// </summary>
+        /// <param name="modules">module install requests (id + optional version)</param>
+        [HttpPost]
+        [Route("update/v2")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
+        public ActionResult<ModulePushNotification> UpdateModuleRequests([FromBody] ModuleInstallRequest[] modules)
+        {
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Update, Modules = modules }));
         }
 
         /// <summary>
         /// Uninstall module
         /// </summary>
         /// <param name="modules">modules</param>
-        /// <returns></returns>
         [HttpPost]
         [Route("uninstall")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModulePushNotification> UninstallModule([FromBody] ModuleDescriptor[] modules)
         {
-            EnsureModulesCatalogInitialized();
+            var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = requests }));
+        }
 
-            var options = new ModuleBackgroundJobOptions
-            {
-                Action = ModuleAction.Uninstall,
-                Modules = modules
-            };
-            var result = ScheduleJob(options);
-            return Ok(result);
+        /// <summary>
+        /// Uninstall modules using lightweight requests
+        /// </summary>
+        /// <param name="modules">module install requests (id only, version ignored)</param>
+        [HttpPost]
+        [Route("uninstall/v2")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
+        public ActionResult<ModulePushNotification> UninstallModuleRequests([FromBody] ModuleInstallRequest[] modules)
+        {
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = modules }));
         }
 
         /// <summary>
         /// Restart web application
         /// </summary>
-        /// <returns></returns>
         [HttpPost]
         [Route("restart")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
@@ -375,22 +281,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public ActionResult Restart()
         {
             _platformRestarter.Restart();
-
             return NoContent();
         }
 
         /// <summary>
         /// Auto-install modules with specified groups
         /// </summary>
-        /// <returns></returns>
         [HttpPost]
         [Route("autoinstall")]
+        [ProducesResponseType(typeof(ModuleAutoInstallPushNotification), StatusCodes.Status200OK)]
         public ActionResult<ModuleAutoInstallPushNotification> TryToAutoInstallModules()
         {
             var notification = new ModuleAutoInstallPushNotification(User.Identity.Name)
             {
                 Title = "Modules installation",
-                //set completed by default
                 Finished = DateTime.UtcNow
             };
 
@@ -406,72 +310,37 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, true);
                             _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Processing);
 
-                            EnsureModulesCatalogInitialized();
-
-                            // Skip Auto Installation if some modules already installed manually
-                            if (!_externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().Any(x => x.IsInstalled))
+                            if (!_moduleService.GetModules().Any(x => x.IsInstalled))
                             {
-                                InstallModulesFromBundles(moduleBundles, notification);
+                                var autoInstallModules = _moduleService.GetNotInstalledModulesFromGroups(moduleBundles);
+                                if (autoInstallModules.Any())
+                                {
+                                    var options = new ModuleBackgroundJobOptions
+                                    {
+                                        Action = ModuleAction.Install,
+                                        Modules = autoInstallModules.Select(x => new ModuleInstallRequest(x.Id, x.Version.ToString())).ToArray()
+                                    };
+                                    notification.Finished = null;
+
+                                    // can't use Hangfire.BackgroundJob.Enqueue(...), because Hangfire tables might be missing in new DB
+                                    new Thread(() =>
+                                    {
+                                        Thread.CurrentThread.IsBackground = true;
+                                        ModuleBackgroundJob(options, notification);
+                                    }).Start();
+                                }
                             }
                         }
                     }
                 }
             }
+
             return Ok(notification);
-        }
-
-        private void InstallModulesFromBundles(string[] moduleBundles, ModuleAutoInstallPushNotification notification)
-        {
-            var modules = new List<ManifestModuleInfo>();
-            var moduleVersionGroups = _externalModuleCatalog.Modules
-                .OfType<ManifestModuleInfo>()
-                .Where(x => x.Groups.Intersect(moduleBundles, StringComparer.OrdinalIgnoreCase).Any())
-                .GroupBy(x => x.Id);
-
-            //Need install only latest versions
-            foreach (var moduleVersionGroup in moduleVersionGroups)
-            {
-                var alreadyInstalledModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.IsInstalled && x.Id.EqualsIgnoreCase(moduleVersionGroup.Key));
-                //skip already installed modules
-                if (alreadyInstalledModule == null)
-                {
-                    var latestVersion = moduleVersionGroup.OrderBy(x => x.Version).LastOrDefault();
-                    if (latestVersion != null)
-                    {
-                        modules.Add(latestVersion);
-                    }
-                }
-            }
-
-            var modulesWithDependencies = _externalModuleCatalog.CompleteListWithDependencies(modules)
-                .OfType<ManifestModuleInfo>()
-                .Where(x => !x.IsInstalled)
-                .Select(x => new ModuleDescriptor(x))
-                .ToArray();
-
-            if (modulesWithDependencies.Any())
-            {
-                var options = new ModuleBackgroundJobOptions
-                {
-                    Action = ModuleAction.Install,
-                    Modules = modulesWithDependencies
-                };
-                //reset finished date
-                notification.Finished = null;
-
-                // can't use Hangfire.BackgroundJob.Enqueue(...), because Hangfire tables might be missing in new DB
-                new Thread(() =>
-                {
-                    Thread.CurrentThread.IsBackground = true;
-                    ModuleBackgroundJob(options, notification);
-                }).Start();
-            }
         }
 
         /// <summary>
         /// This method used by azure automatically deployment scripts to check the installation status
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("autoinstall/state")]
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -482,24 +351,88 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(state);
         }
 
+        /// <summary>
+        /// Get module loading order
+        /// </summary>
         [HttpGet]
         [Route("loading-order")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(string[]), StatusCodes.Status200OK)]
         public ActionResult<string[]> GetModulesLoadingOrder()
         {
-            EnsureModulesCatalogInitialized();
-
-            var modules = _externalModuleCatalog.Modules
-                .OfType<ManifestModuleInfo>()
+            var moduleIds = _moduleService.GetModules()
                 .Where(x => x.IsInstalled)
-                .ToArray();
+                .Select(x => x.Id)
+                .ToList();
 
-            var loadingOrder = _externalModuleCatalog.CompleteListWithDependencies(modules)
-                .OfType<ManifestModuleInfo>()
+            var loadingOrder = _moduleService.GetDependencies(moduleIds)
                 .Select(x => x.Id)
                 .ToArray();
 
             return Ok(loadingOrder);
+        }
+
+        /// <summary>
+        /// Validate that a specific module version package exists at the download URL.
+        /// </summary>
+        /// <param name="moduleId">Module identifier</param>
+        /// <param name="version">Version to validate</param>
+        [HttpGet]
+        [Route("{moduleId}/versions/{version}/validate")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<ActionResult<bool>> ValidateModuleVersion(string moduleId, string version)
+        {
+            return Ok(await _moduleService.ValidateModuleVersionAsync(moduleId, version));
+        }
+
+        /// <summary>
+        /// Install a specific version of a module.
+        /// Validates the package URL, registers the custom version, and schedules installation.
+        /// </summary>
+        /// <param name="moduleId">Module identifier</param>
+        /// <param name="version">Version to install</param>
+        [HttpPost]
+        [Route("{moduleId}/versions/{version}/install")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ModulePushNotification>> InstallModuleVersion(string moduleId, string version)
+        {
+            var moduleInfo = await _moduleService.RegisterCustomModuleVersionAsync(moduleId, version);
+            if (moduleInfo == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = [new ModuleInstallRequest(moduleId, version)] }));
+        }
+
+        /// <summary>
+        /// Install the latest available version of a module.
+        /// </summary>
+        /// <param name="moduleId">Module identifier</param>
+        [HttpPost]
+        [Route("{moduleId}/install")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
+        public ActionResult<ModulePushNotification> InstallModule(string moduleId)
+        {
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = [new ModuleInstallRequest(moduleId)] }));
+        }
+
+
+        /// <summary>
+        /// Uninstall a module.
+        /// </summary>
+        /// <param name="moduleId">Module identifier</param>
+        [HttpPost]
+        [Route("{moduleId}/uninstall")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
+        public ActionResult<ModulePushNotification> UninstallSingleModule(string moduleId)
+        {
+            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = [new ModuleInstallRequest(moduleId)] }));
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -511,15 +444,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
                 {
-                    var moduleInfos = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
-                        .Where(x => options.Modules.Any(y => y.Identity.Equals(x.Identity)))
-                        .ToArray();
-                    var reportProgress = new Progress<ProgressMessage>(m =>
+                    var reportProgress = new Progress<ProgressMessage>(x =>
                     {
                         lock (_lockObject)
                         {
-                            notification.Description = m.Message;
-                            notification.ProgressLog.Add(m);
+                            notification.Description = x.Message;
+                            notification.ProgressLog.Add(x);
                             _pushNotifier.Send(notification);
                         }
                     });
@@ -528,10 +458,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     {
                         case ModuleAction.Install:
                         case ModuleAction.Update:
-                            _moduleInstaller.Install(moduleInfos, reportProgress);
+                            _moduleService.InstallModules(options.Modules, reportProgress);
                             break;
                         case ModuleAction.Uninstall:
-                            _moduleInstaller.Uninstall(moduleInfos, reportProgress);
+                            _moduleService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
                             break;
                     }
                 }
@@ -577,29 +507,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private void EnsureModulesCatalogInitialized()
-        {
-            _externalModuleCatalog.Initialize();
-        }
-
-        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(IEnumerable<ManifestModuleInfo> modules)
-        {
-            var retVal = new List<ManifestModuleInfo>();
-            foreach (var module in modules)
-            {
-                retVal.Add(module);
-                var dependingModules = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
-                                                             .Where(x => x.IsInstalled)
-                                                             .Where(x => x.DependsOn.ContainsIgnoreCase(module.Id))
-                                                             .ToList();
-                if (dependingModules.Any())
-                {
-                    retVal.AddRange(GetDependingModulesRecursive(dependingModules));
-                }
-            }
-            return retVal;
-        }
-
         private ModulePushNotification ScheduleJob(ModuleBackgroundJobOptions options)
         {
             var notification = new ModulePushNotification(_userNameResolver.GetCurrentUserName());
@@ -625,6 +532,88 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
 
             return notification;
+        }
+
+        private static bool IconFileExists(ManifestModuleInfo module)
+        {
+            var moduleIconUrl = module.IconUrl;
+            if (!moduleIconUrl.StartsWith('/'))
+            {
+                moduleIconUrl = "/" + moduleIconUrl;
+            }
+
+            var basePath = new PathString($"/modules/$({module.Id})");
+            var iconUrlPath = new PathString(moduleIconUrl);
+
+            if (!iconUrlPath.StartsWithSegments(basePath, out var subPath) ||
+                string.IsNullOrEmpty(subPath.Value) ||
+                !Directory.Exists(module.FullPhysicalPath))
+            {
+                return false;
+            }
+
+            using var fileProvider = new PhysicalFileProvider(module.FullPhysicalPath);
+            return fileProvider.GetFileInfo(subPath.Value).Exists;
+        }
+
+        private static async Task<string> UploadFile(HttpRequest request, string uploadFolderPath)
+        {
+            var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
+            var reader = new MultipartReader(boundary, request.Body);
+            var section = await reader.ReadNextSectionAsync();
+
+            if (section == null)
+            {
+                return null;
+            }
+
+            if (!ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition) ||
+                !MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+            {
+                return null;
+            }
+
+            var fileName = Path.GetFileName(contentDisposition.FileName.Value);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return null;
+            }
+
+            if (!Directory.Exists(uploadFolderPath))
+            {
+                Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            var targetFilePath = Path.Combine(uploadFolderPath, fileName);
+
+            await using var targetStream = System.IO.File.Create(targetFilePath);
+            await section.Body.CopyToAsync(targetStream);
+
+            return targetFilePath;
+        }
+
+        private async Task<ModuleManifest> LoadModuleManifestFromZipArchive(string path)
+        {
+            ModuleManifest manifest = null;
+
+            try
+            {
+                await using var packageStream = System.IO.File.Open(path, FileMode.Open);
+                await using var package = new ZipArchive(packageStream, ZipArchiveMode.Read);
+
+                var entry = package.GetEntry("module.manifest");
+                if (entry != null)
+                {
+                    await using var manifestStream = await entry.OpenAsync();
+                    manifest = ManifestReader.Read(manifestStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to read module manifest from {Path}", path);
+            }
+
+            return manifest;
         }
     }
 }

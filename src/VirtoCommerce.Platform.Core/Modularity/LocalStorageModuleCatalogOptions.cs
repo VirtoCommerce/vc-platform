@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// A folder where the platform will discover installed modules
         /// Can use absolute or relative path
         /// </summary>
-        public string DiscoveryPath { get; set; }
+        public string DiscoveryPath { get; set; } = "modules";
         /// <summary>
         /// A path where the platform stores installed modules. The platform loads modules assemblies directly from this folder.
         /// </summary>

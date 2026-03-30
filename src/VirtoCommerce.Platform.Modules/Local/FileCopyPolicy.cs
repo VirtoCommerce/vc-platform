@@ -83,7 +83,7 @@ public class FileCopyPolicy : IFileCopyPolicy
         return Path.GetFileName(Path.GetDirectoryName(relativeFilePath));
     }
 
-    public bool IsCopyRequired(Architecture environment, string sourceFilePath, string targetFilePath, out FileCompareResult result)
+    public bool IsCopyRequired(string sourceFilePath, string targetFilePath, Architecture environmentArchitecture, out FileCompareResult result)
     {
         result = new FileCompareResult
         {
@@ -92,7 +92,7 @@ public class FileCopyPolicy : IFileCopyPolicy
 
         CompareDates(sourceFilePath, targetFilePath, result);
         CompareVersions(sourceFilePath, targetFilePath, result);
-        CompareArchitecture(sourceFilePath, targetFilePath, environment, result);
+        CompareArchitecture(sourceFilePath, targetFilePath, environmentArchitecture, result);
 
         return result.NewFile && result.CompatibleArchitecture ||
                result.NewVersion && result.SameOrNewArchitecture ||
@@ -117,19 +117,19 @@ public class FileCopyPolicy : IFileCopyPolicy
         result.NewVersion = targetVersion is not null && sourceVersion > targetVersion;
     }
 
-    private void CompareArchitecture(string sourceFilePath, string targetFilePath, Architecture environment, FileCompareResult result)
+    private void CompareArchitecture(string sourceFilePath, string targetFilePath, Architecture environmentArchitecture, FileCompareResult result)
     {
         var sourceArchitecture = _metadataProvider.GetArchitecture(sourceFilePath);
         var targetArchitecture = _metadataProvider.GetArchitecture(targetFilePath);
 
         result.CompatibleArchitecture = sourceArchitecture == targetArchitecture ||
-                                        sourceArchitecture == environment ||
-                                        sourceArchitecture == Architecture.X86 && environment == Architecture.X64;
+                                        sourceArchitecture == environmentArchitecture ||
+                                        sourceArchitecture == Architecture.X86 && environmentArchitecture == Architecture.X64;
 
         if (result.CompatibleArchitecture)
         {
             result.SameArchitecture = sourceArchitecture == targetArchitecture;
-            result.NewArchitecture = sourceArchitecture == environment && targetArchitecture != environment;
+            result.NewArchitecture = sourceArchitecture == environmentArchitecture && targetArchitecture != environmentArchitecture;
         }
     }
 }

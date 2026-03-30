@@ -258,6 +258,8 @@
           "end": "Slutt",
           "progress-messages": "Fremdriftsmeldinger",
           "process-completed": "Modulhåndteringsprosessen er fullført",
+          "completed-with-errors": "Fullført med feil",
+          "detailed-log": "Vis detaljert logg",
           "restart-application": "Start applikasjonen på nytt nå eller senere"
         }
       },
@@ -287,7 +289,12 @@
           "tags": "Tagger",
           "install-version": "Installer versjon",
           "errors": "Feil",
-          "update-version": "Oppdater {{id}} til"
+          "update-version": "Oppdater {{id}} til",
+          "use-custom-version": "Bruk egendefinert versjon",
+          "use-latest-version": "Bruk nyeste versjon",
+          "custom-version-checking": "Sjekker...",
+          "custom-version-valid": "Pakke funnet",
+          "custom-version-invalid": "Pakke ikke funnet"
         }
       },
       "modules-main": {

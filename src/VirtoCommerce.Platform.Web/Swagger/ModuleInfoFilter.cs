@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Modules;
 
 namespace VirtoCommerce.Platform.Web.Swagger;
 
@@ -49,10 +48,9 @@ public class ModuleInfoFilter : IOperationFilter, IDocumentFilter
     /// <summary>
     /// This operation filter assigns module info (such as name and id) to operations based on their module association.
     /// </summary>
-    public ModuleInfoFilter(IModuleCatalog moduleCatalog)
+    public ModuleInfoFilter()
     {
-        var modules = moduleCatalog.Modules
-            .OfType<ManifestModuleInfo>()
+        var modules = ModuleRegistry.GetInstalledModules()
             .Where(x => x.ModuleInstance != null)
             .Select(x =>
                 new SwaggerModule
@@ -95,7 +93,12 @@ public class ModuleInfoFilter : IOperationFilter, IDocumentFilter
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
-        foreach(var tag in swaggerDoc.Tags)
+        if (swaggerDoc.Tags is null)
+        {
+            return;
+        }
+
+        foreach (var tag in swaggerDoc.Tags)
         {
             if (_moduleById.TryGetValue(tag.Name, out var module))
             {

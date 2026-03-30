@@ -258,6 +258,8 @@
           "end": "Конец",
           "progress-messages": "Сообщения о прогрессе",
           "process-completed": "Процесс управления модулем завершен",
+          "completed-with-errors": "Завершено с ошибками",
+          "detailed-log": "Показать подробный журнал",
           "restart-application": "Перезапустите приложение сейчас или позже"
         }
       },
@@ -287,7 +289,12 @@
           "tags": "Теги",
           "install-version": "Установить версию",
           "errors": "Ошибки",
-          "update-version": "Обновить {{id}} до"
+          "update-version": "Обновить {{id}} до",
+          "use-custom-version": "Указать версию",
+          "use-latest-version": "Последняя версия",
+          "custom-version-checking": "Проверка...",
+          "custom-version-valid": "Пакет найден",
+          "custom-version-invalid": "Пакет не найден"
         }
       },
       "modules-main": {

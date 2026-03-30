@@ -258,6 +258,8 @@
           "end": "Fim",
           "progress-messages": "Mensagens de progresso",
           "process-completed": "O processo de gestão do módulo está concluído",
+          "completed-with-errors": "Concluído com erros",
+          "detailed-log": "Mostrar registro detalhado",
           "restart-application": "Reiniciar a aplicação agora ou mais tarde"
         }
       },
@@ -286,7 +288,12 @@
           "optional-dependencies": "Dependências opcionais",
           "tags": "Tags",
           "install-version": "Instalar versão",
-          "errors": "Erros"
+          "errors": "Erros",
+          "use-custom-version": "Usar versão personalizada",
+          "use-latest-version": "Usar versão mais recente",
+          "custom-version-checking": "Verificando...",
+          "custom-version-valid": "Pacote encontrado",
+          "custom-version-invalid": "Pacote não encontrado"
         }
       },
       "modules-main": {

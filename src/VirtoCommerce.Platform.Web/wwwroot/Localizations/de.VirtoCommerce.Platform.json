@@ -258,6 +258,8 @@
           "end": "Ende",
           "progress-messages": "Fortschrittsmeldungen",
           "process-completed": "Der Modulverwaltungsprozess ist abgeschlossen",
+          "completed-with-errors": "Mit Fehlern abgeschlossen",
+          "detailed-log": "Detailliertes Protokoll anzeigen",
           "restart-application": "Starten Sie die Anwendung jetzt oder später neu"
         }
       },
@@ -287,7 +289,12 @@
           "tags": "Tags",
           "install-version": "Installations version",
           "errors": "Fehler",
-          "update-version": "{{id}} auf aktualisieren"
+          "update-version": "{{id}} auf aktualisieren",
+          "use-custom-version": "Benutzerdefinierte Version verwenden",
+          "use-latest-version": "Neueste Version verwenden",
+          "custom-version-checking": "Überprüfung...",
+          "custom-version-valid": "Paket gefunden",
+          "custom-version-invalid": "Paket nicht gefunden"
         }
       },
       "modules-main": {

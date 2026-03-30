@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Model.Diagnostics;
 using VirtoCommerce.Platform.Web.Modularity;
@@ -16,17 +16,16 @@ using VirtoCommerce.Platform.Web.Modularity;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Route("api/platform/diagnostics")]
+    [ApiController]
     [Authorize]
-    public class DiagnosticsController : Controller
+    public class DiagnosticsController : ControllerBase
     {
-        private readonly IModuleCatalog _moduleCatalog;
         private readonly LicenseProvider _licenseProvider;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public DiagnosticsController(IModuleCatalog moduleCatalog, LicenseProvider licenseProvider, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+        public DiagnosticsController(LicenseProvider licenseProvider, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
-            _moduleCatalog = moduleCatalog;
             _licenseProvider = licenseProvider;
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
@@ -42,7 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var databaseProvider = _configuration.GetValue("DatabaseProvider", "SqlServer");
 
 
-            var installedModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).OrderBy(x => x.Id)
+            var installedModules = ModuleRegistry.GetInstalledModules().OrderBy(x => x.Id)
                                        .Select(x => new ModuleDescriptor(x))
                                        .ToArray();
 
@@ -73,14 +72,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public ActionResult<ModuleDescriptor[]> GetModulesErrors()
         {
-            var result = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
-                .Where(x => !x.Errors.IsNullOrEmpty())
+            var result = ModuleRegistry.GetFailedModules()
                 .OrderBy(x => x.Id)
                 .ThenBy(x => x.Version)
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
 
-            if (!_webHostEnvironment.IsDevelopment() && result.Any())
+            if (!_webHostEnvironment.IsDevelopment() && result.Length != 0)
             {
                 var errorDescription = "To enable the details of this specific error message, please switch environment to Development mode.";
                 var errors = new[] { errorDescription };
