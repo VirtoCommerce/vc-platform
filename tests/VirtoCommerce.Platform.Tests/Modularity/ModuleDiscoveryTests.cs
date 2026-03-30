@@ -35,6 +35,38 @@ public class ModuleDiscoveryTests
     }
 
     [Fact]
+    public void ValidateInstall_MajorVersionUpgradeOfInstalledModule_ReturnsError()
+    {
+        var platformVersion = SemanticVersion.Parse("3.800.0");
+        var module = CreateModule("TestModule", "2.0.0", platformVersion: "3.0.0");
+        var installedModules = new List<ManifestModuleInfo>
+        {
+            CreateModule("TestModule", "1.10.0", platformVersion: "3.0.0", isInstalled: true),
+        };
+
+        var errors = ModuleDiscovery.ValidateInstall(module, installedModules, platformVersion);
+
+        Assert.Single(errors);
+        Assert.Equal("Issue with TestModule:2.0.0. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.", errors[0]);
+    }
+
+    [Fact]
+    public void ValidateInstall_MajorVersionDowngradeOfInstalledModule_ReturnsError()
+    {
+        var platformVersion = SemanticVersion.Parse("3.800.0");
+        var module = CreateModule("TestModule", "1.10.0", platformVersion: "3.0.0");
+        var installedModules = new List<ManifestModuleInfo>
+        {
+            CreateModule("TestModule", "2.0.0", platformVersion: "3.0.0", isInstalled: true),
+        };
+
+        var errors = ModuleDiscovery.ValidateInstall(module, installedModules, platformVersion);
+
+        Assert.Single(errors);
+        Assert.Equal("Issue with TestModule:1.10.0. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.", errors[0]);
+    }
+
+    [Fact]
     public void ValidateInstall_IncompatibleModule_ReturnsError()
     {
         var platformVersion = SemanticVersion.Parse("3.800.0");

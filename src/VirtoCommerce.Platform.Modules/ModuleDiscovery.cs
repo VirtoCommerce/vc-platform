@@ -235,6 +235,13 @@ public static class ModuleDiscovery
             errors.Add($"Target platform version {moduleToInstall.PlatformVersion} is incompatible with current {platformVersion}");
         }
 
+        // Check that installable version is SemVer-compatible with already installed version of the same module
+        var alreadyInstalledModule = installedModules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(moduleToInstall.Id));
+        if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(moduleToInstall.Version))
+        {
+            errors.Add($"Issue with {moduleToInstall}. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.");
+        }
+
         // Check incompatibilities
         if (moduleToInstall.Incompatibilities?.Count > 0)
         {
