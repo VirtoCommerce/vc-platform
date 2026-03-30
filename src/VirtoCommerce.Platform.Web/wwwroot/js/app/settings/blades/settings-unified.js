@@ -428,7 +428,8 @@ angular.module('platformWebApp')
                     });
                 }
 
-                if (blade.selectedGroup && !blade.searchText) {
+                // Apply selected group filter (works alongside search — search narrows within the group)
+                if (blade.selectedGroup) {
                     var selectedPrefix = blade.selectedGroup.groupName + '|';
                     settings = _.filter(settings, function (s) {
                         return s.groupName === blade.selectedGroup.groupName ||
@@ -436,7 +437,7 @@ angular.module('platformWebApp')
                     });
                 }
 
-                var showFullPath = !blade.selectedGroup || blade.searchText || isFiltering;
+                var showFullPath = !blade.selectedGroup || isFiltering;
                 var grouped = _.groupBy(settings, function (s) {
                     if (!s.groupName) {
                         return 'General';
