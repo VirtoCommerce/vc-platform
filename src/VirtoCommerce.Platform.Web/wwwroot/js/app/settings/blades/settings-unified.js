@@ -301,8 +301,9 @@ angular.module('platformWebApp')
                     return true;
                 }
 
-                var isFiltering = blade.searchText || filter.modifiedOnly || filter.moduleId;
-                if (isFiltering && blade.visibleNodeGroups && node.groupName) {
+                // Always hide nodes whose group has no visible settings (respects all active filters,
+                // including the default tenant-property filter on initial load).
+                if (blade.visibleNodeGroups && node.groupName) {
                     if (!blade.visibleNodeGroups[node.groupName]) {
                         return false;
                     }
