@@ -7,6 +7,7 @@
       "notifications": "Notifiche",
       "more": "Altro",
       "settings": "Impostazioni",
+      "settings-unified": "Impostazioni (Unificato)",
       "dynamic-properties": "Proprietà dinamiche",
       "security": "Sicurezza",
       "modules": "Moduli",
@@ -666,6 +667,30 @@
         "title": "Impostazioni",
         "bread-crumb-top": "Tutte le impostazioni"
       },
+      "settings-unified": {
+        "title": "Impostazioni",
+        "all-settings": "Tutte le impostazioni",
+        "filter": "Filtro",
+        "filter-show": "Mostra",
+        "filter-all": "Tutte le impostazioni",
+        "filter-modified": "Solo modificate",
+        "filter-modified-only": "Mostra solo modificate",
+        "filter-module": "Modulo",
+        "filter-all-modules": "Tutti i moduli",
+        "filter-clear": "Cancella filtri",
+        "filter-show-tenant": "Mostra propriétà tenant",
+        "copy-link": "Copia collegamento alla sezione",
+        "no-settings": "Nessuna impostazione corrisponde ai filtri attuali.",
+        "export-json": "Esporta JSON",
+        "import-json": "Importa JSON",
+        "edit-json": "Modifica come JSON",
+        "import-confirm-title": "Importa impostazioni",
+        "import-confirm-message": "Applicare {{count}} impostazioni dal file importato?"
+      },
+      "settings-json-editor": {
+        "title": "Modifica impostazioni come JSON",
+        "format-json": "Formatta JSON"
+      },
       "settings-uploader": {
         "drag-drop-comment": "Trascina e rilascia il file qui",
         "or": "oppure",
@@ -908,6 +933,11 @@
       "sessions-terminate-all": {
         "title": "Termina tutte",
         "message": "Sei sicuro di voler terminare tutte le sessioni utente?"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Cancella filtri"
       }
     },
     "commands": {

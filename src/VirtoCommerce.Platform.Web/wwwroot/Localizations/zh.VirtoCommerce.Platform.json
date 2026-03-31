@@ -7,6 +7,7 @@
       "notifications": "通知",
       "more": "更多",
       "settings": "设置",
+      "settings-unified": "设置 (统一)",
       "dynamic-properties": "动态属性",
       "security": "安全",
       "modules": "模块",
@@ -666,6 +667,30 @@
         "title": "设置",
         "bread-crumb-top": "所有设置"
       },
+      "settings-unified": {
+        "title": "设置",
+        "all-settings": "所有设置",
+        "filter": "筛选",
+        "filter-show": "显示",
+        "filter-all": "所有设置",
+        "filter-modified": "仅已修改",
+        "filter-modified-only": "仅显示已修改",
+        "filter-module": "模块",
+        "filter-all-modules": "所有模块",
+        "filter-clear": "清除筛选",
+        "filter-show-tenant": "显示租户属性",
+        "copy-link": "复制章节链接",
+        "no-settings": "没有设置匹配当前筛选条件。",
+        "export-json": "导出 JSON",
+        "import-json": "导入 JSON",
+        "edit-json": "以 JSON 编辑",
+        "import-confirm-title": "导入设置",
+        "import-confirm-message": "从导入的文件中应用{{count}}个设置？"
+      },
+      "settings-json-editor": {
+        "title": "以 JSON 编辑设置",
+        "format-json": "格式化 JSON"
+      },
       "settings-uploader": {
         "drag-drop-comment": "将文件拖放到此处",
         "or": "或",
@@ -908,6 +933,11 @@
       "sessions-terminate-all": {
         "title": "终止所有",
         "message": "您确定要终止所有用户会话吗？"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "清除过滤器"
       }
     },
     "commands": {

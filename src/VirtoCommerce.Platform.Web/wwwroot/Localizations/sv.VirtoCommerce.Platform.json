@@ -7,6 +7,7 @@
       "notifications": "Notiser",
       "more": "Mer",
       "settings": "Inställningar",
+      "settings-unified": "Inställningar (Enhetlig)",
       "dynamic-properties": "Dynamiska egenskaper",
       "security": "Säkerhet",
       "modules": "Moduler",
@@ -667,6 +668,30 @@
         "title": "Inställningar",
         "bread-crumb-top": "Alla inställningar"
       },
+      "settings-unified": {
+        "title": "Inställningar",
+        "all-settings": "Alla inställningar",
+        "filter": "Filter",
+        "filter-show": "Visa",
+        "filter-all": "Alla inställningar",
+        "filter-modified": "Endast ändrade",
+        "filter-modified-only": "Visa endast ändrade",
+        "filter-module": "Modul",
+        "filter-all-modules": "Alla moduler",
+        "filter-clear": "Rensa filter",
+        "filter-show-tenant": "Visa hyresgästegenskaper",
+        "copy-link": "Kopiera länk till avsnitt",
+        "no-settings": "Inga inställningar matchar de aktuella filtren.",
+        "export-json": "Exportera JSON",
+        "import-json": "Importera JSON",
+        "edit-json": "Redigera som JSON",
+        "import-confirm-title": "Importera inställningar",
+        "import-confirm-message": "Tillämpa {{count}} inställningar från importerad fil?"
+      },
+      "settings-json-editor": {
+        "title": "Redigera inställningar som JSON",
+        "format-json": "Formatera JSON"
+      },
       "settings-uploader": {
         "drag-drop-comment": "Dra och släpp fil här",
         "or": "eller",
@@ -909,6 +934,11 @@
       "sessions-terminate-all": {
         "title": "Avsluta alla",
         "message": "Är du säker på att du vill avsluta alla användarsessioner?"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Rensa filter"
       }
     },
     "commands": {
