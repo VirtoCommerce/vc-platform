@@ -273,7 +273,7 @@ angular.module('platformWebApp')
 
                 var allNode = {
                     id: '__all__',
-                    name: $translate.instant('platform.blades.settings-unified.all-settings') || 'All Settings',
+                    name: '', // rendered via translate filter in template to avoid $translate.instant() race condition on F5
                     groupName: null,
                     level: 0,
                     hasChildren: false,

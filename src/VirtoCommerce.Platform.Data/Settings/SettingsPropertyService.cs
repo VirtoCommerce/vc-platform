@@ -49,11 +49,6 @@ namespace VirtoCommerce.Platform.Data.Settings
                 var typeSettingNames = new HashSet<string>(typeSettings.Select(x => x.Name), StringComparer.OrdinalIgnoreCase);
                 query = query.Where(x => typeSettingNames.Contains(x.Name));
             }
-            else
-            {
-                // Global scope: exclude settings assigned to any tenant
-                query = query.Where(x => !typeAssignments.ContainsKey(x.Name));
-            }
 
             // Keyword search
             if (!string.IsNullOrEmpty(criteria.Keyword))
@@ -184,10 +179,8 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .Where(x => !x.IsHidden);
             }
 
-            // Global scope: exclude settings assigned to any tenant
-            var typeAssignments = _settingsManager.GetSettingTypeAssignments();
-            return _settingsManager.AllRegisteredSettings
-                .Where(x => !x.IsHidden && !typeAssignments.ContainsKey(x.Name));
+            // Global scope
+            return _settingsManager.AllRegisteredSettings.Where(x => !x.IsHidden);
         }
 
         private SettingPropertySchema MapToSchema(
