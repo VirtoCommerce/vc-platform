@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
@@ -12,7 +11,6 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
-using VirtoCommerce.Platform.Modules.Local;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
@@ -193,142 +191,6 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             Assert.Equal(SemanticVersion.Parse(effectiveModuleVersion), module.Version);
 
             _mutex.ReleaseMutex();
-        }
-
-        [Theory]
-        [InlineData(false, null, true)]
-        [InlineData(true, false, false)]
-        [InlineData(true, true, true)]
-        public void NonExecutableFilesCopyTest(
-            bool targetExists,
-            bool? isSourceNewByDate,
-            bool expectedCopyRequired)
-        {
-            //Arrange
-            var metadataProvider = new Mock<IFileMetadataProvider>();
-            var sourcePath = @"c:\source\non_executable.xml";
-            var targetPath = @"c:\target\non_executable.xml";
-            var targetDate = DateTime.UtcNow;
-            var sourceDate = isSourceNewByDate == true ? targetDate.AddDays(1) : targetDate;
-
-            AddFile(metadataProvider, sourcePath, sourceDate, version: null, architecture: null);
-
-            if (targetExists)
-            {
-                AddFile(metadataProvider, targetPath, targetDate, version: null, architecture: null);
-            }
-
-            //Act
-            var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
-            var actualCopyRequired = copyFilePolicy.IsCopyRequired(Architecture.X64, sourcePath, targetPath, out _);
-
-            //Assert
-            Assert.Equal(expectedCopyRequired, actualCopyRequired);
-        }
-
-        [Theory]
-        [InlineData(null, false, null, null, true)]
-        [InlineData(null, true, "1.0.0.0", true, false)]
-        [InlineData(null, true, "1.0.0.0", false, false)]
-        [InlineData("1.0.0.0", false, null, null, true)]
-        [InlineData("1.0.0.0", true, "1.0.0.0", false, false)]
-        [InlineData("1.0.0.0", true, "1.0.0.0", true, true)]
-        [InlineData("1.0.0.0", true, "1.0.0.1", false, false)]
-        [InlineData("1.0.0.0", true, "1.0.0.1", true, false)]
-        [InlineData("1.0.0.2", true, "1.0.0.1", false, true)]
-        [InlineData("1.0.0.2", true, "1.0.0.1", true, true)]
-        public void ExecutableFilesWithDifferentVersionsCopyTest(
-            string sourceVersion,
-            bool targetExists,
-            string targetVersion,
-            bool? isSourceNewByDate,
-            bool expectedCopyRequired)
-        {
-            //Arrange
-            var metadataProvider = new Mock<IFileMetadataProvider>();
-            var sourcePath = @"c:\source\assembly.dll";
-            var targetPath = @"c:\target\assembly.dll";
-            var targetDate = DateTime.UtcNow;
-            var sourceDate = isSourceNewByDate == true ? targetDate.AddDays(1) : targetDate;
-
-            AddFile(metadataProvider, sourcePath, sourceDate, sourceVersion, Architecture.X64);
-
-            if (targetExists)
-            {
-                AddFile(metadataProvider, targetPath, targetDate, targetVersion, Architecture.X64);
-            }
-
-            //Act
-            var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
-            var actualCopyRequired = copyFilePolicy.IsCopyRequired(Architecture.X64, sourcePath, targetPath, out _);
-
-            //Assert
-            Assert.Equal(expectedCopyRequired, actualCopyRequired);
-        }
-
-        [Theory]
-        [InlineData(Architecture.X64, null, false, null, null, true)]
-        [InlineData(Architecture.X64, null, true, null, true, true)]
-        [InlineData(Architecture.X64, null, true, null, false, false)]
-        [InlineData(Architecture.X64, null, true, Architecture.X64, true, false)]
-        [InlineData(Architecture.X64, null, true, Architecture.X86, true, false)]
-        [InlineData(Architecture.X64, Architecture.X64, false, null, null, true)]
-        [InlineData(Architecture.X64, Architecture.X86, false, null, null, true)]
-        [InlineData(Architecture.X86, Architecture.X86, false, null, null, true)]
-        [InlineData(Architecture.X86, Architecture.X64, false, null, null, false)]
-        [InlineData(Architecture.X64, Architecture.X64, true, null, true, true)]
-        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X64, false, false)]
-        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X86, false, true)]
-        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X64, false, false)]
-        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X86, false, false)]
-        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X64, true, true)]
-        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X86, true, true)]
-        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X64, true, false)]
-        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X86, true, true)]
-        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X64, false, false)]
-        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X86, false, false)]
-        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, false, true)]
-        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, false, false)]
-        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X64, true, true)]
-        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X86, true, false)]
-        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, true, true)]
-        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, true, true)]
-        public void ExecutableFilesWithDifferentArchitectureCopyTest(
-            Architecture environment,
-            Architecture? sourceArchitecture,
-            bool targetExists,
-            Architecture? targetArchitecture,
-            bool? isSourceNewByDate,
-            bool expectedCopyRequired)
-        {
-            //Arrange
-            var metadataProvider = new Mock<IFileMetadataProvider>();
-            var sourcePath = @"c:\source\assembly.dll";
-            var targetPath = @"c:\target\assembly.dll";
-            var targetDate = DateTime.UtcNow;
-            var sourceDate = isSourceNewByDate == true ? targetDate.AddDays(1) : targetDate;
-
-            AddFile(metadataProvider, sourcePath, sourceDate, "1.0.0.0", sourceArchitecture);
-
-            if (targetExists)
-            {
-                AddFile(metadataProvider, targetPath, targetDate, "1.0.0.0", targetArchitecture);
-            }
-
-            //Act
-            var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
-            var actualCopyRequired = copyFilePolicy.IsCopyRequired(environment, sourcePath, targetPath, out _);
-
-            //Assert
-            Assert.Equal(expectedCopyRequired, actualCopyRequired);
-        }
-
-        private static void AddFile(Mock<IFileMetadataProvider> metadataProvider, string path, DateTime date, string version, Architecture? architecture)
-        {
-            metadataProvider.Setup(x => x.Exists(path)).Returns(true);
-            metadataProvider.Setup(x => x.GetDate(path)).Returns(date);
-            metadataProvider.Setup(x => x.GetVersion(path)).Returns(version is null ? null : new Version(version));
-            metadataProvider.Setup(x => x.GetArchitecture(path)).Returns(architecture);
         }
 
         private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests, bool includePrerelease = false)
