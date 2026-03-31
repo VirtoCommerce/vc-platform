@@ -7,6 +7,7 @@
       "notifications": "Notifications",
       "more": "More",
       "settings": "Settings",
+      "settings-unified": "Settings (Unified)",
       "dynamic-properties": "Dynamic properties",
       "security": "Security",
       "modules": "Modules",
@@ -674,6 +675,30 @@
         "title": "Settings",
         "bread-crumb-top": "All settings"
       },
+      "settings-unified": {
+        "title": "Settings",
+        "all-settings": "All Settings",
+        "filter": "Filter",
+        "filter-show": "Show",
+        "filter-all": "All Settings",
+        "filter-modified": "Modified Only",
+        "filter-modified-only": "Show modified only",
+        "filter-module": "Module",
+        "filter-all-modules": "All Modules",
+        "filter-clear": "Clear filters",
+        "filter-show-tenant": "Show tenant properties",
+        "copy-link": "Copy link to section",
+        "no-settings": "No settings match the current filters.",
+        "export-json": "Export JSON",
+        "import-json": "Import JSON",
+        "edit-json": "Edit as JSON",
+        "import-confirm-title": "Import Settings",
+        "import-confirm-message": "Apply {{count}} settings from imported file?"
+      },
+      "settings-json-editor": {
+        "title": "Edit Settings as JSON",
+        "format-json": "Format JSON"
+      },
       "settings-uploader": {
         "drag-drop-comment": "Drag and drop file here",
         "or": "or",
@@ -838,8 +863,8 @@
         "message": "The settings has been modified. Do you want to save changes?"
       },
       "settings-delete": {
-        "title": "Delete confirmation",
-        "message": "The settings has been modified. Do you want to save changes?"
+        "title": "Save changes",
+        "message": "The settings have been modified. Do you want to save changes?"
       },
       "localizable-setting-value-delete": {
         "title": "Delete confirmation",
@@ -916,6 +941,11 @@
       "sessions-terminate-all": {
         "title": "Terminate all",
         "message": "Are you sure you want to terminate all user sessions?"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Clear filters"
       }
     },
     "commands": {

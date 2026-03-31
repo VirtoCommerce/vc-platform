@@ -7,6 +7,7 @@
       "notifications": "Notifications",
       "more": "Plus",
       "settings": "Paramètres",
+      "settings-unified": "Paramètres (Unifié)",
       "dynamic-properties": "Propriétés dynamiques",
       "security": "Sécurité",
       "modules": "Modules",
@@ -672,6 +673,30 @@
         "title": "Paramètres",
         "bread-crumb-top": "Tous les paramètres"
       },
+      "settings-unified": {
+        "title": "Paramètres",
+        "all-settings": "Tous les paramètres",
+        "filter": "Filtre",
+        "filter-show": "Afficher",
+        "filter-all": "Tous les paramètres",
+        "filter-modified": "Modifiés uniquement",
+        "filter-modified-only": "Afficher uniquement les modifiés",
+        "filter-module": "Module",
+        "filter-all-modules": "Tous les modules",
+        "filter-clear": "Effacer les filtres",
+        "filter-show-tenant": "Afficher les propriétés du locataire",
+        "copy-link": "Copier le lien vers la section",
+        "no-settings": "Aucun paramètre ne correspond aux filtres actuels.",
+        "export-json": "Exporter JSON",
+        "import-json": "Importer JSON",
+        "edit-json": "Modifier en JSON",
+        "import-confirm-title": "Importer les paramètres",
+        "import-confirm-message": "Appliquer {{count}} parametres du fichier importe?"
+      },
+      "settings-json-editor": {
+        "title": "Modifier les paramètres en JSON",
+        "format-json": "Formater JSON"
+      },
       "settings-uploader": {
         "drag-drop-comment": "Glissez et déposez le fichier ici",
         "or": "ou",
@@ -914,6 +939,11 @@
       "sessions-terminate-all": {
         "title": "Terminer tout",
         "message": "Êtes-vous sûr de vouloir terminer toutes les sessions utilisateur ?"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Effacer les filtres"
       }
     },
     "commands": {

@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.moduleDetailController', ['$scope', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.moduleHelper', 'platformWebApp.modulesApi', 'FileUploader', 'platformWebApp.settings', function ($scope, $timeout, bladeNavigationService, moduleHelper, modulesApi, FileUploader, settings) {
+.controller('platformWebApp.moduleDetailController', ['$scope', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.moduleHelper', 'platformWebApp.modulesApi', 'FileUploader', function ($scope, $timeout, bladeNavigationService, moduleHelper, modulesApi, FileUploader) {
     var blade = $scope.blade;
 
     blade.headIcon = 'fa fa-cubes';
@@ -39,29 +39,6 @@ angular.module('platformWebApp')
                     permission: 'platform:module:manage'
                 }
             ];
-
-            // hide settings toolbar button when there are no settings available #523
-            settings.getSettings({ id: blade.currentEntity.id }, function (results) {
-                if (_.any(results)) {
-                    blade.toolbarCommands.push({
-                        name: "platform.commands.settings", icon: 'fa fa-wrench',
-                        executeMethod: function () {
-                            var newBlade = {
-                                id: 'moduleSettingsSection',
-                                moduleId: blade.currentEntity.id,
-                                data: results,
-                                title: 'platform.blades.module-settings-detail.title',
-                                //subtitle: '',
-                                controller: 'platformWebApp.settingsDetailController',
-                                template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
-                            };
-                            bladeNavigationService.showBlade(newBlade, blade);
-                        },
-                        canExecuteMethod: function () { return true; }
-                    });
-                }
-                blade.isLoading = false;
-            });
         } else {
             blade.toolbarCommands = [];
             blade.mode = blade.currentEntity.$installedVersion ? 'update' : 'install';
@@ -69,6 +46,7 @@ angular.module('platformWebApp')
             originalEntity = blade.currentEntity;
             blade.isLoading = false;
         }
+        blade.isLoading = false;
     }
 
     $scope.toggleCustomVersion = function () {

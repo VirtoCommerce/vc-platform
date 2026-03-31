@@ -7,6 +7,7 @@
       "notifications": "Benachrichtigungen",
       "more": "Mehr",
       "settings": "Einstellungen",
+      "settings-unified": "Einstellungen (Unified)",
       "dynamic-properties": "Dynamische Eigenschaften",
       "security": "Sicherheit",
       "modules": "Module",
@@ -674,6 +675,30 @@
         "title": "Einstellungen",
         "bread-crumb-top": "Alle Einstellungen"
       },
+      "settings-unified": {
+        "title": "Einstellungen",
+        "all-settings": "Alle Einstellungen",
+        "filter": "Filter",
+        "filter-show": "Anzeigen",
+        "filter-all": "Alle Einstellungen",
+        "filter-modified": "Nur geänderte",
+        "filter-modified-only": "Nur geänderte anzeigen",
+        "filter-module": "Modul",
+        "filter-all-modules": "Alle Module",
+        "filter-clear": "Filter zurücksetzen",
+        "filter-show-tenant": "Mandanteneigenschaften anzeigen",
+        "copy-link": "Link zum Abschnitt kopieren",
+        "no-settings": "Keine Einstellungen entsprechen den aktuellen Filtern.",
+        "export-json": "JSON exportieren",
+        "import-json": "JSON importieren",
+        "edit-json": "Als JSON bearbeiten",
+        "import-confirm-title": "Einstellungen importieren",
+        "import-confirm-message": "{{count}} Einstellungen aus importierter Datei anwenden?"
+      },
+      "settings-json-editor": {
+        "title": "Einstellungen als JSON bearbeiten",
+        "format-json": "JSON formatieren"
+      },
       "settings-uploader": {
         "drag-drop-comment": "Datei hierher ziehen und ablegen",
         "or": "oder",
@@ -916,6 +941,11 @@
       "sessions-terminate-all": {
         "title": "Alle beenden",
         "message": "Sind Sie sicher, dass Sie alle Benutzersitzungen beenden möchten?"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Filter zurücksetzen"
       }
     },
     "commands": {
