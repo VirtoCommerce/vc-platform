@@ -108,9 +108,6 @@ namespace VirtoCommerce.Platform.Web
             // Let IPlatformStartup implementations register application-level services
             ModuleBootstrapper.Instance.RunConfigureServices(services, Configuration);
 
-            // Module assemblies are already loaded in Program.Main() via ModuleBootstrapper
-            var sortedModules = ModuleBootstrapper.Instance.GetModules();
-
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
             // Optional Modules Dependency Resolving
@@ -509,10 +506,13 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddTransient<IExternalSignInService, ExternalSignInService>();
 
+            // Module assemblies are already loaded in Program.Main() via ModuleBootstrapper
+            var modules = ModuleBootstrapper.Instance.GetModules();
+
             // Create module catalog adapter (needed by IHasModuleCatalog modules and DI)
 #pragma warning disable VC0014 // Type or member is obsolete
             var boostOptions = Configuration.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
-            var moduleCatalogAdapter = new LocalModuleCatalogAdapter(sortedModules, boostOptions);
+            var moduleCatalogAdapter = new LocalModuleCatalogAdapter(modules, boostOptions);
 #pragma warning restore VC0014 // Type or member is obsolete
 
             // Initialize modules (IModule.Initialize registers DI services)
@@ -521,7 +521,8 @@ namespace VirtoCommerce.Platform.Web
 
             // Register API controllers from loaded modules
             Log.ForContext<Startup>().Information("Registering API controllers");
-            foreach (var module in sortedModules.Where(m => m.Assembly != null && m.Errors.Count == 0))
+
+            foreach (var module in modules.Where(x => x.Assembly != null && x.Errors.Count == 0))
             {
                 mvcBuilder.AddApplicationPart(module.Assembly);
             }

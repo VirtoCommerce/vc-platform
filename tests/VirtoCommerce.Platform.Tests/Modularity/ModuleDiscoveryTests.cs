@@ -152,10 +152,10 @@ public class ModuleDiscoveryTests
             Dependencies = dependencyIds?.Select(x => new ManifestDependency { Id = x, Version = "1.0.0" }).ToArray(),
         };
 
-        var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-        moduleInfo.LoadFromManifest(manifest);
-        moduleInfo.IsInstalled = isInstalled;
+        var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+        module.LoadFromManifest(manifest);
+        module.IsInstalled = isInstalled;
 
-        return moduleInfo;
+        return module;
     }
 }

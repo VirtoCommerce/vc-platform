@@ -162,11 +162,9 @@ public class ModuleRegistryTests
 
     private static ModuleBootstrapper CreateBootstrapperWithModules(List<ManifestModuleInfo> modules)
     {
-        var bootstrapper = new ModuleBootstrapper(
-            NullLoggerFactory.Instance,
-            new LocalStorageModuleCatalogOptions());
-
+        var bootstrapper = new ModuleBootstrapper(NullLoggerFactory.Instance, new LocalStorageModuleCatalogOptions());
         bootstrapper.RegisterModules(modules);
+
         return bootstrapper;
     }
 
@@ -179,15 +177,15 @@ public class ModuleRegistryTests
             PlatformVersion = "3.0.0",
         };
 
-        var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-        moduleInfo.LoadFromManifest(manifest);
-        moduleInfo.IsInstalled = isInstalled;
+        var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+        module.LoadFromManifest(manifest);
+        module.IsInstalled = isInstalled;
 
         if (!error.IsNullOrEmpty())
         {
-            moduleInfo.Errors.Add(error);
+            module.Errors.Add(error);
         }
 
-        return moduleInfo;
+        return module;
     }
 }

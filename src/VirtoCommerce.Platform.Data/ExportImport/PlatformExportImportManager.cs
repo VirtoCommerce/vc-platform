@@ -24,6 +24,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private const string ManifestZipEntryName = "Manifest.json";
         private const string PlatformZipEntryName = "PlatformEntries.json";
 
+        private readonly IModuleService _moduleService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly ISettingsManager _settingsManager;
@@ -33,7 +34,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IUserApiKeySearchService _userApiKeySearchService;
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
         private readonly IDynamicPropertyDictionaryItemsSearchService _dynamicPropertyDictionaryItemsSearchService;
-        private readonly IModuleService _moduleService;
 
         private readonly int _batchSize = 20;
 
@@ -42,23 +42,23 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             , RoleManager<Role> roleManager
             , ISettingsManager settingsManager
             , IDynamicPropertyService dynamicPropertyService
+            , IModuleService moduleService
             , IDynamicPropertySearchService dynamicPropertySearchService
             , IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService
             , IDynamicPropertyDictionaryItemsSearchService dynamicPropertyDictionaryItemsSearchService
             , IUserApiKeyService userApiKeyService
-            , IUserApiKeySearchService userApiKeySearchService
-            , IModuleService moduleService)
+            , IUserApiKeySearchService userApiKeySearchService)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _userManager = userManager;
             _roleManager = roleManager;
             _settingsManager = settingsManager;
+            _moduleService = moduleService;
             _dynamicPropertyDictionaryItemsService = dynamicPropertyDictionaryItemsService;
             _dynamicPropertyDictionaryItemsSearchService = dynamicPropertyDictionaryItemsSearchService;
             _dynamicPropertySearchService = dynamicPropertySearchService;
             _userApiKeyService = userApiKeyService;
             _userApiKeySearchService = userApiKeySearchService;
-            _moduleService = moduleService;
         }
 
         #region IPlatformExportImportManager Members

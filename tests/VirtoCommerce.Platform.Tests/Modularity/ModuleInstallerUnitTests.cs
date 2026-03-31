@@ -14,70 +14,69 @@ namespace VirtoCommerce.Platform.Tests.Modularity
     [Collection("Modularity")]
     public class ModuleInstallerUnitTests
     {
-        private readonly ModuleBootstrapper _bootstrapper = new(
-            NullLoggerFactory.Instance,
-            new LocalStorageModuleCatalogOptions());
+        private readonly ModuleBootstrapper _bootstrapper = new(NullLoggerFactory.Instance, new LocalStorageModuleCatalogOptions());
+
         [Theory]
         [ClassData(typeof(ModularityTestData))]
         public void ValidateInstall_ChecksCompatibility(string currentVersionPlatform, ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool isInstallable)
         {
-            //Arrange
+            // Arrange
             var platformVersion = SemanticVersion.Parse(currentVersionPlatform);
             var modules = GetManifestModuleInfos(moduleManifests);
-            var installedModules = GetManifestModuleInfos(installedModuleManifests);
-            foreach (var m in installedModules)
-            { m.IsInstalled = true; }
+            var installedModules = GetManifestModuleInfos(installedModuleManifests, isInstalled: true);
 
-            //Act
+            // Act
             var allValid = modules.All(module =>
             {
                 var errors = _bootstrapper.ValidateInstall(module, installedModules, platformVersion);
                 return errors.Count == 0;
             });
 
-            //Assert
+            // Assert
             allValid.Should().Be(isInstallable);
         }
 
         [Theory]
         [ClassData(typeof(DepencencyTestData))]
-        public void GetDependencies_DetectsMissingDeps(ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool hasMissingDependency)
+        public void GetDependencies_DetectsMissingDependencies(ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool hasMissingDependency)
         {
-            //Arrange
+            // Arrange
             var modules = GetManifestModuleInfos(moduleManifests);
-            var installedModules = GetManifestModuleInfos(installedModuleManifests);
-            foreach (var m in installedModules)
-            { m.IsInstalled = true; }
-
+            var installedModules = GetManifestModuleInfos(installedModuleManifests, isInstalled: true);
             var allAvailable = modules.Concat(installedModules).ToList();
 
-            //Act
+            // Act
             var result = _bootstrapper.GetDependencies(modules, allAvailable);
 
-            //Assert — check if any declared dependency is NOT resolved in the result
-            var allDeclaredDeps = modules
-                .Where(m => m.Dependencies != null)
-                .SelectMany(m => m.Dependencies)
-                .Select(d => d.Id)
-                .Distinct(StringComparer.OrdinalIgnoreCase);
+            // Assert — check if any declared dependency is NOT resolved in the result
+            var allDeclaredDependencyIds = modules
+                .Where(x => x.Dependencies != null)
+                .SelectMany(x => x.Dependencies)
+                .Select(x => x.Id)
+                .DistinctIgnoreCase();
 
-            var resolvedIds = result.Select(r => r.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
-            var hasMissing = allDeclaredDeps.Any(depId => !resolvedIds.Contains(depId));
+            var resolvedIds = result.Select(x => x.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var actualHasMissingDependency = allDeclaredDependencyIds.Except(resolvedIds).Any();
 
-            hasMissing.Should().Be(hasMissingDependency);
+            actualHasMissingDependency.Should().Be(hasMissingDependency);
         }
 
-        private static ManifestModuleInfo[] GetManifestModuleInfos(ModuleManifest[] moduleManifests)
+
+        private static ManifestModuleInfo[] GetManifestModuleInfos(ModuleManifest[] moduleManifests, bool isInstalled = false)
         {
-            return moduleManifests.Select(x =>
-            {
-                var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                module.LoadFromManifest(x);
-                return module;
-            }).ToArray();
+            return moduleManifests
+                .Select(x =>
+                {
+                    var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+                    module.LoadFromManifest(x);
+                    module.IsInstalled = isInstalled;
+
+                    return module;
+                })
+                .ToArray();
         }
 
-        class ModularityTestData : IEnumerable<object[]>
+        private class ModularityTestData : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {

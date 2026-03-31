@@ -9,13 +9,13 @@ namespace VirtoCommerce.Platform.Data.Localizations
 {
     public class ModulesTranslationDataProvider : FileSystemTranslationDataProvider
     {
-        private readonly TranslationOptions _options;
         private readonly IModuleService _moduleService;
+        private readonly TranslationOptions _options;
 
-        public ModulesTranslationDataProvider(IOptions<TranslationOptions> options, IModuleService moduleService)
+        public ModulesTranslationDataProvider(IModuleService moduleService, IOptions<TranslationOptions> options)
         {
-            _options = options.Value;
             _moduleService = moduleService;
+            _options = options.Value;
         }
 
         protected override IEnumerable<string> DiscoveryFolders

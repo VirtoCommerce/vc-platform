@@ -562,7 +562,7 @@ public class ModuleBootstrapper : IModuleService
     /// <summary>
     /// Get previously discovered IPlatformStartup implementations.
     /// </summary>
-    public IReadOnlyList<IPlatformStartup> Startups => (IReadOnlyList<IPlatformStartup>)_startups;
+    public IList<IPlatformStartup> Startups => _startups;
 
     public void RunConfigureAppConfiguration(IConfigurationBuilder builder, IHostEnvironment environment)
     {
@@ -602,10 +602,10 @@ public class ModuleBootstrapper : IModuleService
 
     internal IList<ManifestModuleInfo> ReadLocalManifests()
     {
-        var discoveryPath = _options.DiscoveryPath;
         var logger = _loggerFactory.CreateLogger<ModuleBootstrapper>();
         logger.LogInformation("Loading modules");
 
+        var discoveryPath = _options.DiscoveryPath;
         if (!discoveryPath.EndsWith(Path.DirectorySeparatorChar))
         {
             discoveryPath += Path.DirectorySeparatorChar;
