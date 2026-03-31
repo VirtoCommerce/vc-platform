@@ -422,7 +422,8 @@
           "account-type": "Tipo de cuenta",
           "login": "Nombre de usuario",
           "state": "Estado",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Copiar ID"
         }
       },
       "account-api": {

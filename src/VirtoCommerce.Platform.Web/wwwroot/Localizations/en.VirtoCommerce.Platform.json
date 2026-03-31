@@ -424,7 +424,8 @@
           "account-type": "Account type",
           "login": "Login",
           "state": "State",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Copy ID"
         }
       },
       "account-api": {

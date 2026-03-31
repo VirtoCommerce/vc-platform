@@ -424,7 +424,8 @@
           "account-type": "Тип учетной записи",
           "login": "Логин",
           "state": "Состояние",
-          "status": "Статус"
+          "status": "Статус",
+          "copy-id": "Скопировать ID"
         }
       },
       "account-api": {

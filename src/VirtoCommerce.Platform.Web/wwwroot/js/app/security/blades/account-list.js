@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils',
-function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService, bladeUtils) {
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.clipboardService',
+function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService, bladeUtils, clipboardService) {
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
 
@@ -102,6 +102,10 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         } else {
             blade.refresh();
         }
+    };
+
+    $scope.copy = function (text) {
+        clipboardService.copyText(text);
     };
 
     // ui-grid

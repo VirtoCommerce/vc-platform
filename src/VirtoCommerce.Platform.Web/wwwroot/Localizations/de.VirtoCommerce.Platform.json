@@ -424,7 +424,8 @@
           "account-type": "Kontotyp",
           "login": "Anmeldung",
           "state": "Zustand",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "ID kopieren"
         }
       },
       "account-api": {
