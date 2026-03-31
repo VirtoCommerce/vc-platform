@@ -137,7 +137,11 @@ namespace VirtoCommerce.Platform.Web
                         options.ProbingPath = Path.GetFullPath(options.ProbingPath);
                     })
                     .ValidateDataAnnotations();
+
+#pragma warning disable VC0014 // Type or member is obsolete
             services.AddOptions<ModuleSequenceBoostOptions>().Bind(Configuration.GetSection("VirtoCommerce"));
+#pragma warning restore VC0014 // Type or member is obsolete
+
             services.AddOptions<DistributedLockOptions>().Bind(Configuration.GetSection("DistributedLock"));
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
@@ -506,8 +510,8 @@ namespace VirtoCommerce.Platform.Web
             services.AddTransient<IExternalSignInService, ExternalSignInService>();
 
             // Create module catalog adapter (needed by IHasModuleCatalog modules and DI)
-            var boostOptions = Configuration.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
 #pragma warning disable VC0014 // Type or member is obsolete
+            var boostOptions = Configuration.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
             var moduleCatalogAdapter = new LocalModuleCatalogAdapter(sortedModules, boostOptions);
 #pragma warning restore VC0014 // Type or member is obsolete
 

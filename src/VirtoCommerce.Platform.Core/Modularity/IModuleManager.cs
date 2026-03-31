@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// <summary>
     /// Defines the interface for the service that will retrieve and initialize the application's modules.
     /// </summary>
-    [Obsolete("Use ModuleRunner static class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModuleBootstrapper class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public interface IModuleManager
     {
         /// <summary>

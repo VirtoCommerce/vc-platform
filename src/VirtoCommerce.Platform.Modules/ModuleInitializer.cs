@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Modules
     /// <summary>
     /// Implements the <see cref="IModuleInitializer"/> interface. Handles loading of a module based on a type.
     /// </summary>
-    [Obsolete("Use ModuleRunner static class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModuleBootstrapper class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ModuleInitializer : IModuleInitializer
     {
         private readonly ILogger<ModuleInitializer> _loggerFacade;

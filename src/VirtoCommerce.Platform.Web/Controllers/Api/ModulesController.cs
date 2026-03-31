@@ -22,7 +22,6 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Helpers;
-using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.Model.Modularity;
 using VirtoCommerce.Platform.Web.Modularity;
 
@@ -34,7 +33,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private const string _managementIsDisabledMessage = "Module management is disabled.";
 
-        private readonly IModuleManagementService _moduleService;
+        private readonly IModuleService _moduleService;
+        private readonly IModuleManagementService _moduleManagementService;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
         private readonly ISettingsManager _settingsManager;
@@ -43,11 +43,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly IPlatformRestarter _platformRestarter;
         private readonly ILogger<ModulesController> _logger;
-        private static readonly object _lockObject = new object();
-        private static readonly FormOptions _defaultFormOptions = new FormOptions();
+        private static readonly Lock _lockObject = new();
+        private static readonly FormOptions _defaultFormOptions = new();
 
         public ModulesController(
-            IModuleManagementService moduleService,
+            IModuleService moduleService,
+            IModuleManagementService moduleManagementService,
             IPushNotificationManager pushNotifier,
             IUserNameResolver userNameResolver,
             ISettingsManager settingsManager,
@@ -58,6 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             ILogger<ModulesController> logger)
         {
             _moduleService = moduleService;
+            _moduleManagementService = moduleManagementService;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
             _settingsManager = settingsManager;
@@ -77,7 +79,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public ActionResult ReloadModules()
         {
-            _moduleService.ReloadModules();
+            _moduleManagementService.ReloadModules();
             return NoContent();
         }
 
@@ -90,13 +92,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(ModuleDescriptor[]), StatusCodes.Status200OK)]
         public ActionResult<ModuleDescriptor[]> GetModules()
         {
-            var allModules = _moduleService.GetModules()
+            var allModules = _moduleManagementService.GetModules()
                 .OrderBy(x => x.Id)
                 .ThenBy(x => x.Version)
                 .Select(x => new ModuleDescriptor(x))
                 .ToList();
 
-            var localModules = ModuleBootstrapper.Instance.GetModules().ToDictionary(x => x.Id);
+            var localModules = _moduleService.GetModules().ToDictionary(x => x.Id);
 
             foreach (var module in allModules.Where(x => !string.IsNullOrEmpty(x.IconUrl)))
             {
@@ -120,7 +122,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
 
-            var retVal = _moduleService.GetDependents(moduleIds).Distinct()
+            var retVal = _moduleManagementService.GetDependents(moduleIds).Distinct()
                 .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
@@ -140,7 +142,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
 
-            var result = _moduleService.GetDependencies(moduleIds)
+            var result = _moduleManagementService.GetDependencies(moduleIds)
                 .Where(x => !x.IsInstalled)
                 .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
                 .Select(x => new ModuleDescriptor(x))
@@ -184,7 +186,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
             module.LoadFromManifest(manifest);
 
-            module = _moduleService.AddUploadedModule(module);
+            module = _moduleManagementService.AddUploadedModule(module);
             module.Ref = targetFilePath;
 
             return Ok(new ModuleDescriptor(module));
@@ -310,9 +312,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, true);
                             _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Processing);
 
-                            if (!_moduleService.GetModules().Any(x => x.IsInstalled))
+                            if (!_moduleManagementService.GetModules().Any(x => x.IsInstalled))
                             {
-                                var autoInstallModules = _moduleService.GetNotInstalledModulesFromGroups(moduleBundles);
+                                var autoInstallModules = _moduleManagementService.GetNotInstalledModulesFromGroups(moduleBundles);
                                 if (autoInstallModules.Any())
                                 {
                                     var options = new ModuleBackgroundJobOptions
@@ -360,12 +362,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(string[]), StatusCodes.Status200OK)]
         public ActionResult<string[]> GetModulesLoadingOrder()
         {
-            var moduleIds = _moduleService.GetModules()
+            var moduleIds = _moduleManagementService.GetModules()
                 .Where(x => x.IsInstalled)
                 .Select(x => x.Id)
                 .ToList();
 
-            var loadingOrder = _moduleService.GetDependencies(moduleIds)
+            var loadingOrder = _moduleManagementService.GetDependencies(moduleIds)
                 .Select(x => x.Id)
                 .ToArray();
 
@@ -383,7 +385,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ValidateModuleVersion(string moduleId, string version)
         {
-            return Ok(await _moduleService.ValidateModuleVersionAsync(moduleId, version));
+            return Ok(await _moduleManagementService.ValidateModuleVersionAsync(moduleId, version));
         }
 
         /// <summary>
@@ -399,7 +401,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ModulePushNotification>> InstallModuleVersion(string moduleId, string version)
         {
-            var moduleInfo = await _moduleService.RegisterCustomModuleVersionAsync(moduleId, version);
+            var moduleInfo = await _moduleManagementService.RegisterCustomModuleVersionAsync(moduleId, version);
             if (moduleInfo == null)
             {
                 return NotFound();
@@ -458,10 +460,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     {
                         case ModuleAction.Install:
                         case ModuleAction.Update:
-                            _moduleService.InstallModules(options.Modules, reportProgress);
+                            _moduleManagementService.InstallModules(options.Modules, reportProgress);
                             break;
                         case ModuleAction.Uninstall:
-                            _moduleService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
+                            _moduleManagementService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
                             break;
                     }
                 }

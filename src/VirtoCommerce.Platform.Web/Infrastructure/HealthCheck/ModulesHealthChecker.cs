@@ -2,15 +2,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
 {
-    public sealed class ModulesHealthChecker : IHealthCheck
+    public sealed class ModulesHealthChecker(IModuleService moduleService) : IHealthCheck
     {
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var errorsDictionary = ModuleBootstrapper.Instance.GetFailedModules()
+            var errorsDictionary = moduleService.GetFailedModules()
                 .ToDictionary(
                     x => x.Id,
                     x => new ModulesHealthReportRecord

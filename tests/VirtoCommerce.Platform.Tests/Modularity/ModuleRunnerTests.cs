@@ -10,12 +10,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity;
 
 public class ModuleRunnerTests
 {
-    private readonly ModuleBootstrapper _bootstrapper;
-
-    public ModuleRunnerTests()
-    {
-        _bootstrapper = CreateBootstrapper();
-    }
+    private readonly ModuleBootstrapper _bootstrapper = CreateBootstrapper();
 
     [Fact]
     public void SortByDependency_EmptyList_ReturnsEmpty()
@@ -163,7 +158,7 @@ public class ModuleRunnerTests
         // Act
         var normal = _bootstrapper.SortModulesByDependency(modules);
 
-        var boostedBootstrapper = CreateBootstrapper(new ModuleSequenceBoostOptions
+        var boostedBootstrapper = CreateBootstrapper(new LocalStorageModuleCatalogOptions
         {
             ModuleSequenceBoost = ["B", "C"],
         });
@@ -207,12 +202,11 @@ public class ModuleRunnerTests
     }
 
 
-    private static ModuleBootstrapper CreateBootstrapper(ModuleSequenceBoostOptions boostOptions = null)
+    private static ModuleBootstrapper CreateBootstrapper(LocalStorageModuleCatalogOptions options = null)
     {
         return new ModuleBootstrapper(
             NullLoggerFactory.Instance,
-            new LocalStorageModuleCatalogOptions(),
-            boostOptions);
+            options ?? new LocalStorageModuleCatalogOptions());
     }
 
     private static ManifestModuleInfo CreateModule(string id, string[] dependencies = null)

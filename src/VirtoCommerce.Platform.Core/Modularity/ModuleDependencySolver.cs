@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// Used by ModuleInitializer to get the load sequence
     /// for the modules to load according to their dependencies.
     /// </summary>
-    [Obsolete("Use ModuleRunner.SortModulesByDependency().", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModuleBootstrapper class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ModuleDependencySolver
     {
         private readonly ListDictionary<string, string> _dependencyMatrix = [];

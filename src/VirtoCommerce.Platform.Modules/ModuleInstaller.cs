@@ -13,7 +13,7 @@ using VirtoCommerce.Platform.Modules.External;
 
 namespace VirtoCommerce.Platform.Modules
 {
-    [Obsolete("Use ModulePackageInstaller and ModuleDiscovery classes instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModulePackageInstaller and ModuleBootstrapper classes instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ModuleInstaller : IModuleInstaller
     {
         private const string _packageFileExtension = ".zip";
@@ -199,7 +199,6 @@ namespace VirtoCommerce.Platform.Modules
                 moduleZipPath = module.Ref;
             }
 
-            // Extract the downloaded/local package using ModulePackageInstaller
             if (File.Exists(moduleZipPath))
             {
                 ModulePackageInstaller.Install(moduleZipPath, dstModuleDir);

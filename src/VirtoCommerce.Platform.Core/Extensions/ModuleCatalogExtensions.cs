@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Extensions
 {
     public static class ModuleCatalogExtensions
     {
-        [Obsolete("Use ModuleRegistry.IsInstalled(moduleId) instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use IModuleService.IsInstalled(moduleId) instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static bool IsModuleInstalled(this IModuleCatalog moduleCatalog, string moduleId)
         {
             return moduleCatalog.Modules

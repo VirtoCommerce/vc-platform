@@ -23,12 +23,10 @@ namespace VirtoCommerce.Platform.Modules;
 
 /// <summary>
 /// Single entry point for the module loading pipeline.
-/// Replaces ModuleLogger, ModuleManifestReader, ModuleRunner, ModuleCopier, ModuleLoader,
-/// ModuleDiscovery, ModuleRegistry, and PlatformStartupDiscovery.
 /// <para>
 /// Usage (platform):
 /// <code>
-/// ModuleBootstrapper.Instance = new ModuleBootstrapper(loggerFactory, options, boostOptions)
+/// ModuleBootstrapper.Instance = new ModuleBootstrapper(loggerFactory, options)
 ///     .Discover(platformVersion)
 ///     .Copy(RuntimeInformation.ProcessArchitecture)
 ///     .Load(isDevelopment);
@@ -59,7 +57,6 @@ public class ModuleBootstrapper : IModuleService
 
     private readonly ILoggerFactory _loggerFactory;
     private readonly LocalStorageModuleCatalogOptions _options;
-    private readonly ModuleSequenceBoostOptions _boostOptions;
 
     // Registry state
     private IList<ManifestModuleInfo> _modules = [];
@@ -94,7 +91,7 @@ public class ModuleBootstrapper : IModuleService
         "System.Composition.TypedParts",
     ];
 
-    private const string RebuildMarkerFileName = ".rebuild";
+    private const string _rebuildMarkerFileName = ".rebuild";
 
     #endregion
 
@@ -104,12 +101,10 @@ public class ModuleBootstrapper : IModuleService
     /// </summary>
     /// <param name="loggerFactory">Logger factory for all module loading operations.</param>
     /// <param name="options">Local module catalog options (discovery path, probing path, etc.).</param>
-    /// <param name="boostOptions">Optional module sequence boost options for dependency sorting.</param>
     /// <param name="ignoredAssemblies">Optional list of assemblies to ignore during module loading.</param>
     public ModuleBootstrapper(
         ILoggerFactory loggerFactory,
         LocalStorageModuleCatalogOptions options,
-        ModuleSequenceBoostOptions boostOptions = null,
         string[] ignoredAssemblies = null)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
@@ -117,7 +112,6 @@ public class ModuleBootstrapper : IModuleService
 
         _loggerFactory = loggerFactory;
         _options = options;
-        _boostOptions = boostOptions ?? new ModuleSequenceBoostOptions();
 
         if (ignoredAssemblies != null)
         {
@@ -171,12 +165,12 @@ public class ModuleBootstrapper : IModuleService
     /// Phase 3: Load module assemblies, refresh the registry (update error state),
     /// and discover IPlatformStartup implementations.
     /// </summary>
-    public ModuleBootstrapper Load(bool isDevelopment)
+    public ModuleBootstrapper Load(bool isDevelopmentEnvironment)
     {
         var logger = _loggerFactory.CreateLogger<ModuleBootstrapper>();
 
         // Load assemblies
-        LoadModulesInternal(_modules, isDevelopment);
+        LoadModulesInternal(_modules, isDevelopmentEnvironment);
 
         // Refresh registry (modules may have new errors from load failures)
         RegisterModules(_modules);
@@ -457,7 +451,7 @@ public class ModuleBootstrapper : IModuleService
             Directory.CreateDirectory(_options.ProbingPath);
         }
 
-        var markerPath = Path.Combine(_options.ProbingPath, RebuildMarkerFileName);
+        var markerPath = Path.Combine(_options.ProbingPath, _rebuildMarkerFileName);
         File.WriteAllBytes(markerPath, []);
 
         logger.LogInformation("Probing folder marked for rebuild on next startup");
@@ -604,7 +598,7 @@ public class ModuleBootstrapper : IModuleService
 
     #endregion
 
-    #region Private — Discovery (was ModuleManifestReader)
+    #region Private — Discovery
 
     internal IList<ManifestModuleInfo> ReadLocalManifests()
     {
@@ -671,7 +665,7 @@ public class ModuleBootstrapper : IModuleService
 
     #endregion
 
-    #region Private — Sorting (was ModuleRunner.SortModulesByDependency)
+    #region Private — Sorting
 
     internal IList<ManifestModuleInfo> SortModulesByDependency(IEnumerable<ManifestModuleInfo> modules)
     {
@@ -683,7 +677,7 @@ public class ModuleBootstrapper : IModuleService
         }
 
         var ignoreCase = StringComparer.OrdinalIgnoreCase;
-        var boostedIds = new HashSet<string>(_boostOptions.ModuleSequenceBoost ?? [], ignoreCase);
+        var boostedIds = new HashSet<string>(_options.ModuleSequenceBoost ?? [], ignoreCase);
 
         var remaining = moduleList
             .GroupBy(x => x.Id, ignoreCase)
@@ -728,7 +722,7 @@ public class ModuleBootstrapper : IModuleService
 
     #endregion
 
-    #region Private — Copying (was ModuleCopier)
+    #region Private — Copying
 
     private void CopyModulesInternal(IList<ManifestModuleInfo> modules, Architecture environmentArchitecture)
     {
@@ -737,7 +731,7 @@ public class ModuleBootstrapper : IModuleService
         var refreshProbing = _options.RefreshProbingFolderOnStart;
         var fileCopyPolicy = new FileCopyPolicy(new FileMetadataProvider(), Options.Create(_options));
 
-        var markerPath = Path.Combine(probingPath, RebuildMarkerFileName);
+        var markerPath = Path.Combine(probingPath, _rebuildMarkerFileName);
         if (File.Exists(markerPath))
         {
             logger.LogInformation("Rebuild marker found — clearing probing folder for clean rebuild");
@@ -842,7 +836,7 @@ public class ModuleBootstrapper : IModuleService
 
     #endregion
 
-    #region Private — Loading (was ModuleLoader)
+    #region Private — Loading
 
     private void LoadModulesInternal(IList<ManifestModuleInfo> modules, bool isDevelopmentEnvironment)
     {
@@ -1093,7 +1087,7 @@ public class ModuleBootstrapper : IModuleService
 
     #endregion
 
-    #region Private — Validation (was ModuleDiscovery.ValidateModules)
+    #region Private — Validation
 
     internal void ValidateModulesInternal(IList<ManifestModuleInfo> modules, SemanticVersion platformVersion)
     {
@@ -1192,7 +1186,7 @@ public class ModuleBootstrapper : IModuleService
 
     #endregion
 
-    #region Private — Startup Discovery (was PlatformStartupDiscovery)
+    #region Private — Startup Discovery
 
     private void DiscoverStartupsInternal(IList<ManifestModuleInfo> modules)
     {
@@ -1250,9 +1244,9 @@ public class ModuleBootstrapper : IModuleService
 
     #endregion
 
-    #region Private — Module Instance Creation (was ModuleRunner.CreateModuleInstance)
+    #region Private — Module Instance Creation
 
-    public static IModule CreateModuleInstance(ManifestModuleInfo moduleInfo)
+    internal static IModule CreateModuleInstance(ManifestModuleInfo moduleInfo)
     {
         if (moduleInfo.Assembly == null)
         {

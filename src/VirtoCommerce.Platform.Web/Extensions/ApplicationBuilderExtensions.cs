@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
         {
             var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
             settingsRegistrar.RegisterSettings(AllSettings, "Platform");
-            settingsRegistrar.RegisterSettingsForType(UserProfile.AllSettings, typeof(UserProfile).Name);
+            settingsRegistrar.RegisterSettingsForType(UserProfile.AllSettings, nameof(UserProfile));
 
             var settingsManager = appBuilder.ApplicationServices.GetRequiredService<ISettingsManager>();
 
@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
         public static IApplicationBuilder ExecuteSynchronized(this IApplicationBuilder app, Action payload)
         {
             var distributedLockProvider = app.ApplicationServices.GetRequiredService<IInternalDistributedLockService>();
-            distributedLockProvider.ExecuteSynchronized(nameof(Startup), (x) => payload());
+            distributedLockProvider.ExecuteSynchronized(nameof(Startup), _ => payload());
             return app;
         }
 

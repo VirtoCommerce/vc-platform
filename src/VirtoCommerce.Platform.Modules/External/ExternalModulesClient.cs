@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 namespace VirtoCommerce.Platform.Modules.External
 {
 
-    [Obsolete("Use ModulePackageInstaller and ModuleDiscovery classes instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModulePackageInstaller and ModuleBootstrapper classes instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ExternalModulesClient : IExternalModulesClient
     {
         private readonly ExternalModuleCatalogOptions _options;

@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// </list>
     /// The <see cref="ModuleCatalog"/> also serves as a baseclass for more specialized Catalogs .
     /// </summary>
-    [Obsolete("Use ModuleRegistry for read-only module queries.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModuleBootstrapper for read-only module queries.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ModuleCatalog : IModuleCatalog
     {
         private readonly ModuleSequenceBoostOptions _boostOptions;

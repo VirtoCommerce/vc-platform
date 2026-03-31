@@ -4,7 +4,6 @@ namespace VirtoCommerce.Platform.Core.Modularity;
 
 /// <summary>
 /// Read-only provider for querying loaded modules.
-/// All lists are sorted in dependency order (no-deps first).
 /// </summary>
 public interface IModuleService
 {
@@ -19,7 +18,7 @@ public interface IModuleService
     IList<ManifestModuleInfo> GetInstalledModules();
 
     /// <summary>
-    /// Returns modules that have errors.
+    /// Returns modules that have errors, sorted by IDs.
     /// </summary>
     IList<ManifestModuleInfo> GetFailedModules();
 

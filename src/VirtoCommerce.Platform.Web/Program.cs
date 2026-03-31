@@ -44,17 +44,17 @@ namespace VirtoCommerce.Platform.Web
                 .CreateBootstrapLogger();
 
             var loggerFactory = new SerilogLoggerFactory(Log.Logger);
-            var boostOptions = bootConfig.GetSection("VirtoCommerce").Get<ModuleSequenceBoostOptions>() ?? new ModuleSequenceBoostOptions();
+
             var options = bootConfig.GetSection("VirtoCommerce").Get<LocalStorageModuleCatalogOptions>();
             options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath);
             options.ProbingPath = Path.GetFullPath(options.ProbingPath);
 
-            var isDevelopment = environment.EqualsIgnoreCase(Environments.Development);
+            var isDevelopmentEnvironment = environment.EqualsIgnoreCase(Environments.Development);
 
-            ModuleBootstrapper.Instance = new ModuleBootstrapper(loggerFactory, options, boostOptions)
+            ModuleBootstrapper.Instance = new ModuleBootstrapper(loggerFactory, options)
                 .Discover(PlatformVersion.CurrentVersion)
                 .Copy(RuntimeInformation.ProcessArchitecture)
-                .Load(isDevelopment);
+                .Load(isDevelopmentEnvironment);
         }
 
         private static IConfigurationRoot GetLoggerConfiguration(IConfigurationRoot bootConfig)

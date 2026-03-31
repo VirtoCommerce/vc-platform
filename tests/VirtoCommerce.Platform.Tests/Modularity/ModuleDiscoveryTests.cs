@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -19,7 +20,7 @@ public class ModuleDiscoveryTests
     {
         var platformVersion = SemanticVersion.Parse("3.800.0");
         var module = CreateModule("TestModule", "1.0.0", platformVersion: "3.0.0");
-        var installedModules = new List<ManifestModuleInfo>();
+        var installedModules = Array.Empty<ManifestModuleInfo>();
 
         var errors = _bootstrapper.ValidateInstall(module, installedModules, platformVersion);
 
@@ -31,7 +32,7 @@ public class ModuleDiscoveryTests
     {
         var platformVersion = SemanticVersion.Parse("3.800.0");
         var module = CreateModule("TestModule", "1.0.0", platformVersion: "4.0.0");
-        var installedModules = new List<ManifestModuleInfo>();
+        var installedModules = Array.Empty<ManifestModuleInfo>();
 
         var errors = _bootstrapper.ValidateInstall(module, installedModules, platformVersion);
 
@@ -74,10 +75,11 @@ public class ModuleDiscoveryTests
     [Fact]
     public void ValidateUninstall_HasDependents_ReturnsError()
     {
-        var moduleA = CreateModule("ModuleA", "1.0.0", isInstalled: true);
-        var moduleB = CreateModule("ModuleB", "1.0.0", isInstalled: true, dependencyIds: ["ModuleA"]);
-
-        var installedModules = new List<ManifestModuleInfo> { moduleA, moduleB };
+        var installedModules = new List<ManifestModuleInfo>
+        {
+            CreateModule("ModuleA", "1.0.0", isInstalled: true),
+            CreateModule("ModuleB", "1.0.0", isInstalled: true, dependencyIds: ["ModuleA"]),
+        };
 
         var errors = _bootstrapper.ValidateUninstall("ModuleA", installedModules);
 
@@ -127,7 +129,8 @@ public class ModuleDiscoveryTests
     [Fact]
     public void MergeWithInstalled_InstalledOnlyModule_Included()
     {
-        var externalModules = new List<ManifestModuleInfo>();
+        var externalModules = Array.Empty<ManifestModuleInfo>();
+
         var installedModules = new List<ManifestModuleInfo>
         {
             CreateModule("LocalOnly", "1.0.0", isInstalled: true),

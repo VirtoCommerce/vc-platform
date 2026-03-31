@@ -3,23 +3,37 @@ namespace VirtoCommerce.Platform.Core.Modularity
     public class LocalStorageModuleCatalogOptions
     {
         /// <summary>
-        /// A folder where the platform will discover installed modules
-        /// Can use absolute or relative path
+        /// The folder where the platform scans for installed module manifests and assemblies.
+        /// Each module is expected to reside in its own subfolder with a <c>module.manifest</c> file.
+        /// Supports absolute or relative paths. Default: "modules".
         /// </summary>
         public string DiscoveryPath { get; set; } = "modules";
+
         /// <summary>
-        /// A path where the platform stores installed modules. The platform loads modules assemblies directly from this folder.
+        /// The folder where module assemblies are copied to and loaded from at runtime.
+        /// During startup, the platform copies assemblies from <see cref="DiscoveryPath"/> to this folder
+        /// (unless <see cref="RefreshProbingFolderOnStart"/> is <c>false</c>),
+        /// then loads them directly from here.
+        /// Supports absolute or relative paths. Default: "app_data/modules".
         /// </summary>
         public string ProbingPath { get; set; } = "app_data/modules";
+
         /// <summary>
-        /// Should the platform check modules assemblies existence/versions in the probing folder in comparison with found at DiscoveryPath and copy/replace them if need.
-        /// Set to true by default (refresh probing folder at each startup).
-        /// It can be useful to avoid refreshing in scenarios with slow storages to speed up the platform startup.
-        /// In this case, set to false and deploy probing folder in some external way,
-        /// the probing folder should exist and contain all the modules files consistent BEFORE the platform starts.
-        /// If the probing folder is absent at platform startup, it will be forcibly refreshed regardless of RefreshProbingFolderOnStart value. 
+        /// Controls whether the platform re-copies module assemblies from <see cref="DiscoveryPath"/>
+        /// to <see cref="ProbingPath"/> on each startup. Default: <c>true</c>.
+        /// <para>
+        /// Set to <c>false</c> to skip copying and speed up startup on slow storage.
+        /// In that case, ensure <see cref="ProbingPath"/> is pre-populated externally before the platform starts.
+        /// If <see cref="ProbingPath"/> does not exist at startup, copying is forced regardless of this setting.
+        /// </para>
         /// </summary>
         public bool RefreshProbingFolderOnStart { get; set; } = true;
+
+        /// <summary>
+        /// Module IDs that should be loaded before other modules at the same dependency level.
+        /// </summary>
+        public string[] ModuleSequenceBoost { get; set; } = [];
+
         public string[] LocalizationFileExtensions { get; set; } = ["resources.dll"];
         public string[] AssemblyFileExtensions { get; set; } = [".dll", ".exe"];
         public string[] AssemblyServiceFileExtensions { get; set; } = [".pdb", ".xml", ".deps.json", ".runtimeconfig.json", ".runtimeconfig.dev.json", ".dep", ".zip"];

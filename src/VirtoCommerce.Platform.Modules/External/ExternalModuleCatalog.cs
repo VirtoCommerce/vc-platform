@@ -11,7 +11,7 @@ using VirtoCommerce.Platform.Modules.External;
 
 namespace VirtoCommerce.Platform.Modules
 {
-    [Obsolete("Use ModuleDiscovery class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModuleBootstrapper class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ExternalModuleCatalog : ModuleCatalog, IExternalModuleCatalog
     {
         private readonly IEnumerable<ModuleInfo> _installedModules;
@@ -57,7 +57,6 @@ namespace VirtoCommerce.Platform.Modules
                     externalModules = externalModules.Distinct().ToList();
                 }
 
-                // Merge with installed using ModuleDiscovery
                 var installedModules = _installedModules.OfType<ManifestModuleInfo>().ToList();
                 var mergedModules = ModuleBootstrapper.Instance.MergeWithInstalled(externalModules, installedModules);
 

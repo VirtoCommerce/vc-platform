@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// application. Each module is described in a ModuleInfo class, that records the
     /// name, type and location of the module.
     /// </summary>
-    [Obsolete("Use ModuleRegistry for read-only module queries.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use ModuleBootstrapper for read-only module queries.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public interface IModuleCatalog
     {
         /// <summary>

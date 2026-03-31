@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Modules;
 /// <summary>
 /// Singleton service for module catalog management.
 /// Caches the merged module list (external + installed) across requests.
-/// Uses static classes (ModuleDiscovery, ModulePackageInstaller, ModuleRegistry) for core logic.
+/// Uses static classes (ModuleBootstrapper, ModulePackageInstaller) for core logic.
 /// </summary>
 public class ModuleManagementService(
     IHttpClientFactory httpClientFactory,
