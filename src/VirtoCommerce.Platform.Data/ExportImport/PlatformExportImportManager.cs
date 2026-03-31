@@ -42,8 +42,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             , RoleManager<Role> roleManager
             , ISettingsManager settingsManager
             , IDynamicPropertyService dynamicPropertyService
-            , IModuleService moduleService
             , IDynamicPropertySearchService dynamicPropertySearchService
+            , IModuleService moduleService
             , IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService
             , IDynamicPropertyDictionaryItemsSearchService dynamicPropertyDictionaryItemsSearchService
             , IUserApiKeyService userApiKeyService
