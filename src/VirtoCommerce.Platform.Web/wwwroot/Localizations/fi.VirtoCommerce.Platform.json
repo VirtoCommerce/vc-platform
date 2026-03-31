@@ -7,6 +7,7 @@
       "notifications": "Ilmoitukset",
       "more": "Lisää",
       "settings": "Asetukset",
+      "settings-unified": "Asetukset (Yhtenäinen)",
       "dynamic-properties": "Dynamiset ominaisuudet",
       "security": "Turvallisuus",
       "modules": "Moduulit",
@@ -667,6 +668,30 @@
         "title": "Asetukset",
         "bread-crumb-top": "Kaikki asetukset"
       },
+      "settings-unified": {
+        "title": "Asetukset",
+        "all-settings": "Kaikki asetukset",
+        "filter": "Suodata",
+        "filter-show": "Näytä",
+        "filter-all": "Kaikki asetukset",
+        "filter-modified": "Vain muokatut",
+        "filter-modified-only": "Näytä vain muokatut",
+        "filter-module": "Moduuli",
+        "filter-all-modules": "Kaikki moduulit",
+        "filter-clear": "Tyhjennä suodattimet",
+        "filter-show-tenant": "Näytä vuokralaisen ominaisuudet",
+        "copy-link": "Kopioi linkki osioon",
+        "no-settings": "Yksikään asetus ei vastaa nykyisiä suodattimia.",
+        "export-json": "Vie JSON",
+        "import-json": "Tuo JSON",
+        "edit-json": "Muokkaa JSON-muodossa",
+        "import-confirm-title": "Tuo asetukset",
+        "import-confirm-message": "Ota kayttoon {{count}} asetusta tuodusta tiedostosta?"
+      },
+      "settings-json-editor": {
+        "title": "Muokkaa asetuksia JSON-muodossa",
+        "format-json": "Muotoile JSON"
+      },
       "settings-uploader": {
         "drag-drop-comment": "Vedä ja pudota tiedosto tänne",
         "or": "tai",
@@ -909,6 +934,11 @@
       "sessions-terminate-all": {
         "title": "Lopeta kaikki",
         "message": "Haluatko varmasti lopettaa kaikki käyttäjäistunnot?"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Tyhjennä suodattimet"
       }
     },
     "commands": {
