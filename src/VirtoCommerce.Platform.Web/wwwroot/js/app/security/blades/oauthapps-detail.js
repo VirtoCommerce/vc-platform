@@ -1,4 +1,4 @@
-angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.validators', function ($scope, bladeNavigationService, dialogService, oauthapps, validators) {
+angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.validators', 'platformWebApp.clipboardService', function ($scope, bladeNavigationService, dialogService, oauthapps, validators, clipboardService) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
 
@@ -104,10 +104,8 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
     }
 
     $scope.copyToClipboard = function (elementId) {
-        var text = document.getElementById(elementId);
-        text.focus();
-        text.select();
-        document.execCommand('copy');
+        var element = document.getElementById(elementId);
+        clipboardService.copyText(element.value || element.innerText);
     };
 
     $scope.editRedirectUris = function () {

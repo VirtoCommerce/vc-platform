@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.systemInfoController', ['$scope', 'platformWebApp.diagnostics',
-        function ($scope, diagnostics) {
+    .controller('platformWebApp.systemInfoController', ['$scope', 'platformWebApp.diagnostics', 'platformWebApp.clipboardService',
+        function ($scope, diagnostics, clipboardService) {
             var blade = $scope.blade;
 
             blade.initializeBlade = function () {
@@ -61,13 +61,7 @@ angular.module('platformWebApp')
 
             $scope.copyToClipboard = function () {
                 var platformInfoElement = document.getElementById('platform-system-info');
-                var infoText = platformInfoElement.innerText;
-                var textarea = document.createElement("textarea");
-                document.body.appendChild(textarea);
-                textarea.value = infoText;
-                textarea.select();
-                document.execCommand("copy");
-                document.body.removeChild(textarea);
+                clipboardService.copyText(platformInfoElement.innerText);
             };
 
             blade.toolbarCommands = [
