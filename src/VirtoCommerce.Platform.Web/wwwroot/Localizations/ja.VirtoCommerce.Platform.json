@@ -7,6 +7,7 @@
       "notifications": "通知",
       "more": "その他",
       "settings": "設定",
+      "settings-unified": "設定 (統合)",
       "dynamic-properties": "動的プロパティ",
       "security": "セキュリティ",
       "modules": "モジュール",
@@ -665,6 +666,30 @@
         "title": "設定",
         "bread-crumb-top": "すべての設定"
       },
+      "settings-unified": {
+        "title": "設定",
+        "all-settings": "すべての設定",
+        "filter": "フィルター",
+        "filter-show": "表示",
+        "filter-all": "すべての設定",
+        "filter-modified": "変更済みのみ",
+        "filter-modified-only": "変更済みのみ表示",
+        "filter-module": "モジュール",
+        "filter-all-modules": "すべてのモジュール",
+        "filter-clear": "フィルターをクリア",
+        "filter-show-tenant": "テナントプロパティを表示",
+        "copy-link": "セクションへのリンクをコピー",
+        "no-settings": "現在のフィルターに一致する設定はありません。",
+        "export-json": "JSONエクスポート",
+        "import-json": "JSONインポート",
+        "edit-json": "JSONとして編集",
+        "import-confirm-title": "設定のインポート",
+        "import-confirm-message": "インポートファイルから{{count}}件の設定を適用しますか？"
+      },
+      "settings-json-editor": {
+        "title": "JSONとして設定を編集",
+        "format-json": "JSONフォーマット"
+      },
       "settings-uploader": {
         "drag-drop-comment": "ファイルをここにドラッグ＆ドロップ",
         "or": "または",
@@ -907,6 +932,11 @@
       "sessions-terminate-all": {
         "title": "すべて終了",
         "message": "すべてのユーザーセッションを終了してもよろしいですか？"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "フィルターをクリア"
       }
     },
     "commands": {

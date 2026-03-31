@@ -10,7 +10,7 @@ angular.module('platformWebApp').directive('vaHeader', ["$state",
                 scope.tooltipPopupDelay = 2000;
 
                 scope.manageSettings = function () {
-                    $state.go('workspace.modulesSettings');
+                    $state.go('workspace.settings');
                 }
             }
         }
