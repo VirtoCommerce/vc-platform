@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.moduleHelper', 'FileUploader', 'platformWebApp.settings', function ($scope, bladeNavigationService, moduleHelper, FileUploader, settings) {
+.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.moduleHelper', 'FileUploader', function ($scope, bladeNavigationService, moduleHelper, FileUploader) {
     var blade = $scope.blade;
 
     blade.headIcon = 'fa fa-cubes';
@@ -30,35 +30,12 @@ angular.module('platformWebApp')
                     permission: 'platform:module:manage'
                 }
             ];
-
-            // hide settings toolbar button when there are no settings available #523
-            settings.getSettings({ id: blade.currentEntity.id }, function (results) {
-                if (_.any(results)) {
-                    blade.toolbarCommands.push({
-                        name: "platform.commands.settings", icon: 'fa fa-wrench',
-                        executeMethod: function () {
-                            var newBlade = {
-                                id: 'moduleSettingsSection',
-                                moduleId: blade.currentEntity.id,
-                                data: results,
-                                title: 'platform.blades.module-settings-detail.title',
-                                //subtitle: '',
-                                controller: 'platformWebApp.settingsDetailController',
-                                template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
-                            };
-                            bladeNavigationService.showBlade(newBlade, blade);
-                        },
-                        canExecuteMethod: function () { return true; }
-                    });
-                }
-                blade.isLoading = false;
-            });
         } else {
             blade.toolbarCommands = [];
             blade.mode = blade.currentEntity.$installedVersion ? 'update' : 'install';
             $scope.availableVersions = _.where(moduleHelper.modules, { id: blade.currentEntity.id, isInstalled: false });
-            blade.isLoading = false;
         }
+        blade.isLoading = false;
     }
 
     $scope.hasOptionalDependencies = function (dependencies) {

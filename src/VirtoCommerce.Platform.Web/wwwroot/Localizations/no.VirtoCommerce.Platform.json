@@ -7,6 +7,7 @@
       "notifications": "Varsler",
       "more": "Mer",
       "settings": "Innstillinger",
+      "settings-unified": "Innstillinger (Samlet)",
       "dynamic-properties": "Dynamiske egenskaper",
       "security": "Sikkerhet",
       "modules": "Moduler",
@@ -666,6 +667,30 @@
         "title": "Innstillinger",
         "bread-crumb-top": "Alle innstillinger"
       },
+      "settings-unified": {
+        "title": "Innstillinger",
+        "all-settings": "Alle innstillinger",
+        "filter": "Filter",
+        "filter-show": "Vis",
+        "filter-all": "Alle innstillinger",
+        "filter-modified": "Kun endrede",
+        "filter-modified-only": "Vis kun endrede",
+        "filter-module": "Modul",
+        "filter-all-modules": "Alle moduler",
+        "filter-clear": "Fjern filtre",
+        "filter-show-tenant": "Vis leietakeregenskaper",
+        "copy-link": "Kopier lenke til seksjonen",
+        "no-settings": "Ingen innstillinger samsvarer med gjeldende filtre.",
+        "export-json": "Eksporter JSON",
+        "import-json": "Importer JSON",
+        "edit-json": "Rediger som JSON",
+        "import-confirm-title": "Importer innstillinger",
+        "import-confirm-message": "Bruk {{count}} innstillinger fra importert fil?"
+      },
+      "settings-json-editor": {
+        "title": "Rediger innstillinger som JSON",
+        "format-json": "Formater JSON"
+      },
       "settings-uploader": {
         "drag-drop-comment": "Dra og slipp fil her",
         "or": "eller",
@@ -917,6 +942,11 @@
         "warning": "ADVARSEL: Denne endringen er permanent og kan ikke angres. Å bruke denne endringen kan føre til tap av data.",
         "message": "Følgende data vil bli slettet:",
         "instruction": "Skriv \"yes\" for å slette:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Fjern filtre"
       }
     },
     "commands": {
