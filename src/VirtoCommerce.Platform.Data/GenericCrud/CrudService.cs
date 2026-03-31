@@ -97,7 +97,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual IList<TModel> ProcessModels(IList<TEntity> entities, string responseGroup)
         {
             return entities
-                ?.Select(x => ProcessModel(responseGroup, x, ToModel(x, model: null)))
+                ?.Select(x => ProcessModel(responseGroup, x, ToModel(x, model: default)))
                 .ToList();
         }
 
@@ -202,7 +202,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#detectchanges-honors-store-generated-key-values
                         repository.TrackModifiedAsAddedForNewChildEntities(originalEntity);
 
-                        var originalModel = ToModel(originalEntity, model: null);
+                        var originalModel = ToModel(originalEntity, model: default);
                         originalModels.Add(originalModel);
                         changedEntries.Add(new GenericChangedEntry<TModel>(model, originalModel, EntryState.Modified));
                         modifiedEntity.Patch(originalEntity);
