@@ -1,11 +1,5 @@
 angular.module('platformWebApp').factory('platformWebApp.clipboardService', [function () {
-    function copyText(text) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text);
-            return;
-        }
-
-        // Fallback for older browsers
+    function fallbackCopy(text) {
         var copyElement = document.createElement("span");
         copyElement.appendChild(document.createTextNode(text));
         document.body.appendChild(copyElement);
@@ -18,6 +12,17 @@ angular.module('platformWebApp').factory('platformWebApp.clipboardService', [fun
         document.execCommand('copy');
         window.getSelection().removeAllRanges();
         copyElement.remove();
+    }
+
+    function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).catch(function () {
+                fallbackCopy(text);
+            });
+            return;
+        }
+
+        fallbackCopy(text);
     }
 
     return {
