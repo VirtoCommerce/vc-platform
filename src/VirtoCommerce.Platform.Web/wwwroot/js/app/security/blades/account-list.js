@@ -6,34 +6,6 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
 
     // --- Filter state (must be initialized before blade.refresh) ---
 
-    function computeDateRange() {
-        if (filter.datePreset === 'custom') {
-            return;
-        }
-        var now = new Date();
-        var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        filter.loginStartDate = null;
-        filter.loginEndDate = null;
-
-        switch (filter.datePreset) {
-            case 'today':
-                filter.loginStartDate = startOfToday;
-                break;
-            case 'yesterday':
-                filter.loginStartDate = new Date(startOfToday.getTime() - 86400000);
-                filter.loginEndDate = startOfToday;
-                break;
-            case 'last7':
-                filter.loginStartDate = new Date(startOfToday.getTime() - 7 * 86400000);
-                break;
-            case 'last30':
-                filter.loginStartDate = new Date(startOfToday.getTime() - 30 * 86400000);
-                break;
-            default:
-                break;
-        }
-    }
-
     var filter = $scope.filter = {
         keyword: '',
         onlyLocked: false,
@@ -75,6 +47,34 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
             }
         }
     };
+
+    function computeDateRange() {
+        if (filter.datePreset === 'custom') {
+            return;
+        }
+        var now = new Date();
+        var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        filter.loginStartDate = null;
+        filter.loginEndDate = null;
+
+        switch (filter.datePreset) {
+            case 'today':
+                filter.loginStartDate = startOfToday;
+                break;
+            case 'yesterday':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 86400000);
+                filter.loginEndDate = startOfToday;
+                break;
+            case 'last7':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 7 * 86400000);
+                break;
+            case 'last30':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 30 * 86400000);
+                break;
+            default:
+                break;
+        }
+    }
 
     blade.searchText = '';
     $scope.$watch('blade.searchText', function (newVal, oldVal) {
