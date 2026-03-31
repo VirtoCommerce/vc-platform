@@ -20,13 +20,13 @@
                     <option ng-repeat="m in blade.modules" value="{{m.id}}">{{m.id}}</option>
                 </select>
             </div>
-            <!--<div class="va-filter-panel__row" ng-if="!blade.isEntityMode">
+            <div class="va-filter-panel__row" ng-if="!blade.isEntityMode">
                 <span class="va-filter-panel__label">{{ 'platform.blades.settings-unified.filter-show-tenant' | translate }}</span>
                 <label class="form-label __switch" style="margin: 0;">
                     <input type="checkbox" ng-model="filter.showTenantProperties" ng-change="filter.criteriaChanged()">
                     <span class="switch"></span>
                 </label>
-            </div>-->
+            </div>
         </va-filter-panel>
     </div>
 </div>
@@ -46,7 +46,7 @@
                     class="fa"
                     ng-if="node.hasChildren"
                     ng-class="node.expanded ? 'fa-angle-down' : 'fa-angle-right'"></i></span><span
-                    class="stree-t">{{node.name}}</span><span
+                    class="stree-t"><span ng-if="node.id === '__all__'">{{'platform.blades.settings-unified.all-settings' | translate}}</span><span ng-if="node.id !== '__all__'">{{node.name}}</span></span><span
                     class="stree-dot" ng-if="node.groupName !== null && nodeHasModified(node)"></span></div>
             </div>
             <!-- RIGHT: Properties panel -->

@@ -273,7 +273,7 @@ angular.module('platformWebApp')
 
                 var allNode = {
                     id: '__all__',
-                    name: $translate.instant('platform.blades.settings-unified.all-settings') || 'All Settings',
+                    name: '', // rendered via translate filter in template to avoid $translate.instant() race condition on F5
                     groupName: null,
                     level: 0,
                     hasChildren: false,
@@ -301,8 +301,9 @@ angular.module('platformWebApp')
                     return true;
                 }
 
-                var isFiltering = blade.searchText || filter.modifiedOnly || filter.moduleId;
-                if (isFiltering && blade.visibleNodeGroups && node.groupName) {
+                // Always hide nodes whose group has no visible settings (respects all active filters,
+                // including the default tenant-property filter on initial load).
+                if (blade.visibleNodeGroups && node.groupName) {
                     if (!blade.visibleNodeGroups[node.groupName]) {
                         return false;
                     }
@@ -428,7 +429,8 @@ angular.module('platformWebApp')
                     });
                 }
 
-                if (blade.selectedGroup && !blade.searchText) {
+                // Apply selected group filter (works alongside search — search narrows within the group)
+                if (blade.selectedGroup) {
                     var selectedPrefix = blade.selectedGroup.groupName + '|';
                     settings = _.filter(settings, function (s) {
                         return s.groupName === blade.selectedGroup.groupName ||
@@ -436,16 +438,8 @@ angular.module('platformWebApp')
                     });
                 }
 
-                var showFullPath = !blade.selectedGroup || blade.searchText || isFiltering;
                 var grouped = _.groupBy(settings, function (s) {
-                    if (!s.groupName) {
-                        return 'General';
-                    }
-                    if (showFullPath) {
-                        return s.groupName.replace(/\|/g, ' > ');
-                    }
-                    var paths = s.groupName.split('|');
-                    return paths[paths.length - 1];
+                    return s.groupName ? s.groupName.replace(/\|/g, ' > ') : 'General';
                 });
 
                 blade.filteredSettings = grouped;
@@ -454,11 +448,7 @@ angular.module('platformWebApp')
                 // Build reverse map: display group name -> raw groupName (for deep link data attributes)
                 blade.filteredSettingsGroupMap = {};
                 _.each(settings, function (s) {
-                    var displayKey = !s.groupName
-                        ? 'General'
-                        : showFullPath
-                            ? s.groupName.replace(/\|/g, ' > ')
-                            : s.groupName.split('|').pop();
+                    var displayKey = s.groupName ? s.groupName.replace(/\|/g, ' > ') : 'General';
                     blade.filteredSettingsGroupMap[displayKey] = s.groupName;
                 });
             }
