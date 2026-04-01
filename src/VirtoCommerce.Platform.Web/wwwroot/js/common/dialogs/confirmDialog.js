@@ -91,7 +91,7 @@ angular.module('platformWebApp')
     };
 
     dialogService.showDeleteConfirmationDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/confirmDeleteDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/confirmDeleteDialog.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showGalleryDialog = function (dialog) {
