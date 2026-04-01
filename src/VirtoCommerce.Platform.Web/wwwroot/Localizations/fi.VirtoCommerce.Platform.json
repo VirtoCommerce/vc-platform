@@ -809,8 +809,7 @@
       "folders-delete": {
         "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Poiston vahvistus",
-        "message": "Oletko varma, että haluat poistaa valitut kansion tai tiedostot?",
-        "asset": "{{count}} resurssi(a)"
+        "message": "Oletko varma, että haluat poistaa valitut kansion tai tiedostot?"
       },
       "properties-save": {
         "title": "Tallenna muutokset",

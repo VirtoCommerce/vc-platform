@@ -809,8 +809,7 @@
       "folders-delete": {
         "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Bekräfta radering",
-        "message": "Är du säker på att du vill radera valda mappar eller filer?",
-        "asset": "{{count}} resurs(er)"
+        "message": "Är du säker på att du vill radera valda mappar eller filer?"
       },
       "properties-save": {
         "title": "Spara ändringar",

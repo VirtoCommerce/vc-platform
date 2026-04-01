@@ -808,8 +808,7 @@
       "folders-delete": {
         "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "削除の確認",
-        "message": "選択したフォルダまたはファイルを削除してもよろしいですか？",
-        "asset": "{{count}} 件のアセット"
+        "message": "選択したフォルダまたはファイルを削除してもよろしいですか？"
       },
       "properties-save": {
         "title": "変更の保存",

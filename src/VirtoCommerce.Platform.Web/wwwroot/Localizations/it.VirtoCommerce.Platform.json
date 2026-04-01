@@ -808,8 +808,7 @@
       "folders-delete": {
         "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Conferma eliminazione",
-        "message": "Sei sicuro di voler eliminare le cartelle o i file selezionati?",
-        "asset": "{{count}} risorsa(e)"
+        "message": "Sei sicuro di voler eliminare le cartelle o i file selezionati?"
       },
       "properties-save": {
         "title": "Salva modifiche",

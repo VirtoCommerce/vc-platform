@@ -808,8 +808,7 @@
       "folders-delete": {
         "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "删除确认",
-        "message": "您确定要删除选定的文件夹或文件吗？",
-        "asset": "{{count}} 个资源"
+        "message": "您确定要删除选定的文件夹或文件吗？"
       },
       "properties-save": {
         "title": "保存更改",

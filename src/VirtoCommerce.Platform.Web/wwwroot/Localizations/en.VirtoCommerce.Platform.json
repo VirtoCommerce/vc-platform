@@ -810,8 +810,7 @@
       "folders-delete": {
         "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected folders or files?",
-        "asset": "{{count}} asset(s)"
+        "message": "Are you sure you want to delete selected folders or files?"
       },
       "properties-save": {
         "title": "Save changes",
