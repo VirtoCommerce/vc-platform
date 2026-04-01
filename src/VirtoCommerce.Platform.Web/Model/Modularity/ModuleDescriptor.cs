@@ -32,6 +32,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 Dependencies = moduleInfo.Dependencies.Select(x => new ModuleIdentity(x.Id, x.Version, x.Optional)).ToList();
             }
             ValidationErrors = moduleInfo.Errors;
+            PackageUrl = moduleInfo.Ref;
         }
 
         public ModuleDescriptor()
@@ -44,6 +45,11 @@ namespace VirtoCommerce.Platform.Web.Modularity
         {
             get
             {
+                if (string.IsNullOrEmpty(Id) || string.IsNullOrEmpty(Version))
+                {
+                    return null;
+                }
+
                 return new ModuleIdentity(Id, SemanticVersion.Parse(Version));
             }
         }
@@ -67,6 +73,6 @@ namespace VirtoCommerce.Platform.Web.Modularity
         public bool IsRemovable { get; set; }
         public bool IsInstalled { get; set; }
         public ModuleIdentity InstalledVersion { get; set; }
-
+        public string PackageUrl { get; set; }
     }
 }

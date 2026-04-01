@@ -259,6 +259,8 @@
           "end": "Ende",
           "progress-messages": "Fortschrittsmeldungen",
           "process-completed": "Der Modulverwaltungsprozess ist abgeschlossen",
+          "completed-with-errors": "Mit Fehlern abgeschlossen",
+          "detailed-log": "Detailliertes Protokoll anzeigen",
           "restart-application": "Starten Sie die Anwendung jetzt oder später neu"
         }
       },
@@ -288,7 +290,12 @@
           "tags": "Tags",
           "install-version": "Installations version",
           "errors": "Fehler",
-          "update-version": "{{id}} auf aktualisieren"
+          "update-version": "{{id}} auf aktualisieren",
+          "use-custom-version": "Benutzerdefinierte Version verwenden",
+          "use-latest-version": "Neueste Version verwenden",
+          "custom-version-checking": "Überprüfung...",
+          "custom-version-valid": "Paket gefunden",
+          "custom-version-invalid": "Paket nicht gefunden"
         }
       },
       "modules-main": {
@@ -298,6 +305,7 @@
           "available": "Verfügbar",
           "browse": "Überblick",
           "installed": "Installiert",
+          "notInstalled": "Nicht installiert",
           "withErrors": "Fehler",
           "advanced": "Erweitert"
         }
@@ -317,7 +325,13 @@
           "version": "Version",
           "author": "Autor",
           "installed": "Installierte Module",
-          "manual-install-warning": "Warnung! Manuell installierte Module werden nicht gestartet, da RefreshProbingFolderOnStart auf false gesetzt ist"
+          "manual-install-warning": "Warnung! Manuell installierte Module werden nicht gestartet, da RefreshProbingFolderOnStart auf false gesetzt ist",
+          "filter": "Module filtern",
+          "status": "Status",
+          "status-all": "Alle",
+          "status-installed": "Installiert",
+          "status-not-installed": "Nicht installiert",
+          "status-updates": "Aktualisierungen"
         }
       },
       "history": {

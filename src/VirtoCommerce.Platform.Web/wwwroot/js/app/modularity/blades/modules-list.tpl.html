@@ -1,16 +1,27 @@
 <div class="blade-static" ng-if="blade.currentEntities.length">
-    <div class="form-group">
-        <div class="form-input __search">
-            <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
-            <button class="btn __other">
-                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()"></i>
-            </button>
-        </div>
+    <div class="form-group" style="display: flex; align-items: center;">
+        <va-filter-panel
+            has-active-filters="filter.hasActiveFilters()"
+            on-clear-filters="filter.clearFilters()"
+            search-text="blade.searchText"
+            filter-title="{{ 'platform.blades.modules-list.labels.filter' | translate }}">
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.modules-list.labels.status' | translate }}</span>
+                <select class="va-filter-panel__select"
+                        ng-model="filter.status"
+                        ng-change="filter.criteriaChanged()">
+                    <option value="">{{ 'platform.blades.modules-list.labels.status-all' | translate }}</option>
+                    <option value="installed">{{ 'platform.blades.modules-list.labels.status-installed' | translate }}</option>
+                    <option value="notInstalled">{{ 'platform.blades.modules-list.labels.status-not-installed' | translate }}</option>
+                    <option value="updates">{{ 'platform.blades.modules-list.labels.status-updates' | translate }}</option>
+                </select>
+            </div>
+        </va-filter-panel>
     </div>
 </div>
-<div class="blade-content __medium-wide">
+<div class="blade-content __medium-wide vc-modules-list">
     <div class="blade-inner">
-        <div ng-if="!allowInstallModules" class="form-group form-error inner-block">
+        <div ng-if="!allowInstallModules" class="form-error inner-block">
             {{ 'platform.blades.modules-list.labels.manual-install-warning' | translate }}
         </div>
         <div class="inner-block" ng-init="setGridOptions({
@@ -35,19 +46,16 @@
             displayName: 'platform.blades.modules-list.labels.author', name: 'authors',
             cellTemplate: 'modules-list-authors.cell.html'
             }-->
-            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='update'">{{ 'platform.blades.modules-list.labels.no-updates' | translate }}</div>
-            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='browse'">{{ 'platform.blades.modules-list.labels.no-modules' | translate }}</div>
-            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='installed'">{{ 'platform.blades.modules-list.labels.no-installed-modules' | translate }}</div>
-            <div class="table-wrapper" ng-if="blade.currentEntities.length">
+            <div class="table-wrapper">
                 <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-grouping ui-grid-height></div>
                 <ul class="menu __context" role="menu" id="mdl_menu">
-                    <li class="menu-item" ng-click="confirmActionInDialog('update', [contextMenuEntity])" ng-if="allowInstallModules && blade.mode!=='advanced' && contextMenuEntity.isInstalled && contextMenuEntity.$alternativeVersion" va-permission="platform:module:manage">
+                    <li class="menu-item" ng-click="confirmActionInDialog('update', [contextMenuEntity])" ng-if="allowInstallModules && contextMenuEntity.isInstalled && contextMenuEntity.$alternativeVersion" va-permission="platform:module:manage">
                         <i class="menu-ico fa fa-arrow-up"></i>{{'platform.commands.update' | translate}}
                     </li>
-                    <li class="menu-item" ng-click="confirmActionInDialog('install', [contextMenuEntity])" ng-if="allowInstallModules && blade.mode==='browse' && !contextMenuEntity.isInstalled" va-permission="platform:module:manage">
+                    <li class="menu-item" ng-click="confirmActionInDialog('install', [contextMenuEntity])" ng-if="allowInstallModules && !contextMenuEntity.isInstalled" va-permission="platform:module:manage">
                         <i class="menu-ico fas fa-plus"></i>{{'platform.commands.install' | translate}}
                     </li>
-                    <li class="menu-item" ng-click="confirmActionInDialog('uninstall', [contextMenuEntity])" ng-if="allowInstallModules && blade.mode!=='advanced' && contextMenuEntity.isInstalled" va-permission="platform:module:manage">
+                    <li class="menu-item" ng-click="confirmActionInDialog('uninstall', [contextMenuEntity])" ng-if="allowInstallModules && contextMenuEntity.isInstalled" va-permission="platform:module:manage">
                         <i class="menu-ico fas fa-trash-alt"></i> {{'platform.commands.uninstall' | translate}}
                     </li>
                 </ul>

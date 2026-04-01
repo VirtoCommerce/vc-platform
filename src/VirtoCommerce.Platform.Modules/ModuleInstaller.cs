@@ -9,30 +9,25 @@ using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
-using VirtoCommerce.Platform.Core.TransactionFileManager;
-using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules.External;
 
 namespace VirtoCommerce.Platform.Modules
 {
+    [Obsolete("Use ModulePackageInstaller and ModuleBootstrapper classes instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ModuleInstaller : IModuleInstaller
     {
         private const string _packageFileExtension = ".zip";
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly IExternalModulesClient _externalClient;
-        private readonly ITransactionFileManager _fileManager;
         private readonly IExternalModuleCatalog _extModuleCatalog;
         private readonly IFileSystem _fileSystem;
-        private readonly IZipFileWrapper _zipFileWrapper;
 
-        public ModuleInstaller(IExternalModuleCatalog extModuleCatalog, IExternalModulesClient externalClient, ITransactionFileManager txFileManager, IOptions<LocalStorageModuleCatalogOptions> localOptions, IFileSystem fileSystem, IZipFileWrapper zipFileWrapper)
+        public ModuleInstaller(IExternalModuleCatalog extModuleCatalog, IExternalModulesClient externalClient, IOptions<LocalStorageModuleCatalogOptions> localOptions, IFileSystem fileSystem)
         {
             _extModuleCatalog = extModuleCatalog;
             _externalClient = externalClient;
             _options = localOptions.Value;
-            _fileManager = txFileManager;
             _fileSystem = fileSystem;
-            _zipFileWrapper = zipFileWrapper;
         }
 
         #region IModuleInstaller Members
@@ -42,40 +37,11 @@ namespace VirtoCommerce.Platform.Modules
             //Dependency and version validation
             foreach (var module in modules.Where(x => !x.IsInstalled))
             {
-                //Check platform version
-                if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion))
+                var allInstalledModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToList();
+                var errors = ModuleBootstrapper.Instance.ValidateInstall(module, allInstalledModules, PlatformVersion.CurrentVersion);
+                foreach (var error in errors)
                 {
-                    Report(progress, ProgressMessageLevel.Error, $"Target Platform version {module.PlatformVersion} is incompatible with current {PlatformVersion.CurrentVersion}");
-                    isValid = false;
-                }
-
-                var allInstalledModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToArray();
-                //Check that incompatible modules are not installed
-                if (!module.Incompatibilities.IsNullOrEmpty())
-                {
-                    var installedIncompatibilities = allInstalledModules.Select(x => x.Identity).Join(module.Incompatibilities, x => x.Id, y => y.Id, (x, y) => new { x, y })
-                                                          .Where(g => g.y.Version.IsCompatibleWith(g.x.Version)).Select(g => g.x)
-                                                          .ToArray();
-                    if (installedIncompatibilities.Any())
-                    {
-                        var identitiesString = string.Join(", ", installedIncompatibilities.Select(x => x.ToString()));
-                        Report(progress, ProgressMessageLevel.Error, $"{module} is incompatible with installed {identitiesString}. You should uninstall these modules first.");
-                        isValid = false;
-                    }
-                }
-
-                //Check that installable version compatible with already installed
-                var alreadyInstalledModule = allInstalledModules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(module.Id));
-                if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
-                {
-                    if (alreadyInstalledModule.Version.Major < module.Version.Major)
-                    {
-                        Report(progress, ProgressMessageLevel.Error, $"Issue with {module}. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.");
-                    }
-                    else
-                    {
-                        Report(progress, ProgressMessageLevel.Error, $"Issue with {module}. Automated downgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.");
-                    }
+                    Report(progress, ProgressMessageLevel.Error, error);
                     isValid = false;
                 }
 
@@ -105,7 +71,7 @@ namespace VirtoCommerce.Platform.Modules
                         {
                             var existModule = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().First(x => x.IsInstalled && x.Id == newModule.Id);
                             var dstModuleDir = Path.Combine(_options.DiscoveryPath, existModule.Id);
-                            _fileManager.SafeDelete(dstModuleDir);
+                            ModulePackageInstaller.Uninstall(dstModuleDir);
                             Report(progress, ProgressMessageLevel.Info, "Updating '{0}' -> '{1}'", existModule, newModule);
                             InnerInstall(newModule, progress);
                             existModule.IsInstalled = false;
@@ -131,16 +97,17 @@ namespace VirtoCommerce.Platform.Modules
         public void Uninstall(IEnumerable<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
         {
             var isValid = true;
+            var modulesList = modules.ToList();
+            var uninstallIds = modulesList.Select(x => x.Id).ToArray();
+
             //Dependency and version validation
-            foreach (var module in modules)
+            foreach (var module in modulesList)
             {
-                var dependingModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled)
-                                                    .Where(x => x.DependsOn.Contains(module.Id))
-                                                    .Except(modules);
-                //If module being uninstalled has depending modules and they are not contained in uninstall list
-                foreach (var dependingModule in dependingModules)
+                var installedModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToList();
+                var errors = ModuleBootstrapper.Instance.ValidateUninstall(module.Id, installedModules, uninstallIds);
+                foreach (var error in errors)
                 {
-                    Report(progress, ProgressMessageLevel.Error, "Unable to uninstall '{0}' because '{1}' depends on it", module, dependingModule);
+                    Report(progress, ProgressMessageLevel.Error, error);
                     isValid = false;
                 }
             }
@@ -152,7 +119,7 @@ namespace VirtoCommerce.Platform.Modules
                 {
                     try
                     {
-                        foreach (var uninstallingModule in modules)
+                        foreach (var uninstallingModule in modulesList)
                         {
                             Report(progress, ProgressMessageLevel.Info, "Uninstalling '{0}'", uninstallingModule);
                             //Call module Uninstall method
@@ -162,11 +129,8 @@ namespace VirtoCommerce.Platform.Modules
                                 uninstallingModule.ModuleInstance.Uninstall();
                             }
                             var moduleDir = Path.Combine(_options.DiscoveryPath, uninstallingModule.Id);
-                            if (Directory.Exists(moduleDir))
-                            {
-                                Report(progress, ProgressMessageLevel.Info, "Deleting module {0} folder", moduleDir);
-                                _fileManager.SafeDelete(moduleDir);
-                            }
+                            Report(progress, ProgressMessageLevel.Info, "Deleting module {0} folder", moduleDir);
+                            ModulePackageInstaller.Uninstall(moduleDir);
                             Report(progress, ProgressMessageLevel.Info, "'{0}' uninstalled successfully.", uninstallingModule);
                             uninstallingModule.IsInstalled = false;
                             changedModulesLog.Add(uninstallingModule);
@@ -213,9 +177,12 @@ namespace VirtoCommerce.Platform.Modules
             var dstModuleDir = Path.Combine(_options.DiscoveryPath, module.Id);
             var moduleZipPath = Path.Combine(dstModuleDir, GetModuleZipFileName(module.Id, module.Version.ToString()));
 
-            _fileManager.CreateDirectory(dstModuleDir);
+            if (!Directory.Exists(dstModuleDir))
+            {
+                Directory.CreateDirectory(dstModuleDir);
+            }
 
-            //download  module archive from web
+            // Download module archive from web
             if (Uri.IsWellFormedUriString(module.Ref, UriKind.Absolute))
             {
                 var moduleUrl = new Uri(module.Ref);
@@ -232,7 +199,10 @@ namespace VirtoCommerce.Platform.Modules
                 moduleZipPath = module.Ref;
             }
 
-            _zipFileWrapper.Extract(moduleZipPath, dstModuleDir);
+            if (File.Exists(moduleZipPath))
+            {
+                ModulePackageInstaller.Install(moduleZipPath, dstModuleDir);
+            }
 
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
         }
