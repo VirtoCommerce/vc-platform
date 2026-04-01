@@ -5,10 +5,11 @@ using System.IO;
 namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
-    /// Loads modules from an arbitrary location on the filesystem. This type loader is only called if 
-    /// <see cref="ModuleInfo"/> classes have a Ref parameter that starts with "file://". 
+    /// Loads modules from an arbitrary location on the filesystem. This type loader is only called if
+    /// <see cref="ModuleInfo"/> classes have a Ref parameter that starts with "file://".
     /// This class is only used on the Desktop version of the Prism Library.
     /// </summary>
+    [Obsolete("Use ModuleAssemblyLoader static class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class FileModuleTypeLoader : IModuleTypeLoader, IDisposable
     {
         private const string _fileSchema = "file://";

@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +13,7 @@ namespace VirtoCommerce.Platform.Modules
     /// <summary>
     /// Implements the <see cref="IModuleInitializer"/> interface. Handles loading of a module based on a type.
     /// </summary>
+    [Obsolete("Use ModuleBootstrapper class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ModuleInitializer : IModuleInitializer
     {
         private readonly ILogger<ModuleInitializer> _loggerFacade;
@@ -161,6 +160,7 @@ namespace VirtoCommerce.Platform.Modules
 
         /// <summary>
         /// Uses the container to resolve a new <see cref="IModule"/> by specifying its <see cref="Type"/>.
+        /// Delegates to <see cref="ModuleBootstrapper.CreateModuleInstance"/> for the core logic.
         /// </summary>
         /// <param name="moduleInfo">The module to create.</param>
         /// <returns>A new instance of the module specified by <paramref name="moduleInfo"/>.</returns>
@@ -171,39 +171,7 @@ namespace VirtoCommerce.Platform.Modules
                 throw new ArgumentNullException(nameof(moduleInfo));
             }
 
-            if (!TryResolveModuleTypeFromAssembly(moduleInfo.Assembly, moduleInfo.ModuleType, out var moduleInitializerType) ||
-                Activator.CreateInstance(moduleInitializerType) is not IModule module)
-            {
-                throw new ModuleInitializeException($"Unable to resolve IModule {moduleInfo.ModuleType} from the assembly {moduleInfo.Assembly.FullName}.");
-            }
-
-            module.ModuleInfo = moduleInfo as ManifestModuleInfo;
-
-            return module;
-        }
-
-        protected virtual bool TryResolveModuleTypeFromAssembly(Assembly moduleAssembly, string moduleType, out Type moduleInitializerType)
-        {
-            if (moduleAssembly == null)
-            {
-                throw new ArgumentNullException(nameof(moduleAssembly));
-            }
-
-            var moduleInitializerTypes = moduleAssembly.GetTypes().Where(x => typeof(IModule).IsAssignableFrom(x)).ToArray();
-            if (!moduleInitializerTypes.Any())
-            {
-                moduleInitializerType = null;
-                return false;
-            }
-
-            if (moduleInitializerTypes.Length == 1)
-            {
-                moduleInitializerType = moduleInitializerTypes.First();
-                return true;
-            }
-
-            moduleInitializerType = moduleInitializerTypes.FirstOrDefault(x => x.AssemblyQualifiedName?.StartsWith(moduleType) == true);
-            return moduleInitializerType != null;
+            return ModuleBootstrapper.CreateModuleInstance(moduleInfo as ManifestModuleInfo);
         }
     }
 }
