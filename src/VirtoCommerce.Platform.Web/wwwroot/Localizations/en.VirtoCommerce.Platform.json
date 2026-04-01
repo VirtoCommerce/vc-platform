@@ -305,7 +305,7 @@
           "updates": "Updates",
           "browse": "Browse",
           "installed": "Installed",
-          "notInstalled": "Not Installed",
+          "notInstalled": "Not installed",
           "withErrors": "Errors",
           "advanced": "Advanced"
         }
@@ -330,8 +330,8 @@
           "status": "Status",
           "status-all": "All",
           "status-installed": "Installed",
-          "status-not-installed": "Not Installed",
-          "status-updates": "Updates Available"
+          "status-not-installed": "Not installed",
+          "status-updates": "Updates"
         }
       },
       "history": {

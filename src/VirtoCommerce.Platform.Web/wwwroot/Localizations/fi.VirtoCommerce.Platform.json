@@ -330,7 +330,7 @@
           "status-all": "Kaikki",
           "status-installed": "Asennetut",
           "status-not-installed": "Asentamattomat",
-          "status-updates": "Päivityksiä saatavilla"
+          "status-updates": "Päivitykset"
         }
       },
       "history": {

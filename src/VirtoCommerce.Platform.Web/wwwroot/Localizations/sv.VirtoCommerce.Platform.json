@@ -330,7 +330,7 @@
           "status-all": "Alla",
           "status-installed": "Installerade",
           "status-not-installed": "Ej installerade",
-          "status-updates": "Uppdateringar tillgängliga"
+          "status-updates": "Uppdateringar"
         }
       },
       "history": {

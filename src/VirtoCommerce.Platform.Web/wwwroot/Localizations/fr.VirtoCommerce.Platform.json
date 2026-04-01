@@ -329,7 +329,7 @@
           "status-all": "Tous",
           "status-installed": "Installés",
           "status-not-installed": "Non installés",
-          "status-updates": "Mises à jour disponibles"
+          "status-updates": "Mises à jour"
         }
       },
       "history": {

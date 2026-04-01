@@ -329,7 +329,7 @@
           "status-all": "すべて",
           "status-installed": "インストール済み",
           "status-not-installed": "未インストール",
-          "status-updates": "更新あり"
+          "status-updates": "アップデート"
         }
       },
       "history": {

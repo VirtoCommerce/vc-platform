@@ -329,7 +329,7 @@
           "status-all": "全部",
           "status-installed": "已安装",
           "status-not-installed": "未安装",
-          "status-updates": "有可用更新"
+          "status-updates": "更新"
         }
       },
       "history": {
