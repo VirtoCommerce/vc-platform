@@ -324,7 +324,13 @@
           "version": "Version",
           "author": "Author",
           "installed": "Installed modules",
-          "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart is set to false"
+          "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart is set to false",
+          "filter": "Filter modules",
+          "status": "Status",
+          "status-all": "All",
+          "status-installed": "Installed",
+          "status-not-installed": "Not Installed",
+          "status-updates": "Updates Available"
         }
       },
       "history": {

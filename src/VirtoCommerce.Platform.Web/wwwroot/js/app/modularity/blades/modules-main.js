@@ -93,7 +93,7 @@ angular.module('platformWebApp')
             var newBlade = {
                 id: 'modulesList',
                 mode: data.mode,
-                currentEntities: data.entities,
+                currentEntities: nodeExisting.entities,
                 title: data.name,
                 subtitle: 'platform.blades.modules-list.subtitle',
                 controller: 'platformWebApp.modulesListController',

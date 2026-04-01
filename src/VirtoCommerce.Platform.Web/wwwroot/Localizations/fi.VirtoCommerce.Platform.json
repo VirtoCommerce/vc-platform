@@ -323,7 +323,13 @@
           "version": "Versio",
           "author": "Tekijä",
           "installed": "Asennetut moduulit",
-          "manual-install-warning": "Varoitus! Manuaalisesti asennetut moduulit eivät käynnisty, koska RefreshProbingFolderOnStart on asetettu falseksi"
+          "manual-install-warning": "Varoitus! Manuaalisesti asennetut moduulit eivät käynnisty, koska RefreshProbingFolderOnStart on asetettu falseksi",
+          "filter": "Suodata moduulit",
+          "status": "Tila",
+          "status-all": "Kaikki",
+          "status-installed": "Asennetut",
+          "status-not-installed": "Asentamattomat",
+          "status-updates": "Päivityksiä saatavilla"
         }
       },
       "history": {

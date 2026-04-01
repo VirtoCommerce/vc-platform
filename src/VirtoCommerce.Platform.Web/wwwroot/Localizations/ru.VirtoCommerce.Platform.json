@@ -324,7 +324,13 @@
           "version": "Версия",
           "author": "Автор",
           "installed": "Установленные модули",
-          "manual-install-warning": "Внимание! Модули, установленные вручную, не запустятся, так как RefreshProbingFolderOnStart имеет значение false"
+          "manual-install-warning": "Внимание! Модули, установленные вручную, не запустятся, так как RefreshProbingFolderOnStart имеет значение false",
+          "filter": "Фильтр модулей",
+          "status": "Статус",
+          "status-all": "Все",
+          "status-installed": "Установленные",
+          "status-not-installed": "Не установленные",
+          "status-updates": "Доступны обновления"
         }
       },
       "history": {

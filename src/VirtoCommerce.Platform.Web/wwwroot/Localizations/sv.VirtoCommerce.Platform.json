@@ -323,7 +323,13 @@
           "version": "Version",
           "author": "Författare",
           "installed": "Installerade moduler",
-          "manual-install-warning": "Varning! Manuellt installerade moduler startar inte eftersom RefreshProbingFolderOnStart är satt till falskt"
+          "manual-install-warning": "Varning! Manuellt installerade moduler startar inte eftersom RefreshProbingFolderOnStart är satt till falskt",
+          "filter": "Filtrera moduler",
+          "status": "Status",
+          "status-all": "Alla",
+          "status-installed": "Installerade",
+          "status-not-installed": "Ej installerade",
+          "status-updates": "Uppdateringar tillgängliga"
         }
       },
       "history": {

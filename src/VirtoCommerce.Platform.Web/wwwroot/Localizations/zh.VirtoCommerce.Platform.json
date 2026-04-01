@@ -322,7 +322,13 @@
           "version": "版本",
           "author": "作者",
           "installed": "已安装的模块",
-          "manual-install-warning": "警告！手动安装的模块将不会启动，因为 RefreshProbingFolderOnStart 设置为 false"
+          "manual-install-warning": "警告！手动安装的模块将不会启动，因为 RefreshProbingFolderOnStart 设置为 false",
+          "filter": "筛选模块",
+          "status": "状态",
+          "status-all": "全部",
+          "status-installed": "已安装",
+          "status-not-installed": "未安装",
+          "status-updates": "有可用更新"
         }
       },
       "history": {

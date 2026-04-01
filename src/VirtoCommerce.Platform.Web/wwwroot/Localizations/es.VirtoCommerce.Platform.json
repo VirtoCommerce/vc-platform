@@ -322,7 +322,13 @@
           "version": "Versión",
           "author": "Autor",
           "installed": "Módulos instalados",
-          "manual-install-warning": "¡Advertencia! Los módulos instalados manualmente no se iniciarán porque RefreshProbingFolderOnStart está configurado como falso"
+          "manual-install-warning": "¡Advertencia! Los módulos instalados manualmente no se iniciarán porque RefreshProbingFolderOnStart está configurado como falso",
+          "filter": "Filtrar módulos",
+          "status": "Estado",
+          "status-all": "Todos",
+          "status-installed": "Instalados",
+          "status-not-installed": "No instalados",
+          "status-updates": "Actualizaciones disponibles"
         }
       },
       "history": {

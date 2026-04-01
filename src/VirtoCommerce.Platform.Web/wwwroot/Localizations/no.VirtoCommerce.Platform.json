@@ -323,7 +323,13 @@
           "version": "Versjon",
           "author": "Forfatter",
           "installed": "Installerte moduler",
-          "manual-install-warning": "Advarsel! Manuelt installerte moduler starter ikke fordi RefreshProbingFolderOnStart er satt til falsk"
+          "manual-install-warning": "Advarsel! Manuelt installerte moduler starter ikke fordi RefreshProbingFolderOnStart er satt til falsk",
+          "filter": "Filtrer moduler",
+          "status": "Status",
+          "status-all": "Alle",
+          "status-installed": "Installerte",
+          "status-not-installed": "Ikke installerte",
+          "status-updates": "Oppdateringer tilgjengelig"
         }
       },
       "history": {

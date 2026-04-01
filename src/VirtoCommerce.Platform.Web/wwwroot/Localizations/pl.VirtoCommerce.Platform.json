@@ -322,7 +322,13 @@
           "version": "Wersja",
           "author": "Autor",
           "installed": "Zainstalowane moduły",
-          "manual-install-warning": "Uwaga! Ręcznie zainstalowane moduły nie uruchomią się, ponieważ RefreshProbingFolderOnStart jest ustawione na false"
+          "manual-install-warning": "Uwaga! Ręcznie zainstalowane moduły nie uruchomią się, ponieważ RefreshProbingFolderOnStart jest ustawione na false",
+          "filter": "Filtruj moduły",
+          "status": "Status",
+          "status-all": "Wszystkie",
+          "status-installed": "Zainstalowane",
+          "status-not-installed": "Niezainstalowane",
+          "status-updates": "Dostępne aktualizacje"
         }
       },
       "history": {

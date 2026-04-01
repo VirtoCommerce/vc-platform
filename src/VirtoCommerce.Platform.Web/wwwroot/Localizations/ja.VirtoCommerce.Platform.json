@@ -322,7 +322,13 @@
           "version": "バージョン",
           "author": "作成者",
           "installed": "インストール済みモジュール",
-          "manual-install-warning": "警告！RefreshProbingFolderOnStartがfalseに設定されているため、手動でインストールされたモジュールは起動しません"
+          "manual-install-warning": "警告！RefreshProbingFolderOnStartがfalseに設定されているため、手動でインストールされたモジュールは起動しません",
+          "filter": "モジュールをフィルター",
+          "status": "ステータス",
+          "status-all": "すべて",
+          "status-installed": "インストール済み",
+          "status-not-installed": "未インストール",
+          "status-updates": "更新あり"
         }
       },
       "history": {
