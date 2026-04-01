@@ -30,6 +30,9 @@ function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleH
         case 'update':
             filter.status = 'updates';
             break;
+        case 'notInstalled':
+            filter.status = 'notInstalled';
+            break;
         default:
             filter.status = '';
             break;
@@ -88,7 +91,10 @@ function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleH
             canExecuteMethod: installedItemsChecked,
             permission: 'platform:module:manage'
         },
-        {
+    ];
+
+    if (blade.mode === 'browse') {
+        blade.toolbarCommands.push({
             name: "platform.commands.grouping", icon: 'fas fa-cubes',
             executeMethod: function () {
                 blade.isGrouped = !blade.isGrouped;
@@ -100,8 +106,8 @@ function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleH
             },
             canExecuteMethod: function () { return true; },
             permission: 'platform:module:view'
-        }
-    ];
+        });
+    }
 
     $scope.confirmActionInDialog = function (action, selection) {
         moduleHelper.performAction(action, selection, blade, false);

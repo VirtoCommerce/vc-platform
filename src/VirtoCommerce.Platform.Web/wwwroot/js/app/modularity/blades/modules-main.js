@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.modulesMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.modulesApi', 'platformWebApp.moduleHelper', function ($scope, bladeNavigationService, modulesApi, moduleHelper) {
         var blade = $scope.blade;
-        var nodeUpdate, nodeExisting, nodeInstalled;
+        var nodeUpdate, nodeExisting, nodeInstalled, nodeNotInstalled;
         $scope.selectedNodeId = null;
 
         blade.reload = function () {
@@ -70,6 +70,7 @@ angular.module('platformWebApp')
                 nodeExisting.entities = moduleHelper.existingModules = newResults;
                 nodeInstalled.entities = _.where(results, { isInstalled: true });
                 nodeUpdate.entities = _.filter(results, function (x) { return x.isInstalled && x.$alternativeVersion; });
+                nodeNotInstalled.entities = _.filter(newResults, function (x) { return !x.isInstalled; });
                 nodeWithErrors.entities = _.filter(results, function (x) { return x.isInstalled && _.any(x.validationErrors); });
 
                 if (_.any(nodeWithErrors.entities) && !nodeWithErrors.isAddedToList) {
@@ -129,7 +130,8 @@ angular.module('platformWebApp')
         blade.currentEntities = [
             nodeExisting = { name: 'platform.blades.modules-main.labels.browse', mode: 'browse' },
             nodeInstalled = { name: 'platform.blades.modules-main.labels.installed', mode: 'installed' },
-            nodeUpdate = { name: 'platform.blades.modules-main.labels.updates', mode: 'update' }
+            nodeUpdate = { name: 'platform.blades.modules-main.labels.updates', mode: 'update' },
+            nodeNotInstalled = { name: 'platform.blades.modules-main.labels.notInstalled', mode: 'notInstalled' }
         ];
 
         if ($scope.allowInstallModules) {

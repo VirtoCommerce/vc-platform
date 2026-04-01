@@ -304,6 +304,7 @@
           "updates": "Oppdateringer",
           "browse": "Bla gjennom",
           "installed": "Installerte",
+          "notInstalled": "Ikke installerte",
           "withErrors": "Feil",
           "advanced": "Avansert"
         }

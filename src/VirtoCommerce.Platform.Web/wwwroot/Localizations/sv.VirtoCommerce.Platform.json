@@ -304,6 +304,7 @@
           "updates": "Uppdateringar",
           "browse": "Bläddra",
           "installed": "Installerade",
+          "notInstalled": "Ej installerade",
           "withErrors": "Fel",
           "advanced": "Avancerat"
         }

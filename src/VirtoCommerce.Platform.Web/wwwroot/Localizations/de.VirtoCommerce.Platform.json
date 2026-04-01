@@ -305,6 +305,7 @@
           "available": "Verfügbar",
           "browse": "Überblick",
           "installed": "Installiert",
+          "notInstalled": "Nicht installiert",
           "withErrors": "Fehler",
           "advanced": "Erweitert"
         }

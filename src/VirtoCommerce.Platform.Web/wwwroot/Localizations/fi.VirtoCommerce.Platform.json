@@ -304,6 +304,7 @@
           "updates": "Päivitykset",
           "browse": "Selaa",
           "installed": "Asennetut",
+          "notInstalled": "Asentamattomat",
           "withErrors": "Virheet",
           "advanced": "Edistynyt"
         }

@@ -304,6 +304,7 @@
           "updates": "Обновления",
           "available": "Доступные",
           "installed": "Установленные",
+          "notInstalled": "Не установленные",
           "withErrors": "Ошибки",
           "advanced": "Расширенные",
           "browse": "Обзор"

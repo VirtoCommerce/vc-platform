@@ -305,6 +305,7 @@
           "updates": "Updates",
           "browse": "Browse",
           "installed": "Installed",
+          "notInstalled": "Not Installed",
           "withErrors": "Errors",
           "advanced": "Advanced"
         }

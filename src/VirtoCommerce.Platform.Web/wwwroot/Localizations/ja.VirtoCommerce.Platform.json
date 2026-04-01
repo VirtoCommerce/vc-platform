@@ -303,6 +303,7 @@
           "updates": "アップデート",
           "available": "利用可能",
           "installed": "インストール済み",
+          "notInstalled": "未インストール",
           "withErrors": "エラー",
           "advanced": "詳細設定"
         }

@@ -303,6 +303,7 @@
           "updates": "更新",
           "available": "可用",
           "installed": "已安装",
+          "notInstalled": "未安装",
           "withErrors": "错误",
           "advanced": "高级"
         }

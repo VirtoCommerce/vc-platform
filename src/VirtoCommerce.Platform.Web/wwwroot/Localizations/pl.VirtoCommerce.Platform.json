@@ -303,6 +303,7 @@
           "updates": "Aktualizacje",
           "available": "Dostępne",
           "installed": "Zainstalowane",
+          "notInstalled": "Niezainstalowane",
           "withErrors": "Błędy",
           "advanced": "Zaawansowane"
         }
