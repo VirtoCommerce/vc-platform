@@ -130,8 +130,8 @@ angular.module('platformWebApp')
         blade.currentEntities = [
             nodeExisting = { name: 'platform.blades.modules-main.labels.browse', mode: 'browse' },
             nodeInstalled = { name: 'platform.blades.modules-main.labels.installed', mode: 'installed' },
+            nodeNotInstalled = { name: 'platform.blades.modules-main.labels.notInstalled', mode: 'notInstalled' },
             nodeUpdate = { name: 'platform.blades.modules-main.labels.updates', mode: 'update' },
-            nodeNotInstalled = { name: 'platform.blades.modules-main.labels.notInstalled', mode: 'notInstalled' }
         ];
 
         if ($scope.allowInstallModules) {
