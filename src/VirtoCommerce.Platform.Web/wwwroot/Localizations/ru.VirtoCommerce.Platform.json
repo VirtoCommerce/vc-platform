@@ -304,7 +304,7 @@
           "updates": "Обновления",
           "available": "Доступные",
           "installed": "Установленные",
-          "notInstalled": "Не установленные",
+          "notInstalled": "Неустановленные",
           "withErrors": "Ошибки",
           "advanced": "Расширенные",
           "browse": "Обзор"
@@ -330,8 +330,8 @@
           "status": "Статус",
           "status-all": "Все",
           "status-installed": "Установленные",
-          "status-not-installed": "Не установленные",
-          "status-updates": "Доступны обновления"
+          "status-not-installed": "Неустановленные",
+          "status-updates": "Обновления"
         }
       },
       "history": {
