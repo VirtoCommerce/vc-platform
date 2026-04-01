@@ -529,6 +529,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     break;
             }
 
+            notification.TotalCount = options.Modules?.Length ?? 0;
+
             _pushNotifier.Send(notification);
 
             BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));

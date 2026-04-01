@@ -45,7 +45,9 @@ angular.module('platformWebApp').controller('platformWebApp.moduleInstallProgres
 
         // Compute stats
         var completed = _.filter(items, function (i) { return i.status === 'done' || i.status === 'error'; }).length;
-        var total = items.length;
+        // Use totalCount from the backend (set upfront) so the UI shows the correct total immediately,
+        // falling back to parsed items count if totalCount is not available
+        var total = blade.currentEntity.totalCount || items.length;
 
         $scope.progressItems = items;
         $scope.progressStats = {
