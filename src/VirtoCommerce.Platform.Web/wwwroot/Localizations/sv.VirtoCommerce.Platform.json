@@ -807,6 +807,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "@deprecated": "Moved to assets module (assets.dialogs.asset-delete). Remove after all modules are updated.",
         "title": "Bekräfta radering",
         "message": "Är du säker på att du vill radera valda mappar eller filer?",
         "asset": "{{count}} resurs(er)"

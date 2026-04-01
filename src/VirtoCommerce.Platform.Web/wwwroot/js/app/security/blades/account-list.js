@@ -41,7 +41,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         var dialog = {
             id: "confirmDeleteItem",
             title: "platform.dialogs.account-delete.title",
-            data: [
+            items: [
                 { key: 'platform.dialogs.account-delete.account', count: selection.length }
             ],
             callback: function (remove) {

@@ -806,6 +806,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "@deprecated": "Moved to assets module (assets.dialogs.asset-delete). Remove after all modules are updated.",
         "title": "Confirmación de eliminación",
         "message": "¿Estás seguro de que quieres eliminar las carpetas o archivos seleccionados?",
         "asset": "{{count}} recurso(s)"

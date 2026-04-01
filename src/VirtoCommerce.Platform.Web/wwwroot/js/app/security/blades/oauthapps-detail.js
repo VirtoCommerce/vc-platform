@@ -46,7 +46,7 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
             id: "confirmDelete",
             title: "platform.dialogs.oauthapps-delete.title",
             message: "platform.dialogs.oauthapps-delete.message",
-            name: blade.currentEntity.displayName || blade.currentEntity.clientId,
+            messageValues: { name: blade.currentEntity.displayName || blade.currentEntity.clientId },
             callback: function (remove) {
                 blade.isLoading = true;
                 if (remove) {

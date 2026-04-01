@@ -43,7 +43,7 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
         var dialog = {
             id: "confirmDeleteItem",
             title: "platform.dialogs.roles-delete.title",
-            data: [
+            items: [
                 { key: 'platform.dialogs.roles-delete.role', count: selection.length }
             ],
             callback: function (remove) {

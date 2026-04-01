@@ -48,7 +48,7 @@ angular.module('platformWebApp').controller('platformWebApp.oauthappsListControl
         var dialog = {
             id: "confirmDeleteItem",
             title: "platform.dialogs.oauthapps-delete.title",
-            data: [
+            items: [
                 { key: 'platform.dialogs.oauthapps-delete.application', count: selection.length }
             ],
             callback: function (remove) {
