@@ -808,7 +808,7 @@
     },
     "dialogs": {
       "folders-delete": {
-        "@deprecated": "Moved to assets module (assets.dialogs.asset-delete). Remove after all modules are updated.",
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete selected folders or files?",
         "asset": "{{count}} asset(s)"
