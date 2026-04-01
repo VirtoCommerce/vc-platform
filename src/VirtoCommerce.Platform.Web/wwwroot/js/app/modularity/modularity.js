@@ -156,6 +156,8 @@ angular.module('platformWebApp')
                 modulesApiMethod(selection, function (data) {
                     blade.isLoading = false;
 
+                    sortByIdIgnoreCase(data);
+
                     var dialog = {
                         id: "confirm",
                         action: action,
@@ -175,7 +177,13 @@ angular.module('platformWebApp')
                                 // apply the action
                                 var apiActionDescriptor = getApiActionDescriptor(action);
                                 if (apiActionDescriptor.method) {
-                                    apiActionDescriptor.method(data, function (progressData) {
+                                    var payload = _.map(data, function (x) {
+                                        return { id: x.id, version: x.version };
+                                    });
+
+                                    sortByIdIgnoreCase(payload);
+
+                                    apiActionDescriptor.method(payload, function (progressData) {
                                         blade.isLoading = false;
                                         // show module (un)installation progress
                                         var newBlade = {
@@ -201,14 +209,20 @@ angular.module('platformWebApp')
             }
         }
 
+        function sortByIdIgnoreCase(modules) {
+            modules.sort(function (a, b) {
+                return a.id.localeCompare(b.id);
+            });
+        }
+
         function getApiActionDescriptor(action) {
             switch (action) {
                 case 'install':
-                    return { title: 'platform.blades.module-wizard-progress-step.title-install', method: modulesApi.install };
+                    return { title: 'platform.blades.module-wizard-progress-step.title-install', method: modulesApi.installModules };
                 case 'update':
-                    return { title: 'platform.blades.module-wizard-progress-step.title-update', method: modulesApi.update };
+                    return { title: 'platform.blades.module-wizard-progress-step.title-update', method: modulesApi.updateModules };
                 case 'uninstall':
-                    return { title: 'platform.blades.module-wizard-progress-step.title-uninstall', method: modulesApi.uninstall };
+                    return { title: 'platform.blades.module-wizard-progress-step.title-uninstall', method: modulesApi.uninstallModules };
                 default:
                     return {};
             }

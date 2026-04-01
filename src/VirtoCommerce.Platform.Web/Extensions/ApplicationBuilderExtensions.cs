@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.DistributedLock;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.Licensing;
 using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
 
@@ -21,7 +19,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
         {
             var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
             settingsRegistrar.RegisterSettings(AllSettings, "Platform");
-            settingsRegistrar.RegisterSettingsForType(UserProfile.AllSettings, typeof(UserProfile).Name);
+            settingsRegistrar.RegisterSettingsForType(UserProfile.AllSettings, nameof(UserProfile));
 
             var settingsManager = appBuilder.ApplicationServices.GetRequiredService<ISettingsManager>();
 
@@ -40,33 +38,6 @@ namespace VirtoCommerce.Platform.Web.Extensions
             return appBuilder;
         }
 
-        public static IApplicationBuilder UseModules(this IApplicationBuilder appBuilder)
-        {
-            using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
-            {
-                var moduleManager = serviceScope.ServiceProvider.GetRequiredService<IModuleManager>();
-                var modules = GetInstalledModules(serviceScope.ServiceProvider);
-                foreach (var module in modules)
-                {
-                    moduleManager.PostInitializeModule(module, appBuilder);
-                }
-            }
-            return appBuilder;
-        }
-
-        private static IEnumerable<ManifestModuleInfo> GetInstalledModules(IServiceProvider serviceProvider)
-        {
-            var moduleCatalog = serviceProvider.GetRequiredService<ILocalModuleCatalog>();
-            var allModules = moduleCatalog.Modules.OfType<ManifestModuleInfo>()
-                                          .Where(x => x.State == ModuleState.Initialized && !x.Errors.Any())
-                                          .ToArray();
-
-            return moduleCatalog.CompleteListWithDependencies(allModules)
-                .OfType<ManifestModuleInfo>()
-                .Where(x => x.State == ModuleState.Initialized && !x.Errors.Any())
-                .ToArray();
-        }
-
         /// <summary>
         /// Run specified payload in sync between several instances
         /// </summary>
@@ -76,20 +47,21 @@ namespace VirtoCommerce.Platform.Web.Extensions
         public static IApplicationBuilder ExecuteSynchronized(this IApplicationBuilder app, Action payload)
         {
             var distributedLockProvider = app.ApplicationServices.GetRequiredService<IInternalDistributedLockService>();
-            distributedLockProvider.ExecuteSynchronized(nameof(Startup), (x) => payload());
+            distributedLockProvider.ExecuteSynchronized(nameof(Startup), _ => payload());
             return app;
         }
 
         public static IApplicationBuilder UseModulesAndAppsFiles(this IApplicationBuilder app)
         {
-            var localModules = app.ApplicationServices.GetRequiredService<ILocalModuleCatalog>().Modules;
+            var localModules = ModuleBootstrapper.Instance.GetInstalledModules();
 
-            foreach (var module in localModules.OfType<ManifestModuleInfo>())
+            foreach (var module in localModules)
             {
                 // Step 1. Enables static file serving for module
+                // Disable FileSystemWatcher to prevent directory handle lock (allows module update/uninstall at runtime)
                 app.UseStaticFiles(new StaticFileOptions()
                 {
-                    FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
+                    FileProvider = new PhysicalFileProvider(module.FullPhysicalPath) { UsePollingFileWatcher = true, UseActivePolling = false },
                     RequestPath = new PathString($"/modules/$({module.ModuleName})")
                 });
 
@@ -107,13 +79,13 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
                     app.UseDefaultFiles(new DefaultFilesOptions()
                     {
-                        FileProvider = new PhysicalFileProvider(appPath),
+                        FileProvider = new PhysicalFileProvider(appPath) { UsePollingFileWatcher = true, UseActivePolling = false },
                         RequestPath = new PathString($"/apps/{moduleApp.Id}")
                     });
 
                     app.UseStaticFiles(new StaticFileOptions()
                     {
-                        FileProvider = new PhysicalFileProvider(appPath),
+                        FileProvider = new PhysicalFileProvider(appPath) { UsePollingFileWatcher = true, UseActivePolling = false },
                         RequestPath = new PathString($"/apps/{moduleApp.Id}")
                     });
                 }

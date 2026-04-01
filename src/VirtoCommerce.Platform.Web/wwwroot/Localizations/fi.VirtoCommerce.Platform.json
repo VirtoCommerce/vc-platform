@@ -259,6 +259,8 @@
           "end": "Loppu",
           "progress-messages": "Edistymisviestit",
           "process-completed": "Moduulien hallintaprosessi on valmis",
+          "completed-with-errors": "Valmis, mutta virheitä ilmeni",
+          "detailed-log": "Näytä yksityiskohtainen loki",
           "restart-application": "Käynnistä sovellus uudelleen nyt tai myöhemmin"
         }
       },
@@ -288,7 +290,12 @@
           "tags": "Tunnisteet",
           "install-version": "Asenna versio",
           "errors": "Virheet",
-          "update-version": "Päivitä {{id}} versioon"
+          "update-version": "Päivitä {{id}} versioon",
+          "use-custom-version": "Käytä mukautettua versiota",
+          "use-latest-version": "Käytä uusinta versiota",
+          "custom-version-checking": "Tarkistetaan...",
+          "custom-version-valid": "Paketti löytyi",
+          "custom-version-invalid": "Pakettia ei löytynyt"
         }
       },
       "modules-main": {
@@ -297,6 +304,7 @@
           "updates": "Päivitykset",
           "browse": "Selaa",
           "installed": "Asennetut",
+          "notInstalled": "Asentamattomat",
           "withErrors": "Virheet",
           "advanced": "Edistynyt"
         }
@@ -316,7 +324,13 @@
           "version": "Versio",
           "author": "Tekijä",
           "installed": "Asennetut moduulit",
-          "manual-install-warning": "Varoitus! Manuaalisesti asennetut moduulit eivät käynnisty, koska RefreshProbingFolderOnStart on asetettu falseksi"
+          "manual-install-warning": "Varoitus! Manuaalisesti asennetut moduulit eivät käynnisty, koska RefreshProbingFolderOnStart on asetettu falseksi",
+          "filter": "Suodata moduulit",
+          "status": "Tila",
+          "status-all": "Kaikki",
+          "status-installed": "Asennetut",
+          "status-not-installed": "Asentamattomat",
+          "status-updates": "Päivitykset"
         }
       },
       "history": {

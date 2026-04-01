@@ -259,6 +259,8 @@
           "end": "Koniec",
           "progress-messages": "Komunikaty o postępie",
           "process-completed": "Proces zarządzania modułem został zakończony",
+          "completed-with-errors": "Zakończono z błędami",
+          "detailed-log": "Pokaż szczegółowy dziennik",
           "restart-application": "Uruchom ponownie aplikację teraz lub później"
         }
       },
@@ -287,7 +289,12 @@
           "optional-dependencies": "Opcjonalne zależności",
           "tags": "Tagi",
           "install-version": "Zainstaluj wersję",
-          "errors": "Błędy"
+          "errors": "Błędy",
+          "use-custom-version": "Użyj niestandardowej wersji",
+          "use-latest-version": "Użyj najnowszej wersji",
+          "custom-version-checking": "Sprawdzanie...",
+          "custom-version-valid": "Pakiet znaleziony",
+          "custom-version-invalid": "Pakiet nie znaleziony"
         }
       },
       "modules-main": {
@@ -296,6 +303,7 @@
           "updates": "Aktualizacje",
           "available": "Dostępne",
           "installed": "Zainstalowane",
+          "notInstalled": "Niezainstalowane",
           "withErrors": "Błędy",
           "advanced": "Zaawansowane"
         }
@@ -315,7 +323,13 @@
           "version": "Wersja",
           "author": "Autor",
           "installed": "Zainstalowane moduły",
-          "manual-install-warning": "Uwaga! Ręcznie zainstalowane moduły nie uruchomią się, ponieważ RefreshProbingFolderOnStart jest ustawione na false"
+          "manual-install-warning": "Uwaga! Ręcznie zainstalowane moduły nie uruchomią się, ponieważ RefreshProbingFolderOnStart jest ustawione na false",
+          "filter": "Filtruj moduły",
+          "status": "Status",
+          "status-all": "Wszystkie",
+          "status-installed": "Zainstalowane",
+          "status-not-installed": "Niezainstalowane",
+          "status-updates": "Aktualizacje"
         }
       },
       "history": {

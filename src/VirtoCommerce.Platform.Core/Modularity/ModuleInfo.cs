@@ -79,6 +79,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// </summary>
         public InitializationMode InitializationMode { get; set; }
 
+        public string AssemblyFile { get; set; }
+
         /// <summary>
         /// Reference to the location of the module assembly.
         /// <example>The following are examples of valid <see cref="ModuleInfo.Ref"/> values:
