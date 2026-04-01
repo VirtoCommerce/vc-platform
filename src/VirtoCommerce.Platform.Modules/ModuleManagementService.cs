@@ -335,7 +335,10 @@ public class ModuleManagementService(
                 continue;
             }
 
-            result.Add(module);
+            if (!moduleIds.ContainsIgnoreCase(module.Id))
+            {
+                result.Add(module);
+            }
 
             foreach (var dependent in _mergedModules.Where(x => x.IsInstalled && x.DependsOn.ContainsIgnoreCase(module.Id)))
             {

@@ -122,8 +122,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
 
-            var retVal = _moduleManagementService.GetDependents(moduleIds).Distinct()
-                .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
+            var retVal = _moduleManagementService.GetDependents(moduleIds)
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
 
