@@ -844,7 +844,7 @@
       },
       "oauthapps-delete": {
         "title": "Poiston vahvistus",
-        "message": "Seuraava OAuth-sovellus poistetaan:",
+        "message": "Seuraava OAuth-sovellus poistetaan: '{{name}}'",
         "application": "{{count}} OAuth-sovellus(ta)"
       },
       "dynamic-property-delete": {
@@ -902,7 +902,7 @@
       },
       "api-key-delete": {
         "title": "Poiston vahvistus",
-        "message": "Seuraava API-avain poistetaan:"
+        "message": "Seuraava API-avain poistetaan: '{{name}}'"
       },
       "app-restart": {
         "title": "Sovelluksen sammutus",

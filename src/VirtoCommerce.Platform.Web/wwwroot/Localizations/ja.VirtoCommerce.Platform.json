@@ -843,7 +843,7 @@
       },
       "oauthapps-delete": {
         "title": "削除の確認",
-        "message": "次のOAuthアプリケーションが削除されます:",
+        "message": "次のOAuthアプリケーションが削除されます: '{{name}}'",
         "application": "{{count}} 件のOAuthアプリケーション"
       },
       "dynamic-property-delete": {
@@ -901,7 +901,7 @@
       },
       "api-key-delete": {
         "title": "削除の確認",
-        "message": "次のAPIキーが削除されます:"
+        "message": "次のAPIキーが削除されます: '{{name}}'"
       },
       "app-restart": {
         "title": "アプリケーションのシャットダウン",

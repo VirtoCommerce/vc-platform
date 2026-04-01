@@ -843,7 +843,7 @@
       },
       "oauthapps-delete": {
         "title": "Confirmación de eliminación",
-        "message": "Se eliminará la siguiente aplicación OAuth:",
+        "message": "Se eliminará la siguiente aplicación OAuth: '{{name}}'",
         "application": "{{count}} aplicación(es) OAuth"
       },
       "dynamic-property-delete": {
@@ -901,7 +901,7 @@
       },
       "api-key-delete": {
         "title": "Confirmación de eliminación",
-        "message": "Se eliminará la siguiente clave API:"
+        "message": "Se eliminará la siguiente clave API: '{{name}}'"
       },
       "app-restart": {
         "title": "Cierre de la aplicación",

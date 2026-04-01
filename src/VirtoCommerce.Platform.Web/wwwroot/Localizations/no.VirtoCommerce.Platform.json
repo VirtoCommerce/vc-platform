@@ -844,7 +844,7 @@
       },
       "oauthapps-delete": {
         "title": "Bekreft sletting",
-        "message": "Følgende OAuth-applikasjon vil bli slettet:",
+        "message": "Følgende OAuth-applikasjon vil bli slettet: '{{name}}'",
         "application": "{{count}} OAuth-applikasjon(er)"
       },
       "dynamic-property-delete": {
@@ -902,7 +902,7 @@
       },
       "api-key-delete": {
         "title": "Bekreft sletting",
-        "message": "Følgende API-nøkkel vil bli slettet:"
+        "message": "Følgende API-nøkkel vil bli slettet: '{{name}}'"
       },
       "app-restart": {
         "title": "Applikasjonsavslutning",

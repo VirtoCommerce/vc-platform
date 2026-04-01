@@ -844,7 +844,7 @@
       },
       "oauthapps-delete": {
         "title": "Bekräfta radering",
-        "message": "Följande OAuth-applikation kommer att tas bort:",
+        "message": "Följande OAuth-applikation kommer att tas bort: '{{name}}'",
         "application": "{{count}} OAuth-applikation(er)"
       },
       "dynamic-property-delete": {
@@ -902,7 +902,7 @@
       },
       "api-key-delete": {
         "title": "Bekräfta radering",
-        "message": "Följande API-nyckel kommer att tas bort:"
+        "message": "Följande API-nyckel kommer att tas bort: '{{name}}'"
       },
       "app-restart": {
         "title": "Applikationsavstängning",
