@@ -119,8 +119,8 @@ public class FileCopyPolicy : IFileCopyPolicy
 
     private void CompareArchitecture(string sourceFilePath, string targetFilePath, Architecture environmentArchitecture, FileCompareResult result)
     {
-        var sourceArchitecture = _metadataProvider.GetArchitecture(sourceFilePath);
-        var targetArchitecture = _metadataProvider.GetArchitecture(targetFilePath);
+        var sourceArchitecture = GetArchitecture(sourceFilePath);
+        var targetArchitecture = GetArchitecture(targetFilePath);
 
         result.CompatibleArchitecture = sourceArchitecture == targetArchitecture ||
                                         sourceArchitecture == environmentArchitecture ||
@@ -131,5 +131,12 @@ public class FileCopyPolicy : IFileCopyPolicy
             result.SameArchitecture = sourceArchitecture == targetArchitecture;
             result.NewArchitecture = sourceArchitecture == environmentArchitecture && targetArchitecture != environmentArchitecture;
         }
+    }
+
+    private Architecture? GetArchitecture(string filePath)
+    {
+        return _options.AssemblyFileExtensions.Any(filePath.EndsWithIgnoreCase)
+            ? _metadataProvider.GetArchitecture(filePath)
+            : null;
     }
 }
