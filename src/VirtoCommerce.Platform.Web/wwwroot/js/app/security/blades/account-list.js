@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 
-                                                     'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.settings', 
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper',
+                                                     'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.settings',
                                                      'platformWebApp.roles', 'platformWebApp.clipboardService',
 function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService, bladeUtils, settings, roles, clipboardService) {
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
