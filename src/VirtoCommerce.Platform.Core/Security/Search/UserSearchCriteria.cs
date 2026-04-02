@@ -11,8 +11,15 @@ namespace VirtoCommerce.Platform.Core.Security
         public DateTime? ModifiedSinceDate { get; set; }
         //Search users by their role names
         public string[] Roles { get; set; }
+        [Obsolete("Use LoginStartDate/LoginEndDate instead", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public DateTime? LasLoginDate { get; set; }
         public bool OnlyUnlocked { get; set; }
-        //TODO: Update UI pagination to use Skip and Take properties
+        public bool OnlyLocked { get; set; }
+        public bool? EmailConfirmed { get; set; }
+        public string UserType { get; set; }
+        public string Status { get; set; }
+        public string StoreId { get; set; }
+        public DateTime? LoginStartDate { get; set; }
+        public DateTime? LoginEndDate { get; set; }
     }
 }

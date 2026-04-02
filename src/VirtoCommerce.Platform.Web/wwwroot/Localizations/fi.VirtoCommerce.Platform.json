@@ -439,6 +439,24 @@
           "login": "Kirjautuminen",
           "state": "Tila",
           "status": "Tila"
+        },
+        "filter": {
+          "title": "Suodattimet",
+          "all": "Kaikki",
+          "locked-only": "Lukitut tilit",
+          "not-verified": "Sähköpostia ei vahvistettu",
+          "account-type": "Tilin tyyppi",
+          "status": "Tila",
+          "role": "Rooli",
+          "last-login": "Viimeisin kirjautuminen",
+          "date-any": "Milloin tahansa",
+          "date-today": "Tänään",
+          "date-yesterday": "Eilen",
+          "date-last7": "Viimeiset 7 päivää",
+          "date-last30": "Viimeiset 30 päivää",
+          "date-custom": "Mukautettu aikaväli",
+          "date-from": "Alkaen",
+          "date-to": "Päättyen"
         }
       },
       "account-api": {

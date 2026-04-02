@@ -438,6 +438,24 @@
           "login": "登录名",
           "state": "状态",
           "status": "状态"
+        },
+        "filter": {
+          "title": "筛选",
+          "all": "全部",
+          "locked-only": "已锁定的账户",
+          "not-verified": "邮箱未验证",
+          "account-type": "账户类型",
+          "status": "状态",
+          "role": "角色",
+          "last-login": "最后登录",
+          "date-any": "任意时间",
+          "date-today": "今天",
+          "date-yesterday": "昨天",
+          "date-last7": "最近7天",
+          "date-last30": "最近30天",
+          "date-custom": "自定义范围",
+          "date-from": "从",
+          "date-to": "至"
         }
       },
       "account-api": {
