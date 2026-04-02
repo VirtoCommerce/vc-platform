@@ -439,6 +439,24 @@
           "login": "Inloggning",
           "state": "Status",
           "status": "Status"
+        },
+        "filter": {
+          "title": "Filter",
+          "all": "Alla",
+          "locked-only": "Låsta konton",
+          "not-verified": "E-post ej verifierad",
+          "account-type": "Kontotyp",
+          "status": "Status",
+          "role": "Roll",
+          "last-login": "Senaste inloggning",
+          "date-any": "Alla tider",
+          "date-today": "Idag",
+          "date-yesterday": "Igår",
+          "date-last7": "Senaste 7 dagarna",
+          "date-last30": "Senaste 30 dagarna",
+          "date-custom": "Anpassat intervall",
+          "date-from": "Från",
+          "date-to": "Till"
         }
       },
       "account-api": {

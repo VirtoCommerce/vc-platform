@@ -439,6 +439,24 @@
           "login": "Innlogging",
           "state": "Status",
           "status": "Status"
+        },
+        "filter": {
+          "title": "Filtre",
+          "all": "Alle",
+          "locked-only": "Låste kontoer",
+          "not-verified": "E-post ikke bekreftet",
+          "account-type": "Kontotype",
+          "status": "Status",
+          "role": "Rolle",
+          "last-login": "Siste innlogging",
+          "date-any": "Når som helst",
+          "date-today": "I dag",
+          "date-yesterday": "I går",
+          "date-last7": "Siste 7 dager",
+          "date-last30": "Siste 30 dager",
+          "date-custom": "Egendefinert periode",
+          "date-from": "Fra",
+          "date-to": "Til"
         }
       },
       "account-api": {

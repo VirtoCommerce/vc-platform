@@ -1,18 +1,124 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils',
-function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService, bladeUtils) {
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.settings', 'platformWebApp.roles',
+function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService, bladeUtils, settings, roles) {
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
+
+    // --- Filter state (must be initialized before blade.refresh) ---
+
+    var filter = $scope.filter = {
+        keyword: '',
+        onlyLocked: false,
+        emailNotConfirmed: false,
+        userType: '',
+        status: '',
+        role: '',
+        datePreset: '',
+        loginStartDate: null,
+        loginEndDate: null,
+
+        hasActiveFilters: function () {
+            return filter.onlyLocked ||
+                   filter.emailNotConfirmed ||
+                   filter.userType ||
+                   filter.status ||
+                   filter.role ||
+                   filter.datePreset;
+        },
+
+        clearFilters: function () {
+            filter.onlyLocked = false;
+            filter.emailNotConfirmed = false;
+            filter.userType = '';
+            filter.status = '';
+            filter.role = '';
+            filter.datePreset = '';
+            filter.loginStartDate = null;
+            filter.loginEndDate = null;
+            filter.criteriaChanged();
+        },
+
+        criteriaChanged: function () {
+            computeDateRange();
+            if ($scope.pageSettings.currentPage > 1) {
+                $scope.pageSettings.currentPage = 1;
+            } else {
+                blade.refresh();
+            }
+        }
+    };
+
+    function computeDateRange() {
+        if (filter.datePreset === 'custom') {
+            return;
+        }
+        var now = new Date();
+        var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        filter.loginStartDate = null;
+        filter.loginEndDate = null;
+
+        switch (filter.datePreset) {
+            case 'today':
+                filter.loginStartDate = startOfToday;
+                break;
+            case 'yesterday':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 86400000);
+                filter.loginEndDate = startOfToday;
+                break;
+            case 'last7':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 7 * 86400000);
+                break;
+            case 'last30':
+                filter.loginStartDate = new Date(startOfToday.getTime() - 30 * 86400000);
+                break;
+            default:
+                break;
+        }
+    }
+
+    blade.searchText = '';
+    $scope.$watch('blade.searchText', function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+            filter.keyword = newVal;
+            filter.criteriaChanged();
+        }
+    });
+
+    // --- Blade operations ---
 
     blade.refresh = function () {
         blade.isLoading = true;
 
-        accounts.search({
+        var searchCriteria = {
             keyword: filter.keyword,
             sort: uiGridHelper.getSortExpression($scope),
             skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             take: $scope.pageSettings.itemsPerPageCount
-        }, function (data) {
+        };
+
+        if (filter.onlyLocked) {
+            searchCriteria.onlyLocked = true;
+        }
+        if (filter.emailNotConfirmed) {
+            searchCriteria.emailConfirmed = false;
+        }
+        if (filter.userType) {
+            searchCriteria.userType = filter.userType;
+        }
+        if (filter.status) {
+            searchCriteria.status = filter.status;
+        }
+        if (filter.role) {
+            searchCriteria.roles = [filter.role];
+        }
+        if (filter.loginStartDate) {
+            searchCriteria.loginStartDate = filter.loginStartDate;
+        }
+        if (filter.loginEndDate) {
+            searchCriteria.loginEndDate = filter.loginEndDate;
+        }
+
+        accounts.search(searchCriteria, function (data) {
             blade.isLoading = false;
 
             $scope.pageSettings.totalItems = data.totalCount;
@@ -94,15 +200,32 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         }
     ];
 
+    // --- Load filter options ---
 
-    var filter = $scope.filter = {};
-    filter.criteriaChanged = function () {
-        if ($scope.pageSettings.currentPage > 1) {
-            $scope.pageSettings.currentPage = 1;
-        } else {
-            blade.refresh();
-        }
-    };
+    blade.accountTypes = [];
+    blade.accountStatuses = [];
+    blade.roles = [];
+
+    settings.get({ id: 'VirtoCommerce.Platform.Security.AccountTypes' }, function (setting) {
+        blade.accountTypes = setting.allowedValues || [];
+    });
+    settings.get({ id: 'VirtoCommerce.Other.AccountStatuses' }, function (setting) {
+        blade.accountStatuses = setting.allowedValues || [];
+    });
+    roles.search({ take: 1000 }, function (data) {
+        blade.roles = data.results || [];
+    }, function (error) {
+        console.error('Failed to load roles:', error);
+    });
+
+    blade.datePresets = [
+        { label: 'platform.blades.account-list.filter.date-any', value: '' },
+        { label: 'platform.blades.account-list.filter.date-today', value: 'today' },
+        { label: 'platform.blades.account-list.filter.date-yesterday', value: 'yesterday' },
+        { label: 'platform.blades.account-list.filter.date-last7', value: 'last7' },
+        { label: 'platform.blades.account-list.filter.date-last30', value: 'last30' },
+        { label: 'platform.blades.account-list.filter.date-custom', value: 'custom' }
+    ];
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {

@@ -438,6 +438,24 @@
           "login": "Login",
           "state": "Stan",
           "status": "Status"
+        },
+        "filter": {
+          "title": "Filtry",
+          "all": "Wszystkie",
+          "locked-only": "Zablokowane konta",
+          "not-verified": "E-mail niezweryfikowany",
+          "account-type": "Typ konta",
+          "status": "Status",
+          "role": "Rola",
+          "last-login": "Ostatnie logowanie",
+          "date-any": "Dowolny czas",
+          "date-today": "Dzisiaj",
+          "date-yesterday": "Wczoraj",
+          "date-last7": "Ostatnie 7 dni",
+          "date-last30": "Ostatnie 30 dni",
+          "date-custom": "Zakres niestandardowy",
+          "date-from": "Od",
+          "date-to": "Do"
         }
       },
       "account-api": {
