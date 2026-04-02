@@ -438,6 +438,24 @@
           "login": "ログイン",
           "state": "状態",
           "status": "ステータス"
+        },
+        "filter": {
+          "title": "フィルター",
+          "all": "すべて",
+          "locked-only": "ロックされたアカウント",
+          "not-verified": "メール未確認",
+          "account-type": "アカウントタイプ",
+          "status": "ステータス",
+          "role": "ロール",
+          "last-login": "最終ログイン",
+          "date-any": "すべての期間",
+          "date-today": "今日",
+          "date-yesterday": "昨日",
+          "date-last7": "過去7日間",
+          "date-last30": "過去30日間",
+          "date-custom": "カスタム範囲",
+          "date-from": "開始日",
+          "date-to": "終了日"
         }
       },
       "account-api": {
