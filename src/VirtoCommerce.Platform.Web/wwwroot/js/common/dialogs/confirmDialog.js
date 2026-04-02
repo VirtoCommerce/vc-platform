@@ -90,6 +90,10 @@ angular.module('platformWebApp')
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/errorDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
+    dialogService.showDeleteConfirmationDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/confirmDeleteDialog.html', 'platformWebApp.confirmDialogController');
+    };
+
     dialogService.showGalleryDialog = function (dialog) {
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
     };

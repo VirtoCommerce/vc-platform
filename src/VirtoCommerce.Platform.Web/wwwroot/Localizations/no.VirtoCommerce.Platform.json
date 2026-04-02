@@ -839,6 +839,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Bekreft sletting",
         "message": "Er du sikker på at du vil slette valgte mapper eller filer?"
       },
@@ -856,7 +857,8 @@
       },
       "roles-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette valgte roller?"
+        "message": "Er du sikker på at du vil slette valgte roller?",
+        "role": "{{count}} rolle(r)"
       },
       "account-save": {
         "title": "Lagre endringer",
@@ -864,7 +866,8 @@
       },
       "account-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette valgte kontoer?"
+        "message": "Er du sikker på at du vil slette valgte kontoer?",
+        "account": "{{count}} konto(er)"
       },
       "oauthapps-save": {
         "title": "Lagre endringer",
@@ -872,7 +875,8 @@
       },
       "oauthapps-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette den valgte OAuth-applikasjonen?"
+        "message": "Følgende OAuth-applikasjon vil bli slettet: '{{name}}'",
+        "application": "{{count}} OAuth-applikasjon(er)"
       },
       "dynamic-property-delete": {
         "title": "Bekreft sletting",
@@ -929,7 +933,7 @@
       },
       "api-key-delete": {
         "title": "Bekreft sletting",
-        "message": "Er du sikker på at du vil slette denne API-nøkkelen?"
+        "message": "Følgende API-nøkkel vil bli slettet: '{{name}}'"
       },
       "app-restart": {
         "title": "Applikasjonsavslutning",
@@ -965,6 +969,11 @@
       "sessions-terminate-all": {
         "title": "Avslutt alle",
         "message": "Er du sikker på at du vil avslutte alle brukerøkter?"
+      },
+      "delete-confirm": {
+        "warning": "ADVARSEL: Denne endringen er permanent og kan ikke angres. Å bruke denne endringen kan føre til tap av data.",
+        "message": "Følgende data vil bli slettet:",
+        "instruction": "Skriv \"yes\" for å slette:"
       }
     },
     "directives": {

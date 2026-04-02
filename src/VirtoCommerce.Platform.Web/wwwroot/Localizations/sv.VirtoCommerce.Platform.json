@@ -839,6 +839,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Bekräfta radering",
         "message": "Är du säker på att du vill radera valda mappar eller filer?"
       },
@@ -856,7 +857,8 @@
       },
       "roles-delete": {
         "title": "Bekräfta radering",
-        "message": "Är du säker på att du vill radera valda roller?"
+        "message": "Är du säker på att du vill radera valda roller?",
+        "role": "{{count}} roll(er)"
       },
       "account-save": {
         "title": "Spara ändringar",
@@ -864,7 +866,8 @@
       },
       "account-delete": {
         "title": "Bekräfta radering",
-        "message": "Är du säker på att du vill radera valda konton?"
+        "message": "Är du säker på att du vill radera valda konton?",
+        "account": "{{count}} konto(n)"
       },
       "oauthapps-save": {
         "title": "Spara ändringar",
@@ -872,7 +875,8 @@
       },
       "oauthapps-delete": {
         "title": "Bekräfta radering",
-        "message": "Är du säker på att du vill radera den valda OAuth-applikationen?"
+        "message": "Följande OAuth-applikation kommer att tas bort: '{{name}}'",
+        "application": "{{count}} OAuth-applikation(er)"
       },
       "dynamic-property-delete": {
         "title": "Bekräfta radering",
@@ -929,7 +933,7 @@
       },
       "api-key-delete": {
         "title": "Bekräfta radering",
-        "message": "Är du säker på att du vill radera denna API-nyckel?"
+        "message": "Följande API-nyckel kommer att tas bort: '{{name}}'"
       },
       "app-restart": {
         "title": "Applikationsavstängning",
@@ -965,6 +969,11 @@
       "sessions-terminate-all": {
         "title": "Avsluta alla",
         "message": "Är du säker på att du vill avsluta alla användarsessioner?"
+      },
+      "delete-confirm": {
+        "warning": "VARNING: Denna ändring är permanent och kan inte ångras. Att tillämpa denna ändring kan leda till dataförlust.",
+        "message": "Följande data kommer att tas bort:",
+        "instruction": "Skriv \"yes\" för att ta bort:"
       }
     },
     "directives": {

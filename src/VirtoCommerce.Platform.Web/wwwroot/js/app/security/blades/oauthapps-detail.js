@@ -46,6 +46,7 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
             id: "confirmDelete",
             title: "platform.dialogs.oauthapps-delete.title",
             message: "platform.dialogs.oauthapps-delete.message",
+            messageValues: { name: blade.currentEntity.displayName || blade.currentEntity.clientId },
             callback: function (remove) {
                 blade.isLoading = true;
                 if (remove) {
@@ -58,7 +59,7 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
                 }
             }
         }
-        dialogService.showConfirmationDialog(dialog);
+        dialogService.showDeleteConfirmationDialog(dialog);
     }
 
     blade.headIcon = 'fas fa-key';
