@@ -437,7 +437,8 @@
           "account-type": "Type de compte",
           "login": "Identifiant",
           "state": "Statut",
-          "status": "Statut"
+          "status": "Statut",
+          "copy-id": "Copier l'ID"
         },
         "filter": {
           "title": "Filtres",

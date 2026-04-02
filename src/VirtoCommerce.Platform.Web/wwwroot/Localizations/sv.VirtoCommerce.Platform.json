@@ -438,7 +438,8 @@
           "account-type": "Kontotyp",
           "login": "Inloggning",
           "state": "Status",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Kopiera ID"
         },
         "filter": {
           "title": "Filter",

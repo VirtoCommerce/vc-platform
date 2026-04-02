@@ -438,7 +438,8 @@
           "account-type": "Tilin tyyppi",
           "login": "Kirjautuminen",
           "state": "Tila",
-          "status": "Tila"
+          "status": "Tila",
+          "copy-id": "Kopioi tunnus"
         },
         "filter": {
           "title": "Suodattimet",

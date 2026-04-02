@@ -437,7 +437,8 @@
           "account-type": "Typ konta",
           "login": "Login",
           "state": "Stan",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Kopiuj ID"
         },
         "filter": {
           "title": "Filtry",

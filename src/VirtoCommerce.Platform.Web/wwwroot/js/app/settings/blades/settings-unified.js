@@ -2,8 +2,8 @@ angular.module('platformWebApp')
     .controller('platformWebApp.settingsUnifiedController', [
         '$scope', '$q', '$translate', '$transitions', '$state', '$stateParams', 'platformWebApp.settingsV2', 'platformWebApp.settings.helper',
         'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modulesApi',
-        'platformWebApp.changeLogApi', 'platformWebApp.WaitForRestart', '$timeout',
-        function ($scope, $q, $translate, $transitions, $state, $stateParams, settingsV2, settingsHelper, bladeNavigationService, dialogService, modulesApi, changeLogApi, waitForRestart, $timeout) {
+        'platformWebApp.changeLogApi', 'platformWebApp.WaitForRestart', '$timeout', 'platformWebApp.clipboardService',
+        function ($scope, $q, $translate, $transitions, $state, $stateParams, settingsV2, settingsHelper, bladeNavigationService, dialogService, modulesApi, changeLogApi, waitForRestart, $timeout, clipboardService) {
             var blade = $scope.blade;
             blade.updatePermission = 'platform:setting:update';
             blade.headIcon = 'fa fa-wrench';
@@ -616,29 +616,8 @@ angular.module('platformWebApp')
                     return;
                 }
                 var url = $state.href('workspace.settings', { group: groupName }, { absolute: true });
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(url).catch(function () {
-                        fallbackCopyToClipboard(url);
-                    });
-                } else {
-                    fallbackCopyToClipboard(url);
-                }
+                clipboardService.copyText(url);
             };
-
-            function fallbackCopyToClipboard(text) {
-                var textarea = document.createElement('textarea');
-                textarea.value = text;
-                textarea.style.position = 'fixed';
-                textarea.style.opacity = '0';
-                document.body.appendChild(textarea);
-                textarea.select();
-                try {
-                    document.execCommand('copy');
-                } catch (e) {
-                    // silent fallback failure
-                }
-                document.body.removeChild(textarea);
-            }
 
             // ================================================================
             // Export / Import / Edit as JSON

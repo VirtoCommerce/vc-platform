@@ -1,6 +1,8 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.settings', 'platformWebApp.roles',
-function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService, bladeUtils, settings, roles) {
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper',
+                                                     'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.settings',
+                                                     'platformWebApp.roles', 'platformWebApp.clipboardService',
+function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService, bladeUtils, settings, roles, clipboardService) {
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
 
@@ -228,6 +230,10 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         { label: 'platform.blades.account-list.filter.date-last30', value: 'last30' },
         { label: 'platform.blades.account-list.filter.date-custom', value: 'custom' }
     ];
+
+    $scope.copy = function (text) {
+        clipboardService.copyText(text);
+    };
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {

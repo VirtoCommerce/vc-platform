@@ -437,7 +437,8 @@
           "account-type": "账户类型",
           "login": "登录名",
           "state": "状态",
-          "status": "状态"
+          "status": "状态",
+          "copy-id": "复制ID"
         },
         "filter": {
           "title": "筛选",
