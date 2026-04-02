@@ -1,0 +1,23 @@
+<div class="va-filter-bar">
+    <div class="va-filter-wrap" ng-if="!hideFilter">
+        <button type="button" class="btn __va-filter"
+                ng-class="{'__active': hasActiveFilters()}"
+                ng-click="togglePanel($event)"
+                title="{{filterTitle}}">
+            <i class="fa fa-sliders"></i>
+            <span class="va-filter-badge" ng-if="hasActiveFilters()"></span>
+        </button>
+        <div class="va-filter-panel" ng-if="showPanel" ng-click="$event.stopPropagation()">
+            <div ng-transclude></div>
+            <div class="va-filter-panel__row __clear" ng-if="hasActiveFilters()">
+                <a href="" ng-click="clearFilters()">{{ 'platform.directives.filter-panel.clear-filters' | translate }}</a>
+            </div>
+        </div>
+    </div>
+    <div class="form-input __search" ng-if="!hideSearch">
+        <input placeholder="{{ searchPlaceholder || ('platform.placeholders.search-keyword' | translate) }}" ng-model="$parent.searchText" ng-model-options="{ debounce: 300 }">
+        <button class="btn __other" style="position: relative; right: 35px;">
+            <i class="btn-ico fa fa-remove" title="Clear" ng-click="$parent.searchText=''"></i>
+        </button>
+    </div>
+</div>
