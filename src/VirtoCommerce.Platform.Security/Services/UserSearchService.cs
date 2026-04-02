@@ -37,6 +37,11 @@ namespace VirtoCommerce.Platform.Security.Services
             var result = AbstractTypeFactory<UserSearchResult>.TryCreateInstance();
             var query = userManager.Users.Include(x => x.UserRoles) as IQueryable<ApplicationUser>;
 
+            if (!criteria.ObjectIds.IsNullOrEmpty())
+            {
+                query = query.Where(x => criteria.ObjectIds.Contains(x.Id));
+            }
+
             if (criteria.Keyword != null)
             {
                 query = query.Where(x => x.UserName.Contains(criteria.Keyword));
