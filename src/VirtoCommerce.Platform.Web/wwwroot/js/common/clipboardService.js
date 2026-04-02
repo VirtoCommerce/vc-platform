@@ -1,16 +1,13 @@
 angular.module('platformWebApp').factory('platformWebApp.clipboardService', [function () {
     function fallbackCopy(text) {
-        var copyElement = document.createElement("span");
-        copyElement.appendChild(document.createTextNode(text));
+        var copyElement = document.createElement("textarea");
+        copyElement.value = text;
+        copyElement.style.position = "fixed";
+        copyElement.style.opacity = "0";
         document.body.appendChild(copyElement);
 
-        var range = document.createRange();
-        range.selectNode(copyElement);
-        window.getSelection().removeAllRanges();
-        window.getSelection().addRange(range);
-
+        copyElement.select();
         document.execCommand('copy');
-        window.getSelection().removeAllRanges();
         copyElement.remove();
     }
 
