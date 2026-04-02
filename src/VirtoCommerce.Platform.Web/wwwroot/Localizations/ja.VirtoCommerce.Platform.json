@@ -437,7 +437,8 @@
           "account-type": "アカウントタイプ",
           "login": "ログイン",
           "state": "状態",
-          "status": "ステータス"
+          "status": "ステータス",
+          "copy-id": "IDをコピー"
         },
         "filter": {
           "title": "フィルター",

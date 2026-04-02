@@ -438,7 +438,8 @@
           "account-type": "Kontotype",
           "login": "Innlogging",
           "state": "Status",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Kopier ID"
         },
         "filter": {
           "title": "Filtre",
