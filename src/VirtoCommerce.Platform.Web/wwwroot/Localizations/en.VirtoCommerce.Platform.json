@@ -260,6 +260,8 @@
           "end": "End",
           "progress-messages": "Progress messages",
           "process-completed": "The module management process is completed",
+          "completed-with-errors": "Completed with errors",
+          "detailed-log": "Show detailed log",
           "restart-application": "Restart the application now or later"
         }
       },
@@ -289,7 +291,12 @@
           "tags": "Tags",
           "install-version": "Install version",
           "errors": "Errors",
-          "update-version": "Update {{id}} to"
+          "update-version": "Update {{id}} to",
+          "use-custom-version": "Use custom version",
+          "use-latest-version": "Use latest version",
+          "custom-version-checking": "Checking...",
+          "custom-version-valid": "Package found",
+          "custom-version-invalid": "Package not found"
         }
       },
       "modules-main": {
@@ -298,6 +305,7 @@
           "updates": "Updates",
           "browse": "Browse",
           "installed": "Installed",
+          "notInstalled": "Not installed",
           "withErrors": "Errors",
           "advanced": "Advanced"
         }
@@ -317,7 +325,13 @@
           "version": "Version",
           "author": "Author",
           "installed": "Installed modules",
-          "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart is set to false"
+          "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart is set to false",
+          "filter": "Filter modules",
+          "status": "Status",
+          "status-all": "All",
+          "status-installed": "Installed",
+          "status-not-installed": "Not installed",
+          "status-updates": "Updates"
         }
       },
       "history": {

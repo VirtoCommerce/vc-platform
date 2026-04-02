@@ -16,35 +16,29 @@ using VirtoCommerce.Platform.Web.Modularity;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Route("api/platform/diagnostics")]
+    [ApiController]
     [Authorize]
-    public class DiagnosticsController : Controller
+    public class DiagnosticsController(
+        LicenseProvider licenseProvider,
+        IConfiguration configuration,
+        IModuleService moduleService,
+        IWebHostEnvironment webHostEnvironment)
+        : ControllerBase
     {
-        private readonly IModuleCatalog _moduleCatalog;
-        private readonly LicenseProvider _licenseProvider;
-        private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public DiagnosticsController(IModuleCatalog moduleCatalog, LicenseProvider licenseProvider, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
-        {
-            _moduleCatalog = moduleCatalog;
-            _licenseProvider = licenseProvider;
-            _configuration = configuration;
-            _webHostEnvironment = webHostEnvironment;
-        }
-
         [HttpGet]
         [Route("systeminfo")]
         public ActionResult<SystemInfo> GetSystemInfo()
         {
             var platformVersion = PlatformVersion.CurrentVersion.ToString();
-            var license = _licenseProvider.GetLicense();
+            var license = licenseProvider.GetLicense();
 
-            var databaseProvider = _configuration.GetValue("DatabaseProvider", "SqlServer");
+            var databaseProvider = configuration.GetValue("DatabaseProvider", "SqlServer");
 
 
-            var installedModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).OrderBy(x => x.Id)
-                                       .Select(x => new ModuleDescriptor(x))
-                                       .ToArray();
+            var installedModules = moduleService.GetInstalledModules()
+                .OrderBy(x => x.Id)
+                .Select(x => new ModuleDescriptor(x))
+                .ToArray();
 
             var result = new SystemInfo
             {
@@ -55,7 +49,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Is64BitOperatingSystem = Environment.Is64BitOperatingSystem,
                 Is64BitProcess = Environment.Is64BitProcess,
                 DatabaseProvider = databaseProvider,
-                EnvironmentName = _webHostEnvironment.IsDevelopment()
+                EnvironmentName = webHostEnvironment.IsDevelopment()
                     ? Environments.Development
                     : Environments.Production,
                 RuntimeIdentifier = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.GetRuntimeIdentifier(),
@@ -73,14 +67,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public ActionResult<ModuleDescriptor[]> GetModulesErrors()
         {
-            var result = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
-                .Where(x => !x.Errors.IsNullOrEmpty())
+            var result = moduleService.GetFailedModules()
                 .OrderBy(x => x.Id)
                 .ThenBy(x => x.Version)
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
 
-            if (!_webHostEnvironment.IsDevelopment() && result.Any())
+            if (!webHostEnvironment.IsDevelopment() && result.Length > 0)
             {
                 var errorDescription = "To enable the details of this specific error message, please switch environment to Development mode.";
                 var errors = new[] { errorDescription };

@@ -1,21 +1,22 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Modules.Local;
 
 public class FileMetadataProvider : IFileMetadataProvider
 {
-    private readonly LocalStorageModuleCatalogOptions _options;
 
-    public FileMetadataProvider(IOptions<LocalStorageModuleCatalogOptions> options)
+    public FileMetadataProvider()
     {
-        _options = options.Value;
+    }
+
+    [Obsolete("Use parameterless constructor.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    public FileMetadataProvider(IOptions<LocalStorageModuleCatalogOptions> _)
+    {
     }
 
     public bool Exists(string filePath)
@@ -53,11 +54,6 @@ public class FileMetadataProvider : IFileMetadataProvider
 
     public Architecture? GetArchitecture(string filePath)
     {
-        if (!_options.AssemblyFileExtensions.Any(filePath.EndsWithIgnoreCase))
-        {
-            return null;
-        }
-
         const int startPosition = 0x3C;
         const int peSignature = 0x00004550;
 
