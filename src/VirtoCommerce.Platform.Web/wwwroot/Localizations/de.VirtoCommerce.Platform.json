@@ -441,6 +441,24 @@
           "state": "Zustand",
           "status": "Status",
           "copy-id": "ID kopieren"
+        },
+        "filter": {
+          "title": "Filter",
+          "all": "Alle",
+          "locked-only": "Gesperrte Konten",
+          "not-verified": "E-Mail nicht bestätigt",
+          "account-type": "Kontotyp",
+          "status": "Status",
+          "role": "Rolle",
+          "last-login": "Letzte Anmeldung",
+          "date-any": "Beliebig",
+          "date-today": "Heute",
+          "date-yesterday": "Gestern",
+          "date-last7": "Letzte 7 Tage",
+          "date-last30": "Letzte 30 Tage",
+          "date-custom": "Benutzerdefiniert",
+          "date-from": "Von",
+          "date-to": "Bis"
         }
       },
       "account-api": {

@@ -439,6 +439,24 @@
           "state": "Statut",
           "status": "Statut",
           "copy-id": "Copier l'ID"
+        },
+        "filter": {
+          "title": "Filtres",
+          "all": "Tous",
+          "locked-only": "Comptes verrouillés",
+          "not-verified": "E-mail non vérifié",
+          "account-type": "Type de compte",
+          "status": "Statut",
+          "role": "Rôle",
+          "last-login": "Dernière connexion",
+          "date-any": "Toute période",
+          "date-today": "Aujourd'hui",
+          "date-yesterday": "Hier",
+          "date-last7": "7 derniers jours",
+          "date-last30": "30 derniers jours",
+          "date-custom": "Période personnalisée",
+          "date-from": "Du",
+          "date-to": "Au"
         }
       },
       "account-api": {

@@ -439,6 +439,24 @@
           "state": "Estado",
           "status": "Status",
           "copy-id": "Copiar ID"
+        },
+        "filter": {
+          "title": "Filtros",
+          "all": "Todos",
+          "locked-only": "Contas bloqueadas",
+          "not-verified": "E-mail não verificado",
+          "account-type": "Tipo de conta",
+          "status": "Status",
+          "role": "Função",
+          "last-login": "Último acesso",
+          "date-any": "Qualquer período",
+          "date-today": "Hoje",
+          "date-yesterday": "Ontem",
+          "date-last7": "Últimos 7 dias",
+          "date-last30": "Últimos 30 dias",
+          "date-custom": "Período personalizado",
+          "date-from": "De",
+          "date-to": "Até"
         }
       },
       "account-api": {
