@@ -13,8 +13,8 @@
         <div class="modal-window__message-container">
             <div class="modal-window__dialog-message"><b>{{ 'platform.dialogs.delete-confirm.warning' | translate }}</b></div>
             <div class="modal-window__dialog-message" ng-if="message">{{ message | translate: messageValues }}</div>
-            <div class="modal-window__dialog-message" ng-if="!message && items.length">{{ 'platform.dialogs.delete-confirm.message' | translate }}</div>
-            <div class="modal-window__dialog-message" ng-if="items.length">
+            <div class="modal-window__dialog-message" ng-if="!message && items && items.length">{{ 'platform.dialogs.delete-confirm.message' | translate }}</div>
+            <div class="modal-window__dialog-message" ng-if="items && items.length">
                 <ul>
                     <li ng-repeat="item in items">{{ item.key | translate: item }}</li>
                 </ul>
