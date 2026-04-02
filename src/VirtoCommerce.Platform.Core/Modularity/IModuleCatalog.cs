@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
-    /// This is the expected catalog definition for the ModuleManager. 
-    /// The ModuleCatalog holds information about the modules that can be used by the 
-    /// application. Each module is described in a ModuleInfo class, that records the 
-    /// name, type and location of the module. 
+    /// This is the expected catalog definition for the ModuleManager.
+    /// The ModuleCatalog holds information about the modules that can be used by the
+    /// application. Each module is described in a ModuleInfo class, that records the
+    /// name, type and location of the module.
     /// </summary>
+    [Obsolete("Use ModuleBootstrapper for read-only module queries.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public interface IModuleCatalog
     {
         /// <summary>

@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
         public async Task Process()
         {
             var lockoutMaximumDaysFromLastLogin = _lockoutOptions.LockoutMaximumDaysFromLastLogin;
-            var criteria = new UserSearchCriteria { OnlyUnlocked = true, LasLoginDate = DateTime.UtcNow.AddDays(-lockoutMaximumDaysFromLastLogin) };
+            var criteria = new UserSearchCriteria { OnlyUnlocked = true, LoginEndDate = DateTime.UtcNow.AddDays(-lockoutMaximumDaysFromLastLogin) };
             var usersResult = await _userSearchService.SearchUsersAsync(criteria);
 
             foreach (var user in usersResult.Results)

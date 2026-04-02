@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -17,9 +15,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
-using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Swagger;
+using VirtoCommerce.Platform.Modules;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
@@ -47,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             }
 
             var provider = services.BuildServiceProvider();
-            var modules = provider.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();
+            var modules = ModuleBootstrapper.Instance.GetInstalledModules().Where(m => m.ModuleInstance != null).ToArray();
 
             services.AddSwaggerGen(c =>
             {
@@ -78,7 +76,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     c.SwaggerDoc(module.ModuleName, new OpenApiInfo { Title = $"{module.Id}", Version = "v1" });
                 }
 
-                c.TagActionsBy(api => [api.GetModuleName(provider)]);
+                c.TagActionsBy(api => [api.GetModuleName()]);
                 c.IgnoreObsoleteActions();
                 c.DocumentFilter<ExcludeRedundantDepsFilter>();
                 c.DocumentFilter<ModuleInfoFilter>();
@@ -160,7 +158,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             });
 
-            var modules = applicationBuilder.ApplicationServices.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();
+            var modules = ModuleBootstrapper.Instance.GetInstalledModules().Where(m => m.ModuleInstance != null).ToArray();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             applicationBuilder.UseSwaggerUI(c =>
@@ -199,10 +197,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
         }
 
 
-        private static string GetModuleName(this ApiDescription api, ServiceProvider serviceProvider)
+        private static string GetModuleName(this ApiDescription api)
         {
-            var moduleCatalog = serviceProvider.GetRequiredService<ILocalModuleCatalog>();
-
             // ------
             // Lifted from ApiDescriptionExtensions
             var actionDescriptor = api.GetProperty<ControllerActionDescriptor>();
@@ -215,7 +211,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // ------
 
             var moduleAssembly = actionDescriptor?.ControllerTypeInfo.Assembly ?? Assembly.GetExecutingAssembly();
-            var module = moduleCatalog.Modules.FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
+            var module = ModuleBootstrapper.Instance.GetInstalledModules().FirstOrDefault(m => m.ModuleInstance != null && m.Assembly == moduleAssembly);
 
             return module?.ModuleName ?? "VirtoCommerce.Platform";
         }

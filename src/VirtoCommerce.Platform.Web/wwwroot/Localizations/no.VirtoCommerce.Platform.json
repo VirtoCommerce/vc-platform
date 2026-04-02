@@ -259,6 +259,8 @@
           "end": "Slutt",
           "progress-messages": "Fremdriftsmeldinger",
           "process-completed": "Modulhåndteringsprosessen er fullført",
+          "completed-with-errors": "Fullført med feil",
+          "detailed-log": "Vis detaljert logg",
           "restart-application": "Start applikasjonen på nytt nå eller senere"
         }
       },
@@ -288,7 +290,12 @@
           "tags": "Tagger",
           "install-version": "Installer versjon",
           "errors": "Feil",
-          "update-version": "Oppdater {{id}} til"
+          "update-version": "Oppdater {{id}} til",
+          "use-custom-version": "Bruk egendefinert versjon",
+          "use-latest-version": "Bruk nyeste versjon",
+          "custom-version-checking": "Sjekker...",
+          "custom-version-valid": "Pakke funnet",
+          "custom-version-invalid": "Pakke ikke funnet"
         }
       },
       "modules-main": {
@@ -297,6 +304,7 @@
           "updates": "Oppdateringer",
           "browse": "Bla gjennom",
           "installed": "Installerte",
+          "notInstalled": "Ikke installerte",
           "withErrors": "Feil",
           "advanced": "Avansert"
         }
@@ -316,7 +324,13 @@
           "version": "Versjon",
           "author": "Forfatter",
           "installed": "Installerte moduler",
-          "manual-install-warning": "Advarsel! Manuelt installerte moduler starter ikke fordi RefreshProbingFolderOnStart er satt til falsk"
+          "manual-install-warning": "Advarsel! Manuelt installerte moduler starter ikke fordi RefreshProbingFolderOnStart er satt til falsk",
+          "filter": "Filtrer moduler",
+          "status": "Status",
+          "status-all": "Alle",
+          "status-installed": "Installerte",
+          "status-not-installed": "Ikke installerte",
+          "status-updates": "Oppdateringer"
         }
       },
       "history": {
@@ -425,6 +439,24 @@
           "login": "Innlogging",
           "state": "Status",
           "status": "Status"
+        },
+        "filter": {
+          "title": "Filtre",
+          "all": "Alle",
+          "locked-only": "Låste kontoer",
+          "not-verified": "E-post ikke bekreftet",
+          "account-type": "Kontotype",
+          "status": "Status",
+          "role": "Rolle",
+          "last-login": "Siste innlogging",
+          "date-any": "Når som helst",
+          "date-today": "I dag",
+          "date-yesterday": "I går",
+          "date-last7": "Siste 7 dager",
+          "date-last30": "Siste 30 dager",
+          "date-custom": "Egendefinert periode",
+          "date-from": "Fra",
+          "date-to": "Til"
         }
       },
       "account-api": {

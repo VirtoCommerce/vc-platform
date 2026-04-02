@@ -259,6 +259,8 @@
           "end": "Fim",
           "progress-messages": "Mensagens de progresso",
           "process-completed": "O processo de gestão do módulo está concluído",
+          "completed-with-errors": "Concluído com erros",
+          "detailed-log": "Mostrar registro detalhado",
           "restart-application": "Reiniciar a aplicação agora ou mais tarde"
         }
       },
@@ -287,7 +289,12 @@
           "optional-dependencies": "Dependências opcionais",
           "tags": "Tags",
           "install-version": "Instalar versão",
-          "errors": "Erros"
+          "errors": "Erros",
+          "use-custom-version": "Usar versão personalizada",
+          "use-latest-version": "Usar versão mais recente",
+          "custom-version-checking": "Verificando...",
+          "custom-version-valid": "Pacote encontrado",
+          "custom-version-invalid": "Pacote não encontrado"
         }
       },
       "modules-main": {
@@ -296,6 +303,7 @@
           "updates": "Atualizações",
           "available": "Disponíveis",
           "installed": "Instalados",
+          "notInstalled": "Não instalados",
           "withErrors": "Erros",
           "advanced": "Avançado"
         }
@@ -315,7 +323,13 @@
           "version": "Versão",
           "author": "Autor",
           "installed": "Módulos instalados",
-          "manual-install-warning": "Aviso! Módulos instalados manualmente não iniciarão porque RefreshProbingFolderOnStart está definido como falso"
+          "manual-install-warning": "Aviso! Módulos instalados manualmente não iniciarão porque RefreshProbingFolderOnStart está definido como falso",
+          "filter": "Filtrar módulos",
+          "status": "Status",
+          "status-all": "Todos",
+          "status-installed": "Instalados",
+          "status-not-installed": "Não instalados",
+          "status-updates": "Atualizações"
         }
       },
       "history": {
@@ -424,6 +438,24 @@
           "login": "Login",
           "state": "Estado",
           "status": "Status"
+        },
+        "filter": {
+          "title": "Filtros",
+          "all": "Todos",
+          "locked-only": "Contas bloqueadas",
+          "not-verified": "E-mail não verificado",
+          "account-type": "Tipo de conta",
+          "status": "Status",
+          "role": "Função",
+          "last-login": "Último acesso",
+          "date-any": "Qualquer período",
+          "date-today": "Hoje",
+          "date-yesterday": "Ontem",
+          "date-last7": "Últimos 7 dias",
+          "date-last30": "Últimos 30 dias",
+          "date-custom": "Período personalizado",
+          "date-from": "De",
+          "date-to": "Até"
         }
       },
       "account-api": {

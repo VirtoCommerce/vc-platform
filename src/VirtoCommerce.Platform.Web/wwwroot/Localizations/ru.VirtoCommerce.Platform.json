@@ -259,6 +259,8 @@
           "end": "Конец",
           "progress-messages": "Сообщения о прогрессе",
           "process-completed": "Процесс управления модулем завершен",
+          "completed-with-errors": "Завершено с ошибками",
+          "detailed-log": "Показать подробный журнал",
           "restart-application": "Перезапустите приложение сейчас или позже"
         }
       },
@@ -288,7 +290,12 @@
           "tags": "Теги",
           "install-version": "Установить версию",
           "errors": "Ошибки",
-          "update-version": "Обновить {{id}} до"
+          "update-version": "Обновить {{id}} до",
+          "use-custom-version": "Указать версию",
+          "use-latest-version": "Последняя версия",
+          "custom-version-checking": "Проверка...",
+          "custom-version-valid": "Пакет найден",
+          "custom-version-invalid": "Пакет не найден"
         }
       },
       "modules-main": {
@@ -297,6 +304,7 @@
           "updates": "Обновления",
           "available": "Доступные",
           "installed": "Установленные",
+          "notInstalled": "Неустановленные",
           "withErrors": "Ошибки",
           "advanced": "Расширенные",
           "browse": "Обзор"
@@ -317,7 +325,13 @@
           "version": "Версия",
           "author": "Автор",
           "installed": "Установленные модули",
-          "manual-install-warning": "Внимание! Модули, установленные вручную, не запустятся, так как RefreshProbingFolderOnStart имеет значение false"
+          "manual-install-warning": "Внимание! Модули, установленные вручную, не запустятся, так как RefreshProbingFolderOnStart имеет значение false",
+          "filter": "Фильтр модулей",
+          "status": "Статус",
+          "status-all": "Все",
+          "status-installed": "Установленные",
+          "status-not-installed": "Неустановленные",
+          "status-updates": "Обновления"
         }
       },
       "history": {
@@ -426,6 +440,24 @@
           "login": "Логин",
           "state": "Состояние",
           "status": "Статус"
+        },
+        "filter": {
+          "title": "Фильтры",
+          "all": "Все",
+          "locked-only": "Заблокированные аккаунты",
+          "not-verified": "E-mail не подтверждён",
+          "account-type": "Тип учётной записи",
+          "status": "Статус",
+          "role": "Роль",
+          "last-login": "Последний вход",
+          "date-any": "За всё время",
+          "date-today": "Сегодня",
+          "date-yesterday": "Вчера",
+          "date-last7": "Последние 7 дней",
+          "date-last30": "Последние 30 дней",
+          "date-custom": "Произвольный период",
+          "date-from": "С",
+          "date-to": "По"
         }
       },
       "account-api": {

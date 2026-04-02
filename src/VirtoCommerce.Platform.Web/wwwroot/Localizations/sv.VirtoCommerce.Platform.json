@@ -259,6 +259,8 @@
           "end": "Slut",
           "progress-messages": "Förloppsmeddelanden",
           "process-completed": "Modulhanteringsprocessen är slutförd",
+          "completed-with-errors": "Slutfört med fel",
+          "detailed-log": "Visa detaljerad logg",
           "restart-application": "Starta om applikationen nu eller senare"
         }
       },
@@ -288,7 +290,12 @@
           "tags": "Taggar",
           "install-version": "Installera version",
           "errors": "Fel",
-          "update-version": "Uppdatera {{id}} till"
+          "update-version": "Uppdatera {{id}} till",
+          "use-custom-version": "Använd anpassad version",
+          "use-latest-version": "Använd senaste versionen",
+          "custom-version-checking": "Kontrollerar...",
+          "custom-version-valid": "Paket hittades",
+          "custom-version-invalid": "Paket hittades inte"
         }
       },
       "modules-main": {
@@ -297,6 +304,7 @@
           "updates": "Uppdateringar",
           "browse": "Bläddra",
           "installed": "Installerade",
+          "notInstalled": "Ej installerade",
           "withErrors": "Fel",
           "advanced": "Avancerat"
         }
@@ -316,7 +324,13 @@
           "version": "Version",
           "author": "Författare",
           "installed": "Installerade moduler",
-          "manual-install-warning": "Varning! Manuellt installerade moduler startar inte eftersom RefreshProbingFolderOnStart är satt till falskt"
+          "manual-install-warning": "Varning! Manuellt installerade moduler startar inte eftersom RefreshProbingFolderOnStart är satt till falskt",
+          "filter": "Filtrera moduler",
+          "status": "Status",
+          "status-all": "Alla",
+          "status-installed": "Installerade",
+          "status-not-installed": "Ej installerade",
+          "status-updates": "Uppdateringar"
         }
       },
       "history": {
@@ -425,6 +439,24 @@
           "login": "Inloggning",
           "state": "Status",
           "status": "Status"
+        },
+        "filter": {
+          "title": "Filter",
+          "all": "Alla",
+          "locked-only": "Låsta konton",
+          "not-verified": "E-post ej verifierad",
+          "account-type": "Kontotyp",
+          "status": "Status",
+          "role": "Roll",
+          "last-login": "Senaste inloggning",
+          "date-any": "Alla tider",
+          "date-today": "Idag",
+          "date-yesterday": "Igår",
+          "date-last7": "Senaste 7 dagarna",
+          "date-last30": "Senaste 30 dagarna",
+          "date-custom": "Anpassat intervall",
+          "date-from": "Från",
+          "date-to": "Till"
         }
       },
       "account-api": {
