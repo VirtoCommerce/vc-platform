@@ -841,6 +841,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Löschen bestätigen",
         "message": "Sind Sie sicher, dass Sie die ausgewählten Ordner oder Dateien löschen möchten?"
       },
@@ -858,7 +859,8 @@
       },
       "roles-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie die ausgewählten Rollen löschen möchten?"
+        "message": "Sind Sie sicher, dass Sie die ausgewählten Rollen löschen möchten?",
+        "role": "{{count}} Rolle(n)"
       },
       "account-save": {
         "title": "Änderungen speichern",
@@ -866,7 +868,8 @@
       },
       "account-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie die ausgewählten Konten löschen möchten?"
+        "message": "Sind Sie sicher, dass Sie die ausgewählten Konten löschen möchten?",
+        "account": "{{count}} Konto/Konten"
       },
       "oauthapps-save": {
         "title": "Änderungen speichern",
@@ -874,7 +877,8 @@
       },
       "oauthapps-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie die ausgewählte OAuth-Anwendung löschen möchten?"
+        "message": "Die folgende OAuth-Anwendung wird gelöscht: '{{name}}'",
+        "application": "{{count}} OAuth-Anwendung(en)"
       },
       "dynamic-property-delete": {
         "title": "Löschen bestätigen",
@@ -931,7 +935,7 @@
       },
       "api-key-delete": {
         "title": "Löschen bestätigen",
-        "message": "Sind Sie sicher, dass Sie diesen API-Schlüssel löschen möchten?"
+        "message": "Der folgende API-Schlüssel wird gelöscht: '{{name}}'"
       },
       "app-restart": {
         "title": "Anwendungsbeendigung",
@@ -967,6 +971,11 @@
       "sessions-terminate-all": {
         "title": "Alle beenden",
         "message": "Sind Sie sicher, dass Sie alle Benutzersitzungen beenden möchten?"
+      },
+      "delete-confirm": {
+        "warning": "WARNUNG: Diese Änderung ist dauerhaft und kann nicht rückgängig gemacht werden. Das Anwenden dieser Änderung kann zu Datenverlust führen.",
+        "message": "Die folgenden Daten werden gelöscht:",
+        "instruction": "Geben Sie 'yes' ein, um zu löschen:"
       }
     },
     "directives": {

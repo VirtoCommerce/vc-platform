@@ -839,6 +839,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "删除确认",
         "message": "您确定要删除选定的文件夹或文件吗？"
       },
@@ -856,7 +857,8 @@
       },
       "roles-delete": {
         "title": "删除确认",
-        "message": "您确定要删除选定的角色吗？"
+        "message": "您确定要删除选定的角色吗？",
+        "role": "{{count}} 个角色"
       },
       "account-save": {
         "title": "保存更改",
@@ -864,7 +866,8 @@
       },
       "account-delete": {
         "title": "删除确认",
-        "message": "您确定要删除选定的账户吗？"
+        "message": "您确定要删除选定的账户吗？",
+        "account": "{{count}} 个账户"
       },
       "oauthapps-save": {
         "title": "保存更改",
@@ -872,7 +875,8 @@
       },
       "oauthapps-delete": {
         "title": "删除确认",
-        "message": "您确定要删除选定的 OAuth 应用吗？"
+        "message": "以下OAuth应用将被删除：'{{name}}'",
+        "application": "{{count}} 个OAuth应用"
       },
       "dynamic-property-delete": {
         "title": "删除确认",
@@ -929,7 +933,7 @@
       },
       "api-key-delete": {
         "title": "删除确认",
-        "message": "您确定要删除此 API 密钥吗？"
+        "message": "以下API密钥将被删除：'{{name}}'"
       },
       "app-restart": {
         "title": "应用程序关闭",
@@ -965,6 +969,11 @@
       "sessions-terminate-all": {
         "title": "终止所有",
         "message": "您确定要终止所有用户会话吗？"
+      },
+      "delete-confirm": {
+        "warning": "警告：此更改是永久性的，无法撤销。应用此更改可能会导致数据丢失。",
+        "message": "以下数据将被删除：",
+        "instruction": "请输入\"yes\"以删除："
       }
     },
     "directives": {

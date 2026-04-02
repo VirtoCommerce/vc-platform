@@ -839,6 +839,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Confirmação de exclusão",
         "message": "Tem certeza de que deseja excluir as pastas ou arquivos selecionados?"
       },
@@ -856,7 +857,8 @@
       },
       "roles-delete": {
         "title": "Confirmação de exclusão",
-        "message": "Tem certeza de que deseja excluir as funções selecionadas?"
+        "message": "Tem certeza de que deseja excluir as funções selecionadas?",
+        "role": "{{count}} função(ões)"
       },
       "account-save": {
         "title": "Salvar alterações",
@@ -864,7 +866,8 @@
       },
       "account-delete": {
         "title": "Confirmação de exclusão",
-        "message": "Tem certeza de que deseja excluir as contas selecionadas?"
+        "message": "Tem certeza de que deseja excluir as contas selecionadas?",
+        "account": "{{count}} conta(s)"
       },
       "oauthapps-save": {
         "title": "Salvar alterações",
@@ -872,7 +875,8 @@
       },
       "oauthapps-delete": {
         "title": "Confirmação de exclusão",
-        "message": "Tem certeza de que deseja excluir o aplicativo OAuth selecionado?"
+        "message": "A seguinte aplicação OAuth será eliminada: '{{name}}'",
+        "application": "{{count}} aplicação(ões) OAuth"
       },
       "dynamic-property-delete": {
         "title": "Confirmação de exclusão",
@@ -929,7 +933,7 @@
       },
       "api-key-delete": {
         "title": "Confirmação de exclusão",
-        "message": "Tem certeza de que deseja excluir esta chave de API?"
+        "message": "A seguinte chave API será eliminada: '{{name}}'"
       },
       "app-restart": {
         "title": "Encerramento da aplicação",
@@ -965,6 +969,11 @@
       "sessions-terminate-all": {
         "title": "Encerrar todas",
         "message": "Tem certeza de que deseja encerrar todas as sessões de usuário?"
+      },
+      "delete-confirm": {
+        "warning": "AVISO: Esta alteração é permanente e não pode ser desfeita. A aplicação desta alteração pode resultar na perda de dados.",
+        "message": "Os seguintes dados serão eliminados:",
+        "instruction": "Escreva \"yes\" para eliminar:"
       }
     },
     "directives": {
