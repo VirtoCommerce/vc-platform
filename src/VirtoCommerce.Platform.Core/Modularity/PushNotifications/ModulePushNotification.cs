@@ -24,6 +24,13 @@ namespace VirtoCommerce.Platform.Core.Modularity.PushNotifications
         public ICollection<ProgressMessage> ProgressLog { get; set; }
 
         /// <summary>
+        /// Gets or sets the total number of modules to process.
+        /// Set upfront so the UI can display an accurate total from the start.
+        /// </summary>
+        [JsonProperty("totalCount")]
+        public int TotalCount { get; set; }
+
+        /// <summary>
         /// Gets the count of errors during processing.
         /// </summary>
         /// <value>

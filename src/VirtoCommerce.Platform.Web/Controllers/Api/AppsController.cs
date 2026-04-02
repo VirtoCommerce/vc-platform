@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -9,15 +8,9 @@ using VirtoCommerce.Platform.Web.Model.Modularity;
 namespace VirtoCommerce.Platform.Web.Controllers.Api;
 
 [Route("api/platform/apps")]
-public class AppsController : Controller
+[ApiController]
+public class AppsController(IModuleService moduleService) : ControllerBase
 {
-    private readonly ILocalModuleCatalog _localModuleCatalog;
-
-    public AppsController(ILocalModuleCatalog localModuleCatalog)
-    {
-        _localModuleCatalog = localModuleCatalog ?? throw new ArgumentNullException(nameof(localModuleCatalog));
-    }
-
     /// <summary>
     ///  Gets the list of available apps, filtered by user permissions.
     /// </summary>
@@ -25,7 +18,7 @@ public class AppsController : Controller
     [HttpGet]
     public IEnumerable<AppDescriptor> GetApps()
     {
-        var apps = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+        var apps = moduleService.GetInstalledModules()
             .SelectMany(x => x.Apps)
             .Select(x => new AppDescriptor(x))
             .OrderBy(x => x.Title)

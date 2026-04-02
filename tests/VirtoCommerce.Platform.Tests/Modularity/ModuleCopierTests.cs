@@ -9,9 +9,16 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Modularity;
 
-public class FileCopyPolicyTests
+public class ModuleCopierTests
 {
     private readonly Mock<IFileMetadataProvider> _metadataProvider = new();
+    private readonly FileCopyPolicy _fileCopyPolicy;
+
+    public ModuleCopierTests()
+    {
+        var options = Options.Create(new LocalStorageModuleCatalogOptions());
+        _fileCopyPolicy = new FileCopyPolicy(_metadataProvider.Object, options);
+    }
 
     public static TheoryData<string, string> FilePathTestData => new()
     {
@@ -43,13 +50,11 @@ public class FileCopyPolicyTests
     public void FilePathTests(string sourcePath, string expectedTargetPath)
     {
         // Arrange
-        var copyFilePolicy = GetFileCopyPolicy();
-
         // Make tests independent of DirectorySeparatorChar
         sourcePath = sourcePath.Replace('/', Path.DirectorySeparatorChar);
 
         // Act
-        var actualTargetPath = copyFilePolicy.GetTargetRelativePath(sourcePath);
+        var actualTargetPath = _fileCopyPolicy.GetTargetRelativePath(sourcePath);
 
         // Make tests independent of DirectorySeparatorChar
         actualTargetPath = actualTargetPath?.Replace(Path.DirectorySeparatorChar, '/');
@@ -72,18 +77,16 @@ public class FileCopyPolicyTests
         const string targetPath = @"c:\target\non_executable.xml";
 
         var sourceDate = DateTime.UtcNow;
-        AddFile(sourcePath, sourceDate, version: null, architecture: null);
+        AddFile(sourcePath, sourceDate);
 
         if (targetExists)
         {
             var targetDate = isTargetOlder == true ? sourceDate.AddDays(-1) : sourceDate;
-            AddFile(targetPath, targetDate, version: null, architecture: null);
+            AddFile(targetPath, targetDate);
         }
 
-        var copyFilePolicy = GetFileCopyPolicy();
-
         // Act
-        var actualCopyRequired = copyFilePolicy.IsCopyRequired(Architecture.X64, sourcePath, targetPath, out _);
+        var actualCopyRequired = _fileCopyPolicy.IsCopyRequired(sourcePath, targetPath, Architecture.X64, out _);
 
         // Assert
         Assert.Equal(expectedCopyRequired, actualCopyRequired);
@@ -120,10 +123,8 @@ public class FileCopyPolicyTests
             AddFile(targetPath, targetDate, targetVersion, Architecture.X64);
         }
 
-        var copyFilePolicy = GetFileCopyPolicy();
-
         // Act
-        var actualCopyRequired = copyFilePolicy.IsCopyRequired(Architecture.X64, sourcePath, targetPath, out _);
+        var actualCopyRequired = _fileCopyPolicy.IsCopyRequired(sourcePath, targetPath, Architecture.X64, out _);
 
         // Assert
         Assert.Equal(expectedCopyRequired, actualCopyRequired);
@@ -157,7 +158,7 @@ public class FileCopyPolicyTests
     [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, true, true)]
     [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, true, true)]
     public void ExecutableFilesWithDifferentArchitectureCopyTest(
-        Architecture environment,
+        Architecture environmentArchitecture,
         Architecture? sourceArchitecture,
         bool targetExists,
         Architecture? targetArchitecture,
@@ -177,22 +178,14 @@ public class FileCopyPolicyTests
             AddFile(targetPath, targetDate, "1.0.0.0", targetArchitecture);
         }
 
-        var copyFilePolicy = GetFileCopyPolicy();
-
         // Act
-        var actualCopyRequired = copyFilePolicy.IsCopyRequired(environment, sourcePath, targetPath, out _);
+        var actualCopyRequired = _fileCopyPolicy.IsCopyRequired(sourcePath, targetPath, environmentArchitecture, out _);
 
         // Assert
         Assert.Equal(expectedCopyRequired, actualCopyRequired);
     }
 
-
-    private FileCopyPolicy GetFileCopyPolicy()
-    {
-        return new FileCopyPolicy(_metadataProvider.Object, Options.Create(new LocalStorageModuleCatalogOptions()));
-    }
-
-    private void AddFile(string path, DateTime date, string version, Architecture? architecture)
+    private void AddFile(string path, DateTime date, string version = null, Architecture? architecture = null)
     {
         _metadataProvider.Setup(x => x.Exists(path)).Returns(true);
         _metadataProvider.Setup(x => x.GetDate(path)).Returns(date);

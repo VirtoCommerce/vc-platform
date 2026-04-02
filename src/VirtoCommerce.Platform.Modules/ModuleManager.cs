@@ -11,6 +11,7 @@ namespace VirtoCommerce.Platform.Modules
     /// <summary>
     /// Component responsible for coordinating the modules' type loading and module initialization process.
     /// </summary>
+    [Obsolete("Use ModuleBootstrapper class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class ModuleManager : IModuleManager, IDisposable
     {
         private readonly IModuleInitializer _moduleInitializer;
