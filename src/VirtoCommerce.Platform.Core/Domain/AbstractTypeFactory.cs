@@ -8,31 +8,38 @@ using System.Threading;
 namespace VirtoCommerce.Platform.Core.Common
 {
     /// <summary>
-    /// Represents factory that supports type overriding and provides special factory capabilities.
+    /// Represents a factory that supports type overriding and provides special factory capabilities.
     /// </summary>
     /// <typeparam name="BaseType"></typeparam>
     public static class AbstractTypeFactory<BaseType>
     {
-        // Registration (Add/Remove) is NOT thread-safe — callers must register types at startup before concurrent reads.
+#pragma warning disable S2743 // Static fields should not be used in generic types — intentional: each closed generic gets its own state
+
+        // Registration (Add/Remove) is serialized via _registrationLock.
         // Read paths (FindTypeInfoByName, TryCreateInstance) are concurrent-safe via ConcurrentDictionary + Volatile.
+        private static readonly Lock _registrationLock = new();
         private static readonly List<TypeInfo<BaseType>> _typeInfos = [];
         private static ConcurrentDictionary<string, TypeInfo<BaseType>> _typeNameIndex = new(StringComparer.OrdinalIgnoreCase);
+
+        // Immutable snapshot for lock-free read paths (FindTypeInfoByName fallback, AllTypeInfos).
+        // Updated atomically in RebuildIndex under _registrationLock.
+        private static TypeInfo<BaseType>[] _typeInfosSnapshot = [];
 
         // Cached delegate for creating BaseType when no overrides are registered.
         // Lazily compiled on first TryCreateInstance() call via Interlocked.CompareExchange.
         private static Func<BaseType> _defaultFactory;
 
+#pragma warning restore S2743
+
         /// <summary>
         /// Gets all registered type mapping information within the current factory instance.
         /// </summary>
-        public static IEnumerable<TypeInfo<BaseType>> AllTypeInfos => _typeInfos;
+        public static IEnumerable<TypeInfo<BaseType>> AllTypeInfos => Volatile.Read(ref _typeInfosSnapshot);
 
-#pragma warning disable S2743
         /// <summary>
         /// Gets a value indicating whether there are any type overrides registered in the factory.
         /// </summary>
-        public static bool HasOverrides => _typeInfos.Count > 0;
-#pragma warning restore S2743 // Static fields should not be used in generic types
+        public static bool HasOverrides => Volatile.Read(ref _typeInfosSnapshot) is { Length: > 0 };
 
         /// <summary>
         /// Registers a new type in the factory and returns a TypeInfo instance for further configuration.
@@ -54,27 +61,30 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             ArgumentNullException.ThrowIfNull(type);
 
-            TypeInfo<BaseType> result = null;
-            foreach (var typeInfo in _typeInfos)
+            lock (_registrationLock)
             {
-                if (typeInfo.AllSubclasses.Contains(type))
+                TypeInfo<BaseType> result = null;
+                foreach (var typeInfo in _typeInfos)
                 {
-                    result = typeInfo;
-                    break;
+                    if (typeInfo.AllSubclasses.Contains(type))
+                    {
+                        result = typeInfo;
+                        break;
+                    }
                 }
+
+                if (result is null)
+                {
+                    result = new TypeInfo<BaseType>(type) { OnTypeNameChanged = RebuildIndexLocked };
+                    _typeInfos.Add(result);
+                    RebuildIndex();
+                }
+
+                // Invalidate default factory — type resolution may have changed
+                Volatile.Write(ref _defaultFactory, null);
+
+                return result;
             }
-
-            if (result == null)
-            {
-                result = new TypeInfo<BaseType>(type) { OnTypeNameChanged = RebuildIndex };
-                _typeInfos.Add(result);
-                RebuildIndex();
-            }
-
-            // Invalidate default factory — type resolution may have changed
-            Volatile.Write(ref _defaultFactory, null);
-
-            return result;
         }
 
         /// <summary>
@@ -102,22 +112,25 @@ namespace VirtoCommerce.Platform.Core.Common
                 throw new ArgumentException($"Only a type assignable to {typeof(BaseType)} can be used to override {oldType}", nameof(newType));
             }
 
-            var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
-            var newTypeInfo = new TypeInfo<BaseType>(newType) { OnTypeNameChanged = RebuildIndex };
-            if (existTypeInfo != null)
+            lock (_registrationLock)
             {
-                _typeInfos.Remove(existTypeInfo);
+                var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
+                var newTypeInfo = new TypeInfo<BaseType>(newType) { OnTypeNameChanged = RebuildIndexLocked };
+                if (existTypeInfo is not null)
+                {
+                    _typeInfos.Remove(existTypeInfo);
+                }
+
+                _typeInfos.Add(newTypeInfo);
+
+                // Rebuild entire index — clears cached inheritance lookups that may now be stale
+                RebuildIndex();
+
+                // Invalidate default factory — type resolution may have changed
+                Volatile.Write(ref _defaultFactory, null);
+
+                return newTypeInfo;
             }
-
-            _typeInfos.Add(newTypeInfo);
-
-            // Rebuild entire index — clears cached inheritance lookups that may now be stale
-            RebuildIndex();
-
-            // Invalidate default factory — type resolution may have changed
-            Volatile.Write(ref _defaultFactory, null);
-
-            return newTypeInfo;
         }
 
         /// <summary>
@@ -194,7 +207,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             var typeInfo = FindTypeInfoByName(typeName);
 
-            return typeInfo != null
+            return typeInfo is not null
                 ? CreateFromTypeInfo(typeInfo)
                 : CreateFallbackInstance(typeName);
         }
@@ -209,7 +222,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             var typeInfo = FindTypeInfoByName(typeName);
 
-            return typeInfo != null
+            return typeInfo is not null
                 ? CreateFromTypeInfo(typeInfo)
                 : defaultObj;
         }
@@ -223,14 +236,14 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns>An instance of the base type.</returns>
         public static BaseType TryCreateInstance(string typeName, BaseType defaultObj, params object[] args)
         {
-            if (args == null || args.Length == 0)
+            if (args is not { Length: > 0 })
             {
                 return TryCreateInstance(typeName, defaultObj);
             }
 
             var typeInfo = FindTypeInfoByName(typeName);
 
-            return typeInfo != null
+            return typeInfo is not null
                 ? CreateFromTypeInfo(typeInfo, args)
                 : defaultObj;
         }
@@ -245,9 +258,9 @@ namespace VirtoCommerce.Platform.Core.Common
         public static BaseType TryCreateInstance(string typeName, params object[] args)
         {
             var typeInfo = FindTypeInfoByName(typeName);
-            if (typeInfo != null)
+            if (typeInfo is not null)
             {
-                return (args == null || args.Length == 0)
+                return args is not { Length: > 0 }
                     ? CreateFromTypeInfo(typeInfo)
                     : CreateFromTypeInfo(typeInfo, args);
             }
@@ -276,7 +289,7 @@ namespace VirtoCommerce.Platform.Core.Common
         private static BaseType CreateFromTypeInfo(TypeInfo<BaseType> typeInfo, object[] args)
         {
             var factory = typeInfo.Factory;
-            var result = factory != null
+            var result = factory is not null
                 ? factory()
                 : (BaseType)Activator.CreateInstance(typeInfo.Type, args);
             typeInfo.SetupAction?.Invoke(result);
@@ -304,7 +317,14 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns>The TypeInfo instance for the specified type name.</returns>
         public static TypeInfo<BaseType> FindTypeInfoByName(string typeName)
         {
-            if (_typeInfos.Count == 0 || string.IsNullOrEmpty(typeName))
+            if (string.IsNullOrEmpty(typeName))
+            {
+                return null;
+            }
+
+            // Read snapshot once — safe to iterate without locks
+            var snapshot = Volatile.Read(ref _typeInfosSnapshot);
+            if (snapshot is not { Length: > 0 })
             {
                 return null;
             }
@@ -314,14 +334,14 @@ namespace VirtoCommerce.Platform.Core.Common
 
             // O(1) direct match via concurrent dictionary
             TypeInfo<BaseType> result = null;
-            if (index?.TryGetValue(typeName, out result) == true)
+            if (index?.TryGetValue(typeName, out result) is true)
             {
                 return result;
             }
 
             // Fallback: inheritance chain scan (e.g., lookup "ShoppingCart" when "CustomShoppingCart" is registered)
-            // Uses a loop instead of FirstOrDefault to avoid closure allocation on typeName capture
-            foreach (var typeInfo in _typeInfos)
+            // Iterates the immutable snapshot — safe for concurrent reads
+            foreach (var typeInfo in snapshot)
             {
                 if (typeInfo.IsAssignableTo(typeName))
                 {
@@ -331,7 +351,7 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             // Cache the result so subsequent lookups for the same name are O(1)
-            if (result != null)
+            if (result is not null)
             {
                 index?.TryAdd(typeName, result);
             }
@@ -346,7 +366,7 @@ namespace VirtoCommerce.Platform.Core.Common
         private static BaseType CreateDefaultInstance()
         {
             var factory = Volatile.Read(ref _defaultFactory);
-            if (factory == null)
+            if (factory is null)
             {
                 factory = CompileFactory(typeof(BaseType));
                 Interlocked.CompareExchange(ref _defaultFactory, factory, null);
@@ -359,23 +379,39 @@ namespace VirtoCommerce.Platform.Core.Common
         private static Func<BaseType> CompileFactory(Type type)
         {
             var ctor = type.GetConstructor(Type.EmptyTypes);
-            if (ctor == null)
-            {
-                throw new MissingMethodException(type.FullName, ".ctor");
-            }
 
-            return Expression.Lambda<Func<BaseType>>(Expression.New(ctor)).Compile();
+            return ctor is null
+                ? throw new MissingMethodException(type.FullName, ".ctor")
+                : Expression.Lambda<Func<BaseType>>(Expression.New(ctor)).Compile();
+        }
+
+        /// <summary>
+        /// Lock-acquiring wrapper for RebuildIndex. Used as the OnTypeNameChanged callback
+        /// so that WithTypeName() (called outside the lock) is also safe.
+        /// Lock is reentrant, so safe when called from within RegisterType/OverrideType too.
+        /// </summary>
+        private static void RebuildIndexLocked()
+        {
+            lock (_registrationLock)
+            {
+                RebuildIndex();
+            }
         }
 
         /// <summary>
         /// Rebuilds the type name index from scratch. Called on RegisterType, OverrideType,
         /// and WithTypeName to clear any cached inheritance lookups that may now be stale.
+        /// Must be called under <see cref="_registrationLock"/>.
         /// </summary>
         private static void RebuildIndex()
         {
+            // Publish immutable snapshot for lock-free read paths
+            var snapshot = _typeInfos.ToArray();
+            Volatile.Write(ref _typeInfosSnapshot, snapshot);
+
             // Atomic swap: concurrent readers see either old or new index, never an empty/partial one
             var newIndex = new ConcurrentDictionary<string, TypeInfo<BaseType>>(StringComparer.OrdinalIgnoreCase);
-            foreach (var typeInfo in _typeInfos)
+            foreach (var typeInfo in snapshot)
             {
                 // TryAdd preserves first-wins semantics matching the original FirstOrDefault behavior
                 newIndex.TryAdd(typeInfo.TypeName, typeInfo);
@@ -554,17 +590,17 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             // Manual factory always takes priority
             var factory = Volatile.Read(ref _factory);
-            if (factory != null)
+            if (factory is not null)
             {
                 return factory;
             }
 
             // Auto-compiled parameterless delegate
             var compiled = Volatile.Read(ref _compiledFactory);
-            if (compiled == null)
+            if (compiled is null)
             {
                 var ctor = Type.GetConstructor(Type.EmptyTypes);
-                if (ctor != null)
+                if (ctor is not null)
                 {
                     compiled = Expression.Lambda<Func<BaseType>>(Expression.New(ctor)).Compile();
                     Interlocked.CompareExchange(ref _compiledFactory, compiled, null);
