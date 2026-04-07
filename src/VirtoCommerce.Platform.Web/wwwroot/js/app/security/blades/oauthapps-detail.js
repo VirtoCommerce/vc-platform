@@ -1,4 +1,4 @@
-angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.validators', function ($scope, bladeNavigationService, dialogService, oauthapps, validators) {
+angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.validators', 'platformWebApp.clipboardService', function ($scope, bladeNavigationService, dialogService, oauthapps, validators, clipboardService) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
 
@@ -46,6 +46,7 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
             id: "confirmDelete",
             title: "platform.dialogs.oauthapps-delete.title",
             message: "platform.dialogs.oauthapps-delete.message",
+            messageValues: { name: blade.currentEntity.displayName || blade.currentEntity.clientId },
             callback: function (remove) {
                 blade.isLoading = true;
                 if (remove) {
@@ -58,7 +59,7 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
                 }
             }
         }
-        dialogService.showConfirmationDialog(dialog);
+        dialogService.showDeleteConfirmationDialog(dialog);
     }
 
     blade.headIcon = 'fas fa-key';
@@ -104,10 +105,8 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
     }
 
     $scope.copyToClipboard = function (elementId) {
-        var text = document.getElementById(elementId);
-        text.focus();
-        text.select();
-        document.execCommand('copy');
+        var element = document.getElementById(elementId);
+        clipboardService.copyText(element.value || element.innerText);
     };
 
     $scope.editRedirectUris = function () {

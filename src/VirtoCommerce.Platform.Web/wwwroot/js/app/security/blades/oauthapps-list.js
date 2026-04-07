@@ -48,7 +48,9 @@ angular.module('platformWebApp').controller('platformWebApp.oauthappsListControl
         var dialog = {
             id: "confirmDeleteItem",
             title: "platform.dialogs.oauthapps-delete.title",
-            message: "platform.dialogs.oauthapps-delete.message",
+            items: [
+                { key: 'platform.dialogs.oauthapps-delete.application', count: selection.length }
+            ],
             callback: function (remove) {
                 if (remove) {
                     bladeNavigationService.closeChildrenBlades(blade, function () {
@@ -58,7 +60,7 @@ angular.module('platformWebApp').controller('platformWebApp.oauthappsListControl
                 }
             }
         };
-        dialogService.showConfirmationDialog(dialog);
+        dialogService.showDeleteConfirmationDialog(dialog);
     };
 
     blade.headIcon = 'fas fa-key';

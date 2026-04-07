@@ -437,7 +437,8 @@
           "account-type": "Tipo de cuenta",
           "login": "Nombre de usuario",
           "state": "Estado",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Copiar ID"
         },
         "filter": {
           "title": "Filtros",
@@ -838,6 +839,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Confirmación de eliminación",
         "message": "¿Estás seguro de que quieres eliminar las carpetas o archivos seleccionados?"
       },
@@ -855,7 +857,8 @@
       },
       "roles-delete": {
         "title": "Confirmación de eliminación",
-        "message": "¿Estás seguro de que quieres eliminar los roles seleccionados?"
+        "message": "¿Estás seguro de que quieres eliminar los roles seleccionados?",
+        "role": "{{count}} rol(es)"
       },
       "account-save": {
         "title": "Guardar cambios",
@@ -863,7 +866,8 @@
       },
       "account-delete": {
         "title": "Confirmación de eliminación",
-        "message": "¿Estás seguro de que quieres eliminar las cuentas seleccionadas?"
+        "message": "¿Estás seguro de que quieres eliminar las cuentas seleccionadas?",
+        "account": "{{count}} cuenta(s)"
       },
       "oauthapps-save": {
         "title": "Guardar cambios",
@@ -871,7 +875,8 @@
       },
       "oauthapps-delete": {
         "title": "Confirmación de eliminación",
-        "message": "¿Estás seguro de que quieres eliminar la aplicación OAuth seleccionada?"
+        "message": "Se eliminará la siguiente aplicación OAuth: '{{name}}'",
+        "application": "{{count}} aplicación(es) OAuth"
       },
       "dynamic-property-delete": {
         "title": "Confirmación de eliminación",
@@ -928,7 +933,7 @@
       },
       "api-key-delete": {
         "title": "Confirmación de eliminación",
-        "message": "¿Estás seguro de que quieres eliminar esta clave API?"
+        "message": "Se eliminará la siguiente clave API: '{{name}}'"
       },
       "app-restart": {
         "title": "Cierre de la aplicación",
@@ -964,6 +969,11 @@
       "sessions-terminate-all": {
         "title": "Terminar todas",
         "message": "¿Está seguro de que desea terminar todas las sesiones de usuario?"
+      },
+      "delete-confirm": {
+        "warning": "ADVERTENCIA: Este cambio es permanente y no se puede deshacer. Aplicar este cambio puede provocar la pérdida de datos.",
+        "message": "Se eliminarán los siguientes datos:",
+        "instruction": "Escriba 'yes' para eliminar:"
       }
     },
     "directives": {

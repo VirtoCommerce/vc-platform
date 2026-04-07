@@ -386,6 +386,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Get users by IDs
+        /// </summary>
+        /// <param name="ids">An array of user IDs.</param>
+        [HttpGet]
+        [Route("users")]
+        [Authorize(PlatformPermissions.SecurityQuery)]
+        public async Task<ActionResult<ApplicationUser[]>> GetUsersByIds([FromQuery] string[] ids)
+        {
+            if (ids.IsNullOrEmpty())
+            {
+                return Ok(Array.Empty<ApplicationUser>());
+            }
+
+            var criteria = AbstractTypeFactory<UserSearchCriteria>.TryCreateInstance();
+            criteria.ObjectIds = ids;
+            criteria.Take = ids.Length;
+
+            var result = await _userSearchService.SearchUsersAsync(criteria);
+
+            return Ok(ReduceUsersDetails(result.Results));
+        }
+
+        /// <summary>
         /// Get user details by user name
         /// </summary>
         /// <param name="userName"></param>
