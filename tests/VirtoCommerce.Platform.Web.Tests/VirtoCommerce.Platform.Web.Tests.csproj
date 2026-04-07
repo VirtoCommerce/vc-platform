@@ -5,8 +5,6 @@
     <IsPackable>false</IsPackable>
     <!-- Add common warnings to suppress and keep in sync with Directory.Build.props -->
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <!-- Treat NU1608 as a warning (not an error) for this project -->
-    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1608</WarningsNotAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
