@@ -104,7 +104,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("changelog/search")]
-        public async Task<ActionResult<ChangeLogSearchResult>> SearchChanges([FromBody] ChangeLogSearchCriteria criteria)
+        public async Task<ActionResult<OperationLog[]>> SearchChanges([FromBody] ChangeLogSearchCriteria criteria)
+        {
+            var result = await _changeLogSearchService.SearchAsync(criteria);
+
+            return Ok(result.Results);
+        }
+
+        [HttpPost]
+        [Route("changelog/v2/search")]
+        public async Task<ActionResult<ChangeLogSearchResult>> SearchChangesV2([FromBody] ChangeLogSearchCriteria criteria)
         {
             var result = await _changeLogSearchService.SearchAsync(criteria);
 
