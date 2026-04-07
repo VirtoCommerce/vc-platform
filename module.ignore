@@ -6,6 +6,7 @@ FluentValidation.dll
 Hangfire.AspNetCore.dll
 Hangfire.Console.dll
 Hangfire.Core.dll
+Hangfire.Core.resources.dll
 Hangfire.MemoryStorage.dll
 Hangfire.MySql.dll
 Hangfire.NetCore.dll
@@ -32,6 +33,8 @@ Microsoft.Bcl.AsyncInterfaces.dll
 Microsoft.Bcl.Cryptography.dll
 Microsoft.Bcl.TimeProvider.dll
 Microsoft.Data.SqlClient.dll
+Microsoft.Data.SqlClient.resources.dll
+Microsoft.Data.SqlClient.SNI.dll
 Microsoft.DotNet.PlatformAbstractions.dll
 Microsoft.EntityFrameworkCore.Abstractions.dll
 Microsoft.EntityFrameworkCore.dll
@@ -88,6 +91,8 @@ OpenIddict.Validation.DataProtection.dll
 OpenIddict.Validation.dll
 OpenIddict.Validation.ServerIntegration.dll
 OpenIddict.Validation.SystemNetHttp.dll
+package.json
+package-lock.json
 Pipelines.Sockets.Unofficial.dll
 Polly.Core.dll
 Polly.dll
