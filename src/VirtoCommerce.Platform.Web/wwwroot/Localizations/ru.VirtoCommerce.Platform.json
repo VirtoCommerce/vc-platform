@@ -64,7 +64,25 @@
         "labels": {
           "login": "Логин",
           "details": "Подробности",
-          "time": "Время"
+          "time": "Время",
+          "operation-type": "Тип"
+        },
+        "filter": {
+          "title": "Фильтр",
+          "operation-type": "Тип операции",
+          "all": "Все",
+          "type-added": "Добавлено",
+          "type-modified": "Изменено",
+          "type-deleted": "Удалено",
+          "modified-date": "Изменено",
+          "date-any": "Любое время",
+          "date-today": "Сегодня",
+          "date-yesterday": "Вчера",
+          "date-last7": "Последние 7 дней",
+          "date-last30": "Последние 30 дней",
+          "date-custom": "Произвольный период",
+          "date-from": "С",
+          "date-to": "По"
         }
       },
       "dynamicObject-list": {

@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
             var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
-                cacheEntry.AddExpirationToken(ChangeLogCacheRegion.CreateChangeToken()); 
+                cacheEntry.AddExpirationToken(ChangeLogCacheRegion.CreateChangeToken());
                 var searchResult = AbstractTypeFactory<ChangeLogSearchResult>.TryCreateInstance();
 
                 using (var repository = _repositoryFactory())
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
         protected virtual IQueryable<OperationLogEntity> GetQuery(IPlatformRepository repository, ChangeLogSearchCriteria criteria, IEnumerable<SortInfo> sortInfos)
         {
-            var query = repository.OperationLogs.Where(x => (criteria.StartDate == null || x.ModifiedDate >= criteria.StartDate)&& (criteria.EndDate == null || x.ModifiedDate <= criteria.EndDate));
+            var query = repository.OperationLogs.Where(x => (criteria.StartDate == null || x.ModifiedDate >= criteria.StartDate) && (criteria.EndDate == null || x.ModifiedDate <= criteria.EndDate));
             if (!criteria.OperationTypes.IsNullOrEmpty())
             {
                 var operationTypes = criteria.OperationTypes.Select(x => x.ToString());
@@ -67,6 +67,12 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                 query = query.Where(x => criteria.ObjectTypes.Contains(x.ObjectType));
             }
 
+            if (!string.IsNullOrEmpty(criteria.Keyword))
+            {
+                query = query.Where(x => x.ModifiedBy.Contains(criteria.Keyword)
+                                       || x.Detail.Contains(criteria.Keyword));
+            }
+
             return query.OrderBySortInfos(sortInfos);
         }
 
@@ -75,10 +81,10 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             var sortInfos = criteria.SortInfos;
             if (sortInfos.IsNullOrEmpty())
             {
-                sortInfos = new[]
-                {
+                sortInfos =
+                [
                     new SortInfo { SortColumn = nameof(OperationLog.ModifiedDate), SortDirection = SortDirection.Descending }
-                };
+                ];
             }
             return sortInfos;
         }

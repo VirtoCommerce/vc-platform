@@ -65,7 +65,25 @@
         "labels": {
           "login": "Login",
           "details": "Details",
-          "time": "Time"
+          "time": "Time",
+          "operation-type": "Type"
+        },
+        "filter": {
+          "title": "Filter",
+          "operation-type": "Operation type",
+          "all": "All",
+          "type-added": "Added",
+          "type-modified": "Modified",
+          "type-deleted": "Deleted",
+          "modified-date": "Modified",
+          "date-any": "Any time",
+          "date-today": "Today",
+          "date-yesterday": "Yesterday",
+          "date-last7": "Last 7 days",
+          "date-last30": "Last 30 days",
+          "date-custom": "Custom range",
+          "date-from": "From",
+          "date-to": "To"
         }
       },
       "dynamicObject-list": {

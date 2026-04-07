@@ -106,10 +106,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("changelog/search")]
         public async Task<ActionResult<ChangeLogSearchResult>> SearchChanges([FromBody] ChangeLogSearchCriteria criteria)
         {
-            // Get changes count from operation log
             var result = await _changeLogSearchService.SearchAsync(criteria);
 
-            return Ok(result.Results);
+            return Ok(result);
         }
 
         [HttpGet]
