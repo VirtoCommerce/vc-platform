@@ -134,6 +134,70 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         /// <summary>
+        /// Removes a registered type from the factory by its <see cref="Type"/>.
+        /// </summary>
+        /// <typeparam name="T">The type to remove.</typeparam>
+        /// <returns>true if the type was found and removed; false otherwise.</returns>
+        public static bool RemoveType<T>() where T : BaseType
+        {
+            return RemoveType(typeof(T));
+        }
+
+        /// <summary>
+        /// Removes a registered type from the factory by its <see cref="Type"/>.
+        /// </summary>
+        /// <param name="type">The type to remove.</param>
+        /// <returns>true if the type was found and removed; false otherwise.</returns>
+        public static bool RemoveType(Type type)
+        {
+            ArgumentNullException.ThrowIfNull(type);
+
+            lock (_registrationLock)
+            {
+                var typeInfo = _typeInfos.FirstOrDefault(x => x.Type == type);
+                if (typeInfo is null)
+                {
+                    return false;
+                }
+
+                _typeInfos.Remove(typeInfo);
+                RebuildIndex();
+                Volatile.Write(ref _defaultFactory, null);
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Removes a registered type from the factory by its type name.
+        /// </summary>
+        /// <param name="typeName">The name of the type to remove.</param>
+        /// <returns>true if the type was found and removed; false otherwise.</returns>
+        public static bool RemoveType(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+            {
+                return false;
+            }
+
+            lock (_registrationLock)
+            {
+                var typeInfo = _typeInfos.FirstOrDefault(x => x.TypeName.EqualsIgnoreCase(typeName)
+                    || x.Type.Name.EqualsIgnoreCase(typeName));
+                if (typeInfo is null)
+                {
+                    return false;
+                }
+
+                _typeInfos.Remove(typeInfo);
+                RebuildIndex();
+                Volatile.Write(ref _defaultFactory, null);
+
+                return true;
+            }
+        }
+
+        /// <summary>
         /// Creates an instance of the base type using the type name.
         /// </summary>
         /// <returns>An instance of the base type.</returns>
