@@ -2,11 +2,11 @@
 .constant("platformWebApp.fallbackLanguage", "en")
 .constant("platformWebApp.fallbackRegionalFormat", "en")
 .constant("platformWebApp.fallbackTimeZone", "Etc/Utc")
-.constant("platformWebApp.fallbackTimeAgoSettings", { useTimeAgo: true, thresholdUnit: 'Never', threshold: null })
+.constant("platformWebApp.fallbackTimeAgoSettings", { useTimeAgo: false, thresholdUnit: 'Never', threshold: null })
 .constant("platformWebApp.fallbackTimeFormat", { showMeridian: true})
 // Service provider get/set function pairs for language, regional format, time zone and time ago settings
-    .factory('platformWebApp.i18n', ['platformWebApp.fallbackLanguage', 'platformWebApp.fallbackRegionalFormat', 'platformWebApp.fallbackTimeAgoSettings', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'angularMomentConfig', 'amTimeAgoConfig', 'platformWebApp.fallbackTimeFormat',
-        function (fallbackLanguage, fallbackRegionalFormat, fallbackTimeAgoSettings, languages, locales, timeZones, userProfileApi, $translate, dynamicLocale, moment, momentService, momentConfig, timeAgoConfig, fallbackTimeFormat) {
+    .factory('platformWebApp.i18n', ['platformWebApp.fallbackLanguage', 'platformWebApp.fallbackRegionalFormat', 'platformWebApp.fallbackTimeAgoSettings', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'angularMomentConfig', 'amTimeAgoConfig', 'platformWebApp.fallbackTimeFormat', '$rootScope',
+        function (fallbackLanguage, fallbackRegionalFormat, fallbackTimeAgoSettings, languages, locales, timeZones, userProfileApi, $translate, dynamicLocale, moment, momentService, momentConfig, timeAgoConfig, fallbackTimeFormat, $rootScope) {
         var changeLanguage = function (language) {
             userProfileApi.getLocales(function(availableLanguages) {
                 availableLanguages.sort();
@@ -60,6 +60,10 @@
                 // To avoid situation when settings set threshold unit, but threshold value is undefined, set threshold value to 1 if it's not specified
                 timeAgoConfig.fullDateThreshold = timeAgoSettings.thresholdUnit && timeAgoSettings.thresholdUnit !== 'Never' ? timeAgoSettings.threshold || 1 : null;
             }
+            // Sync to $rootScope so that am-time-ago directives pick up changes
+            // via attribute bindings and their built-in $observe watchers
+            $rootScope.amTimeAgoFullDateThreshold = timeAgoConfig.fullDateThreshold;
+            $rootScope.amTimeAgoFullDateThresholdUnit = timeAgoConfig.fullDateThresholdUnit;
         }
         var changeTimeSettings = function (timeSettings) {
             if (timeSettings)
@@ -124,7 +128,8 @@
         var service = $delegate;
         // Change time ago full date format when regional formatting changed
         $rootScope.$on('$localeChangeSuccess', function () {
-            timeAgoConfig.fullDateFormat = dateFormatConverter.convert('short');
+            timeAgoConfig.fullDateFormat = dateFormatConverter.convert('medium');
+            $rootScope.amTimeAgoFullDateFormat = timeAgoConfig.fullDateFormat;
         });
         // There is no option to set fallback regional format and use it when we can't use specified.
         // This decorator subscribes to angular dynamic locale change error and tries to use fallback regional format
