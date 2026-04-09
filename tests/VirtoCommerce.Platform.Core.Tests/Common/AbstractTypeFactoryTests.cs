@@ -235,6 +235,74 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
     {
     }
 
+    // For: RemoveType_ByType_RemovesRegistration
+    public class Inventory
+    {
+        public string Location { get; set; }
+    }
+
+    public class WarehouseInventory : Inventory
+    {
+    }
+
+    // For: RemoveType_ByType_ReturnsFalse_WhenNotRegistered
+    public class Vendor
+    {
+        public string Name { get; set; }
+    }
+
+    // For: RemoveType_ByTypeName_RemovesRegistration
+    public class Subscription
+    {
+        public string Plan { get; set; }
+    }
+
+    public class MonthlySubscription : Subscription
+    {
+    }
+
+    // For: RemoveType_ByTypeName_ReturnsFalse_WhenNotFound
+    public class Invoice
+    {
+        public string Number { get; set; }
+    }
+
+    // For: RemoveType_ByTypeName_CaseInsensitive
+    public class Refund
+    {
+        public string Reason { get; set; }
+    }
+
+    public class PartialRefund : Refund
+    {
+    }
+
+    // For: RemoveType_InvalidatesCache_TryCreateInstanceFallsBack
+    public class Coupon
+    {
+        public string Code { get; set; }
+    }
+
+    public class PercentageCoupon : Coupon
+    {
+    }
+
+    // For: RemoveType_ByTypeName_NullOrEmpty_ReturnsFalse
+    public class Tag
+    {
+        public string Label { get; set; }
+    }
+
+    // For: RemoveType_Generic_RemovesRegistration
+    public class Badge
+    {
+        public string Title { get; set; }
+    }
+
+    public class AchievementBadge : Badge
+    {
+    }
+
     // ── Tests ──────────────────────────────────────────────────────
 
     [Trait("Category", "Unit")]
@@ -534,6 +602,97 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
 
             Assert.NotNull(result);
             Assert.IsType<DropshipCenter>(result);
+        }
+
+        // ── RemoveType tests ──────────────────────────────────────────
+
+        [Fact]
+        public void RemoveType_ByType_RemovesRegistration()
+        {
+            AbstractTypeFactory<Inventory>.RegisterType<WarehouseInventory>();
+
+            var removed = AbstractTypeFactory<Inventory>.RemoveType(typeof(WarehouseInventory));
+
+            Assert.True(removed);
+            Assert.Empty(AbstractTypeFactory<Inventory>.AllTypeInfos);
+        }
+
+        [Fact]
+        public void RemoveType_ByType_ReturnsFalse_WhenNotRegistered()
+        {
+            var removed = AbstractTypeFactory<Vendor>.RemoveType(typeof(Vendor));
+
+            Assert.False(removed);
+        }
+
+        [Fact]
+        public void RemoveType_Generic_RemovesRegistration()
+        {
+            AbstractTypeFactory<Badge>.RegisterType<AchievementBadge>();
+
+            var removed = AbstractTypeFactory<Badge>.RemoveType<AchievementBadge>();
+
+            Assert.True(removed);
+            Assert.Empty(AbstractTypeFactory<Badge>.AllTypeInfos);
+        }
+
+        [Fact]
+        public void RemoveType_ByTypeName_RemovesRegistration()
+        {
+            AbstractTypeFactory<Subscription>.RegisterType<MonthlySubscription>();
+
+            var removed = AbstractTypeFactory<Subscription>.RemoveType(nameof(MonthlySubscription));
+
+            Assert.True(removed);
+            Assert.Empty(AbstractTypeFactory<Subscription>.AllTypeInfos);
+        }
+
+        [Fact]
+        public void RemoveType_ByTypeName_ReturnsFalse_WhenNotFound()
+        {
+            var removed = AbstractTypeFactory<Invoice>.RemoveType("NonExistentType");
+
+            Assert.False(removed);
+        }
+
+        [Fact]
+        public void RemoveType_ByTypeName_CaseInsensitive()
+        {
+            AbstractTypeFactory<Refund>.RegisterType<PartialRefund>();
+
+            var removed = AbstractTypeFactory<Refund>.RemoveType("partialrefund");
+
+            Assert.True(removed);
+            Assert.Empty(AbstractTypeFactory<Refund>.AllTypeInfos);
+        }
+
+        [Fact]
+        public void RemoveType_InvalidatesCache_TryCreateInstanceFallsBack()
+        {
+            AbstractTypeFactory<Coupon>.RegisterType<PercentageCoupon>();
+
+            // Warm the cache
+            var first = AbstractTypeFactory<Coupon>.TryCreateInstance();
+            Assert.IsType<PercentageCoupon>(first);
+
+            // Remove the override
+            AbstractTypeFactory<Coupon>.RemoveType<PercentageCoupon>();
+
+            // Should fall back to base type
+            var second = AbstractTypeFactory<Coupon>.TryCreateInstance();
+            Assert.IsType<Coupon>(second);
+        }
+
+        [Fact]
+        public void RemoveType_ByTypeName_NullOrEmpty_ReturnsFalse()
+        {
+            AbstractTypeFactory<Tag>.RegisterType<Tag>();
+
+            Assert.False(AbstractTypeFactory<Tag>.RemoveType((string)null));
+            Assert.False(AbstractTypeFactory<Tag>.RemoveType(string.Empty));
+
+            // Original registration should still be intact
+            Assert.Single(AbstractTypeFactory<Tag>.AllTypeInfos);
         }
     }
 }
