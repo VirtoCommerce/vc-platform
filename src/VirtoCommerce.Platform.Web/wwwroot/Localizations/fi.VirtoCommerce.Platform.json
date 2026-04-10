@@ -64,7 +64,25 @@
         "labels": {
           "login": "Kirjautuminen",
           "details": "Tiedot",
-          "time": "Aika"
+          "time": "Aika",
+          "operation-type": "Tyyppi"
+        },
+        "filter": {
+          "title": "Suodatin",
+          "operation-type": "Toimintotyyppi",
+          "all": "Kaikki",
+          "type-added": "Lisätty",
+          "type-modified": "Muokattu",
+          "type-deleted": "Poistettu",
+          "modified-date": "Muokattu",
+          "date-any": "Milloin tahansa",
+          "date-today": "Tänään",
+          "date-yesterday": "Eilen",
+          "date-last7": "Viimeiset 7 päivää",
+          "date-last30": "Viimeiset 30 päivää",
+          "date-custom": "Mukautettu aikaväli",
+          "date-from": "Alkaen",
+          "date-to": "Asti"
         }
       },
       "dynamicObject-list": {

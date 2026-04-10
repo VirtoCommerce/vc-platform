@@ -64,7 +64,25 @@
         "labels": {
           "login": "Innlogging",
           "details": "Detaljer",
-          "time": "Tid"
+          "time": "Tid",
+          "operation-type": "Type"
+        },
+        "filter": {
+          "title": "Filter",
+          "operation-type": "Operasjonstype",
+          "all": "Alle",
+          "type-added": "Lagt til",
+          "type-modified": "Endret",
+          "type-deleted": "Slettet",
+          "modified-date": "Endret",
+          "date-any": "Når som helst",
+          "date-today": "I dag",
+          "date-yesterday": "I går",
+          "date-last7": "Siste 7 dager",
+          "date-last30": "Siste 30 dager",
+          "date-custom": "Egendefinert periode",
+          "date-from": "Fra",
+          "date-to": "Til"
         }
       },
       "dynamicObject-list": {

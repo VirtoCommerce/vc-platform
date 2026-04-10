@@ -1,16 +1,69 @@
+<div class="blade-static">
+    <div class="form-group" style="display: flex; align-items: center;">
+        <va-filter-panel
+            has-active-filters="filter.hasActiveFilters()"
+            on-clear-filters="filter.clearFilters()"
+            search-text="blade.searchText"
+            filter-title="{{ 'platform.blades.operation-list.filter.title' | translate }}">
+
+            <!-- Operation type dropdown -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.operation-list.filter.operation-type' | translate }}</span>
+                <select class="va-filter-panel__select" ng-model="filter.operationType" ng-change="filter.criteriaChanged()">
+                    <option ng-repeat="t in blade.operationTypes" value="{{t.value}}">{{ t.label | translate }}</option>
+                </select>
+            </div>
+
+            <!-- Modified date preset -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.operation-list.filter.modified-date' | translate }}</span>
+                <select class="va-filter-panel__select" ng-model="filter.datePreset" ng-change="filter.criteriaChanged()">
+                    <option ng-repeat="p in blade.datePresets" value="{{p.value}}">{{ p.label | translate }}</option>
+                </select>
+            </div>
+
+            <!-- Custom date range inputs -->
+            <div class="va-filter-panel__row" ng-if="filter.datePreset === 'custom'">
+                <span class="va-filter-panel__label">{{ 'platform.blades.operation-list.filter.date-from' | translate }}</span>
+                <input type="date" class="va-filter-panel__date-input" ng-model="filter.startDate" ng-change="filter.criteriaChanged()">
+            </div>
+            <div class="va-filter-panel__row" ng-if="filter.datePreset === 'custom'">
+                <span class="va-filter-panel__label">{{ 'platform.blades.operation-list.filter.date-to' | translate }}</span>
+                <input type="date" class="va-filter-panel__date-input" ng-model="filter.endDate" ng-change="filter.criteriaChanged()">
+            </div>
+
+        </va-filter-panel>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper nowrap" ng-init="setGridOptions({
-                data: 'blade.currentEntities',
-                columnDefs: [
-                    { name: 'createdBy', displayName: 'platform.blades.operation-list.labels.login', width: 100 },
-                    { name: 'detail', displayName: 'platform.blades.operation-list.labels.details' },
-                    { name: 'createdDate', displayName: 'platform.blades.operation-list.labels.time', width: 87 }
-                ]})">
-                <div ng-if="blade.currentEntities.length" ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    useExternalSorting: true,
+                    rowTemplate: 'operation-list.row.html',
+                    columnDefs: [
+                        { name: 'operationType', displayName: 'platform.blades.operation-list.labels.operation-type', width: 100 },
+                        { name: 'createdBy', displayName: 'platform.blades.operation-list.labels.login', width: 200 },
+                        { name: 'detail', displayName: 'platform.blades.operation-list.labels.details' },
+                        { name: 'createdDate', displayName: 'platform.blades.operation-list.labels.time', width: 220, sort: { direction: uiGridConstants.DESC }, cellTemplate: 'operation-list-time.cell.html' }
+                    ]})">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
             </div>
-            <div class="note" ng-if="!blade.currentEntities.length">{{ 'platform.list.no-data' | translate }}</div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="operation-list-time.cell.html">
+    <div class="ui-grid-cell-contents">{{COL_FIELD | amDateFormat:"MMM D, YYYY h:mm:ss.SSS A"}}</div>
+</script>
+
+<script type="text/ng-template" id="operation-list.row.html">
+    <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+         ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'"
+         class="ui-grid-cell"
+         ng-class="{ 'ui-grid-row-header-cell': col.isRowHeader }"
+         role="{{col.isRowHeader ? 'rowheader' : 'gridcell'}}"
+         ui-grid-cell>
+    </div>
+  </script>
