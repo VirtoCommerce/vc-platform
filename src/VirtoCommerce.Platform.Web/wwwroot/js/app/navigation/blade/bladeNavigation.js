@@ -159,44 +159,93 @@ angular.module('platformWebApp')
                     });
                 };
 
-                scope.$watch('blade.toolbarCommands', function (toolbarCommands) {
-                    scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller);
+                scope.moreToolsOpen = false;
+                scope.overflowCommands = [];
 
+                scope.$watch('blade.toolbarCommands', function (toolbarCommands) {
+
+                    scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller);
+                    scope.moreToolsOpen = false;
                     setVisibleToolsLimit();
                 }, true);
 
-                var toolbar = currentBlade.find(".blade-toolbar .menu.__inline");
-
+                var pendingToolsTimeout = null;
                 function setVisibleToolsLimit() {
+                    scope.moreToolsOpen = false;
                     scope.toolsPerLineCount = scope.resolvedToolbarCommands ? scope.resolvedToolbarCommands.length : 1;
 
-                    $timeout(function () {
-                        if (toolbar.height() > 55 && scope.toolsPerLineCount > 1) {
-                            var maxToolbarWidth = toolbar.width() - 46; // the 'more' button is 46px wide
-                            //console.log(toolbar.width() + 'maxToolbarWidth: ' + maxToolbarWidth);
-                            var toolsWidth = 0;
-                            var lis = toolbar.find("li");
-                            var i = 0;
-                            while (maxToolbarWidth > toolsWidth && lis.length > i) {
-                                toolsWidth += lis[i].clientWidth;
-                                i++;
+                    // Cancel any pending timeout to avoid race conditions with repeated calls
+                    if (pendingToolsTimeout) {
+                        $timeout.cancel(pendingToolsTimeout);
+                    }
+
+                    pendingToolsTimeout = $timeout(function () {
+                        pendingToolsTimeout = null;
+                        // Look up toolbar element fresh each time to avoid stale references from ng-if
+                        var toolbar = currentBlade.find(".blade-toolbar .menu.__inline");
+                        var lis = toolbar.find("li");
+
+                        if (lis.length > 1) {
+                            var totalToolsWidth = 0;
+                            for (var j = 0; j < lis.length; j++) {
+                                totalToolsWidth += lis[j].clientWidth;
                             }
-                            scope.toolsPerLineCount = i - 1;
+                            var availableWidth = toolbar.width();
+
+                            if (totalToolsWidth > availableWidth) {
+                                var maxToolbarWidth = availableWidth - 46; // the 'more' button is 46px wide
+                                var toolsWidth = 0;
+                                var i = 0;
+                                while (i < lis.length && toolsWidth + lis[i].clientWidth <= maxToolbarWidth) {
+                                    toolsWidth += lis[i].clientWidth;
+                                    i++;
+                                }
+                                scope.toolsPerLineCount = Math.max(i, 1);
+
+                            }
                         }
+                        updateOverflowCommands();
                     }, 220);
                 }
 
+                function updateOverflowCommands() {
+                    if (scope.resolvedToolbarCommands && scope.toolsPerLineCount < scope.resolvedToolbarCommands.length) {
+                        scope.overflowCommands = scope.resolvedToolbarCommands.slice(scope.toolsPerLineCount);
+                    } else {
+                        scope.overflowCommands = [];
+                    }
+                }
+
                 function handleClickEvent() {
-                    setVisibleToolsLimit();
+                    scope.$apply(function () {
+                        scope.moreToolsOpen = false;
+                    });
                     $document.unbind('click', handleClickEvent);
                 }
 
+                scope.dropdownStyle = {};
                 scope.showMoreTools = function (event) {
-                    scope.toolsPerLineCount = scope.resolvedToolbarCommands.length;
-
+                    scope.moreToolsOpen = !scope.moreToolsOpen;
                     event.stopPropagation();
-                    $document.bind('click', handleClickEvent);
+                    if (scope.moreToolsOpen) {
+                        // Calculate fixed position for dropdown relative to the toolbar bottom
+                        var toolbar = currentBlade.find(".blade-toolbar")[0];
+                        if (toolbar) {
+                            var rect = toolbar.getBoundingClientRect();
+                            scope.dropdownStyle = {
+                                top: Math.round(rect.bottom) + 'px',
+                                right: Math.round(document.documentElement.clientWidth - rect.right) + 'px'
+                            };
+                        }
+                        $document.bind('click', handleClickEvent);
+                    } else {
+                        $document.unbind('click', handleClickEvent);
+                    }
                 };
+
+                scope.$on('$destroy', function () {
+                    $document.unbind('click', handleClickEvent);
+                });
 
                 scope.showErrorDetails = function () {
                     var dialog = {
