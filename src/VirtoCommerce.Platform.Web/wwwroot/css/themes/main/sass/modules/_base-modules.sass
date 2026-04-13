@@ -1781,10 +1781,9 @@ tags-input
       top: 79px
       z-index: 50
 
-      transition: height .3s ease
       .menu
         margin: 0 0 0 7px
-        white-space: normal
+        white-space: nowrap
       .menu-item
         margin: 7px 0
         &.separator
@@ -1827,6 +1826,47 @@ tags-input
         display: block
         font-size: 18px
         margin: 0 0 3px
+      .toolbar-dropdown
+        background: $bladeHeadBg
+        border: 1px solid rgba(255,255,255,.2)
+        border-top: none
+        box-shadow: 0 4px 8px rgba(0,0,0,.3)
+        position: fixed
+        z-index: 1000
+        min-width: 160px
+        max-height: 300px
+        overflow-y: auto
+        padding: 5px 0
+        white-space: nowrap
+        .menu-item
+          display: block
+          margin: 0
+          &.separator
+            border-bottom: 1px solid rgba(255,255,255,.2)
+            border-right: none
+        .menu-btn
+          background: none
+          border: none
+          color: $whiteColor
+          cursor: pointer
+          font-size: 11px
+          font-weight: 300
+          display: flex
+          align-items: center
+          padding: 8px 15px
+          text-align: left
+          width: 100%
+          white-space: nowrap
+          &:hover
+            background: rgba(255,255,255,.1)
+            color: $baseColor
+          &:disabled
+            color: rgba(255,255,255,.4)
+            cursor: not-allowed
+        .menu-ico
+          display: inline-block
+          font-size: 16px
+          margin: 0 8px 0 0
     .blade-switch
       bottom: 4px
       position: absolute
