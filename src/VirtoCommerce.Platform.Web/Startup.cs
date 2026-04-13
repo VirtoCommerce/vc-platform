@@ -454,7 +454,7 @@ namespace VirtoCommerce.Platform.Web
                     // Register the ASP.NET Core host.
                     validationBuilder.UseAspNetCore();
 
-                    if (authorizationOptions.EnableStorageTokenValidation)
+                    if (authorizationOptions.EnablePersistentStorageTokenValidation)
                     {
                         // invalidate token immediately
                         validationBuilder.EnableAuthorizationEntryValidation();

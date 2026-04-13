@@ -30,6 +30,6 @@ namespace VirtoCommerce.Platform.Core.Security
         /// <summary>
         /// Immediately validate token via database call. By default, false. 
         /// </summary>
-        public bool EnableStorageTokenValidation { get; set; }
+        public bool EnablePersistentStorageTokenValidation { get; set; }
     }
 }
