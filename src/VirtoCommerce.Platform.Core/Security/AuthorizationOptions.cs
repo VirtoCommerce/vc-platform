@@ -26,5 +26,10 @@ namespace VirtoCommerce.Platform.Core.Security
         /// Allows customers to access the API endpoints and perform authorized actions. By default, false.
         /// </summary>
         public bool AllowApiAccessForCustomers { get; set; }
+
+        /// <summary>
+        /// Immediately validate token via database call. By default, false. 
+        /// </summary>
+        public bool EnableStorageTokenValidation { get; set; }
     }
 }
