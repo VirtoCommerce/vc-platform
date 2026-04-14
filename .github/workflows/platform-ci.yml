@@ -288,7 +288,7 @@ jobs:
     - name: Push Build Info to Jira
       if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
       id: push_build_info_to_jira
-      uses: VirtoCommerce/jira-upload-build-info@VCST-4770
+      uses: VirtoCommerce/jira-upload-build-info@master
       with:
         cloud-instance-base-url: '${{ secrets.CLOUD_INSTANCE_BASE_URL }}'
         client-id: '${{ secrets.CLIENT_ID }}'
@@ -314,7 +314,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@VCST-4770
+    uses: VirtoCommerce/.github/.github/workflows/ui-autotests.yml@v3.800.29
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -330,7 +330,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@VCST-4770
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.29
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -372,7 +372,7 @@ jobs:
   trivy-scan:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     needs: 'ci'
-    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@VCST-4770
+    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.29
     with:
       assigneeAccountId: '621c47c0302c6b006af0a1cd'
       assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'
