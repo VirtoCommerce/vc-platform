@@ -343,17 +343,17 @@ jobs:
       envPAT: ${{ secrets.REPO_TOKEN }}
       katalonApiKey: ${{ secrets.KATALON_API_KEY }}
 
-  # deploy-cloud:
-  #   if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
-  #   needs: ci
-  #   uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.26    
-  #   with:
-  #     releaseSource: platform
-  #     platformVer: ${{ needs.ci.outputs.version }}
-  #     platformTag: ${{ needs.ci.outputs.tag }}
-  #     jiraKeys: ${{ needs.ci.outputs.jira-keys }}
-  #     matrix: '{"include":${{ needs.ci.outputs.matrix }}}'
-  #   secrets: inherit
+  deploy-cloud:
+    if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
+    needs: ci
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.26    
+    with:
+      releaseSource: platform
+      platformVer: ${{ needs.ci.outputs.version }}
+      platformTag: ${{ needs.ci.outputs.tag }}
+      jiraKeys: ${{ needs.ci.outputs.jira-keys }}
+      matrix: '{"include":${{ needs.ci.outputs.matrix }}}'
+    secrets: inherit
 
   owasp-scan:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
