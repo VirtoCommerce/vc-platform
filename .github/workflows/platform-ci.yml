@@ -346,7 +346,7 @@ jobs:
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.26    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.29    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
