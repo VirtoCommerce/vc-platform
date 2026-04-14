@@ -187,7 +187,7 @@ jobs:
 
     - name: Docker Login
       if: ${{ env.BUILD_DOCKER == 'true' }}
-      uses: docker/login-action@v3
+      uses: docker/login-action@v4
       with:
         registry: ${{ env.PACKAGE_SERVER }}
         username: $GITHUB_ACTOR
