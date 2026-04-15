@@ -24,7 +24,6 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.5" />
     <PackageReference Include="Microsoft.IdentityModel.Validators" Version="8.15.0" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.2.0" />
-    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.2.0" />
   </ItemGroup>
 
   <ItemGroup>
