@@ -117,7 +117,6 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-
             services.AddRedis(Configuration);
 
             services.AddSignalR().AddPushNotifications(Configuration);
@@ -278,26 +277,27 @@ namespace VirtoCommerce.Platform.Web
                     {
                         var authorization = context.Request.Headers.Authorization.ToString();
 
-                        if (!authorization.IsNullOrEmpty())
+                        // First bearer token 
+                        if (!authorization.IsNullOrEmpty() && authorization.StartsWithIgnoreCase("Bearer "))
                         {
-                            if (authorization.StartsWithIgnoreCase("Bearer "))
-                            {
-                                return OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                            }
-
-                            if (authorization.StartsWithIgnoreCase("Basic "))
-                            {
-                                return BasicAuthenticationOptions.DefaultScheme;
-                            }
+                            return OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
                         }
 
-                        if (context.Request.Query.ContainsKey("api_key") ||
-                            context.Request.Headers.ContainsKey(ApiKeyAuthenticationOptions.DefaultScheme))
+                        // Second ApiKey
+                        var options = context.RequestServices.GetRequiredService<IOptions<ApiKeyAuthenticationOptions>>().Value;
+                        if (context.Request.Query.ContainsKey(options.ApiKeyParamName) ||
+                            context.Request.Headers.ContainsKey(options.ApiKeyParamName))
                         {
                             return ApiKeyAuthenticationOptions.DefaultScheme;
                         }
 
-                        // Identity cookie
+                        // Third Basic auth
+                        if (!authorization.IsNullOrEmpty() && authorization.StartsWithIgnoreCase("Basic "))
+                        {
+                            return BasicAuthenticationOptions.DefaultScheme;
+                        }
+
+                        // Lastly Identity cookie
                         return IdentityConstants.ApplicationScheme;
                     };
                 })
@@ -493,7 +493,7 @@ namespace VirtoCommerce.Platform.Web
                     // Register the ASP.NET Core host.
                     validationBuilder.UseAspNetCore();
 
-                    if (authorizationOptions.EnablePersistentStorageTokenValidation)
+                    if (authorizationOptions != null && authorizationOptions.EnablePersistentStorageTokenValidation)
                     {
                         // invalidate token immediately
                         validationBuilder.EnableAuthorizationEntryValidation();
