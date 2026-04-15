@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using OpenIddict.Abstractions;
@@ -8,27 +9,29 @@ namespace VirtoCommerce.Platform.Security.Services;
 
 public class UserSessionsService : IUserSessionsService
 {
-    private readonly IOpenIddictTokenManager _tokenManager;
-    private readonly IOpenIddictAuthorizationManager _authorizationManager;
+    private readonly Func<IOpenIddictTokenManager> _tokenManagerFactory;
+    private readonly Func<IOpenIddictAuthorizationManager> _authorizationManagerFactory;
 
-    public UserSessionsService(IOpenIddictTokenManager tokenManager, IOpenIddictAuthorizationManager authorizationManager)
+    public UserSessionsService(Func<IOpenIddictTokenManager> tokenManagerFactory, Func<IOpenIddictAuthorizationManager> authorizationManagerFactory)
     {
-        _tokenManager = tokenManager;
-        _authorizationManager = authorizationManager;
+        _tokenManagerFactory = tokenManagerFactory;
+        _authorizationManagerFactory = authorizationManagerFactory;
     }
 
     public virtual async Task TerminateUserSession(string sessionId)
     {
-        var tokenObject = await _tokenManager.FindByIdAsync(sessionId);
+        var tokenManager = _tokenManagerFactory();
+
+        var tokenObject = await tokenManager.FindByIdAsync(sessionId);
         if (tokenObject is VirtoOpenIddictEntityFrameworkCoreToken token)
         {
-            var authorizationId = await _tokenManager.GetAuthorizationIdAsync(token);
+            var authorizationId = await tokenManager.GetAuthorizationIdAsync(token);
 
-            await _tokenManager.TryRevokeAsync(token);
+            await tokenManager.TryRevokeAsync(token);
 
             if (authorizationId != null)
             {
-                var validSessionsCount = await _tokenManager.FindByAuthorizationIdAsync(authorizationId)
+                var validSessionsCount = await tokenManager.FindByAuthorizationIdAsync(authorizationId)
                     .OfType<VirtoOpenIddictEntityFrameworkCoreToken>()
                     .Where(x => x.Type == OpenIddictConstants.TokenTypeIdentifiers.RefreshToken)
                     .Where(x => x.Status == OpenIddictConstants.Statuses.Valid)
@@ -44,31 +47,37 @@ public class UserSessionsService : IUserSessionsService
 
     public virtual async Task TerminateUserSessionGroup(string sessionGroupId)
     {
-        var tokens = _tokenManager.FindByAuthorizationIdAsync(sessionGroupId);
+        var tokenManager = _tokenManagerFactory();
+        var authorizationManager = _authorizationManagerFactory();
+
+        var tokens = tokenManager.FindByAuthorizationIdAsync(sessionGroupId);
         await foreach (var token in tokens)
         {
-            await _tokenManager.TryRevokeAsync(token);
+            await tokenManager.TryRevokeAsync(token);
         }
 
-        var authorization = await _authorizationManager.FindByIdAsync(sessionGroupId);
+        var authorization = await authorizationManager.FindByIdAsync(sessionGroupId);
         if (authorization != null)
         {
-            await _authorizationManager.TryRevokeAsync(authorization);
+            await authorizationManager.TryRevokeAsync(authorization);
         }
     }
 
     public virtual async Task TerminateAllUserSessions(string userId)
     {
-        var tokens = _tokenManager.FindBySubjectAsync(userId);
+        var tokenManager = _tokenManagerFactory();
+        var authorizationManager = _authorizationManagerFactory();
+
+        var tokens = tokenManager.FindBySubjectAsync(userId);
         await foreach (var token in tokens)
         {
-            await _tokenManager.TryRevokeAsync(token);
+            await tokenManager.TryRevokeAsync(token);
         }
 
-        var authorizations = _authorizationManager.FindBySubjectAsync(userId);
+        var authorizations = authorizationManager.FindBySubjectAsync(userId);
         await foreach (var authorization in authorizations)
         {
-            await _authorizationManager.TryRevokeAsync(authorization);
+            await authorizationManager.TryRevokeAsync(authorization);
         }
     }
 }

@@ -13,6 +13,11 @@ namespace VirtoCommerce.Platform.Core
 
         public static class Security
         {
+            public static class AuthenticationSchemes
+            {
+                public const string MixedScheme = "VirtoMixedAuthenticationScheme";
+            }
+
             public static class GrantTypes
             {
                 public const string Impersonate = "impersonate";
