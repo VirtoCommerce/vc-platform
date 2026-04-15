@@ -781,6 +781,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete selected folders or files?"
       },
@@ -798,7 +799,8 @@
       },
       "roles-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected roles?"
+        "message": "Are you sure you want to delete selected roles?",
+        "role": "{{count}} role(s)"
       },
       "account-save": {
         "title": "Save changes",
@@ -806,7 +808,8 @@
       },
       "account-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected accounts?"
+        "message": "Are you sure you want to delete selected accounts?",
+        "account": "{{count}} account(s)"
       },
       "oauthapps-save": {
         "title": "Save changes",
@@ -814,7 +817,8 @@
       },
       "oauthapps-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected OAuth application?"
+        "message": "The following OAuth application will be deleted: '{{name}}'",
+        "application": "{{count}} OAuth application(s)"
       },
       "dynamic-property-delete": {
         "title": "Delete confirmation",
@@ -871,7 +875,7 @@
       },
       "api-key-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete this API key?"
+        "message": "The following API key will be deleted: '{{name}}'"
       },
       "app-restart": {
         "title": "Application shutdown",
@@ -907,6 +911,11 @@
       "sessions-terminate-all": {
         "title": "Terminate all",
         "message": "Are you sure you want to terminate all user sessions?"
+      },
+      "delete-confirm": {
+        "warning": "WARNING: This change is permanent and cannot be undone. Applying this change may result in data loss.",
+        "message": "The following data will be deleted:",
+        "instruction": "Type 'yes' to delete:"
       }
     },
     "commands": {
