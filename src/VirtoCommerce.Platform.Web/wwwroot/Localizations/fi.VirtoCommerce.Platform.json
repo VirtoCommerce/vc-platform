@@ -782,6 +782,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Poiston vahvistus",
         "message": "Oletko varma, että haluat poistaa valitut kansion tai tiedostot?"
       },
@@ -799,7 +800,8 @@
       },
       "roles-delete": {
         "title": "Poiston vahvistus",
-        "message": "Oletko varma, että haluat poistaa valitut roolit?"
+        "message": "Oletko varma, että haluat poistaa valitut roolit?",
+        "role": "{{count}} rooli(a)"
       },
       "account-save": {
         "title": "Tallenna muutokset",
@@ -807,7 +809,8 @@
       },
       "account-delete": {
         "title": "Poiston vahvistus",
-        "message": "Oletko varma, että haluat poistaa valitut tilit?"
+        "message": "Oletko varma, että haluat poistaa valitut tilit?",
+        "account": "{{count}} tili(ä)"
       },
       "oauthapps-save": {
         "title": "Tallenna muutokset",
@@ -815,7 +818,8 @@
       },
       "oauthapps-delete": {
         "title": "Poiston vahvistus",
-        "message": "Oletko varma, että haluat poistaa valitun OAuth-sovelluksen?"
+        "message": "Seuraava OAuth-sovellus poistetaan: '{{name}}'",
+        "application": "{{count}} OAuth-sovellus(ta)"
       },
       "dynamic-property-delete": {
         "title": "Poiston vahvistus",
@@ -872,7 +876,7 @@
       },
       "api-key-delete": {
         "title": "Poiston vahvistus",
-        "message": "Oletko varma, että haluat poistaa tämän API-avaimen?"
+        "message": "Seuraava API-avain poistetaan: '{{name}}'"
       },
       "app-restart": {
         "title": "Sovelluksen sammutus",
@@ -908,6 +912,11 @@
       "sessions-terminate-all": {
         "title": "Lopeta kaikki",
         "message": "Haluatko varmasti lopettaa kaikki käyttäjäistunnot?"
+      },
+      "delete-confirm": {
+        "warning": "VAROITUS: Tämä muutos on pysyvä eikä sitä voi perua. Muutoksen toteuttaminen voi johtaa tietojen menetykseen.",
+        "message": "Seuraavat tiedot poistetaan:",
+        "instruction": "Kirjoita 'yes' poistaaksesi:"
       }
     },
     "commands": {

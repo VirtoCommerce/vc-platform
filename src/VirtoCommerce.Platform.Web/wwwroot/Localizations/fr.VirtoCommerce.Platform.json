@@ -781,6 +781,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Confirmation de suppression",
         "message": "Êtes-vous sûr de vouloir supprimer les dossiers ou fichiers sélectionnés ?"
       },
@@ -798,7 +799,8 @@
       },
       "roles-delete": {
         "title": "Confirmation de suppression",
-        "message": "Êtes-vous sûr de vouloir supprimer les rôles sélectionnés ?"
+        "message": "Êtes-vous sûr de vouloir supprimer les rôles sélectionnés ?",
+        "role": "{{count}} rôle(s)"
       },
       "account-save": {
         "title": "Enregistrer les modifications",
@@ -806,7 +808,8 @@
       },
       "account-delete": {
         "title": "Confirmation de suppression",
-        "message": "Êtes-vous sûr de vouloir supprimer les comptes sélectionnés ?"
+        "message": "Êtes-vous sûr de vouloir supprimer les comptes sélectionnés ?",
+        "account": "{{count}} compte(s)"
       },
       "oauthapps-save": {
         "title": "Enregistrer les modifications",
@@ -814,7 +817,8 @@
       },
       "oauthapps-delete": {
         "title": "Confirmation de suppression",
-        "message": "Êtes-vous sûr de vouloir supprimer l'application OAuth sélectionnée ?"
+        "message": "L'application OAuth suivante sera supprimée : '{{name}}'",
+        "application": "{{count}} application(s) OAuth"
       },
       "dynamic-property-delete": {
         "title": "Confirmation de suppression",
@@ -871,7 +875,7 @@
       },
       "api-key-delete": {
         "title": "Confirmation de suppression",
-        "message": "Êtes-vous sûr de vouloir supprimer cette clé API ?"
+        "message": "La clé API suivante sera supprimée : '{{name}}'"
       },
       "app-restart": {
         "title": "Arrêt de l'application",
@@ -907,6 +911,11 @@
       "sessions-terminate-all": {
         "title": "Terminer tout",
         "message": "Êtes-vous sûr de vouloir terminer toutes les sessions utilisateur ?"
+      },
+      "delete-confirm": {
+        "warning": "AVERTISSEMENT : Cette modification est permanente et ne peut pas être annulée. L'application de cette modification peut entraîner une perte de données.",
+        "message": "Les données suivantes seront supprimées :",
+        "instruction": "Tapez « yes » pour supprimer :"
       }
     },
     "commands": {

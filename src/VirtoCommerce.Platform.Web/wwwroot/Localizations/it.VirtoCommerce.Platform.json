@@ -781,6 +781,7 @@
     },
     "dialogs": {
       "folders-delete": {
+        "Obsolete-VC0014": "Moved to assets module (assets.dialogs.asset-delete).",
         "title": "Conferma eliminazione",
         "message": "Sei sicuro di voler eliminare le cartelle o i file selezionati?"
       },
@@ -798,7 +799,8 @@
       },
       "roles-delete": {
         "title": "Conferma eliminazione",
-        "message": "Sei sicuro di voler eliminare i ruoli selezionati?"
+        "message": "Sei sicuro di voler eliminare i ruoli selezionati?",
+        "role": "{{count}} ruolo(i)"
       },
       "account-save": {
         "title": "Salva modifiche",
@@ -806,7 +808,8 @@
       },
       "account-delete": {
         "title": "Conferma eliminazione",
-        "message": "Sei sicuro di voler eliminare gli account selezionati?"
+        "message": "Sei sicuro di voler eliminare gli account selezionati?",
+        "account": "{{count}} account"
       },
       "oauthapps-save": {
         "title": "Salva modifiche",
@@ -814,7 +817,8 @@
       },
       "oauthapps-delete": {
         "title": "Conferma eliminazione",
-        "message": "Sei sicuro di voler eliminare l'applicazione OAuth selezionata?"
+        "message": "La seguente applicazione OAuth verrà eliminata: '{{name}}'",
+        "application": "{{count}} applicazione(i) OAuth"
       },
       "dynamic-property-delete": {
         "title": "Conferma eliminazione",
@@ -871,7 +875,7 @@
       },
       "api-key-delete": {
         "title": "Conferma eliminazione",
-        "message": "Sei sicuro di voler eliminare questa chiave API?"
+        "message": "La seguente chiave API verrà eliminata: '{{name}}'"
       },
       "app-restart": {
         "title": "Chiusura dell'applicazione",
@@ -907,6 +911,11 @@
       "sessions-terminate-all": {
         "title": "Termina tutte",
         "message": "Sei sicuro di voler terminare tutte le sessioni utente?"
+      },
+      "delete-confirm": {
+        "warning": "AVVISO: Questa modifica è permanente e non può essere annullata. L'applicazione di questa modifica può comportare la perdita di dati.",
+        "message": "I seguenti dati verranno eliminati:",
+        "instruction": "Digita \"yes\" per eliminare:"
       }
     },
     "commands": {
