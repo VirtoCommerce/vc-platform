@@ -284,9 +284,9 @@ namespace VirtoCommerce.Platform.Web
                         }
 
                         // Second ApiKey
-                        var options = context.RequestServices.GetRequiredService<IOptions<ApiKeyAuthenticationOptions>>().Value;
-                        if (context.Request.Query.ContainsKey(options.ApiKeyParamName) ||
-                            context.Request.Headers.ContainsKey(options.ApiKeyParamName))
+                        var apiKeyOptions = context.RequestServices.GetRequiredService<IOptions<ApiKeyAuthenticationOptions>>().Value;
+                        if (context.Request.Query.ContainsKey(apiKeyOptions.ApiKeyParamName) ||
+                            context.Request.Headers.ContainsKey(apiKeyOptions.ApiKeyParamName))
                         {
                             return ApiKeyAuthenticationOptions.DefaultScheme;
                         }
@@ -507,13 +507,16 @@ namespace VirtoCommerce.Platform.Web
             // Must be registered AFTER AddOpenIddict() so it overrides the default store.
             services.AddScoped<IOpenIddictTokenStore<VirtoOpenIddictEntityFrameworkCoreToken>, VirtoOpenIddictEntityFrameworkCoreTokenStore>();
 
-            services.AddSingleton<Func<IOpenIddictTokenManager>>(provider =>
-                () => provider.CreateScope().ServiceProvider.GetRequiredService<IOpenIddictTokenManager>());
-            services.AddSingleton<Func<IOpenIddictAuthorizationManager>>(provider =>
-                () => provider.CreateScope().ServiceProvider.GetRequiredService<IOpenIddictAuthorizationManager>());
-
-            services.AddTransient<IUserSessionsService, UserSessionsService>();
             services.AddTransient<IUserSessionsSearchService, UserSessionsSearchService>();
+
+            // Func<(IUserSessionsService, IServiceScope)> - need to dispose the scope inside the singleton consumer 
+            services.AddScoped<IUserSessionsService, UserSessionsService>();
+            services.AddSingleton<Func<(IUserSessionsService SessionService, IServiceScope Scope)>>(provider => () =>
+                {
+                    var scope = provider.CreateScope();
+                    var sessionService = scope.ServiceProvider.GetRequiredService<IUserSessionsService>();
+                    return (SessionService: sessionService, Scope: scope);
+                });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
