@@ -50,7 +50,7 @@ angular.module('platformWebApp')
             $scope.$on('accountPasswordChanged', function () {
                 $timeout(function () {
                     refresh();
-                }, 1000);
+                });
             });
 
             refresh();

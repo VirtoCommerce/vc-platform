@@ -575,6 +575,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await UserManager.AccessFailedAsync(user);
             }
 
+            if (result.Succeeded)
+            {
+                await TryTerminateUserSessions(currentUser, user);
+            }
+
             return Ok(result.ToSecurityResult());
         }
 
@@ -630,6 +635,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     user.PasswordExpired = request.ForcePasswordChangeOnNextSignIn;
                     await UserManager.UpdateAsync(user);
                 }
+
+                await TryTerminateUserSessions(currentUser, user);
             }
 
             return Ok(result.ToSecurityResult());
@@ -663,6 +670,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 user.PasswordExpired = false;
                 await UserManager.UpdateAsync(user);
+            }
+
+            if (result.Succeeded)
+            {
+                // terminate all sessions for password reset request
+                await _userSessionsService.TerminateAllUserSessions(user.Id);
             }
 
             return Ok(result.ToSecurityResult());
@@ -1213,6 +1226,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             user.LastLoginDate = DateTime.UtcNow;
             return _signInManager.UserManager.UpdateAsync(user);
+        }
+
+        private async Task TryTerminateUserSessions(ApplicationUser currentUser, ApplicationUser sourceUser)
+        {
+            // try to clear user tokens for the user 
+            var terminateSessionsRequest = new TerminateUserSessionsRequest
+            {
+                UserId = sourceUser.Id,
+            };
+
+            // except the current session if password chagne was requested by the current user
+            if (sourceUser.Id.EqualsIgnoreCase(currentUser.Id))
+            {
+                var session = User.FindFirstValue(Claims.Private.AuthorizationId);
+                if (!session.IsNullOrEmpty())
+                {
+                    terminateSessionsRequest.ExcludedSessionGroupIds = [session];
+                }
+            }
+
+            await _userSessionsService.TerminateUserSessions(terminateSessionsRequest);
         }
     }
 }

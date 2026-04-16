@@ -9,10 +9,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 namespace VirtoCommerce.Platform.Security.Handlers;
 
 public class RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionService, IServiceScope Scope)> userSessionsServiceFactory) :
-    IEventHandler<UserChangedEvent>,
-    IEventHandler<UserPasswordChangedEvent>,
-    IEventHandler<UserResetPasswordEvent>,
-    IEventHandler<UserChangedPasswordEvent>
+    IEventHandler<UserChangedEvent>
 {
     public virtual async Task Handle(UserChangedEvent message)
     {
@@ -31,10 +28,6 @@ public class RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionServi
             }
         }
     }
-
-    public virtual Task Handle(UserPasswordChangedEvent message) => TerminateAllUserSessions(message.UserId);
-    public virtual Task Handle(UserResetPasswordEvent message) => TerminateAllUserSessions(message.UserId);
-    public virtual Task Handle(UserChangedPasswordEvent message) => TerminateAllUserSessions(message.UserId);
 
     private async Task TerminateAllUserSessions(string userId)
     {

@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using OpenIddict.Abstractions;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 
@@ -68,6 +69,32 @@ public class UserSessionsService : IUserSessionsService
         var authorizations = _authorizationManager.FindBySubjectAsync(userId);
         await foreach (var authorization in authorizations)
         {
+            await _authorizationManager.TryRevokeAsync(authorization);
+        }
+    }
+
+    public virtual async Task TerminateUserSessions(TerminateUserSessionsRequest request)
+    {
+        if (request.UserId.IsNullOrEmpty())
+        {
+            return;
+        }
+
+        var authorizations = await _authorizationManager.FindBySubjectAsync(request.UserId).OfType<VirtoOpenIddictEntityFrameworkCoreAuthorization>().ToListAsync();
+
+        if (!request.ExcludedSessionGroupIds.IsNullOrEmpty())
+        {
+            authorizations = authorizations.Where(x => !request.ExcludedSessionGroupIds.Contains(x.Id)).ToList();
+        }
+
+        foreach (var authorization in authorizations)
+        {
+            var tokens = _tokenManager.FindByAuthorizationIdAsync(authorization.Id);
+            await foreach (var token in tokens)
+            {
+                await _tokenManager.TryRevokeAsync(token);
+            }
+
             await _authorizationManager.TryRevokeAsync(authorization);
         }
     }
