@@ -64,7 +64,25 @@
         "labels": {
           "login": "Connexion",
           "details": "Détails",
-          "time": "Heure"
+          "time": "Heure",
+          "operation-type": "Type"
+        },
+        "filter": {
+          "title": "Filtre",
+          "operation-type": "Type d'opération",
+          "all": "Tous",
+          "type-added": "Ajouté",
+          "type-modified": "Modifié",
+          "type-deleted": "Supprimé",
+          "modified-date": "Modifié",
+          "date-any": "Tout moment",
+          "date-today": "Aujourd'hui",
+          "date-yesterday": "Hier",
+          "date-last7": "7 derniers jours",
+          "date-last30": "30 derniers jours",
+          "date-custom": "Plage personnalisée",
+          "date-from": "Du",
+          "date-to": "Au"
         }
       },
       "dynamicObject-list": {

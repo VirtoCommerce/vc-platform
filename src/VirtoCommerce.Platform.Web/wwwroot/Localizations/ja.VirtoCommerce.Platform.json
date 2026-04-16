@@ -64,7 +64,25 @@
         "labels": {
           "login": "ログイン",
           "details": "詳細",
-          "time": "時間"
+          "time": "時間",
+          "operation-type": "種類"
+        },
+        "filter": {
+          "title": "フィルター",
+          "operation-type": "操作タイプ",
+          "all": "すべて",
+          "type-added": "追加",
+          "type-modified": "変更",
+          "type-deleted": "削除",
+          "modified-date": "更新日",
+          "date-any": "すべての期間",
+          "date-today": "今日",
+          "date-yesterday": "昨日",
+          "date-last7": "過去7日間",
+          "date-last30": "過去30日間",
+          "date-custom": "カスタム範囲",
+          "date-from": "開始日",
+          "date-to": "終了日"
         }
       },
       "dynamicObject-list": {

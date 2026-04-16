@@ -64,7 +64,25 @@
         "labels": {
           "login": "登录",
           "details": "详情",
-          "time": "时间"
+          "time": "时间",
+          "operation-type": "类型"
+        },
+        "filter": {
+          "title": "筛选",
+          "operation-type": "操作类型",
+          "all": "全部",
+          "type-added": "已添加",
+          "type-modified": "已修改",
+          "type-deleted": "已删除",
+          "modified-date": "修改时间",
+          "date-any": "任何时间",
+          "date-today": "今天",
+          "date-yesterday": "昨天",
+          "date-last7": "最近7天",
+          "date-last30": "最近30天",
+          "date-custom": "自定义范围",
+          "date-from": "从",
+          "date-to": "至"
         }
       },
       "dynamicObject-list": {

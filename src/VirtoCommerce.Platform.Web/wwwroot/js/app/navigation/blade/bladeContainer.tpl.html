@@ -66,6 +66,14 @@
                         </button>
                     </li>
                 </ul>
+                <ul class="menu toolbar-dropdown" ng-show="moreToolsOpen" ng-style="dropdownStyle">
+                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade), 'separator': toolbarCommand.showSeparator}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in overflowCommands" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" ng-show="!toolbarCommand.hide(blade)" va-permission="{{toolbarCommand.permission}}" security-scopes="blade.securityScopes">
+                        <button class="menu-btn" ng-attr-title="{{toolbarCommand.title | translate}}">
+                            <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
+                            {{ toolbarCommand.name | translate }}
+                        </button>
+                    </li>
+                </ul>
             </div>
         </header>
 

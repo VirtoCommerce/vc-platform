@@ -64,7 +64,25 @@
         "labels": {
           "login": "Login",
           "details": "Detalhes",
-          "time": "Hora"
+          "time": "Hora",
+          "operation-type": "Tipo"
+        },
+        "filter": {
+          "title": "Filtro",
+          "operation-type": "Tipo de operação",
+          "all": "Todos",
+          "type-added": "Adicionado",
+          "type-modified": "Modificado",
+          "type-deleted": "Excluído",
+          "modified-date": "Modificado",
+          "date-any": "Qualquer momento",
+          "date-today": "Hoje",
+          "date-yesterday": "Ontem",
+          "date-last7": "Últimos 7 dias",
+          "date-last30": "Últimos 30 dias",
+          "date-custom": "Intervalo personalizado",
+          "date-from": "De",
+          "date-to": "Até"
         }
       },
       "dynamicObject-list": {
