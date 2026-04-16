@@ -52,6 +52,7 @@
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.5.192" />
     <PackageReference Include="System.Text.Json" Version="[8.0.5,9)" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.3" />
   </ItemGroup>
 
   <!--Temporary packages to be removed-->
