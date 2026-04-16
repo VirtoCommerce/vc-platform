@@ -2,16 +2,15 @@ angular.module("platformWebApp")
     .config(
         ['$stateProvider', '$provide', function ($stateProvider, $provide) {
             $stateProvider
-                .state('workspace.modulesSettings', {
-                    url: '/settings',
+                .state('workspace.settings', {
+                    url: '/settings?group&setting',
                     templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
                     controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                         var blade = {
                             id: 'settings',
-                            title: 'platform.blades.settingGroup-list.title',
-                            //subtitle: 'Manage settings',
-                            controller: 'platformWebApp.settingGroupListController',
-                            template: '$(Platform)/Scripts/app/settings/blades/settingGroup-list.tpl.html',
+                            title: 'platform.blades.settings-unified.title',
+                            controller: 'platformWebApp.settingsUnifiedController',
+                            template: '$(Platform)/Scripts/app/settings/blades/settings-unified.tpl.html',
                             isClosingDisabled: true
                         };
                         bladeNavigationService.showBlade(blade);
@@ -40,20 +39,23 @@ angular.module("platformWebApp")
     )
     .run(['platformWebApp.mainMenuService', 'platformWebApp.breadcrumbHistoryService', 'platformWebApp.changeLogApi', 'platformWebApp.toolbarService', 'platformWebApp.dialogService', '$state', function (mainMenuService, breadcrumbHistoryService, changeLogApi, toolbarService, dialogService, $state) {
         //Register module in main menu
-        var menuItem = {
+
+        // Unified settings V2 menu item
+        var unifiedMenuItem = {
             path: 'configuration/settings',
             icon: 'fa fa-gears',
             title: 'platform.menu.settings',
             priority: 1,
-            action: function () { $state.go('workspace.modulesSettings'); },
+            action: function () { $state.go('workspace.settings'); },
             permission: 'platform:setting:access'
         };
-        mainMenuService.addMenuItem(menuItem);
+        mainMenuService.addMenuItem(unifiedMenuItem);
 
         // register back-button
         toolbarService.register(breadcrumbHistoryService.getBackButtonInstance(), 'platformWebApp.settingGroupListController');
 
         // Add 'Reset cache' command to settings blade
+        var cacheResetDialogTitle = 'platform.dialogs.cache-reset.title';
         var resetCacheCommand = {
             name: 'platform.commands.cache-reset.name',
             title: 'platform.commands.cache-reset.title',
@@ -61,7 +63,7 @@ angular.module("platformWebApp")
             executeMethod: function (blade) {
                 var confirmDialog = {
                     id: "confirmCacheResetDialog",
-                    title: "platform.dialogs.cache-reset.title",
+                    title: cacheResetDialogTitle,
                     message: "platform.dialogs.cache-reset.confirm-reset-message",
                     callback: function (confirm) {
                         if (confirm) {
@@ -70,7 +72,7 @@ angular.module("platformWebApp")
                                 blade.isLoading = false;
                                 var successDialog = {
                                     id: "successCacheResetDialog",
-                                    title: "platform.dialogs.cache-reset.title",
+                                    title: cacheResetDialogTitle,
                                     message: "platform.dialogs.cache-reset.reset-successfully-message",
                                 };
                                 dialogService.showSuccessDialog(successDialog);

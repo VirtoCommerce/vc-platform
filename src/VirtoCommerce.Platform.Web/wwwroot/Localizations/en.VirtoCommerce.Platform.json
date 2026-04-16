@@ -7,6 +7,7 @@
       "notifications": "Notifications",
       "more": "More",
       "settings": "Settings",
+      "settings-unified": "Settings (Unified)",
       "dynamic-properties": "Dynamic properties",
       "security": "Security",
       "modules": "Modules",
@@ -31,7 +32,8 @@
           "environment-name": "Environment mode",
           "is-64-bit-os": "64-bit operating system",
           "is-64-bit-process": "64-bit process",
-          "database-provider": "Database provider"
+          "database-provider": "Database provider",
+          "runtime-identifier": "Runtime identifier"
         }
       },
       "asset-list": {
@@ -63,7 +65,25 @@
         "labels": {
           "login": "Login",
           "details": "Details",
-          "time": "Time"
+          "time": "Time",
+          "operation-type": "Type"
+        },
+        "filter": {
+          "title": "Filter",
+          "operation-type": "Operation type",
+          "all": "All",
+          "type-added": "Added",
+          "type-modified": "Modified",
+          "type-deleted": "Deleted",
+          "modified-date": "Modified",
+          "date-any": "Any time",
+          "date-today": "Today",
+          "date-yesterday": "Yesterday",
+          "date-last7": "Last 7 days",
+          "date-last30": "Last 30 days",
+          "date-custom": "Custom range",
+          "date-from": "From",
+          "date-to": "To"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +278,8 @@
           "end": "End",
           "progress-messages": "Progress messages",
           "process-completed": "The module management process is completed",
+          "completed-with-errors": "Completed with errors",
+          "detailed-log": "Show detailed log",
           "restart-application": "Restart the application now or later"
         }
       },
@@ -287,7 +309,12 @@
           "tags": "Tags",
           "install-version": "Install version",
           "errors": "Errors",
-          "update-version": "Update {{id}} to"
+          "update-version": "Update {{id}} to",
+          "use-custom-version": "Use custom version",
+          "use-latest-version": "Use latest version",
+          "custom-version-checking": "Checking...",
+          "custom-version-valid": "Package found",
+          "custom-version-invalid": "Package not found"
         }
       },
       "modules-main": {
@@ -296,6 +323,7 @@
           "updates": "Updates",
           "browse": "Browse",
           "installed": "Installed",
+          "notInstalled": "Not installed",
           "withErrors": "Errors",
           "advanced": "Advanced"
         }
@@ -315,7 +343,13 @@
           "version": "Version",
           "author": "Author",
           "installed": "Installed modules",
-          "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart is set to false"
+          "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart is set to false",
+          "filter": "Filter modules",
+          "status": "Status",
+          "status-all": "All",
+          "status-installed": "Installed",
+          "status-not-installed": "Not installed",
+          "status-updates": "Updates"
         }
       },
       "history": {
@@ -423,7 +457,26 @@
           "account-type": "Account type",
           "login": "Login",
           "state": "State",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Copy ID"
+        },
+        "filter": {
+          "title": "Filters",
+          "all": "All",
+          "locked-only": "Locked accounts",
+          "not-verified": "Email not verified",
+          "account-type": "Account type",
+          "status": "Status",
+          "role": "Role",
+          "last-login": "Last login",
+          "date-any": "Any time",
+          "date-today": "Today",
+          "date-yesterday": "Yesterday",
+          "date-last7": "Last 7 days",
+          "date-last30": "Last 30 days",
+          "date-custom": "Custom range",
+          "date-from": "From",
+          "date-to": "To"
         }
       },
       "account-api": {
@@ -666,6 +719,30 @@
         "title": "Settings",
         "bread-crumb-top": "All settings"
       },
+      "settings-unified": {
+        "title": "Settings",
+        "all-settings": "All Settings",
+        "filter": "Filter",
+        "filter-show": "Show",
+        "filter-all": "All Settings",
+        "filter-modified": "Modified Only",
+        "filter-modified-only": "Show modified only",
+        "filter-module": "Module",
+        "filter-all-modules": "All Modules",
+        "filter-clear": "Clear filters",
+        "filter-show-tenant": "Show tenant properties",
+        "copy-link": "Copy link to section",
+        "no-settings": "No settings match the current filters.",
+        "export-json": "Export JSON",
+        "import-json": "Import JSON",
+        "edit-json": "Edit as JSON",
+        "import-confirm-title": "Import Settings",
+        "import-confirm-message": "Apply {{count}} settings from imported file?"
+      },
+      "settings-json-editor": {
+        "title": "Edit Settings as JSON",
+        "format-json": "Format JSON"
+      },
       "settings-uploader": {
         "drag-drop-comment": "Drag and drop file here",
         "or": "or",
@@ -834,8 +911,8 @@
         "message": "The settings has been modified. Do you want to save changes?"
       },
       "settings-delete": {
-        "title": "Delete confirmation",
-        "message": "The settings has been modified. Do you want to save changes?"
+        "title": "Save changes",
+        "message": "The settings have been modified. Do you want to save changes?"
       },
       "localizable-setting-value-delete": {
         "title": "Delete confirmation",
@@ -917,6 +994,11 @@
         "warning": "WARNING: This change is permanent and cannot be undone. Applying this change may result in data loss.",
         "message": "The following data will be deleted:",
         "instruction": "Type 'yes' to delete:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Clear filters"
       }
     },
     "commands": {

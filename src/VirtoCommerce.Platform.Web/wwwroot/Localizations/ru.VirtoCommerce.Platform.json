@@ -7,6 +7,7 @@
       "notifications": "Уведомления",
       "more": "Ещё",
       "settings": "Настройки",
+      "settings-unified": "Настройки (Единые)",
       "dynamic-properties": "Динамические свойства",
       "security": "Безопасность",
       "modules": "Модули",
@@ -63,7 +64,25 @@
         "labels": {
           "login": "Логин",
           "details": "Подробности",
-          "time": "Время"
+          "time": "Время",
+          "operation-type": "Тип"
+        },
+        "filter": {
+          "title": "Фильтр",
+          "operation-type": "Тип операции",
+          "all": "Все",
+          "type-added": "Добавлено",
+          "type-modified": "Изменено",
+          "type-deleted": "Удалено",
+          "modified-date": "Изменено",
+          "date-any": "Любое время",
+          "date-today": "Сегодня",
+          "date-yesterday": "Вчера",
+          "date-last7": "Последние 7 дней",
+          "date-last30": "Последние 30 дней",
+          "date-custom": "Произвольный период",
+          "date-from": "С",
+          "date-to": "По"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +277,8 @@
           "end": "Конец",
           "progress-messages": "Сообщения о прогрессе",
           "process-completed": "Процесс управления модулем завершен",
+          "completed-with-errors": "Завершено с ошибками",
+          "detailed-log": "Показать подробный журнал",
           "restart-application": "Перезапустите приложение сейчас или позже"
         }
       },
@@ -287,7 +308,12 @@
           "tags": "Теги",
           "install-version": "Установить версию",
           "errors": "Ошибки",
-          "update-version": "Обновить {{id}} до"
+          "update-version": "Обновить {{id}} до",
+          "use-custom-version": "Указать версию",
+          "use-latest-version": "Последняя версия",
+          "custom-version-checking": "Проверка...",
+          "custom-version-valid": "Пакет найден",
+          "custom-version-invalid": "Пакет не найден"
         }
       },
       "modules-main": {
@@ -296,6 +322,7 @@
           "updates": "Обновления",
           "available": "Доступные",
           "installed": "Установленные",
+          "notInstalled": "Неустановленные",
           "withErrors": "Ошибки",
           "advanced": "Расширенные",
           "browse": "Обзор"
@@ -316,7 +343,13 @@
           "version": "Версия",
           "author": "Автор",
           "installed": "Установленные модули",
-          "manual-install-warning": "Внимание! Модули, установленные вручную, не запустятся, так как RefreshProbingFolderOnStart имеет значение false"
+          "manual-install-warning": "Внимание! Модули, установленные вручную, не запустятся, так как RefreshProbingFolderOnStart имеет значение false",
+          "filter": "Фильтр модулей",
+          "status": "Статус",
+          "status-all": "Все",
+          "status-installed": "Установленные",
+          "status-not-installed": "Неустановленные",
+          "status-updates": "Обновления"
         }
       },
       "history": {
@@ -424,7 +457,26 @@
           "account-type": "Тип учетной записи",
           "login": "Логин",
           "state": "Состояние",
-          "status": "Статус"
+          "status": "Статус",
+          "copy-id": "Скопировать ID"
+        },
+        "filter": {
+          "title": "Фильтры",
+          "all": "Все",
+          "locked-only": "Заблокированные аккаунты",
+          "not-verified": "E-mail не подтверждён",
+          "account-type": "Тип учётной записи",
+          "status": "Статус",
+          "role": "Роль",
+          "last-login": "Последний вход",
+          "date-any": "За всё время",
+          "date-today": "Сегодня",
+          "date-yesterday": "Вчера",
+          "date-last7": "Последние 7 дней",
+          "date-last30": "Последние 30 дней",
+          "date-custom": "Произвольный период",
+          "date-from": "С",
+          "date-to": "По"
         }
       },
       "account-api": {
@@ -666,6 +718,30 @@
       "settingGroup-list": {
         "title": "Настройки",
         "bread-crumb-top": "Все настройки"
+      },
+      "settings-unified": {
+        "title": "Настройки",
+        "all-settings": "Все настройки",
+        "filter": "Фильтр",
+        "filter-show": "Показать",
+        "filter-all": "Все настройки",
+        "filter-modified": "Только изменённые",
+        "filter-modified-only": "Показать только изменённые",
+        "filter-module": "Модуль",
+        "filter-all-modules": "Все модули",
+        "filter-clear": "Сбросить фильтры",
+        "filter-show-tenant": "Показать свойства арендатора",
+        "copy-link": "Копировать ссылку на раздел",
+        "no-settings": "Нет настроек, соответствующих текущим фильтрам.",
+        "export-json": "Экспорт JSON",
+        "import-json": "Импорт JSON",
+        "edit-json": "Редактировать как JSON",
+        "import-confirm-title": "Импорт настроек",
+        "import-confirm-message": "Применить {{count}} настроек из импортированного файла?"
+      },
+      "settings-json-editor": {
+        "title": "Редактировать настройки как JSON",
+        "format-json": "Форматировать JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Перетащите файл сюда",
@@ -918,6 +994,11 @@
         "warning": "ПРЕДУПРЕЖДЕНИЕ: Это действие является необратимым и не может быть отменено. Применение этого действия может привести к потере данных.",
         "message": "Будут удалены следующие данные:",
         "instruction": "Введите «yes», чтобы удалить:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Сбросить фильтры"
       }
     },
     "commands": {

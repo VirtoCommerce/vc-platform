@@ -267,11 +267,13 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
 
                     b.Property<string>("Detail")
                         .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
+                        .HasColumnType("character varying(2048)")
+                        .UseCollation("case_insensitive");
 
                     b.Property<string>("ModifiedBy")
                         .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
+                        .HasColumnType("character varying(64)")
+                        .UseCollation("case_insensitive");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");

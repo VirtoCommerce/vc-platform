@@ -7,6 +7,7 @@
       "notifications": "通知",
       "more": "その他",
       "settings": "設定",
+      "settings-unified": "設定 (統合)",
       "dynamic-properties": "動的プロパティ",
       "security": "セキュリティ",
       "modules": "モジュール",
@@ -63,7 +64,25 @@
         "labels": {
           "login": "ログイン",
           "details": "詳細",
-          "time": "時間"
+          "time": "時間",
+          "operation-type": "種類"
+        },
+        "filter": {
+          "title": "フィルター",
+          "operation-type": "操作タイプ",
+          "all": "すべて",
+          "type-added": "追加",
+          "type-modified": "変更",
+          "type-deleted": "削除",
+          "modified-date": "更新日",
+          "date-any": "すべての期間",
+          "date-today": "今日",
+          "date-yesterday": "昨日",
+          "date-last7": "過去7日間",
+          "date-last30": "過去30日間",
+          "date-custom": "カスタム範囲",
+          "date-from": "開始日",
+          "date-to": "終了日"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +277,8 @@
           "end": "終了",
           "progress-messages": "進行メッセージ",
           "process-completed": "モジュール管理プロセスが完了しました",
+          "completed-with-errors": "エラーが発生して完了しました",
+          "detailed-log": "詳細ログを表示",
           "restart-application": "アプリケーションを今すぐ再起動するか、後で再起動してください"
         }
       },
@@ -286,7 +307,12 @@
           "optional-dependencies": "オプションの依存関係",
           "tags": "タグ",
           "install-version": "インストールバージョン",
-          "errors": "エラー"
+          "errors": "エラー",
+          "use-custom-version": "カスタムバージョンを使用",
+          "use-latest-version": "最新バージョンを使用",
+          "custom-version-checking": "確認中...",
+          "custom-version-valid": "パッケージが見つかりました",
+          "custom-version-invalid": "パッケージが見つかりません"
         }
       },
       "modules-main": {
@@ -295,6 +321,7 @@
           "updates": "アップデート",
           "available": "利用可能",
           "installed": "インストール済み",
+          "notInstalled": "未インストール",
           "withErrors": "エラー",
           "advanced": "詳細設定"
         }
@@ -314,7 +341,13 @@
           "version": "バージョン",
           "author": "作成者",
           "installed": "インストール済みモジュール",
-          "manual-install-warning": "警告！RefreshProbingFolderOnStartがfalseに設定されているため、手動でインストールされたモジュールは起動しません"
+          "manual-install-warning": "警告！RefreshProbingFolderOnStartがfalseに設定されているため、手動でインストールされたモジュールは起動しません",
+          "filter": "モジュールをフィルター",
+          "status": "ステータス",
+          "status-all": "すべて",
+          "status-installed": "インストール済み",
+          "status-not-installed": "未インストール",
+          "status-updates": "アップデート"
         }
       },
       "history": {
@@ -422,7 +455,26 @@
           "account-type": "アカウントタイプ",
           "login": "ログイン",
           "state": "状態",
-          "status": "ステータス"
+          "status": "ステータス",
+          "copy-id": "IDをコピー"
+        },
+        "filter": {
+          "title": "フィルター",
+          "all": "すべて",
+          "locked-only": "ロックされたアカウント",
+          "not-verified": "メール未確認",
+          "account-type": "アカウントタイプ",
+          "status": "ステータス",
+          "role": "ロール",
+          "last-login": "最終ログイン",
+          "date-any": "すべての期間",
+          "date-today": "今日",
+          "date-yesterday": "昨日",
+          "date-last7": "過去7日間",
+          "date-last30": "過去30日間",
+          "date-custom": "カスタム範囲",
+          "date-from": "開始日",
+          "date-to": "終了日"
         }
       },
       "account-api": {
@@ -664,6 +716,30 @@
       "settingGroup-list": {
         "title": "設定",
         "bread-crumb-top": "すべての設定"
+      },
+      "settings-unified": {
+        "title": "設定",
+        "all-settings": "すべての設定",
+        "filter": "フィルター",
+        "filter-show": "表示",
+        "filter-all": "すべての設定",
+        "filter-modified": "変更済みのみ",
+        "filter-modified-only": "変更済みのみ表示",
+        "filter-module": "モジュール",
+        "filter-all-modules": "すべてのモジュール",
+        "filter-clear": "フィルターをクリア",
+        "filter-show-tenant": "テナントプロパティを表示",
+        "copy-link": "セクションへのリンクをコピー",
+        "no-settings": "現在のフィルターに一致する設定はありません。",
+        "export-json": "JSONエクスポート",
+        "import-json": "JSONインポート",
+        "edit-json": "JSONとして編集",
+        "import-confirm-title": "設定のインポート",
+        "import-confirm-message": "インポートファイルから{{count}}件の設定を適用しますか？"
+      },
+      "settings-json-editor": {
+        "title": "JSONとして設定を編集",
+        "format-json": "JSONフォーマット"
       },
       "settings-uploader": {
         "drag-drop-comment": "ファイルをここにドラッグ＆ドロップ",
@@ -916,6 +992,11 @@
         "warning": "警告: この変更は永久的で、元に戻すことはできません。この変更を適用すると、データが失われる可能性があります。",
         "message": "次のデータが削除されます:",
         "instruction": "削除するには「yes」と入力してください:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "フィルターをクリア"
       }
     },
     "commands": {

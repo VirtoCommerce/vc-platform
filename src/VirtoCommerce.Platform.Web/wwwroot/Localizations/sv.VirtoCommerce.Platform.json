@@ -7,6 +7,7 @@
       "notifications": "Notiser",
       "more": "Mer",
       "settings": "Inställningar",
+      "settings-unified": "Inställningar (Enhetlig)",
       "dynamic-properties": "Dynamiska egenskaper",
       "security": "Säkerhet",
       "modules": "Moduler",
@@ -63,7 +64,25 @@
         "labels": {
           "login": "Inloggning",
           "details": "Detaljer",
-          "time": "Tid"
+          "time": "Tid",
+          "operation-type": "Typ"
+        },
+        "filter": {
+          "title": "Filter",
+          "operation-type": "Operationstyp",
+          "all": "Alla",
+          "type-added": "Tillagd",
+          "type-modified": "Ändrad",
+          "type-deleted": "Borttagen",
+          "modified-date": "Ändrad",
+          "date-any": "När som helst",
+          "date-today": "Idag",
+          "date-yesterday": "Igår",
+          "date-last7": "Senaste 7 dagarna",
+          "date-last30": "Senaste 30 dagarna",
+          "date-custom": "Anpassat intervall",
+          "date-from": "Från",
+          "date-to": "Till"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +277,8 @@
           "end": "Slut",
           "progress-messages": "Förloppsmeddelanden",
           "process-completed": "Modulhanteringsprocessen är slutförd",
+          "completed-with-errors": "Slutfört med fel",
+          "detailed-log": "Visa detaljerad logg",
           "restart-application": "Starta om applikationen nu eller senare"
         }
       },
@@ -287,7 +308,12 @@
           "tags": "Taggar",
           "install-version": "Installera version",
           "errors": "Fel",
-          "update-version": "Uppdatera {{id}} till"
+          "update-version": "Uppdatera {{id}} till",
+          "use-custom-version": "Använd anpassad version",
+          "use-latest-version": "Använd senaste versionen",
+          "custom-version-checking": "Kontrollerar...",
+          "custom-version-valid": "Paket hittades",
+          "custom-version-invalid": "Paket hittades inte"
         }
       },
       "modules-main": {
@@ -296,6 +322,7 @@
           "updates": "Uppdateringar",
           "browse": "Bläddra",
           "installed": "Installerade",
+          "notInstalled": "Ej installerade",
           "withErrors": "Fel",
           "advanced": "Avancerat"
         }
@@ -315,7 +342,13 @@
           "version": "Version",
           "author": "Författare",
           "installed": "Installerade moduler",
-          "manual-install-warning": "Varning! Manuellt installerade moduler startar inte eftersom RefreshProbingFolderOnStart är satt till falskt"
+          "manual-install-warning": "Varning! Manuellt installerade moduler startar inte eftersom RefreshProbingFolderOnStart är satt till falskt",
+          "filter": "Filtrera moduler",
+          "status": "Status",
+          "status-all": "Alla",
+          "status-installed": "Installerade",
+          "status-not-installed": "Ej installerade",
+          "status-updates": "Uppdateringar"
         }
       },
       "history": {
@@ -423,7 +456,26 @@
           "account-type": "Kontotyp",
           "login": "Inloggning",
           "state": "Status",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Kopiera ID"
+        },
+        "filter": {
+          "title": "Filter",
+          "all": "Alla",
+          "locked-only": "Låsta konton",
+          "not-verified": "E-post ej verifierad",
+          "account-type": "Kontotyp",
+          "status": "Status",
+          "role": "Roll",
+          "last-login": "Senaste inloggning",
+          "date-any": "Alla tider",
+          "date-today": "Idag",
+          "date-yesterday": "Igår",
+          "date-last7": "Senaste 7 dagarna",
+          "date-last30": "Senaste 30 dagarna",
+          "date-custom": "Anpassat intervall",
+          "date-from": "Från",
+          "date-to": "Till"
         }
       },
       "account-api": {
@@ -665,6 +717,30 @@
       "settingGroup-list": {
         "title": "Inställningar",
         "bread-crumb-top": "Alla inställningar"
+      },
+      "settings-unified": {
+        "title": "Inställningar",
+        "all-settings": "Alla inställningar",
+        "filter": "Filter",
+        "filter-show": "Visa",
+        "filter-all": "Alla inställningar",
+        "filter-modified": "Endast ändrade",
+        "filter-modified-only": "Visa endast ändrade",
+        "filter-module": "Modul",
+        "filter-all-modules": "Alla moduler",
+        "filter-clear": "Rensa filter",
+        "filter-show-tenant": "Visa hyresgästegenskaper",
+        "copy-link": "Kopiera länk till avsnitt",
+        "no-settings": "Inga inställningar matchar de aktuella filtren.",
+        "export-json": "Exportera JSON",
+        "import-json": "Importera JSON",
+        "edit-json": "Redigera som JSON",
+        "import-confirm-title": "Importera inställningar",
+        "import-confirm-message": "Tillämpa {{count}} inställningar från importerad fil?"
+      },
+      "settings-json-editor": {
+        "title": "Redigera inställningar som JSON",
+        "format-json": "Formatera JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Dra och släpp fil här",
@@ -917,6 +993,11 @@
         "warning": "VARNING: Denna ändring är permanent och kan inte ångras. Att tillämpa denna ändring kan leda till dataförlust.",
         "message": "Följande data kommer att tas bort:",
         "instruction": "Skriv \"yes\" för att ta bort:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Rensa filter"
       }
     },
     "commands": {

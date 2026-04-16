@@ -7,6 +7,7 @@
       "notifications": "Varsler",
       "more": "Mer",
       "settings": "Innstillinger",
+      "settings-unified": "Innstillinger (Samlet)",
       "dynamic-properties": "Dynamiske egenskaper",
       "security": "Sikkerhet",
       "modules": "Moduler",
@@ -63,7 +64,25 @@
         "labels": {
           "login": "Innlogging",
           "details": "Detaljer",
-          "time": "Tid"
+          "time": "Tid",
+          "operation-type": "Type"
+        },
+        "filter": {
+          "title": "Filter",
+          "operation-type": "Operasjonstype",
+          "all": "Alle",
+          "type-added": "Lagt til",
+          "type-modified": "Endret",
+          "type-deleted": "Slettet",
+          "modified-date": "Endret",
+          "date-any": "Når som helst",
+          "date-today": "I dag",
+          "date-yesterday": "I går",
+          "date-last7": "Siste 7 dager",
+          "date-last30": "Siste 30 dager",
+          "date-custom": "Egendefinert periode",
+          "date-from": "Fra",
+          "date-to": "Til"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +277,8 @@
           "end": "Slutt",
           "progress-messages": "Fremdriftsmeldinger",
           "process-completed": "Modulhåndteringsprosessen er fullført",
+          "completed-with-errors": "Fullført med feil",
+          "detailed-log": "Vis detaljert logg",
           "restart-application": "Start applikasjonen på nytt nå eller senere"
         }
       },
@@ -287,7 +308,12 @@
           "tags": "Tagger",
           "install-version": "Installer versjon",
           "errors": "Feil",
-          "update-version": "Oppdater {{id}} til"
+          "update-version": "Oppdater {{id}} til",
+          "use-custom-version": "Bruk egendefinert versjon",
+          "use-latest-version": "Bruk nyeste versjon",
+          "custom-version-checking": "Sjekker...",
+          "custom-version-valid": "Pakke funnet",
+          "custom-version-invalid": "Pakke ikke funnet"
         }
       },
       "modules-main": {
@@ -296,6 +322,7 @@
           "updates": "Oppdateringer",
           "browse": "Bla gjennom",
           "installed": "Installerte",
+          "notInstalled": "Ikke installerte",
           "withErrors": "Feil",
           "advanced": "Avansert"
         }
@@ -315,7 +342,13 @@
           "version": "Versjon",
           "author": "Forfatter",
           "installed": "Installerte moduler",
-          "manual-install-warning": "Advarsel! Manuelt installerte moduler starter ikke fordi RefreshProbingFolderOnStart er satt til falsk"
+          "manual-install-warning": "Advarsel! Manuelt installerte moduler starter ikke fordi RefreshProbingFolderOnStart er satt til falsk",
+          "filter": "Filtrer moduler",
+          "status": "Status",
+          "status-all": "Alle",
+          "status-installed": "Installerte",
+          "status-not-installed": "Ikke installerte",
+          "status-updates": "Oppdateringer"
         }
       },
       "history": {
@@ -423,7 +456,26 @@
           "account-type": "Kontotype",
           "login": "Innlogging",
           "state": "Status",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Kopier ID"
+        },
+        "filter": {
+          "title": "Filtre",
+          "all": "Alle",
+          "locked-only": "Låste kontoer",
+          "not-verified": "E-post ikke bekreftet",
+          "account-type": "Kontotype",
+          "status": "Status",
+          "role": "Rolle",
+          "last-login": "Siste innlogging",
+          "date-any": "Når som helst",
+          "date-today": "I dag",
+          "date-yesterday": "I går",
+          "date-last7": "Siste 7 dager",
+          "date-last30": "Siste 30 dager",
+          "date-custom": "Egendefinert periode",
+          "date-from": "Fra",
+          "date-to": "Til"
         }
       },
       "account-api": {
@@ -665,6 +717,30 @@
       "settingGroup-list": {
         "title": "Innstillinger",
         "bread-crumb-top": "Alle innstillinger"
+      },
+      "settings-unified": {
+        "title": "Innstillinger",
+        "all-settings": "Alle innstillinger",
+        "filter": "Filter",
+        "filter-show": "Vis",
+        "filter-all": "Alle innstillinger",
+        "filter-modified": "Kun endrede",
+        "filter-modified-only": "Vis kun endrede",
+        "filter-module": "Modul",
+        "filter-all-modules": "Alle moduler",
+        "filter-clear": "Fjern filtre",
+        "filter-show-tenant": "Vis leietakeregenskaper",
+        "copy-link": "Kopier lenke til seksjonen",
+        "no-settings": "Ingen innstillinger samsvarer med gjeldende filtre.",
+        "export-json": "Eksporter JSON",
+        "import-json": "Importer JSON",
+        "edit-json": "Rediger som JSON",
+        "import-confirm-title": "Importer innstillinger",
+        "import-confirm-message": "Bruk {{count}} innstillinger fra importert fil?"
+      },
+      "settings-json-editor": {
+        "title": "Rediger innstillinger som JSON",
+        "format-json": "Formater JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Dra og slipp fil her",
@@ -917,6 +993,11 @@
         "warning": "ADVARSEL: Denne endringen er permanent og kan ikke angres. Å bruke denne endringen kan føre til tap av data.",
         "message": "Følgende data vil bli slettet:",
         "instruction": "Skriv \"yes\" for å slette:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Fjern filtre"
       }
     },
     "commands": {

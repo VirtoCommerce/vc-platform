@@ -1,11 +1,75 @@
 <div class="blade-static">
-    <div class="form-group">
-        <div class="form-input __search">
-            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.keyword" ng-keyup="$event.which === 13 && filter.criteriaChanged()">
-            <button class="btn __other">
-                <i class="btn-ico fa fa-remove" title="Clear" ng-click="filter.keyword=null;filter.criteriaChanged()"></i>
-            </button>
-        </div>
+    <div class="form-group" style="display: flex; align-items: center;">
+        <va-filter-panel
+            has-active-filters="filter.hasActiveFilters()"
+            on-clear-filters="filter.clearFilters()"
+            search-text="blade.searchText"
+            filter-title="{{ 'platform.blades.account-list.filter.title' | translate }}">
+
+            <!-- Locked accounts toggle -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.account-list.filter.locked-only' | translate }}</span>
+                <label class="form-label __switch" style="margin: 0;">
+                    <input type="checkbox" ng-model="filter.onlyLocked" ng-change="filter.criteriaChanged()">
+                    <span class="switch"></span>
+                </label>
+            </div>
+
+            <!-- Email not verified toggle -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.account-list.filter.not-verified' | translate }}</span>
+                <label class="form-label __switch" style="margin: 0;">
+                    <input type="checkbox" ng-model="filter.emailNotConfirmed" ng-change="filter.criteriaChanged()">
+                    <span class="switch"></span>
+                </label>
+            </div>
+
+            <!-- Account type dropdown -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.account-list.filter.account-type' | translate }}</span>
+                <select class="va-filter-panel__select" ng-model="filter.userType" ng-change="filter.criteriaChanged()">
+                    <option value="">{{ 'platform.blades.account-list.filter.all' | translate }}</option>
+                    <option ng-repeat="t in blade.accountTypes" value="{{t}}">{{t}}</option>
+                </select>
+            </div>
+
+            <!-- Status dropdown -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.account-list.filter.status' | translate }}</span>
+                <select class="va-filter-panel__select" ng-model="filter.status" ng-change="filter.criteriaChanged()">
+                    <option value="">{{ 'platform.blades.account-list.filter.all' | translate }}</option>
+                    <option ng-repeat="s in blade.accountStatuses" value="{{s}}">{{s}}</option>
+                </select>
+            </div>
+
+            <!-- Role dropdown -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.account-list.filter.role' | translate }}</span>
+                <select class="va-filter-panel__select" ng-model="filter.role" ng-change="filter.criteriaChanged()">
+                    <option value="">{{ 'platform.blades.account-list.filter.all' | translate }}</option>
+                    <option ng-repeat="r in blade.roles" value="{{r.name}}">{{r.name}}</option>
+                </select>
+            </div>
+
+            <!-- Last login date preset -->
+            <div class="va-filter-panel__row">
+                <span class="va-filter-panel__label">{{ 'platform.blades.account-list.filter.last-login' | translate }}</span>
+                <select class="va-filter-panel__select" ng-model="filter.datePreset" ng-change="filter.criteriaChanged()">
+                    <option ng-repeat="p in blade.datePresets" value="{{p.value}}">{{p.label | translate}}</option>
+                </select>
+            </div>
+
+            <!-- Custom date range inputs -->
+            <div class="va-filter-panel__row" ng-if="filter.datePreset === 'custom'">
+                <span class="va-filter-panel__label">{{ 'platform.blades.account-list.filter.date-from' | translate }}</span>
+                <input type="date" class="va-filter-panel__date-input" ng-model="filter.loginStartDate" ng-change="filter.criteriaChanged()">
+            </div>
+            <div class="va-filter-panel__row" ng-if="filter.datePreset === 'custom'">
+                <span class="va-filter-panel__label">{{ 'platform.blades.account-list.filter.date-to' | translate }}</span>
+                <input type="date" class="va-filter-panel__date-input" ng-model="filter.loginEndDate" ng-change="filter.criteriaChanged()">
+            </div>
+
+        </va-filter-panel>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
@@ -22,6 +86,9 @@
                     ]})">
                 <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
                 <ul class="menu __context" role="menu" id="acc_menu">
+                    <li class="menu-item" ng-click='copy(contextMenuEntity.id)'>
+                        <i class="menu-ico fa fa-copy"></i> {{'platform.blades.account-list.labels.copy-id' | translate}}
+                    </li>
                     <li class="menu-item" ng-click='deleteList([contextMenuEntity])' va-permission="platform:security:delete">
                         <i class="menu-ico fas fa-trash-alt"></i> {{'platform.commands.delete' | translate}}
                     </li>

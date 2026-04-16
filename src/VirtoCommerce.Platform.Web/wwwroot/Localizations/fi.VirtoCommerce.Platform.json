@@ -7,6 +7,7 @@
       "notifications": "Ilmoitukset",
       "more": "Lisää",
       "settings": "Asetukset",
+      "settings-unified": "Asetukset (Yhtenäinen)",
       "dynamic-properties": "Dynamiset ominaisuudet",
       "security": "Turvallisuus",
       "modules": "Moduulit",
@@ -63,7 +64,25 @@
         "labels": {
           "login": "Kirjautuminen",
           "details": "Tiedot",
-          "time": "Aika"
+          "time": "Aika",
+          "operation-type": "Tyyppi"
+        },
+        "filter": {
+          "title": "Suodatin",
+          "operation-type": "Toimintotyyppi",
+          "all": "Kaikki",
+          "type-added": "Lisätty",
+          "type-modified": "Muokattu",
+          "type-deleted": "Poistettu",
+          "modified-date": "Muokattu",
+          "date-any": "Milloin tahansa",
+          "date-today": "Tänään",
+          "date-yesterday": "Eilen",
+          "date-last7": "Viimeiset 7 päivää",
+          "date-last30": "Viimeiset 30 päivää",
+          "date-custom": "Mukautettu aikaväli",
+          "date-from": "Alkaen",
+          "date-to": "Asti"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +277,8 @@
           "end": "Loppu",
           "progress-messages": "Edistymisviestit",
           "process-completed": "Moduulien hallintaprosessi on valmis",
+          "completed-with-errors": "Valmis, mutta virheitä ilmeni",
+          "detailed-log": "Näytä yksityiskohtainen loki",
           "restart-application": "Käynnistä sovellus uudelleen nyt tai myöhemmin"
         }
       },
@@ -287,7 +308,12 @@
           "tags": "Tunnisteet",
           "install-version": "Asenna versio",
           "errors": "Virheet",
-          "update-version": "Päivitä {{id}} versioon"
+          "update-version": "Päivitä {{id}} versioon",
+          "use-custom-version": "Käytä mukautettua versiota",
+          "use-latest-version": "Käytä uusinta versiota",
+          "custom-version-checking": "Tarkistetaan...",
+          "custom-version-valid": "Paketti löytyi",
+          "custom-version-invalid": "Pakettia ei löytynyt"
         }
       },
       "modules-main": {
@@ -296,6 +322,7 @@
           "updates": "Päivitykset",
           "browse": "Selaa",
           "installed": "Asennetut",
+          "notInstalled": "Asentamattomat",
           "withErrors": "Virheet",
           "advanced": "Edistynyt"
         }
@@ -315,7 +342,13 @@
           "version": "Versio",
           "author": "Tekijä",
           "installed": "Asennetut moduulit",
-          "manual-install-warning": "Varoitus! Manuaalisesti asennetut moduulit eivät käynnisty, koska RefreshProbingFolderOnStart on asetettu falseksi"
+          "manual-install-warning": "Varoitus! Manuaalisesti asennetut moduulit eivät käynnisty, koska RefreshProbingFolderOnStart on asetettu falseksi",
+          "filter": "Suodata moduulit",
+          "status": "Tila",
+          "status-all": "Kaikki",
+          "status-installed": "Asennetut",
+          "status-not-installed": "Asentamattomat",
+          "status-updates": "Päivitykset"
         }
       },
       "history": {
@@ -423,7 +456,26 @@
           "account-type": "Tilin tyyppi",
           "login": "Kirjautuminen",
           "state": "Tila",
-          "status": "Tila"
+          "status": "Tila",
+          "copy-id": "Kopioi tunnus"
+        },
+        "filter": {
+          "title": "Suodattimet",
+          "all": "Kaikki",
+          "locked-only": "Lukitut tilit",
+          "not-verified": "Sähköpostia ei vahvistettu",
+          "account-type": "Tilin tyyppi",
+          "status": "Tila",
+          "role": "Rooli",
+          "last-login": "Viimeisin kirjautuminen",
+          "date-any": "Milloin tahansa",
+          "date-today": "Tänään",
+          "date-yesterday": "Eilen",
+          "date-last7": "Viimeiset 7 päivää",
+          "date-last30": "Viimeiset 30 päivää",
+          "date-custom": "Mukautettu aikaväli",
+          "date-from": "Alkaen",
+          "date-to": "Päättyen"
         }
       },
       "account-api": {
@@ -665,6 +717,30 @@
       "settingGroup-list": {
         "title": "Asetukset",
         "bread-crumb-top": "Kaikki asetukset"
+      },
+      "settings-unified": {
+        "title": "Asetukset",
+        "all-settings": "Kaikki asetukset",
+        "filter": "Suodata",
+        "filter-show": "Näytä",
+        "filter-all": "Kaikki asetukset",
+        "filter-modified": "Vain muokatut",
+        "filter-modified-only": "Näytä vain muokatut",
+        "filter-module": "Moduuli",
+        "filter-all-modules": "Kaikki moduulit",
+        "filter-clear": "Tyhjennä suodattimet",
+        "filter-show-tenant": "Näytä vuokralaisen ominaisuudet",
+        "copy-link": "Kopioi linkki osioon",
+        "no-settings": "Yksikään asetus ei vastaa nykyisiä suodattimia.",
+        "export-json": "Vie JSON",
+        "import-json": "Tuo JSON",
+        "edit-json": "Muokkaa JSON-muodossa",
+        "import-confirm-title": "Tuo asetukset",
+        "import-confirm-message": "Ota kayttoon {{count}} asetusta tuodusta tiedostosta?"
+      },
+      "settings-json-editor": {
+        "title": "Muokkaa asetuksia JSON-muodossa",
+        "format-json": "Muotoile JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Vedä ja pudota tiedosto tänne",
@@ -917,6 +993,11 @@
         "warning": "VAROITUS: Tämä muutos on pysyvä eikä sitä voi perua. Muutoksen toteuttaminen voi johtaa tietojen menetykseen.",
         "message": "Seuraavat tiedot poistetaan:",
         "instruction": "Kirjoita 'yes' poistaaksesi:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Tyhjennä suodattimet"
       }
     },
     "commands": {

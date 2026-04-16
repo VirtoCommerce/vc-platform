@@ -1,3 +1,6 @@
 ﻿<div class="ui-grid-cell-contents" ng-if="COL_FIELD">
-    <span class="table-date" am-time-ago="COL_FIELD"></span>
+    <span class="table-date" am-time-ago="COL_FIELD"
+          am-full-date-threshold="{{$root.amTimeAgoFullDateThreshold}}"
+          am-full-date-threshold-unit="{{$root.amTimeAgoFullDateThresholdUnit}}"
+          am-full-date-format="{{$root.amTimeAgoFullDateFormat}}"></span>
 </div>

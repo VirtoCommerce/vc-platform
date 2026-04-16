@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Tests.IntegrationTests
         }
 
         [Fact]
-        public void CreateDirectory_CreateTestDirectory()
+        public void CreateDirectory_CreateAndDeleteTestDirectory()
         {
             //Arrange
             var path = Path.GetFullPath("Test");
@@ -25,13 +25,6 @@ namespace VirtoCommerce.Platform.Tests.IntegrationTests
 
             //Assert
             Assert.True(Directory.Exists(path));
-        }
-
-        [Fact]
-        public void Delete_DeleteTestDirectory()
-        {
-            //Arrange
-            var path = Path.GetFullPath("Test");
 
             //Act
             _fileManager.Delete(path);

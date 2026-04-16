@@ -7,6 +7,7 @@
       "notifications": "Powiadomienia",
       "more": "Więcej",
       "settings": "Ustawienia",
+      "settings-unified": "Ustawienia (Zunifikowane)",
       "dynamic-properties": "Właściwości dynamiczne",
       "security": "Bezpieczeństwo",
       "modules": "Moduły",
@@ -63,7 +64,25 @@
         "labels": {
           "login": "Login",
           "details": "Szczegóły",
-          "time": "Czas"
+          "time": "Czas",
+          "operation-type": "Typ"
+        },
+        "filter": {
+          "title": "Filtr",
+          "operation-type": "Typ operacji",
+          "all": "Wszystkie",
+          "type-added": "Dodano",
+          "type-modified": "Zmodyfikowano",
+          "type-deleted": "Usunięto",
+          "modified-date": "Zmodyfikowano",
+          "date-any": "Dowolny czas",
+          "date-today": "Dzisiaj",
+          "date-yesterday": "Wczoraj",
+          "date-last7": "Ostatnie 7 dni",
+          "date-last30": "Ostatnie 30 dni",
+          "date-custom": "Zakres niestandardowy",
+          "date-from": "Od",
+          "date-to": "Do"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +277,8 @@
           "end": "Koniec",
           "progress-messages": "Komunikaty o postępie",
           "process-completed": "Proces zarządzania modułem został zakończony",
+          "completed-with-errors": "Zakończono z błędami",
+          "detailed-log": "Pokaż szczegółowy dziennik",
           "restart-application": "Uruchom ponownie aplikację teraz lub później"
         }
       },
@@ -286,7 +307,12 @@
           "optional-dependencies": "Opcjonalne zależności",
           "tags": "Tagi",
           "install-version": "Zainstaluj wersję",
-          "errors": "Błędy"
+          "errors": "Błędy",
+          "use-custom-version": "Użyj niestandardowej wersji",
+          "use-latest-version": "Użyj najnowszej wersji",
+          "custom-version-checking": "Sprawdzanie...",
+          "custom-version-valid": "Pakiet znaleziony",
+          "custom-version-invalid": "Pakiet nie znaleziony"
         }
       },
       "modules-main": {
@@ -295,6 +321,7 @@
           "updates": "Aktualizacje",
           "available": "Dostępne",
           "installed": "Zainstalowane",
+          "notInstalled": "Niezainstalowane",
           "withErrors": "Błędy",
           "advanced": "Zaawansowane"
         }
@@ -314,7 +341,13 @@
           "version": "Wersja",
           "author": "Autor",
           "installed": "Zainstalowane moduły",
-          "manual-install-warning": "Uwaga! Ręcznie zainstalowane moduły nie uruchomią się, ponieważ RefreshProbingFolderOnStart jest ustawione na false"
+          "manual-install-warning": "Uwaga! Ręcznie zainstalowane moduły nie uruchomią się, ponieważ RefreshProbingFolderOnStart jest ustawione na false",
+          "filter": "Filtruj moduły",
+          "status": "Status",
+          "status-all": "Wszystkie",
+          "status-installed": "Zainstalowane",
+          "status-not-installed": "Niezainstalowane",
+          "status-updates": "Aktualizacje"
         }
       },
       "history": {
@@ -422,7 +455,26 @@
           "account-type": "Typ konta",
           "login": "Login",
           "state": "Stan",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Kopiuj ID"
+        },
+        "filter": {
+          "title": "Filtry",
+          "all": "Wszystkie",
+          "locked-only": "Zablokowane konta",
+          "not-verified": "E-mail niezweryfikowany",
+          "account-type": "Typ konta",
+          "status": "Status",
+          "role": "Rola",
+          "last-login": "Ostatnie logowanie",
+          "date-any": "Dowolny czas",
+          "date-today": "Dzisiaj",
+          "date-yesterday": "Wczoraj",
+          "date-last7": "Ostatnie 7 dni",
+          "date-last30": "Ostatnie 30 dni",
+          "date-custom": "Zakres niestandardowy",
+          "date-from": "Od",
+          "date-to": "Do"
         }
       },
       "account-api": {
@@ -664,6 +716,30 @@
       "settingGroup-list": {
         "title": "Ustawienia",
         "bread-crumb-top": "Wszystkie ustawienia"
+      },
+      "settings-unified": {
+        "title": "Ustawienia",
+        "all-settings": "Wszystkie ustawienia",
+        "filter": "Filtr",
+        "filter-show": "Pokaż",
+        "filter-all": "Wszystkie ustawienia",
+        "filter-modified": "Tylko zmienione",
+        "filter-modified-only": "Pokaż tylko zmienione",
+        "filter-module": "Moduł",
+        "filter-all-modules": "Wszystkie moduły",
+        "filter-clear": "Wyczyść filtry",
+        "filter-show-tenant": "Pokaż właściwości najemcy",
+        "copy-link": "Kopiuj link do sekcji",
+        "no-settings": "Żadne ustawienia nie odpowiadają bieżącym filtrom.",
+        "export-json": "Eksportuj JSON",
+        "import-json": "Importuj JSON",
+        "edit-json": "Edytuj jako JSON",
+        "import-confirm-title": "Importuj ustawienia",
+        "import-confirm-message": "Zastosowac {{count}} ustawien z zaimportowanego pliku?"
+      },
+      "settings-json-editor": {
+        "title": "Edytuj ustawienia jako JSON",
+        "format-json": "Formatuj JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Przeciągnij i upuść plik tutaj",
@@ -916,6 +992,11 @@
         "warning": "OSTRZEŻENIE: Ta zmiana jest trwała i nie można jej cofnąć. Zastosowanie tej zmiany może spowodować utratę danych.",
         "message": "Następujące dane zostaną usunięte:",
         "instruction": "Wpisz 'yes', aby usunąć:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Wyczyść filtry"
       }
     },
     "commands": {

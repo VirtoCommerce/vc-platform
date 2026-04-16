@@ -18,7 +18,7 @@ jobs:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@main    
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.26    
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
@@ -36,7 +36,7 @@ jobs:
       changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install VirtoCommerce.GlobalTool
       uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master

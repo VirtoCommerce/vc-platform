@@ -390,7 +390,7 @@ namespace VirtoCommerce.Platform.Core
                     Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.Boolean,
-                    DefaultValue = true
+                    DefaultValue = false
                 };
 
                 public static SettingDescriptor FullDateThreshold { get; } = new SettingDescriptor

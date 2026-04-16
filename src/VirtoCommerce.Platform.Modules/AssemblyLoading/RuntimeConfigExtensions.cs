@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
         /// <param name="isDevelopmentEnvironment">If it is development environment, should be true. Will add configs local probing paths in that case.</param>
         /// <param name="error">The error, if one occurs while parsing runtimeconfig.json</param>
         /// <returns>Additional probing paths (including NuGet and DotNet package caches).</returns>
-        public static IEnumerable<string> TryGetAdditionalProbingPathFromRuntimeConfig(
+        public static ICollection<string> TryGetAdditionalProbingPathFromRuntimeConfig(
             this string runtimeConfigPath,
             bool isDevelopmentEnvironment,
             out Exception error)

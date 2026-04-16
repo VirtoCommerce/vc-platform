@@ -5,19 +5,17 @@
     <IsPackable>false</IsPackable>
     <!-- Add common warnings to suppress and keep in sync with Directory.Build.props -->
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <!-- Treat NU1608 as a warning (not an error) for this project -->
-    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1608</WarningsNotAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.18.1" />
-    <PackageReference Include="coverlet.collector" Version="6.0.4">
+    <PackageReference Include="coverlet.collector" Version="8.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <!--Don't Update FluentAssertions 8.0+ requires a paid license for commercial use.-->
-    <PackageReference Include="FluentAssertions" Version="7.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <!--Don't update. FluentAssertions 8+ requires a paid license for commercial use.-->
+    <PackageReference Include="FluentAssertions" Version="[7.2.2, 8.0.0)" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit.v3" Version="3.2.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">

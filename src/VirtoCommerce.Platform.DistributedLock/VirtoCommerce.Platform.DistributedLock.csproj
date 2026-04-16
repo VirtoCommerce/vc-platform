@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="StackExchange.Redis" Version="2.10.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.12.14" />
     <PackageReference Include="RedLock.net" Version="2.3.2" />
   </ItemGroup>
 

@@ -7,6 +7,7 @@
       "notifications": "通知",
       "more": "更多",
       "settings": "设置",
+      "settings-unified": "设置 (统一)",
       "dynamic-properties": "动态属性",
       "security": "安全",
       "modules": "模块",
@@ -63,7 +64,25 @@
         "labels": {
           "login": "登录",
           "details": "详情",
-          "time": "时间"
+          "time": "时间",
+          "operation-type": "类型"
+        },
+        "filter": {
+          "title": "筛选",
+          "operation-type": "操作类型",
+          "all": "全部",
+          "type-added": "已添加",
+          "type-modified": "已修改",
+          "type-deleted": "已删除",
+          "modified-date": "修改时间",
+          "date-any": "任何时间",
+          "date-today": "今天",
+          "date-yesterday": "昨天",
+          "date-last7": "最近7天",
+          "date-last30": "最近30天",
+          "date-custom": "自定义范围",
+          "date-from": "从",
+          "date-to": "至"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +277,8 @@
           "end": "结束",
           "progress-messages": "进度消息",
           "process-completed": "模块管理过程完成",
+          "completed-with-errors": "完成但有错误",
+          "detailed-log": "显示详细日志",
           "restart-application": "立即重启应用程序或稍后重启"
         }
       },
@@ -286,7 +307,12 @@
           "optional-dependencies": "可选依赖项",
           "tags": "标签",
           "install-version": "安装版本",
-          "errors": "错误"
+          "errors": "错误",
+          "use-custom-version": "使用自定义版本",
+          "use-latest-version": "使用最新版本",
+          "custom-version-checking": "检查中...",
+          "custom-version-valid": "已找到安装包",
+          "custom-version-invalid": "未找到安装包"
         }
       },
       "modules-main": {
@@ -295,6 +321,7 @@
           "updates": "更新",
           "available": "可用",
           "installed": "已安装",
+          "notInstalled": "未安装",
           "withErrors": "错误",
           "advanced": "高级"
         }
@@ -314,7 +341,13 @@
           "version": "版本",
           "author": "作者",
           "installed": "已安装的模块",
-          "manual-install-warning": "警告！手动安装的模块将不会启动，因为 RefreshProbingFolderOnStart 设置为 false"
+          "manual-install-warning": "警告！手动安装的模块将不会启动，因为 RefreshProbingFolderOnStart 设置为 false",
+          "filter": "筛选模块",
+          "status": "状态",
+          "status-all": "全部",
+          "status-installed": "已安装",
+          "status-not-installed": "未安装",
+          "status-updates": "更新"
         }
       },
       "history": {
@@ -422,7 +455,26 @@
           "account-type": "账户类型",
           "login": "登录名",
           "state": "状态",
-          "status": "状态"
+          "status": "状态",
+          "copy-id": "复制ID"
+        },
+        "filter": {
+          "title": "筛选",
+          "all": "全部",
+          "locked-only": "已锁定的账户",
+          "not-verified": "邮箱未验证",
+          "account-type": "账户类型",
+          "status": "状态",
+          "role": "角色",
+          "last-login": "最后登录",
+          "date-any": "任意时间",
+          "date-today": "今天",
+          "date-yesterday": "昨天",
+          "date-last7": "最近7天",
+          "date-last30": "最近30天",
+          "date-custom": "自定义范围",
+          "date-from": "从",
+          "date-to": "至"
         }
       },
       "account-api": {
@@ -664,6 +716,30 @@
       "settingGroup-list": {
         "title": "设置",
         "bread-crumb-top": "所有设置"
+      },
+      "settings-unified": {
+        "title": "设置",
+        "all-settings": "所有设置",
+        "filter": "筛选",
+        "filter-show": "显示",
+        "filter-all": "所有设置",
+        "filter-modified": "仅已修改",
+        "filter-modified-only": "仅显示已修改",
+        "filter-module": "模块",
+        "filter-all-modules": "所有模块",
+        "filter-clear": "清除筛选",
+        "filter-show-tenant": "显示租户属性",
+        "copy-link": "复制章节链接",
+        "no-settings": "没有设置匹配当前筛选条件。",
+        "export-json": "导出 JSON",
+        "import-json": "导入 JSON",
+        "edit-json": "以 JSON 编辑",
+        "import-confirm-title": "导入设置",
+        "import-confirm-message": "从导入的文件中应用{{count}}个设置？"
+      },
+      "settings-json-editor": {
+        "title": "以 JSON 编辑设置",
+        "format-json": "格式化 JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "将文件拖放到此处",
@@ -916,6 +992,11 @@
         "warning": "警告：此更改是永久性的，无法撤销。应用此更改可能会导致数据丢失。",
         "message": "以下数据将被删除：",
         "instruction": "请输入\"yes\"以删除："
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "清除过滤器"
       }
     },
     "commands": {

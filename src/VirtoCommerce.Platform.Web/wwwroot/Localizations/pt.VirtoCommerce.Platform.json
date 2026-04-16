@@ -7,6 +7,7 @@
       "notifications": "Notificações",
       "more": "Mais",
       "settings": "Configurações",
+      "settings-unified": "Configurações (Unificado)",
       "dynamic-properties": "Propriedades dinâmicas",
       "security": "Segurança",
       "modules": "Módulos",
@@ -63,7 +64,25 @@
         "labels": {
           "login": "Login",
           "details": "Detalhes",
-          "time": "Hora"
+          "time": "Hora",
+          "operation-type": "Tipo"
+        },
+        "filter": {
+          "title": "Filtro",
+          "operation-type": "Tipo de operação",
+          "all": "Todos",
+          "type-added": "Adicionado",
+          "type-modified": "Modificado",
+          "type-deleted": "Excluído",
+          "modified-date": "Modificado",
+          "date-any": "Qualquer momento",
+          "date-today": "Hoje",
+          "date-yesterday": "Ontem",
+          "date-last7": "Últimos 7 dias",
+          "date-last30": "Últimos 30 dias",
+          "date-custom": "Intervalo personalizado",
+          "date-from": "De",
+          "date-to": "Até"
         }
       },
       "dynamicObject-list": {
@@ -258,6 +277,8 @@
           "end": "Fim",
           "progress-messages": "Mensagens de progresso",
           "process-completed": "O processo de gestão do módulo está concluído",
+          "completed-with-errors": "Concluído com erros",
+          "detailed-log": "Mostrar registro detalhado",
           "restart-application": "Reiniciar a aplicação agora ou mais tarde"
         }
       },
@@ -286,7 +307,12 @@
           "optional-dependencies": "Dependências opcionais",
           "tags": "Tags",
           "install-version": "Instalar versão",
-          "errors": "Erros"
+          "errors": "Erros",
+          "use-custom-version": "Usar versão personalizada",
+          "use-latest-version": "Usar versão mais recente",
+          "custom-version-checking": "Verificando...",
+          "custom-version-valid": "Pacote encontrado",
+          "custom-version-invalid": "Pacote não encontrado"
         }
       },
       "modules-main": {
@@ -295,6 +321,7 @@
           "updates": "Atualizações",
           "available": "Disponíveis",
           "installed": "Instalados",
+          "notInstalled": "Não instalados",
           "withErrors": "Erros",
           "advanced": "Avançado"
         }
@@ -314,7 +341,13 @@
           "version": "Versão",
           "author": "Autor",
           "installed": "Módulos instalados",
-          "manual-install-warning": "Aviso! Módulos instalados manualmente não iniciarão porque RefreshProbingFolderOnStart está definido como falso"
+          "manual-install-warning": "Aviso! Módulos instalados manualmente não iniciarão porque RefreshProbingFolderOnStart está definido como falso",
+          "filter": "Filtrar módulos",
+          "status": "Status",
+          "status-all": "Todos",
+          "status-installed": "Instalados",
+          "status-not-installed": "Não instalados",
+          "status-updates": "Atualizações"
         }
       },
       "history": {
@@ -422,7 +455,26 @@
           "account-type": "Tipo de conta",
           "login": "Login",
           "state": "Estado",
-          "status": "Status"
+          "status": "Status",
+          "copy-id": "Copiar ID"
+        },
+        "filter": {
+          "title": "Filtros",
+          "all": "Todos",
+          "locked-only": "Contas bloqueadas",
+          "not-verified": "E-mail não verificado",
+          "account-type": "Tipo de conta",
+          "status": "Status",
+          "role": "Função",
+          "last-login": "Último acesso",
+          "date-any": "Qualquer período",
+          "date-today": "Hoje",
+          "date-yesterday": "Ontem",
+          "date-last7": "Últimos 7 dias",
+          "date-last30": "Últimos 30 dias",
+          "date-custom": "Período personalizado",
+          "date-from": "De",
+          "date-to": "Até"
         }
       },
       "account-api": {
@@ -664,6 +716,30 @@
       "settingGroup-list": {
         "title": "Configurações",
         "bread-crumb-top": "Todas as configurações"
+      },
+      "settings-unified": {
+        "title": "Configurações",
+        "all-settings": "Todas as configurações",
+        "filter": "Filtro",
+        "filter-show": "Mostrar",
+        "filter-all": "Todas as configurações",
+        "filter-modified": "Apenas modificadas",
+        "filter-modified-only": "Mostrar apenas modificadas",
+        "filter-module": "Módulo",
+        "filter-all-modules": "Todos os módulos",
+        "filter-clear": "Limpar filtros",
+        "filter-show-tenant": "Mostrar propriedades do inquilino",
+        "copy-link": "Copiar link para a seção",
+        "no-settings": "Nenhuma configuração corresponde aos filtros atuais.",
+        "export-json": "Exportar JSON",
+        "import-json": "Importar JSON",
+        "edit-json": "Editar como JSON",
+        "import-confirm-title": "Importar configurações",
+        "import-confirm-message": "Aplicar {{count}} configuracoes do arquivo importado?"
+      },
+      "settings-json-editor": {
+        "title": "Editar configurações como JSON",
+        "format-json": "Formatar JSON"
       },
       "settings-uploader": {
         "drag-drop-comment": "Arraste e solte o arquivo aqui",
@@ -916,6 +992,11 @@
         "warning": "AVISO: Esta alteração é permanente e não pode ser desfeita. A aplicação desta alteração pode resultar na perda de dados.",
         "message": "Os seguintes dados serão eliminados:",
         "instruction": "Escreva \"yes\" para eliminar:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Limpar filtros"
       }
     },
     "commands": {
