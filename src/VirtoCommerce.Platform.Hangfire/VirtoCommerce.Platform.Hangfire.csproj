@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -19,14 +19,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire" Version="1.8.22" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
+    <PackageReference Include="Hangfire" Version="1.8.23" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.23" />
     <PackageReference Include="Hangfire.Console" Version="1.4.3" />
     <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
     <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
-    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.13" />
-    <PackageReference Include="HangFire.SqlServer" Version="1.8.22" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.5" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />
+    <PackageReference Include="HangFire.SqlServer" Version="1.8.23" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.6" />
   </ItemGroup>
 
   <ItemGroup>
