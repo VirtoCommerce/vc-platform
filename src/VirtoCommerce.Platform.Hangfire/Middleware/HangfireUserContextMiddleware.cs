@@ -18,18 +18,16 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
             _userNameResolver = userNameResolver;
         }
 
-        private string ContextUserName => _userNameResolver.GetCurrentUserName();
-
         #region IClientFilter Members
 
         public void OnCreating(CreatingContext filterContext)
         {
-            if (ContextUserName is null)
-            {
-                return;
-            }
+            var currentUserName = _userNameResolver.GetCurrentUserName();
 
-            filterContext.SetJobParameter(USER_NAME, ContextUserName);
+            if (!string.IsNullOrEmpty(currentUserName))
+            {
+                filterContext.SetJobParameter(USER_NAME, currentUserName);
+            }
         }
 
         public void OnCreated(CreatedContext filterContext)

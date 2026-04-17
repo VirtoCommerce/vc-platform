@@ -840,13 +840,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 user.SecurityStamp = applicationUser.SecurityStamp;
             }
 
-            user.PasswordExpired = applicationUser.PasswordExpired;
-            user.LockoutEnabled = applicationUser.LockoutEnabled;
-
-            user.LockoutEnd = applicationUser.LockoutEnd;
-            user.LastLoginDate = applicationUser.LastLoginDate;
-            user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
-            user.LastPasswordChangeRequestDate = applicationUser.LastPasswordChangeRequestDate;
+            // Legacy storefront scenario: when AllowUpdateProtectedUserFields is enabled,
+            // integrations (e.g. vc-storefront) that manage their own ASP.NET Core Identity
+            // lockout may push updated lockout/audit state via PUT /users. By default, the
+            // protected fields are restored from the database so the API cannot tamper with
+            // them as a side effect of profile updates.
+            if (!_securityOptions.AllowUpdateProtectedUserFields)
+            {
+                user.PasswordExpired = applicationUser.PasswordExpired;
+                user.LockoutEnabled = applicationUser.LockoutEnabled;
+                user.LockoutEnd = applicationUser.LockoutEnd;
+                user.LastLoginDate = applicationUser.LastLoginDate;
+                user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
+                user.LastPasswordChangeRequestDate = applicationUser.LastPasswordChangeRequestDate;
+            }
 
             var result = await UserManager.UpdateAsync(user);
 
