@@ -25,7 +25,7 @@ jobs:
       version: ${{ steps.artifactVer.outputs.shortVersion }}
     steps:
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
 
     - name: Get Artifact Version
       uses: VirtoCommerce/vc-github-actions/get-image-version@master
