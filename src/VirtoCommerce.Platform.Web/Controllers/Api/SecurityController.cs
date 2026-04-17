@@ -829,7 +829,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             // Legacy storefront scenario: when AllowUpdateProtectedUserFields is enabled,
             // integrations (e.g. vc-storefront) that manage their own ASP.NET Core Identity
-            // lockout may push updated lockout/audit state via PUT /users. By default the
+            // lockout may push updated lockout/audit state via PUT /users. By default, the
             // protected fields are restored from the database so the API cannot tamper with
             // them as a side effect of profile updates.
             if (!_securityOptions.AllowUpdateProtectedUserFields)
