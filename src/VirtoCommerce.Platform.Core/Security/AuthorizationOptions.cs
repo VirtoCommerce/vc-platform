@@ -36,6 +36,6 @@ namespace VirtoCommerce.Platform.Core.Security
         /// that manage their own ASP.NET Core Identity lockout and push state back via
         /// this endpoint. By default, false.
         /// </summary>
-        public bool AllowOverrideProtectedUserFields { get; set; }
+        public bool AllowUpdateProtectedUserFields { get; set; }
     }
 }
