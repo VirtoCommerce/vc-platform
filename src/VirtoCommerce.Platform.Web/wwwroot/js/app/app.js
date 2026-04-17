@@ -189,6 +189,9 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                         url: loginPageUIOptions.patternUrl
                     };
                 }
+                // Default to true when the flag is missing (older backends).
+                $rootScope.uiCustomization.showForgotPasswordLink =
+                    loginPageUIOptions.showForgotPasswordLink !== false;
             })
         });
 
