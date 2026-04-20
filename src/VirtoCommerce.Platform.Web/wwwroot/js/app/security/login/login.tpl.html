@@ -29,7 +29,7 @@
                             <input type="checkbox" class="vc-checkbox__input" name="c1" checked="" ng-model="user.remember">
                             <span class="vc-checkbox__label">{{ 'platform.blades.login.labels.remember-me' | translate }}</span>
                         </label>
-                        <a class="vc-link" ui-sref="forgotpasswordDialog">{{ 'platform.blades.login.labels.forgot-password' | translate }}</a>
+                        <a class="vc-link" ng-if="uiCustomization.showForgotPasswordLink" ui-sref="forgotpasswordDialog">{{ 'platform.blades.login.labels.forgot-password' | translate }}</a>
                     </div>
                 </div>
                 <div class="login-form__alerts" ng-if="authError">
