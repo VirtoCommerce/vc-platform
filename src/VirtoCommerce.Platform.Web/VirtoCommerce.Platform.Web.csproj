@@ -52,6 +52,11 @@
     <PackageReference Include="System.Security.Permissions" Version="10.0.6" />
     <PackageReference Include="System.Windows.Extensions" Version="10.0.6" />
     <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
+
+    <!--Added to support VC modules on .NET8.-->
+    <PackageReference Include="System.Linq.Async" Version="7.0.0">
+      <ExcludeAssets>compile</ExcludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
