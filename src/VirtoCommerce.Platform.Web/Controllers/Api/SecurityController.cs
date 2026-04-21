@@ -1260,8 +1260,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             catch (Exception ex)
             {
-                var userId = currentUser.Id;
-                _logger.LogError(ex, "Failed to terminate sessions for user {userId}.", userId);
+                var sourceUserId = sourceUser.Id;
+                _logger.LogError(ex, "Failed to terminate sessions for user {userId}.", sourceUserId);
             }
         }
     }
