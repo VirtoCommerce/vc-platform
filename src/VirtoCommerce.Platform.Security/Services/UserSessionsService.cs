@@ -80,22 +80,35 @@ public class UserSessionsService : IUserSessionsService
             return;
         }
 
-        var authorizations = await _authorizationManager.FindBySubjectAsync(request.UserId).OfType<VirtoOpenIddictEntityFrameworkCoreAuthorization>().ToListAsync();
-
-        if (!request.ExcludedSessionGroupIds.IsNullOrEmpty())
+        if (request.ExcludedSessionGroupIds.IsNullOrEmpty())
         {
-            authorizations = authorizations.Where(x => !request.ExcludedSessionGroupIds.Contains(x.Id)).ToList();
+            await TerminateAllUserSessions(request.UserId);
+            return;
         }
+
+        var authorizations = await _authorizationManager.FindBySubjectAsync(request.UserId).OfType<VirtoOpenIddictEntityFrameworkCoreAuthorization>().ToListAsync();
+        authorizations = authorizations.Where(x => !request.ExcludedSessionGroupIds.Contains(x.Id)).ToList();
 
         foreach (var authorization in authorizations)
         {
-            var tokens = _tokenManager.FindByAuthorizationIdAsync(authorization.Id);
-            await foreach (var token in tokens)
+            var authorizationTokens = _tokenManager.FindByAuthorizationIdAsync(authorization.Id);
+            await foreach (var token in authorizationTokens)
             {
                 await _tokenManager.TryRevokeAsync(token);
             }
 
             await _authorizationManager.TryRevokeAsync(authorization);
+        }
+
+        // remove orphaned tokens, if present
+        var tokens = _tokenManager.FindBySubjectAsync(request.UserId);
+        await foreach (var token in tokens)
+        {
+            var authorizationId = await _tokenManager.GetAuthorizationIdAsync(token);
+            if (!request.ExcludedSessionGroupIds.Contains(authorizationId))
+            {
+                await _tokenManager.TryRevokeAsync(token);
+            }
         }
     }
 }

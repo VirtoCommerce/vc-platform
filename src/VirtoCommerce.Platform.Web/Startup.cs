@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
@@ -275,15 +276,24 @@ namespace VirtoCommerce.Platform.Web
                 {
                     options.ForwardDefaultSelector = context =>
                     {
-                        var authorization = context.Request.Headers.Authorization.ToString();
-
-                        // First bearer token 
-                        if (!authorization.IsNullOrEmpty() && authorization.StartsWithIgnoreCase("Bearer "))
+                        // 1) Authorization header: parse once; the scheme token decides the forward target.
+                        var authorizationHeader = context.Request.Headers.Authorization.ToString();
+                        if (!authorizationHeader.IsNullOrEmpty() &&
+                            AuthenticationHeaderValue.TryParse(authorizationHeader, out var parsed) && !parsed.Scheme.IsNullOrEmpty())
                         {
-                            return OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                            if (parsed.Scheme.EqualsIgnoreCase("Bearer"))
+                            {
+                                // Even if parsed.Parameter is empty/malformed, let OpenIddict produce the 401.
+                                return OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                            }
+
+                            if (parsed.Scheme.EqualsIgnoreCase("Basic"))
+                            {
+                                return BasicAuthenticationOptions.DefaultScheme;
+                            }
                         }
 
-                        // Second ApiKey
+                        // 2) API key: header or query string.
                         var apiKeyOptions = context.RequestServices.GetRequiredService<IOptions<ApiKeyAuthenticationOptions>>().Value;
                         if (context.Request.Query.ContainsKey(apiKeyOptions.ApiKeyParamName) ||
                             context.Request.Headers.ContainsKey(apiKeyOptions.ApiKeyParamName))
@@ -291,13 +301,7 @@ namespace VirtoCommerce.Platform.Web
                             return ApiKeyAuthenticationOptions.DefaultScheme;
                         }
 
-                        // Third Basic auth
-                        if (!authorization.IsNullOrEmpty() && authorization.StartsWithIgnoreCase("Basic "))
-                        {
-                            return BasicAuthenticationOptions.DefaultScheme;
-                        }
-
-                        // Lastly Identity cookie
+                        // 3) Cookie fallback (also covers anonymous requests).
                         return IdentityConstants.ApplicationScheme;
                     };
                 })

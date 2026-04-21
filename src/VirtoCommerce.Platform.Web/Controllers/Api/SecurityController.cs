@@ -577,7 +577,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (result.Succeeded)
             {
-                await TryTerminateUserSessions(currentUser, user);
+                await TryTerminateUserSessions(currentUser, user, preserveCurrentUserSession: true);
             }
 
             return Ok(result.ToSecurityResult());
@@ -636,7 +636,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     await UserManager.UpdateAsync(user);
                 }
 
-                await TryTerminateUserSessions(currentUser, user);
+                await TryTerminateUserSessions(currentUser, user, preserveCurrentUserSession: true);
             }
 
             return Ok(result.ToSecurityResult());
@@ -674,8 +674,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (result.Succeeded)
             {
-                // terminate all sessions for password reset request
-                await _userSessionsService.TerminateAllUserSessions(user.Id);
+                // terminate all sessions for password reset requests
+                await TryTerminateUserSessions(currentUser: null, sourceUser: user);
             }
 
             return Ok(result.ToSecurityResult());
@@ -1230,23 +1230,32 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private async Task TryTerminateUserSessions(ApplicationUser currentUser, ApplicationUser sourceUser)
         {
-            // try to clear user tokens for the user 
-            var terminateSessionsRequest = new TerminateUserSessionsRequest
+            try
             {
-                UserId = sourceUser.Id,
-            };
-
-            // except the current session if password chagne was requested by the current user
-            if (sourceUser.Id.EqualsIgnoreCase(currentUser.Id))
-            {
-                var session = User.FindFirstValue(Claims.Private.AuthorizationId);
-                if (!session.IsNullOrEmpty())
+                // try to clear user tokens for the user 
+                var terminateSessionsRequest = new TerminateUserSessionsRequest
                 {
-                    terminateSessionsRequest.ExcludedSessionGroupIds = [session];
-                }
-            }
+                    UserId = sourceUser.Id,
+                };
 
-            await _userSessionsService.TerminateUserSessions(terminateSessionsRequest);
+                // except the current session if password change was requested by the current user
+                // if current user is not passed then we remove all sessions 
+                if (currentUser != null && sourceUser.Id.EqualsIgnoreCase(currentUser.Id))
+                {
+                    var session = User.FindFirstValue(Claims.Private.AuthorizationId);
+                    if (!session.IsNullOrEmpty())
+                    {
+                        terminateSessionsRequest.ExcludedSessionGroupIds = [session];
+                    }
+                }
+
+                await _userSessionsService.TerminateUserSessions(terminateSessionsRequest);
+            }
+            catch (Exception ex)
+            {
+                var userId = currentUser.Id;
+                _logger.LogError(ex, "Failed to terminate sessions for user {userId}.", userId);
+            }
         }
     }
 }
