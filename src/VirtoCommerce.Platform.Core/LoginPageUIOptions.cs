@@ -10,6 +10,8 @@ namespace VirtoCommerce.Platform.Core
 
         public string Preset { get; set; }
 
+        public bool ShowForgotPasswordLink { get; set; } = true;
+
         public List<LoginPageUIOptionPreset> Presets { get; set; } = new List<LoginPageUIOptionPreset>();
 
         public class LoginPageUIOptionPreset
