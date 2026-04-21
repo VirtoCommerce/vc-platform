@@ -577,7 +577,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (result.Succeeded)
             {
-                await TryTerminateUserSessions(currentUser, user, preserveCurrentUserSession: true);
+                await TryTerminateUserSessions(currentUser, user);
             }
 
             return Ok(result.ToSecurityResult());
@@ -636,7 +636,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     await UserManager.UpdateAsync(user);
                 }
 
-                await TryTerminateUserSessions(currentUser, user, preserveCurrentUserSession: true);
+                await TryTerminateUserSessions(currentUser, user);
             }
 
             return Ok(result.ToSecurityResult());
