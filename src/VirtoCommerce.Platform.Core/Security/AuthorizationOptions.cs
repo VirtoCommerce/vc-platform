@@ -26,5 +26,16 @@ namespace VirtoCommerce.Platform.Core.Security
         /// Allows customers to access the API endpoints and perform authorized actions. By default, false.
         /// </summary>
         public bool AllowApiAccessForCustomers { get; set; }
+
+        /// <summary>
+        /// Legacy storefront scenario only. When true, the PUT users endpoint accepts
+        /// caller-provided values for the protected user fields (PasswordExpired,
+        /// LockoutEnabled, LockoutEnd, LastLoginDate, LastPasswordChangedDate,
+        /// LastPasswordChangeRequestDate) instead of restoring them from the database.
+        /// Provided for backward compatibility with integrations (e.g. vc-storefront)
+        /// that manage their own ASP.NET Core Identity lockout and push state back via
+        /// this endpoint. By default, false.
+        /// </summary>
+        public bool AllowUpdateProtectedUserFields { get; set; }
     }
 }

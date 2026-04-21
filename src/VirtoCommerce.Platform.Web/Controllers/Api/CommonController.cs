@@ -62,7 +62,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 patternUrl = preset?.PatternUrl;
             }
 
-            return Ok(new { BackgroundUrl = backgroundUrl, PatternUrl = patternUrl });
+            return Ok(new
+            {
+                BackgroundUrl = backgroundUrl,
+                PatternUrl = patternUrl,
+                ShowForgotPasswordLink = _loginPageOptions.ShowForgotPasswordLink,
+            });
         }
     }
 }
