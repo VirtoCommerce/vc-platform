@@ -9,5 +9,6 @@ namespace VirtoCommerce.Platform.Core.Common
         Task<IList<Country>> GetCountriesAsync();
         Task<IList<CountryRegion>> GetCountryRegionsAsync(string countryId);
         Country GetByCode(string code);
+        Country FindByName(string name);
     }
 }
