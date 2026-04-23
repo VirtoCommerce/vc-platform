@@ -125,13 +125,42 @@ angular.module('platformWebApp')
         }]);
 
         // Fix bugs & add features for datepicker popup
-        $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', 'timepickerConfig', '$filter', '$locale', 'moment',
-            function ($delegate, formatConverter, datepickerPopupConfig, timepickerConfig, $filter, $locale, moment) {
+        $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', 'timepickerConfig', '$filter', '$locale', 'moment', 'platformWebApp.i18n', 'platformWebApp.common.timeZones',
+            function ($delegate, formatConverter, datepickerPopupConfig, timepickerConfig, $filter, $locale, moment, i18n, timeZones) {
                 //delete bootstrap directive
                 $delegate.shift();
 
                 //use custom date time picker directive
                 var directive = $delegate[0];
+
+                // Offset (minutes west of UTC) for the user's profile timezone; same source as dateFilter decorator
+                // so the popup's wall-clock matches the input field exactly.
+                function getUserTzOffsetMinutes(sampleDate) {
+                    var tz = timeZones.get(i18n.getTimeZone());
+                    var fallback = sampleDate ? sampleDate.getTimezoneOffset() : 0;
+                    if (!tz || !tz.utcOffset || !tz.utcOffset.formatted) {
+                        return fallback;
+                    }
+                    var offsetStr = tz.utcOffset.formatted.replace(':', '');
+                    var parsed = Date.parse('Jan 01, 1970 00:00:00 ' + offsetStr) / 60000;
+                    return isNaN(parsed) ? fallback : parsed;
+                }
+
+                // Shift a real instant into a Date whose browser-local fields render the user's profile-TZ wall-clock.
+                function toUserTzWallClock(value) {
+                    if (!value) return value;
+                    var d = angular.isDate(value) ? new Date(value.getTime()) : new Date(value);
+                    var diff = getUserTzOffsetMinutes(d) - d.getTimezoneOffset();
+                    return new Date(d.getTime() - diff * 60000);
+                }
+
+                // Reverse of toUserTzWallClock — used when the picker commits back to the model.
+                function fromUserTzWallClock(value) {
+                    if (!value) return value;
+                    var d = angular.isDate(value) ? new Date(value.getTime()) : new Date(value);
+                    var diff = getUserTzOffsetMinutes(d) - d.getTimezoneOffset();
+                    return new Date(d.getTime() + diff * 60000);
+                }
 
                 directive.compile = function (tElem, tAttrs) {
                     tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);
@@ -160,23 +189,54 @@ angular.module('platformWebApp')
 
                         directive.link.apply(this, arguments);
 
-                        // convert localized date to javascript date object for correct validation
+                        // scope.date is bound to the internal date/time pickers. Shift it to the user-profile-TZ wall-clock
+                        // so the popup renders the same hours/minutes as the input field (which formats via user TZ
+                        // through the dateFilter decorator below).
                         ngModelCtrl.$formatters.splice(1, 1, function (value) {
                             var format = attrs.datepickerPopup;
-                            scope.date = value;
-                            return ngModelCtrl.$isEmpty(value) ? value : $filter('date')(moment(value), format);
+                            if (ngModelCtrl.$isEmpty(value)) {
+                                scope.date = value;
+                                return value;
+                            }
+                            scope.date = toUserTzWallClock(value);
+                            return $filter('date')(moment(value), format);
                         });
 
                         ngModelCtrl.$parsers.unshift(function (value) {
-                            if (value) {
-                                var format = formatConverter.convert(attrs.datepickerPopup);
-                                var date = moment(value, format, moment.locale(), true);
-                                return date.isValid() ? date.toDate() : undefined;
+                            if (!value) {
+                                //Allow to enter empty value
+                                return value;
                             }
-
-                            //Allow to enter empty value
-                            return value;
+                            // Picker commits a Date representing user-TZ wall-clock — convert back to the real instant.
+                            if (angular.isDate(value)) {
+                                return fromUserTzWallClock(value);
+                            }
+                            var format = formatConverter.convert(attrs.datepickerPopup);
+                            var date = moment(value, format, moment.locale(), true);
+                            return date.isValid() ? date.toDate() : undefined;
                         });
+
+                        // "Now" / "Today" buttons in the popup use new Date() (browser wall-clock); shift so they land
+                        // in user-TZ wall-clock like the rest of the picker state.
+                        var originalSelect = scope.select;
+                        if (angular.isFunction(originalSelect)) {
+                            scope.select = function (opt) {
+                                if (opt === 'today' || opt === 'now') {
+                                    var nowShifted = toUserTzWallClock(new Date());
+                                    var date;
+                                    if (angular.isDate(scope.date)) {
+                                        date = new Date(scope.date);
+                                        date.setFullYear(nowShifted.getFullYear(), nowShifted.getMonth(), nowShifted.getDate());
+                                        date.setHours(nowShifted.getHours(), nowShifted.getMinutes(), nowShifted.getSeconds(), nowShifted.getMilliseconds());
+                                    } else {
+                                        date = nowShifted;
+                                    }
+                                    scope.dateSelection(date);
+                                    return;
+                                }
+                                return originalSelect.apply(this, arguments);
+                            };
+                        }
                     }
                 };
                 return $delegate;
