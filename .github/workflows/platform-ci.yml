@@ -310,6 +310,7 @@ jobs:
       run: |
         echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
   auto-tests:
+    needs: ci
     # if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
     #     (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
     uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@VCST-4958
