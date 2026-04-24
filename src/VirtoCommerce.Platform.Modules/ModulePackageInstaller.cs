@@ -20,7 +20,7 @@ public static class ModulePackageInstaller
     /// <summary>
     /// Install a module from a ZIP file to the target module directory.
     /// </summary>
-    public static void Install(string zipPath, string targetModulePath, bool deleteZip = true)
+    public static void Install(string zipPath, string targetModulePath, bool deleteZip)
     {
         ArgumentNullException.ThrowIfNull(zipPath);
         ArgumentNullException.ThrowIfNull(targetModulePath);
@@ -198,7 +198,7 @@ public static class ModulePackageInstaller
             var zipPath = Path.Combine(modulePath, $"{module.Id}_{module.Version}.zip");
 
             Download(zipUrl, zipPath, options, httpClient);
-            Install(zipPath, modulePath);
+            Install(zipPath, modulePath, deleteZip: true);
         }
         else if (File.Exists(module.Ref))
         {
