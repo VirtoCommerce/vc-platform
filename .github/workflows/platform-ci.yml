@@ -320,7 +320,7 @@ jobs:
       platformDockerTag: ${{ needs.ci.outputs.tag }}
       vctestingRepoBranch: 'test-VCST-4958' #'dev'
       frontendZipUrl: 'latest'
-      testSuites: 'graphql, restapi'
+      testSuites: 'graphql,restapi,e2e'
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
       testSecretEnvFile: ${{ secrets.VC_TESTING_MODULE_ENV_FILE_NEW }} #${{ secrets.VC_TESTING_MODULE_ENV_FILE }}
