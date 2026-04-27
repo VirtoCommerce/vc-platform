@@ -82,6 +82,23 @@ namespace VirtoCommerce.Platform.Data.Common
             return country;
         }
 
+        public Country FindByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
+            var countryInfo = _provider.GetCountryByName(name);
+            if (countryInfo == null)
+            {
+                return null;
+            }
+
+            var iso3 = countryInfo.Alpha3Code.ToString();
+            return GetCountries().FirstOrDefault(x => x.Id == iso3);
+        }
+
         private string GetIso3Code(string code)
         {
             if (code.Length == 2)
