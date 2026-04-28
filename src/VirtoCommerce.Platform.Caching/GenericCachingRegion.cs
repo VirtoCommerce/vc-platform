@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Caching
     /// Generic CRUD caching region implementation for use with crud services.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GenericCachingRegion<T> : CancellableCacheRegion<GenericCachingRegion<T>> where T : Entity
+    public class GenericCachingRegion<T> : CancellableCacheRegion<GenericCachingRegion<T>> where T : IEntity
     {
         public static IChangeToken CreateChangeToken(IEnumerable<T> entities)
         {

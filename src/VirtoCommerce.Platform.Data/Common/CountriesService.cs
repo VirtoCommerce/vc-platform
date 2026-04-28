@@ -50,6 +50,22 @@ namespace VirtoCommerce.Platform.Data.Common
             return new Country {Name = countryInfo.OfficialName, Id = countryInfo.Alpha3Code.ToString()};
         }
 
+        public Country FindByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
+            var countryInfo = _provider.GetCountryByName(name);
+            if (countryInfo == null)
+            {
+                return null;
+            }
+
+            return new Country { Name = countryInfo.OfficialName, Id = countryInfo.Alpha3Code.ToString() };
+        }
+
         public async Task<IList<CountryRegion>> GetCountryRegionsAsync(string countryId)
         {
             var country = GetByCode(countryId);
