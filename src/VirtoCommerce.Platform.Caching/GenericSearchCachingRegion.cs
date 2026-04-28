@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Caching
     /// Generic CRUD search cache region implementation for use with crud/search services.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GenericSearchCachingRegion<T> : CancellableCacheRegion<GenericSearchCachingRegion<T>> where T : Entity
+    public class GenericSearchCachingRegion<T> : CancellableCacheRegion<GenericSearchCachingRegion<T>> where T : IEntity
     {
     }
 }

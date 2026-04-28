@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Core.GenericCrud;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public interface IOuterEntityService<T> : ICrudService<T>
-    where T : Entity, IHasOuterId
+    where T : IEntity, IHasOuterId
 {
     /// <summary>
     /// Returns a list of model instances for specified outer IDs (integration key)
