@@ -92,9 +92,18 @@ public class ModuleManagementService(
             }
         }
 
-        if (modulesToInstall.Count > 0)
+        if (modulesToInstall.IsNullOrEmpty() ||
+            !ValidateInstall(modulesToInstall, _mergedModules, PlatformVersion.CurrentVersion, progress))
         {
-            InstallModulesInternal(modulesToInstall, progress);
+            return;
+        }
+
+        var httpClient = httpClientFactory.CreateClient();
+        var success = ModulePackageInstaller.InstallModules(modulesToInstall, _mergedModules, _localOptions.DiscoveryPath, _externalOptions, httpClient, progress);
+
+        if (success)
+        {
+            InvalidateProbingFolder();
         }
     }
 
@@ -117,7 +126,8 @@ public class ModuleManagementService(
             }
         }
 
-        if (modulesToUninstall.Count > 0)
+        if (modulesToUninstall.Count > 0 &&
+            ValidateUninstall(modulesToUninstall, progress))
         {
             UninstallModulesInternal(modulesToUninstall, progress);
         }
@@ -191,95 +201,8 @@ public class ModuleManagementService(
         return module;
     }
 
-    private void InstallModulesInternal(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
-    {
-        var failed = false;
-        var installedModules = ModuleBootstrapper.Instance.GetModules();
-
-        foreach (var module in modules.Where(x => !x.IsInstalled))
-        {
-            var errors = ModuleBootstrapper.Instance.ValidateInstall(module, installedModules, PlatformVersion.CurrentVersion);
-            foreach (var error in errors)
-            {
-                Report(progress, ProgressMessageLevel.Error, error);
-            }
-
-            failed |= errors.Count > 0;
-            failed |= HasMissingDependencies(module, modules, progress);
-        }
-
-        if (failed)
-        {
-            return;
-        }
-
-        var installedModuleIds = installedModules.Select(x => x.Id).ToArray();
-        var modulesToUpdate = modules.Where(x => installedModuleIds.Contains(x.Id)).ToArray();
-        var modulesToAdd = modules.Except(modulesToUpdate);
-
-        var changedModules = new List<ManifestModuleInfo>();
-        using var scope = new TransactionScope(TransactionScopeOption.Required, TransactionManager.MaximumTimeout);
-
-        try
-        {
-            foreach (var module in modulesToAdd)
-            {
-                Report(progress, ProgressMessageLevel.Info, "Installing '{0}'", module);
-                InstallModule(module, progress);
-                changedModules.Add(module);
-                module.IsInstalled = true;
-            }
-
-            foreach (var module in modulesToUpdate)
-            {
-                var existingModule = ModuleBootstrapper.Instance.GetModule(module.Id);
-                var modulePath = Path.Combine(_localOptions.DiscoveryPath, existingModule.Id);
-                ModulePackageInstaller.Uninstall(modulePath);
-                Report(progress, ProgressMessageLevel.Info, "Updating '{0}' -> '{1}'", existingModule, module);
-                InstallModule(module, progress);
-                existingModule.IsInstalled = false;
-                module.IsInstalled = true;
-                changedModules.Add(existingModule);
-                changedModules.Add(module);
-            }
-
-            scope.Complete();
-            InvalidateProbingFolder();
-        }
-        catch (Exception ex)
-        {
-            Report(progress, ProgressMessageLevel.Error, ex.ToString());
-            Report(progress, ProgressMessageLevel.Error, "Rollback all changes...");
-
-            foreach (var changedModule in changedModules)
-            {
-                changedModule.IsInstalled = !changedModule.IsInstalled;
-            }
-        }
-    }
-
     private void UninstallModulesInternal(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
     {
-        var failed = false;
-        var uninstallIds = modules.Select(x => x.Id).ToArray();
-        var installedModules = ModuleBootstrapper.Instance.GetModules();
-
-        foreach (var module in modules)
-        {
-            var errors = ModuleBootstrapper.Instance.ValidateUninstall(module.Id, installedModules, uninstallIds);
-            foreach (var error in errors)
-            {
-                Report(progress, ProgressMessageLevel.Error, error);
-            }
-
-            failed |= errors.Count > 0;
-        }
-
-        if (failed)
-        {
-            return;
-        }
-
         var changedModules = new List<ManifestModuleInfo>();
         using var scope = new TransactionScope();
 
@@ -472,19 +395,63 @@ public class ModuleManagementService(
             }
 
             var httpClient = httpClientFactory.CreateClient();
-            var externalModules = ModulePackageInstaller.LoadExternalModules(httpClient, _externalOptions);
+            var externalModules = ModulePackageInstaller.LoadExternalModules(_externalOptions, PlatformVersion.CurrentVersion, httpClient);
             var installedModules = ModuleBootstrapper.Instance.GetModules();
             _mergedModules = ModuleBootstrapper.Instance.MergeWithInstalled(externalModules, installedModules);
         }
     }
 
-    private bool HasMissingDependencies(ManifestModuleInfo module, IList<ManifestModuleInfo> dependenciesToIgnore, IProgress<ProgressMessage> progress)
+    private static bool ValidateInstall(
+        IList<ManifestModuleInfo> modules,
+        IList<ManifestModuleInfo> allModules,
+        SemanticVersion platformVersion,
+        IProgress<ProgressMessage> progress)
+    {
+        var valid = true;
+        var installedModules = ModuleBootstrapper.Instance.GetModules();
+
+        foreach (var module in modules.Where(x => !x.IsInstalled))
+        {
+            var errors = ModuleBootstrapper.Instance.ValidateInstall(module, installedModules, platformVersion);
+            foreach (var error in errors)
+            {
+                Report(progress, ProgressMessageLevel.Error, error);
+            }
+
+            valid &= errors.IsNullOrEmpty();
+            valid &= !HasMissingDependencies(module, allModules, modules, progress);
+        }
+
+        return valid;
+    }
+
+    private static bool ValidateUninstall(IList<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
+    {
+        var valid = true;
+        var uninstallIds = modules.Select(x => x.Id).ToArray();
+        var installedModules = ModuleBootstrapper.Instance.GetModules();
+
+        foreach (var module in modules)
+        {
+            var errors = ModuleBootstrapper.Instance.ValidateUninstall(module.Id, installedModules, uninstallIds);
+            foreach (var error in errors)
+            {
+                Report(progress, ProgressMessageLevel.Error, error);
+            }
+
+            valid &= errors.IsNullOrEmpty();
+        }
+
+        return valid;
+    }
+
+    private static bool HasMissingDependencies(ManifestModuleInfo module, IList<ManifestModuleInfo> allModules, IList<ManifestModuleInfo> dependenciesToIgnore, IProgress<ProgressMessage> progress)
     {
         bool hasMissingDependencies;
 
         try
         {
-            hasMissingDependencies = ModuleBootstrapper.Instance.GetDependencies([module], _mergedModules)
+            hasMissingDependencies = ModuleBootstrapper.Instance.GetDependencies([module], allModules)
                 .Where(x => !x.IsInstalled)
                 .Except(dependenciesToIgnore)
                 .Any();
@@ -501,40 +468,6 @@ public class ModuleManagementService(
     private static void InvalidateProbingFolder()
     {
         ModuleBootstrapper.Instance.InvalidateProbingFolder();
-    }
-
-    private void InstallModule(ManifestModuleInfo module, IProgress<ProgressMessage> progress)
-    {
-        var modulePath = Path.Combine(_localOptions.DiscoveryPath, module.Id);
-        var moduleZipName = $"{module.Id}_{module.Version}.zip";
-        var moduleZipPath = Path.Combine(modulePath, moduleZipName);
-
-        if (!Directory.Exists(modulePath))
-        {
-            Directory.CreateDirectory(modulePath);
-        }
-
-        if (Uri.IsWellFormedUriString(module.Ref, UriKind.Absolute))
-        {
-            Report(progress, ProgressMessageLevel.Info, "Downloading '{0}' ", module.Ref);
-            var httpClient = httpClientFactory.CreateClient();
-            ModulePackageInstaller.Download(new Uri(module.Ref), moduleZipPath, httpClient, _externalOptions);
-        }
-        else if (File.Exists(module.Ref))
-        {
-            moduleZipPath = module.Ref;
-        }
-
-        if (File.Exists(moduleZipPath))
-        {
-            ModulePackageInstaller.Install(moduleZipPath, modulePath);
-        }
-        else
-        {
-            throw new FileNotFoundException($"Module package not found: {moduleZipPath}");
-        }
-
-        Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
     }
 
     private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)

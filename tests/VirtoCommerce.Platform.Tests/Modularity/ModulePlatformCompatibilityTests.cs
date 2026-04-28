@@ -48,7 +48,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var module = CreateModule("A", "1.0.0", modulePlatformVersion);
 
             // Act
-            _bootstrapper.ValidateModulesInternal([module], platformVersion);
+            _bootstrapper.ValidateDependenciesInternal([module], platformVersion);
 
             // Assert
             Assert.Equal(isCompatible, module.Errors.Count == 0);
@@ -67,7 +67,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var module = CreateModule("A", "1.0.0", platformVersion: "3.800.0", CreateDependency("B", "3.1111.0"));
 
             // Act
-            _bootstrapper.ValidateModulesInternal([module], platformVersion);
+            _bootstrapper.ValidateDependenciesInternal([module], platformVersion);
 
             // Assert
             Assert.Equal(["Module dependency B 3.1111.0 is not installed"], module.Errors);
@@ -82,7 +82,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var dependency = CreateModule("B", "3.100.0", platformVersion: "3.800.0");
 
             // Act
-            _bootstrapper.ValidateModulesInternal([module, dependency], platformVersion);
+            _bootstrapper.ValidateDependenciesInternal([module, dependency], platformVersion);
 
             // Assert
             Assert.Equal(["Module dependency B 3.1111.0 is incompatible with installed 3.100.0"], module.Errors);
@@ -97,7 +97,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var dependency = CreateModule("B", "3.500.0", platformVersion: "3.800.0");
 
             // Act
-            _bootstrapper.ValidateModulesInternal([module, dependency], platformVersion);
+            _bootstrapper.ValidateDependenciesInternal([module, dependency], platformVersion);
 
             // Assert
             Assert.Empty(module.Errors);
@@ -111,7 +111,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var module = CreateModule("A", "1.0.0", platformVersion: "3.800.0", CreateDependency("VirtoCommerce.Optional", "3.0.0", isOptional: true));
 
             // Act
-            _bootstrapper.ValidateModulesInternal([module], platformVersion);
+            _bootstrapper.ValidateDependenciesInternal([module], platformVersion);
 
             // Assert
             Assert.Empty(module.Errors);
@@ -128,7 +128,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var dependency = CreateModule("B", "3.900.0", platformVersion: "3.1111.0");
 
             // Act
-            _bootstrapper.ValidateModulesInternal([dependency, module], platformVersion);
+            _bootstrapper.ValidateDependenciesInternal([dependency, module], platformVersion);
 
             // Assert
             Assert.Equal(["Module requires platform version 3.1111.0, which is incompatible with current version 3.800.0"], dependency.Errors);
@@ -146,7 +146,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var moduleC = CreateModule("C", "1.0.0", platformVersion: "3.800.0", CreateDependency("B", "1.0.0"));
 
             // Act
-            _bootstrapper.ValidateModulesInternal([moduleA, moduleB, moduleC], platformVersion);
+            _bootstrapper.ValidateDependenciesInternal([moduleA, moduleB, moduleC], platformVersion);
 
             // Assert
             Assert.Equal(["Module requires platform version 3.1111.0, which is incompatible with current version 3.800.0"], moduleA.Errors);
@@ -164,7 +164,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var b = CreateModule("B", "1.0.0", platformVersion: "3.800.0", CreateDependency("A", "1.0.0", isOptional: true));
 
             // Act
-            _bootstrapper.ValidateModulesInternal([a, b], platformVersion);
+            _bootstrapper.ValidateDependenciesInternal([a, b], platformVersion);
 
             // Assert
             Assert.NotEmpty(a.Errors);
