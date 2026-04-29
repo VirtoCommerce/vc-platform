@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace VirtoCommerce.Platform.Core.Modularity;
@@ -36,67 +35,4 @@ public interface IAppManifestService
     /// module declares an app with the given id.
     /// </returns>
     AppManifestDescriptor GetManifest(string appId, ClaimsPrincipal user = null);
-}
-
-/// <summary>
-/// Service-layer descriptor returned by <see cref="IAppManifestService.GetManifest"/>.
-/// The web layer maps this to the public <c>AppManifestResponse</c> DTO.
-/// </summary>
-public class AppManifestDescriptor
-{
-    public string AppId { get; set; }
-
-    /// <summary>
-    /// Version of the host app — the running platform version for the reserved
-    /// <c>platform</c> app id, otherwise the version of the module that declares
-    /// the <c>&lt;app&gt;</c> element. Surfaces directly in the JSON response.
-    /// </summary>
-    public string Version { get; set; }
-    public string Title { get; set; }
-    public string AppPermission { get; set; }
-    public IList<PluginDescriptor> Plugins { get; set; } = new List<PluginDescriptor>();
-}
-
-/// <summary>
-/// File-asset kinds the modularity framework recognises. The web layer's
-/// <c>ContentFile.Type</c> property carries these values verbatim — they are
-/// kept as plain strings so the JSON contract stays stable across future
-/// C# renames.
-/// </summary>
-public static class ContentFileTypes
-{
-    public const string Script = "script";
-    public const string Style = "style";
-}
-
-/// <summary>
-/// Service-layer asset descriptor. Mirrors <c>ContentFile</c> in the web layer.
-/// Carries the asset's <see cref="Type"/>, public URL <see cref="Path"/>, and
-/// cache-busting <see cref="Hash"/> so client-side loaders can build correct
-/// <c>&lt;script&gt;</c> / <c>&lt;link&gt;</c> tags without re-probing the file.
-/// </summary>
-public class ContentFileDescriptor
-{
-    public string Type { get; set; }
-    public string Path { get; set; }
-    public string Hash { get; set; }
-}
-
-/// <summary>
-/// Service-layer plugin descriptor. Mirrors <c>PluginEntry</c> in the web layer.
-/// </summary>
-public class PluginDescriptor
-{
-    public string Id { get; set; }
-    public string Version { get; set; }
-    public ContentFileDescriptor Entry { get; set; }
-    public IList<ContentFileDescriptor> ContentFiles { get; set; } = new List<ContentFileDescriptor>();
-    public PluginRemoteDescriptor Remote { get; set; }
-    public string Permission { get; set; }
-}
-
-public class PluginRemoteDescriptor
-{
-    public string Name { get; set; }
-    public string Exposed { get; set; }
 }
