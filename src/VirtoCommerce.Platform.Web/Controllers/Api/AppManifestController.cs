@@ -120,12 +120,4 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return $"\"{Convert.ToHexString(hash)}\"";
         }
     }
-
-    /// <summary>
-    /// Body shape historically posted by VC-Shell to <c>/api/frontend-modules</c>.
-    /// </summary>
-    public class LegacyFrontendModulesRequest
-    {
-        public string AppName { get; set; }
-    }
 }

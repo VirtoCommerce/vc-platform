@@ -8,8 +8,9 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity;
 public class ContentFile
 {
     /// <summary>
-    /// Asset kind. See <see cref="ContentFileTypes"/>. Lower-case string so the
-    /// JSON contract is stable against future C# enum renames.
+    /// Asset kind. See <see cref="VirtoCommerce.Platform.Core.Modularity.ContentFileTypes"/>
+    /// for the canonical values. Lower-case string so the JSON contract is
+    /// stable against future C# enum renames.
     /// </summary>
     public string Type { get; set; }
 

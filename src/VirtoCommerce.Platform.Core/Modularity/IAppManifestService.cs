@@ -58,9 +58,10 @@ public class AppManifestDescriptor
 }
 
 /// <summary>
-/// File-asset kinds the modularity framework recognises. Mirrors
-/// the <c>ContentFileTypes</c> constants in the web layer (kept in sync as
-/// plain strings to keep the JSON contract stable across renames).
+/// File-asset kinds the modularity framework recognises. The web layer's
+/// <c>ContentFile.Type</c> property carries these values verbatim — they are
+/// kept as plain strings so the JSON contract stays stable across future
+/// C# renames.
 /// </summary>
 public static class ContentFileTypes
 {
