@@ -9,7 +9,7 @@ Plugins are discovered through the existing `module.manifest` dependency graph.
 Virto Commerce's backoffice has historically come in three flavours:
 
 | Host | Tech | Status |
-||||
+|---|---|---|
 | Platform admin (a.k.a. "Commerce Manager") | AngularJS 1.8 | Mature, in production for years |
 | VC-Shell | Vue 3 + Module Federation | Used by Marketplace and other vertical apps |
 | Custom standalone SPAs | Anything (System Operations is Vue 3) | One-off pages served via the platform `<apps>` mechanism |
