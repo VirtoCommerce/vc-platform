@@ -24,5 +24,13 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         [XmlElement("supportEmbeddedMode")]
         public bool SupportEmbeddedMode { get; set; }
+
+        /// <summary>
+        /// Folder under each installed module that the platform probes for plugin descriptors
+        /// targeting this app. Default: <c>plugins</c>. Each plugin lives at
+        /// <c>{moduleRoot}/{PluginsDiscoveryFolder}/{appId}/</c>.
+        /// </summary>
+        [XmlElement("pluginsDiscoveryFolder")]
+        public string PluginsDiscoveryFolder { get; set; } = "plugins";
     }
 }

@@ -24,6 +24,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
             services.AddSingleton<IPlatformRestarter, ProcessPlatformRestarter>();
             services.AddSingleton<IModuleManagementService, ModuleManagementService>();
             services.AddSingleton<IModuleService>(ModuleBootstrapper.Instance);
+            services.AddSingleton<IAppManifestService, AppManifestService>();
 
             return services;
         }

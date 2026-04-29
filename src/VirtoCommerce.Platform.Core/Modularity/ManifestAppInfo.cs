@@ -16,6 +16,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Permission = item.Permission;
             ContentPath = item.ContentPath;
             SupportEmbeddedMode = item.SupportEmbeddedMode;
+            PluginsDiscoveryFolder = item.PluginsDiscoveryFolder;
         }
 
         public string Id { get; set; }
@@ -36,5 +37,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public string ContentPath { get; set; }
 
         public bool SupportEmbeddedMode { get; set; }
+
+        /// <summary>
+        /// Folder under each installed module that the platform probes for plugin descriptors
+        /// targeting this app. Defaults to <c>plugins</c> when null/empty.
+        /// </summary>
+        public string PluginsDiscoveryFolder { get; set; }
     }
 }
