@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.DistributedLock;
@@ -49,7 +50,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
             var moduleService = appBuilder.ApplicationServices.GetRequiredService<Core.Modularity.IModuleService>();
             foreach (var module in moduleService.GetInstalledModules())
             {
-                if (module.Settings.Count > 0)
+                if (!module.Settings.IsNullOrEmpty())
                 {
                     settingsRegistrar.RegisterSettings(module.Settings, module.Id);
                 }
