@@ -144,7 +144,7 @@ The platform's `IAppManifestService` walks the topologically sorted module list 
 ### Per-app discovery rules
 
 | `appId` | Probe path on disk | URL served | Loader |
-|||||
+|---|---|---|---|
 | `platform` (legacy AngularJS) | `{moduleRoot}/dist/app.js` + `dist/style.css` (existing convention — unchanged) | `/modules/{moduleId}/dist/app.js` | `legacy` (hardcoded) |
 | anything else | `{moduleRoot}/plugins/{appId}/remoteEntry.js` (+ optional `plugin.json`) | `/modules/{moduleId}/plugins/{appId}/remoteEntry.js` | `module-federation` |
 
@@ -215,7 +215,7 @@ interface PluginManifest {
 ### Two loaders
 
 | Loader | Triggered by | Mechanism |
-||||
+|---|---|---|
 | `module-federation` | Any `appId != "platform"`. Always. | Host registers remote via `@module-federation/runtime`, calls `loadRemote("name/exposed")`, invokes default-export `install`. |
 | `legacy` | Hardcoded for `appId == "platform"`. | `<script src="dist/app.js">` + `<link href="dist/style.css">` per module in dep order; bundle pushes onto global `AppDependencies`; AngularJS DI does the rest. |
 
