@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
@@ -46,6 +47,16 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public bool UseFullTypeNameInSwagger { get; set; }
 
         public ICollection<ManifestAppInfo> Apps { get; } = new List<ManifestAppInfo>();
+
+        /// <summary>
+        /// Platform settings declared in <c>module.manifest</c> via the
+        /// <c>&lt;settings&gt;</c> element. Registered at startup by
+        /// <c>UsePlatformSettings()</c> alongside any settings registered
+        /// programmatically from <c>IModule.Initialize</c>.
+        /// Coercion failures are surfaced via <see cref="Errors"/> so a
+        /// typo in one setting never takes down a whole module.
+        /// </summary>
+        public ICollection<SettingDescriptor> Settings { get; } = new List<SettingDescriptor>();
 
         public string StartupType { get; set; }
 
@@ -106,6 +117,26 @@ namespace VirtoCommerce.Platform.Core.Modularity
             if (manifest.Apps != null)
             {
                 Apps.AddRange(manifest.Apps.Select(x => new ManifestAppInfo(x)));
+            }
+
+            if (manifest.Settings != null)
+            {
+                foreach (var setting in manifest.Settings)
+                {
+                    try
+                    {
+                        Settings.Add(setting.ToSettingDescriptor(Id));
+                    }
+                    catch (FormatException ex)
+                    {
+                        // Bad <defaultValue> or <allowedValues> coercion. Skip
+                        // the offending setting and surface the error against
+                        // this module so the operator sees it in the Modules
+                        // admin UI; don't bring the rest of the module down.
+                        Errors.Add(
+                            $"Failed to register setting '{setting.Name ?? "(unnamed)"}': {ex.Message}");
+                    }
+                }
             }
 
             return this;

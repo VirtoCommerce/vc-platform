@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Model.Modularity;
 
@@ -24,14 +23,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class AppManifestController : ControllerBase
     {
         private readonly IAppManifestService _service;
-        private readonly IModuleService _moduleService;
 
-        public AppManifestController(
-            IAppManifestService service,
-            IModuleService moduleService)
+        public AppManifestController(IAppManifestService service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
-            _moduleService = moduleService ?? throw new ArgumentNullException(nameof(moduleService));
         }
 
         /// <summary>
@@ -48,22 +43,34 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return NotFound();
             }
 
-            var response = MapToResponse(descriptor);
-
-            // ETag = SHA1(appId + sorted module ids+versions + sorted user permissions).
-            // Lets clients cache the JSON; invalidates whenever the module set, a module
-            // version, or the caller's permission set changes.
-            var etag = ComputeETag(appId, User);
+            // ETag is derived from the descriptor's content-affecting fields,
+            // not from out-of-band inputs. It MUST include the per-file
+            // cache-busting hashes — otherwise rebuilding a plugin file
+            // without bumping its module version produces a fresh
+            // `?v={hash}` URL in the body but a stale ETag, and clients
+            // sending If-None-Match get a 304 + cached body with old URLs,
+            // serving stale plugin code from the browser HTTP cache.
+            //
+            // User permissions enter the ETag implicitly: the service has
+            // already filtered `descriptor.Plugins` by them, so a different
+            // permission set yields a different plugin list yields a
+            // different ETag.
+            var etag = ComputeETag(appId, descriptor);
             var requestEtag = Request.Headers[HeaderNames.IfNoneMatch].ToString();
             if (!string.IsNullOrEmpty(requestEtag) && requestEtag == etag)
             {
+                // RFC 7232 §4.1: 304 responses SHOULD echo the ETag so
+                // proxies can refresh their cached header set without
+                // re-fetching the body.
+                Response.Headers[HeaderNames.ETag] = etag;
+                Response.Headers[HeaderNames.CacheControl] = "private, must-revalidate";
                 return StatusCode(StatusCodes.Status304NotModified);
             }
 
             Response.Headers[HeaderNames.ETag] = etag;
             Response.Headers[HeaderNames.CacheControl] = "private, must-revalidate";
 
-            return Ok(response);
+            return Ok(MapToResponse(descriptor));
         }
 
         private static AppManifestResponse MapToResponse(AppManifestDescriptor descriptor) => new()
@@ -92,27 +99,53 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             Hash = source.Hash,
         };
 
-        private string ComputeETag(string appId, System.Security.Claims.ClaimsPrincipal user)
+        /// <summary>
+        /// Computes a strong ETag covering every field of the response body
+        /// that can change between requests: appId + the ordered list of
+        /// plugins + each plugin's id, version, entry hash, content-file
+        /// hashes, and federation remote coordinates.
+        /// </summary>
+        /// <remarks>
+        /// Plugin order is preserved as-is — it's already deterministic
+        /// (topological dependency order from <c>ModuleBootstrapper</c>),
+        /// so re-sorting here would just hide intentional ordering changes
+        /// from the cache key.
+        /// </remarks>
+        private static string ComputeETag(string appId, AppManifestDescriptor descriptor)
         {
             var sb = new StringBuilder();
             sb.Append(appId).Append('|');
+            sb.Append(descriptor.Version ?? string.Empty).Append('|');
 
-            foreach (var module in _moduleService.GetInstalledModules().OrderBy(m => m.Id, StringComparer.OrdinalIgnoreCase))
+            foreach (var plugin in descriptor.Plugins)
             {
-                sb.Append(module.Id).Append('@').Append(module.Version).Append(';');
-            }
-            sb.Append('|');
+                sb.Append(plugin.Id ?? string.Empty)
+                  .Append('@')
+                  .Append(plugin.Version ?? string.Empty)
+                  .Append('|');
 
-            if (user?.Identity?.IsAuthenticated == true)
-            {
-                var permissions = user
-                    .FindAll(PlatformConstants.Security.Claims.PermissionClaimType)
-                    .Select(c => c.Value)
-                    .OrderBy(p => p, StringComparer.OrdinalIgnoreCase);
-                foreach (var p in permissions)
+                if (plugin.Entry != null)
                 {
-                    sb.Append(p).Append(';');
+                    sb.Append(plugin.Entry.Hash ?? string.Empty);
                 }
+                sb.Append('|');
+
+                if (plugin.ContentFiles != null)
+                {
+                    foreach (var file in plugin.ContentFiles)
+                    {
+                        sb.Append(file?.Hash ?? string.Empty).Append(',');
+                    }
+                }
+                sb.Append('|');
+
+                if (plugin.Remote != null)
+                {
+                    sb.Append(plugin.Remote.Name ?? string.Empty)
+                      .Append('/')
+                      .Append(plugin.Remote.Exposed ?? string.Empty);
+                }
+                sb.Append(';');
             }
 
             // Static SHA1.HashData avoids allocating an instance per request.
