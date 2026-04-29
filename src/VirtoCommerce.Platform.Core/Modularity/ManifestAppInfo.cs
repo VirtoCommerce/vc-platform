@@ -15,7 +15,12 @@ namespace VirtoCommerce.Platform.Core.Modularity
             RelativeUrl = $"/apps/{item.Id}";
             Permission = item.Permission;
             ContentPath = item.ContentPath;
-            SupportEmbeddedMode = item.SupportEmbeddedMode;
+            // Placement is the canonical value. When the manifest explicitly
+            // sets <placement>, honour it. Otherwise derive from the legacy
+            // <supportEmbeddedMode> bool so unmodified third-party manifests
+            // keep behaving identically.
+            Placement = item.Placement
+                        ?? (item.SupportEmbeddedMode ? AppPlacement.MainMenu : AppPlacement.AppMenu);
             PluginsDiscoveryFolder = item.PluginsDiscoveryFolder;
         }
 
@@ -36,7 +41,13 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// </summary>
         public string ContentPath { get; set; }
 
-        public bool SupportEmbeddedMode { get; set; }
+        /// <summary>
+        /// Where the app surfaces in the admin navigation. Always populated;
+        /// falls back to a derivation from the legacy
+        /// <c>&lt;supportEmbeddedMode&gt;</c> manifest element when the new
+        /// <c>&lt;placement&gt;</c> element is absent.
+        /// </summary>
+        public AppPlacement Placement { get; set; }
 
         /// <summary>
         /// Folder under each installed module that the platform probes for plugin descriptors

@@ -31,7 +31,8 @@ public class AppsController(IModuleService moduleService) : ControllerBase
                 Title = "Commerce Manager",
                 Description = "Virto Commerce Platform",
                 RelativeUrl = "/",
-                IconUrl = "/images/platform_app.svg"
+                IconUrl = "/images/platform_app.svg",
+                Placement = AppPlacement.AppMenu,
             });
 
         return apps;

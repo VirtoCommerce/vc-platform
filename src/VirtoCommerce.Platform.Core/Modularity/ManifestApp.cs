@@ -22,8 +22,24 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlElement("contentPath")]
         public string ContentPath { get; set; }
 
+        /// <summary>
+        /// Legacy boolean. Use <see cref="Placement"/> instead. Kept for
+        /// backwards compatibility: when <see cref="Placement"/> is not
+        /// declared, <c>true</c> maps to <see cref="AppPlacement.MainMenu"/>
+        /// and <c>false</c> maps to <see cref="AppPlacement.AppMenu"/>.
+        /// </summary>
         [XmlElement("supportEmbeddedMode")]
         public bool SupportEmbeddedMode { get; set; }
+
+        /// <summary>
+        /// Where the app surfaces in the admin navigation. When omitted from
+        /// <c>module.manifest</c>, the value is derived from
+        /// <see cref="SupportEmbeddedMode"/> for backwards compatibility.
+        /// Nullable so deserialization can distinguish "element omitted"
+        /// from "element present and equal to AppMenu (default)".
+        /// </summary>
+        [XmlElement("placement")]
+        public AppPlacement? Placement { get; set; }
 
         /// <summary>
         /// Folder under each installed module that the platform probes for plugin descriptors
