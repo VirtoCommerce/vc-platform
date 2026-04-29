@@ -309,27 +309,23 @@ namespace VirtoCommerce.Platform.Modules
 
         // ---- plugin.json schema (server-side parsing model) ----
         //
-        // These records are populated exclusively by System.Text.Json
-        // deserialization. Using `init` setters + `sealed record` makes the
-        // immutability intent explicit; the analyzer-flagged "unused setter"
-        // / "unassigned property" warnings are inherent to JSON DTOs and are
-        // mitigated here by the `record` shape (Sonar treats records as data
-        // carriers and skips those rules).
+        // Positional records: System.Text.Json binds incoming JSON property
+        // names to the primary-constructor parameters case-insensitively
+        // (per `s_pluginJsonOptions.PropertyNameCaseInsensitive = true`).
+        // Missing fields default to null. The positional shape also keeps
+        // Sonar's data-flow analyzer happy — every property is considered
+        // "assigned by the primary constructor", so S1144 ("unused setter")
+        // and S3459 ("unassigned auto-property") don't fire here as they
+        // would on init-only auto-property syntax.
 
-        private sealed record PluginManifestFile
-        {
-            public string Id { get; init; }
-            public string Version { get; init; }
-            public string Entry { get; init; }
-            public List<string> ContentFiles { get; init; }
-            public PluginManifestRemote Remote { get; init; }
-            public string Permission { get; init; }
-        }
+        private sealed record PluginManifestFile(
+            string Id,
+            string Version,
+            string Entry,
+            List<string> ContentFiles,
+            PluginManifestRemote Remote,
+            string Permission);
 
-        private sealed record PluginManifestRemote
-        {
-            public string Name { get; init; }
-            public string Exposed { get; init; }
-        }
+        private sealed record PluginManifestRemote(string Name, string Exposed);
     }
 }
