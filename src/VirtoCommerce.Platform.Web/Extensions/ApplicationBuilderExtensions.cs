@@ -21,22 +21,6 @@ namespace VirtoCommerce.Platform.Web.Extensions
             settingsRegistrar.RegisterSettings(AllSettings, "Platform");
             settingsRegistrar.RegisterSettingsForType(UserProfile.AllSettings, nameof(UserProfile));
 
-            // Register settings declared in each installed module's
-            // module.manifest <settings> element. Frontend-only modules
-            // (no .NET assembly) rely on this path because they have no
-            // IModule.Initialize hook to call ISettingsRegistrar from.
-            // Programmatic registration from IModule still happens later
-            // and overrides on duplicates (last-writer-wins).
-            // See docs/developer-guide/manifest-settings.md.
-            var moduleService = appBuilder.ApplicationServices.GetRequiredService<Core.Modularity.IModuleService>();
-            foreach (var module in moduleService.GetInstalledModules())
-            {
-                if (module.Settings.Count > 0)
-                {
-                    settingsRegistrar.RegisterSettings(module.Settings, module.Id);
-                }
-            }
-
             var settingsManager = appBuilder.ApplicationServices.GetRequiredService<ISettingsManager>();
 
             var sendDiagnosticData = settingsManager.GetValue<bool>(Setup.SendDiagnosticData);
@@ -48,6 +32,26 @@ namespace VirtoCommerce.Platform.Web.Extensions
                 if (license == null || license.ExpirationDate < DateTime.UtcNow)
                 {
                     settingsManager.SetValue(Setup.SendDiagnosticData.Name, true);
+                }
+            }
+
+            return appBuilder;
+        }
+
+        /// <summary>
+        /// Register settings declared in each installed module's module.manifest, settings element. 
+        /// </summary>
+        /// <param name="appBuilder"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseSettingsFromModuleManifests(this IApplicationBuilder appBuilder)
+        {
+            var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
+            var moduleService = appBuilder.ApplicationServices.GetRequiredService<Core.Modularity.IModuleService>();
+            foreach (var module in moduleService.GetInstalledModules())
+            {
+                if (module.Settings.Count > 0)
+                {
+                    settingsRegistrar.RegisterSettings(module.Settings, module.Id);
                 }
             }
 
