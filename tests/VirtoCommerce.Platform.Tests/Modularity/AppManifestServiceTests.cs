@@ -296,8 +296,12 @@ public class AppManifestServiceTests : IDisposable
 
         var result = service.GetManifest("vc-shell-marketplace");
 
-        Assert.Equal(new[] { "Module.A", "Module.B", "Module.C" }, result.Plugins.Select(p => p.Id).ToArray());
+        Assert.Equal(s_expectedTopologicalOrder, result.Plugins.Select(p => p.Id).ToArray());
     }
+
+    // CA1861 — keep the expected-order array out of the call site so xUnit's
+    // assertion equality doesn't allocate a new array on every test invocation.
+    private static readonly string[] s_expectedTopologicalOrder = ["Module.A", "Module.B", "Module.C"];
 
     // ---------- Helpers ----------
 

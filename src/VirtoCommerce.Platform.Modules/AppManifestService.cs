@@ -77,9 +77,9 @@ namespace VirtoCommerce.Platform.Modules
             var descriptor = new AppManifestDescriptor
             {
                 AppId = appId,
-                // For "platform" the running platform version is the source of truth;
-                // for any other app, the version of the module that declares the
-                // <app> element is what the host should advertise.
+                // "platform" advertises the running platform version. Other apps
+                // surface the version of the module that declared this app id
+                // in its module manifest.
                 Version = IsPlatformApp(appId)
                     ? PlatformVersion.CurrentVersion?.ToString()
                     : hostModule?.Version?.ToString(),
@@ -186,10 +186,17 @@ namespace VirtoCommerce.Platform.Modules
             }
 
             var urlPrefix = $"{discoveryFolder}/{hostApp.Id}";
+            // Resolve the plugin id once — used both as PluginDescriptor.Id
+            // and as the default federation remote name.
+            var pluginId = string.IsNullOrWhiteSpace(manifest?.Id) ? module.Id : manifest.Id;
+            var pluginVersion = string.IsNullOrWhiteSpace(manifest?.Version) ? module.Version?.ToString() : manifest.Version;
+            var remoteName = string.IsNullOrWhiteSpace(manifest?.Remote?.Name) ? pluginId : manifest.Remote.Name;
+            var remoteExposed = string.IsNullOrWhiteSpace(manifest?.Remote?.Exposed) ? DefaultExposedModule : manifest.Remote.Exposed;
+
             var plugin = new PluginDescriptor
             {
-                Id = string.IsNullOrWhiteSpace(manifest?.Id) ? module.Id : manifest.Id,
-                Version = string.IsNullOrWhiteSpace(manifest?.Version) ? module.Version?.ToString() : manifest.Version,
+                Id = pluginId,
+                Version = pluginVersion,
                 Entry = MakeFile(
                     type: ContentFileTypes.Script,
                     url: BuildModuleUrl(module.ModuleName, $"{urlPrefix}/{entryFileName}"),
@@ -197,10 +204,8 @@ namespace VirtoCommerce.Platform.Modules
                 Permission = manifest?.Permission,
                 Remote = new PluginRemoteDescriptor
                 {
-                    Name = string.IsNullOrWhiteSpace(manifest?.Remote?.Name)
-                        ? (string.IsNullOrWhiteSpace(manifest?.Id) ? module.Id : manifest.Id)
-                        : manifest.Remote.Name,
-                    Exposed = string.IsNullOrWhiteSpace(manifest?.Remote?.Exposed) ? DefaultExposedModule : manifest.Remote.Exposed,
+                    Name = remoteName,
+                    Exposed = remoteExposed,
                 },
             };
 
@@ -303,21 +308,28 @@ namespace VirtoCommerce.Platform.Modules
             string.Equals(appId, PlatformAppId, StringComparison.OrdinalIgnoreCase);
 
         // ---- plugin.json schema (server-side parsing model) ----
+        //
+        // These records are populated exclusively by System.Text.Json
+        // deserialization. Using `init` setters + `sealed record` makes the
+        // immutability intent explicit; the analyzer-flagged "unused setter"
+        // / "unassigned property" warnings are inherent to JSON DTOs and are
+        // mitigated here by the `record` shape (Sonar treats records as data
+        // carriers and skips those rules).
 
-        private class PluginManifestFile
+        private sealed record PluginManifestFile
         {
-            public string Id { get; set; }
-            public string Version { get; set; }
-            public string Entry { get; set; }
-            public List<string> ContentFiles { get; set; }
-            public PluginManifestRemote Remote { get; set; }
-            public string Permission { get; set; }
+            public string Id { get; init; }
+            public string Version { get; init; }
+            public string Entry { get; init; }
+            public List<string> ContentFiles { get; init; }
+            public PluginManifestRemote Remote { get; init; }
+            public string Permission { get; init; }
         }
 
-        private class PluginManifestRemote
+        private sealed record PluginManifestRemote
         {
-            public string Name { get; set; }
-            public string Exposed { get; set; }
+            public string Name { get; init; }
+            public string Exposed { get; init; }
         }
     }
 }

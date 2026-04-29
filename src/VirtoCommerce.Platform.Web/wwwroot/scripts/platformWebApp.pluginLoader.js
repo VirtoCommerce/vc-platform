@@ -42,7 +42,7 @@
     fetch(ENDPOINT, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
         .then(function (response) {
             if (!response.ok) {
-                throw new Error('GET ' + ENDPOINT + ' returned HTTP ' + response.status);
+                throw new Error(`GET ${ENDPOINT} returned HTTP ${response.status}`);
             }
             return response.json();
         })
@@ -73,7 +73,9 @@
 
         return scripts
             .reduce(function (chain, file) {
-                return chain.then(function () { return injectScript(file); });
+                return chain.then(function () {
+                    return injectScript(file);
+                });
             }, Promise.resolve())
             .then(resumeAngularBootstrap);
     }
@@ -95,7 +97,7 @@
         if (!file || !file.path) {
             return null;
         }
-        return file.hash ? file.path + '?v=' + encodeURIComponent(file.hash) : file.path;
+        return file.hash ? `${file.path}?v=${encodeURIComponent(file.hash)}` : file.path;
     }
 
     function injectStylesheet(file) {
@@ -122,7 +124,9 @@
             // async=false on dynamically-created scripts preserves execution order
             // when multiple are appended in sequence (ES spec / WHATWG).
             script.async = false;
-            script.onload = function () { resolve(); };
+            script.onload = function () {
+                resolve();
+            };
             script.onerror = function () {
                 // Don't block remaining plugins — log and continue. AngularJS will
                 // surface the missing dependency as a clearer error than a frozen page.

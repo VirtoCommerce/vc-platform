@@ -115,8 +115,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            using var sha1 = SHA1.Create();
-            var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString()));
+            // Static SHA1.HashData avoids allocating an instance per request.
+            var hash = SHA1.HashData(Encoding.UTF8.GetBytes(sb.ToString()));
             return $"\"{Convert.ToHexString(hash)}\"";
         }
     }
