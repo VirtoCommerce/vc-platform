@@ -116,11 +116,12 @@ field-for-field.
 
 ### 2.1 Element reference
 
-| Child element | Type | Required | Maps to `SettingDescriptor` | Notes |
+| Element / attribute | Type | Required | Maps to `SettingDescriptor` | Notes |
 |---|---|---|---|---|
+| `tenant=` (XML attribute on `<setting>`) | string | no | `Tenant` | Tenant-type name. When `UserProfile`, the setting is registered as a per-user setting (see §4a). Omit (default) for a global setting. Any other non-empty value is treated as a custom tenant-type name and passed verbatim to `RegisterSettingsForType`. Compared ordinally |
 | `<name>` | string | **yes** | `Name` | Globally unique. Convention: `<ModuleId>.<Group>.<Name>` |
 | `<groupName>` | string | yes | `GroupName` | Pipe-delimited tree, e.g. `System Operations\|Backup` |
-| `<displayName>` | string | no | `DisplayName` | Raw English label. Localization is a frontend concern (see §5) |
+| `<displayName>` | string | no | `DisplayName` | Raw English label. Localization is a frontend concern (see §6) |
 | `<valueType>` | enum | **yes** | `ValueType` | One of: `ShortText`, `LongText`, `Integer`, `PositiveInteger`, `Decimal`, `DateTime`, `Boolean`, `SecureString`, `Json` |
 | `<defaultValue>` | string | no | `DefaultValue` | Always XML-string; the platform coerces to `ValueType` at registration time |
 | `<allowedValues>` | array of `<value>` | no | `AllowedValues` | Same coercion rules as `<defaultValue>`. Useful for enum-style settings |
@@ -162,8 +163,8 @@ maintainers; module authors do not need to touch any of these:
 |---|---|
 | [`Core/Modularity/ManifestSetting.cs`](../../src/VirtoCommerce.Platform.Core/Modularity/ManifestSetting.cs) | XML POCO. `ToSettingDescriptor(moduleId)` instance method does the type coercion and stamps the module id |
 | [`Core/Modularity/ModuleManifest.cs`](../../src/VirtoCommerce.Platform.Core/Modularity/ModuleManifest.cs) | Adds `[XmlArray("settings"), XmlArrayItem("setting")] ManifestSetting[] Settings` |
-| [`Core/Modularity/ManifestModuleInfo.cs`](../../src/VirtoCommerce.Platform.Core/Modularity/ManifestModuleInfo.cs) | Adds `ICollection<SettingDescriptor> Settings`. Populated in `LoadFromManifest` with try/catch around each setting; failures land in `Errors` |
-| [`Web/Extensions/ApplicationBuilderExtensions.cs`](../../src/VirtoCommerce.Platform.Web/Extensions/ApplicationBuilderExtensions.cs) | `UsePlatformSettings()` iterates installed modules and calls `ISettingsRegistrar.RegisterSettings(module.Settings, module.Id)` after registering Platform settings |
+| [`Core/Modularity/ManifestModuleInfo.cs`](../../src/VirtoCommerce.Platform.Core/Modularity/ManifestModuleInfo.cs) | Adds a single `ICollection<SettingDescriptor> Settings`. Populated in `LoadFromManifest` with try/catch around each setting; failures land in `Errors`. Each descriptor's `Tenant` field carries the manifest's `tenant="…"` attribute so the registration step below can sort by it without parallel collections |
+| [`Web/Extensions/ApplicationBuilderExtensions.cs`](../../src/VirtoCommerce.Platform.Web/Extensions/ApplicationBuilderExtensions.cs) | `UseSettingsFromModuleManifests()` iterates installed modules. For each module it (1) registers every entry globally via `ISettingsRegistrar.RegisterSettings(module.Settings, module.Id)`, then (2) groups any descriptors with a non-empty `Tenant` by tenant-type name and additionally calls `RegisterSettingsForType(group, group.Key)` — mirroring the platform's own dual-registration of `UserProfile.AllSettings` in `UsePlatformSettings()` |
 
 ### 3.1 Registration order
 
@@ -243,7 +244,7 @@ so no controller change was needed.
 ### 4.2 Current values
 
 ```http
-GET /api/platform/settings/v2/global/values?modifiedOnly=false
+GET /api/platform/settings/v2/global/values?modifiedOnly=false&moduleId=VirtoCommerce.SystemOperations
 ```
 
 Response (flat dictionary keyed by setting name):
@@ -252,13 +253,15 @@ Response (flat dictionary keyed by setting name):
 {
   "VirtoCommerce.SystemOperations.RestartTimeoutSeconds": 120,
   "VirtoCommerce.SystemOperations.DefaultTheme": "system",
-  "VirtoCommerce.SystemOperations.AllowDestructiveOperations": true,
-  …
+  "VirtoCommerce.SystemOperations.AllowDestructiveOperations": true
 }
 ```
 
 `modifiedOnly=true` returns only those whose persisted value differs from
-the registered default — useful for diff-style admin views.
+the registered default — useful for diff-style admin views. The
+`moduleId` filter is optional; omit it to get every module's settings
+(the admin Settings UI does this), include it to scope the response to
+one module's read-and-use values without a follow-up `/schema` call.
 
 ### 4.3 Save updates
 
@@ -278,17 +281,18 @@ setting to its default in the same call.
 ### 4.4 Curl recipe (smoke test)
 
 ```bash
-# 1. List your module's settings
+# 1. List your module's settings (schema metadata — only needed if you're
+#    rendering an editor; the read-and-use composable below skips this)
 curl -s -b session.cookies \
   'https://platform/api/platform/settings/v2/global/schema?moduleId=VirtoCommerce.SystemOperations' \
   | jq
 
-# 2. Read current value for one setting
+# 2. Read all current values for your module (defaults filled in)
 curl -s -b session.cookies \
-  'https://platform/api/platform/settings/v2/global/values' \
-  | jq '."VirtoCommerce.SystemOperations.RestartTimeoutSeconds"'
+  'https://platform/api/platform/settings/v2/global/values?modifiedOnly=false&moduleId=VirtoCommerce.SystemOperations' \
+  | jq
 
-# 3. Update it
+# 3. Update one
 curl -s -b session.cookies -X POST \
   -H 'Content-Type: application/json' \
   -d '{"VirtoCommerce.SystemOperations.RestartTimeoutSeconds": 300}' \
@@ -297,11 +301,148 @@ curl -s -b session.cookies -X POST \
 
 ---
 
+## 4a. Per-user (UserProfile) tenant
+
+By default, every `<setting>` is a **global** platform setting — one value
+shared across all admins and tenants. For a setting that should be
+**per-user** (e.g. theme preference, feature flag the admin toggles for
+themself), add `tenant="UserProfile"`:
+
+```xml
+<settings>
+  <!-- per-user: stored under the authenticated caller's profile -->
+  <setting tenant="UserProfile">
+    <name>VirtoCommerce.SystemOperations.UserDefaultTheme</name>
+    <groupName>System Operations|UI</groupName>
+    <displayName>Theme preference</displayName>
+    <valueType>ShortText</valueType>
+    <defaultValue>system</defaultValue>
+    <allowedValues>
+      <value>system</value>
+      <value>light</value>
+      <value>dark</value>
+    </allowedValues>
+  </setting>
+</settings>
+```
+
+### 4a.1 What the platform does at startup
+
+`UseSettingsFromModuleManifests()` walks every installed module's parsed
+settings and registers each module's collection in two passes — the same
+descriptor list goes through both, just under different storage
+identities. This mirrors the platform's own dual registration of
+`UserProfile.AllSettings` in `UsePlatformSettings`:
+
+```csharp
+// 1. Register every manifest-declared setting globally.
+settingsRegistrar.RegisterSettings(module.Settings, module.Id);
+
+// 2. Additionally register any tenant-scoped subset under its
+//    tenant-type name. Same descriptors — registering twice is intentional.
+//    A module that mixes <setting tenant="UserProfile"> with
+//    <setting tenant="Store"> will produce two RegisterSettingsForType
+//    calls, one per group.
+var tenantGroups = module.Settings
+    .Where(x => !string.IsNullOrWhiteSpace(x.Tenant))
+    .GroupBy(x => x.Tenant);
+foreach (var tenantGroup in tenantGroups)
+{
+    settingsRegistrar.RegisterSettingsForType(tenantGroup.ToList(), tenantGroup.Key);
+}
+```
+
+| Manifest tenant | Pass 1 (always) | Pass 2 (only if tenant non-empty) | Reachable via |
+|---|---|---|---|
+| (omitted) | `RegisterSettings(items, moduleId)` | — | `/api/platform/settings/v2/global/*` |
+| `UserProfile` | `RegisterSettings(items, moduleId)` | `RegisterSettingsForType(subset, "UserProfile")` | `/api/platform/settings/v2/global/*` **and** `/api/platform/settings/v2/me/*` |
+| `<custom>` (e.g. `Store`) | `RegisterSettings(items, moduleId)` | `RegisterSettingsForType(subset, "<custom>")` | `/api/platform/settings/v2/global/*` **and** `/api/platform/settings/v2/tenant/<custom>/{id}/*` |
+
+The dual registration is the same pattern the platform itself uses for
+its own `UserProfile` settings (see
+[`ApplicationBuilderExtensions.cs`](../../src/VirtoCommerce.Platform.Web/Extensions/ApplicationBuilderExtensions.cs)
+`UsePlatformSettings`). Manifest-declared user settings appear in the
+admin's user-profile settings UI alongside the platform-shipped ones,
+with no special UI handling.
+
+The single `Settings` collection on `ManifestModuleInfo` carries every
+setting regardless of tenant; the per-descriptor `Tenant` field (populated
+verbatim from the `<setting tenant="…">` attribute) is the routing input
+for pass 2. Comparison is ordinal — match the casing of the registered
+tenant type (canonical for the per-user tenant is `UserProfile`).
+
+### 4a.2 The `/me/*` endpoints
+
+Three endpoints on `SettingsV2Controller` operate on the **authenticated
+caller's** UserProfile settings:
+
+```http
+# Schema (metadata only — same across all users)
+GET /api/platform/settings/v2/me/schema?moduleId=…&keyword=…
+
+# Current user's effective values
+GET /api/platform/settings/v2/me/values?modifiedOnly=…
+
+# Update current user's values
+POST /api/platform/settings/v2/me/values?replaceAll=…
+Content-Type: application/json
+{ "VirtoCommerce.SystemOperations.UserDefaultTheme": "dark" }
+```
+
+| Aspect | Behaviour |
+|---|---|
+| Authentication | Required. Anonymous calls → `401`. The class-level `[Authorize]` attribute on `SettingsV2Controller` enforces this |
+| Permission | None — your own profile is yours. No `platform:setting:*` permission is checked for `/me/*`, unlike `/global/*` and `/tenant/*` |
+| User-id resolution | `UserManager<ApplicationUser>.GetUserId(User)` reads the subject claim from the bearer token — the frontend never sends a user id |
+| Cross-user access | Not via `/me/*`. Use the existing `GET/POST /api/platform/settings/v2/tenant/UserProfile/{userId}/*` endpoints (admin-permissioned) |
+
+### 4a.3 Curl recipe
+
+```bash
+# 1. List your module's per-user settings
+curl -s -b session.cookies \
+  'https://platform/api/platform/settings/v2/me/schema?moduleId=VirtoCommerce.SystemOperations' \
+  | jq
+
+# 2. Read my current values for this module (defaults filled in)
+curl -s -b session.cookies \
+  'https://platform/api/platform/settings/v2/me/values?modifiedOnly=false&moduleId=VirtoCommerce.SystemOperations' \
+  | jq
+
+# 3. Update my preference
+curl -s -b session.cookies -X POST \
+  -H 'Content-Type: application/json' \
+  -d '{"VirtoCommerce.SystemOperations.UserDefaultTheme": "dark"}' \
+  'https://platform/api/platform/settings/v2/me/values'
+
+# 4. Anonymous call → 401
+curl -i 'https://platform/api/platform/settings/v2/me/values'
+```
+
+### 4a.4 When to use which tenant
+
+- **Omit `tenant=` (global)** for platform-wide knobs an operator/admin
+  tunes (e.g. `RestartTimeoutSeconds`, `AllowDestructiveOperations`).
+  One value across the whole install.
+- **`tenant="UserProfile"`** for personal preferences (theme, layout
+  density, per-admin feature toggles, dismissed-tip flags). Each
+  authenticated caller has their own value; their session, their settings.
+- **`tenant="<custom>"`** for module-specific tenant types (e.g.
+  `Store`, `Organization`). The setting is registered under that
+  tenant-type name — the consuming module is responsible for the
+  per-tenant endpoint contract.
+
+A single module can mix all three — declare each `<setting>` independently
+with the appropriate `tenant=` attribute.
+
+---
+
 ## 5. Reading from a frontend SPA — the `useModuleSettings` composable
 
 `vc-module-system-operations` ships a reactive Vue 3 composable that
-encapsulates all three v2 endpoints. Other custom SPAs are encouraged to
-copy it verbatim — the contract is intentionally tiny.
+encapsulates the read-and-use path of the v2 settings API. Other custom
+SPAs are encouraged to copy it verbatim — the contract is intentionally
+tiny.
 
 **Source:**
 [`vc-module-system-operations/src/.../app/composables/useModuleSettings.ts`](https://github.com/VirtoCommerce/vc-module-system-operations/blob/main/src/VirtoCommerce.SystemOperations.Web/app/composables/useModuleSettings.ts)
@@ -309,16 +450,36 @@ copy it verbatim — the contract is intentionally tiny.
 **API:**
 
 ```ts
-export function useModuleSettings(moduleId: string): {
-  schema: Ref<SettingSchema[]>;             // /schema?moduleId=…
-  values: Ref<Record<string, unknown>>;     // /values, filtered to this module
+export function useModuleSettings(
+  moduleId: string,
+  options?: { scope?: 'global' | 'UserProfile' },   // defaults to 'global'
+): {
+  values: Ref<Record<string, unknown>>;     // /values?moduleId=… (defaults filled in)
   loaded: Ref<boolean>;                     // load() succeeded at least once
   error:  Ref<ApiError | null>;             // last fetch/save error
-  load(): Promise<void>;                    // refetch schema + values
+  load(): Promise<void>;                    // refetch values
   save(updates: Record<string, unknown>): Promise<void>;
-  get<T>(name: string, fallback?: T): T;    // persisted → default → fallback
+  get<T>(name: string, fallback?: T): T;    // value-or-default → caller fallback
 };
 ```
+
+**One round-trip per scope** — the composable hits only
+`GET /v2/<scope>/values?modifiedOnly=false&moduleId=<id>`. The
+`moduleId` query parameter scopes the response server-side so the
+client never has to filter someone else's settings out, and
+`modifiedOnly=false` returns every registered setting with its
+persisted value or schema default already filled in. There's no
+parallel `/schema` fetch — if you need full metadata
+(`displayName`, `allowedValues`, `valueType`, etc.) for a settings
+**editor** UI, call `/v2/<scope>/schema?moduleId=…` directly; this
+composable is the read-and-use shortcut that doesn't.
+
+**Scope option** — passing `scope: 'UserProfile'` swaps the underlying
+endpoint from `/api/platform/settings/v2/global/values` to
+`/api/platform/settings/v2/me/values`. Same interface for the calling
+component; the data tier behind it is per-user instead of global, and
+the change you persist via `save()` follows the user across browsers
+and devices.
 
 **Typical use site:**
 
@@ -329,7 +490,7 @@ import { useModuleSettings } from './composables/useModuleSettings';
 
 const moduleSettings = useModuleSettings('VirtoCommerce.SystemOperations');
 
-// `get(name, fallback)` resolves: persisted value → schema default → fallback
+// `get(name, fallback)` resolves: server response (persisted-or-default) → caller fallback
 const restartTimeout = computed(() =>
   moduleSettings.get<number>('VirtoCommerce.SystemOperations.RestartTimeoutSeconds', 120),
 );
@@ -529,10 +690,18 @@ const { restartPlatform } = useOperations(dialog, t, {
 
 ## 9. Out of scope (today)
 
-- **Tenant-scoped settings.** The C# API exposes `RegisterSettingsForType`
-  for per-store / per-organisation settings. `<settings>` only handles
-  globals. Tenant scope can be added later as a `<settings forType="Store">`
-  attribute or a `<tenantSettings>` sibling element.
+- **Tenant-id resolution for custom tenants.** `<setting tenant="…">`
+  passes any non-empty tenant-type name through to
+  `RegisterSettingsForType` verbatim, so a module wiring up its own
+  tenant type (e.g. `Store`) can declare it declaratively without a
+  platform-side change. What the platform does **not** ship is per-tenant
+  endpoints for arbitrary tenant types beyond what already exists on
+  `SettingsV2Controller` — the `/v2/tenant/{tenantType}/{tenantId}/*`
+  endpoints serve any registered tenant type, but how `{tenantId}` is
+  resolved (URL segment vs. header vs. claim) for each custom tenant is
+  the consuming module's contract, not the platform's. `UserProfile` is
+  the only tenant the platform itself surfaces a self-service shortcut
+  for (the `/v2/me/*` endpoints).
 - **Runtime mutation of the schema.** Settings are registered once at
   startup. Adding a new `<setting>` element to a deployed module's manifest
   requires a platform restart — same as the programmatic path.

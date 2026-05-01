@@ -48,14 +48,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public ICollection<ManifestAppInfo> Apps { get; } = new List<ManifestAppInfo>();
 
-        /// <summary>
-        /// Platform settings declared in <c>module.manifest</c> via the
-        /// <c>&lt;settings&gt;</c> element. Registered at startup by
-        /// <c>UsePlatformSettings()</c> alongside any settings registered
-        /// programmatically from <c>IModule.Initialize</c>.
-        /// Coercion failures are surfaced via <see cref="Errors"/> so a
-        /// typo in one setting never takes down a whole module.
-        /// </summary>
+
         public ICollection<SettingDescriptor> Settings { get; } = new List<SettingDescriptor>();
 
         public string StartupType { get; set; }
@@ -125,6 +118,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 {
                     try
                     {
+                        // All settings land in the single Settings collection
+                        // regardless of scope. The Scope field on the resulting
+                        // SettingDescriptor preserves any scope="…" attribute
+                        // so UseSettingsFromModuleManifests can do an additional
+                        // RegisterSettingsForType pass for the right subset.
                         Settings.Add(setting.ToSettingDescriptor(Id));
                     }
                     catch (FormatException ex)

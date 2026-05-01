@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,19 +41,47 @@ namespace VirtoCommerce.Platform.Web.Extensions
         }
 
         /// <summary>
-        /// Register settings declared in each installed module's module.manifest, settings element. 
+        /// Register settings declared in each installed module's
+        /// <c>module.manifest</c> &lt;settings&gt; element. For each module:
+        /// <list type="number">
+        ///   <item>Every entry in <see cref="Core.Modularity.ManifestModuleInfo.Settings"/> is
+        ///   registered globally via
+        ///   <see cref="ISettingsRegistrar.RegisterSettings"/> — surfaces
+        ///   under <c>/api/platform/settings/v2/global/*</c>.</item>
+        ///   <item>Entries whose <see cref="SettingDescriptor.Tenant"/> is
+        ///   non-empty (set by the manifest's
+        ///   <c>&lt;setting tenant="…"&gt;</c> attribute, e.g.
+        ///   <c>tenant="UserProfile"</c>) are also registered via
+        ///   <see cref="ISettingsRegistrar.RegisterSettingsForType"/>
+        ///   under that tenant-type name — for <c>UserProfile</c> this
+        ///   surfaces them additionally under
+        ///   <c>/api/platform/settings/v2/me/*</c>.</item>
+        /// </list>
+        /// Mirrors the platform's own dual-registration pattern in
+        /// <see cref="UsePlatformSettings"/> for
+        /// <c>PlatformConstants.Settings.UserProfile.AllSettings</c>.
         /// </summary>
-        /// <param name="appBuilder"></param>
-        /// <returns></returns>
         public static IApplicationBuilder UseSettingsFromModuleManifests(this IApplicationBuilder appBuilder)
         {
             var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
             var moduleService = appBuilder.ApplicationServices.GetRequiredService<Core.Modularity.IModuleService>();
             foreach (var module in moduleService.GetInstalledModules())
             {
-                if (!module.Settings.IsNullOrEmpty())
+                if (module.Settings.IsNullOrEmpty())
                 {
-                    settingsRegistrar.RegisterSettings(module.Settings, module.Id);
+                    continue;
+                }
+
+                // 1. Register every manifest-declared setting globally.
+                settingsRegistrar.RegisterSettings(module.Settings, module.Id);
+
+                // 2. Register the tenant-scoped subset additionally
+                var tenantSettingsGroups = module.Settings
+                    .Where(x => !string.IsNullOrWhiteSpace(x.Tenant))
+                    .GroupBy(x => x.Tenant);
+                foreach (var tenantSettings in tenantSettingsGroups)
+                {
+                    settingsRegistrar.RegisterSettingsForType(tenantSettings.ToList(), tenantSettings.Key);
                 }
             }
 

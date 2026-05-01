@@ -2,6 +2,7 @@ using System.Linq;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using Xunit;
+using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
 
 namespace VirtoCommerce.Platform.Tests.Modularity;
 
@@ -107,6 +108,78 @@ public class ManifestModuleInfoSettingsTests
         Assert.NotNull(module.Settings);
         Assert.Empty(module.Settings);
         Assert.Empty(module.Errors);
+    }
+
+    [Fact]
+    public void LoadFromManifest_AllSettingsLandInSingleCollection_TenantFlowsToDescriptor()
+    {
+        // Both global and tenant-scoped settings land in the single Settings
+        // collection. UseSettingsFromModuleManifests then registers all
+        // globally and additionally calls RegisterSettingsForType for any
+        // descriptor whose Tenant is non-empty (e.g. "UserProfile").
+        var manifest = NewManifest("VirtoCommerce.Demo");
+        manifest.Settings =
+        [
+            new ManifestSetting
+            {
+                Name = "VirtoCommerce.Demo.MaxRetries",
+                ValueType = SettingValueType.Integer,
+                DefaultValue = "3",
+                // Tenant omitted -> global. Resulting descriptor.Tenant is null.
+            },
+            new ManifestSetting
+            {
+                Name = "VirtoCommerce.Demo.UserDefaultTheme",
+                ValueType = SettingValueType.ShortText,
+                DefaultValue = "system",
+                Tenant = nameof(UserProfile),
+            },
+        ];
+
+        var module = new ManifestModuleInfo().LoadFromManifest(manifest);
+
+        Assert.Equal(2, module.Settings.Count);
+
+        var maxRetries = module.Settings.Single(s => s.Name == "VirtoCommerce.Demo.MaxRetries");
+        Assert.Null(maxRetries.Tenant);
+
+        var userTheme = module.Settings.Single(s => s.Name == "VirtoCommerce.Demo.UserDefaultTheme");
+        Assert.Equal("UserProfile", userTheme.Tenant);
+        Assert.Equal("VirtoCommerce.Demo", userTheme.ModuleId);
+    }
+
+    [Fact]
+    public void LoadFromManifest_BadCoercion_OnTenantScopedSetting_SkipsOnly_ThatSetting()
+    {
+        // A tenant-scoped setting with an invalid integer must be skipped
+        // and surfaced via Errors. Other settings (regardless of tenant)
+        // still register normally.
+        var manifest = NewManifest("VirtoCommerce.Demo");
+        manifest.Settings =
+        [
+            new ManifestSetting
+            {
+                Name = "VirtoCommerce.Demo.UserBadInt",
+                ValueType = SettingValueType.Integer,
+                DefaultValue = "not-a-number",
+                Tenant = nameof(UserProfile),
+            },
+            new ManifestSetting
+            {
+                Name = "VirtoCommerce.Demo.GlobalGood",
+                ValueType = SettingValueType.Boolean,
+                DefaultValue = "true",
+            },
+        ];
+
+        var module = new ManifestModuleInfo().LoadFromManifest(manifest);
+
+        // Bad setting dropped; the good global one survives.
+        Assert.DoesNotContain(module.Settings, s => s.Name == "VirtoCommerce.Demo.UserBadInt");
+        var good = Assert.Single(module.Settings);
+        Assert.Equal("VirtoCommerce.Demo.GlobalGood", good.Name);
+        var error = Assert.Single(module.Errors);
+        Assert.Contains("VirtoCommerce.Demo.UserBadInt", error);
     }
 
     [Fact]

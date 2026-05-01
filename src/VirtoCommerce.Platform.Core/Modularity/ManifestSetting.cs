@@ -16,6 +16,21 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// </summary>
     public class ManifestSetting
     {
+        /// <summary>
+        /// Optional tenant-type name. Default (null/empty) registers the
+        /// setting as a global platform setting. Set to <c>UserProfile</c>
+        /// to register it as a per-user setting; the caller's value is
+        /// then read/written via the <c>/api/platform/settings/v2/me/*</c>
+        /// endpoints under the authenticated user's profile. Any other
+        /// non-empty value is treated as a custom tenant-type name and
+        /// passed verbatim to <see cref="ISettingsRegistrar.RegisterSettingsForType"/>.
+        /// Compared ordinally — match the casing of the registered tenant
+        /// type (canonical for <c>UserProfile</c> is the form
+        /// <c>nameof(UserProfile)</c> resolves to).
+        /// </summary>
+        [XmlAttribute("tenant")]
+        public string Tenant { get; set; }
+
         [XmlElement("name")]
         public string Name { get; set; }
 
@@ -102,6 +117,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 IsDictionary = IsDictionary,
                 IsLocalizable = IsLocalizable,
                 RestartRequired = RestartRequired,
+                Tenant = Tenant,
             };
         }
 

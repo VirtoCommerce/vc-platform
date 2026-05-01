@@ -2,6 +2,7 @@ using System;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using Xunit;
+using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
 
 namespace VirtoCommerce.Platform.Tests.Modularity;
 
@@ -137,6 +138,48 @@ public class ManifestSettingTests
         var descriptor = setting.ToSettingDescriptor("VirtoCommerce.MyModule");
 
         Assert.Equal("VirtoCommerce.MyModule", descriptor.ModuleId);
+    }
+
+    // --- tenant attribute (UserProfile or any custom tenant type) ---
+
+    [Fact]
+    public void Tenant_DefaultsToNull_WhenAttributeOmitted()
+    {
+        // Plain <setting> with no tenant="…" attribute means "global".
+        // The descriptor's Tenant must be null so UseSettingsFromModuleManifests
+        // skips the RegisterSettingsForType pass for it.
+        var setting = NewSetting(SettingValueType.Boolean, "true");
+
+        Assert.Null(setting.Tenant);
+        Assert.Null(setting.ToSettingDescriptor("M").Tenant);
+    }
+
+    [Fact]
+    public void Tenant_FlowsToDescriptor_Verbatim()
+    {
+        // <setting tenant="UserProfile"> → descriptor.Tenant == "UserProfile".
+        // No normalisation: the tenant-type comparison in
+        // ISettingsRegistrar.GetSettingsForType is ordinal, so the manifest
+        // must match the casing of the registered tenant type.
+        var setting = NewSetting(SettingValueType.Boolean, "true");
+        setting.Tenant = nameof(UserProfile);
+
+        var descriptor = setting.ToSettingDescriptor("M");
+        Assert.Equal("UserProfile", descriptor.Tenant);
+    }
+
+    [Fact]
+    public void Tenant_CustomValue_PassesThroughVerbatim()
+    {
+        // Any non-empty tenant value passes through. UseSettingsFromModuleManifests
+        // groups by Tenant and calls RegisterSettingsForType once per group, so a
+        // module wiring up its own tenant type (e.g. "Store") can declare it
+        // declaratively in the manifest with no platform-side change.
+        var setting = NewSetting(SettingValueType.Boolean, "true");
+        setting.Tenant = "Store";
+
+        var descriptor = setting.ToSettingDescriptor("M");
+        Assert.Equal("Store", descriptor.Tenant);
     }
 
     [Fact]
