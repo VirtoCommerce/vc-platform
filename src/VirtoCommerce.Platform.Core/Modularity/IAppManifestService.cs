@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 namespace VirtoCommerce.Platform.Core.Modularity;
 
 /// <summary>
@@ -16,7 +14,8 @@ public interface IAppManifestService
 {
     /// <summary>
     /// Returns the host app's manifest (metadata + ordered plugin list) for the
-    /// given app id.
+    /// given app id. Per-plugin <c>Permission</c> values are surfaced as-is on
+    /// the result; the consuming SPA evaluates them against the current user.
     /// </summary>
     /// <param name="appId">
     /// Host app id declared by some installed module's <c>&lt;app&gt;</c> element.
@@ -24,15 +23,10 @@ public interface IAppManifestService
     /// triggers the hardcoded <c>dist/app.js</c> + <c>dist/style.css</c> probe
     /// instead of the Module Federation plugin probe.
     /// </param>
-    /// <param name="user">
-    /// The current user; used to filter contributions and plugins whose
-    /// <c>permission</c> the user lacks. Pass <c>null</c> for unauthenticated
-    /// callers — the implementation should still return non-permissioned
-    /// plugins (no permission required).
-    /// </param>
     /// <returns>
-    /// The resolved host app + plugin list, or <c>null</c> if no installed
+    /// The resolved host app + plugin list (with <see cref="AppManifestDescriptor.Hash"/>
+    /// pre-computed for use as a strong ETag), or <c>null</c> if no installed
     /// module declares an app with the given id.
     /// </returns>
-    AppManifestDescriptor GetManifest(string appId, ClaimsPrincipal user = null);
+    AppManifestDescriptor GetManifest(string appId);
 }

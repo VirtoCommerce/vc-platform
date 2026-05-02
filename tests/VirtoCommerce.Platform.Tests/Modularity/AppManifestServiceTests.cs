@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Moq;
-using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
@@ -101,16 +101,26 @@ public class AppManifestServiceTests : IDisposable
     }
 
     [Fact]
-    public void GetManifest_PlatformApp_HashChangesWhenFileMutates()
+    public void GetManifest_PlatformApp_HashChangesWhenFileMutates_AfterCacheInvalidation()
     {
+        // The service caches the descriptor for the process lifetime, so a
+        // file mutation alone won't change the returned hash — by design,
+        // since modules + files don't change mid-process. The cache is
+        // explicitly invalidated via AppManifestCacheRegion.ExpireRegion()
+        // (e.g. by a future hot-reload feature, or by a test that needs a
+        // fresh probe).
         var catalog = NewModule("VirtoCommerce.Catalog");
         var jsPath = WriteFile(catalog.FullPhysicalPath, "dist/app.js", "// v1");
         var service = NewService(catalog);
 
         var hash1 = service.GetManifest("platform").Plugins[0].Entry.Hash;
 
-        // Mutate the file to a different last-write time.
+        // Mutate the file to a different last-write time AND invalidate
+        // the cache region — both are required for the next probe to see
+        // the new mtime.
         File.SetLastWriteTimeUtc(jsPath, DateTime.UtcNow.AddSeconds(10));
+        AppManifestCacheRegion.ExpireRegion();
+
         var hash2 = service.GetManifest("platform").Plugins[0].Entry.Hash;
 
         Assert.NotEqual(hash1, hash2);
@@ -180,8 +190,7 @@ public class AppManifestServiceTests : IDisposable
 
         var service = NewService(host, plugin);
 
-        // Caller has the required permission.
-        var result = service.GetManifest("vc-shell-marketplace", PrincipalWith("marketplace:reviews:advanced"));
+        var result = service.GetManifest("vc-shell-marketplace");
 
         var p = Assert.Single(result.Plugins);
         Assert.Equal("reviews-custom", p.Id);
@@ -200,8 +209,14 @@ public class AppManifestServiceTests : IDisposable
     }
 
     [Fact]
-    public void GetManifest_ModernApp_PluginPermission_FiltersOutForUnauthorizedUsers()
+    public void GetManifest_ModernApp_PluginPermission_FlowsToDescriptorAsMetadata()
     {
+        // The service does not filter by permission — it returns the full
+        // plugin list with each plugin's `permission` field intact, and the
+        // consuming SPA decides whether to load each plugin based on the
+        // current user's claims. This keeps the controller cacheable
+        // (one ETag per appId, not per user) and lets the service share a
+        // single cached descriptor across all callers.
         var host = NewModule("VirtoCommerce.MarketplaceVendor");
         host.Apps.Add(new ManifestAppInfo { Id = "vc-shell-marketplace" });
 
@@ -213,11 +228,10 @@ public class AppManifestServiceTests : IDisposable
 
         var service = NewService(host, plugin);
 
-        var withoutPerm = service.GetManifest("vc-shell-marketplace", PrincipalWith()); // no permissions
-        var withPerm = service.GetManifest("vc-shell-marketplace", PrincipalWith("marketplace:reviews:advanced"));
+        var result = service.GetManifest("vc-shell-marketplace");
 
-        Assert.Empty(withoutPerm.Plugins);
-        Assert.Single(withPerm.Plugins);
+        var p = Assert.Single(result.Plugins);
+        Assert.Equal("marketplace:reviews:advanced", p.Permission);
     }
 
     [Fact]
@@ -303,6 +317,74 @@ public class AppManifestServiceTests : IDisposable
     // assertion equality doesn't allocate a new array on every test invocation.
     private static readonly string[] s_expectedTopologicalOrder = ["Module.A", "Module.B", "Module.C"];
 
+    // ---------- Cache + Hash behaviour ----------
+
+    [Fact]
+    public void GetManifest_RepeatedCalls_HitCacheNotFilesystem()
+    {
+        // The probe is identical across users for a given appId, and modules
+        // + files don't change mid-process, so the descriptor is cached.
+        // Verified by counting IModuleService.GetInstalledModules invocations.
+        var catalog = NewModule("VirtoCommerce.Catalog");
+        WriteFile(catalog.FullPhysicalPath, "dist/app.js", "// catalog");
+
+        var harness = NewServiceWithMock(catalog);
+
+        harness.Service.GetManifest("platform");
+        harness.Service.GetManifest("platform");
+        harness.Service.GetManifest("platform");
+
+        harness.ModuleServiceMock.Verify(s => s.GetInstalledModules(), Times.Once);
+    }
+
+    [Fact]
+    public void GetManifest_DescriptorHash_IsPopulatedAndDeterministic()
+    {
+        // Hash flows through the cache, so two calls return the same value
+        // (same cached object, in fact). Strong ETag input for the controller.
+        var catalog = NewModule("VirtoCommerce.Catalog");
+        WriteFile(catalog.FullPhysicalPath, "dist/app.js", "// catalog");
+        var service = NewService(catalog);
+
+        var first = service.GetManifest("platform");
+        var second = service.GetManifest("platform");
+
+        Assert.False(string.IsNullOrEmpty(first.Hash));
+        Assert.Equal(first.Hash, second.Hash);
+    }
+
+    [Fact]
+    public void GetManifest_AfterRegionExpire_RebuildsFromFilesystem()
+    {
+        // AppManifestCacheRegion.ExpireRegion() is the documented escape
+        // hatch for any future feature that needs to invalidate the cache
+        // without a process restart. Calling it forces the next request
+        // to re-walk the modules.
+        var catalog = NewModule("VirtoCommerce.Catalog");
+        WriteFile(catalog.FullPhysicalPath, "dist/app.js", "// catalog");
+
+        var harness = NewServiceWithMock(catalog);
+
+        harness.Service.GetManifest("platform");
+        AppManifestCacheRegion.ExpireRegion();
+        harness.Service.GetManifest("platform");
+
+        harness.ModuleServiceMock.Verify(s => s.GetInstalledModules(), Times.Exactly(2));
+    }
+
+    [Fact]
+    public void GetManifest_UnknownAppId_CachesNullResult()
+    {
+        // Repeated probes for a non-existent appId must not re-walk the
+        // module list — null is a valid cached value.
+        var harness = NewServiceWithMock(NewModule("VirtoCommerce.Foo"));
+
+        Assert.Null(harness.Service.GetManifest("does-not-exist"));
+        Assert.Null(harness.Service.GetManifest("does-not-exist"));
+
+        harness.ModuleServiceMock.Verify(s => s.GetInstalledModules(), Times.Once);
+    }
+
     // ---------- Helpers ----------
 
     private ManifestModuleInfo NewModule(string id, string version = "1.0.0")
@@ -334,19 +416,44 @@ public class AppManifestServiceTests : IDisposable
         return fullPath;
     }
 
-    private static AppManifestService NewService(params ManifestModuleInfo[] modules)
+    private AppManifestService NewService(params ManifestModuleInfo[] modules) =>
+        NewServiceWithMock(modules).Service;
+
+    private AppManifestServiceTestHarness NewServiceWithMock(params ManifestModuleInfo[] modules)
     {
         var moduleService = new Mock<IModuleService>();
         moduleService.Setup(s => s.GetInstalledModules()).Returns(modules.ToList());
-        return new AppManifestService(moduleService.Object, NullLogger<AppManifestService>.Instance);
+        var service = new AppManifestService(
+            moduleService.Object,
+            NullLogger<AppManifestService>.Instance,
+            new TestPlatformMemoryCache());
+
+        // Each test instance gets its own cache (via TestPlatformMemoryCache),
+        // but the static AppManifestCacheRegion is shared across instances. Ensure
+        // any tokens raised by a previous test don't pre-expire this test's
+        // entries — and clean up at the end via Dispose.
+        AppManifestCacheRegion.ExpireRegion();
+
+        return new AppManifestServiceTestHarness(service, moduleService);
     }
 
-    private static ClaimsPrincipal PrincipalWith(params string[] permissions)
+    private sealed record AppManifestServiceTestHarness(
+        AppManifestService Service,
+        Mock<IModuleService> ModuleServiceMock);
+
+    /// <summary>
+    /// Minimal <see cref="IPlatformMemoryCache"/> over an in-memory backing
+    /// cache. Returns a default <see cref="MemoryCacheEntryOptions"/> so the
+    /// tests don't depend on the platform's CachingOptions configuration —
+    /// the only behaviour we exercise is "store, retrieve, expire on token".
+    /// </summary>
+    private sealed class TestPlatformMemoryCache : MemoryCache, IPlatformMemoryCache
     {
-        var claims = new List<Claim> { new(ClaimTypes.Name, "tester") };
-        claims.AddRange(permissions.Select(p =>
-            new Claim(PlatformConstants.Security.Claims.PermissionClaimType, p)));
-        var identity = new ClaimsIdentity(claims, "TestAuth");
-        return new ClaimsPrincipal(identity);
+        public TestPlatformMemoryCache()
+            : base(Options.Create(new MemoryCacheOptions()))
+        {
+        }
+
+        public MemoryCacheEntryOptions GetDefaultCacheEntryOptions() => new();
     }
 }
