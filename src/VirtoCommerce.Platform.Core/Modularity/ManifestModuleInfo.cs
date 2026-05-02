@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
@@ -46,6 +47,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public bool UseFullTypeNameInSwagger { get; set; }
 
         public ICollection<ManifestAppInfo> Apps { get; } = new List<ManifestAppInfo>();
+
+
+        public ICollection<SettingDescriptor> Settings { get; } = new List<SettingDescriptor>();
 
         public string StartupType { get; set; }
 
@@ -106,6 +110,31 @@ namespace VirtoCommerce.Platform.Core.Modularity
             if (manifest.Apps != null)
             {
                 Apps.AddRange(manifest.Apps.Select(x => new ManifestAppInfo(x)));
+            }
+
+            if (manifest.Settings != null)
+            {
+                foreach (var setting in manifest.Settings)
+                {
+                    try
+                    {
+                        // All settings land in the single Settings collection
+                        // regardless of scope. The Scope field on the resulting
+                        // SettingDescriptor preserves any scope="…" attribute
+                        // so UseSettingsFromModuleManifests can do an additional
+                        // RegisterSettingsForType pass for the right subset.
+                        Settings.Add(setting.ToSettingDescriptor(Id));
+                    }
+                    catch (FormatException ex)
+                    {
+                        // Bad <defaultValue> or <allowedValues> coercion. Skip
+                        // the offending setting and surface the error against
+                        // this module so the operator sees it in the Modules
+                        // admin UI; don't bring the rest of the module down.
+                        Errors.Add(
+                            $"Failed to register setting '{setting.Name ?? "(unnamed)"}': {ex.Message}");
+                    }
+                }
             }
 
             return this;

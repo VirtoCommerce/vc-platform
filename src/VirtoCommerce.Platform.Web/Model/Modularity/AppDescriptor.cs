@@ -18,7 +18,11 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
             IconUrl = moduleAppInfo.IconUrl;
             RelativeUrl = moduleAppInfo.RelativeUrl;
             Permission = moduleAppInfo.Permission;
-            SupportEmbeddedMode = moduleAppInfo.SupportEmbeddedMode;
+            Placement = moduleAppInfo.Placement;
+            // Kept for backwards compatibility with clients that still read
+            // the legacy boolean (older VC-Shell builds, third-party JS).
+            // Always derived from Placement so the two stay consistent.
+            SupportEmbeddedMode = moduleAppInfo.Placement == AppPlacement.MainMenu;
         }
 
 
@@ -32,6 +36,17 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
 
         public string Permission { get; set; }
 
+        /// <summary>
+        /// Where the app surfaces in the admin navigation
+        /// (<c>AppMenu</c> / <c>MainMenu</c> / <c>Hidden</c>).
+        /// </summary>
+        public AppPlacement Placement { get; set; }
+
+        /// <summary>
+        /// Deprecated. Use <see cref="Placement"/> instead. Equivalent to
+        /// <c>Placement == AppPlacement.MainMenu</c>; kept on the JSON
+        /// contract for backwards compatibility.
+        /// </summary>
         public bool SupportEmbeddedMode { get; set; }
     }
 }
