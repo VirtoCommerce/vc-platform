@@ -100,7 +100,7 @@ public class UserSessionsService : IUserSessionsService
             await _authorizationManager.TryRevokeAsync(authorization);
         }
 
-        // remove orphaned tokens, if present
+        // revoke any remaining tokens, except tokens from excluded session groups
         var tokens = _tokenManager.FindBySubjectAsync(request.UserId);
         await foreach (var token in tokens)
         {
