@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
@@ -68,7 +69,6 @@ using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
-using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
 using VirtoCommerce.Platform.Web.Json;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -117,10 +117,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddForwardedHeaders();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            // This custom provider allows able to use just [Authorize] instead of having to define [Authorize(AuthenticationSchemes = "Bearer")] above every API controller
-            // without this Bearer authorization will not work
-            services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
 
             services.AddRedis(Configuration);
 
@@ -269,7 +265,46 @@ namespace VirtoCommerce.Platform.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var authBuilder = services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
+            var authBuilder = services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = PlatformConstants.Security.AuthenticationSchemes.MixedScheme;
+                    options.DefaultAuthenticateScheme = PlatformConstants.Security.AuthenticationSchemes.MixedScheme;
+                    options.DefaultChallengeScheme = PlatformConstants.Security.AuthenticationSchemes.MixedScheme;
+                })
+                // Do not set displayName, setting displayName makes it an external scheme  
+                .AddPolicyScheme(PlatformConstants.Security.AuthenticationSchemes.MixedScheme, displayName: null, options =>
+                {
+                    options.ForwardDefaultSelector = context =>
+                    {
+                        // 1) Authorization header: parse once; the scheme token decides the forward target.
+                        var authorizationHeader = context.Request.Headers.Authorization.ToString();
+                        if (!authorizationHeader.IsNullOrEmpty() &&
+                            AuthenticationHeaderValue.TryParse(authorizationHeader, out var parsed) && !parsed.Scheme.IsNullOrEmpty())
+                        {
+                            if (parsed.Scheme.EqualsIgnoreCase("Bearer"))
+                            {
+                                // Even if parsed.Parameter is empty/malformed, let OpenIddict produce the 401.
+                                return OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                            }
+
+                            if (parsed.Scheme.EqualsIgnoreCase("Basic"))
+                            {
+                                return BasicAuthenticationOptions.DefaultScheme;
+                            }
+                        }
+
+                        // 2) API key: header or query string.
+                        var apiKeyOptions = context.RequestServices.GetRequiredService<IOptions<ApiKeyAuthenticationOptions>>().Value;
+                        if (context.Request.Query.ContainsKey(apiKeyOptions.ApiKeyParamName) ||
+                            context.Request.Headers.ContainsKey(apiKeyOptions.ApiKeyParamName))
+                        {
+                            return ApiKeyAuthenticationOptions.DefaultScheme;
+                        }
+
+                        // 3) Cookie fallback (also covers anonymous requests).
+                        return IdentityConstants.ApplicationScheme;
+                    };
+                })
                 //Add the second ApiKey auth schema to handle api_key in query string
                 .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                 //Add the third BasicAuth auth schema
@@ -284,6 +319,14 @@ namespace VirtoCommerce.Platform.Web
                 .AddEntityFrameworkStores<SecurityDbContext>()
                 .AddDefaultTokenProviders()
                 .AddUserValidator<CustomUserValidator>();
+
+            // AddIdentity rewrites default scheme to Cookie, so we need to set it to Mixed scheme again
+            services.PostConfigure<AuthenticationOptions>(options =>
+            {
+                options.DefaultScheme = PlatformConstants.Security.AuthenticationSchemes.MixedScheme;
+                options.DefaultAuthenticateScheme = PlatformConstants.Security.AuthenticationSchemes.MixedScheme;
+                options.DefaultChallengeScheme = PlatformConstants.Security.AuthenticationSchemes.MixedScheme;
+            });
 
             // Configure Identity to use the same JWT claims as OpenIddict instead
             // of the legacy WS-Federation claims it uses by default (ClaimTypes),
@@ -453,6 +496,13 @@ namespace VirtoCommerce.Platform.Web
 
                     // Register the ASP.NET Core host.
                     validationBuilder.UseAspNetCore();
+
+                    if (authorizationOptions != null && authorizationOptions.EnablePersistentStorageTokenValidation)
+                    {
+                        // invalidate token immediately
+                        validationBuilder.EnableAuthorizationEntryValidation();
+                        validationBuilder.EnableTokenEntryValidation();
+                    }
                 });
             });
 
@@ -461,11 +511,16 @@ namespace VirtoCommerce.Platform.Web
             // Must be registered AFTER AddOpenIddict() so it overrides the default store.
             services.AddScoped<IOpenIddictTokenStore<VirtoOpenIddictEntityFrameworkCoreToken>, VirtoOpenIddictEntityFrameworkCoreTokenStore>();
 
-            services.AddSingleton<Func<IOpenIddictTokenManager>>(provider =>
-                () => provider.CreateScope().ServiceProvider.GetRequiredService<IOpenIddictTokenManager>());
-
-            services.AddTransient<IUserSessionsService, UserSessionsService>();
             services.AddTransient<IUserSessionsSearchService, UserSessionsSearchService>();
+
+            // Func<(IUserSessionsService, IServiceScope)> - need to dispose the scope inside the singleton consumer 
+            services.AddScoped<IUserSessionsService, UserSessionsService>();
+            services.AddSingleton<Func<(IUserSessionsService SessionService, IServiceScope Scope)>>(provider => () =>
+                {
+                    var scope = provider.CreateScope();
+                    var sessionService = scope.ServiceProvider.GetRequiredService<IUserSessionsService>();
+                    return (SessionService: sessionService, Scope: scope);
+                });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
@@ -484,18 +539,15 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddAuthorization(options =>
             {
-                //We need this policy because it is a single way to implicitly use the three schemas (JwtBearer, ApiKey and Basic) authentication for resource based authorization.
-                var multipleSchemaAuthPolicy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme, BasicAuthenticationOptions.DefaultScheme)
+                // The good article is described the meaning DefaultPolicy and FallbackPolicy
+                // https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(PlatformConstants.Security.AuthenticationSchemes.MixedScheme)
                     .RequireAuthenticatedUser()
                     // Customer user can get token, but can't use any API where auth is needed
                     .RequireAssertion(context =>
                         authorizationOptions.AllowApiAccessForCustomers ||
                         !context.User.HasClaim(OpenIddictConstants.Claims.Role, PlatformConstants.Security.SystemRoles.Customer))
                     .Build();
-                //The good article is described the meaning DefaultPolicy and FallbackPolicy
-                //https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
-                options.DefaultPolicy = multipleSchemaAuthPolicy;
             });
             // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in module manifest
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();

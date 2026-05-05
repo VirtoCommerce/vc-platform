@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.accountSessionsWidgetController',
-        ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', function ($scope, bladeNavigationService, accounts) {
+        ['$scope', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', function ($scope, $timeout, bladeNavigationService, accounts) {
             var blade = $scope.widget.blade;
 
             var userId = null;
@@ -46,6 +46,12 @@ angular.module('platformWebApp')
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             };
+
+            $scope.$on('accountPasswordChanged', function () {
+                $timeout(function () {
+                    refresh();
+                });
+            });
 
             refresh();
         }]);
