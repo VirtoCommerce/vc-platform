@@ -12,15 +12,17 @@
 
 ## 1. Goal
 
-VC-Shell currently calls `POST /api/frontend-modules` with a body of `{ appName, provides }` and expects a `{ modules: [...] }` registry. That endpoint **was never officially in `vc-platform`**; production installations have stubbed it out-of-tree, which is why upgrades have been painful.
+VC-Shell currently calls `POST /api/frontend-modules` with a body of `{ appName, provides }` and expects a `{ modules: [...] }` registry. That endpoint **was never officially in `vc-platform`**; production installations have stubbed it out-of-tree, which is why upgrades have been painful. Earlier drafts of this migration also experimented with a separate `<frontendModules compatibleWith="…">` element on `module.manifest` to decouple frontend versioning from `<dependencies>` — that path is **abandoned** to keep one source of truth for module compatibility.
 
-The platform now ships an official endpoint:
+The platform now ships an official endpoint and a unified manifest model:
 
 ```
 GET /api/apps/{appId}/manifest
 ```
 
-**Migrate `@vc-shell/mf-host` to call this canonical endpoint.** The platform keeps `POST /api/frontend-modules` as a permanent backwards-compatibility alias so you can take the upgrade at your own pace, but new code should use the canonical name.
+**One manifest for backend and frontend.** The plugin's existing `<dependencies>` graph is the single declaration — same one that already governs .NET install order — and VC-Shell consumes the canonical `/api/apps/{appId}/manifest` to load plugin remotes. There is no parallel `<frontendModules>` registry to maintain.
+
+**Migrate `@vc-shell/mf-host` to call this canonical endpoint.** The platform keeps `POST /api/frontend-modules` as a deprecated backwards-compatibility alias so installations running pre-migration VC-Shell builds keep working; the alias delegates to the same `IAppManifestService` so behaviour is identical. New VC-Shell builds — and any downstream client — should use the canonical `GET` endpoint and migrate at their own pace.
 
 ---
 
@@ -355,7 +357,7 @@ Less elegant; punt the burden to every plugin author. **Prefer Option A.**
 | 2 | Ship `@vc-shell/mf-host` 3.0 with the new endpoint | VC-Shell team — **this doc** |
 | 3 | Ship `@vc-shell/mf-module` with new default `outDir` (Option A) | VC-Shell team |
 | 4 | Update one consumer app (e.g. marketplace) end-to-end | Marketplace team |
-| 5 | Deprecate `POST /api/frontend-modules` in OpenAPI but keep the alias forever | Platform team |
+| 5 | Mark `POST /api/frontend-modules` deprecated in OpenAPI; keep the alias active until major-version bump | Platform team |
 
 Phases 2 and 3 can ship in the same release. Phase 4 is the canary; once
 proven, broader rollout to other vc-shell-based apps follows their own cadence.
@@ -448,8 +450,11 @@ curl -i -b session.cookies \
    **Out of scope for v1**; raise later if a use case materialises.
 
 3. **Deprecation timeline for the legacy `POST /api/frontend-modules` alias.**
-   Plan as written: kept forever. Reconsider only if it becomes operationally
-   painful (e.g. masks bugs because old clients silently work).
+   Plan as written: marked deprecated in OpenAPI as of phase 5; alias remains
+   active for installations running pre-migration VC-Shell builds. Removal
+   targets the next major platform bump — clients have a full minor-cycle to
+   migrate. The alias delegates to the same `IAppManifestService`, so it's
+   not a separate code path that can drift.
 
 4. **Should `@vc-shell/mf-module` add an `appId` option?** Yes — see §6
    Option A. Confirm naming (`appId` vs `discoveryFolder` vs `pluginsFolder`).

@@ -14,13 +14,13 @@ Virto Commerce's backoffice has historically come in three flavours:
 | VC-Shell | Vue 3 + Module Federation | Used by Marketplace and other vertical apps |
 | Custom standalone SPAs | Anything (System Operations is Vue 3) | One-off pages served via the platform `<apps>` mechanism |
 
-Until now each host had its **own** way of loading "extensions" written by other module authors:
+Until now each host had its **own** way of loading "extensions" written by other module authors, and frontend modularity lived in a separate registry from the backend:
 
 - AngularJS uses an implicit `dist/app.js` bundle convention plus a global `AppDependencies` array for module registration.
-- VC-Shell expected an undefined `POST /api/frontend-modules` endpoint that some installations stubbed out-of-tree.
+- VC-Shell expected an undefined `POST /api/frontend-modules` endpoint that some installations stubbed out-of-tree, and earlier drafts experimented with a separate `<frontendModules>` element on top of `<dependencies>`.
 - Custom SPAs were not extensible at all.
 
-The framework treats Module Federation as the default loader for new SPAs and preserves the legacy AngularJS path **untouched** so existing modules (catalog, pricing, marketplace, hundreds of others) keep working with zero changes.
+**One manifest for backend and frontend.** The framework consolidates everything into the existing `module.manifest`: there is no separate frontend-modules registry, no second compatibility model, no per-host enrolment. The same `<dependencies>` graph that already governs .NET module install order also drives plugin discovery and frontend compatibility. VC-Shell migrates to consume this canonical manifest; the legacy AngularJS path is preserved **untouched** so existing modules (catalog, pricing, marketplace, hundreds of others) keep working with zero changes.
 
 ### Principles
 
@@ -112,15 +112,19 @@ The framework treats Module Federation as the default loader for new SPAs and pr
                                   │  loadRemote / dynamic <script>
                                   ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│                         Plugin Module (.NET)                         │
+│                       Plugin Module (.NET / JS)                      │
 │                                                                      │
 │   module.manifest                                                    │
 │      └── <dependency id="VirtoCommerce.MyHostApp"/>  ← discovery key │
 │                                                                      │
-│   plugins/{appId}/                                                   │
-│      ├── remoteEntry.js          ← MF entry (built by Vite)          │
-│      ├── *.js, *.css              ← chunks (hashed)                  │
-│      └── plugin.json (optional)  ← override defaults                 │
+│   plugins/                       ← one folder per target app         │
+│      ├── {appId-A}/                                                  │
+│      │   ├── remoteEntry.js      ← MF entry (built by Vite)          │
+│      │   ├── *.js, *.css          ← chunks (hashed)                  │
+│      │   └── plugin.json (optional)                                  │
+│      ├── {appId-B}/              ← optional second app target        │
+│      │   └── remoteEntry.js                                          │
+│      └── ...                                                         │
 │                                                                      │
 │   src/index.ts:                                                      │
 │      export default {                                                │
@@ -136,13 +140,59 @@ The framework treats Module Federation as the default loader for new SPAs and pr
 A plugin module declares the existing `<dependency>` on the host's .NET module:
 
 ```xml
-<!-- vc-module-marketplace-reviews/module.manifest -->
+<!-- VirtoCommerce.SystemOperations.SampleExtension/module.manifest -->
 <dependencies>
-  <dependency id="VirtoCommerce.MarketplaceVendor" version="3.1000.0" />
+  <dependency id="VirtoCommerce.SystemOperations" version="3.1000.0" />
 </dependencies>
 ```
 
 The platform's `IAppManifestService` walks the topologically sorted module list (already produced by `ModuleBootstrapper`) and probes each module for plugin descriptors. There's no second registry to keep in sync.
+
+#### On-disk layout
+
+A plugin module ships its frontend bundle in `plugins/{appId}/` directly under the module root. `appId` is the **id of the target host app**, not the plugin's own id — that decoupling is what lets one module host plugins for several apps:
+
+```
+modules/VirtoCommerce.SystemOperations.Ext/      ← installed plugin module
+├── module.manifest                              ← <dependency id="…SystemOperations">
+└── plugins/
+    └── system-operations/                       ← target appId
+        ├── remoteEntry.js                       ← MF entry
+        ├── index.js
+        └── assets/
+```
+
+In the source repo (authoring), the same convention applies — Vite outputs directly into `plugins/{appId}/`, no intermediate `dist/` segment:
+
+```
+samples/VirtoCommerce.SystemOperations.SampleExtension/
+├── _module.manifest                             ← becomes module.manifest at install
+├── package.json
+├── vite.config.mts                              ← @module-federation/vite, outDir = plugins/system-operations
+├── src/
+│   ├── index.ts                                 ← default-export install()
+│   └── …
+└── plugins/
+    └── system-operations/                       ← Vite emits remoteEntry.js etc. here
+        ├── remoteEntry.js
+        ├── index.js
+        └── assets/
+```
+
+#### One module, multiple apps
+
+Each subfolder under `plugins/` targets a different host app. A single module can extend more than one host at once:
+
+```
+modules/VirtoCommerce.MyExtensions/
+├── module.manifest
+└── plugins/
+    ├── system-operations/        ← contributes to System Operations
+    ├── vc-shell-marketplace/     ← contributes to Marketplace (Vendor Portal)
+    └── platform/                 ← contributes to legacy AngularJS admin
+```
+
+The platform discovers each subfolder independently when the corresponding `GET /api/apps/{appId}/manifest` is requested. Module authors don't have to split functionality across multiple .NET modules just because the contributions target different host UIs.
 
 ### Per-app discovery rules
 
@@ -202,7 +252,7 @@ For `appId == "platform"`, `remote` is omitted; `entry` points at `dist/app.js` 
 
 **Errors:** `401` unauthenticated, `403` user lacks app permission, `404` unknown `appId`.
 
-A back-compat alias `POST /api/frontend-modules { appName }` is kept permanently for older VC-Shell consumers.
+A back-compat alias `POST /api/frontend-modules { appName }` is kept for installations still running pre-migration VC-Shell builds. The alias is **deprecated** — new VC-Shell builds call the canonical `GET /api/apps/{appId}/manifest` directly, and clients should migrate at their own pace. The alias maps to the same `IAppManifestService`, so behaviour is identical; only the URL differs.
 
 ### Plugin descriptor (`plugin.json`) — optional
 
@@ -575,7 +625,7 @@ You're shipping a Vue 3 admin extension for a vc-shell-based marketplace app:
      <dependency id="VirtoCommerce.MarketplaceVendor" version="3.1000.0" />
    </dependencies>
    ```
-2. **npm subpackage** with `vite.config.mts` using `@module-federation/vite`:
+2. **`vite.config.mts`** at the module root, using `@module-federation/vite`:
    ```ts
    federation({
      name: 'VirtoCommerce.MyMarketplaceExt',
@@ -584,8 +634,9 @@ You're shipping a Vue 3 admin extension for a vc-shell-based marketplace app:
      shared: { vue: { singleton: true } },
      dts: false,
    })
+   // build.outDir = 'plugins/vc-shell-marketplace'  ← appId of the target host
    ```
-   Set Vite's `outDir` to `../plugins/vc-shell-marketplace`.
+   To contribute to several host apps from one module, build into `plugins/{appId-A}/` and `plugins/{appId-B}/` in separate Vite passes (or one rollup with multiple entries).
 3. **Plugin entry** — default-export an `install`:
    ```ts
    import { defineAppModule } from '@vc-shell/framework';
@@ -690,24 +741,22 @@ When you publish a new plugin version, bump your module's `<version>` in the usu
 
 If the operator installs your module on a platform with `VirtoCommerce.SystemOperations` 3.0.0, the platform refuses the install and surfaces a clear error before any plugin reaches the host UI.
 
-#### Two compatibility checks at different times
+#### Two compatibility checks, one declaration
 
-There are actually **two** version-compatibility models running side by side:
+The platform deliberately collapses backend and frontend compatibility onto the **same** `<dependencies>` graph. There is no separate `<frontendModules compatibleWith>` element — earlier drafts had one, but it created a parallel registry that operators had to maintain in lockstep with `<dependencies>`. The unified manifest is simpler and harder to get wrong.
 
 | Check | Where declared | Validated when | What it gates |
 |---|---|---|---|
-| `<dependency id version>` (.NET) | `module.manifest` `<dependencies>` | Module install time | Whether the module is allowed to install at all on this platform |
-| `compatibleWith` (frontend) | `module.manifest` `<frontendModules compatibleWith="@vc-shell/framework [2.0.0, 3.0.0)">` | Manifest fetch / plugin load time | Whether the host runtime accepts this plugin's frontend bundle |
-| MF `requiredVersion` | Vite `federation({ shared: { vue: { requiredVersion: "^3.4" } } })` | `loadRemote()` shared negotiation | Whether the plugin can use the host's instance of Vue (vs bundling its own) |
+| `<dependency id version>` | `module.manifest` `<dependencies>` | Module install time | Whether the plugin module is allowed to install. Single source of truth — covers both the .NET API surface (e.g. `VirtoCommerce.MarketplaceVendor` 3.1000+) **and** the frontend host's framework version (because the host module owns both). |
+| MF `requiredVersion` | Vite `federation({ shared: { vue: { requiredVersion: "^3.4" } } })` | `loadRemote()` shared negotiation | Whether the plugin can use the host's instance of Vue (vs bundling its own copy). Runtime-only check — applies after the platform-level dependency is satisfied. |
 
-The .NET check is **install-blocking** — the plugin won't even reach disk if it's not satisfied. The frontend `compatibleWith` and MF `requiredVersion` are **load-time**: a plugin built against an old framework version can be installed but will be rejected (or load with a warning) at runtime.
+The first check is **install-blocking** — the plugin won't even reach disk if its declared dependency isn't satisfied. The second is **load-time** — a plugin can be installed but rejected (or load with a fallback) at `loadRemote()` if its shared-deps view is incompatible with the host.
 
-Module authors should treat these as different concerns:
-- Bump `<dependency version>` when you depend on new C# APIs from another VC module.
-- Bump `compatibleWith` when you depend on new frontend framework APIs.
-- Adjust `requiredVersion` ranges in shared deps to widen / narrow Vue (etc.) compatibility.
+Module authors only declare compatibility in one place:
+- Bump `<dependency version>` when you depend on new APIs (C# or frontend) from the host module.
+- Adjust `requiredVersion` ranges in shared deps to widen / narrow Vue (etc.) compatibility for in-flight plugin loads.
 
-Skipping any of these creates the classic "installs successfully, crashes at runtime" failure mode.
+Skipping the first creates the classic "installs successfully, crashes at runtime" failure mode; skipping the second creates the "two Vue instances" failure mode.
 
 ### What about hot reload?
 
@@ -738,7 +787,7 @@ A: Module Federation gives shared-singleton negotiation for free, which is what 
 A: All plugins are first-party (they ship inside Virto Commerce modules and go through the same install flow as the host). The trust model doesn't justify iframe overhead. If untrusted third-party plugins ever become a use case, this can be revisited.
 
 **Q: How does this relate to the platform's existing `<apps>` element?**
-A: `<apps>` declares **host apps** (the SPAs the platform serves at `/apps/{appId}/`). The modularity framework declares **plugins** (extensions to those host apps). They're complementary: a `<dependency>` on a host module + a `plugins/{appId}/` folder = a plugin for that app.
+A: `<apps>` declares **host apps** (the SPAs the platform serves at `/apps/{appId}/`). The modularity framework declares **plugins** (extensions to those host apps). They're complementary: a `<dependency>` on a host module + a `plugins/{appId}/` folder = a plugin for that app. A single module can have **several** `plugins/{appId}/` subfolders to contribute to multiple host apps simultaneously — see "On-disk layout" in the Discovery section.
 
 **Q: Can I see what plugins are loaded for a host without booting the UI?**
 A: Yes. `curl https://your-platform/api/apps/{appId}/manifest` (with appropriate auth) returns the same JSON the host receives. Useful for smoke tests and operator diagnostics.

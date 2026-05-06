@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Back Office Modularity — Virto Commerce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #0B0E14;
+    --bg-darker: #060810;
+    --bg-card: #131825;
+    --bg-card-hover: #1A2032;
+    --border: #232938;
+    --text-primary: #E6EAF3;
+    --text-secondary: #9AA3B5;
+    --text-muted: #5E6675;
+    --accent: #FF6B2C;        /* Virto orange */
+    --accent-soft: rgba(255, 107, 44, 0.12);
+    --accent-glow: rgba(255, 107, 44, 0.35);
+    --cyan: #4FD1FF;
+    --green: #22C55E;
+    --amber: #FBBF24;
+    --orange: #F97316;
+    --purple: #A78BFA;
+    --magenta: #F472B6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg-darker);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .stage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide {
+    position: absolute;
+    width: 1200px;
+    height: 720px;
+    background: var(--bg-dark);
+    border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+    padding: 56px 64px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms ease, visibility 0s 200ms;
+    overflow: hidden;
+    transform: scale(var(--fit-scale, 1));
+    transform-origin: center;
+  }
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 240ms ease;
+  }
+
+  /* ── Cover slide ── */
+  .slide.cover {
+    padding: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,107,44,0.18), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(79,209,255,0.10), transparent 50%),
+      var(--bg-dark);
+  }
+  .cover-inner {
+    height: 100%;
+    padding: 80px 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cover-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    width: fit-content;
+  }
+  .cover-tag .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+  .cover-title {
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-top: 32px;
+  }
+  .cover-title .accent {
+    background: linear-gradient(135deg, var(--accent) 0%, #FFB37A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cover-subtitle {
+    font-size: 24px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 800px;
+    margin-top: 24px;
+    line-height: 1.4;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 36px;
+    align-items: flex-end;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .cover-chips {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 36px;
+  }
+  .chip {
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .chip strong { color: var(--accent); margin-right: 6px; }
+
+  /* ── Section header (Section divider) ── */
+  .slide.section {
+    background:
+      radial-gradient(circle at 70% 50%, rgba(255,107,44,0.12), transparent 60%),
+      var(--bg-dark);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    font-weight: 600;
+  }
+  .section-title {
+    font-size: 64px;
+    font-weight: 800;
+    margin-top: 16px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .section-blurb {
+    font-size: 22px;
+    color: var(--text-secondary);
+    margin-top: 28px;
+    max-width: 800px;
+    line-height: 1.5;
+  }
+  .section-list {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 32px;
+    max-width: 900px;
+  }
+  .section-list-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 120ms;
+    font-size: 15px;
+  }
+  .section-list-item:hover { background: var(--bg-card-hover); }
+  .section-list-item .num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  /* ── Content slide ── */
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1.slide-title {
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 12px;
+  }
+  h1.slide-title .accent {
+    background: linear-gradient(135deg, var(--accent) 0%, #FFB37A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .slide-lead {
+    font-size: 18px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    max-width: 1000px;
+    margin-bottom: 28px;
+  }
+  .slide-body { font-size: 16px; line-height: 1.55; color: var(--text-primary); }
+  .slide-body p + p { margin-top: 14px; }
+  .slide-body strong { color: var(--text-primary); font-weight: 600; }
+  .slide-body code {
+    font-size: 14px;
+    background: var(--bg-card);
+    padding: 2px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    color: var(--cyan);
+  }
+  .slide-body ul { padding-left: 24px; margin-top: 8px; }
+  .slide-body li { margin-bottom: 8px; color: var(--text-secondary); }
+  .slide-body li strong { color: var(--text-primary); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card h3 .icon-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 10px var(--accent-glow);
+  }
+  .card p { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+  .card.muted { background: rgba(255,255,255,0.02); }
+
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 16px;
+  }
+  table.compare th, table.compare td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  table.compare th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  table.compare tr:last-child td { border-bottom: none; }
+  table.compare td.code { font-family: 'JetBrains Mono', monospace; color: var(--cyan); font-size: 13px; }
+
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .pill.green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .pill.amber { background: rgba(251,191,36,0.15); color: var(--amber); }
+  .pill.cyan { background: rgba(79,209,255,0.15); color: var(--cyan); }
+  .pill.purple { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .pill.orange { background: rgba(249,115,22,0.15); color: var(--orange); }
+
+  pre.snippet {
+    background: var(--bg-darker);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.55;
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+  pre.snippet .kw { color: var(--accent); }
+  pre.snippet .str { color: var(--green); }
+  pre.snippet .com { color: var(--text-muted); font-style: italic; }
+  pre.snippet .key { color: var(--cyan); }
+  pre.snippet .num { color: var(--amber); }
+
+  /* ── SVG schema container ── */
+  .schema {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .schema svg { width: 100%; height: auto; max-height: 100%; }
+  text.lbl { fill: var(--text-primary); font-family: 'Inter', sans-serif; font-weight: 500; }
+  text.lbl-sm { fill: var(--text-secondary); font-family: 'Inter', sans-serif; font-size: 12px; }
+  text.mono-svg { font-family: 'JetBrains Mono', monospace; }
+  rect.box { fill: var(--bg-darker); stroke: var(--border); stroke-width: 1.5; }
+  rect.box-accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+  rect.box-cyan { fill: rgba(79,209,255,0.08); stroke: var(--cyan); stroke-width: 1.5; }
+  rect.box-purple { fill: rgba(167,139,250,0.08); stroke: var(--purple); stroke-width: 1.5; }
+  path.arrow, line.arrow { stroke: var(--text-muted); stroke-width: 1.5; fill: none; }
+  path.arrow-accent, line.arrow-accent { stroke: var(--accent); stroke-width: 2; fill: none; }
+
+  /* ── Footer / nav controls ── */
+  .nav-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(19,24,37,0.95);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 10px 16px;
+    z-index: 100;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+  .nav-btn {
+    background: transparent; border: none;
+    color: var(--text-secondary);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 120ms;
+  }
+  .nav-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-secondary);
+    min-width: 60px;
+    text-align: center;
+    font-weight: 500;
+  }
+  .nav-counter .accent { color: var(--accent); }
+
+  .toc-btn {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    width: 44px; height: 44px;
+    background: rgba(19,24,37,0.95);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    transition: all 120ms;
+  }
+  .toc-btn:hover { color: var(--text-primary); background: var(--bg-card-hover); }
+
+  /* ── TOC panel ── */
+  .toc-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 360px;
+    height: 100%;
+    background: rgba(11,14,20,0.97);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border);
+    transform: translateX(-100%);
+    transition: transform 280ms cubic-bezier(0.16,1,0.3,1);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+  }
+  .toc-panel.open { transform: translateX(0); }
+  .toc-header {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .toc-header h2 { font-size: 14px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+  .toc-list { flex: 1; overflow-y: auto; padding: 12px 0; }
+  .toc-list::-webkit-scrollbar { width: 6px; }
+  .toc-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .toc-section-label {
+    padding: 18px 28px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 28px;
+    cursor: pointer;
+    transition: background 120ms;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  .toc-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+  .toc-item.active { color: var(--accent); background: var(--accent-soft); border-left: 3px solid var(--accent); padding-left: 25px; }
+  .toc-item .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); min-width: 22px; }
+  .toc-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0; pointer-events: none;
+    transition: opacity 240ms;
+    z-index: 199;
+  }
+  .toc-overlay.open { opacity: 1; pointer-events: auto; }
+
+  /* ── Hint / kbd ── */
+  .kbd-hint {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    z-index: 100;
+  }
+  kbd {
+    display: inline-block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    padding: 2px 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin: 0 2px;
+  }
+
+  /* ── Final CTA ── */
+  .slide.cta {
+    text-align: center;
+    background:
+      radial-gradient(circle at 50% 60%, rgba(255,107,44,0.15), transparent 50%),
+      var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .cta-title { font-size: 88px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 32px; }
+  .cta-title .accent {
+    background: linear-gradient(135deg, var(--accent) 0%, #FFB37A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cta-links { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; max-width: 900px; margin-top: 24px; }
+  .cta-link {
+    padding: 14px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 160ms;
+  }
+  .cta-link:hover { background: var(--bg-card-hover); border-color: var(--accent); color: var(--accent); }
+
+  /* ── Executive summary slide (Slide 00) ── */
+  .psf-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 22px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .psf-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--psf-color, var(--accent));
+    opacity: 0.6;
+  }
+  .psf-card .psf-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--psf-color, var(--accent));
+    margin-bottom: 14px;
+  }
+  .psf-card .psf-label .psf-num {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--psf-color-bg);
+    color: var(--psf-color);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .psf-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .psf-card ul { list-style: none; padding: 0; margin: 0; flex: 1; }
+  .psf-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .psf-card li:last-child { border-bottom: none; }
+  .psf-card li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--psf-color);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .psf-card li strong { color: var(--text-primary); font-weight: 600; }
+  .psf-card.problem  { --psf-color: #F87171; --psf-color-bg: rgba(248,113,113,0.12); }
+  .psf-card.solution { --psf-color: var(--accent); --psf-color-bg: var(--accent-soft); }
+  .psf-card.features { --psf-color: var(--cyan); --psf-color-bg: rgba(79,209,255,0.12); }
+</style>
+</head>
+<body>
+
+<button class="toc-btn" id="tocBtn" aria-label="Toggle table of contents">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+    <line x1="3" y1="6"  x2="17" y2="6"/>
+    <line x1="3" y1="10" x2="17" y2="10"/>
+    <line x1="3" y1="14" x2="17" y2="14"/>
+  </svg>
+</button>
+
+<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>T</kbd> contents · <kbd>F</kbd> fullscreen</div>
+
+<div class="toc-overlay" id="tocOverlay"></div>
+<aside class="toc-panel" id="tocPanel" aria-label="Table of contents">
+  <div class="toc-header">
+    <h2>Contents</h2>
+    <button class="nav-btn" id="tocClose" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="3" x2="13" y2="13"/>
+        <line x1="13" y1="3" x2="3" y2="13"/>
+      </svg>
+    </button>
+  </div>
+  <div class="toc-list" id="tocList"></div>
+</aside>
+
+<div class="stage" id="stage">
+
+  <!-- ============================================================ -->
+  <!-- 1. COVER                                                     -->
+  <!-- ============================================================ -->
+  <section class="slide cover" data-section="Intro" data-title="Cover">
+    <div class="cover-inner">
+      <div>
+        <div class="cover-tag"><span class="dot"></span>Architecture Overview</div>
+        <h1 class="cover-title">Back Office <span class="accent">Modularity</span></h1>
+        <p class="cover-subtitle">One contract for plugins across three host UIs — for module authors, solution architects, and platform operators.</p>
+        <div class="cover-chips">
+          <span class="chip"><strong>One</strong> manifest endpoint</span>
+          <span class="chip"><strong>Three</strong> host UIs</span>
+          <span class="chip"><strong>Module Federation</strong> 2.0</span>
+          <span class="chip"><strong>Zero-config</strong> discovery</span>
+        </div>
+      </div>
+      <div class="cover-meta">
+        <div>Virto Commerce Platform · Backoffice Modularity Framework</div>
+        <div>Audience: Business · Solution Architects</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 2. EXECUTIVE SUMMARY (Problem · Solution · Features)         -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Intro" data-title="Executive summary">
+    <div class="breadcrumb">Overview</div>
+    <h1 class="slide-title">Executive <span class="accent">summary</span></h1>
+    <p class="slide-lead">The whole story in one slide. Skip ahead if this is enough.</p>
+    <div class="grid-3" style="margin-top: 18px; height: 420px;">
+      <div class="psf-card problem">
+        <div class="psf-label"><span class="psf-num">!</span>Problem</div>
+        <h3>Three hosts, three habits</h3>
+        <ul>
+          <li>Each host UI loaded plugins its own way</li>
+          <li>VC-Shell relied on an undocumented endpoint</li>
+          <li>Custom SPAs weren't extensible at all</li>
+          <li>Frontend modularity lived in a parallel registry</li>
+        </ul>
+      </div>
+      <div class="psf-card solution">
+        <div class="psf-label"><span class="psf-num">→</span>Solution</div>
+        <h3>One contract, every host</h3>
+        <ul>
+          <li>Plugins ship as ordinary VC Modules</li>
+          <li>One manifest endpoint serves every host UI</li>
+          <li>Module Federation 2.0 default · legacy preserved</li>
+          <li>Zero-config discovery via dependency graph</li>
+        </ul>
+      </div>
+      <div class="psf-card features">
+        <div class="psf-label"><span class="psf-num">★</span>Features</div>
+        <h3>What you get</h3>
+        <ul>
+          <li>Permission-aware end-to-end</li>
+          <li>Cacheable, with dev-mode bypass</li>
+          <li>Manifest-declared settings · Global + UserProfile</li>
+          <li>Multi-app per module</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 2. SECTION DIVIDER: ARCHITECTURE                             -->
+  <!-- ============================================================ -->
+  <section class="slide section" data-section="Architecture" data-title="Section: Architecture" data-toc-divider="true">
+    <div class="section-num">SECTION 01</div>
+    <h2 class="section-title">The architecture<br>at a glance</h2>
+    <p class="section-blurb">How modularity works across the three backoffice host UIs — and why the contract is built once, used everywhere.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 3. THREE HOST FLAVOURS                                       -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Three host flavours">
+    <div class="breadcrumb">Architecture · Hosts</div>
+    <h1 class="slide-title">Three host flavours, <span class="accent">one contract</span></h1>
+    <p class="slide-lead">Different UI tech, same plugin discovery rules — module authors learn one workflow, regardless of which admin app the plugin targets.</p>
+    <div class="grid-3" style="margin-top: 8px;">
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--purple)"></span>Platform Admin</h3>
+        <p style="margin-bottom: 10px;">Mature AngularJS 1.8 admin used in production for years.</p>
+        <span class="pill purple">Legacy loader</span>
+        <p style="margin-top: 14px; color: var(--text-muted); font-size: 13px;">Convention: <code style="background:transparent;border:none;color:var(--cyan);padding:0;">dist/app.js</code> + <code style="background:transparent;border:none;color:var(--cyan);padding:0;">dist/style.css</code> per module.</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--accent)"></span>VC-Shell</h3>
+        <p style="margin-bottom: 10px;">Modern Vue 3 admin with Module Federation, used by Marketplace and vertical apps.</p>
+        <span class="pill orange">MF loader</span>
+        <p style="margin-top: 14px; color: var(--text-muted); font-size: 13px;"><code style="background:transparent;border:none;color:var(--cyan);padding:0;">defineAppModule</code>, blades, extension points.</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--cyan)"></span>Custom SPAs</h3>
+        <p style="margin-bottom: 10px;">Self-contained apps served via the platform's <code style="background:transparent;border:none;color:var(--cyan);padding:0;">&lt;apps&gt;</code> mechanism.</p>
+        <span class="pill cyan">MF loader</span>
+        <p style="margin-top: 14px; color: var(--text-muted); font-size: 13px;">Example: System Operations — Vue 3 SPA with its own host API.</p>
+      </div>
+    </div>
+    <div class="card muted" style="margin-top: 24px;">
+      <p><strong style="color:var(--accent);">Why one contract matters.</strong> Before the framework: every host had its own way to load plugins (AngularJS implicit bundles · stub <code>POST /frontend-modules</code> for VC-Shell · custom SPAs not extensible at all) and frontend modularity sat in a separate registry from backend. Now: <code>module.manifest</code> declares modularity for both backend and frontend, and <code>GET /api/apps/{appId}/manifest</code> serves all three host UIs.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 4. THREE-TIER ARCHITECTURE                                   -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Three-tier architecture">
+    <div class="breadcrumb">Architecture · Layers</div>
+    <h1 class="slide-title">Platform · Host · <span class="accent">Plugin</span></h1>
+    <p class="slide-lead">Three layers, each with one job. The platform tells the host which plugins to load; the host loads them; the plugin contributes UI.</p>
+    <div class="schema" style="height: 460px;">
+      <svg viewBox="0 0 1080 460" xmlns="http://www.w3.org/2000/svg">
+        <!-- Platform layer -->
+        <rect class="box-accent" x="40" y="20" width="1000" height="120" rx="14"/>
+        <text class="lbl" x="64" y="56" font-size="18" font-weight="700">VC Platform (.NET)</text>
+        <text class="lbl-sm" x="64" y="78">Source of truth. Knows installed modules, dependency order, file hashes, permissions.</text>
+        <g transform="translate(64,96)">
+          <rect class="box" x="0" y="0" width="220" height="32" rx="6"/>
+          <text class="lbl mono-svg" x="14" y="21" font-size="12">module.manifest XML</text>
+        </g>
+        <g transform="translate(298,96)">
+          <rect class="box" x="0" y="0" width="220" height="32" rx="6"/>
+          <text class="lbl mono-svg" x="14" y="21" font-size="12">IAppManifestService</text>
+        </g>
+        <g transform="translate(532,96)">
+          <rect class="box" x="0" y="0" width="220" height="32" rx="6"/>
+          <text class="lbl mono-svg" x="14" y="21" font-size="12">AppManifestController</text>
+        </g>
+        <g transform="translate(766,96)">
+          <rect class="box" x="0" y="0" width="220" height="32" rx="6"/>
+          <text class="lbl mono-svg" x="14" y="21" font-size="12">Static-file middleware</text>
+        </g>
+
+        <!-- Arrow down -->
+        <path class="arrow-accent" d="M 540 152 L 540 178" marker-end="url(#arr)"/>
+        <text class="lbl-sm" x="552" y="170">GET /api/apps/{appId}/manifest</text>
+
+        <!-- Host layer -->
+        <rect class="box-cyan" x="40" y="190" width="1000" height="120" rx="14"/>
+        <text class="lbl" x="64" y="226" font-size="18" font-weight="700">Host Application</text>
+        <text class="lbl-sm" x="64" y="248">Fetches manifest, registers MF remotes, calls each plugin's install(). Renders shell + plugin contributions.</text>
+        <g transform="translate(64,266)">
+          <rect class="box" x="0" y="0" width="300" height="32" rx="6"/>
+          <text class="lbl mono-svg" x="14" y="21" font-size="12">platformWebApp.pluginLoader.js</text>
+        </g>
+        <g transform="translate(384,266)">
+          <rect class="box" x="0" y="0" width="300" height="32" rx="6"/>
+          <text class="lbl mono-svg" x="14" y="21" font-size="12">@vc-shell/mf-host</text>
+        </g>
+        <g transform="translate(704,266)">
+          <rect class="box" x="0" y="0" width="280" height="32" rx="6"/>
+          <text class="lbl mono-svg" x="14" y="21" font-size="12">SystemOperations / custom</text>
+        </g>
+
+        <!-- Arrow down -->
+        <path class="arrow-accent" d="M 540 322 L 540 348" marker-end="url(#arr)"/>
+        <text class="lbl-sm" x="552" y="340">loadRemote(name/exposed)</text>
+
+        <!-- Plugin layer -->
+        <rect class="box-purple" x="40" y="360" width="1000" height="80" rx="14"/>
+        <text class="lbl" x="64" y="396" font-size="18" font-weight="700">Plugin = VC Module containing plugins/{appId}/</text>
+        <text class="lbl-sm" x="64" y="418">Vue 3 + Vite + MF bundle inside a Virto Commerce Module. Same install/uninstall/version as any backend module — no separate plugin marketplace.</text>
+
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 4b. PLUGINS SHIP INSIDE VC MODULES (lifecycle)               -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Plugins ship inside VC Modules">
+    <div class="breadcrumb">Architecture · Lifecycle</div>
+    <h1 class="slide-title">Plugins ship inside <span class="accent">VC Modules</span></h1>
+    <p class="slide-lead">A "plugin" is not a separate thing with its own marketplace. It is — quite literally — files inside a VC Module. The whole platform install / uninstall / version / dependency machinery applies for free.</p>
+
+    <div class="schema" style="height: 280px; padding: 22px;">
+      <svg viewBox="0 0 1080 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- 4 lifecycle stages, each in a card -->
+        <g>
+          <rect class="box-purple" x="20"  y="40" width="240" height="160" rx="14"/>
+          <text class="lbl" x="38" y="70" font-size="11" font-weight="700" fill="var(--purple)">DEVELOPED</text>
+          <text class="lbl" x="38" y="96" font-size="14" font-weight="600">Inside a VC Module</text>
+          <text class="lbl mono-svg" x="38" y="122" font-size="10.5" fill="var(--text-secondary)">samples/</text>
+          <text class="lbl mono-svg" x="38" y="138" font-size="10.5" fill="var(--text-secondary)">  SystemOperations.SampleExt/</text>
+          <text class="lbl mono-svg" x="38" y="154" font-size="10.5" fill="var(--text-secondary)">    _module.manifest</text>
+          <text class="lbl mono-svg" x="38" y="170" font-size="10.5" fill="var(--text-secondary)">    src/index.ts</text>
+          <text class="lbl mono-svg" x="38" y="186" font-size="10.5" fill="var(--text-secondary)">    vite.config.mts</text>
+        </g>
+
+        <line class="arrow-accent" x1="262" y1="120" x2="288" y2="120" marker-end="url(#arrL)"/>
+
+        <g>
+          <rect class="box-cyan" x="290" y="40" width="240" height="160" rx="14"/>
+          <text class="lbl" x="308" y="70" font-size="11" font-weight="700" fill="var(--cyan)">DELIVERED</text>
+          <text class="lbl" x="308" y="96" font-size="14" font-weight="600">As a VC Module package</text>
+          <text class="lbl-sm" x="308" y="122">vc-build → .zip / NuGet</text>
+          <text class="lbl-sm" x="308" y="142">Same channel as any backend module:</text>
+          <text class="lbl-sm" x="308" y="158">VC Module Manager · CLI · CI/CD</text>
+          <text class="lbl-sm" x="308" y="178" fill="var(--text-muted)">No separate plugin marketplace</text>
+        </g>
+
+        <line class="arrow-accent" x1="532" y1="120" x2="558" y2="120" marker-end="url(#arrL)"/>
+
+        <g>
+          <rect class="box-accent" x="560" y="40" width="240" height="160" rx="14"/>
+          <text class="lbl" x="578" y="70" font-size="11" font-weight="700" fill="var(--accent)">INSTALLED</text>
+          <text class="lbl" x="578" y="96" font-size="14" font-weight="600">As a VC Module on disk</text>
+          <text class="lbl mono-svg" x="578" y="122" font-size="10.5" fill="var(--text-secondary)">platform/modules/</text>
+          <text class="lbl mono-svg" x="578" y="138" font-size="10.5" fill="var(--text-secondary)">  SystemOperations.Ext/</text>
+          <text class="lbl mono-svg" x="578" y="154" font-size="10.5" fill="var(--text-secondary)">    module.manifest</text>
+          <text class="lbl mono-svg" x="578" y="170" font-size="10.5" fill="var(--text-secondary)">    plugins/system-operations/</text>
+          <text class="lbl mono-svg" x="578" y="186" font-size="10.5" fill="var(--text-secondary)">      remoteEntry.js</text>
+        </g>
+
+        <line class="arrow-accent" x1="802" y1="120" x2="828" y2="120" marker-end="url(#arrL)"/>
+
+        <g>
+          <rect class="box" x="830" y="40" width="230" height="160" rx="14" stroke="var(--green)" fill="rgba(34,197,94,0.05)"/>
+          <text class="lbl" x="848" y="70" font-size="11" font-weight="700" fill="var(--green)">LOADED</text>
+          <text class="lbl" x="848" y="96" font-size="14" font-weight="600">From the VC Module</text>
+          <text class="lbl-sm" x="848" y="122">Host calls /api/apps/.../manifest</text>
+          <text class="lbl-sm" x="848" y="142">→ resolves to module's plugins/</text>
+          <text class="lbl-sm" x="848" y="162">→ MF runtime fetches remoteEntry</text>
+          <text class="lbl-sm" x="848" y="182" fill="var(--green)">All from the installed VC Module</text>
+        </g>
+
+        <defs>
+          <marker id="arrL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="grid-3" style="margin-top: 20px;">
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--purple)"></span>One distribution unit</h3>
+        <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.5;">
+          The VC Module is the only thing that gets shipped, installed, versioned, uninstalled. Plugins are <strong style="color:var(--text-primary);">files inside it</strong> — not a parallel artefact.
+        </p>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--accent)"></span>Standard install path</h3>
+        <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.5;">
+          Same install / uninstall as any other VC Module: <code>vc-build</code>, <code>vc-package</code>, VC Module Manager UI, CI/CD pipelines. Operators learn nothing new.
+        </p>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--green)"></span>Lifecycle for free</h3>
+        <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.5;">
+          Uninstall a module → its plugins disappear from manifest. Bump module version → cache invalidates on next call. Dependency conflicts caught at install time.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 5. MANIFEST ENDPOINT                                         -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Manifest endpoint contract">
+    <div class="breadcrumb">Architecture · API</div>
+    <h1 class="slide-title">One endpoint to <span class="accent">rule them all</span></h1>
+    <p class="slide-lead">The platform exposes a single, cacheable endpoint. Every host UI consumes the same JSON shape — only the loader strategy differs.</p>
+    <div class="grid-2" style="margin-top: 8px;">
+      <div>
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <div style="background:var(--bg-darker); padding:14px 20px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:13px;">
+            <span style="color:var(--green); font-weight:600;">GET</span>
+            <span style="color:var(--text-primary); margin-left:8px;">/api/apps/{appId}/manifest</span>
+          </div>
+          <pre class="snippet" style="margin:0; border:none; border-radius:0;">{
+  <span class="key">"appId"</span>:   <span class="str">"vc-shell-marketplace"</span>,
+  <span class="key">"version"</span>: <span class="str">"3.1000.0"</span>,
+  <span class="key">"title"</span>:   <span class="str">"Marketplace"</span>,
+  <span class="key">"hash"</span>:    <span class="str">"8DBA4F3C9E2A..."</span>,
+  <span class="key">"plugins"</span>: [
+    {
+      <span class="key">"id"</span>:         <span class="str">"VirtoCommerce.MarketplaceReviews"</span>,
+      <span class="key">"version"</span>:    <span class="str">"3.1001.0"</span>,
+      <span class="key">"permission"</span>: <span class="kw">null</span>,
+      <span class="key">"entry"</span>: {
+        <span class="key">"type"</span>: <span class="str">"script"</span>,
+        <span class="key">"path"</span>: <span class="str">"/modules/.../remoteEntry.js"</span>,
+        <span class="key">"hash"</span>: <span class="str">"8DBA4F3C"</span>
+      },
+      <span class="key">"remote"</span>: { <span class="key">"name"</span>: <span class="str">"…"</span>, <span class="key">"exposed"</span>: <span class="str">"./Module"</span> }
+    }
+  ]
+}</pre>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3><span class="icon-dot" style="background:var(--cyan)"></span>What's in it</h3>
+          <ul style="padding-left:18px; margin-top:10px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
+            <li><strong style="color:var(--text-primary);">Topologically sorted</strong> — plugins ship in module-dependency order.</li>
+            <li><strong style="color:var(--text-primary);">Cache-busting hashes</strong> — per-file mtime + descriptor-level <code>hash</code> as ETag.</li>
+            <li><strong style="color:var(--text-primary);">Permission metadata</strong> — host SPA evaluates <code>plugin.permission</code> client-side.</li>
+            <li><strong style="color:var(--text-primary);">Federation coordinates</strong> — <code>name</code> + <code>exposed</code> for <code>loadRemote()</code>.</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <h3><span class="icon-dot" style="background:var(--green)"></span>Cacheability</h3>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.55;">
+            <code style="background:transparent;border:none;color:var(--cyan);padding:0;">If-None-Match</code> against <code style="background:transparent;border:none;color:var(--cyan);padding:0;">hash</code> → <code style="background:transparent;border:none;color:var(--cyan);padding:0;">304 Not Modified</code> in microseconds.
+            Server-side cache via <code style="background:transparent;border:none;color:var(--cyan);padding:0;">IPlatformMemoryCache</code> for the process lifetime — no filesystem walk on cache-hits.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 6. MF SEQUENCE                                               -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Module Federation flow">
+    <div class="breadcrumb">Architecture · Runtime</div>
+    <h1 class="slide-title">How a plugin gets <span class="accent">loaded</span></h1>
+    <p class="slide-lead">Five steps from page load to rendered plugin. The host shell paints first; plugins flow in reactively as remotes resolve.</p>
+    <div class="schema" style="height: 440px;">
+      <svg viewBox="0 0 1080 440" xmlns="http://www.w3.org/2000/svg">
+        <!-- Lanes -->
+        <line x1="120" y1="40" x2="120" y2="420" stroke="var(--border)" stroke-dasharray="3 4"/>
+        <line x1="370" y1="40" x2="370" y2="420" stroke="var(--border)" stroke-dasharray="3 4"/>
+        <line x1="620" y1="40" x2="620" y2="420" stroke="var(--border)" stroke-dasharray="3 4"/>
+        <line x1="870" y1="40" x2="870" y2="420" stroke="var(--border)" stroke-dasharray="3 4"/>
+
+        <!-- Lane labels -->
+        <text class="lbl" x="120" y="30" font-size="13" text-anchor="middle" font-weight="600">Browser</text>
+        <text class="lbl" x="370" y="30" font-size="13" text-anchor="middle" font-weight="600">Host SPA</text>
+        <text class="lbl" x="620" y="30" font-size="13" text-anchor="middle" font-weight="600">VC Platform</text>
+        <text class="lbl" x="870" y="30" font-size="13" text-anchor="middle" font-weight="600">Plugin Remote</text>
+
+        <!-- Step 1 -->
+        <circle cx="50" cy="80" r="14" fill="var(--accent)"/>
+        <text x="50" y="85" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+        <line x1="120" y1="80" x2="365" y2="80" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr2)"/>
+        <text class="lbl-sm" x="240" y="74" text-anchor="middle">GET /apps/{appId}/index.html</text>
+
+        <!-- Step 2 -->
+        <circle cx="50" cy="140" r="14" fill="var(--accent)"/>
+        <text x="50" y="145" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+        <line x1="370" y1="140" x2="615" y2="140" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr2)"/>
+        <text class="lbl-sm" x="490" y="134" text-anchor="middle">GET /api/apps/{appId}/manifest</text>
+        <line x1="615" y1="160" x2="375" y2="160" stroke="var(--text-muted)" stroke-width="1.5" marker-end="url(#arr3)" stroke-dasharray="4 3"/>
+        <text class="lbl-sm" x="490" y="178" text-anchor="middle" fill="var(--text-muted)">200 + ETag · or 304</text>
+
+        <!-- Step 3 -->
+        <circle cx="50" cy="220" r="14" fill="var(--accent)"/>
+        <text x="50" y="225" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+        <line x1="370" y1="220" x2="865" y2="220" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr2)"/>
+        <text class="lbl-sm" x="615" y="214" text-anchor="middle">fetch remoteEntry.js?v={hash}</text>
+
+        <!-- Step 4 -->
+        <circle cx="50" cy="290" r="14" fill="var(--accent)"/>
+        <text x="50" y="295" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+        <line x1="870" y1="290" x2="375" y2="290" stroke="var(--text-muted)" stroke-width="1.5" marker-end="url(#arr3)" stroke-dasharray="4 3"/>
+        <text class="lbl-sm" x="615" y="284" text-anchor="middle">federation metadata · Vue singleton negotiated</text>
+
+        <!-- Step 5 -->
+        <circle cx="50" cy="360" r="14" fill="var(--accent)"/>
+        <text x="50" y="365" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+        <line x1="370" y1="360" x2="865" y2="360" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr2)"/>
+        <text class="lbl-sm" x="615" y="354" text-anchor="middle">install(host, ctx) · register card / route / blade</text>
+        <line x1="370" y1="395" x2="120" y2="395" stroke="var(--text-muted)" stroke-width="1.5" marker-end="url(#arr3)" stroke-dasharray="4 3"/>
+        <text class="lbl-sm" x="240" y="412" text-anchor="middle" fill="var(--text-muted)">UI rerenders reactively</text>
+
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+          </marker>
+          <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--text-muted)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 7. PLUGIN DISCOVERY                                          -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Zero-config plugin discovery">
+    <div class="breadcrumb">Architecture · Discovery</div>
+    <h1 class="slide-title">Drop a folder, <span class="accent">ship a plugin</span></h1>
+    <p class="slide-lead">No new XML element, no plugin registry, no marketplace ID. The platform finds plugins by walking the dependency graph it already maintains.</p>
+    <div class="grid-2" style="margin-top: 8px;">
+      <div>
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <div style="background:var(--bg-darker); padding:10px 18px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--purple); font-weight:600;">Source repo (authoring)</div>
+          <pre class="snippet" style="margin:0; border:none; border-radius:0; font-size:11.5px;"><span class="com">// vc-module-system-operations/samples/</span>
+└── VirtoCommerce.SystemOperations.SampleExtension/
+    ├── _module.manifest         <span class="com">← &lt;dependency id="…SystemOperations"&gt;</span>
+    ├── package.json
+    ├── vite.config.mts          <span class="com">← @module-federation/vite</span>
+    ├── src/
+    │   ├── index.ts             <span class="com">← default export install()</span>
+    │   ├── BrowserInfoCard.vue
+    │   └── host-types.ts
+    └── plugins/                 <span class="com">← Vite outputs here</span>
+        └── system-operations/   <span class="kw">← appId of target host</span>
+            ├── remoteEntry.js
+            ├── index.js
+            └── assets/</pre>
+        </div>
+        <div class="card" style="padding: 0; overflow: hidden; margin-top:12px;">
+          <div style="background:var(--bg-darker); padding:10px 18px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); font-weight:600;">Installed (on the platform)</div>
+          <pre class="snippet" style="margin:0; border:none; border-radius:0; font-size:11.5px;"><span class="com">// platform/modules/</span>
+└── VirtoCommerce.SystemOperations.Ext/
+    ├── module.manifest
+    └── plugins/
+        └── system-operations/
+            ├── remoteEntry.js   <span class="kw">← MF entry</span>
+            ├── index.js
+            └── assets/</pre>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3><span class="icon-dot" style="background:var(--accent)"></span>Discovery mechanism</h3>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-top:10px;">
+            Plugin's <code>module.manifest</code> declares <code>&lt;dependency id="HostModule"&gt;</code>. Platform walks the topologically sorted module list and probes <code>{moduleRoot}/plugins/{appId}/remoteEntry.js</code> — found = plugin.
+          </p>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <h3><span class="icon-dot" style="background:var(--cyan)"></span>One module · multiple apps</h3>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-top:10px;">
+            The folder name under <code>plugins/</code> is the <strong style="color:var(--text-primary);">target appId</strong>, not the plugin id. A single module can host plugins for several host apps:
+          </p>
+          <pre class="snippet" style="margin-top:10px; font-size:11px;">plugins/
+├── system-operations/      <span class="com">← for SO host</span>
+├── vc-shell-marketplace/   <span class="com">← for Marketplace</span>
+└── platform/               <span class="com">← for legacy admin</span></pre>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <h3><span class="icon-dot" style="background:var(--green)"></span>One manifest, backend + frontend</h3>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-top:10px;">
+            <code>module.manifest</code> is the single declaration. No second registry. Frontend-only modules just leave <code>&lt;assemblyFile&gt;</code> empty — pure JS ships like any other module.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 8. PERMISSION MODEL                                          -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Permission model">
+    <div class="breadcrumb">Architecture · Security</div>
+    <h1 class="slide-title">Two layers of <span class="accent">permission</span></h1>
+    <p class="slide-lead">App access is gated server-side; plugin visibility is gated client-side. Both leverage the platform's existing permission system.</p>
+    <div class="grid-2" style="margin-top: 8px;">
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--green)"></span>Server-side: app permission</h3>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:14px;">
+          <code>&lt;app permission="my-app:access"&gt;</code> on the host module. If the user lacks the permission, the manifest endpoint returns <strong style="color:var(--text-primary);">403 Forbidden</strong> — the user never receives the plugin list at all.
+        </p>
+        <pre class="snippet"><span class="com">&lt;!-- module.manifest --&gt;</span>
+<span class="kw">&lt;apps&gt;</span>
+  <span class="kw">&lt;app</span> id=<span class="str">"vendor-portal"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;title&gt;</span>Vendor Portal<span class="kw">&lt;/title&gt;</span>
+    <span class="kw">&lt;permission&gt;</span>vendor_portal:access<span class="kw">&lt;/permission&gt;</span>
+  <span class="kw">&lt;/app&gt;</span>
+<span class="kw">&lt;/apps&gt;</span></pre>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--accent)"></span>Client-side: plugin permission</h3>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:14px;">
+          <code>plugin.json</code> declares a permission. The host SPA evaluates it before <code>loadRemote()</code>. <strong style="color:var(--text-primary);">Why client-side?</strong> The manifest is cached once across all users — server-side filter would multiply cache entries by user count.
+        </p>
+        <pre class="snippet"><span class="com">// plugins/system-operations/plugin.json</span>
+{
+  <span class="key">"permission"</span>: <span class="str">"system-operations:advanced"</span>
+}</pre>
+        <p style="font-size:13px; color:var(--text-muted); margin-top:14px;">
+          The plugin itself enforces deeper authorization on the API endpoints it calls — defense in depth.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 9. CACHING STRATEGY                                          -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Caching strategy">
+    <div class="breadcrumb">Architecture · Performance</div>
+    <h1 class="slide-title">Cache <span class="accent">like a pro</span></h1>
+    <p class="slide-lead">Three layers. Each plays a different role per environment. Production fast paths · dev workflow that just works.</p>
+    <table class="compare" style="margin-top:8px;">
+      <thead>
+        <tr>
+          <th>Environment</th>
+          <th>Backend cache</th>
+          <th>Cache-Control</th>
+          <th>Behaviour</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill purple">Production</span></td>
+          <td>IPlatformMemoryCache · process lifetime</td>
+          <td class="code">private, must-revalidate</td>
+          <td>First request — full body. Subsequent — 304 in microseconds.</td>
+        </tr>
+        <tr>
+          <td><span class="pill cyan">Development</span></td>
+          <td>Bypassed entirely</td>
+          <td class="code">no-store</td>
+          <td>Every request — fresh build. Plugin rebuild visible on next reload, no platform restart.</td>
+        </tr>
+        <tr>
+          <td><span class="pill amber">After invalidate</span></td>
+          <td>Rebuilt on next call</td>
+          <td>(unchanged from env)</td>
+          <td>Browser revalidates with old ETag → 200 with new body if changed.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="grid-2" style="margin-top:24px;">
+      <div class="card muted">
+        <h3><span class="icon-dot" style="background:var(--green)"></span>Force-invalidate without restart</h3>
+        <pre class="snippet" style="margin-top:10px;"><span class="kw">POST</span> /api/apps/manifest/invalidate
+<span class="key">Authorization:</span> Bearer …
+<span class="com">// requires platform:module:manage</span>
+
+<span class="com">→</span> <span class="num">204</span> No Content</pre>
+      </div>
+      <div class="card muted">
+        <h3><span class="icon-dot" style="background:var(--cyan)"></span>What this gets you</h3>
+        <ul style="padding-left:18px; margin-top:10px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <li>Cold start ~ms; warm requests microseconds.</li>
+          <li>Dev workflow: <code>yarn build</code> → reload, no restart.</li>
+          <li>Operators can hot-swap plugin bundles via single POST.</li>
+          <li>Browser always sees fresh URLs when files change (mtime-based hashes).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 10. COMPATIBILITY                                            -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Architecture" data-title="Compatibility model">
+    <div class="breadcrumb">Architecture · Versioning</div>
+    <h1 class="slide-title">One mechanism, <span class="accent">no second registry</span></h1>
+    <p class="slide-lead">Compatibility piggybacks on the platform's existing <code>&lt;dependency&gt;</code> graph — the same one operators already understand. No separate frontend-versioning system to learn.</p>
+    <table class="compare" style="margin-top: 8px;">
+      <thead>
+        <tr>
+          <th>Check</th>
+          <th>Where declared</th>
+          <th>Validated when</th>
+          <th>Gates</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill green">Module dependency</span></td>
+          <td class="code">&lt;dependency id version&gt;</td>
+          <td>Module install time</td>
+          <td>Whether the plugin module is allowed to install. Single source of truth for both backend and frontend compatibility.</td>
+        </tr>
+        <tr>
+          <td><span class="pill orange">MF shared (runtime)</span></td>
+          <td class="code">federation({ shared: { vue: { requiredVersion } } })</td>
+          <td>loadRemote() shared negotiation</td>
+          <td>Whether the plugin uses the host's Vue / Router / etc., or its own copy.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="card muted" style="margin-top: 24px;">
+      <p style="font-size:15px; line-height:1.6;"><strong style="color: var(--accent);">One manifest, one dependency graph.</strong> Earlier drafts had a separate <code>&lt;frontendModules compatibleWith&gt;</code> registry — now obsolete. The unified module.manifest handles backend + frontend in one place; bumping <code>&lt;dependency version&gt;</code> on the host module is the only declaration plugin authors need to make.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 11. SECTION DIVIDER: MANIFEST SETTINGS                       -->
+  <!-- ============================================================ -->
+  <section class="slide section" data-section="Manifest Settings" data-title="Section: Manifest Settings" data-toc-divider="true">
+    <div class="section-num">SECTION 02</div>
+    <h2 class="section-title">Manifest <span style="background: linear-gradient(135deg, var(--accent), #FFB37A); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">Settings</span></h2>
+    <p class="section-blurb">Declarative platform settings in <code style="background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:2px 8px; font-family:'JetBrains Mono',monospace; font-size:18px; color:var(--cyan);">module.manifest</code> — global and per-user, no programmatic registration required.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 12. WHAT & WHY                                               -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Manifest Settings" data-title="What and why">
+    <div class="breadcrumb">Manifest Settings · Concept</div>
+    <h1 class="slide-title">Settings as <span class="accent">configuration</span>, not code</h1>
+    <p class="slide-lead">A module declares its settings in XML. The platform parses, validates, and registers them. The same v2 settings API serves them — no new endpoints, no new admin UI plumbing.</p>
+    <div class="grid-2" style="margin-top: 8px;">
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--purple)"></span>Before</h3>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.55; margin-bottom: 14px;">
+          Every module had to register settings programmatically from <code>IModule.Initialize()</code>. <strong style="color:var(--text-primary);">Frontend-only modules can't.</strong>
+        </p>
+        <pre class="snippet" style="font-size:11px;"><span class="kw">public void</span> Initialize(IServiceCollection services)
+{
+    <span class="kw">var</span> registrar = services.BuildServiceProvider()
+        .GetRequiredService&lt;ISettingsRegistrar&gt;();
+
+    registrar.RegisterSettings(
+        ModuleConstants.Settings.AllSettings,
+        ModuleInfo.Id);
+}</pre>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--accent)"></span>After</h3>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.55; margin-bottom: 14px;">
+          Drop a <code>&lt;settings&gt;</code> element into module.manifest. Platform parses + registers automatically. <strong style="color:var(--text-primary);">Works for any module — assembly or not.</strong>
+        </p>
+        <pre class="snippet" style="font-size:11px;"><span class="kw">&lt;settings&gt;</span>
+  <span class="kw">&lt;setting&gt;</span>
+    <span class="kw">&lt;name&gt;</span>VirtoCommerce.MyExt.MaxRetries<span class="kw">&lt;/name&gt;</span>
+    <span class="kw">&lt;groupName&gt;</span>MyExt|Reliability<span class="kw">&lt;/groupName&gt;</span>
+    <span class="kw">&lt;valueType&gt;</span>PositiveInteger<span class="kw">&lt;/valueType&gt;</span>
+    <span class="kw">&lt;defaultValue&gt;</span>3<span class="kw">&lt;/defaultValue&gt;</span>
+  <span class="kw">&lt;/setting&gt;</span>
+<span class="kw">&lt;/settings&gt;</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 13. TWO TENANT TYPES                                         -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Manifest Settings" data-title="Global vs UserProfile">
+    <div class="breadcrumb">Manifest Settings · Tenant types</div>
+    <h1 class="slide-title">One mechanism, <span class="accent">two scopes</span></h1>
+    <p class="slide-lead">A single <code>tenant=</code> attribute decides whether a setting is global (shared across all admins) or per-user (theme, layout density, feature flags).</p>
+    <div class="schema" style="height: 410px;">
+      <svg viewBox="0 0 1080 410" xmlns="http://www.w3.org/2000/svg">
+        <!-- module.manifest source -->
+        <rect class="box-accent" x="40" y="20" width="320" height="170" rx="14"/>
+        <text class="lbl" x="58" y="50" font-size="15" font-weight="700">module.manifest</text>
+        <text class="lbl mono-svg" x="58" y="80" font-size="11">&lt;setting&gt;</text>
+        <text class="lbl mono-svg" x="68" y="98" font-size="11" fill="var(--text-secondary)">&lt;name&gt;X.MaxRetries&lt;/name&gt;</text>
+        <text class="lbl mono-svg" x="68" y="115" font-size="11" fill="var(--text-secondary)">&lt;valueType&gt;Integer&lt;/valueType&gt;</text>
+        <text class="lbl mono-svg" x="58" y="132" font-size="11">&lt;/setting&gt;</text>
+        <text class="lbl mono-svg" x="58" y="158" font-size="11">&lt;setting tenant="UserProfile"&gt;</text>
+        <text class="lbl mono-svg" x="68" y="176" font-size="11" fill="var(--text-secondary)">&lt;name&gt;X.DefaultTheme&lt;/name&gt;</text>
+
+        <!-- arrow -->
+        <line class="arrow-accent" x1="370" y1="105" x2="430" y2="105" marker-end="url(#a4)"/>
+        <text class="lbl-sm" x="400" y="98" text-anchor="middle">parse</text>
+
+        <!-- two registrations -->
+        <rect class="box-cyan" x="450" y="20" width="600" height="80" rx="12"/>
+        <text class="lbl" x="468" y="50" font-size="14" font-weight="700">Global setting</text>
+        <text class="lbl-sm" x="468" y="72">RegisterSettings(items, moduleId)</text>
+        <text class="lbl mono-svg" x="468" y="90" font-size="11" fill="var(--cyan)">/api/platform/settings/v2/global/*</text>
+
+        <rect class="box-purple" x="450" y="120" width="600" height="80" rx="12"/>
+        <text class="lbl" x="468" y="150" font-size="14" font-weight="700">UserProfile (per-user) setting</text>
+        <text class="lbl-sm" x="468" y="172">RegisterSettingsForType(items, "UserProfile") · also registers globally</text>
+        <text class="lbl mono-svg" x="468" y="190" font-size="11" fill="var(--purple)">/api/platform/settings/v2/me/*</text>
+
+        <!-- consumers -->
+        <rect class="box" x="40" y="240" width="500" height="150" rx="14"/>
+        <text class="lbl" x="58" y="270" font-size="14" font-weight="700">Global use cases</text>
+        <text class="lbl-sm" x="58" y="296">• Restart polling timeout</text>
+        <text class="lbl-sm" x="58" y="316">• Allow destructive operations</text>
+        <text class="lbl-sm" x="58" y="336">• Tunables ops/admins set once for the install</text>
+        <text class="lbl-sm" x="58" y="362" fill="var(--text-muted)">Permission: platform:setting:read / :update</text>
+
+        <rect class="box" x="560" y="240" width="490" height="150" rx="14"/>
+        <text class="lbl" x="578" y="270" font-size="14" font-weight="700">UserProfile use cases</text>
+        <text class="lbl-sm" x="578" y="296">• Theme preference (system / light / dark)</text>
+        <text class="lbl-sm" x="578" y="316">• Layout density · dismissed-tip flags</text>
+        <text class="lbl-sm" x="578" y="336">• Per-admin feature toggles</text>
+        <text class="lbl-sm" x="578" y="362" fill="var(--text-muted)">Auth required (your own profile)</text>
+
+        <defs>
+          <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 14. UserProfile DEEP DIVE                                    -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Manifest Settings" data-title="UserProfile in depth">
+    <div class="breadcrumb">Manifest Settings · UserProfile</div>
+    <h1 class="slide-title">Per-user settings, <span class="accent">across devices</span></h1>
+    <p class="slide-lead">A user changes their theme on one browser → it follows them to another. The platform stores per-user values under the authenticated caller's profile, surfaced via dedicated /me/* endpoints.</p>
+    <div class="grid-2" style="margin-top: 8px;">
+      <div>
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <div style="background:var(--bg-darker); padding:14px 20px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:13px;">
+            <span style="color:var(--purple); font-weight:600;">Manifest</span>
+          </div>
+          <pre class="snippet" style="margin:0; border:none; border-radius:0;"><span class="kw">&lt;setting</span> tenant=<span class="str">"UserProfile"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;name&gt;</span>VC.SystemOperations.DefaultTheme<span class="kw">&lt;/name&gt;</span>
+  <span class="kw">&lt;groupName&gt;</span>System Operations|UI<span class="kw">&lt;/groupName&gt;</span>
+  <span class="kw">&lt;displayName&gt;</span>Theme preference<span class="kw">&lt;/displayName&gt;</span>
+  <span class="kw">&lt;valueType&gt;</span>ShortText<span class="kw">&lt;/valueType&gt;</span>
+  <span class="kw">&lt;defaultValue&gt;</span>system<span class="kw">&lt;/defaultValue&gt;</span>
+  <span class="kw">&lt;allowedValues&gt;</span>
+    <span class="kw">&lt;value&gt;</span>system<span class="kw">&lt;/value&gt;</span>
+    <span class="kw">&lt;value&gt;</span>light<span class="kw">&lt;/value&gt;</span>
+    <span class="kw">&lt;value&gt;</span>dark<span class="kw">&lt;/value&gt;</span>
+  <span class="kw">&lt;/allowedValues&gt;</span>
+<span class="kw">&lt;/setting&gt;</span></pre>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3><span class="icon-dot" style="background:var(--purple)"></span>Self-service /me/* endpoints</h3>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.55; margin-top:10px;">Three endpoints resolve <code>{userId}</code> from the auth token — frontend never sends it.</p>
+          <pre class="snippet" style="font-size:11px; margin-top:10px;"><span class="kw">GET</span> /v2/me/schema?moduleId=…
+<span class="kw">GET</span> /v2/me/values?modifiedOnly=…
+<span class="kw">POST</span> /v2/me/values</pre>
+          <p style="font-size:13px; color:var(--text-muted); margin-top:14px; line-height:1.55;">
+            <strong style="color:var(--text-primary);">Auth-only.</strong> Your own profile is yours — no <code>platform:setting:*</code> permission needed for /me/*. Cross-user access uses the existing tenant endpoints.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 15. FRONTEND COMPOSABLE                                      -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Manifest Settings" data-title="Frontend composable">
+    <div class="breadcrumb">Manifest Settings · Frontend</div>
+    <h1 class="slide-title">One composable, <span class="accent">two scopes</span></h1>
+    <p class="slide-lead">The Vue 3 storefront and System Operations ship a tiny reactive composable. Same API regardless of scope — <code>scope: 'UserProfile'</code> swaps the underlying endpoint family.</p>
+    <pre class="snippet" style="font-size:13px; margin-top: 12px;"><span class="com">// Vue 3 storefront / custom SPA</span>
+<span class="kw">import</span> { useModuleSettings } <span class="kw">from</span> <span class="str">'./composables/useModuleSettings'</span>;
+
+<span class="com">// global tier</span>
+<span class="kw">const</span> globalSettings = <span class="key">useModuleSettings</span>(<span class="str">'VC.SystemOperations'</span>);
+
+<span class="com">// per-user tier</span>
+<span class="kw">const</span> userSettings = <span class="key">useModuleSettings</span>(<span class="str">'VC.SystemOperations'</span>, { scope: <span class="str">'UserProfile'</span> });
+
+<span class="com">// usage</span>
+<span class="kw">await</span> globalSettings.load();
+<span class="kw">const</span> timeout = globalSettings.<span class="key">get</span>&lt;<span class="kw">number</span>&gt;(<span class="str">'VC.SystemOperations.RestartTimeoutSeconds'</span>, <span class="num">120</span>);
+
+<span class="kw">await</span> userSettings.load();
+<span class="kw">await</span> userSettings.save({ <span class="str">'VC.SystemOperations.DefaultTheme'</span>: <span class="str">'dark'</span> });
+<span class="com">// → POST /api/platform/settings/v2/me/values  ·  persists to the caller's profile</span></pre>
+    <div class="grid-3" style="margin-top: 24px;">
+      <div class="card muted">
+        <h3><span class="icon-dot" style="background:var(--green)"></span>One round-trip</h3>
+        <p style="font-size:13px; color:var(--text-secondary);">Single GET to <code>/values?moduleId=…&amp;modifiedOnly=false</code> — values + defaults inline. No separate /schema fetch.</p>
+      </div>
+      <div class="card muted">
+        <h3><span class="icon-dot" style="background:var(--cyan)"></span>Reactive</h3>
+        <p style="font-size:13px; color:var(--text-secondary);">Returns a <code>Ref</code>; UI re-renders on save() optimistic merge. No second round-trip.</p>
+      </div>
+      <div class="card muted">
+        <h3><span class="icon-dot" style="background:var(--purple)"></span>Best-effort load</h3>
+        <p style="font-size:13px; color:var(--text-secondary);">401/403/network → fall back to caller fallback. Page renders with defaults first, refines after load.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 16. SECTION DIVIDER: BUSINESS VALUE                          -->
+  <!-- ============================================================ -->
+  <section class="slide section" data-section="Value" data-title="Section: Business value" data-toc-divider="true">
+    <div class="section-num">SECTION 03</div>
+    <h2 class="section-title">What this <span style="background: linear-gradient(135deg, var(--accent), #FFB37A); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">unlocks</span></h2>
+    <p class="section-blurb">For module authors, platform operators, and product owners — what changes once the contract is in place.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 17. BUSINESS VALUE                                           -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Value" data-title="Business value">
+    <div class="breadcrumb">Value · Outcomes</div>
+    <h1 class="slide-title">Why it <span class="accent">matters</span></h1>
+    <p class="slide-lead">Architecture decisions usually have invisible payoff. Here's what becomes possible — or trivially possible — with this framework.</p>
+    <div class="grid-3" style="margin-top: 8px;">
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--accent)"></span>For module authors</h3>
+        <ul style="padding-left:18px; margin-top:10px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <li>One toolchain (<code>@module-federation/vite</code>) for any host.</li>
+          <li>Drop a folder, ship a plugin — no plugin.json in 80% of cases.</li>
+          <li>Settings declared in XML — no code for frontend-only modules.</li>
+          <li>NSwag-generated TS clients for the API.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--cyan)"></span>For operators</h3>
+        <ul style="padding-left:18px; margin-top:10px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <li>One config surface (module.manifest) for every kind of extension.</li>
+          <li>One API to introspect plugins (curl-friendly).</li>
+          <li>Hot-swap plugin bundles via single POST — no restart.</li>
+          <li>Permission-gated apps prevent accidental access.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--purple)"></span>For the product</h3>
+        <ul style="padding-left:18px; margin-top:10px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <li>Independent release cycles for vertical apps + plugins.</li>
+          <li>Backwards compatible — every legacy AngularJS module works unchanged.</li>
+          <li>Marketplace-ready foundation for third-party plugins.</li>
+          <li>Per-user preferences without writing storage code.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card muted" style="margin-top: 24px;">
+      <p style="font-size:15px; line-height:1.6;"><strong style="color:var(--accent);">Bottom line.</strong> The framework removes friction at every layer — author, operator, product. New plugins reach production faster, with less plumbing, on a stable contract that scales from a single team to a marketplace ecosystem.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 18. ROADMAP                                                  -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Value" data-title="What's next">
+    <div class="breadcrumb">Value · Roadmap</div>
+    <h1 class="slide-title">What's <span class="accent">next</span></h1>
+    <p class="slide-lead">The current contract is v1. Several capabilities are already on the roadmap or under consideration.</p>
+    <div class="grid-2" style="margin-top: 8px;">
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--green)"></span>Near-term</h3>
+        <ul style="padding-left:18px; margin-top:10px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <li><strong style="color:var(--text-primary);">Public manifest endpoint</strong> for anonymous storefront-style apps — CDN-friendly cache headers, dedicated path.</li>
+          <li><strong style="color:var(--text-primary);">Runtime resilience baseline</strong> — bundled retry + errorLoadRemote in <code>@vc-shell/mf-host</code> by default.</li>
+          <li><strong style="color:var(--text-primary);">DTS plugin migration</strong> — replace inline host-types with <code>@mf-types.zip</code> auto-generation.</li>
+          <li><strong style="color:var(--text-primary);">vc-frontend extensibility</strong> — Phase 1 from the storefront roadmap (extension points without MF).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--purple)"></span>Longer-term</h3>
+        <ul style="padding-left:18px; margin-top:10px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <li><strong style="color:var(--text-primary);">Hot reload</strong> end-to-end — in-place plugin swap with state preservation.</li>
+          <li><strong style="color:var(--text-primary);">Cross-framework plugins</strong> — React + Vue interop via MF Bridge.</li>
+          <li><strong style="color:var(--text-primary);">Custom tenant types</strong> in declarative settings — <code>tenant="Store"</code>, <code>"Organization"</code>.</li>
+          <li><strong style="color:var(--text-primary);">Marketplace</strong> — third-party plugins with security review, sandboxing, signed manifests.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 19. THANK YOU / CTA                                          -->
+  <!-- ============================================================ -->
+  <section class="slide cta" data-section="Closing" data-title="Thank you">
+    <div>
+      <h1 class="cta-title">Modular by <span class="accent">design</span></h1>
+      <p class="cover-subtitle" style="text-align: center; max-width: 700px; margin: 0 auto;">
+        One contract. Three host UIs. Zero-config discovery. Manifest-declared settings. A foundation that scales from one team to a plugin marketplace.
+      </p>
+      <div class="cta-links">
+        <a href="../developer-guide/backoffice-modularity.md" class="cta-link">Backoffice Modularity guide</a>
+        <a href="../developer-guide/manifest-settings.md" class="cta-link">Manifest Settings reference</a>
+        <a href="../developer-guide/vc-shell-implementation.md" class="cta-link">VC-Shell adapter spec</a>
+        <a href="https://module-federation.io" class="cta-link">Module Federation 2.0</a>
+      </div>
+      <p style="color: var(--text-muted); font-size: 12px; margin-top: 64px; letter-spacing: 0.06em; text-transform: uppercase;">
+        Virto Commerce Platform · Backoffice Modularity Framework
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" aria-label="Previous slide">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="10,4 5,8 10,12"/></svg>
+  </button>
+  <span class="nav-counter" id="navCounter"><span class="accent" id="curIdx">1</span> / <span id="totIdx">21</span></span>
+  <button class="nav-btn" id="nextBtn" aria-label="Next slide">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,4 11,8 6,12"/></svg>
+  </button>
+</div>
+
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const stage = document.getElementById('stage');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const curIdx = document.getElementById('curIdx');
+  const totIdx = document.getElementById('totIdx');
+  const tocBtn = document.getElementById('tocBtn');
+  const tocPanel = document.getElementById('tocPanel');
+  const tocOverlay = document.getElementById('tocOverlay');
+  const tocClose = document.getElementById('tocClose');
+  const tocList = document.getElementById('tocList');
+
+  let current = 0;
+
+  totIdx.textContent = slides.length;
+
+  // ── Build TOC ──
+  let lastSection = null;
+  slides.forEach((slide, i) => {
+    const section = slide.dataset.section;
+    const title = slide.dataset.title;
+    if (section !== lastSection) {
+      const label = document.createElement('div');
+      label.className = 'toc-section-label';
+      label.textContent = section;
+      tocList.appendChild(label);
+      lastSection = section;
+    }
+    const item = document.createElement('div');
+    item.className = 'toc-item';
+    item.dataset.idx = i;
+    item.innerHTML = `<span class="num">${String(i + 1).padStart(2, '0')}</span><span>${title}</span>`;
+    item.addEventListener('click', () => { goTo(i); closeToc(); });
+    tocList.appendChild(item);
+  });
+
+  // ── Navigation ──
+  function show(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[current].classList.remove('active');
+    slides[i].classList.add('active');
+    current = i;
+    curIdx.textContent = i + 1;
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === slides.length - 1;
+    Array.from(tocList.querySelectorAll('.toc-item')).forEach((el, idx) => {
+      el.classList.toggle('active', idx === i);
+    });
+  }
+  function goTo(i) { show(Math.max(0, Math.min(slides.length - 1, i))); }
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  // ── Keyboard ──
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    switch (e.key) {
+      case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(slides.length - 1); break;
+      case 'f': case 'F':
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+        break;
+      case 't': case 'T':
+        if (tocPanel.classList.contains('open')) closeToc();
+        else openToc();
+        break;
+      case 'Escape':
+        if (tocPanel.classList.contains('open')) closeToc();
+        break;
+    }
+  });
+
+  // ── TOC ──
+  function openToc()  { tocPanel.classList.add('open');    tocOverlay.classList.add('open'); }
+  function closeToc() { tocPanel.classList.remove('open'); tocOverlay.classList.remove('open'); }
+  tocBtn.addEventListener('click', openToc);
+  tocClose.addEventListener('click', closeToc);
+  tocOverlay.addEventListener('click', closeToc);
+
+  // ── Scale to viewport ──
+  function fit() {
+    const sw = 1200, sh = 720;
+    const ww = window.innerWidth, wh = window.innerHeight;
+    const margin = 32;
+    const scale = Math.min((ww - margin) / sw, (wh - margin) / sh, 1);
+    document.documentElement.style.setProperty('--fit-scale', scale.toFixed(3));
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  // ── Init ──
+  show(0);
+})();
+</script>
+
+</body>
+</html>
