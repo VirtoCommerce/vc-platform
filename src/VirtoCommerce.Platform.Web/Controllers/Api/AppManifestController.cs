@@ -3,8 +3,11 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.Model.Modularity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api;
@@ -21,18 +24,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api;
 public class AppManifestController : ControllerBase
 {
     private readonly IAppManifestService _service;
+    private readonly bool _isDevelopment;
 
-    public AppManifestController(IAppManifestService service)
+    public AppManifestController(IAppManifestService service, IHostEnvironment hostEnvironment)
     {
         _service = service ?? throw new ArgumentNullException(nameof(service));
+        ArgumentNullException.ThrowIfNull(hostEnvironment);
+        _isDevelopment = hostEnvironment.IsDevelopment();
     }
 
     /// <summary>
-    /// Returns the host app's plugin manifest. Cacheable — responds 304 on
-    /// matching <c>If-None-Match</c>. The descriptor is built and hashed
-    /// once at the service layer (<see cref="IAppManifestService"/>) and
-    /// cached there for the process lifetime, so 304 cache-hits short-circuit
-    /// without touching the filesystem.
+    /// Returns the host app's plugin manifest.
+    /// <para>
+    /// In production: cacheable — responds 304 on matching
+    /// <c>If-None-Match</c>. The descriptor is built and hashed once at the
+    /// service layer (<see cref="IAppManifestService"/>) and cached for the
+    /// process lifetime, so 304 cache-hits short-circuit without touching the
+    /// filesystem.
+    /// </para>
+    /// <para>
+    /// In Development: <c>Cache-Control: no-store</c> is emitted and the 304
+    /// fast path is skipped — every request returns 200 with a freshly built
+    /// body. This makes <c>yarn build</c> in a plugin folder visible on the
+    /// next page reload without restarting the platform.
+    /// </para>
     /// </summary>
     [HttpGet("api/apps/{appId}/manifest")]
     [AllowAnonymous]
@@ -51,6 +66,17 @@ public class AppManifestController : ControllerBase
         // strong-ETag syntax and let HTTP do the conditional GET.
         var etag = $"\"{descriptor.Hash}\"";
         Response.Headers[HeaderNames.ETag] = etag;
+
+        if (_isDevelopment)
+        {
+            // Dev: defeat all HTTP caching. The service is also bypassing its
+            // in-memory cache (see AppManifestService), so every request is a
+            // fresh round-trip and a plugin rebuild is visible on next reload.
+            Response.Headers[HeaderNames.CacheControl] = "no-store";
+            return Ok(MapToResponse(descriptor));
+        }
+
+        // Production: standard conditional-GET path.
         Response.Headers[HeaderNames.CacheControl] = "private, must-revalidate";
 
         var requestEtag = Request.Headers[HeaderNames.IfNoneMatch].ToString();
@@ -63,6 +89,27 @@ public class AppManifestController : ControllerBase
         }
 
         return Ok(MapToResponse(descriptor));
+    }
+
+    /// <summary>
+    /// Force-invalidate the manifest cache for every <c>appId</c>. The next
+    /// call to <c>GET /api/apps/{appId}/manifest</c> will rebuild the
+    /// descriptor from disk, picking up any plugin changes since the last
+    /// build (new module installs, drop-in plugin replacements, plugin
+    /// rebuilds).
+    /// <para>
+    /// In Development this isn't normally needed (the service bypasses its
+    /// cache anyway), but the endpoint works in any environment for
+    /// operators who want to refresh without restarting the platform.
+    /// </para>
+    /// </summary>
+    [HttpPost("api/apps/manifest/invalidate")]
+    [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    public ActionResult InvalidateManifestCache()
+    {
+        AppManifestCacheRegion.ExpireRegion();
+        return NoContent();
     }
 
     private static AppManifestResponse MapToResponse(AppManifestDescriptor descriptor) => new()

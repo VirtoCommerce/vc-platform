@@ -419,6 +419,39 @@ Without this indirection, MF runtime can't initialize shared dependencies before
 
 **Hosts only.** Plugins don't need this pattern; they're already dynamically imported by definition.
 
+### Caching strategy
+
+Three layers of caching interact: backend descriptor cache (`IPlatformMemoryCache`), HTTP response cache (`Cache-Control` header), and the per-file URL cache-buster (`?v={hash}`). Each plays a different role per environment.
+
+| Environment | Backend cache | `Cache-Control` | Browser behaviour |
+|---|---|---|---|
+| **Production** | `IPlatformMemoryCache` for process lifetime | `private, must-revalidate` | First request — full body. Subsequent — 304 Not Modified (microsecond fast path). |
+| **Development** | Bypassed entirely | `no-store` | Every request returns 200 with a freshly built body. Plugin rebuild is visible on next reload, no platform restart needed. |
+| **After invalidation** | Rebuilt on next call | (unchanged from env) | Browser sends `If-None-Match` with old ETag → server compares against fresh `Hash` → 200 with new body if changed. |
+
+The trigger for development bypass is `IHostEnvironment.IsDevelopment()` (i.e. `ASPNETCORE_ENVIRONMENT=Development`). Both the `AppManifestService` (skip `IPlatformMemoryCache`) and `AppManifestController` (`no-store` header, skip 304 fast path) check it independently — so partial misconfiguration still gets you mostly-fresh data.
+
+#### Why `no-store` and not `no-cache` in dev
+
+`no-cache` allows the browser to use a cached copy if it revalidates first; `no-store` forbids any caching whatsoever. We pick `no-store` to simplify reasoning: in dev there's literally no client-side cache to invalidate, so a plugin rebuild always shows up.
+
+#### Why `private` (not `public`) in production
+
+Per-app permissions (`<app permission>`) gate access at the `403` level. With `private`, only the user's browser caches the manifest — never CDN / shared proxy. The single-cached-manifest property is preserved (one descriptor per appId, all users see the same body when permitted), which makes the backend cache trivially shareable across users without per-user cache fragmentation.
+
+#### Force-invalidate without restart
+
+```http
+POST /api/apps/manifest/invalidate
+Authorization: Bearer ...   (requires platform:module:manage)
+```
+
+Returns `204`. Calls `AppManifestCacheRegion.ExpireRegion()` — the next `GET /api/apps/{appId}/manifest` rebuilds from disk for any appId. Useful for:
+
+- An admin who drop-installed a new module bundle and wants to refresh without a full platform restart.
+- An operator deploying plugin updates behind a feature flag.
+- Future admin-UI button "Reload plugin manifests".
+
 
 
 ## Sequence diagram
@@ -678,7 +711,12 @@ Skipping any of these creates the classic "installs successfully, crashes at run
 
 ### What about hot reload?
 
-Out of scope for v1. After installing or updating a plugin, the host app is reloaded and re-fetches the manifest. The MF runtime reserves a `dispose()` API for future use; it is not currently invoked.
+Partial. After installing or updating a plugin:
+
+- **In Development** the manifest endpoint always returns a freshly built descriptor (cache bypass + `Cache-Control: no-store`); a plugin rebuild surfaces on the next host SPA reload without a platform restart. The host SPA itself still needs a manual reload — true HMR through the manifest is not implemented.
+- **In Production** the descriptor is cached for the process lifetime; force a refresh via `POST /api/apps/manifest/invalidate` or platform restart.
+
+The MF runtime reserves a `dispose()` API for future use; it is not currently invoked, so plugin code already loaded into the host stays loaded until the host reloads. End-to-end hot reload (in-place plugin swap with state preservation) remains out of scope.
 
 ### Are there breaking changes for existing modules?
 No. AngularJS modules and old VC-Shell consumers are untouched. The framework adds a new endpoint and a new optional folder convention; it removes nothing.
@@ -721,11 +759,14 @@ A: In principle yes, via `@module-federation/bridge-react` and `@module-federati
 A: First check whether `singleton: false` (per-plugin copy) is acceptable — not all libraries break with multiple copies. If state-sharing is required, use **share scopes** (named pools — see "Shared dependencies"). If neither works, the dependency belongs in the host's shared list, which means a PR to the host's mf-config.
 
 **Q: I rebuilt my plugin but the host still serves the old version.**
-A: The platform caches the manifest descriptor for the process lifetime via `IPlatformMemoryCache` — modules and plugin files are stable until restart by design. Invalidate by:
-- calling `AppManifestCacheRegion.ExpireRegion()` from an admin endpoint, or
-- restarting the platform.
+A: Depends on environment.
 
-For a smoother dev workflow, a future version may add a `FileSystemWatcher` that auto-invalidates when a `remoteEntry.js` mtime changes. Until then, consider disabling the cache in dev (`if (env.IsDevelopment()) skip cache`).
+- **In Development** (`ASPNETCORE_ENVIRONMENT=Development`): the manifest service automatically bypasses the cache and the controller emits `Cache-Control: no-store`. Just `yarn build` → reload host SPA → new URLs → new code. Nothing else to do.
+- **In Production**: the manifest descriptor is cached for the process lifetime via `IPlatformMemoryCache` — modules and plugin files are intentionally stable until restart. To force a refresh without restarting:
+  - `POST /api/apps/manifest/invalidate` (requires `platform:module:manage`) — calls `AppManifestCacheRegion.ExpireRegion()`. Next manifest fetch rebuilds from disk.
+  - Or call `AppManifestCacheRegion.ExpireRegion()` directly from your own admin code.
+
+See the "Caching strategy" section under Architecture for the full table.
 
 **Q: What's the difference between the platform manifest (`/api/apps/{appId}/manifest`) and `mf-manifest.json`?**
 A: They're complementary (see "Two manifest layers"). Platform manifest = catalog of *which* plugins exist for the app (backend-generated, permission-aware, cache-busting hashes). `mf-manifest.json` = internals of *one* plugin's remote (Vite-generated, lists `exposes`, `shared`, types). Host loader uses the platform manifest to pick remotes; MF runtime then fetches each plugin's `mf-manifest.json` for shared-dependency negotiation.

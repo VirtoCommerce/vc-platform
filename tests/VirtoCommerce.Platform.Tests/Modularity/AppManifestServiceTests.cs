@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -385,6 +386,48 @@ public class AppManifestServiceTests : IDisposable
         harness.ModuleServiceMock.Verify(s => s.GetInstalledModules(), Times.Once);
     }
 
+    [Fact]
+    public void GetManifest_InDevelopment_BypassesCache_AlwaysRebuilds()
+    {
+        // Dev workflow: a developer rebuilds a plugin (yarn build → new
+        // remoteEntry.js with new mtime). The next manifest fetch must
+        // surface the updated hash without a platform restart. The service
+        // achieves this by skipping the IPlatformMemoryCache wrapper in
+        // Development — every call rebuilds from disk.
+        var catalog = NewModule("VirtoCommerce.Catalog");
+        WriteFile(catalog.FullPhysicalPath, "dist/app.js", "// catalog");
+
+        var harness = NewServiceWithMock(Environments.Development, catalog);
+
+        harness.Service.GetManifest("platform");
+        harness.Service.GetManifest("platform");
+        harness.Service.GetManifest("platform");
+
+        // Cache bypass means GetInstalledModules ran for every call.
+        harness.ModuleServiceMock.Verify(s => s.GetInstalledModules(), Times.Exactly(3));
+    }
+
+    [Fact]
+    public void GetManifest_InDevelopment_FileMutation_ReflectsImmediately()
+    {
+        // Companion to GetManifest_InDevelopment_BypassesCache: not only is
+        // the cache bypassed, but a file mutation between calls actually
+        // shows up as a new hash without explicit invalidation. This is the
+        // core dev-experience guarantee.
+        var catalog = NewModule("VirtoCommerce.Catalog");
+        var jsPath = WriteFile(catalog.FullPhysicalPath, "dist/app.js", "// v1");
+        var harness = NewServiceWithMock(Environments.Development, catalog);
+
+        var hash1 = harness.Service.GetManifest("platform").Plugins[0].Entry.Hash;
+
+        // Mutate the file's mtime; no explicit cache invalidation.
+        File.SetLastWriteTimeUtc(jsPath, DateTime.UtcNow.AddSeconds(10));
+
+        var hash2 = harness.Service.GetManifest("platform").Plugins[0].Entry.Hash;
+
+        Assert.NotEqual(hash1, hash2);
+    }
+
     // ---------- Helpers ----------
 
     private ManifestModuleInfo NewModule(string id, string version = "1.0.0")
@@ -417,16 +460,26 @@ public class AppManifestServiceTests : IDisposable
     }
 
     private AppManifestService NewService(params ManifestModuleInfo[] modules) =>
-        NewServiceWithMock(modules).Service;
+        NewServiceWithMock(environmentName: Environments.Production, modules).Service;
 
-    private AppManifestServiceTestHarness NewServiceWithMock(params ManifestModuleInfo[] modules)
+    private AppManifestServiceTestHarness NewServiceWithMock(params ManifestModuleInfo[] modules) =>
+        NewServiceWithMock(environmentName: Environments.Production, modules);
+
+    private AppManifestServiceTestHarness NewServiceWithMock(
+        string environmentName,
+        params ManifestModuleInfo[] modules)
     {
         var moduleService = new Mock<IModuleService>();
         moduleService.Setup(s => s.GetInstalledModules()).Returns(modules.ToList());
+
+        var hostEnvironment = new Mock<IHostEnvironment>();
+        hostEnvironment.SetupGet(x => x.EnvironmentName).Returns(environmentName);
+
         var service = new AppManifestService(
             moduleService.Object,
             NullLogger<AppManifestService>.Instance,
-            new TestPlatformMemoryCache());
+            new TestPlatformMemoryCache(),
+            hostEnvironment.Object);
 
         // Each test instance gets its own cache (via TestPlatformMemoryCache),
         // but the static AppManifestCacheRegion is shared across instances. Ensure

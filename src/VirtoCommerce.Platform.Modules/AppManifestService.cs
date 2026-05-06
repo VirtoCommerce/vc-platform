@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
@@ -25,6 +26,11 @@ namespace VirtoCommerce.Platform.Modules;
 /// startup and plugin files are deployed before that startup, so the descriptor
 /// is stable until restart — hence the long-lived cache, with explicit
 /// invalidation available through <c>AppManifestCacheRegion.ExpireRegion()</c>.
+///
+/// In Development environment the cache is bypassed: every call rebuilds the
+/// descriptor from disk so a plugin rebuild (yarn build → new <c>remoteEntry.js</c>
+/// mtime) is immediately reflected in the next manifest fetch, without needing
+/// a platform restart. Cost is a few file stats per request, negligible in dev.
 /// </summary>
 public class AppManifestService : IAppManifestService
 {
@@ -52,14 +58,27 @@ public class AppManifestService : IAppManifestService
     private readonly ILogger<AppManifestService> _logger;
     private readonly IPlatformMemoryCache _memoryCache;
 
+    /// <summary>
+    /// True when the service should skip <see cref="IPlatformMemoryCache"/>
+    /// and rebuild the descriptor on every call. Set in the constructor from
+    /// <c>IHostEnvironment.IsDevelopment()</c> so the dev workflow
+    /// (plugin rebuild → reload host SPA) sees fresh hashes without a
+    /// platform restart. Stored as a field so the env check happens once at
+    /// startup, not per-request.
+    /// </summary>
+    private readonly bool _bypassCache;
+
     public AppManifestService(
         IModuleService moduleService,
         ILogger<AppManifestService> logger,
-        IPlatformMemoryCache memoryCache)
+        IPlatformMemoryCache memoryCache,
+        IHostEnvironment hostEnvironment)
     {
         _moduleService = moduleService ?? throw new ArgumentNullException(nameof(moduleService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+        ArgumentNullException.ThrowIfNull(hostEnvironment);
+        _bypassCache = hostEnvironment.IsDevelopment();
     }
 
     /// <inheritdoc />
@@ -70,21 +89,37 @@ public class AppManifestService : IAppManifestService
             throw new ArgumentException("App id is required.", nameof(appId));
         }
 
-        // Build + hash run together inside the cache factory so a single cache
-        // entry per appId carries a fully-formed descriptor (with Hash set).
-        // Subsequent requests — including the 304 fast path in the controller —
-        // hit the cache without touching the filesystem at all.
+        if (_bypassCache)
+        {
+            // Dev: always rebuild — a plugin rebuild changes file mtimes which
+            // must immediately surface in the descriptor's per-file hashes and
+            // top-level Hash. Cost is a handful of file stats per request,
+            // negligible in dev. In production this path isn't taken (cache is
+            // hit) so the perf characteristics are unaffected.
+            return BuildAndHash(appId);
+        }
+
+        // Production / cached path: build + hash run together inside the cache
+        // factory so a single cache entry per appId carries a fully-formed
+        // descriptor (with Hash set). Subsequent requests — including the 304
+        // fast path in the controller — hit the cache without touching the
+        // filesystem at all.
         var cacheKey = CacheKey.With(GetType(), nameof(GetManifest), appId);
         return _memoryCache.GetOrCreateExclusive(cacheKey, cacheEntry =>
         {
             cacheEntry.AddExpirationToken(AppManifestCacheRegion.CreateChangeToken());
-            var descriptor = BuildDescriptor(appId);
-            if (descriptor != null)
-            {
-                descriptor.Hash = ComputeHash(descriptor);
-            }
-            return descriptor;
+            return BuildAndHash(appId);
         });
+    }
+
+    private AppManifestDescriptor BuildAndHash(string appId)
+    {
+        var descriptor = BuildDescriptor(appId);
+        if (descriptor != null)
+        {
+            descriptor.Hash = ComputeHash(descriptor);
+        }
+        return descriptor;
     }
 
     /// <summary>
