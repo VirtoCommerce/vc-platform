@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extension-Point Inspector — Virto Commerce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #0B0E14;
+    --bg-darker: #060810;
+    --bg-card: #131825;
+    --bg-card-hover: #1A2032;
+    --border: #232938;
+    --text-primary: #E6EAF3;
+    --text-secondary: #9AA3B5;
+    --text-muted: #5E6675;
+    --accent: #FF6B2C;
+    --accent-soft: rgba(255, 107, 44, 0.12);
+    --accent-glow: rgba(255, 107, 44, 0.35);
+    --cyan: #4FD1FF;
+    --green: #22C55E;
+    --amber: #FBBF24;
+    --orange: #F97316;
+    --purple: #A78BFA;
+    --magenta: #F472B6;
+    --teal: #14B8A6;
+
+    /* Inspector type colours (mirrors extensionPointInspector.js) */
+    --xp-menu:     #7c3aed;
+    --xp-blade:    #2563eb;
+    --xp-toolbar:  #ea580c;
+    --xp-widget:   #16a34a;
+    --xp-metaform: #0d9488;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg-darker);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .stage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide {
+    position: absolute;
+    width: 1200px;
+    height: 720px;
+    background: var(--bg-dark);
+    border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+    padding: 56px 64px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms ease, visibility 0s 200ms;
+    overflow: hidden;
+    transform: scale(var(--fit-scale, 1));
+    transform-origin: center;
+  }
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 240ms ease;
+  }
+
+  /* ── Cover ── */
+  .slide.cover {
+    padding: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,107,44,0.18), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(79,209,255,0.10), transparent 50%),
+      var(--bg-dark);
+  }
+  .cover-inner {
+    height: 100%;
+    padding: 80px 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cover-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    width: fit-content;
+  }
+  .cover-tag .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+  .cover-title {
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-top: 32px;
+  }
+  .cover-title .accent {
+    background: linear-gradient(135deg, var(--accent) 0%, #FFB37A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cover-subtitle {
+    font-size: 24px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 880px;
+    margin-top: 24px;
+    line-height: 1.4;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 36px;
+    align-items: flex-end;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .cover-chips {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 36px;
+  }
+  .chip {
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .chip strong { color: var(--accent); margin-right: 6px; }
+
+  /* ── Section divider ── */
+  .slide.section {
+    background:
+      radial-gradient(circle at 70% 50%, rgba(255,107,44,0.12), transparent 60%),
+      var(--bg-dark);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    font-weight: 600;
+  }
+  .section-title {
+    font-size: 64px;
+    font-weight: 800;
+    margin-top: 16px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .section-blurb {
+    font-size: 22px;
+    color: var(--text-secondary);
+    margin-top: 28px;
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  /* ── Content slide ── */
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1.slide-title {
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 12px;
+  }
+  h1.slide-title .accent {
+    background: linear-gradient(135deg, var(--accent) 0%, #FFB37A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .slide-lead {
+    font-size: 18px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    max-width: 1000px;
+    margin-bottom: 28px;
+  }
+  .slide-body code {
+    font-size: 14px;
+    background: var(--bg-card);
+    padding: 2px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    color: var(--cyan);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card h3 .icon-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 10px var(--accent-glow);
+  }
+  .card p { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+  .card.muted { background: rgba(255,255,255,0.02); }
+
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 16px;
+  }
+  table.compare th, table.compare td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.compare th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  table.compare tr:last-child td { border-bottom: none; }
+  table.compare td.code { font-family: 'JetBrains Mono', monospace; color: var(--cyan); font-size: 13px; }
+
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .pill.green   { background: rgba(34,197,94,0.15);  color: var(--green); }
+  .pill.amber   { background: rgba(251,191,36,0.15); color: var(--amber); }
+  .pill.cyan    { background: rgba(79,209,255,0.15); color: var(--cyan); }
+  .pill.purple  { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .pill.orange  { background: rgba(249,115,22,0.15); color: var(--orange); }
+  .pill.teal    { background: rgba(20,184,166,0.15); color: var(--teal); }
+  .pill.blue    { background: rgba(37,99,235,0.18);  color: #6097FF; }
+
+  pre.snippet {
+    background: var(--bg-darker);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.55;
+    overflow-x: auto;
+    margin-top: 12px;
+    white-space: pre;
+  }
+  pre.snippet .kw  { color: var(--accent); }
+  pre.snippet .str { color: var(--green); }
+  pre.snippet .com { color: var(--text-muted); font-style: italic; }
+  pre.snippet .key { color: var(--cyan); }
+  pre.snippet .num { color: var(--amber); }
+
+  .schema {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .schema svg { width: 100%; height: auto; max-height: 100%; }
+  text.lbl { fill: var(--text-primary); font-family: 'Inter', sans-serif; font-weight: 500; }
+  text.lbl-sm { fill: var(--text-secondary); font-family: 'Inter', sans-serif; font-size: 12px; }
+  text.mono-svg { font-family: 'JetBrains Mono', monospace; }
+  rect.box { fill: var(--bg-darker); stroke: var(--border); stroke-width: 1.5; }
+  rect.box-accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+  rect.box-cyan { fill: rgba(79,209,255,0.08); stroke: var(--cyan); stroke-width: 1.5; }
+  rect.box-purple { fill: rgba(167,139,250,0.08); stroke: var(--purple); stroke-width: 1.5; }
+  path.arrow, line.arrow { stroke: var(--text-muted); stroke-width: 1.5; fill: none; }
+  path.arrow-accent, line.arrow-accent { stroke: var(--accent); stroke-width: 2; fill: none; }
+
+  /* ── Inspector overlay mockup (matches the runtime appearance) ── */
+  .demo-frame {
+    position: relative;
+    background: #f4f4f7;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    height: 100%;
+  }
+  .demo-frame.dark { background: #1f2230; }
+  .demo-platform {
+    display: grid;
+    grid-template-columns: 220px 360px 1fr;
+    grid-template-rows: 36px 1fr;
+    height: 100%;
+    color: #1a1d29;
+    font-size: 11px;
+  }
+  .demo-platform .top-bar {
+    grid-column: 1 / 4;
+    background: #1f2230;
+    color: #cdd1dc;
+    display: flex; align-items: center; padding: 0 10px;
+    font-weight: 600;
+    font-size: 11px;
+    border-bottom: 1px solid #000;
+  }
+  .demo-platform .left-nav {
+    background: #fff;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #2c2f3c;
+    font-size: 11px;
+  }
+  .demo-platform .left-nav .nav-item {
+    padding: 7px 8px;
+    border-radius: 4px;
+    color: #5b6477;
+  }
+  .demo-platform .left-nav .nav-item.sel { background: #e8edf6; color: #1a1d29; }
+  .demo-platform .blade {
+    background: #fff;
+    border-right: 1px solid #d4d8e2;
+    padding: 12px;
+  }
+  .demo-platform .blade h4 {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    color: #1a1d29;
+  }
+  .demo-platform .blade .toolbar {
+    display: flex; gap: 8px;
+    background: #1f2230;
+    color: #aab1be;
+    margin: -12px -12px 10px;
+    padding: 8px 12px;
+    font-size: 10px;
+  }
+  .demo-platform .blade .field {
+    display: flex; gap: 12px;
+    padding: 8px 6px;
+    border-bottom: 1px dashed #e6e9f0;
+  }
+  .demo-platform .blade .field-label { color: #5b6477; min-width: 110px; font-size: 10px; }
+  .demo-platform .blade .field-val { color: #1a1d29; font-size: 10px; }
+  .demo-platform .blade .widgets {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .demo-platform .blade .widget-tile {
+    background: #f0f3f9;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 10px;
+    text-align: center;
+    color: #5b6477;
+  }
+  .demo-platform .blade.right {
+    background: #fff;
+  }
+
+  /* The overlay outlines and labels — match extensionPointInspector.js styling */
+  .xp-box {
+    position: absolute;
+    border: 2px dashed var(--xp-color);
+    background: var(--xp-bg);
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+  .xp-label {
+    position: absolute;
+    background: var(--xp-color);
+    color: #fff;
+    font: 600 10.5px/1.4 'JetBrains Mono', monospace;
+    padding: 2px 7px;
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    white-space: nowrap;
+    max-width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .xp-label.inside { border-radius: 0 0 3px 0; }
+  .xp-label .xp-copy {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 2px;
+    padding: 1px 5px;
+    font: 600 9.5px/1.4 'JetBrains Mono', monospace;
+  }
+  .xp-menu     { --xp-color: #7c3aed; --xp-bg: rgba(124,58,237,0.12); }
+  .xp-blade    { --xp-color: #2563eb; --xp-bg: rgba(37,99,235,0.10); }
+  .xp-toolbar  { --xp-color: #ea580c; --xp-bg: rgba(234,88,12,0.10); }
+  .xp-widget   { --xp-color: #16a34a; --xp-bg: rgba(22,163,74,0.10); }
+  .xp-metaform { --xp-color: #0d9488; --xp-bg: rgba(13,148,136,0.10); }
+
+  .xp-toast {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 18px;
+    background: #16a34a;
+    color: #fff;
+    font: 600 11px/1.4 'JetBrains Mono', monospace;
+    padding: 8px 14px;
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    text-align: center;
+    white-space: pre-line;
+    pointer-events: none;
+  }
+
+  /* ── Footer / nav controls ── */
+  .nav-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(19,24,37,0.95);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 10px 16px;
+    z-index: 100;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+  .nav-btn {
+    background: transparent; border: none;
+    color: var(--text-secondary);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 120ms;
+  }
+  .nav-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-secondary);
+    min-width: 60px;
+    text-align: center;
+    font-weight: 500;
+  }
+  .nav-counter .accent { color: var(--accent); }
+
+  .toc-btn {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    width: 44px; height: 44px;
+    background: rgba(19,24,37,0.95);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    transition: all 120ms;
+  }
+  .toc-btn:hover { color: var(--text-primary); background: var(--bg-card-hover); }
+
+  .toc-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 360px;
+    height: 100%;
+    background: rgba(11,14,20,0.97);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border);
+    transform: translateX(-100%);
+    transition: transform 280ms cubic-bezier(0.16,1,0.3,1);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+  }
+  .toc-panel.open { transform: translateX(0); }
+  .toc-header {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .toc-header h2 { font-size: 14px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+  .toc-list { flex: 1; overflow-y: auto; padding: 12px 0; }
+  .toc-list::-webkit-scrollbar { width: 6px; }
+  .toc-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .toc-section-label {
+    padding: 18px 28px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 28px;
+    cursor: pointer;
+    transition: background 120ms;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  .toc-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+  .toc-item.active { color: var(--accent); background: var(--accent-soft); border-left: 3px solid var(--accent); padding-left: 25px; }
+  .toc-item .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); min-width: 22px; }
+  .toc-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0; pointer-events: none;
+    transition: opacity 240ms;
+    z-index: 199;
+  }
+  .toc-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .kbd-hint {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    z-index: 100;
+  }
+  kbd {
+    display: inline-block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    padding: 2px 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin: 0 2px;
+  }
+
+  .slide.cta {
+    text-align: center;
+    background:
+      radial-gradient(circle at 50% 60%, rgba(255,107,44,0.15), transparent 50%),
+      var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .cta-title { font-size: 88px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 32px; }
+  .cta-title .accent {
+    background: linear-gradient(135deg, var(--accent) 0%, #FFB37A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cta-links { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; max-width: 900px; margin-top: 24px; }
+  .cta-link {
+    padding: 14px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 160ms;
+  }
+  .cta-link:hover { background: var(--bg-card-hover); border-color: var(--accent); color: var(--accent); }
+
+  .psf-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 22px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .psf-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--psf-color, var(--accent));
+    opacity: 0.6;
+  }
+  .psf-card .psf-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--psf-color, var(--accent));
+    margin-bottom: 14px;
+  }
+  .psf-card .psf-label .psf-num {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--psf-color-bg);
+    color: var(--psf-color);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .psf-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .psf-card ul { list-style: none; padding: 0; margin: 0; flex: 1; }
+  .psf-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .psf-card li:last-child { border-bottom: none; }
+  .psf-card li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--psf-color);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .psf-card li strong { color: var(--text-primary); font-weight: 600; }
+  .psf-card.problem  { --psf-color: #F87171; --psf-color-bg: rgba(248,113,113,0.12); }
+  .psf-card.solution { --psf-color: var(--accent); --psf-color-bg: var(--accent-soft); }
+  .psf-card.features { --psf-color: var(--cyan); --psf-color-bg: rgba(79,209,255,0.12); }
+
+  /* Type-coloured legend dots in tables */
+  td .dot, th .dot, span.legend-dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<button class="toc-btn" id="tocBtn" aria-label="Toggle table of contents">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+    <line x1="3" y1="6"  x2="17" y2="6"/>
+    <line x1="3" y1="10" x2="17" y2="10"/>
+    <line x1="3" y1="14" x2="17" y2="14"/>
+  </svg>
+</button>
+
+<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>T</kbd> contents · <kbd>F</kbd> fullscreen</div>
+
+<div class="toc-overlay" id="tocOverlay"></div>
+<aside class="toc-panel" id="tocPanel" aria-label="Table of contents">
+  <div class="toc-header">
+    <h2>Contents</h2>
+    <button class="nav-btn" id="tocClose" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="3" x2="13" y2="13"/>
+        <line x1="13" y1="3" x2="3" y2="13"/>
+      </svg>
+    </button>
+  </div>
+  <div class="toc-list" id="tocList"></div>
+</aside>
+
+<div class="stage" id="stage">
+
+  <!-- ============================================================ -->
+  <!-- 1. COVER                                                     -->
+  <!-- ============================================================ -->
+  <section class="slide cover" data-section="Intro" data-title="Cover">
+    <div class="cover-inner">
+      <div>
+        <div class="cover-tag"><span class="dot"></span>Developer Experience</div>
+        <h1 class="cover-title">Extension-Point <span class="accent">Inspector</span></h1>
+        <p class="cover-subtitle">A console-gated debug overlay that highlights every Platform Manager extension point on screen — with one-click copy of the registration snippet for each.</p>
+        <div class="cover-chips">
+          <span class="chip"><strong>5</strong> extension points</span>
+          <span class="chip"><strong>1</strong> console command</span>
+          <span class="chip"><strong>0</strong> server changes</span>
+          <span class="chip"><strong>~8 KB</strong> bundle delta</span>
+        </div>
+      </div>
+      <div class="cover-meta">
+        <div>Virto Commerce Platform · Backoffice Developer Tools</div>
+        <div>Audience: Module Authors · Onboarding Engineers</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 2. PROBLEM ↔ SOLUTION (the concrete task)                    -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Intro" data-title="Problem & Solution">
+    <div class="breadcrumb">Overview · The same task, two ways</div>
+    <h1 class="slide-title">Adding a widget to a blade — <span class="accent">before & after</span></h1>
+    <p class="slide-lead">A concrete onboarding task. The mechanics haven't changed; what changed is how long it takes and how often it ships broken on the first try.</p>
+
+    <div class="grid-2" style="margin-top: 12px; height: 440px;">
+      <!-- Before -->
+      <div class="psf-card problem" style="height: 100%;">
+        <div class="psf-label"><span class="psf-num">!</span>Before</div>
+        <h3>Hunt-and-peck the docs</h3>
+        <ol style="list-style:none; padding:0; margin:0; flex:1;">
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:#F87171; font-weight:700; min-width:20px;">1</span><span>Open the extensibility doc page; find the section on widgets</span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:#F87171; font-weight:700; min-width:20px;">2</span><span><code>grep -r "registerWidget" modules/</code> — get a wall of results</span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:#F87171; font-weight:700; min-width:20px;">3</span><span>Guess the container name: <code>orderDetail</code>? <code>customerOrderDetail</code>? <code>customerOrderDetailWidgets</code>?</span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:#F87171; font-weight:700; min-width:20px;">4</span><span>Write the snippet by hand; copy template path conventions from another module</span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:#F87171; font-weight:700; min-width:20px;">5</span><span>Reload. Widget doesn't appear. Wrong group. Repeat from step 3.</span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:#F87171; font-weight:700; min-width:20px;">6</span><span>Eventually ask a teammate</span></li>
+        </ol>
+        <div style="margin-top: 14px; padding: 10px 14px; background: rgba(248,113,113,0.10); border: 1px solid rgba(248,113,113,0.4); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 12px; color: #F87171; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">Time to first working build</span>
+          <span style="font: 700 22px 'JetBrains Mono', monospace; color: #F87171;">30 – 60 min</span>
+        </div>
+      </div>
+
+      <!-- After -->
+      <div class="psf-card solution" style="height: 100%;">
+        <div class="psf-label"><span class="psf-num">→</span>After</div>
+        <h3>Highlight, copy, paste</h3>
+        <ol style="list-style:none; padding:0; margin:0; flex:1;">
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:700; min-width:20px;">1</span><span>Open the page where you want to add the widget</span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:700; min-width:20px;">2</span><span>DevTools console → <code>vcExt.show()</code></span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:700; min-width:20px;">3</span><span>The widget container is outlined green and labelled<br><code>[widget] :: customerOrderDetailWidgets (12 widgets)</code></span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:700; min-width:20px;">4</span><span>Click <strong>Copy snippet</strong> on that label</span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:700; min-width:20px;">5</span><span>Paste into your module's <code>.run</code> block; replace controller + template paths</span></li>
+          <li style="display:flex; gap:10px; padding:8px 0; font-size:13.5px; color:var(--text-secondary); line-height:1.5;"><span style="font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:700; min-width:20px;">6</span><span>Reload — widget appears. <strong style="color:var(--text-primary);">Right name, every time.</strong></span></li>
+        </ol>
+        <div style="margin-top: 14px; padding: 10px 14px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">Time to first working build</span>
+          <span style="font: 700 22px 'JetBrains Mono', monospace; color: var(--accent);">&lt; 1 min</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 3. EXECUTIVE SUMMARY                                         -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Intro" data-title="Executive summary">
+    <div class="breadcrumb">Overview</div>
+    <h1 class="slide-title">Executive <span class="accent">summary</span></h1>
+    <p class="slide-lead">Why this exists, what it does, and what you get.</p>
+    <div class="grid-3" style="margin-top: 18px; height: 460px;">
+      <div class="psf-card problem">
+        <div class="psf-label"><span class="psf-num">!</span>Problem</div>
+        <h3>The hidden contracts</h3>
+        <ul>
+          <li>Extension-point names are <strong>invisible in the UI</strong> — widget container groups, toolbar controllers, meta-form keys</li>
+          <li>Docs list them in the abstract; mapping a doc entry to <em>this screen</em> is manual</li>
+          <li>Wrong identifier = silent failure: registration succeeds but UI never updates</li>
+          <li>Onboarding new module authors burns hours on copy-paste plumbing</li>
+        </ul>
+      </div>
+      <div class="psf-card solution">
+        <div class="psf-label"><span class="psf-num">→</span>Solution</div>
+        <h3>Highlight everything, copy anything</h3>
+        <ul>
+          <li>One console command — <code>vcExt.show()</code> — outlines every extension point</li>
+          <li>Each highlight shows the <strong>actual id</strong> the developer needs</li>
+          <li>One-click <strong>Copy snippet</strong> writes a parameterised registration call to the clipboard</li>
+          <li>Always loaded, always available — invisible until invoked</li>
+        </ul>
+      </div>
+      <div class="psf-card features">
+        <div class="psf-label"><span class="psf-num">★</span>Features</div>
+        <h3>What you get</h3>
+        <ul>
+          <li>5 extension-point types: menu, blade, toolbar, widget, meta-form</li>
+          <li>Bare service-call snippets (paste into your module's <code>.run</code>)</li>
+          <li>Auto-refresh as blades open and close</li>
+          <li>Toast confirms each copy; <code>vcExt.list()</code> for full inventory</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 3. SECTION DIVIDER · WHAT IT IS                              -->
+  <!-- ============================================================ -->
+  <section class="slide section" data-section="What it is" data-title="Section: What it is" data-toc-divider="true">
+    <div class="section-num">SECTION 01</div>
+    <h2 class="section-title">What it is —<br>and what it isn't</h2>
+    <p class="section-blurb">A read-only inspection tool. No registry mutations, no permission gating, no UI affordance until you ask for it.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 4. CONSOLE API                                               -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="What it is" data-title="Console API">
+    <div class="breadcrumb">What it is · Console API</div>
+    <h1 class="slide-title">Six commands, <span class="accent">one global</span></h1>
+    <p class="slide-lead">On bundle load the inspector exposes <code>window.vcExt</code> with a tiny, discoverable surface. No setup, no permission, no menu item.</p>
+    <div class="grid-2">
+      <div>
+        <table class="compare">
+          <thead>
+            <tr><th>Command</th><th>What it does</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="code">vcExt.help()</td><td>Print usage to console</td></tr>
+            <tr><td class="code">vcExt.show()</td><td>Overlay every extension point on the current page (idempotent)</td></tr>
+            <tr><td class="code">vcExt.hide()</td><td>Tear down overlay; detach observer + listeners</td></tr>
+            <tr><td class="code">vcExt.toggle()</td><td>Show / hide</td></tr>
+            <tr><td class="code">vcExt.list()</td><td><code>console.table</code> of every registered item across all five services</td></tr>
+            <tr><td class="code">vcExt.copy(<br>&nbsp;&nbsp;type, id?)</td><td>Copy a registration snippet for the given type<br>(<code>'menu' | 'blade' | 'toolbar' | 'widget' | 'metaform'</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="card">
+          <h3><span class="icon-dot" style="background:var(--cyan)"></span>On bundle load</h3>
+          <pre class="snippet" style="margin-top:8px;"><span class="com">// the only output until you call vcExt.show()</span>
+<span class="key">[Virto]</span> Extension-point inspector loaded.
+        Type <span class="kw">vcExt.help()</span> to begin.</pre>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <h3><span class="icon-dot" style="background:var(--accent)"></span>Production safety</h3>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-top:8px;">
+            Bundled into <code>dist/app.js</code> via the existing webpack glob — <strong style="color:var(--text-primary);">no _Layout.cshtml change, no new endpoint, no new permission</strong>. Bundle delta ≈ 8 KB. Vanilla IIFE; injector calls are deferred until <code>show()</code>, so it never interferes with Angular bootstrap.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 5. FIVE EXTENSION POINTS                                     -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="What it is" data-title="Five extension points">
+    <div class="breadcrumb">What it is · Coverage</div>
+    <h1 class="slide-title">Five extension points, <span class="accent">colour-coded</span></h1>
+    <p class="slide-lead">The five most-extended points in Platform Manager. Each maps to a stable DOM marker AND an AngularJS service registry — so the overlay can show the count of currently-registered items.</p>
+    <table class="compare" style="margin-top:8px;">
+      <thead>
+        <tr>
+          <th style="width: 16%">Type</th>
+          <th style="width: 24%">DOM selector</th>
+          <th style="width: 30%">Service / registry</th>
+          <th>What you extend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="legend-dot" style="background:var(--xp-menu)"></span><strong>Main menu</strong></td>
+          <td class="code">nav.nav-bar</td>
+          <td class="code">mainMenuService.menuItems</td>
+          <td>Top-level navigation entries</td>
+        </tr>
+        <tr>
+          <td><span class="legend-dot" style="background:var(--xp-blade)"></span><strong>Blade</strong></td>
+          <td class="code">[ng-model="blade"]</td>
+          <td class="code">bladeNavigationService.blades</td>
+          <td>Detail / edit panels</td>
+        </tr>
+        <tr>
+          <td><span class="legend-dot" style="background:var(--xp-toolbar)"></span><strong>Blade toolbar</strong></td>
+          <td class="code">.blade-toolbar</td>
+          <td class="code">toolbarService<br>.toolbarCommandsMap[ctrl]</td>
+          <td>Buttons in a blade's header</td>
+        </tr>
+        <tr>
+          <td><span class="legend-dot" style="background:var(--xp-widget)"></span><strong>Widget container</strong></td>
+          <td class="code">[gridster-opts]</td>
+          <td class="code">widgetService.widgetsMap[group]</td>
+          <td>Tiles inside a blade or dashboard</td>
+        </tr>
+        <tr>
+          <td><span class="legend-dot" style="background:var(--xp-metaform)"></span><strong>Meta form</strong></td>
+          <td class="code">[registered-inputs]</td>
+          <td class="code">metaFormsService.getMetaFields(name)</td>
+          <td>Dynamic form fields on a blade</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="card muted" style="margin-top: 18px;">
+      <p style="font-size:14px; color:var(--text-secondary); line-height:1.55;"><strong style="color:var(--accent);">Why these five.</strong> They are the canonical list at <code>docs.virtocommerce.org/.../key-extensibility-points/</code>. Push-notification templates, setup-wizard steps and breadcrumb history are exposed via <code>vcExt.list()</code> only — they have no stable on-screen DOM host to highlight.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 6. SECTION DIVIDER · LIVE LOOK                               -->
+  <!-- ============================================================ -->
+  <section class="slide section" data-section="Live look" data-title="Section: Live look" data-toc-divider="true">
+    <div class="section-num">SECTION 02</div>
+    <h2 class="section-title">What it looks like<br><span style="background: linear-gradient(135deg, var(--accent), #FFB37A); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">on screen</span></h2>
+    <p class="section-blurb">A single screen of Platform Manager — the order detail page — with every extension point outlined and labelled, exactly as the developer sees it.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 7. SCREEN MOCKUP — single blade                              -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Live look" data-title="Order detail · single blade">
+    <div class="breadcrumb">Live look · One blade</div>
+    <h1 class="slide-title">Order detail page, <span class="accent">inspector on</span></h1>
+    <p class="slide-lead">Five overlays at once: main menu, blade, toolbar, meta-form (the customer-order field block), and the widget container holding twelve dashboard tiles.</p>
+
+    <div class="demo-frame" style="height: 480px;">
+      <div class="demo-platform">
+        <div class="top-bar">
+          <span style="color: var(--accent); font-weight: 700; margin-right: 8px;">VIRTO</span>
+          <span style="color: #cdd1dc;">COMMERCE</span>
+          <span style="margin-left: auto; color:#aab1be;">Development · Administrator</span>
+        </div>
+
+        <!-- Left nav -->
+        <div class="left-nav">
+          <div class="nav-item">⌂ Home</div>
+          <div class="nav-item sel">📦 Orders</div>
+          <div class="nav-item">📁 Catalog</div>
+          <div class="nav-item">👥 Contacts</div>
+          <div class="nav-item">🔒 Security</div>
+          <div class="nav-item">⚙ Settings</div>
+        </div>
+
+        <!-- Order blade -->
+        <div class="blade">
+          <div class="toolbar">+ New &nbsp; ⎙ Save &nbsp; ↺ Reset &nbsp; 🗑 Delete</div>
+          <h4>Customer's order</h4>
+          <div class="field"><div class="field-label">Order number</div><div class="field-val">CO260416-00003</div></div>
+          <div class="field"><div class="field-label">Status</div><div class="field-val">New</div></div>
+          <div class="field"><div class="field-label">Customer</div><div class="field-val">alex@mail.com</div></div>
+          <div class="field"><div class="field-label">Created at</div><div class="field-val">Apr 16, 2026 12:45 PM</div></div>
+          <div class="field"><div class="field-label">Discount</div><div class="field-val">0 USD</div></div>
+          <div class="widgets">
+            <div class="widget-tile">📭<br>Notification feed</div>
+            <div class="widget-tile">1<br>Line items</div>
+            <div class="widget-tile">↺<br>Changes</div>
+            <div class="widget-tile">1<br>Addresses</div>
+            <div class="widget-tile">💬<br>No comments</div>
+            <div class="widget-tile">0<br>Dynamic properties</div>
+          </div>
+        </div>
+
+        <!-- Right space -->
+        <div></div>
+      </div>
+
+      <!-- Overlays -->
+      <div class="xp-box xp-menu" style="left:0; top:36px; width:220px; height:444px;"></div>
+      <div class="xp-label xp-menu inside" style="left:0; top:36px;">[menu] (36 items) <span class="xp-copy">Copy snippet</span></div>
+
+      <div class="xp-box xp-blade" style="left:220px; top:36px; width:360px; height:444px;"></div>
+      <div class="xp-label xp-blade" style="left:220px; top:14px;">[blade] :: orders <span class="xp-copy">Copy snippet</span></div>
+
+      <div class="xp-box xp-toolbar" style="left:220px; top:50px; width:360px; height:24px;"></div>
+      <div class="xp-label xp-toolbar inside" style="left:220px; top:50px;">[toolbar] :: virtoCommerce.orderModule.operationDetailController <span class="xp-copy">Copy snippet</span></div>
+
+      <div class="xp-box xp-metaform" style="left:230px; top:90px; width:340px; height:160px;"></div>
+      <div class="xp-label xp-metaform" style="left:230px; top:68px;">[metaform] :: host: orders <span class="xp-copy">Copy snippet</span></div>
+
+      <div class="xp-box xp-widget" style="left:230px; top:280px; width:340px; height:200px;"></div>
+      <div class="xp-label xp-widget" style="left:230px; top:258px;">[widget] :: customerOrderDetailWidgets (12 widgets) <span class="xp-copy">Copy snippet</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 8. SCREEN MOCKUP — two blades + toast                        -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Live look" data-title="Two blades + toast">
+    <div class="breadcrumb">Live look · Open a child blade</div>
+    <h1 class="slide-title">Open a blade, <span class="accent">overlays follow</span></h1>
+    <p class="slide-lead">Click the <em>Addresses</em> widget — the <em>Manage addresses</em> blade slides in. New overlays auto-attach to it. Click <strong>Copy snippet</strong> on either blade — toast confirms the write to clipboard.</p>
+
+    <div class="demo-frame" style="height: 480px;">
+      <div class="demo-platform" style="grid-template-columns: 220px 320px 320px 1fr;">
+        <div class="top-bar" style="grid-column: 1 / 5;">
+          <span style="color: var(--accent); font-weight: 700; margin-right: 8px;">VIRTO</span>
+          <span style="color: #cdd1dc;">COMMERCE</span>
+          <span style="margin-left: auto; color:#aab1be;">Development</span>
+        </div>
+        <div class="left-nav">
+          <div class="nav-item">⌂ Home</div>
+          <div class="nav-item sel">📦 Orders</div>
+          <div class="nav-item">📁 Catalog</div>
+          <div class="nav-item">👥 Contacts</div>
+          <div class="nav-item">🔒 Security</div>
+          <div class="nav-item">⚙ Settings</div>
+        </div>
+        <div class="blade">
+          <div class="toolbar">+ New &nbsp; ⎙ Save &nbsp; 🗑 Delete</div>
+          <h4>Customer's order</h4>
+          <div class="field"><div class="field-label">Order number</div><div class="field-val">CO260416-00003</div></div>
+          <div class="field"><div class="field-label">Status</div><div class="field-val">New</div></div>
+          <div class="field"><div class="field-label">Customer</div><div class="field-val">alex@mail.com</div></div>
+          <div class="widgets">
+            <div class="widget-tile">📭</div>
+            <div class="widget-tile">1<br>Lines</div>
+            <div class="widget-tile">↺<br>Changes</div>
+            <div class="widget-tile" style="background:#dde7f5;">1<br>Addresses</div>
+            <div class="widget-tile">💬</div>
+            <div class="widget-tile">0<br>Dynamic</div>
+          </div>
+        </div>
+        <div class="blade right">
+          <div class="toolbar">+ Add</div>
+          <h4>Manage addresses</h4>
+          <div style="border-top: 2px solid #4FB6E8; padding-top: 8px;">
+            <div style="font-weight: 700; font-size: 11px; color: #1a1d29;">Shipping</div>
+            <div style="font-size: 10px; color:#5b6477; margin-top:4px;">USA, New York, NewYork, Some address line</div>
+            <div style="font-size: 9px; color:#8590a4; margin-top:6px;">Shipping</div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+
+      <!-- Overlays -->
+      <div class="xp-box xp-menu" style="left:0; top:36px; width:220px; height:444px;"></div>
+      <div class="xp-label xp-menu inside" style="left:0; top:36px;">[menu] (36 items) <span class="xp-copy">Copy snippet</span></div>
+
+      <!-- Left blade -->
+      <div class="xp-box xp-blade" style="left:220px; top:36px; width:320px; height:444px;"></div>
+      <div class="xp-label xp-blade" style="left:220px; top:14px;">[blade] :: orders <span class="xp-copy">Copy snippet</span></div>
+      <div class="xp-box xp-toolbar" style="left:220px; top:50px; width:320px; height:24px;"></div>
+      <div class="xp-label xp-toolbar inside" style="left:220px; top:50px;">[toolbar] :: orderModule.operationDetailController <span class="xp-copy">Copy snippet</span></div>
+
+      <!-- Right blade (newly opened) -->
+      <div class="xp-box xp-blade" style="left:540px; top:36px; width:320px; height:444px;"></div>
+      <div class="xp-label xp-blade" style="left:540px; top:14px;">[blade] :: orderOperationAddresses <span class="xp-copy">Copy snippet</span></div>
+      <div class="xp-box xp-toolbar" style="left:540px; top:50px; width:320px; height:24px;"></div>
+      <div class="xp-label xp-toolbar inside" style="left:540px; top:50px;">[toolbar] :: orderModule.addressListController <span class="xp-copy">Copy snippet</span></div>
+
+      <div class="xp-toast">Snippet copied to clipboard
+[blade] orderOperationAddresses</div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 9. SECTION DIVIDER · SNIPPETS                                -->
+  <!-- ============================================================ -->
+  <section class="slide section" data-section="Snippets" data-title="Section: The snippets" data-toc-divider="true">
+    <div class="section-num">SECTION 03</div>
+    <h2 class="section-title">What ends up in<br>your <span style="background: linear-gradient(135deg, var(--accent), #FFB37A); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">clipboard</span></h2>
+    <p class="section-blurb">Bare service-call snippets — no module bootstrap wrapper. Paste into your existing module's <code>.run</code> block and you're done.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 10. SNIPPETS — menu, blade, toolbar                          -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Snippets" data-title="Menu · Blade · Toolbar">
+    <div class="breadcrumb">Snippets · Navigation</div>
+    <h1 class="slide-title">Menu · Blade · <span class="accent">Toolbar</span></h1>
+    <p class="slide-lead">The three navigation primitives. Each snippet is parameterised to the highlighted host — the toolbar copy carries its host blade's controller name; the blade copy carries its <code>id</code>.</p>
+
+    <div class="grid-3" style="margin-top: 8px;">
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="background:var(--bg-darker); padding:10px 16px; border-bottom:1px solid var(--border); font:600 11px/1.4 'JetBrains Mono', monospace; color:#fff; background:var(--xp-menu);">[menu]</div>
+        <pre class="snippet" style="margin:0; border:none; border-radius:0; font-size:11.5px;">mainMenuService.<span class="kw">addMenuItem</span>({
+  <span class="key">path</span>:     <span class="str">'&lt;group&gt;/&lt;item&gt;'</span>,
+  <span class="key">icon</span>:     <span class="str">'fa fa-cube'</span>,
+  <span class="key">title</span>:    <span class="str">'platform.menu.&lt;key&gt;'</span>,
+  <span class="key">priority</span>: <span class="num">100</span>,
+  <span class="key">action</span>:   <span class="kw">function</span> () {
+    $state.go(<span class="str">'&lt;state-name&gt;'</span>);
+  },
+  <span class="key">permission</span>: <span class="str">'&lt;permission&gt;'</span>
+});</pre>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="background:var(--bg-darker); padding:10px 16px; border-bottom:1px solid var(--border); font:600 11px/1.4 'JetBrains Mono', monospace; color:#fff; background:var(--xp-blade);">[blade] :: orders</div>
+        <pre class="snippet" style="margin:0; border:none; border-radius:0; font-size:11.5px;"><span class="kw">var</span> blade = {
+  <span class="key">id</span>:         <span class="str">'orders'</span>,
+  <span class="key">title</span>:      <span class="str">'platform.blades.&lt;key&gt;'</span>,
+  <span class="key">controller</span>: <span class="str">'&lt;your.controller&gt;'</span>,
+  <span class="key">template</span>:
+    <span class="str">'$(YourModule)/Scripts/blades/orders.tpl.html'</span>
+};
+bladeNavigationService.<span class="kw">showBlade</span>(
+  blade, parentBlade
+);</pre>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="background:var(--bg-darker); padding:10px 16px; border-bottom:1px solid var(--border); font:600 11px/1.4 'JetBrains Mono', monospace; color:#fff; background:var(--xp-toolbar);">[toolbar] :: orderModule…operationDetailCtrl</div>
+        <pre class="snippet" style="margin:0; border:none; border-radius:0; font-size:11.5px;">toolbarService.<span class="kw">register</span>({
+  <span class="key">name</span>:  <span class="str">'platform.commands.&lt;k&gt;'</span>,
+  <span class="key">icon</span>:  <span class="str">'fa fa-cog'</span>,
+  <span class="key">index</span>: <span class="num">100</span>,
+  <span class="key">executeMethod</span>:
+    <span class="kw">function</span> (blade) { <span class="com">/* … */</span> },
+  <span class="key">canExecuteMethod</span>:
+    <span class="kw">function</span> (blade) { <span class="kw">return</span> <span class="num">true</span>; }
+}, <span class="str">'virtoCommerce.orderModule.…'</span>);</pre>
+      </div>
+    </div>
+
+    <div class="card muted" style="margin-top: 22px;">
+      <p style="font-size:14px; color:var(--text-secondary); line-height:1.55;"><strong style="color:var(--accent);">Format note.</strong> Bare service call. No <code>angular.module(…).run([…])</code> wrapper, no wiring boilerplate. Drop it into your module's existing <code>.run</code> block alongside other registrations.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 11. SNIPPETS — widget, metaform                              -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="Snippets" data-title="Widget · Metaform">
+    <div class="breadcrumb">Snippets · Content</div>
+    <h1 class="slide-title">Widget · <span class="accent">Meta-form</span></h1>
+    <p class="slide-lead">The two content extension points. Widget snippets carry the exact container <code>group</code>; meta-form snippets carry the resolved form name (or a placeholder if heuristic resolution can't pin it down).</p>
+
+    <div class="grid-2" style="margin-top: 8px;">
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="background:var(--xp-widget); padding:10px 16px; border-bottom:1px solid var(--border); font:600 11px/1.4 'JetBrains Mono', monospace; color:#fff;">[widget] :: customerOrderDetailWidgets</div>
+        <pre class="snippet" style="margin:0; border:none; border-radius:0; font-size:13px;">widgetService.<span class="kw">registerWidget</span>({
+  <span class="key">controller</span>: <span class="str">'&lt;yourModule&gt;.&lt;yourWidgetController&gt;'</span>,
+  <span class="key">template</span>:   <span class="str">'$(YourModule)/Scripts/widgets/&lt;widget&gt;.tpl.html'</span>
+}, <span class="str">'customerOrderDetailWidgets'</span>);</pre>
+        <div style="padding: 12px 18px; font-size: 12.5px; color: var(--text-secondary);">
+          The exact <code>group</code> name is read from the widget container's <code>group</code> attribute. No more guessing between <code>customerOrderDetailWidgets</code>, <code>orderDetail</code>, and <code>customerOrderDetail</code>.
+        </div>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="background:var(--xp-metaform); padding:10px 16px; border-bottom:1px solid var(--border); font:600 11px/1.4 'JetBrains Mono', monospace; color:#fff;">[metaform] :: accountDetails</div>
+        <pre class="snippet" style="margin:0; border:none; border-radius:0; font-size:13px;">metaFormsService.<span class="kw">registerMetaFields</span>(<span class="str">'accountDetails'</span>, [{
+  <span class="key">name</span>:      <span class="str">'&lt;fieldName&gt;'</span>,
+  <span class="key">title</span>:     <span class="str">'platform.blades.&lt;form&gt;.labels.&lt;f&gt;'</span>,
+  <span class="key">valueType</span>: <span class="str">'ShortText'</span>,
+  <span class="key">priority</span>:  <span class="num">100</span>
+}]);</pre>
+        <div style="padding: 12px 18px; font-size: 12.5px; color: var(--text-secondary);">
+          The form name is recovered by reverse-lookup: comparing the directive's bound array reference against <code>metaFormsService.getMetaFields(name)</code> for known seed names. Custom forms fall back to a <code>'&lt;formName&gt;'</code> placeholder.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 12. SECTION DIVIDER · WHAT'S NEXT                            -->
+  <!-- ============================================================ -->
+  <section class="slide section" data-section="What's next" data-title="Section: What's next" data-toc-divider="true">
+    <div class="section-num">SECTION 04</div>
+    <h2 class="section-title">Where the same idea<br><span style="background: linear-gradient(135deg, var(--accent), #FFB37A); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">goes next</span></h2>
+    <p class="section-blurb">The Platform Manager is the first host. The same console-gated overlay pattern applies cleanly to vc-frontend (Vue 3), VC-Shell, and any custom SPA built on the modularity framework.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 17. PORT TO OTHER HOSTS                                      -->
+  <!-- ============================================================ -->
+  <section class="slide" data-section="What's next" data-title="Port to other hosts">
+    <div class="breadcrumb">What's next · Roadmap</div>
+    <h1 class="slide-title">Same pattern, <span class="accent">different host</span></h1>
+    <p class="slide-lead">Port the inspector to vc-frontend (Vue 3 storefront) and VC-Shell (Module Federation admin). The UX contract is identical — only the detection layer changes.</p>
+
+    <div class="grid-3" style="margin-top: 8px;">
+      <div class="card">
+        <h3><span class="icon-dot" style="background:#41B883"></span>vc-frontend (Vue 3)</h3>
+        <p style="font-size: 13.5px; color:var(--text-secondary); line-height:1.55;">Detect Vue named slots, Pinia plugin registries, route slot outlets. Add <code>data-vc-slot</code> attributes behind <code>import.meta.env.DEV</code>; the rest of the inspector runs unchanged.</p>
+        <span class="pill green" style="margin-top:10px;">Storefront</span>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--accent)"></span>VC-Shell (Vue 3 + MF)</h3>
+        <p style="font-size: 13.5px; color:var(--text-secondary); line-height:1.55;">Detect MF remote-loaded blades and extension points. Inspect the <code>defineAppModule</code> registry. Snippet output uses VC-Shell's plugin <code>install()</code> idiom.</p>
+        <span class="pill orange" style="margin-top:10px;">Admin (modern)</span>
+      </div>
+      <div class="card">
+        <h3><span class="icon-dot" style="background:var(--cyan)"></span>Custom SPAs</h3>
+        <p style="font-size: 13.5px; color:var(--text-secondary); line-height:1.55;">System Operations and other vertical SPAs. The same console API (<code>vcExt.show()</code>) gives a uniform experience across every Virto host UI.</p>
+        <span class="pill cyan" style="margin-top:10px;">Vertical apps</span>
+      </div>
+    </div>
+
+    <div class="card muted" style="margin-top: 22px;">
+      <p style="font-size: 14px; color:var(--text-secondary); line-height:1.55;"><strong style="color:var(--accent);">A self-contained prompt</strong> for replicating the inspector in a new host UI is checked into <code>docs/prompts/</code>. The same console API (<code>vcExt.show / hide / list / copy</code>) and colour scheme apply across every Virto host — module authors learn the tool once.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 18. THANK YOU / CTA                                          -->
+  <!-- ============================================================ -->
+  <section class="slide cta" data-section="Closing" data-title="Thank you">
+    <div>
+      <h1 class="cta-title">Highlight, copy, <span class="accent">ship</span></h1>
+      <p class="cover-subtitle" style="text-align: center; max-width: 720px; margin: 0 auto;">
+        One console command, five extension points outlined in colour, snippets a click away. The kind of tool you should have had on day one.
+      </p>
+      <div class="cta-links">
+        <a href="../../src/VirtoCommerce.Platform.Web/wwwroot/js/app/developer-tools/extensionPointInspector.js" class="cta-link">Source: extensionPointInspector.js</a>
+        <a href="https://docs.virtocommerce.org/platform/developer-guide/latest/Extensibility/key-extensibility-points/" class="cta-link">Reference: key extensibility points</a>
+        <a href="../fundamentals/extensibility/overview.md" class="cta-link">Extensibility overview</a>
+      </div>
+      <p style="color: var(--text-muted); font-size: 12px; margin-top: 64px; letter-spacing: 0.06em; text-transform: uppercase;">
+        Virto Commerce Platform · Backoffice Developer Tools
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" aria-label="Previous slide">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="10,4 5,8 10,12"/></svg>
+  </button>
+  <span class="nav-counter" id="navCounter"><span class="accent" id="curIdx">1</span> / <span id="totIdx">15</span></span>
+  <button class="nav-btn" id="nextBtn" aria-label="Next slide">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,4 11,8 6,12"/></svg>
+  </button>
+</div>
+
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const stage = document.getElementById('stage');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const curIdx = document.getElementById('curIdx');
+  const totIdx = document.getElementById('totIdx');
+  const tocBtn = document.getElementById('tocBtn');
+  const tocPanel = document.getElementById('tocPanel');
+  const tocOverlay = document.getElementById('tocOverlay');
+  const tocClose = document.getElementById('tocClose');
+  const tocList = document.getElementById('tocList');
+
+  let current = 0;
+  totIdx.textContent = slides.length;
+
+  let lastSection = null;
+  slides.forEach((slide, i) => {
+    const section = slide.dataset.section;
+    const title = slide.dataset.title;
+    if (section !== lastSection) {
+      const label = document.createElement('div');
+      label.className = 'toc-section-label';
+      label.textContent = section;
+      tocList.appendChild(label);
+      lastSection = section;
+    }
+    const item = document.createElement('div');
+    item.className = 'toc-item';
+    item.dataset.idx = i;
+    item.innerHTML = `<span class="num">${String(i + 1).padStart(2, '0')}</span><span>${title}</span>`;
+    item.addEventListener('click', () => { goTo(i); closeToc(); });
+    tocList.appendChild(item);
+  });
+
+  function show(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[current].classList.remove('active');
+    slides[i].classList.add('active');
+    current = i;
+    curIdx.textContent = i + 1;
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === slides.length - 1;
+    Array.from(tocList.querySelectorAll('.toc-item')).forEach((el, idx) => {
+      el.classList.toggle('active', idx === i);
+    });
+  }
+  function goTo(i) { show(Math.max(0, Math.min(slides.length - 1, i))); }
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    switch (e.key) {
+      case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(slides.length - 1); break;
+      case 'f': case 'F':
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+        break;
+      case 't': case 'T':
+        if (tocPanel.classList.contains('open')) closeToc();
+        else openToc();
+        break;
+      case 'Escape':
+        if (tocPanel.classList.contains('open')) closeToc();
+        break;
+    }
+  });
+
+  function openToc()  { tocPanel.classList.add('open');    tocOverlay.classList.add('open'); }
+  function closeToc() { tocPanel.classList.remove('open'); tocOverlay.classList.remove('open'); }
+  tocBtn.addEventListener('click', openToc);
+  tocClose.addEventListener('click', closeToc);
+  tocOverlay.addEventListener('click', closeToc);
+
+  function fit() {
+    const sw = 1200, sh = 720;
+    const ww = window.innerWidth, wh = window.innerHeight;
+    const margin = 32;
+    const scale = Math.min((ww - margin) / sw, (wh - margin) / sh, 1);
+    document.documentElement.style.setProperty('--fit-scale', scale.toFixed(3));
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  show(0);
+})();
+</script>
+
+</body>
+</html>
