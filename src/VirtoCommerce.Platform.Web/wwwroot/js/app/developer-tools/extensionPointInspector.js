@@ -19,12 +19,32 @@
     }
 
     var ROOT_ID = 'vc-ext-inspector-root';
+    var TOAST_ID = 'vc-ext-toast';
+    var DATA_VC_EXT_ATTR = 'data-vc-ext';
+    var ATTR_ID = 'id';
+    var ATTR_NG_CONTROLLER = 'ng-controller';
+    var BLADE_HOST_SELECTOR = '[ng-model="blade"]';
+    var COPY_BUTTON_TEXT = 'Copy snippet';
+
+    var POSITION_FIXED = 'position:fixed';
+    var WHITE_FG = 'color:#fff';
+    var BG_PREFIX = 'background:';
+
+    var COLOR_TOAST_OK = '#16a34a';
+    var COLOR_TOAST_FAIL = '#dc2626';
+
+    var SVC_MAIN_MENU = 'platformWebApp.mainMenuService';
+    var SVC_BLADE = 'platformWebApp.bladeNavigationService';
+    var SVC_WIDGET = 'platformWebApp.widgetService';
+    var SVC_TOOLBAR = 'platformWebApp.toolbarService';
+    var SVC_METAFORMS = 'platformWebApp.metaFormsService';
+
     var TYPE_COLORS = {
-        menu:      { border: '#7c3aed', bg: 'rgba(124,58,237,0.12)' },
-        blade:     { border: '#2563eb', bg: 'rgba(37,99,235,0.10)' },
-        toolbar:   { border: '#ea580c', bg: 'rgba(234,88,12,0.10)' },
-        widget:    { border: '#16a34a', bg: 'rgba(22,163,74,0.10)' },
-        metaform:  { border: '#0d9488', bg: 'rgba(13,148,136,0.10)' }
+        menu:     { border: '#7c3aed', bg: 'rgba(124,58,237,0.12)' },
+        blade:    { border: '#2563eb', bg: 'rgba(37,99,235,0.10)' },
+        toolbar:  { border: '#ea580c', bg: 'rgba(234,88,12,0.10)' },
+        widget:   { border: COLOR_TOAST_OK, bg: 'rgba(22,163,74,0.10)' },
+        metaform: { border: '#0d9488', bg: 'rgba(13,148,136,0.10)' }
     };
 
     var state = {
@@ -40,7 +60,9 @@
 
     function getInjector() {
         try {
-            if (typeof angular === 'undefined' || !angular.element) return null;
+            if (typeof angular === 'undefined' || !angular.element) {
+                return null;
+            }
             var injector = angular.element(document).injector();
             return injector || null;
         } catch (e) {
@@ -50,8 +72,14 @@
 
     function getService(name) {
         var injector = getInjector();
-        if (!injector) return null;
-        try { return injector.get(name); } catch (e) { return null; }
+        if (!injector) {
+            return null;
+        }
+        try {
+            return injector.get(name);
+        } catch (e) {
+            return null;
+        }
     }
 
     function copyToClipboard(text) {
@@ -61,35 +89,41 @@
         var ta = document.createElement('textarea');
         ta.value = text;
         ta.setAttribute('readonly', '');
-        ta.setAttribute('data-vc-ext', '1');
-        ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;';
+        ta.setAttribute(DATA_VC_EXT_ATTR, '1');
+        ta.style.cssText = POSITION_FIXED + ';top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;';
         document.body.appendChild(ta);
         ta.focus();
         ta.select();
-        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        try {
+            ok = document.execCommand('copy');
+        } catch (e) {
+            ok = false;
+        }
         ta.remove();
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            try { navigator.clipboard.writeText(text); } catch (e) { /* ignore */ }
+            navigator.clipboard.writeText(text).catch(function () { /* best-effort, ignore */ });
         }
         return ok;
     }
 
     function showToast(message, color) {
-        var existing = document.getElementById('vc-ext-toast');
-        if (existing) existing.remove();
+        var existing = document.getElementById(TOAST_ID);
+        if (existing) {
+            existing.remove();
+        }
 
         var toast = document.createElement('div');
-        toast.id = 'vc-ext-toast';
-        toast.setAttribute('data-vc-ext', '1');
+        toast.id = TOAST_ID;
+        toast.setAttribute(DATA_VC_EXT_ATTR, '1');
         toast.textContent = message;
         toast.style.cssText = [
-            'position:fixed',
+            POSITION_FIXED,
             'bottom:32px',
             'left:50%',
             'transform:translateX(-50%) translateY(20px)',
-            'background:' + (color || '#16a34a'),
-            'color:#fff',
+            BG_PREFIX + (color || COLOR_TOAST_OK),
+            WHITE_FG,
             'padding:10px 18px',
             'border-radius:6px',
             'font:600 13px/1.4 Consolas,Menlo,monospace',
@@ -111,7 +145,11 @@
         setTimeout(function () {
             toast.style.opacity = '0';
             toast.style.transform = 'translateX(-50%) translateY(20px)';
-            setTimeout(function () { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 220);
+            setTimeout(function () {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 220);
         }, 1600);
     }
 
@@ -124,59 +162,59 @@
             var title = (item && item.title) || 'platform.menu.<key>';
             var permission = (item && item.permission) || '<permission>';
             return [
-                "mainMenuService.addMenuItem({",
-                "    path: '" + path + "',",
-                "    icon: '" + icon + "',",
-                "    title: '" + title + "',",
-                "    priority: 100,",
+                'mainMenuService.addMenuItem({',
+                `    path: '${path}',`,
+                `    icon: '${icon}',`,
+                `    title: '${title}',`,
+                '    priority: 100,',
                 "    action: function () { $state.go('<state-name>'); },",
-                "    permission: '" + permission + "'",
-                "});"
+                `    permission: '${permission}'`,
+                '});'
             ].join('\n');
         },
         blade: function (id, controller) {
             var bladeId = id || '<bladeId>';
             var ctrl = controller || '<yourModule>.<yourController>';
             return [
-                "var blade = {",
-                "    id: '" + bladeId + "',",
+                'var blade = {',
+                `    id: '${bladeId}',`,
                 "    title: 'platform.blades.<title-key>',",
-                "    controller: '" + ctrl + "',",
-                "    template: '$(YourModule)/Scripts/blades/" + bladeId + ".tpl.html'",
-                "};",
-                "bladeNavigationService.showBlade(blade, parentBlade);"
+                `    controller: '${ctrl}',`,
+                `    template: '$(YourModule)/Scripts/blades/${bladeId}.tpl.html'`,
+                '};',
+                'bladeNavigationService.showBlade(blade, parentBlade);'
             ].join('\n');
         },
         toolbar: function (controller) {
             var ctrl = controller || '<yourModule>.<yourController>';
             return [
-                "toolbarService.register({",
+                'toolbarService.register({',
                 "    name: 'platform.commands.<command-key>',",
                 "    icon: 'fa fa-cog',",
-                "    index: 100,",
-                "    executeMethod: function (blade) { /* ... */ },",
-                "    canExecuteMethod: function (blade) { return true; }",
-                "}, '" + ctrl + "');"
+                '    index: 100,',
+                '    executeMethod: function (blade) { /* ... */ },',
+                '    canExecuteMethod: function (blade) { return true; }',
+                `}, '${ctrl}');`
             ].join('\n');
         },
         widget: function (group) {
             var g = group || '<containerName>';
             return [
-                "widgetService.registerWidget({",
+                'widgetService.registerWidget({',
                 "    controller: '<yourModule>.<yourWidgetController>',",
                 "    template: '$(YourModule)/Scripts/widgets/<widget>.tpl.html'",
-                "}, '" + g + "');"
+                `}, '${g}');`
             ].join('\n');
         },
         metaform: function (formName) {
             var name = formName || '<formName>';
             return [
-                "metaFormsService.registerMetaFields('" + name + "', [{",
+                `metaFormsService.registerMetaFields('${name}', [{`,
                 "    name: '<fieldName>',",
                 "    title: 'platform.blades.<form>.labels.<field>',",
                 "    valueType: 'ShortText',",
-                "    priority: 100",
-                "}]);"
+                '    priority: 100',
+                '}]);'
             ].join('\n');
         }
     };
@@ -187,21 +225,27 @@
     // with [data-vc-ext] is internal.
 
     function isInternalNode(node) {
-        if (!node || node.nodeType !== 1) return false;
-        if (node.hasAttribute && node.hasAttribute('data-vc-ext')) return true;
-        return !!(node.closest && node.closest('[data-vc-ext]'));
+        if (!node || node.nodeType !== 1) {
+            return false;
+        }
+        if (node.hasAttribute && node.hasAttribute(DATA_VC_EXT_ATTR)) {
+            return true;
+        }
+        return !!(node.closest && node.closest(`[${DATA_VC_EXT_ATTR}]`));
+    }
+
+    function nodeListHasExternal(nodes) {
+        for (var node of nodes) {
+            if (node.nodeType === 1 && !isInternalNode(node)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function hasExternalChange(mutation) {
         if (mutation.type === 'childList') {
-            var i;
-            for (i = 0; i < mutation.addedNodes.length; i++) {
-                if (mutation.addedNodes[i].nodeType === 1 && !isInternalNode(mutation.addedNodes[i])) return true;
-            }
-            for (i = 0; i < mutation.removedNodes.length; i++) {
-                if (mutation.removedNodes[i].nodeType === 1 && !isInternalNode(mutation.removedNodes[i])) return true;
-            }
-            return false;
+            return nodeListHasExternal(mutation.addedNodes) || nodeListHasExternal(mutation.removedNodes);
         }
         if (mutation.type === 'attributes') {
             return !isInternalNode(mutation.target);
@@ -216,19 +260,19 @@
 
         var nav = document.querySelector('nav.nav-bar');
         if (nav) {
-            hosts.push({ type: 'menu', el: nav, name: '', service: 'mainMenuService' });
+            hosts.push({ type: 'menu', el: nav, name: '', service: SVC_MAIN_MENU });
         }
 
-        document.querySelectorAll('[ng-model="blade"]').forEach(function (el) {
-            var bladeId = el.getAttribute('id') || el.id || '';
-            var controller = el.getAttribute('ng-controller') || '';
+        document.querySelectorAll(BLADE_HOST_SELECTOR).forEach(function (el) {
+            var bladeId = el.getAttribute(ATTR_ID) || el.id || '';
+            var controller = el.getAttribute(ATTR_NG_CONTROLLER) || '';
             hosts.push({ type: 'blade', el: el, name: bladeId, controller: controller });
         });
 
         document.querySelectorAll('.blade-toolbar').forEach(function (el) {
-            var bladeEl = el.closest('[ng-model="blade"]');
-            var controller = bladeEl ? (bladeEl.getAttribute('ng-controller') || '') : '';
-            var bladeId = bladeEl ? (bladeEl.getAttribute('id') || '') : '';
+            var bladeEl = el.closest(BLADE_HOST_SELECTOR);
+            var controller = bladeEl ? (bladeEl.getAttribute(ATTR_NG_CONTROLLER) || '') : '';
+            var bladeId = bladeEl ? (bladeEl.getAttribute(ATTR_ID) || '') : '';
             hosts.push({ type: 'toolbar', el: el, name: controller || bladeId, controller: controller });
         });
 
@@ -238,10 +282,15 @@
         });
 
         document.querySelectorAll('[registered-inputs]').forEach(function (el) {
-            var bladeEl = el.closest('[ng-model="blade"]');
-            var bladeId = bladeEl ? (bladeEl.getAttribute('id') || '') : '';
+            var bladeEl = el.closest(BLADE_HOST_SELECTOR);
+            var bladeId = bladeEl ? (bladeEl.getAttribute(ATTR_ID) || '') : '';
             var formName = inferMetaFormName(el, bladeId);
-            hosts.push({ type: 'metaform', el: el, name: formName || ('host: ' + bladeId), inferredName: formName });
+            hosts.push({
+                type: 'metaform',
+                el: el,
+                name: formName || `host: ${bladeId}`,
+                inferredName: formName
+            });
         });
 
         return hosts;
@@ -250,17 +299,23 @@
     function inferMetaFormName(metaformEl, bladeId) {
         try {
             var scope = angular.element(metaformEl).isolateScope() || angular.element(metaformEl).scope();
-            if (!scope || !scope.registeredInputs) return null;
-            var metaFormsService = getService('platformWebApp.metaFormsService');
-            if (!metaFormsService || typeof metaFormsService.getMetaFields !== 'function') return null;
+            if (!scope || !scope.registeredInputs) {
+                return null;
+            }
+            var metaFormsService = getService(SVC_METAFORMS);
+            if (!metaFormsService || typeof metaFormsService.getMetaFields !== 'function') {
+                return null;
+            }
             var candidates = collectKnownMetaFormNames(bladeId);
-            for (var i = 0; i < candidates.length; i++) {
-                var fields = metaFormsService.getMetaFields(candidates[i]);
+            for (var candidate of candidates) {
+                var fields = metaFormsService.getMetaFields(candidate);
                 if (fields && fields === scope.registeredInputs) {
-                    return candidates[i];
+                    return candidate;
                 }
             }
-        } catch (e) { /* fall through */ }
+        } catch (e) {
+            /* fall through */
+        }
         return null;
     }
 
@@ -275,38 +330,64 @@
     }
 
     // -------- Counts from registries --------
+    // One resolver per type so describe() stays linear and easy to extend.
+
+    var COUNT_RESOLVERS = {
+        menu: function () {
+            var svc = getService(SVC_MAIN_MENU);
+            if (!svc || !svc.menuItems) {
+                return null;
+            }
+            return `${svc.menuItems.length} items`;
+        },
+        widget: function (host) {
+            if (!host.name) {
+                return null;
+            }
+            var svc = getService(SVC_WIDGET);
+            if (!svc || !svc.widgetsMap) {
+                return null;
+            }
+            var items = svc.widgetsMap[host.name] || [];
+            return `${items.length} widgets`;
+        },
+        toolbar: function (host) {
+            if (!host.controller) {
+                return null;
+            }
+            var svc = getService(SVC_TOOLBAR);
+            if (!svc || !svc.toolbarCommandsMap) {
+                return null;
+            }
+            var items = svc.toolbarCommandsMap[host.controller] || [];
+            return `${items.length} commands`;
+        },
+        metaform: function (host) {
+            if (!host.inferredName) {
+                return null;
+            }
+            var svc = getService(SVC_METAFORMS);
+            if (!svc) {
+                return null;
+            }
+            var fields = svc.getMetaFields(host.inferredName);
+            if (!fields) {
+                return null;
+            }
+            return `${fields.length} fields`;
+        }
+    };
 
     function describe(host) {
-        var name = host.name || '';
-        var count = '';
-
-        if (host.type === 'menu') {
-            var menuSvc = getService('platformWebApp.mainMenuService');
-            if (menuSvc && menuSvc.menuItems) count = '(' + menuSvc.menuItems.length + ' items)';
-        } else if (host.type === 'widget') {
-            var widgetSvc = getService('platformWebApp.widgetService');
-            if (widgetSvc && widgetSvc.widgetsMap && host.name) {
-                var ws = widgetSvc.widgetsMap[host.name] || [];
-                count = '(' + ws.length + ' widgets)';
-            }
-        } else if (host.type === 'toolbar') {
-            var tbSvc = getService('platformWebApp.toolbarService');
-            if (tbSvc && tbSvc.toolbarCommandsMap && host.controller) {
-                var cmds = tbSvc.toolbarCommandsMap[host.controller] || [];
-                count = '(' + cmds.length + ' commands)';
-            }
-        } else if (host.type === 'metaform') {
-            var mf = getService('platformWebApp.metaFormsService');
-            if (mf && host.inferredName) {
-                var fields = mf.getMetaFields(host.inferredName);
-                if (fields) count = '(' + fields.length + ' fields)';
-            }
+        var resolver = COUNT_RESOLVERS[host.type];
+        var countStr = resolver ? resolver(host) : null;
+        var parts = [`[${host.type}]`];
+        if (host.name) {
+            parts.push(`:: ${host.name}`);
         }
-
-        var prefix = '[' + host.type + ']';
-        var parts = [prefix];
-        if (name) parts.push(':: ' + name);
-        if (count) parts.push(count);
+        if (countStr) {
+            parts.push(`(${countStr})`);
+        }
         return parts.join(' ');
     }
 
@@ -320,8 +401,8 @@
         }
         root = document.createElement('div');
         root.id = ROOT_ID;
-        root.setAttribute('data-vc-ext', '1');
-        root.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;pointer-events:none;z-index:2147483600;';
+        root.setAttribute(DATA_VC_EXT_ATTR, '1');
+        root.style.cssText = `${POSITION_FIXED};top:0;left:0;width:0;height:0;pointer-events:none;z-index:2147483600;`;
         document.body.appendChild(root);
         attachRootDelegate(root);
         return root;
@@ -336,38 +417,40 @@
         // viewport coords directly.
         var insideTop = rect.top < LABEL_HEIGHT;
         var labelTop = insideTop ? rect.top : (rect.top - LABEL_HEIGHT);
-        label.style.left = rect.left + 'px';
-        label.style.top = labelTop + 'px';
+        label.style.left = `${rect.left}px`;
+        label.style.top = `${labelTop}px`;
         label.style.borderRadius = insideTop ? '0 0 3px 0' : '3px 3px 0 0';
     }
 
     function makeOverlay(host) {
         var color = TYPE_COLORS[host.type] || TYPE_COLORS.blade;
         var rect = host.el.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return null;
+        if (rect.width === 0 || rect.height === 0) {
+            return null;
+        }
 
         var box = document.createElement('div');
         box.className = 'vc-ext-overlay';
         box.style.cssText = [
-            'position:fixed',
+            POSITION_FIXED,
             'pointer-events:none',
-            'border:2px dashed ' + color.border,
-            'background:' + color.bg,
+            `border:2px dashed ${color.border}`,
+            BG_PREFIX + color.bg,
             'box-sizing:border-box',
             'transition:none',
-            'left:' + rect.left + 'px',
-            'top:' + rect.top + 'px',
-            'width:' + rect.width + 'px',
-            'height:' + rect.height + 'px'
+            `left:${rect.left}px`,
+            `top:${rect.top}px`,
+            `width:${rect.width}px`,
+            `height:${rect.height}px`
         ].join(';');
 
         var label = document.createElement('div');
         label.className = 'vc-ext-label';
         label.style.cssText = [
-            'position:fixed',
+            POSITION_FIXED,
             'pointer-events:auto',
-            'background:' + color.border,
-            'color:#fff',
+            BG_PREFIX + color.border,
+            WHITE_FG,
             'font:600 11px/1.4 Consolas,Menlo,monospace',
             'padding:2px 8px',
             'white-space:nowrap',
@@ -388,12 +471,12 @@
 
         var copyBtn = document.createElement('button');
         copyBtn.type = 'button';
-        copyBtn.textContent = 'Copy snippet';
+        copyBtn.textContent = COPY_BUTTON_TEXT;
         copyBtn.setAttribute('data-vc-ext-action', 'copy');
         copyBtn.style.cssText = [
             'pointer-events:auto',
             'background:rgba(255,255,255,0.18)',
-            'color:#fff',
+            WHITE_FG,
             'border:1px solid rgba(255,255,255,0.4)',
             'border-radius:2px',
             'padding:1px 6px',
@@ -408,12 +491,16 @@
     }
 
     function attachRootDelegate(root) {
-        if (root.__vcDelegated) return;
+        if (root.__vcDelegated) {
+            return;
+        }
         root.__vcDelegated = true;
 
         function handleCopy(ev) {
             var btn = ev.target && ev.target.closest && ev.target.closest('button[data-vc-ext-action="copy"]');
-            if (!btn) return;
+            if (!btn) {
+                return;
+            }
             // Guard against double-fire (mousedown + click on the same press)
             if (state.copyLockUntil && Date.now() < state.copyLockUntil) {
                 ev.stopPropagation();
@@ -424,17 +511,23 @@
             ev.stopPropagation();
             ev.preventDefault();
             var host = btn.__vcHost;
-            if (!host) return;
+            if (!host) {
+                return;
+            }
             var snippet = snippetFor(host);
             var ok = copyToClipboard(snippet);
             btn.textContent = ok ? 'Copied!' : 'Copy failed';
-            setTimeout(function () { if (btn.isConnected) btn.textContent = 'Copy snippet'; }, 1200);
-            var typeLabel = '[' + host.type + ']' + (host.name ? ' ' + host.name : '');
+            setTimeout(function () {
+                if (btn.isConnected) {
+                    btn.textContent = COPY_BUTTON_TEXT;
+                }
+            }, 1200);
+            var typeLabel = `[${host.type}]${host.name ? ` ${host.name}` : ''}`;
             if (ok) {
-                showToast('Snippet copied to clipboard\n' + typeLabel, '#16a34a');
+                showToast(`Snippet copied to clipboard\n${typeLabel}`, COLOR_TOAST_OK);
             } else {
-                showToast('Copy failed — see console\n' + typeLabel, '#dc2626');
-                console.warn('[Virto] Copy failed. Snippet:\n' + snippet);
+                showToast(`Copy failed — see console\n${typeLabel}`, COLOR_TOAST_FAIL);
+                console.warn(`[Virto] Copy failed. Snippet:\n${snippet}`);
             }
         }
 
@@ -472,10 +565,10 @@
                 return;
             }
             entry.box.style.display = '';
-            entry.box.style.left = rect.left + 'px';
-            entry.box.style.top = rect.top + 'px';
-            entry.box.style.width = rect.width + 'px';
-            entry.box.style.height = rect.height + 'px';
+            entry.box.style.left = `${rect.left}px`;
+            entry.box.style.top = `${rect.top}px`;
+            entry.box.style.width = `${rect.width}px`;
+            entry.box.style.height = `${rect.height}px`;
             entry.label.style.display = '';
             applyLabelPosition(entry.label, rect);
         });
@@ -483,7 +576,9 @@
 
     function rebuild() {
         var root = ensureRoot();
-        while (root.firstChild) root.removeChild(root.firstChild);
+        while (root.firstChild) {
+            root.removeChild(root.firstChild);
+        }
         state.overlays = [];
 
         findHosts().forEach(function (host) {
@@ -497,7 +592,9 @@
     }
 
     function scheduleRebuild() {
-        if (state.rebuildTimer) return;
+        if (state.rebuildTimer) {
+            return;
+        }
         state.rebuildTimer = setTimeout(function () {
             state.rebuildTimer = null;
             // Skip if a copy is in progress so the user's button isn't torn down mid-press
@@ -505,16 +602,22 @@
                 scheduleRebuild();
                 return;
             }
-            if (state.active) rebuild();
+            if (state.active) {
+                rebuild();
+            }
         }, 120);
     }
 
     function scheduleReposition() {
-        if (state.rafScheduled) return;
+        if (state.rafScheduled) {
+            return;
+        }
         state.rafScheduled = true;
         requestAnimationFrame(function () {
             state.rafScheduled = false;
-            if (state.active) reposition();
+            if (state.active) {
+                reposition();
+            }
         });
     }
 
@@ -529,14 +632,19 @@
         rebuild();
 
         state.observer = new MutationObserver(function (mutations) {
-            for (var i = 0; i < mutations.length; i++) {
-                if (hasExternalChange(mutations[i])) {
+            for (var mutation of mutations) {
+                if (hasExternalChange(mutation)) {
                     scheduleRebuild();
                     return;
                 }
             }
         });
-        state.observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['id', 'ng-model', 'group', 'registered-inputs'] });
+        state.observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: [ATTR_ID, 'ng-model', 'group', 'registered-inputs']
+        });
 
         state.scrollListener = function () { scheduleReposition(); };
         state.resizeListener = function () { scheduleReposition(); };
@@ -561,57 +669,94 @@
             state.resizeListener = null;
         }
         var root = document.getElementById(ROOT_ID);
-        if (root) root.parentNode.removeChild(root);
+        if (root) {
+            root.parentNode.removeChild(root);
+        }
         state.overlays = [];
     }
 
     function toggle() {
-        if (state.active) hide(); else show();
+        if (state.active) {
+            hide();
+        } else {
+            show();
+        }
     }
 
     function list() {
         var rows = [];
-        var menuSvc = getService('platformWebApp.mainMenuService');
+
+        var menuSvc = getService(SVC_MAIN_MENU);
         if (menuSvc && menuSvc.menuItems) {
             menuSvc.menuItems.forEach(function (m) {
-                rows.push({ type: 'menu', name: m.path, detail: m.title || '', priority: m.priority, permission: m.permission || '' });
-            });
-        }
-
-        var bladeSvc = getService('platformWebApp.bladeNavigationService');
-        if (bladeSvc && bladeSvc.blades) {
-            Object.keys(bladeSvc.blades).forEach(function (state) {
-                (bladeSvc.blades[state] || []).forEach(function (b) {
-                    rows.push({ type: 'blade', name: b.id, detail: b.controller || '', priority: '', permission: b.updatePermission || '' });
+                rows.push({
+                    type: 'menu',
+                    name: m.path,
+                    detail: m.title || '',
+                    priority: m.priority,
+                    permission: m.permission || ''
                 });
             });
         }
 
-        var widgetSvc = getService('platformWebApp.widgetService');
+        var bladeSvc = getService(SVC_BLADE);
+        if (bladeSvc && bladeSvc.blades) {
+            Object.keys(bladeSvc.blades).forEach(function (stateName) {
+                (bladeSvc.blades[stateName] || []).forEach(function (b) {
+                    rows.push({
+                        type: 'blade',
+                        name: b.id,
+                        detail: b.controller || '',
+                        priority: '',
+                        permission: b.updatePermission || ''
+                    });
+                });
+            });
+        }
+
+        var widgetSvc = getService(SVC_WIDGET);
         if (widgetSvc && widgetSvc.widgetsMap) {
             Object.keys(widgetSvc.widgetsMap).forEach(function (group) {
                 (widgetSvc.widgetsMap[group] || []).forEach(function (w) {
-                    rows.push({ type: 'widget', name: group, detail: w.controller || '', priority: '', permission: w.permission || '' });
+                    rows.push({
+                        type: 'widget',
+                        name: group,
+                        detail: w.controller || '',
+                        priority: '',
+                        permission: w.permission || ''
+                    });
                 });
             });
         }
 
-        var tbSvc = getService('platformWebApp.toolbarService');
+        var tbSvc = getService(SVC_TOOLBAR);
         if (tbSvc && tbSvc.toolbarCommandsMap) {
             Object.keys(tbSvc.toolbarCommandsMap).forEach(function (ctrl) {
                 (tbSvc.toolbarCommandsMap[ctrl] || []).forEach(function (cmd) {
-                    rows.push({ type: 'toolbar', name: ctrl, detail: cmd.name || '', priority: cmd.index, permission: cmd.permission || '' });
+                    rows.push({
+                        type: 'toolbar',
+                        name: ctrl,
+                        detail: cmd.name || '',
+                        priority: cmd.index,
+                        permission: cmd.permission || ''
+                    });
                 });
             });
         }
 
-        var mfSvc = getService('platformWebApp.metaFormsService');
+        var mfSvc = getService(SVC_METAFORMS);
         if (mfSvc) {
             collectKnownMetaFormNames('').forEach(function (n) {
                 var fields = mfSvc.getMetaFields(n);
                 if (fields && fields.length) {
                     fields.forEach(function (f) {
-                        rows.push({ type: 'metaform', name: n, detail: f.name || '', priority: f.priority, permission: '' });
+                        rows.push({
+                            type: 'metaform',
+                            name: n,
+                            detail: f.name || '',
+                            priority: f.priority,
+                            permission: ''
+                        });
                     });
                 }
             });
@@ -629,22 +774,33 @@
     function copy(type, id) {
         var snippet;
         switch (type) {
-            case 'menu':     snippet = SNIPPETS.menu(null); break;
-            case 'blade':    snippet = SNIPPETS.blade(id, null); break;
-            case 'toolbar':  snippet = SNIPPETS.toolbar(id); break;
-            case 'widget':   snippet = SNIPPETS.widget(id); break;
-            case 'metaform': snippet = SNIPPETS.metaform(id); break;
+            case 'menu':
+                snippet = SNIPPETS.menu(null);
+                break;
+            case 'blade':
+                snippet = SNIPPETS.blade(id, null);
+                break;
+            case 'toolbar':
+                snippet = SNIPPETS.toolbar(id);
+                break;
+            case 'widget':
+                snippet = SNIPPETS.widget(id);
+                break;
+            case 'metaform':
+                snippet = SNIPPETS.metaform(id);
+                break;
             default:
                 console.warn("[Virto] Unknown type. Use one of: 'menu', 'blade', 'toolbar', 'widget', 'metaform'");
                 return;
         }
         var ok = copyToClipboard(snippet);
+        var idSuffix = id ? ` ${id}` : '';
         if (ok) {
-            showToast('Snippet copied to clipboard\n[' + type + ']' + (id ? ' ' + id : ''), '#16a34a');
-            console.log('[Virto] Snippet copied to clipboard:\n' + snippet);
+            showToast(`Snippet copied to clipboard\n[${type}]${idSuffix}`, COLOR_TOAST_OK);
+            console.log(`[Virto] Snippet copied to clipboard:\n${snippet}`);
         } else {
-            showToast('Copy failed — see console\n[' + type + ']', '#dc2626');
-            console.warn('[Virto] Copy failed. Snippet:\n' + snippet);
+            showToast(`Copy failed — see console\n[${type}]`, COLOR_TOAST_FAIL);
+            console.warn(`[Virto] Copy failed. Snippet:\n${snippet}`);
         }
     }
 
