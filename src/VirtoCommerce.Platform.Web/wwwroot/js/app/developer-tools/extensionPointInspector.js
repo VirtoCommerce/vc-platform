@@ -632,7 +632,7 @@
         Object.keys(PROBES).forEach(function (type) {
             REQUIRED.forEach(function (field) {
                 if (PROBES[type][field] == null) {
-                    console.error('[Virto] Probe "' + type + '" is missing required field "' + field + '"');
+                    console.error(`[Virto] Probe "${type}" is missing required field "${field}"`);
                 }
             });
         });
@@ -654,12 +654,12 @@
     function describe(host) {
         var p = PROBES[host.type];
         var n = p.count(host);
-        var parts = ['[' + host.type + ']'];
+        var parts = [`[${host.type}]`];
         if (host.name) {
-            parts.push(':: ' + host.name);
+            parts.push(`:: ${host.name}`);
         }
         if (n != null) {
-            parts.push('(' + n + ' ' + p.countLabel + ')');
+            parts.push(`(${n} ${p.countLabel})`);
         }
         return parts.join(' ');
     }
@@ -692,12 +692,11 @@
         if (node.hasAttribute && node.hasAttribute(DATA_VC_EXT_ATTR)) {
             return true;
         }
-        return !!(node.closest && node.closest('[' + DATA_VC_EXT_ATTR + ']'));
+        return !!(node.closest && node.closest(`[${DATA_VC_EXT_ATTR}]`));
     }
 
     function nodeListHasExternal(nodes) {
-        for (var i = 0; i < nodes.length; i++) {
-            var n = nodes[i];
+        for (var n of nodes) {
             if (n.nodeType === 1 && !isInternalNode(n)) {
                 return true;
             }
@@ -864,8 +863,10 @@
         return root;
     }
 
+    var COPY_BUTTON_SELECTOR = `button[${COPY_ACTION_ATTR}="${COPY_ACTION_VALUE}"]`;
+
     function handleRootCopy(ev) {
-        var btn = ev.target && ev.target.closest && ev.target.closest('button[' + COPY_ACTION_ATTR + '="' + COPY_ACTION_VALUE + '"]');
+        var btn = ev.target && ev.target.closest && ev.target.closest(COPY_BUTTON_SELECTOR);
         if (!btn) {
             return;
         }
@@ -892,12 +893,12 @@
             }
         }, BUTTON_FLASH_MS);
 
-        var typeLabel = '[' + host.type + ']' + (host.name ? ' ' + host.name : '');
+        var typeLabel = `[${host.type}]${host.name ? ` ${host.name}` : ''}`;
         if (ok) {
-            showToast('Snippet copied to clipboard\n' + typeLabel, COLOR_TOAST_OK);
+            showToast(`Snippet copied to clipboard\n${typeLabel}`, COLOR_TOAST_OK);
         } else {
-            showToast('Copy failed — see console\n' + typeLabel, COLOR_TOAST_FAIL);
-            console.warn('[Virto] Copy failed. Snippet:\n' + snippet);
+            showToast(`Copy failed — see console\n${typeLabel}`, COLOR_TOAST_FAIL);
+            console.warn(`[Virto] Copy failed. Snippet:\n${snippet}`);
         }
     }
 
@@ -985,7 +986,7 @@
                     if (span) {
                         span.textContent = describe(host);
                     }
-                    var btn = existing.label.querySelector('button[' + COPY_ACTION_ATTR + '="' + COPY_ACTION_VALUE + '"]');
+                    var btn = existing.label.querySelector(COPY_BUTTON_SELECTOR);
                     if (btn) {
                         btn.__vcHost = host;
                     }
@@ -1140,23 +1141,23 @@
     function copy(type, id) {
         var p = PROBES[type];
         if (!p) {
-            console.warn('[Virto] Unknown type "' + type + '". Use one of: ' + Object.keys(PROBES).join(', '));
+            console.warn(`[Virto] Unknown type "${type}". Use one of: ${Object.keys(PROBES).join(', ')}`);
             return;
         }
         var snippet = p.manualSnippet(id);
         var ok = copyToClipboard(snippet);
-        var idSuffix = id ? ' ' + id : '';
+        var idSuffix = id ? ` ${id}` : '';
         if (ok) {
-            showToast('Snippet copied to clipboard\n[' + type + ']' + idSuffix, COLOR_TOAST_OK);
-            console.log('[Virto] Snippet copied to clipboard:\n' + snippet);
+            showToast(`Snippet copied to clipboard\n[${type}]${idSuffix}`, COLOR_TOAST_OK);
+            console.log(`[Virto] Snippet copied to clipboard:\n${snippet}`);
         } else {
-            showToast('Copy failed — see console\n[' + type + ']', COLOR_TOAST_FAIL);
-            console.warn('[Virto] Copy failed. Snippet:\n' + snippet);
+            showToast(`Copy failed — see console\n[${type}]`, COLOR_TOAST_FAIL);
+            console.warn(`[Virto] Copy failed. Snippet:\n${snippet}`);
         }
     }
 
     function help() {
-        var types = Object.keys(PROBES).map(function (t) { return "'" + t + "'"; }).join(' | ');
+        var types = Object.keys(PROBES).map(function (t) { return `'${t}'`; }).join(' | ');
         console.log([
             'Virto Commerce Extension-Point Inspector',
             '----------------------------------------',
@@ -1165,9 +1166,9 @@
             'vcExt.toggle()           Toggle overlay.',
             'vcExt.list()             Print a table of every registered item.',
             'vcExt.copy(type, id?)    Copy a registration snippet.',
-            '                         type ∈ ' + types + '.',
+            `                         type ∈ ${types}.`,
             '',
-            'Highlighted points: ' + Object.keys(PROBES).join(', ') + '.',
+            `Highlighted points: ${Object.keys(PROBES).join(', ')}.`,
             'Reference: https://docs.virtocommerce.org/platform/developer-guide/latest/Extensibility/key-extensibility-points/'
         ].join('\n'));
     }
