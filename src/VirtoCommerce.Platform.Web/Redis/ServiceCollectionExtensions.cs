@@ -7,7 +7,6 @@ using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock;
-using VirtoCommerce.Platform.DistributedLock.InMemory;
 using VirtoCommerce.Platform.DistributedLock.NoLock;
 using VirtoCommerce.Platform.DistributedLock.Redis;
 
@@ -37,9 +36,7 @@ namespace VirtoCommerce.Platform.Web.Redis
             else
             {
                 services.AddSingleton<IInternalDistributedLockService, InternalNoLockService>();
-                // Single-instance fallback: serialize per resource key within this process.
-                // For multi-replica deployments, configure Redis so DistributedLockService is used instead.
-                services.AddSingleton<IDistributedLockService, InMemoryLockService>();
+                services.AddSingleton<IDistributedLockService, NoLockService>();
             }
 
             return services;
