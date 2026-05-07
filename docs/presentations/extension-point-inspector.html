@@ -1274,7 +1274,6 @@ bladeNavigationService.<span class="kw">showBlade</span>(
 <script>
 (() => {
   const slides = Array.from(document.querySelectorAll('.slide'));
-  const stage = document.getElementById('stage');
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const curIdx = document.getElementById('curIdx');
@@ -1284,6 +1283,8 @@ bladeNavigationService.<span class="kw">showBlade</span>(
   const tocOverlay = document.getElementById('tocOverlay');
   const tocClose = document.getElementById('tocClose');
   const tocList = document.getElementById('tocList');
+
+  const TOC_OPEN_CLASS = 'open';
 
   let current = 0;
   totIdx.textContent = slides.length;
@@ -1303,12 +1304,17 @@ bladeNavigationService.<span class="kw">showBlade</span>(
     item.className = 'toc-item';
     item.dataset.idx = i;
     item.innerHTML = `<span class="num">${String(i + 1).padStart(2, '0')}</span><span>${title}</span>`;
-    item.addEventListener('click', () => { goTo(i); closeToc(); });
+    item.addEventListener('click', () => {
+      goTo(i);
+      closeToc();
+    });
     tocList.appendChild(item);
   });
 
   function show(i) {
-    if (i < 0 || i >= slides.length) return;
+    if (i < 0 || i >= slides.length) {
+      return;
+    }
     slides[current].classList.remove('active');
     slides[i].classList.add('active');
     current = i;
@@ -1319,43 +1325,92 @@ bladeNavigationService.<span class="kw">showBlade</span>(
       el.classList.toggle('active', idx === i);
     });
   }
-  function goTo(i) { show(Math.max(0, Math.min(slides.length - 1, i))); }
-  function next() { goTo(current + 1); }
-  function prev() { goTo(current - 1); }
+  function goTo(i) {
+    show(Math.max(0, Math.min(slides.length - 1, i)));
+  }
+  function next() {
+    goTo(current + 1);
+  }
+  function prev() {
+    goTo(current - 1);
+  }
 
   prevBtn.addEventListener('click', prev);
   nextBtn.addEventListener('click', next);
 
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
+  }
+
+  function toggleToc() {
+    if (tocPanel.classList.contains(TOC_OPEN_CLASS)) {
+      closeToc();
+    } else {
+      openToc();
+    }
+  }
+
   document.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      return;
+    }
     switch (e.key) {
-      case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); next(); break;
-      case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
-      case 'Home': e.preventDefault(); goTo(0); break;
-      case 'End': e.preventDefault(); goTo(slides.length - 1); break;
-      case 'f': case 'F':
-        if (document.fullscreenElement) document.exitFullscreen();
-        else document.documentElement.requestFullscreen();
+      case 'ArrowRight':
+      case ' ':
+      case 'PageDown':
+        e.preventDefault();
+        next();
         break;
-      case 't': case 'T':
-        if (tocPanel.classList.contains('open')) closeToc();
-        else openToc();
+      case 'ArrowLeft':
+      case 'PageUp':
+        e.preventDefault();
+        prev();
+        break;
+      case 'Home':
+        e.preventDefault();
+        goTo(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        goTo(slides.length - 1);
+        break;
+      case 'f':
+      case 'F':
+        toggleFullscreen();
+        break;
+      case 't':
+      case 'T':
+        toggleToc();
         break;
       case 'Escape':
-        if (tocPanel.classList.contains('open')) closeToc();
+        if (tocPanel.classList.contains(TOC_OPEN_CLASS)) {
+          closeToc();
+        }
         break;
     }
   });
 
-  function openToc()  { tocPanel.classList.add('open');    tocOverlay.classList.add('open'); }
-  function closeToc() { tocPanel.classList.remove('open'); tocOverlay.classList.remove('open'); }
+  function openToc() {
+    tocPanel.classList.add(TOC_OPEN_CLASS);
+    tocOverlay.classList.add(TOC_OPEN_CLASS);
+  }
+  function closeToc() {
+    tocPanel.classList.remove(TOC_OPEN_CLASS);
+    tocOverlay.classList.remove(TOC_OPEN_CLASS);
+  }
   tocBtn.addEventListener('click', openToc);
   tocClose.addEventListener('click', closeToc);
   tocOverlay.addEventListener('click', closeToc);
 
   function fit() {
-    const sw = 1200, sh = 720;
-    const ww = window.innerWidth, wh = window.innerHeight;
+    const sw = 1200;
+    const sh = 720;
+    const ww = window.innerWidth;
+    const wh = window.innerHeight;
     const margin = 32;
     const scale = Math.min((ww - margin) / sw, (wh - margin) / sh, 1);
     document.documentElement.style.setProperty('--fit-scale', scale.toFixed(3));

@@ -51,12 +51,42 @@
         active: false,
         overlays: [],
         observer: null,
-        rafScheduled: false,
         rebuildTimer: null,
         copyLockUntil: 0,
-        scrollListener: null,
-        resizeListener: null
+        repositionLoopRunning: false,
+        // Names captured live from metaFormsService.registerMetaFields. Populated
+        // by the decorator below as modules call register, so we can match every
+        // <va-metaform> directive to its actual registry key (e.g. 'productDetail2'
+        // for the catalog item page) instead of falling back to the host:bladeId
+        // placeholder.
+        metaFormNames: new Set()
     };
+
+    // Install an Angular decorator at IIFE-evaluation time so every future
+    // metaFormsService.registerMetaFields(name, …) call records the form name.
+    // Decorators run when the service is instantiated, before any .run() block
+    // that injects it — so by the time module code calls register, this wrapper
+    // is already in place.
+    try {
+        if (typeof angular !== 'undefined' && angular.module) {
+            angular.module('platformWebApp').decorator(
+                'platformWebApp.metaFormsService',
+                ['$delegate', function ($delegate) {
+                    var origRegister = $delegate.registerMetaFields;
+                    $delegate.registerMetaFields = function (formName) {
+                        if (formName) {
+                            state.metaFormNames.add(formName);
+                        }
+                        return origRegister.apply(this, arguments);
+                    };
+                    return $delegate;
+                }]
+            );
+        }
+    } catch (e) {
+        // Angular not yet available, or 'platformWebApp' module not registered
+        // at this point — fall back to the seed list in collectKnownMetaFormNames.
+    }
 
     function getInjector() {
         try {
@@ -298,35 +328,92 @@
 
     function inferMetaFormName(metaformEl, bladeId) {
         try {
-            var scope = angular.element(metaformEl).isolateScope() || angular.element(metaformEl).scope();
-            if (!scope || !scope.registeredInputs) {
+            var injector = getInjector();
+            if (!injector) {
                 return null;
             }
-            var metaFormsService = getService(SVC_METAFORMS);
-            if (!metaFormsService || typeof metaFormsService.getMetaFields !== 'function') {
+            var svc = injector.get(SVC_METAFORMS);
+            if (!svc || typeof svc.getMetaFields !== 'function') {
                 return null;
             }
+
+            // The directive's `registered-inputs` attribute is the expression the
+            // parent scope evaluates to get the fields array (e.g. 'blade.metaFields',
+            // 'blade.metaFields1', etc.). Production builds disable Angular debug
+            // info, so angular.element(el).scope() returns null. Instead, walk the
+            // $rootScope tree and resolve the expression on each scope until we find
+            // an array reference equal to one of the registered form arrays.
+            var expr = metaformEl.getAttribute('registered-inputs');
+            if (!expr) {
+                return null;
+            }
+            var parts = expr.split('.');
+
+            var $rootScope = injector.get('$rootScope');
             var candidates = collectKnownMetaFormNames(bladeId);
-            for (var candidate of candidates) {
-                var fields = metaFormsService.getMetaFields(candidate);
-                if (fields && fields === scope.registeredInputs) {
-                    return candidate;
+            var found = null;
+
+            function visit(scope) {
+                if (found) {
+                    return;
+                }
+                var v = scope;
+                for (var i = 0; i < parts.length && v != null; i++) {
+                    v = v[parts[i]];
+                }
+                if (Array.isArray(v)) {
+                    for (var name of candidates) {
+                        var fields = svc.getMetaFields(name);
+                        if (fields && fields === v) {
+                            found = name;
+                            return;
+                        }
+                    }
+                }
+                var c = scope.$$childHead;
+                while (c && !found) {
+                    visit(c);
+                    c = c.$$nextSibling;
                 }
             }
+            visit($rootScope);
+            return found;
         } catch (e) {
-            /* fall through */
+            return null;
         }
-        return null;
     }
 
     function collectKnownMetaFormNames(bladeId) {
-        var seeds = ['accountDetails', 'roleDetail', 'roleDetails', 'storeDetail', 'apiAccountDetail', 'oAuthApplicationDetail'];
+        // Merge: live-captured names from the decorator wins (most accurate),
+        // plus seed list for forms registered before vcExt loaded (e.g. the
+        // decorator may have failed to install if Angular wasn't ready).
+        var seen = new Set();
+        state.metaFormNames.forEach(function (n) { seen.add(n); });
+
+        var seeds = [
+            // platform
+            'accountDetails', 'roleDetail', 'roleDetails',
+            // store
+            'storeDetail',
+            // security
+            'apiAccountDetail', 'oAuthApplicationDetail',
+            // catalog (https://github.com/VirtoCommerce/vc-module-catalog/.../catalog.js)
+            'productDetail', 'productDetail1', 'productDetail2',
+            'categoryDetail', 'categoryDetails',
+            'variationDetail',
+            // customer
+            'memberDetail',
+            // orders
+            'orderDetail', 'orderOperationDetail'
+        ];
+        seeds.forEach(function (n) { seen.add(n); });
+
         if (bladeId) {
-            seeds.push(bladeId);
-            seeds.push(bladeId.replace(/Detail$/, 'Details'));
-            seeds.push(bladeId.replace(/Details$/, 'Detail'));
+            seen.add(bladeId);
+            seen.add(bladeId.replace(/Detail$/, 'Details'));
+            seen.add(bladeId.replace(/Details$/, 'Detail'));
         }
-        return seeds;
+        return Array.from(seen);
     }
 
     // -------- Counts from registries --------
@@ -431,6 +518,13 @@
 
         var box = document.createElement('div');
         box.className = 'vc-ext-overlay';
+        // Tag directly (not just via the root ancestor) so isInternalNode() can
+        // still recognise this element as inspector-owned after rebuild() detaches
+        // it from the root — closest() can't traverse to a former parent on a
+        // disconnected node, and without the direct attribute the resulting
+        // childList mutation would be misclassified as external and re-trigger
+        // scheduleRebuild() in an infinite loop.
+        box.setAttribute(DATA_VC_EXT_ATTR, '1');
         box.style.cssText = [
             POSITION_FIXED,
             'pointer-events:none',
@@ -446,6 +540,12 @@
 
         var label = document.createElement('div');
         label.className = 'vc-ext-label';
+        label.setAttribute(DATA_VC_EXT_ATTR, '1');
+        // CSS grid (1fr auto) keeps the layout predictable across browsers: the text
+        // column takes whatever's left after the auto-sized button column, and the
+        // text truncates with ellipsis when it doesn't fit. Flex with shrink-to-fit
+        // is fragile here — long unbreakable descriptors interact badly with
+        // white-space:nowrap and intrinsic min-content sizing.
         label.style.cssText = [
             POSITION_FIXED,
             'pointer-events:auto',
@@ -453,8 +553,7 @@
             WHITE_FG,
             'font:600 11px/1.4 Consolas,Menlo,monospace',
             'padding:2px 8px',
-            'white-space:nowrap',
-            'display:flex',
+            'grid-template-columns:minmax(0,1fr) auto',
             'align-items:center',
             'gap:8px',
             'max-width:400px',
@@ -462,11 +561,15 @@
             'overflow:hidden',
             'box-shadow:0 1px 4px rgba(0,0,0,0.25)'
         ].join(';');
+        // Set display via the property API: when packed inside cssText alongside
+        // the `font:` shorthand and many other declarations, some browsers silently
+        // drop `display:grid`. Setting it after via the property setter is reliable.
+        label.style.display = 'grid';
         applyLabelPosition(label, rect);
 
         var text = document.createElement('span');
         text.textContent = describe(host);
-        text.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 auto;min-width:0;';
+        text.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;';
         label.appendChild(text);
 
         var copyBtn = document.createElement('button');
@@ -482,7 +585,7 @@
             'padding:1px 6px',
             'font:600 10px/1.4 Consolas,Menlo,monospace',
             'cursor:pointer',
-            'flex:0 0 auto'
+            'white-space:nowrap'
         ].join(';');
         copyBtn.__vcHost = host;
         label.appendChild(copyBtn);
@@ -556,39 +659,116 @@
         }
     }
 
+    // Reposition: read all rects FIRST, then apply all styles. Batching prevents
+    // layout-thrash that would otherwise occur when each iteration toggles between
+    // a getBoundingClientRect (forces layout) and a style write (invalidates it).
     function reposition() {
-        state.overlays.forEach(function (entry) {
-            var rect = entry.host.el.getBoundingClientRect();
+        var entries = state.overlays;
+        var rects = new Array(entries.length);
+        for (var i = 0; i < entries.length; i++) {
+            rects[i] = entries[i].host.el.getBoundingClientRect();
+        }
+        for (var j = 0; j < entries.length; j++) {
+            var entry = entries[j];
+            var rect = rects[j];
             if (rect.width === 0 || rect.height === 0) {
                 entry.box.style.display = 'none';
                 entry.label.style.display = 'none';
-                return;
+                continue;
             }
+            // Skip writes when the rect hasn't moved (cheap shallow compare via cached values).
+            if (entry._lastTop === rect.top && entry._lastLeft === rect.left
+                && entry._lastWidth === rect.width && entry._lastHeight === rect.height) {
+                continue;
+            }
+            entry._lastTop = rect.top;
+            entry._lastLeft = rect.left;
+            entry._lastWidth = rect.width;
+            entry._lastHeight = rect.height;
             entry.box.style.display = '';
             entry.box.style.left = `${rect.left}px`;
             entry.box.style.top = `${rect.top}px`;
             entry.box.style.width = `${rect.width}px`;
             entry.box.style.height = `${rect.height}px`;
-            entry.label.style.display = '';
+            // Restore to 'grid' (not '') — clearing the inline display would let
+            // the browser's default 'block' win, breaking the column layout that
+            // keeps the Copy snippet button on the same line as the label text.
+            entry.label.style.display = 'grid';
             applyLabelPosition(entry.label, rect);
-        });
+        }
     }
 
-    function rebuild() {
-        var root = ensureRoot();
-        while (root.firstChild) {
-            root.removeChild(root.firstChild);
+    // Pause the observer around any inspector-internal DOM work so the data-vc-ext
+    // filter doesn't have to do it. Belt-and-suspenders against any mutation that
+    // could slip past the filter (e.g. a host element being modified by Angular at
+    // the same instant we're updating overlays).
+    function withObserverPaused(fn) {
+        var wasObserving = !!state.observer;
+        if (wasObserving) {
+            state.observer.disconnect();
         }
-        state.overlays = [];
-
-        findHosts().forEach(function (host) {
-            var entry = makeOverlay(host);
-            if (entry) {
-                root.appendChild(entry.box);
-                root.appendChild(entry.label);
-                state.overlays.push(entry);
+        try {
+            fn();
+        } finally {
+            if (wasObserving && state.active) {
+                attachObserver();
             }
+        }
+    }
+
+    // Diff the current overlays against findHosts() output:
+    //   • host element already present  → keep the existing overlay (no DOM churn)
+    //   • host element new              → create + append
+    //   • old entry whose host vanished → remove from DOM and drop
+    // Avoids the previous tear-down-everything-and-rebuild cycle which caused layout
+    // thrash and visible lag whenever Angular's digest mutated the DOM.
+    function rebuild() {
+        withObserverPaused(function () {
+            var root = ensureRoot();
+            var newHosts = findHosts();
+
+            var existingByEl = new Map();
+            state.overlays.forEach(function (e) { existingByEl.set(e.host.el, e); });
+
+            var nextOverlays = [];
+            var seen = new Set();
+
+            newHosts.forEach(function (host) {
+                var existing = existingByEl.get(host.el);
+                if (existing && existing.host.type === host.type) {
+                    // Refresh fields that may have changed (count, name, controller, inferredName)
+                    existing.host = host;
+                    var span = existing.label.firstChild;
+                    if (span) {
+                        span.textContent = describe(host);
+                    }
+                    var btn = existing.label.querySelector('button[data-vc-ext-action="copy"]');
+                    if (btn) {
+                        btn.__vcHost = host;
+                    }
+                    nextOverlays.push(existing);
+                    seen.add(existing);
+                    return;
+                }
+                var entry = makeOverlay(host);
+                if (entry) {
+                    root.appendChild(entry.box);
+                    root.appendChild(entry.label);
+                    nextOverlays.push(entry);
+                }
+            });
+
+            state.overlays.forEach(function (e) {
+                if (!seen.has(e)) {
+                    if (e.box.parentNode) e.box.parentNode.removeChild(e.box);
+                    if (e.label.parentNode) e.label.parentNode.removeChild(e.label);
+                }
+            });
+
+            state.overlays = nextOverlays;
         });
+        // After diffing, place the surviving overlays at their current rects.
+        reposition();
     }
 
     function scheduleRebuild() {
@@ -605,32 +785,32 @@
             if (state.active) {
                 rebuild();
             }
-        }, 120);
+        }, 250);
     }
 
-    function scheduleReposition() {
-        if (state.rafScheduled) {
+    // Continuous rAF loop tracks blade-open / blade-close CSS transforms (which fire
+    // neither scroll nor resize and don't trigger childList mutations). The loop
+    // self-stops when the inspector is hidden. Cost is ~1 cheap getBoundingClientRect
+    // per overlay per frame — and reposition() short-circuits when nothing moved.
+    function startRepositionLoop() {
+        if (state.repositionLoopRunning) {
             return;
         }
-        state.rafScheduled = true;
-        requestAnimationFrame(function () {
-            state.rafScheduled = false;
-            if (state.active) {
-                reposition();
+        state.repositionLoopRunning = true;
+        function tick() {
+            if (!state.active) {
+                state.repositionLoopRunning = false;
+                return;
             }
-        });
+            reposition();
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
     }
 
     // -------- Public API --------
 
-    function show() {
-        if (state.active) {
-            rebuild();
-            return;
-        }
-        state.active = true;
-        rebuild();
-
+    function attachObserver() {
         state.observer = new MutationObserver(function (mutations) {
             for (var mutation of mutations) {
                 if (hasExternalChange(mutation)) {
@@ -645,11 +825,18 @@
             attributes: true,
             attributeFilter: [ATTR_ID, 'ng-model', 'group', 'registered-inputs']
         });
+    }
 
-        state.scrollListener = function () { scheduleReposition(); };
-        state.resizeListener = function () { scheduleReposition(); };
-        window.addEventListener('scroll', state.scrollListener, true);
-        window.addEventListener('resize', state.resizeListener);
+    function show() {
+        if (state.active) {
+            rebuild();
+            return;
+        }
+        state.active = true;
+        attachObserver();
+        rebuild();
+        // rAF loop tracks blade animation (CSS transform) — scroll/resize alone miss it.
+        startRepositionLoop();
 
         console.log('[Virto] Extension-point overlay enabled. Type vcExt.hide() to remove.');
     }
@@ -660,13 +847,9 @@
             state.observer.disconnect();
             state.observer = null;
         }
-        if (state.scrollListener) {
-            window.removeEventListener('scroll', state.scrollListener, true);
-            state.scrollListener = null;
-        }
-        if (state.resizeListener) {
-            window.removeEventListener('resize', state.resizeListener);
-            state.resizeListener = null;
+        if (state.rebuildTimer) {
+            clearTimeout(state.rebuildTimer);
+            state.rebuildTimer = null;
         }
         var root = document.getElementById(ROOT_ID);
         if (root) {
