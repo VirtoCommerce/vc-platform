@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using VirtoCommerce.Platform.Data.MySql.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -12,7 +13,8 @@ namespace VirtoCommerce.Platform.Data.MySql
         PlatformDbContext IDesignTimeDbContextFactory<PlatformDbContext>.CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<PlatformDbContext>();
-            var connectionString = args.Any() ? args[0] : "server=localhost;user=root;password=virto;database=VirtoCommerce3;";
+            var connectionString = DbContextOptionsBuilderExtensions.NormalizeConnectionString(
+                args.Any() ? args[0] : "server=localhost;user=root;password=virto;database=VirtoCommerce3;");
             var serverVersion = args.Length >= 2 ? args[1] : null;
 
             builder.UseMySql(
@@ -27,7 +29,8 @@ namespace VirtoCommerce.Platform.Data.MySql
         SecurityDbContext IDesignTimeDbContextFactory<SecurityDbContext>.CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<SecurityDbContext>();
-            var connectionString = args.Any() ? args[0] : "server=localhost;user=root;password=virto;database=VirtoCommerce3;";
+            var connectionString = DbContextOptionsBuilderExtensions.NormalizeConnectionString(
+                args.Any() ? args[0] : "server=localhost;user=root;password=virto;database=VirtoCommerce3;");
             var serverVersion = args.Length >= 2 ? args[1] : null;
 
             builder.UseMySql(
