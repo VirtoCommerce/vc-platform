@@ -314,7 +314,7 @@ jobs:
     needs: ci
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.30
+    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@VCST-5041 #v3.800.30
     with:
       installModules: 'true'
       installCustomModule: 'false'
