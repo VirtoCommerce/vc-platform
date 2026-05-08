@@ -47,12 +47,15 @@ namespace VirtoCommerce.Platform.Core.Caching
                         {
                             var cacheKey = CacheKey.With(keyPrefix, id);
 
+                            // Do not cache "not found" — a transient empty read would otherwise poison
+                            // this instance's cache for the entry's TTL, manifesting as a per-id stuck
+                            // failure when no cross-instance invalidation backplane is in place.
                             result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
                             {
                                 var item = itemsByIds.GetValueSafe(id);
                                 configureCache(options, id, item);
                                 return item;
-                            });
+                            }, cacheNullValue: false);
                         }
                     }
                 }
