@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
+using VirtoCommerce.Platform.Core;
 
 namespace VirtoCommerce.Platform.Data.PostgreSql.Extensions;
 
@@ -17,10 +18,15 @@ public static class DbContextOptionsBuilderExtensions
         IConfiguration configuration,
         Action<NpgsqlDbContextOptionsBuilder, IConfiguration>? npgsqlOptionsAction = null)
     {
+        // Enhance connection string with performance and reliability settings
+        var postgreSqlOptions = configuration.GetSection("PostgreSql").Get<PostgreSqlOptions>() ?? new PostgreSqlOptions();
+        connectionString = postgreSqlOptions.EnhanceConnectionString(connectionString);
+
         return optionsBuilder.UseNpgsql(connectionString,
             npgsqlDbContextOptionsBuilder =>
             {
                 npgsqlDbContextOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
+
                 npgsqlOptionsAction?.Invoke(npgsqlDbContextOptionsBuilder, configuration);
             })
             .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.NoEntityTypeConfigurationsWarning));

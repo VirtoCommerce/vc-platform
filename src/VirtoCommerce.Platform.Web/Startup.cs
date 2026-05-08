@@ -80,6 +80,7 @@ using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
+using AuthorizationOptions = VirtoCommerce.Platform.Core.Security.AuthorizationOptions;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using MsTokens = Microsoft.IdentityModel.Tokens;
 
@@ -145,11 +146,12 @@ namespace VirtoCommerce.Platform.Web
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
             });
             services.AddOptions<SecurityHeadersOptions>().Bind(Configuration.GetSection("SecurityHeaders")).ValidateDataAnnotations();
+            services.AddOptions<PostgreSqlOptions>().Bind(Configuration.GetSection("PostgreSql")).ValidateDataAnnotations();
 
             services.AddSingleton<IFileCopyPolicy, FileCopyPolicy>();
             services.AddSingleton<IFileMetadataProvider, FileMetadataProvider>();
 
-            services.AddDbContext<PlatformDbContext>((provider, options) =>
+            services.AddDbContext<PlatformDbContext>(options =>
             {
                 var connectionString = Configuration.GetConnectionString("VirtoCommerce");
 
@@ -352,8 +354,8 @@ namespace VirtoCommerce.Platform.Web
                 };
             });
 
-            services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
-            var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
+            services.AddOptions<AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
+            var authorizationOptions = Configuration.GetSection("Authorization").Get<AuthorizationOptions>();
 
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
