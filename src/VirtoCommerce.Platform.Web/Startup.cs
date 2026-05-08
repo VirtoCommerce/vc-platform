@@ -413,6 +413,14 @@ namespace VirtoCommerce.Platform.Web
                                                 VirtoOpenIddictEntityFrameworkCoreScope,
                                                 VirtoOpenIddictEntityFrameworkCoreToken,
                                                 string>();
+
+                        if (databaseProvider == "MySql")
+                        {
+                            // OpenIddict's bulk delete path uses navigation-based ExecuteDelete,
+                            // which Microting MySQL provider compiles to SQL that triggers
+                            // MySQL error 1093 (target table referenced in subquery).
+                            efBuilder.DisableBulkOperations();
+                        }
                     });
 
                 });
