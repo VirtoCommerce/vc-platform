@@ -1,4 +1,4 @@
-# v3.800.30
+# v3.800.31
 # https://virtocommerce.atlassian.net/browse/VCST-4958
 name: Release
 
@@ -7,6 +7,6 @@ on:
 
 jobs:
   release:
-    uses: VirtoCommerce/.github/.github/workflows/release.yml@v3.800.30    
+    uses: VirtoCommerce/.github/.github/workflows/release.yml@v3.800.31    
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
