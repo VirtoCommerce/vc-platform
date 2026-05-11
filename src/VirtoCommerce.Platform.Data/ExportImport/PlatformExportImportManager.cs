@@ -206,9 +206,16 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             await using var stream = await platformZipEntries.OpenAsync();
             await using var reader = new JsonTextReader(new StreamReader(stream));
 
+            // Section names live at depth 1 — directly inside the root `{ ... }` of PlatformEntries.json.
+            // Anything deeper (e.g. property names inside individual Role / User / Settings objects) must be
+            // ignored by the dispatch: an exception during a section's deserialization can leave the reader
+            // anywhere in the section's array, and we don't want a stray nested property name to trigger
+            // a second import action. `SafeImportSectionAsync` also re-syncs the reader to depth 1 after a
+            // failure as belt-and-suspenders.
+            const int sectionDepth = 1;
             while (await reader.ReadAsync())
             {
-                if (reader.TokenType != JsonToken.PropertyName)
+                if (reader.TokenType != JsonToken.PropertyName || reader.Depth != sectionDepth)
                 {
                     continue;
                 }
@@ -218,27 +225,27 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 switch (token)
                 {
                     case "Roles" when manifest.HandleSecurity:
-                        await SafeImportSectionAsync(token, () => ImportRolesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportRolesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "Users" when manifest.HandleSecurity:
-                        await SafeImportSectionAsync(token, () => ImportUsersInternalAsync(reader, jsonSerializer, manifest.CallerUserName, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportUsersInternalAsync(reader, jsonSerializer, manifest.CallerUserName, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "Settings" when manifest.HandleSettings:
-                        await SafeImportSectionAsync(token, () => ImportSettingsInternalAsync(reader, jsonSerializer, manifest, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportSettingsInternalAsync(reader, jsonSerializer, manifest, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "DynamicProperties" when manifest.HandleDynamicProperties:
-                        await SafeImportSectionAsync(token, () => ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "DynamicPropertyDictionaryItems" when manifest.HandleDynamicProperties:
-                        await SafeImportSectionAsync(token, () => ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "UserApiKeys" when manifest.HandleSecurity:
-                        await SafeImportSectionAsync(token, () => ImportUserApiKeysInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportUserApiKeysInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     default:
@@ -247,7 +254,19 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }
         }
 
-        private static async Task SafeImportSectionAsync(string sectionName, Func<Task> importAction, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback)
+        /// <summary>
+        /// Invokes <paramref name="importAction"/> with try/catch around the per-section deserialization.
+        /// On failure, advances <paramref name="reader"/> back to <paramref name="sectionDepth"/> so the
+        /// outer dispatch loop resumes at the next top-level property and doesn't iterate over leftover
+        /// tokens inside the failed section's array.
+        /// </summary>
+        private static async Task SafeImportSectionAsync(
+            string sectionName,
+            JsonTextReader reader,
+            int sectionDepth,
+            Func<Task> importAction,
+            ExportImportProgressInfo progressInfo,
+            Action<ExportImportProgressInfo> progressCallback)
         {
             ReportProgress(progressInfo, progressCallback, $"Importing '{sectionName}'");
             var errorsBefore = progressInfo.Errors?.Count ?? 0;
@@ -276,6 +295,17 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             {
                 progressInfo.ProcessedCount++;
                 ReportProgress(progressInfo, progressCallback, $"Failed to import '{sectionName}': {ex.Message}", ProgressMessageLevel.Error);
+
+                // The reader is now somewhere inside the failed section's array (or part-way through a
+                // single item that threw mid-deserialization). Skip any remaining tokens until we're back
+                // at the section level so the next loop iteration starts at the next top-level property.
+                while (reader.Depth > sectionDepth)
+                {
+                    if (!await reader.ReadAsync())
+                    {
+                        break;
+                    }
+                }
             }
         }
 
