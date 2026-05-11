@@ -184,7 +184,15 @@
           "download-url": "URL di download",
           "errors": "Errori",
           "start": "Inizio",
-          "end": "Fine"
+          "end": "Fine",
+          "export-progress": "Avanzamento del backup",
+          "export-finished": "Backup completato",
+          "process-completed": "Il processo di backup è completo",
+          "completed-with-errors": "Completato con errori",
+          "detailed-log": "Mostra registro dettagliato",
+          "copy-error": "Copia errore",
+          "copy-log": "Copia registro",
+          "download-backup": "Scarica backup"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Proprietà dinamiche",
             "description": "Proprietà dinamiche della piattaforma"
           }
+        },
+        "warnings": {
+          "security-data-title": "Questo backup conterrà dati sensibili",
+          "security-data-body": "Verranno inclusi gli hash delle password, le chiavi API e i timbri di sicurezza di tutti gli utenti. Chiunque abbia accesso al file di backup può utilizzarlo per prendere il controllo degli account utente. Conserva il file in un luogo sicuro e limita chi può scaricarlo."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Nessun dato",
           "errors": "Errori",
           "start": "Inizio",
-          "end": "Fine"
+          "end": "Fine",
+          "drag-or-browse": "Trascina e rilascia un file .zip qui, oppure clicca per sfogliare",
+          "drag-note-detail": "Il file deve essere stato generato dal backup dei dati di Virto Commerce",
+          "process-completed": "Il processo di ripristino è completo",
+          "completed-with-errors": "Completato con errori",
+          "detailed-log": "Mostra registro dettagliato",
+          "copy-error": "Copia errore",
+          "copy-log": "Copia registro"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Proprietà dinamiche",
             "description": "Proprietà dinamiche della piattaforma"
           }
+        },
+        "warnings": {
+          "security-data-title": "Questo ripristino sovrascriverà dati sensibili",
+          "security-data-body": "Le password degli utenti, le chiavi API e i timbri di sicurezza dal backup sostituiranno i valori attuali per ogni utente nel file.",
+          "security-data-admin-preserved": "Il tuo account amministratore ({{username}}) non verrà modificato — la tua password e la sessione attiva vengono preservate."
         }
       },
       "exportImport-main": {

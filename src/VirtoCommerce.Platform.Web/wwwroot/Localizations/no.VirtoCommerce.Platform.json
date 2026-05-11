@@ -184,7 +184,15 @@
           "download-url": "Nedlastings-URL",
           "errors": "Feil",
           "start": "Start",
-          "end": "Slutt"
+          "end": "Slutt",
+          "export-progress": "Sikkerhetskopieringsfremdrift",
+          "export-finished": "Sikkerhetskopiering fullført",
+          "process-completed": "Sikkerhetskopieringsprosessen er fullført",
+          "completed-with-errors": "Fullført med feil",
+          "detailed-log": "Vis detaljert logg",
+          "copy-error": "Kopier feil",
+          "copy-log": "Kopier logg",
+          "download-backup": "Last ned sikkerhetskopi"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Dynamiske egenskaper",
             "description": "Plattformens dynamiske egenskaper"
           }
+        },
+        "warnings": {
+          "security-data-title": "Denne sikkerhetskopien vil inneholde sensitive data",
+          "security-data-body": "Passord-hashes, API-nøkler og sikkerhetsstempler for alle brukere vil bli inkludert. Alle som har tilgang til sikkerhetskopifilen kan bruke den til å overta brukerkontoer. Lagre filen på et sikkert sted og begrens hvem som kan laste den ned."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Ingen data",
           "errors": "Feil",
           "start": "Start",
-          "end": "Slutt"
+          "end": "Slutt",
+          "drag-or-browse": "Dra og slipp en .zip-fil her, eller klikk for å bla",
+          "drag-note-detail": "Filen må være opprettet av Virto Commerce datasikkerhetskopiering",
+          "process-completed": "Gjenopprettingsprosessen er fullført",
+          "completed-with-errors": "Fullført med feil",
+          "detailed-log": "Vis detaljert logg",
+          "copy-error": "Kopier feil",
+          "copy-log": "Kopier logg"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Dynamiske egenskaper",
             "description": "Plattformens dynamiske egenskaper"
           }
+        },
+        "warnings": {
+          "security-data-title": "Denne gjenopprettingen vil overskrive sensitive data",
+          "security-data-body": "Brukerpassord, API-nøkler og sikkerhetsstempler fra sikkerhetskopien vil erstatte de gjeldende verdiene for hver bruker i filen.",
+          "security-data-admin-preserved": "Din egen administratorkonto ({{username}}) vil ikke bli endret — passordet og den aktive økten din bevares."
         }
       },
       "exportImport-main": {

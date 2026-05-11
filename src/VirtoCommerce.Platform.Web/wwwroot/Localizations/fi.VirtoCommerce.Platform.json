@@ -184,7 +184,15 @@
           "download-url": "Lataus-URL",
           "errors": "Virheet",
           "start": "Alku",
-          "end": "Loppu"
+          "end": "Loppu",
+          "export-progress": "Varmuuskopioinnin edistyminen",
+          "export-finished": "Varmuuskopiointi valmis",
+          "process-completed": "Varmuuskopiointiprosessi on valmis",
+          "completed-with-errors": "Valmistui virheillä",
+          "detailed-log": "Näytä yksityiskohtainen loki",
+          "copy-error": "Kopioi virhe",
+          "copy-log": "Kopioi loki",
+          "download-backup": "Lataa varmuuskopio"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Dynamiset ominaisuudet",
             "description": "Alustan dynamiset ominaisuudet"
           }
+        },
+        "warnings": {
+          "security-data-title": "Tämä varmuuskopio sisältää arkaluonteisia tietoja",
+          "security-data-body": "Salasanojen hash-arvot, API-avaimet ja kaikkien käyttäjien suojaleimat sisällytetään. Jokainen, jolla on pääsy varmuuskopiotiedostoon, voi käyttää sitä käyttäjätilien haltuunottoon. Säilytä tiedosto turvallisessa paikassa ja rajoita kuka voi ladata sen."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Ei dataa",
           "errors": "Virheet",
           "start": "Alku",
-          "end": "Loppu"
+          "end": "Loppu",
+          "drag-or-browse": "Vedä ja pudota .zip-tiedosto tähän tai napsauta selataksesi",
+          "drag-note-detail": "Tiedoston on oltava Virto Commerce -datan varmuuskopioinnin tuottama",
+          "process-completed": "Palautusprosessi on valmis",
+          "completed-with-errors": "Valmistui virheillä",
+          "detailed-log": "Näytä yksityiskohtainen loki",
+          "copy-error": "Kopioi virhe",
+          "copy-log": "Kopioi loki"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Dynamiset ominaisuudet",
             "description": "Alustan dynamiset ominaisuudet"
           }
+        },
+        "warnings": {
+          "security-data-title": "Tämä palautus korvaa arkaluonteiset tiedot",
+          "security-data-body": "Käyttäjien salasanat, API-avaimet ja varmuuskopiosta peräisin olevat suojaleimat korvaavat tiedoston jokaisen käyttäjän nykyiset arvot.",
+          "security-data-admin-preserved": "Omaa järjestelmänvalvojan tiliäsi ({{username}}) ei muokata — salasanasi ja aktiivinen istuntosi säilyvät."
         }
       },
       "exportImport-main": {

@@ -184,7 +184,15 @@
           "download-url": "Download-URL",
           "errors": "Fehler",
           "start": "Start",
-          "end": "Ende"
+          "end": "Ende",
+          "export-progress": "Sicherungsfortschritt",
+          "export-finished": "Sicherung abgeschlossen",
+          "process-completed": "Der Sicherungsvorgang ist abgeschlossen",
+          "completed-with-errors": "Mit Fehlern abgeschlossen",
+          "detailed-log": "Detailliertes Protokoll anzeigen",
+          "copy-error": "Fehler kopieren",
+          "copy-log": "Protokoll kopieren",
+          "download-backup": "Sicherung herunterladen"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Dynamische Eigenschaften",
             "description": "Dynamische Eigenschaften der Plattform"
           }
+        },
+        "warnings": {
+          "security-data-title": "Diese Sicherung enthält vertrauliche Daten",
+          "security-data-body": "Passwort-Hashes, API-Schlüssel und Sicherheits-Stempel aller Benutzer werden eingeschlossen. Jeder mit Zugriff auf die Sicherungsdatei kann damit Benutzerkonten übernehmen. Speichern Sie die Datei an einem sicheren Ort und beschränken Sie den Download."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Keine Daten",
           "errors": "Fehler",
           "start": "Start",
-          "end": "Ende"
+          "end": "Ende",
+          "drag-or-browse": "Ziehen Sie eine .zip-Datei hierher oder klicken Sie zum Auswählen",
+          "drag-note-detail": "Die Datei muss durch Virto Commerce-Datensicherung erstellt worden sein",
+          "process-completed": "Der Wiederherstellungsvorgang ist abgeschlossen",
+          "completed-with-errors": "Mit Fehlern abgeschlossen",
+          "detailed-log": "Detailliertes Protokoll anzeigen",
+          "copy-error": "Fehler kopieren",
+          "copy-log": "Protokoll kopieren"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Dynamische Eigenschaften",
             "description": "Dynamische Eigenschaften der Plattform"
           }
+        },
+        "warnings": {
+          "security-data-title": "Diese Wiederherstellung überschreibt vertrauliche Daten",
+          "security-data-body": "Benutzer-Passwörter, API-Schlüssel und Sicherheits-Stempel aus der Sicherung ersetzen die aktuellen Werte für jeden Benutzer in der Datei.",
+          "security-data-admin-preserved": "Ihr eigenes Admin-Konto ({{username}}) wird nicht verändert — Ihr Passwort und Ihre aktive Sitzung bleiben erhalten."
         }
       },
       "exportImport-main": {

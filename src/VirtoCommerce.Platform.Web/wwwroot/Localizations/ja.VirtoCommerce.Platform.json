@@ -184,7 +184,15 @@
           "download-url": "ダウンロードURL",
           "errors": "エラー",
           "start": "開始",
-          "end": "終了"
+          "end": "終了",
+          "export-progress": "バックアップの進行状況",
+          "export-finished": "バックアップ完了",
+          "process-completed": "バックアップ処理が完了しました",
+          "completed-with-errors": "エラーありで完了しました",
+          "detailed-log": "詳細ログを表示",
+          "copy-error": "エラーをコピー",
+          "copy-log": "ログをコピー",
+          "download-backup": "バックアップをダウンロード"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "動的プロパティ",
             "description": "プラットフォームの動的プロパティ"
           }
+        },
+        "warnings": {
+          "security-data-title": "このバックアップには機密データが含まれます",
+          "security-data-body": "すべてのユーザーのパスワードハッシュ、APIキー、セキュリティスタンプが含まれます。バックアップファイルにアクセスできる人は誰でも、それを使用してユーザーアカウントを乗っ取ることができます。ファイルは安全な場所に保管し、ダウンロードできるユーザーを制限してください。"
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "データなし",
           "errors": "エラー",
           "start": "開始",
-          "end": "終了"
+          "end": "終了",
+          "drag-or-browse": ".zip ファイルをここにドラッグ＆ドロップするか、クリックして参照",
+          "drag-note-detail": "ファイルは Virto Commerce のデータバックアップで作成されたものである必要があります",
+          "process-completed": "復元処理が完了しました",
+          "completed-with-errors": "エラーありで完了しました",
+          "detailed-log": "詳細ログを表示",
+          "copy-error": "エラーをコピー",
+          "copy-log": "ログをコピー"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "動的プロパティ",
             "description": "プラットフォームの動的プロパティ"
           }
+        },
+        "warnings": {
+          "security-data-title": "この復元により機密データが上書きされます",
+          "security-data-body": "バックアップのユーザーパスワード、APIキー、セキュリティスタンプが、ファイル内の各ユーザーの現在の値を置き換えます。",
+          "security-data-admin-preserved": "あなた自身の管理者アカウント ({{username}}) は変更されません — パスワードとアクティブセッションは保持されます。"
         }
       },
       "exportImport-main": {

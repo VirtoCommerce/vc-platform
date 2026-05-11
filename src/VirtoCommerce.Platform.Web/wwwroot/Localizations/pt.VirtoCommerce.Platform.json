@@ -184,7 +184,15 @@
           "download-url": "URL de download",
           "errors": "Erros",
           "start": "Início",
-          "end": "Fim"
+          "end": "Fim",
+          "export-progress": "Progresso do backup",
+          "export-finished": "Backup concluído",
+          "process-completed": "O processo de backup está concluído",
+          "completed-with-errors": "Concluído com erros",
+          "detailed-log": "Mostrar registro detalhado",
+          "copy-error": "Copiar erro",
+          "copy-log": "Copiar registro",
+          "download-backup": "Baixar backup"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Propriedades dinâmicas",
             "description": "Propriedades dinâmicas da plataforma"
           }
+        },
+        "warnings": {
+          "security-data-title": "Este backup conterá dados sensíveis",
+          "security-data-body": "Hashes de senhas, chaves de API e selos de segurança de todos os usuários serão incluídos. Qualquer pessoa com acesso ao arquivo de backup pode usá-lo para assumir o controle de contas de usuário. Armazene o arquivo em um local seguro e limite quem pode baixá-lo."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Sem dados",
           "errors": "Erros",
           "start": "Início",
-          "end": "Fim"
+          "end": "Fim",
+          "drag-or-browse": "Arraste e solte um arquivo .zip aqui, ou clique para procurar",
+          "drag-note-detail": "O arquivo deve ter sido gerado pelo backup de dados do Virto Commerce",
+          "process-completed": "O processo de restauração está concluído",
+          "completed-with-errors": "Concluído com erros",
+          "detailed-log": "Mostrar registro detalhado",
+          "copy-error": "Copiar erro",
+          "copy-log": "Copiar registro"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Propriedades dinâmicas",
             "description": "Propriedades dinâmicas da plataforma"
           }
+        },
+        "warnings": {
+          "security-data-title": "Esta restauração sobrescreverá dados sensíveis",
+          "security-data-body": "As senhas de usuário, chaves de API e selos de segurança do backup substituirão os valores atuais para cada usuário no arquivo.",
+          "security-data-admin-preserved": "Sua própria conta de administrador ({{username}}) não será modificada — sua senha e sessão ativa são preservadas."
         }
       },
       "exportImport-main": {

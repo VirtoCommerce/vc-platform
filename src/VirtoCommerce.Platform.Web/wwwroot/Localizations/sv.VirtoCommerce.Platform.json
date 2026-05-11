@@ -184,7 +184,15 @@
           "download-url": "Hämtnings-URL",
           "errors": "Fel",
           "start": "Start",
-          "end": "Slut"
+          "end": "Slut",
+          "export-progress": "Säkerhetskopieringsförlopp",
+          "export-finished": "Säkerhetskopiering slutförd",
+          "process-completed": "Säkerhetskopieringsprocessen är slutförd",
+          "completed-with-errors": "Slutförd med fel",
+          "detailed-log": "Visa detaljerad logg",
+          "copy-error": "Kopiera fel",
+          "copy-log": "Kopiera logg",
+          "download-backup": "Ladda ner säkerhetskopia"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Dynamiska egenskaper",
             "description": "Plattformens dynamiska egenskaper"
           }
+        },
+        "warnings": {
+          "security-data-title": "Denna säkerhetskopia kommer att innehålla känsliga data",
+          "security-data-body": "Lösenords-hashar, API-nycklar och säkerhetsstämplar för alla användare kommer att inkluderas. Vem som helst med åtkomst till säkerhetskopian kan använda den för att ta över användarkonton. Lagra filen på en säker plats och begränsa vem som kan ladda ner den."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Inga data",
           "errors": "Fel",
           "start": "Start",
-          "end": "Slut"
+          "end": "Slut",
+          "drag-or-browse": "Dra och släpp en .zip-fil här eller klicka för att bläddra",
+          "drag-note-detail": "Filen måste ha skapats av Virto Commerce databackup",
+          "process-completed": "Återställningsprocessen är slutförd",
+          "completed-with-errors": "Slutförd med fel",
+          "detailed-log": "Visa detaljerad logg",
+          "copy-error": "Kopiera fel",
+          "copy-log": "Kopiera logg"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Dynamiska egenskaper",
             "description": "Plattformens dynamiska egenskaper"
           }
+        },
+        "warnings": {
+          "security-data-title": "Denna återställning kommer att skriva över känsliga data",
+          "security-data-body": "Användarlösenord, API-nycklar och säkerhetsstämplar från säkerhetskopian kommer att ersätta de aktuella värdena för varje användare i filen.",
+          "security-data-admin-preserved": "Ditt eget administratörskonto ({{username}}) kommer inte att ändras — ditt lösenord och din aktiva session bevaras."
         }
       },
       "exportImport-main": {

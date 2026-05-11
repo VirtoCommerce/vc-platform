@@ -14,6 +14,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
@@ -229,7 +230,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             void progressCallback(ExportImportProgressInfo x)
             {
-                pushNotification.Path(x);
+                pushNotification.Patch(x);
                 pushNotification.JobId = context.BackgroundJob.Id;
                 _pushNotifier.Send(pushNotification);
             }
@@ -280,12 +281,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             catch (Exception ex)
             {
-                pushNotification.Errors.Add(ex.ExpandExceptionMessage());
+                var message = ex.ExpandExceptionMessage();
+                pushNotification.Errors.Add(message);
+                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
             {
                 await _settingsManager.SetValueAsync(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
-                pushNotification.Description = "Sample data import process completed successfully.";
+                pushNotification.Description = pushNotification.Errors.Any()
+                    ? "Sample data import process completed with errors."
+                    : "Sample data import process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }

@@ -184,7 +184,15 @@
           "download-url": "URL de descarga",
           "errors": "Errores",
           "start": "Inicio",
-          "end": "Fin"
+          "end": "Fin",
+          "export-progress": "Progreso de la copia de seguridad",
+          "export-finished": "Copia de seguridad finalizada",
+          "process-completed": "El proceso de copia de seguridad está completo",
+          "completed-with-errors": "Completado con errores",
+          "detailed-log": "Mostrar registro detallado",
+          "copy-error": "Copiar error",
+          "copy-log": "Copiar registro",
+          "download-backup": "Descargar copia de seguridad"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Propiedades dinámicas",
             "description": "Propiedades dinámicas de la plataforma"
           }
+        },
+        "warnings": {
+          "security-data-title": "Esta copia de seguridad contendrá datos confidenciales",
+          "security-data-body": "Se incluirán los hashes de contraseñas, las claves de API y los sellos de seguridad de todos los usuarios. Cualquiera con acceso al archivo de copia de seguridad puede usarlo para tomar el control de las cuentas de usuario. Guarde el archivo en un lugar seguro y limite quién puede descargarlo."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Sin datos",
           "errors": "Errores",
           "start": "Inicio",
-          "end": "Fin"
+          "end": "Fin",
+          "drag-or-browse": "Arrastre y suelte un archivo .zip aquí, o haga clic para examinar",
+          "drag-note-detail": "El archivo debe haber sido generado por la copia de seguridad de datos de Virto Commerce",
+          "process-completed": "El proceso de restauración está completo",
+          "completed-with-errors": "Completado con errores",
+          "detailed-log": "Mostrar registro detallado",
+          "copy-error": "Copiar error",
+          "copy-log": "Copiar registro"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Propiedades dinámicas",
             "description": "Propiedades dinámicas de la plataforma"
           }
+        },
+        "warnings": {
+          "security-data-title": "Esta restauración sobrescribirá datos confidenciales",
+          "security-data-body": "Las contraseñas de usuario, las claves de API y los sellos de seguridad de la copia de seguridad reemplazarán los valores actuales para cada usuario en el archivo.",
+          "security-data-admin-preserved": "Su propia cuenta de administrador ({{username}}) no se modificará — su contraseña y sesión activa se conservan."
         }
       },
       "exportImport-main": {

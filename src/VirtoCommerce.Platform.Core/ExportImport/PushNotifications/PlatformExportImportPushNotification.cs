@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Core.ExportImport.PushNotifications
@@ -12,6 +13,7 @@ namespace VirtoCommerce.Platform.Core.ExportImport.PushNotifications
             : base(creator)
         {
             Errors = new List<string>();
+            ProgressLog = new List<ProgressMessage>();
         }
 
         [JsonProperty("jobId")]
@@ -27,5 +29,12 @@ namespace VirtoCommerce.Platform.Core.ExportImport.PushNotifications
         [JsonProperty("errors")]
         public ICollection<string> Errors { get; set; }
 
+        /// <summary>
+        /// Cumulative log of structured progress messages — drives the per-item timeline UX
+        /// in the admin blade. New entries are appended via <c>Patch</c> from the progress
+        /// info delta on every callback.
+        /// </summary>
+        [JsonProperty("progressLog")]
+        public ICollection<ProgressMessage> ProgressLog { get; set; }
     }
 }

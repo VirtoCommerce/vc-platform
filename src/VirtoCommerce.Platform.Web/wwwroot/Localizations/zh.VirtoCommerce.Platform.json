@@ -184,7 +184,15 @@
           "download-url": "下载URL",
           "errors": "错误",
           "start": "开始",
-          "end": "结束"
+          "end": "结束",
+          "export-progress": "备份进度",
+          "export-finished": "备份完成",
+          "process-completed": "备份过程已完成",
+          "completed-with-errors": "已完成（有错误）",
+          "detailed-log": "显示详细日志",
+          "copy-error": "复制错误",
+          "copy-log": "复制日志",
+          "download-backup": "下载备份"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "动态属性",
             "description": "平台动态属性"
           }
+        },
+        "warnings": {
+          "security-data-title": "此备份将包含敏感数据",
+          "security-data-body": "将包含所有用户的密码哈希、API 密钥和安全戳。任何能访问此备份文件的人都可以用它来接管用户账户。请将文件存储在安全位置，并限制谁可以下载。"
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "无数据",
           "errors": "错误",
           "start": "开始",
-          "end": "结束"
+          "end": "结束",
+          "drag-or-browse": "将 .zip 文件拖放到此处，或点击浏览",
+          "drag-note-detail": "该文件必须由 Virto Commerce 数据备份生成",
+          "process-completed": "还原过程已完成",
+          "completed-with-errors": "已完成（有错误）",
+          "detailed-log": "显示详细日志",
+          "copy-error": "复制错误",
+          "copy-log": "复制日志"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "动态属性",
             "description": "平台动态属性"
           }
+        },
+        "warnings": {
+          "security-data-title": "此还原将覆盖敏感数据",
+          "security-data-body": "备份中的用户密码、API 密钥和安全戳将替换文件中每个用户的当前值。",
+          "security-data-admin-preserved": "您自己的管理员账户 ({{username}}) 将不会被修改 — 您的密码和当前会话将被保留。"
         }
       },
       "exportImport-main": {

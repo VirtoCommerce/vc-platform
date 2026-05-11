@@ -184,7 +184,15 @@
           "download-url": "URL do pobrania",
           "errors": "Błędy",
           "start": "Start",
-          "end": "Koniec"
+          "end": "Koniec",
+          "export-progress": "Postęp tworzenia kopii zapasowej",
+          "export-finished": "Kopia zapasowa zakończona",
+          "process-completed": "Proces tworzenia kopii zapasowej został zakończony",
+          "completed-with-errors": "Zakończono z błędami",
+          "detailed-log": "Pokaż szczegółowy dziennik",
+          "copy-error": "Kopiuj błąd",
+          "copy-log": "Kopiuj dziennik",
+          "download-backup": "Pobierz kopię zapasową"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Właściwości dynamiczne",
             "description": "Właściwości dynamiczne platformy"
           }
+        },
+        "warnings": {
+          "security-data-title": "Ta kopia zapasowa będzie zawierać dane wrażliwe",
+          "security-data-body": "Skróty haseł, klucze API i znaczniki bezpieczeństwa wszystkich użytkowników zostaną uwzględnione. Każdy, kto ma dostęp do pliku kopii zapasowej, może go użyć do przejęcia kont użytkowników. Przechowuj plik w bezpiecznej lokalizacji i ograniczaj, kto może go pobrać."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Brak danych",
           "errors": "Błędy",
           "start": "Start",
-          "end": "Koniec"
+          "end": "Koniec",
+          "drag-or-browse": "Przeciągnij i upuść plik .zip tutaj lub kliknij, aby przeglądać",
+          "drag-note-detail": "Plik musi zostać utworzony przez kopię zapasową danych Virto Commerce",
+          "process-completed": "Proces przywracania został zakończony",
+          "completed-with-errors": "Zakończono z błędami",
+          "detailed-log": "Pokaż szczegółowy dziennik",
+          "copy-error": "Kopiuj błąd",
+          "copy-log": "Kopiuj dziennik"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Właściwości dynamiczne",
             "description": "Właściwości dynamiczne platformy"
           }
+        },
+        "warnings": {
+          "security-data-title": "To przywracanie nadpisze dane wrażliwe",
+          "security-data-body": "Hasła użytkowników, klucze API i znaczniki bezpieczeństwa z kopii zapasowej zastąpią bieżące wartości każdego użytkownika w pliku.",
+          "security-data-admin-preserved": "Twoje konto administratora ({{username}}) nie zostanie zmodyfikowane — Twoje hasło i aktywna sesja są zachowane."
         }
       },
       "exportImport-main": {

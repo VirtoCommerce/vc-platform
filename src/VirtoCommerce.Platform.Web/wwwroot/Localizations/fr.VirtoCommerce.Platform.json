@@ -184,7 +184,15 @@
           "download-url": "URL de téléchargement",
           "errors": "Erreurs",
           "start": "Début",
-          "end": "Fin"
+          "end": "Fin",
+          "export-progress": "Progression de la sauvegarde",
+          "export-finished": "Sauvegarde terminée",
+          "process-completed": "Le processus de sauvegarde est terminé",
+          "completed-with-errors": "Terminé avec des erreurs",
+          "detailed-log": "Afficher le journal détaillé",
+          "copy-error": "Copier l'erreur",
+          "copy-log": "Copier le journal",
+          "download-backup": "Télécharger la sauvegarde"
         },
         "menu": {
           "security": {
@@ -203,6 +211,10 @@
             "title": "Propriétés dynamiques",
             "description": "Propriétés dynamiques de la plateforme"
           }
+        },
+        "warnings": {
+          "security-data-title": "Cette sauvegarde contiendra des données sensibles",
+          "security-data-body": "Les hachages de mots de passe, les clés API et les tampons de sécurité de tous les utilisateurs seront inclus. Toute personne ayant accès au fichier de sauvegarde peut l'utiliser pour prendre le contrôle des comptes utilisateurs. Stockez le fichier dans un emplacement sécurisé et limitez qui peut le télécharger."
         }
       },
       "import-main": {
@@ -224,7 +236,14 @@
           "no-data": "Pas de données",
           "errors": "Erreurs",
           "start": "Début",
-          "end": "Fin"
+          "end": "Fin",
+          "drag-or-browse": "Glissez-déposez un fichier .zip ici, ou cliquez pour parcourir",
+          "drag-note-detail": "Le fichier doit avoir été produit par la sauvegarde de données Virto Commerce",
+          "process-completed": "Le processus de restauration est terminé",
+          "completed-with-errors": "Terminé avec des erreurs",
+          "detailed-log": "Afficher le journal détaillé",
+          "copy-error": "Copier l'erreur",
+          "copy-log": "Copier le journal"
         },
         "menu": {
           "security": {
@@ -243,6 +262,11 @@
             "title": "Propriétés dynamiques",
             "description": "Propriétés dynamiques de la plateforme"
           }
+        },
+        "warnings": {
+          "security-data-title": "Cette restauration écrasera des données sensibles",
+          "security-data-body": "Les mots de passe utilisateurs, les clés API et les tampons de sécurité de la sauvegarde remplaceront les valeurs actuelles pour chaque utilisateur du fichier.",
+          "security-data-admin-preserved": "Votre propre compte administrateur ({{username}}) ne sera pas modifié — votre mot de passe et votre session active sont préservés."
         }
       },
       "exportImport-main": {
