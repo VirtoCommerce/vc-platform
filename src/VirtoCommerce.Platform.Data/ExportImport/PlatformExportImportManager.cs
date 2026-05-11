@@ -85,20 +85,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             using (var package = new ZipArchive(stream, ZipArchiveMode.Read, true))
             {
                 var manifestPart = package.GetEntry(ManifestZipEntryName);
-                using (var manifestStream = manifestPart.Open())
-                {
-                    retVal = manifestStream.DeserializeJson<PlatformExportManifest>(GetJsonSerializer());
-                }
+                using var manifestStream = manifestPart.Open();
+                retVal = manifestStream.DeserializeJson<PlatformExportManifest>(GetJsonSerializer());
             }
             return retVal;
         }
 
         public async Task ExportAsync(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
         {
-            if (exportOptions == null)
-            {
-                throw new ArgumentNullException(nameof(exportOptions));
-            }
+            ArgumentNullException.ThrowIfNull(exportOptions);
 
             var progressInfo = new ExportImportProgressInfo
             {
@@ -106,30 +101,23 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             };
             ReportProgress(progressInfo, progressCallback, "Starting platform export...");
 
-            using (var zipArchive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
-            {
-                //Export all selected platform entries
-                await ExportPlatformEntriesInternalAsync(zipArchive, exportOptions, progressInfo, progressCallback, сancellationToken);
-                //Export all selected  modules
-                await ExportModulesInternalAsync(zipArchive, exportOptions, progressInfo, progressCallback, сancellationToken);
+            using var zipArchive = new ZipArchive(outStream, ZipArchiveMode.Create, true);
+            //Export all selected platform entries
+            await ExportPlatformEntriesInternalAsync(zipArchive, exportOptions, progressInfo, progressCallback, сancellationToken);
+            //Export all selected  modules
+            await ExportModulesInternalAsync(zipArchive, exportOptions, progressInfo, progressCallback, сancellationToken);
 
-                //Write system information about exported modules
-                var manifestZipEntry = zipArchive.CreateEntry(ManifestZipEntryName, CompressionLevel.Optimal);
+            //Write system information about exported modules
+            var manifestZipEntry = zipArchive.CreateEntry(ManifestZipEntryName, CompressionLevel.Optimal);
 
-                //After all modules exported need write export manifest part
-                await using (var stream = await manifestZipEntry.OpenAsync())
-                {
-                    exportOptions.SerializeJson(stream, GetJsonSerializer());
-                }
-            }
+            //After all modules exported need write export manifest part
+            await using var stream = await manifestZipEntry.OpenAsync();
+            exportOptions.SerializeJson(stream, GetJsonSerializer());
         }
 
         public async Task ImportAsync(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
         {
-            if (importOptions == null)
-            {
-                throw new ArgumentNullException(nameof(importOptions));
-            }
+            ArgumentNullException.ThrowIfNull(importOptions);
 
             var progressInfo = new ExportImportProgressInfo
             {
@@ -137,14 +125,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             };
             ReportProgress(progressInfo, progressCallback, "Starting platform import...");
 
-            using (var zipArchive = new ZipArchive(inputStream, ZipArchiveMode.Read, true))
-            using (EventSuppressor.SuppressEvents())
-            {
-                //Import selected platform entries
-                await ImportPlatformEntriesInternalAsync(zipArchive, importOptions, progressInfo, progressCallback, сancellationToken);
-                //Import selected modules
-                await ImportModulesInternalAsync(zipArchive, importOptions, progressInfo, progressCallback, сancellationToken);
-            }
+            using var zipArchive = new ZipArchive(inputStream, ZipArchiveMode.Read, true);
+            using var _ = EventSuppressor.SuppressEvents();
+
+            //Import selected platform entries
+            await ImportPlatformEntriesInternalAsync(zipArchive, importOptions, progressInfo, progressCallback, сancellationToken);
+            //Import selected modules
+            await ImportModulesInternalAsync(zipArchive, importOptions, progressInfo, progressCallback, сancellationToken);
         }
 
         #endregion IPlatformExportImportManager Members
@@ -169,10 +156,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private static void ReportProgress(ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, string message, ProgressMessageLevel level = ProgressMessageLevel.Info)
         {
             progressInfo.Description = message;
-            progressInfo.ProgressLog = new List<ProgressMessage>
-            {
-                new ProgressMessage { Level = level, Message = message },
-            };
+            progressInfo.ProgressLog =
+            [
+                new() { Level = level, Message = message },
+            ];
             if (level == ProgressMessageLevel.Error)
             {
                 progressInfo.Errors ??= new List<string>();
@@ -187,16 +174,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }
             finally
             {
-                progressInfo.ProgressLog = new List<ProgressMessage>();
+                progressInfo.ProgressLog = [];
             }
         }
 
-        /// <summary>
-        /// Appends every error from <paramref name="incoming"/> that isn't already in
-        /// <paramref name="target"/> and returns the appended subset. Used by the per-module
-        /// progress callbacks to dedupe error accumulation across module → platform forwarding.
-        /// </summary>
-        private static List<string> AppendNewErrors(IList<string> target, IList<string> incoming)
+        private static List<string> AppendNewErrors(ICollection<string> target, ICollection<string> incoming)
         {
             var newErrors = new List<string>();
             if (incoming == null || target == null)
@@ -223,6 +205,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             await using var stream = await platformZipEntries.OpenAsync();
             await using var reader = new JsonTextReader(new StreamReader(stream));
+
             while (await reader.ReadAsync())
             {
                 if (reader.TokenType != JsonToken.PropertyName)
@@ -271,6 +254,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             try
             {
                 await importAction();
+
                 progressInfo.ProcessedCount++;
                 var newErrors = (progressInfo.Errors?.Count ?? 0) - errorsBefore;
                 if (newErrors > 0)
