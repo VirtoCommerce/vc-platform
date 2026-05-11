@@ -289,7 +289,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             finally
             {
                 await _settingsManager.SetValueAsync(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
-                pushNotification.Description = pushNotification.Errors.Any()
+                pushNotification.Description = pushNotification.Errors.Count > 0
                     ? "Sample data import process completed with errors."
                     : "Sample data import process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;

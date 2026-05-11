@@ -151,7 +151,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
         private static int EstimateImportItemCount(PlatformExportManifest manifest)
         {
-            var moduleCount = manifest.Modules?.Count() ?? 0;
+            var moduleCount = manifest.Modules?.Count ?? 0;
             // Mirror the JSON tokens emitted on export: 3 security sections + 1 settings + 2 dynamic-property sections.
             var platformSectionCount =
                 (manifest.HandleSecurity ? 3 : 0) +
@@ -189,6 +189,26 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             {
                 progressInfo.ProgressLog = new List<ProgressMessage>();
             }
+        }
+
+        /// <summary>
+        /// Appends every error from <paramref name="incoming"/> that isn't already in
+        /// <paramref name="target"/> and returns the appended subset. Used by the per-module
+        /// progress callbacks to dedupe error accumulation across module → platform forwarding.
+        /// </summary>
+        private static List<string> AppendNewErrors(IList<string> target, IList<string> incoming)
+        {
+            var newErrors = new List<string>();
+            if (incoming == null || target == null)
+            {
+                return newErrors;
+            }
+            foreach (var error in incoming.Where(e => !target.Contains(e)))
+            {
+                target.Add(error);
+                newErrors.Add(error);
+            }
+            return newErrors;
         }
 
         private async Task ImportPlatformEntriesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
@@ -452,7 +472,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                 #endregion Users
 
-                await SerializeArray("UserApiKeys", "User API keys", _userApiKeySearchService, writer);
+                await SerializeArray("UserApiKeys", _userApiKeySearchService, writer);
             }
 
             if (manifest.HandleSettings)
@@ -482,8 +502,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             if (manifest.HandleDynamicProperties)
             {
-                await SerializeArray("DynamicProperties", "Dynamic properties", _dynamicPropertySearchService, writer);
-                await SerializeArray("DynamicPropertyDictionaryItems", "Dynamic property dictionary items", _dynamicPropertyDictionaryItemsSearchService, writer);
+                await SerializeArray("DynamicProperties", _dynamicPropertySearchService, writer);
+                await SerializeArray("DynamicPropertyDictionaryItems", _dynamicPropertyDictionaryItemsSearchService, writer);
             }
 
             await writer.WriteEndObjectAsync();
@@ -491,7 +511,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             async Task SerializeArray<TModel, TCriteria, TResult>(
                 string name,
-                string displayName,
                 ISearchService<TCriteria, TResult, TModel> searchService,
                 JsonTextWriter jsonTextWriter)
                 where TCriteria : SearchCriteriaBase
@@ -538,18 +557,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         void ModuleProgressCallback(ExportImportProgressInfo x)
                         {
                             progressInfo.Description = $"{moduleInfo.Id}: {x.Description}";
-                            var newErrors = new List<string>();
-                            if (x.Errors != null)
-                            {
-                                foreach (var error in x.Errors)
-                                {
-                                    if (!progressInfo.Errors.Contains(error))
-                                    {
-                                        progressInfo.Errors.Add(error);
-                                        newErrors.Add(error);
-                                    }
-                                }
-                            }
+                            var newErrors = AppendNewErrors(progressInfo.Errors, x.Errors);
                             // Surface each new error as an Error-level entry in the progress log so the
                             // timeline parser can attach it to the current module item and flip its status.
                             progressInfo.ProgressLog = newErrors
@@ -612,18 +620,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     void ModuleProgressCallback(ExportImportProgressInfo x)
                     {
                         progressInfo.Description = $"{module.Id}: {x.Description}";
-                        var newErrors = new List<string>();
-                        if (x.Errors != null)
-                        {
-                            foreach (var error in x.Errors)
-                            {
-                                if (!progressInfo.Errors.Contains(error))
-                                {
-                                    progressInfo.Errors.Add(error);
-                                    newErrors.Add(error);
-                                }
-                            }
-                        }
+                        var newErrors = AppendNewErrors(progressInfo.Errors, x.Errors);
                         progressInfo.ProgressLog = newErrors
                             .Select(e => new ProgressMessage { Level = ProgressMessageLevel.Error, Message = e })
                             .ToList();

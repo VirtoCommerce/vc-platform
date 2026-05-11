@@ -149,7 +149,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
-                pushNotification.Description = pushNotification.Errors.Any()
+                pushNotification.Description = pushNotification.Errors.Count > 0
                     ? "Platform restore process completed with errors."
                     : "Platform restore process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
@@ -203,7 +203,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
-                pushNotification.Description = pushNotification.Errors.Any()
+                pushNotification.Description = pushNotification.Errors.Count > 0
                     ? "Platform backup process completed with errors."
                     : "Platform backup process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;

@@ -20,12 +20,9 @@ namespace VirtoCommerce.Platform.Core.ExportImport
             if (source.Errors != null)
             {
                 target.Errors ??= new List<string>();
-                foreach (var error in source.Errors)
+                foreach (var error in source.Errors.Where(x => !target.Errors.Contains(x)))
                 {
-                    if (!target.Errors.Contains(error))
-                    {
-                        target.Errors.Add(error);
-                    }
+                    target.Errors.Add(error);
                 }
             }
 

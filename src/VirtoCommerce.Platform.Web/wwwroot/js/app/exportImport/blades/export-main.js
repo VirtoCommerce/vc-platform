@@ -13,7 +13,7 @@ angular.module('platformWebApp')
         $scope.copyToClipboard = function (text, $event) {
             if ($event) { $event.stopPropagation(); }
             if (!text) { return; }
-            var done = function () { };
+            var done = function () { /* intentional no-op; reserved for future visual feedback */ };
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, done);
             } else {
@@ -36,7 +36,7 @@ angular.module('platformWebApp')
 
         $scope.copyDetailedLog = function ($event) {
             var entries = (blade.notification && blade.notification.progressLog) || [];
-            var lines = _.map(entries, function (e) { return '[' + (e.level || 'Info') + '] ' + (e.message || ''); });
+            var lines = _.map(entries, function (e) { return `[${e.level || 'Info'}] ${e.message || ''}`; });
             $scope.copyToClipboard(lines.join('\n'), $event);
         };
 

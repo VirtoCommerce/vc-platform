@@ -1,5 +1,11 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'platformWebApp.authService', 'FileUploader', function ($scope, bladeNavigationService, exportImportResourse, authService, FileUploader) {
+    .controller('platformWebApp.exportImport.importMainController', [
+        '$scope',
+        'platformWebApp.bladeNavigationService',
+        'platformWebApp.exportImport.resource',
+        'platformWebApp.authService',
+        'FileUploader',
+        function ($scope, bladeNavigationService, exportImportResourse, authService, FileUploader) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:import';
         blade.headIcon = 'fa fa-download';
@@ -40,7 +46,7 @@ angular.module('platformWebApp')
 
         $scope.copyDetailedLog = function ($event) {
             var entries = (blade.notification && blade.notification.progressLog) || [];
-            var lines = _.map(entries, function (e) { return '[' + (e.level || 'Info') + '] ' + (e.message || ''); });
+            var lines = _.map(entries, function (e) { return `[${e.level || 'Info'}] ${e.message || ''}`; });
             $scope.copyToClipboard(lines.join('\n'), $event);
         };
 
