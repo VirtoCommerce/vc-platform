@@ -27,7 +27,8 @@ namespace VirtoCommerce.Platform.Modules;
 /// Usage (platform):
 /// <code>
 /// ModuleBootstrapper.Instance = new ModuleBootstrapper(loggerFactory, options)
-///     .Discover(platformVersion)
+///     .Discover()
+///     .Validate(platformVersion)
 ///     .Copy(RuntimeInformation.ProcessArchitecture)
 ///     .Load(isDevelopment);
 /// </code>
@@ -36,7 +37,8 @@ namespace VirtoCommerce.Platform.Modules;
 /// Usage (vc-build, design-time only):
 /// <code>
 /// var bootstrapper = new ModuleBootstrapper(loggerFactory, options)
-///     .Discover(platformVersion);
+///     .Discover();
+///     .Validate(platformVersion) // Optional
 /// var modules = bootstrapper.GetModules();
 /// </code>
 /// </para>
@@ -127,23 +129,18 @@ public class ModuleBootstrapper : IModuleService
     /// Phase 1: Read manifests from discovery path, sort by dependencies, validate against platform version,
     /// and populate the module registry (GetModules/GetInstalledModules/GetFailedModules).
     /// </summary>
-    public ModuleBootstrapper Discover(SemanticVersion platformVersion)
+    public ModuleBootstrapper Discover()
     {
-        ArgumentNullException.ThrowIfNull(platformVersion);
-
         var logger = _loggerFactory.CreateLogger<ModuleBootstrapper>();
 
-        // 1. Read manifests
+        // Read manifests
         var modules = ReadLocalManifests();
 
-        // 2. Sort by dependencies
+        // Sort by dependencies
         modules = SortModulesByDependency(modules);
 
-        // 3. Validate
-        ValidateModulesInternal(modules, platformVersion);
-
-        // 4. Populate registry
-        RegisterModules(modules);
+        // Populate registry
+        RegisterModulesInternal(modules);
 
         logger.LogInformation("Discovered modules: {ModuleCount}, with errors: {ErrorCount}",
             modules.Count, modules.Count(x => x.Errors.Count > 0));
@@ -151,13 +148,26 @@ public class ModuleBootstrapper : IModuleService
         return this;
     }
 
+    public ModuleBootstrapper Validate(SemanticVersion platformVersion)
+    {
+        ArgumentNullException.ThrowIfNull(platformVersion);
+
+        ValidateDependenciesInternal(_modules, platformVersion);
+
+        var logger = _loggerFactory.CreateLogger<ModuleBootstrapper>();
+
+        logger.LogInformation("Validated modules: {ModuleCount}, with errors: {ErrorCount}",
+            _modules.Count, _modules.Count(x => x.Errors.Count > 0));
+
+        return this;
+    }
+
     /// <summary>
     /// Phase 2: Copy module assemblies to the probing path.
-    /// Platform-only — vc-build skips this phase.
     /// </summary>
-    public ModuleBootstrapper Copy(Architecture arch)
+    public ModuleBootstrapper Copy(Architecture environmentArchitecture)
     {
-        CopyModulesInternal(_modules, arch);
+        CopyModulesInternal(_modules, environmentArchitecture);
         return this;
     }
 
@@ -171,9 +181,6 @@ public class ModuleBootstrapper : IModuleService
 
         // Load assemblies
         LoadModulesInternal(_modules, isDevelopmentEnvironment);
-
-        // Refresh registry (modules may have new errors from load failures)
-        RegisterModules(_modules);
 
         // Discover IPlatformStartup implementations
         DiscoverStartupsInternal(_modules);
@@ -241,7 +248,7 @@ public class ModuleBootstrapper : IModuleService
     /// </summary>
     public IList<string> ValidateInstall(
         ManifestModuleInfo moduleToInstall,
-        IEnumerable<ManifestModuleInfo> installedModules,
+        IList<ManifestModuleInfo> installedModules,
         SemanticVersion platformVersion)
     {
         ArgumentNullException.ThrowIfNull(moduleToInstall);
@@ -249,7 +256,6 @@ public class ModuleBootstrapper : IModuleService
         ArgumentNullException.ThrowIfNull(platformVersion);
 
         var errors = new List<string>();
-        var installed = installedModules as IList<ManifestModuleInfo> ?? installedModules.ToList();
 
         if (!moduleToInstall.PlatformVersion.IsCompatibleWith(platformVersion) ||
             !moduleToInstall.PlatformVersion.IsCompatibleWithBySemVer(platformVersion))
@@ -259,7 +265,7 @@ public class ModuleBootstrapper : IModuleService
 
         if (moduleToInstall.Incompatibilities?.Count > 0)
         {
-            var installedIncompatibleModules = installed
+            var installedIncompatibleModules = installedModules
                 .Where(x => moduleToInstall.Incompatibilities.Any(incompatible =>
                     incompatible.Id.EqualsIgnoreCase(x.Id) &&
                     incompatible.Version.IsCompatibleWith(x.Version)))
@@ -280,16 +286,13 @@ public class ModuleBootstrapper : IModuleService
     /// </summary>
     public IList<string> ValidateUninstall(
         string moduleId,
-        IEnumerable<ManifestModuleInfo> installedModules,
-        IEnumerable<string> excludeModuleIds = null)
+        IList<ManifestModuleInfo> installedModules,
+        IList<string> excludeModuleIds = null)
     {
-        var installed = installedModules as IList<ManifestModuleInfo> ?? installedModules.ToList();
-        var excludeIds = excludeModuleIds as IList<string> ?? excludeModuleIds?.ToList();
-
-        var dependingModules = installed
+        var dependingModules = installedModules
             .Where(x =>
                 x.DependsOn.ContainsIgnoreCase(moduleId) &&
-                (excludeIds == null || !excludeIds.ContainsIgnoreCase(x.Id)));
+                (excludeModuleIds == null || !excludeModuleIds.ContainsIgnoreCase(x.Id)));
 
         return dependingModules
             .Select(x => $"Unable to uninstall '{moduleId}' because '{x.Id}' depends on it")
@@ -300,13 +303,12 @@ public class ModuleBootstrapper : IModuleService
     /// Returns the given modules plus all their transitive dependencies (prerequisites), sorted in dependency order.
     /// </summary>
     public IList<ManifestModuleInfo> GetDependencies(
-        IEnumerable<ManifestModuleInfo> selectedModules,
-        IEnumerable<ManifestModuleInfo> allAvailableModules)
+        IList<ManifestModuleInfo> selectedModules,
+        IList<ManifestModuleInfo> allAvailableModules)
     {
         ArgumentNullException.ThrowIfNull(selectedModules);
         ArgumentNullException.ThrowIfNull(allAvailableModules);
 
-        var available = allAvailableModules as IList<ManifestModuleInfo> ?? allAvailableModules.ToList();
         var completeList = new List<ManifestModuleInfo>();
         var pendingList = new List<ManifestModuleInfo>(selectedModules);
 
@@ -319,7 +321,7 @@ public class ModuleBootstrapper : IModuleService
             {
                 foreach (var dependency in moduleInfo.Dependencies)
                 {
-                    var candidates = available
+                    var candidates = allAvailableModules
                         .Where(x => x.Id.EqualsIgnoreCase(dependency.Id))
                         .Where(x => dependency.Version.IsCompatibleWithBySemVer(x.Version))
                         .OrderByDescending(x => x.Version)
@@ -395,14 +397,13 @@ public class ModuleBootstrapper : IModuleService
     /// Merge external modules with locally installed modules.
     /// </summary>
     public IList<ManifestModuleInfo> MergeWithInstalled(
-        IEnumerable<ManifestModuleInfo> externalModules,
-        IEnumerable<ManifestModuleInfo> installedModules)
+        IList<ManifestModuleInfo> externalModules,
+        IList<ManifestModuleInfo> installedModules)
     {
         ArgumentNullException.ThrowIfNull(externalModules);
         ArgumentNullException.ThrowIfNull(installedModules);
 
-        var installed = installedModules as IList<ManifestModuleInfo> ?? installedModules.ToList();
-        var installedModulesById = installed.ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
+        var installedModulesById = installedModules.ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
         var result = new List<ManifestModuleInfo>();
 
         foreach (var externalModule in externalModules)
@@ -423,7 +424,7 @@ public class ModuleBootstrapper : IModuleService
             result.Add(externalModule);
         }
 
-        foreach (var installedModule in installed)
+        foreach (var installedModule in installedModules)
         {
             if (!result.Contains(installedModule))
             {
@@ -454,7 +455,7 @@ public class ModuleBootstrapper : IModuleService
         var markerPath = Path.Combine(_options.ProbingPath, _rebuildMarkerFileName);
         File.WriteAllBytes(markerPath, []);
 
-        logger.LogInformation("Probing folder marked for rebuild on next startup");
+        logger.LogDebug("Probing folder marked for rebuild");
     }
 
     #endregion
@@ -667,11 +668,9 @@ public class ModuleBootstrapper : IModuleService
 
     #region Private — Sorting
 
-    internal IList<ManifestModuleInfo> SortModulesByDependency(IEnumerable<ManifestModuleInfo> modules)
+    internal IList<ManifestModuleInfo> SortModulesByDependency(IList<ManifestModuleInfo> modules)
     {
-        var moduleList = modules as IList<ManifestModuleInfo> ?? modules.ToList();
-
-        if (moduleList.Count == 0)
+        if (modules.Count == 0)
         {
             return [];
         }
@@ -679,7 +678,7 @@ public class ModuleBootstrapper : IModuleService
         var ignoreCase = StringComparer.OrdinalIgnoreCase;
         var boostedIds = new HashSet<string>(_options.ModuleSequenceBoost ?? [], ignoreCase);
 
-        var remaining = moduleList
+        var remaining = modules
             .GroupBy(x => x.Id, ignoreCase)
             .ToDictionary(
                 g => g.Key,
@@ -734,7 +733,7 @@ public class ModuleBootstrapper : IModuleService
         var markerPath = Path.Combine(probingPath, _rebuildMarkerFileName);
         if (File.Exists(markerPath))
         {
-            logger.LogInformation("Rebuild marker found — clearing probing folder for clean rebuild");
+            logger.LogDebug("Rebuild marker found — clearing probing folder for clean rebuild");
 
             foreach (var entry in new DirectoryInfo(probingPath).EnumerateFileSystemInfos())
             {
@@ -1089,7 +1088,7 @@ public class ModuleBootstrapper : IModuleService
 
     #region Private — Validation
 
-    internal void ValidateModulesInternal(IList<ManifestModuleInfo> modules, SemanticVersion platformVersion)
+    internal void ValidateDependenciesInternal(IList<ManifestModuleInfo> modules, SemanticVersion platformVersion)
     {
         var logger = _loggerFactory.CreateLogger<ModuleBootstrapper>();
 
@@ -1178,7 +1177,7 @@ public class ModuleBootstrapper : IModuleService
 
     #region Private — Registry
 
-    public void RegisterModules(IList<ManifestModuleInfo> modules)
+    internal void RegisterModulesInternal(IList<ManifestModuleInfo> modules)
     {
         _modules = modules;
         _modulesById = modules.ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
