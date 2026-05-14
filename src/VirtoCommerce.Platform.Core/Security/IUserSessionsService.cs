@@ -7,5 +7,4 @@ public interface IUserSessionsService
     Task TerminateUserSession(string sessionId);
     Task TerminateUserSessionGroup(string sessionGroupId);
     Task TerminateAllUserSessions(string userId);
-    Task TerminateUserSessions(TerminateUserSessionsRequest request);
 }

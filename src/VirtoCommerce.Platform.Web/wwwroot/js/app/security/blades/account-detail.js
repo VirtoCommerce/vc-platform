@@ -144,10 +144,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                         title: blade.title,
                         subtitle: "platform.blades.account-resetPassword.subtitle",
                         controller: 'platformWebApp.accountResetPasswordController',
-                        template: '$(Platform)/Scripts/app/security/blades/account-resetPassword.tpl.html',
-                        onSuccessPasswordResetCallback: function () {
-                            $scope.$broadcast('accountPasswordChanged');
-                        }
+                        template: '$(Platform)/Scripts/app/security/blades/account-resetPassword.tpl.html'
                     };
                     bladeNavigationService.showBlade(newBlade, blade);
                 },

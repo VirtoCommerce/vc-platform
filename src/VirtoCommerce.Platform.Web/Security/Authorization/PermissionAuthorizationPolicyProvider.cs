@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Core;
+using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Authorization;
+using VirtoCommerce.Platform.Web.Security.Authentication;
 
 namespace VirtoCommerce.Platform.Web.Security.Authorization
 {
@@ -46,9 +47,9 @@ namespace VirtoCommerce.Platform.Web.Security.Authorization
                 var resultLookup = new Dictionary<string, AuthorizationPolicy>();
                 foreach (var permission in _permissionsProvider.GetAllPermissions())
                 {
-                    resultLookup[permission.Name] = new AuthorizationPolicyBuilder()
-                        .AddRequirements(new PermissionAuthorizationRequirement(permission.Name))
-                        .AddAuthenticationSchemes(PlatformConstants.Security.AuthenticationSchemes.MixedScheme)
+                    resultLookup[permission.Name] = new AuthorizationPolicyBuilder().AddRequirements(new PermissionAuthorizationRequirement(permission.Name))
+                        //Use the three schemas (JwtBearer, ApiKey and Basic) authentication for permission authorization policies.
+                        .AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme, BasicAuthenticationOptions.DefaultScheme)
                         .Build();
                 }
                 return resultLookup;
