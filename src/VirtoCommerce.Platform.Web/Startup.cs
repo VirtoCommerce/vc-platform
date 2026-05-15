@@ -770,6 +770,9 @@ namespace VirtoCommerce.Platform.Web
                 // Register platform settings
                 app.UsePlatformSettings();
 
+                // Register Settings from module manifests (if any)
+                app.UseSettingsFromModuleManifests();
+
                 // Complete hangfire init and apply Hangfire migrations
                 app.UseHangfire(Configuration);
 

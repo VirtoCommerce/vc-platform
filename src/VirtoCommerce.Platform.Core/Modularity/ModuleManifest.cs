@@ -85,5 +85,17 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlArray("apps")]
         [XmlArrayItem("app")]
         public ManifestApp[] Apps { get; set; }
+
+        /// <summary>
+        /// Platform settings declared in the manifest. Lets frontend-only
+        /// modules ship settings without a .NET assembly. Registered at
+        /// platform startup via <c>ISettingsRegistrar</c> exactly like
+        /// settings registered programmatically from <c>IModule.Initialize</c>.
+        ///
+        /// See <c>docs/developer-guide/manifest-settings.md</c>.
+        /// </summary>
+        [XmlArray("settings")]
+        [XmlArrayItem("setting")]
+        public ManifestSetting[] Settings { get; set; }
     }
 }

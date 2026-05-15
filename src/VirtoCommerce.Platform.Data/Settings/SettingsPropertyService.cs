@@ -71,9 +71,21 @@ namespace VirtoCommerce.Platform.Data.Settings
         public async Task<Dictionary<string, object>> GetValuesAsync(
             string tenantType = null,
             string tenantId = null,
-            bool modifiedOnly = false)
+            bool modifiedOnly = false,
+            string moduleId = null)
         {
             var descriptors = GetDescriptors(tenantType);
+
+            // Server-side moduleId filter so callers (notably the
+            // useModuleSettings composable) can read+use a single module's
+            // values in one round-trip without a follow-up /schema?moduleId=…
+            // fetch just to narrow the response. Mirrors the same filter on
+            // GetSchemaAsync (lines 36-40).
+            if (!string.IsNullOrEmpty(moduleId))
+            {
+                descriptors = descriptors.Where(x => x.ModuleId == moduleId);
+            }
+
             var names = descriptors.Select(x => x.Name).ToArray();
 
             var settings = await _settingsManager.GetObjectSettingsAsync(names, tenantType, tenantId);

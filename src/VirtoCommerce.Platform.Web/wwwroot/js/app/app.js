@@ -95,12 +95,24 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         $scope.mainMenu.items = mainMenuService.menuItems;
         $scope.mainMenu.apps = [];
 
+        // Resolve the placement of an app from /api/platform/apps. Prefers
+        // the new `placement` field; falls back to deriving from the
+        // legacy boolean `supportEmbeddedMode` so unmigrated modules keep
+        // behaving identically. Returns 'AppMenu' | 'MainMenu' | 'Hidden'.
+        function getAppPlacement(app) {
+            if (app && app.placement) {
+                return app.placement;
+            }
+            return app && app.supportEmbeddedMode ? 'MainMenu' : 'AppMenu';
+        }
+
         // Load web apps
         webApps.loadApps().then(function (apps) {
             if (angular.isArray(apps)) {
                 angular.forEach(apps, function (app) {
-                    // Ignore platform app and apps that do not support embedded mode
-                    if (!app.supportEmbeddedMode) {
+                    // Only MainMenu apps render inline; AppMenu apps land in
+                    // the Apps dropdown below; Hidden apps render nowhere.
+                    if (getAppPlacement(app) !== 'MainMenu') {
                         return;
                     }
 
@@ -120,9 +132,9 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     mainMenuService.addMenuItem(menuItem);
                 });
 
-                // Remove embedded apps from main menu items
+                // Apps dropdown: external-app cards. Hidden apps are excluded.
                 $scope.mainMenu.apps = apps.filter(function (item) {
-                    return item.supportEmbeddedMode === false;
+                    return getAppPlacement(item) === 'AppMenu';
                 });
             }
         });
