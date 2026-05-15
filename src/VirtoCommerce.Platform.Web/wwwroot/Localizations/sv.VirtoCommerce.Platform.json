@@ -192,7 +192,9 @@
           "detailed-log": "Visa detaljerad logg",
           "copy-error": "Kopiera fel",
           "copy-log": "Kopiera logg",
-          "download-backup": "Ladda ner säkerhetskopia"
+          "download-backup": "Ladda ner säkerhetskopia",
+          "backup-password": "Säkerhetskopielösenord",
+          "password-shown-once": "Visas endast en gång"
         },
         "menu": {
           "security": {
@@ -210,11 +212,20 @@
           "dynamic-props": {
             "title": "Dynamiska egenskaper",
             "description": "Plattformens dynamiska egenskaper"
+          },
+          "password-protect": {
+            "title": "Skydda med lösenord",
+            "description": "Kryptera säkerhetskopian med ett engångslösenord (AES-256). Rekommenderas."
           }
         },
         "warnings": {
           "security-data-title": "Denna säkerhetskopia kommer att innehålla känsliga data",
-          "security-data-body": "Lösenords-hashar, API-nycklar och säkerhetsstämplar för alla användare kommer att inkluderas. Vem som helst med åtkomst till säkerhetskopian kan använda den för att ta över användarkonton. Lagra filen på en säker plats och begränsa vem som kan ladda ner den."
+          "security-data-body": "Lösenordshashar, API-nycklar och säkerhetsstämplar för alla användare kommer att inkluderas. Vem som helst med tillgång till säkerhetskopiefilen kan använda den för att ta över användarkonton. Förvara filen säkert och begränsa vem som kan ladda ner den.",
+          "no-encryption-title": "Denna säkerhetskopia kommer inte att vara krypterad",
+          "no-encryption-body": "Den som kan läsa filen kan återställa användarlösenord och API-nycklar. Fortsätt endast om filen aldrig lämnar en säker miljö."
+        },
+        "hints": {
+          "backup-password": "Detta lösenord krypterar säkerhetskopiefilen. Förvara det säkert — utan det kan säkerhetskopian inte återställas. Det visas endast en gång på den här skärmen; om du navigerar bort kan det inte återskapas."
         }
       },
       "import-main": {
@@ -243,7 +254,9 @@
           "completed-with-errors": "Slutförd med fel",
           "detailed-log": "Visa detaljerad logg",
           "copy-error": "Kopiera fel",
-          "copy-log": "Kopiera logg"
+          "copy-log": "Kopiera logg",
+          "password-section": "Säkerhetskopielösenord",
+          "password": "Säkerhetskopielösenord"
         },
         "menu": {
           "security": {
@@ -265,8 +278,17 @@
         },
         "warnings": {
           "security-data-title": "Denna återställning kommer att skriva över känsliga data",
-          "security-data-body": "Användarlösenord, API-nycklar och säkerhetsstämplar från säkerhetskopian kommer att ersätta de aktuella värdena för varje användare i filen.",
+          "security-data-body": "Användarlösenord, API-nycklar och säkerhetsstämplar från säkerhetskopian ersätter aktuella värden för varje användare i filen.",
           "security-data-admin-preserved": "Ditt eget administratörskonto ({{username}}) kommer inte att ändras — ditt lösenord och din aktiva session bevaras."
+        },
+        "placeholders": {
+          "password": "Ange lösenordet som visades när den här säkerhetskopian skapades"
+        },
+        "hints": {
+          "password": "Ange lösenordet som visades när den här säkerhetskopian skapades."
+        },
+        "errors": {
+          "wrong-password": "Felaktigt lösenord. Försök igen."
         }
       },
       "exportImport-main": {

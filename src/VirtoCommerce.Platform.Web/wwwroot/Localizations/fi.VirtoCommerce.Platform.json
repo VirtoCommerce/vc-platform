@@ -192,7 +192,9 @@
           "detailed-log": "Näytä yksityiskohtainen loki",
           "copy-error": "Kopioi virhe",
           "copy-log": "Kopioi loki",
-          "download-backup": "Lataa varmuuskopio"
+          "download-backup": "Lataa varmuuskopio",
+          "backup-password": "Varmuuskopion salasana",
+          "password-shown-once": "Näytetään vain kerran"
         },
         "menu": {
           "security": {
@@ -210,11 +212,20 @@
           "dynamic-props": {
             "title": "Dynamiset ominaisuudet",
             "description": "Alustan dynamiset ominaisuudet"
+          },
+          "password-protect": {
+            "title": "Suojaa salasanalla",
+            "description": "Salaa varmuuskopio kertakäyttöisellä salasanalla (AES-256). Suositeltu."
           }
         },
         "warnings": {
           "security-data-title": "Tämä varmuuskopio sisältää arkaluonteisia tietoja",
-          "security-data-body": "Salasanojen hash-arvot, API-avaimet ja kaikkien käyttäjien suojaleimat sisällytetään. Jokainen, jolla on pääsy varmuuskopiotiedostoon, voi käyttää sitä käyttäjätilien haltuunottoon. Säilytä tiedosto turvallisessa paikassa ja rajoita kuka voi ladata sen."
+          "security-data-body": "Kaikkien käyttäjien salasanatiivisteet, API-avaimet ja suojausleimat sisällytetään. Kuka tahansa, jolla on pääsy varmuuskopiotiedostoon, voi käyttää sitä käyttäjätilien haltuunottoon. Säilytä tiedosto turvallisessa paikassa ja rajoita lataajia.",
+          "no-encryption-title": "Tämä varmuuskopio on salaamaton",
+          "no-encryption-body": "Kuka tahansa, joka voi lukea tiedoston, voi palauttaa käyttäjien salasanat ja API-avaimet. Jatka vain, jos tiedosto ei koskaan poistu suojatusta ympäristöstä."
+        },
+        "hints": {
+          "backup-password": "Tämä salasana salaa varmuuskopiotiedoston. Säilytä se turvallisessa paikassa — ilman sitä varmuuskopiota ei voi palauttaa. Se näytetään vain kerran tällä näytöllä; jos poistut, sitä ei voi palauttaa."
         }
       },
       "import-main": {
@@ -243,7 +254,9 @@
           "completed-with-errors": "Valmistui virheillä",
           "detailed-log": "Näytä yksityiskohtainen loki",
           "copy-error": "Kopioi virhe",
-          "copy-log": "Kopioi loki"
+          "copy-log": "Kopioi loki",
+          "password-section": "Varmuuskopion salasana",
+          "password": "Varmuuskopion salasana"
         },
         "menu": {
           "security": {
@@ -264,9 +277,18 @@
           }
         },
         "warnings": {
-          "security-data-title": "Tämä palautus korvaa arkaluonteiset tiedot",
-          "security-data-body": "Käyttäjien salasanat, API-avaimet ja varmuuskopiosta peräisin olevat suojaleimat korvaavat tiedoston jokaisen käyttäjän nykyiset arvot.",
-          "security-data-admin-preserved": "Omaa järjestelmänvalvojan tiliäsi ({{username}}) ei muokata — salasanasi ja aktiivinen istuntosi säilyvät."
+          "security-data-title": "Tämä palautus ylikirjoittaa arkaluonteisia tietoja",
+          "security-data-body": "Varmuuskopiosta tulevat käyttäjäsalasanat, API-avaimet ja suojausleimat korvaavat tiedoston jokaisen käyttäjän nykyiset arvot.",
+          "security-data-admin-preserved": "Omaa ylläpitäjätiliäsi ({{username}}) ei muuteta — salasanasi ja aktiivinen istuntosi säilyvät."
+        },
+        "placeholders": {
+          "password": "Anna salasana, joka näytettiin tämän varmuuskopion luonnin yhteydessä"
+        },
+        "hints": {
+          "password": "Anna salasana, joka näytettiin tämän varmuuskopion luonnin yhteydessä."
+        },
+        "errors": {
+          "wrong-password": "Virheellinen salasana. Yritä uudelleen."
         }
       },
       "exportImport-main": {

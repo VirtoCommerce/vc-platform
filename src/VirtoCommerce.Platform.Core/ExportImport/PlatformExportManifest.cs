@@ -51,6 +51,21 @@ namespace VirtoCommerce.Platform.Core.ExportImport
         /// </summary>
         [JsonIgnore]
         public string CallerUserName { get; set; }
+
+        /// <summary>
+        /// True when this backup's entries (all but Manifest.json) are AES-256 encrypted with
+        /// the password generated at export time. Serialized into Manifest.json so the import
+        /// side can detect encryption without trying to decrypt blindly. Set to true at export
+        /// when a Password is present; read at import to drive the password-prompt UX.
+        /// </summary>
+        public bool IsEncrypted { get; set; }
+
+        /// <summary>
+        /// Transient ZIP password threaded from the controller (after Data Protection unprotect)
+        /// down to the archive writer/reader. Never serialized into the backup, never logged.
+        /// </summary>
+        [JsonIgnore]
+        public string Password { get; set; }
     }
 
 

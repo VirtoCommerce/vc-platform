@@ -54,6 +54,40 @@
             </div>
 
             <form class="form ng-pristine ng-valid" ng-if="importRequest.exportManifest && !blade.notification">
+                <fieldset ng-if="importRequest.exportManifest.isEncrypted">
+                    <div class="sub-t __border">{{ 'platform.blades.import-main.labels.password-section' | translate }}</div>
+                    <div class="form-group">
+                        <label class="form-label required">
+                            {{ 'platform.blades.import-main.labels.password' | translate }}
+                            <i class="form-ico fa fa-question-circle __link __lightblue" ng-click="passwordDescrVisible = !passwordDescrVisible;"></i>
+                        </label>
+                        <div class="form-input">
+                            <!-- Intentionally `type="text"` rather than `type="password"`. Edge's
+                                 (and to a lesser extent Chrome's) password manager triggers
+                                 "Save your password?" on any `type=password` field that gets
+                                 submitted, regardless of autocomplete hints. A backup
+                                 decryption key is NOT a login credential and should not be
+                                 stored in a browser password manager. We mask the on-screen
+                                 value with CSS (-webkit-text-security: disc) so the UX still
+                                 looks like a password field in Chromium browsers. -->
+                            <input type="text" ng-model="importRequest.password"
+                                   ng-change="clearPasswordError()"
+                                   name="backup-key"
+                                   autocomplete="off"
+                                   data-lpignore="true"
+                                   data-1p-ignore="true"
+                                   data-form-type="other"
+                                   class="backup-password-input">
+                        </div>
+                        <div ng-if="passwordDescrVisible" class="backup-password-descr">
+                            <div class="form-hint">{{ 'platform.blades.import-main.hints.password' | translate }}</div>
+                            <a href="" ng-click="passwordDescrVisible = null;">{{ 'platform.blades.settings-detail.hide-description' | translate}}</a>
+                        </div>
+                        <div class="form-error" ng-if="passwordError">
+                            <span>{{ 'platform.blades.import-main.errors.wrong-password' | translate }}</span>
+                        </div>
+                    </div>
+                </fieldset>
                 <div class="security-warning-banner" ng-if="importRequest.handleSecurity">
                     <i class="fa fa-exclamation-triangle security-warning-banner__icon"></i>
                     <div class="security-warning-banner__content">

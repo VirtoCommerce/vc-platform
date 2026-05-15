@@ -46,6 +46,19 @@ angular.module('platformWebApp')
         function parseProgressLog($scope, blade, verb) {
             var patterns = VERB_PATTERNS[verb];
             var progressLog = (blade.notification && blade.notification.progressLog) || [];
+
+            // Snapshot the previous items by name so we can carry over UI-only state
+            // (currently just `expanded`) when rebuilding. Notifications arrive frequently
+            // during an active import/export and rebuilding from scratch would otherwise
+            // reset any error panel the user clicked open to inspect details, making the
+            // expand interaction effectively unusable until the job finishes.
+            var previousByName = {};
+            _.each($scope.progressItems || [], function (prev) {
+                if (prev && prev.name) {
+                    previousByName[prev.name] = prev;
+                }
+            });
+
             var items = [];
             var currentItem = null;
 
@@ -57,11 +70,16 @@ angular.module('platformWebApp')
                     if (currentItem && currentItem.status === 'active') {
                         currentItem.status = 'done';
                     }
+                    var name = startMatch[1];
+                    var prev = previousByName[name];
                     currentItem = {
                         id: items.length,
-                        name: startMatch[1],
+                        name: name,
                         status: 'active',
-                        messages: []
+                        messages: [],
+                        // Restore the user's expand toggle if this item was already shown
+                        // in the previous parse. New items default to collapsed.
+                        expanded: prev ? !!prev.expanded : false
                     };
                     items.push(currentItem);
                 } else if (entry.level === 'Error' && currentItem) {

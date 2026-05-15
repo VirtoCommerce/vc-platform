@@ -193,9 +193,18 @@
           "detailed-log": "Show detailed log",
           "copy-error": "Copy error",
           "copy-log": "Copy log",
-          "download-backup": "Download backup"
+          "download-backup": "Download backup",
+          "backup-password": "Backup password",
+          "password-shown-once": "Shown only once"
+        },
+        "hints": {
+          "backup-password": "This password encrypts your backup file. Save it somewhere safe — without it, the backup cannot be restored. It is shown only once on this screen; if you navigate away it cannot be recovered."
         },
         "menu": {
+          "password-protect": {
+            "title": "Password protect",
+            "description": "Encrypt the backup with a one-time password (AES-256). Recommended."
+          },
           "security": {
             "title": "Security",
             "description": "Accounts and roles"
@@ -215,7 +224,9 @@
         },
         "warnings": {
           "security-data-title": "This backup will contain sensitive data",
-          "security-data-body": "Password hashes, API keys, and security stamps for all users will be included. Anyone with access to the backup file can use it to take over user accounts. Store the file in a secure location and limit who can download it."
+          "security-data-body": "Password hashes, API keys, and security stamps for all users will be included. Anyone with access to the backup file can use it to take over user accounts. Store the file in a secure location and limit who can download it.",
+          "no-encryption-title": "This backup will be unencrypted",
+          "no-encryption-body": "Anyone who can read the file can recover user passwords and API keys. Only proceed if the file will never leave a secured environment."
         }
       },
       "import-main": {
@@ -244,7 +255,18 @@
           "completed-with-errors": "Completed with errors",
           "detailed-log": "Show detailed log",
           "copy-error": "Copy error",
-          "copy-log": "Copy log"
+          "copy-log": "Copy log",
+          "password-section": "Backup password",
+          "password": "Backup password"
+        },
+        "placeholders": {
+          "password": "Enter the password shown when this backup was created"
+        },
+        "hints": {
+          "password": "Enter the password shown when this backup was created."
+        },
+        "errors": {
+          "wrong-password": "Incorrect password. Please try again."
         },
         "menu": {
           "security": {

@@ -440,3 +440,122 @@ $dashboardHeadHeight: 80px
   border-top: 1px solid lighten($genericWarningColor, 25%)
   font-size: 12px
   color: $colorText
+
+/* Danger variant — used when the admin opts out of password encryption on a backup.
+   Same layout as the default warning banner; red instead of amber so the higher-risk
+   choice gets a visually distinct treatment. */
+.security-warning-banner.security-warning-banner__danger
+  background: lighten($genericErrorColor, 38%)
+  border-left-color: $genericErrorColor
+
+  .security-warning-banner__icon
+    color: $genericErrorColor
+
+  .security-warning-banner__title
+    color: darken($genericErrorColor, 10%)
+
+/* One-time backup password modal — emphasizes the password and the must-acknowledge
+   gate so admins are unlikely to dismiss without saving it. */
+.backup-password-dialog
+  .backup-password-dialog__body
+    margin: 0 0 12px
+    font-size: 14px
+    line-height: 1.5
+
+  .backup-password-dialog__warning
+    margin: 0 0 16px
+    padding: 10px 12px
+    background: lighten($genericWarningColor, 35%)
+    border-left: 4px solid $genericWarningColor
+    border-radius: 3px
+    font-size: 13px
+
+    i
+      color: $genericWarningColor
+      margin-right: 6px
+
+  .backup-password-dialog__value
+    font-family: "Courier New", Consolas, monospace
+    font-size: 14px
+    letter-spacing: 1px
+
+  .backup-password-dialog__ack
+    display: flex
+    align-items: center
+    gap: 8px
+    margin-top: 12px
+    font-size: 13px
+    cursor: pointer
+
+/* The import-side password field renders as `type="text"` (to keep browser password
+   managers from offering to save it) but is visually masked here so the user still sees
+   bullets. -webkit-text-security covers Chromium/Edge/Safari, which is the platform's
+   primary admin-browser audience. Firefox shows the text in cleartext — acceptable
+   trade-off vs. polluting a user's saved-password list with one-shot backup keys.
+   The explicit `font: inherit` is defensive: Chromium tends to fall back to a built-in
+   "password font" when -webkit-text-security is set, which leaks into the placeholder
+   and makes it visually mismatch the surrounding labels. Pinning to inherit keeps the
+   placeholder in the platform's body font ($font). */
+.backup-password-input
+  -webkit-text-security: disc
+  font: inherit
+  // re-apply the platform's standard input styling that font: inherit just clobbered
+  font-size: 13px
+  color: #4c4c4c
+  &::placeholder
+    font: inherit
+    font-size: 13px
+
+/* Export-side one-time password callout. Amber-tinted card with a key icon and a
+   "shown only once" badge so it visually outranks the surrounding progress / download
+   UI — the surrounding admin is unlikely to skim past it and miss the copy step. */
+.backup-password-card
+  background: lighten($genericWarningColor, 40%)
+  border: 1px solid lighten($genericWarningColor, 25%)
+  border-left: 4px solid $genericWarningColor
+  border-radius: 3px
+  padding: 12px 14px
+  margin: 16px 0
+
+  .backup-password-card__head
+    display: flex
+    align-items: center
+    gap: 8px
+    margin-bottom: 8px
+
+  .backup-password-card__icon
+    color: $genericWarningColor
+    font-size: 18px
+    flex-shrink: 0
+
+  .backup-password-card__label
+    flex: 1
+    margin: 0
+    font-weight: 600
+    color: darken($genericWarningColor, 18%)
+
+  .backup-password-card__badge
+    display: inline-block
+    padding: 2px 8px
+    background: $genericWarningColor
+    color: #fff
+    font-size: 11px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.5px
+    border-radius: 2px
+    flex-shrink: 0
+
+  .backup-password-card__value
+    font-family: "Courier New", Consolas, monospace
+    font-size: 15px
+    font-weight: 600
+    letter-spacing: 1px
+    background: #fff
+
+/* Matches the spacing the platform's standard `.form-input ~ .form-hint` rule gives —
+   re-applied here because our help-icon-toggleable description sits inside an
+   `ng-if`'d wrapper, so the natural-sibling selector in _forms.sass doesn't match. */
+.backup-password-card__descr,
+.backup-password-descr
+  margin: 5px 0 0

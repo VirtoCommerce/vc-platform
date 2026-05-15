@@ -13,11 +13,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="security-warning-banner security-warning-banner__danger" ng-if="!exportRequest.passwordProtect">
+                    <i class="fa fa-exclamation-triangle security-warning-banner__icon"></i>
+                    <div class="security-warning-banner__content">
+                        <div class="security-warning-banner__title">
+                            {{ 'platform.blades.export-main.warnings.no-encryption-title' | translate }}
+                        </div>
+                        <div class="security-warning-banner__body">
+                            {{ 'platform.blades.export-main.warnings.no-encryption-body' | translate }}
+                        </div>
+                    </div>
+                </div>
                 <fieldset>
                     <div class="sub-t">{{ 'platform.blades.export-main.labels.platform-entries' | translate }}</div>
                     <div class="table-wrapper">
                         <table class="table">
                             <tbody>
+                                <tr class="table-item" ng-click="exportRequest.passwordProtect = !exportRequest.passwordProtect">
+                                    <td class="table-col">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': exportRequest.passwordProtect}">&nbsp;</div>
+                                    </td>
+                                    <td class="table-col">
+                                        <span class="table-t">{{ 'platform.blades.export-main.menu.password-protect.title' | translate }}</span>
+                                        <span class="table-descr">{{ 'platform.blades.export-main.menu.password-protect.description' | translate }}</span>
+                                    </td>
+                                </tr>
                                 <tr class="table-item" ng-click="exportRequest.handleSecurity = !exportRequest.handleSecurity">
                                     <td class="table-col">
                                         <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': exportRequest.handleSecurity}">&nbsp;</div>
@@ -98,6 +118,30 @@
                                 &mdash; {{ 'platform.blades.export-main.labels.end' | translate }}
                                 {{ blade.notification.finished | amParse | date:'mediumTime' }}
                             </span>
+                        </div>
+                    </div>
+
+                    <!-- One-time password readout. Wrapped in `.backup-password-card` — an
+                         amber-tinted, key-iconned callout — so the admin can't skim past it
+                         and miss copying the password before downloading. -->
+                    <div class="form-group backup-password-card" ng-if="blade.notification.finished && blade.notification.errorCount === 0 && backupPassword">
+                        <div class="backup-password-card__head">
+                            <i class="fa fa-key backup-password-card__icon"></i>
+                            <label class="form-label backup-password-card__label">
+                                {{ 'platform.blades.export-main.labels.backup-password' | translate }}
+                                <i class="form-ico fa fa-question-circle __link __lightblue" ng-click="passwordDescrVisible = !passwordDescrVisible;"></i>
+                            </label>
+                            <!--<span class="backup-password-card__badge">{{ 'platform.blades.export-main.labels.password-shown-once' | translate }}</span>-->
+                        </div>
+                        <div class="form-input">
+                            <input type="text" id="backupPasswordReadout" class="backup-password-card__value" ng-model="backupPassword" readonly>
+                            <button class="btn __ico" type="button" ng-click="copyBackupPassword()" title="{{ 'platform.commands.copy' | translate }}">
+                                <i class="btn-ico fas fa-paste"></i>
+                            </button>
+                        </div>
+                        <div ng-if="passwordDescrVisible" class="backup-password-card__descr">
+                            <div class="form-hint">{{ 'platform.blades.export-main.hints.backup-password' | translate }}</div>
+                            <a href="" ng-click="passwordDescrVisible = null;">{{ 'platform.blades.settings-detail.hide-description' | translate}}</a>
                         </div>
                     </div>
 

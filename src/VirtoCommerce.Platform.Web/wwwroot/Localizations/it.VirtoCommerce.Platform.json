@@ -192,7 +192,9 @@
           "detailed-log": "Mostra registro dettagliato",
           "copy-error": "Copia errore",
           "copy-log": "Copia registro",
-          "download-backup": "Scarica backup"
+          "download-backup": "Scarica backup",
+          "backup-password": "Password del backup",
+          "password-shown-once": "Mostrata una sola volta"
         },
         "menu": {
           "security": {
@@ -210,11 +212,20 @@
           "dynamic-props": {
             "title": "Proprietà dinamiche",
             "description": "Proprietà dinamiche della piattaforma"
+          },
+          "password-protect": {
+            "title": "Proteggi con password",
+            "description": "Cifra il backup con una password monouso (AES-256). Consigliato."
           }
         },
         "warnings": {
           "security-data-title": "Questo backup conterrà dati sensibili",
-          "security-data-body": "Verranno inclusi gli hash delle password, le chiavi API e i timbri di sicurezza di tutti gli utenti. Chiunque abbia accesso al file di backup può utilizzarlo per prendere il controllo degli account utente. Conserva il file in un luogo sicuro e limita chi può scaricarlo."
+          "security-data-body": "Saranno inclusi gli hash delle password, le chiavi API e i timbri di sicurezza di tutti gli utenti. Chiunque abbia accesso al file di backup potrebbe usarlo per impossessarsi degli account utente. Conserva il file in un luogo sicuro e limita chi può scaricarlo.",
+          "no-encryption-title": "Questo backup non sarà cifrato",
+          "no-encryption-body": "Chiunque possa leggere il file può recuperare le password degli utenti e le chiavi API. Procedi solo se il file non lascerà mai un ambiente protetto."
+        },
+        "hints": {
+          "backup-password": "Questa password cifra il file di backup. Conservala in un luogo sicuro — senza di essa il backup non può essere ripristinato. Viene mostrata una sola volta in questa schermata; se ti allontani non potrà essere recuperata."
         }
       },
       "import-main": {
@@ -243,7 +254,9 @@
           "completed-with-errors": "Completato con errori",
           "detailed-log": "Mostra registro dettagliato",
           "copy-error": "Copia errore",
-          "copy-log": "Copia registro"
+          "copy-log": "Copia registro",
+          "password-section": "Password del backup",
+          "password": "Password del backup"
         },
         "menu": {
           "security": {
@@ -265,8 +278,17 @@
         },
         "warnings": {
           "security-data-title": "Questo ripristino sovrascriverà dati sensibili",
-          "security-data-body": "Le password degli utenti, le chiavi API e i timbri di sicurezza dal backup sostituiranno i valori attuali per ogni utente nel file.",
-          "security-data-admin-preserved": "Il tuo account amministratore ({{username}}) non verrà modificato — la tua password e la sessione attiva vengono preservate."
+          "security-data-body": "Le password utente, le chiavi API e i timbri di sicurezza del backup sostituiranno i valori attuali per ogni utente nel file.",
+          "security-data-admin-preserved": "Il tuo account amministratore ({{username}}) non sarà modificato — la tua password e la sessione attiva sono preservate."
+        },
+        "placeholders": {
+          "password": "Inserisci la password mostrata quando è stato creato questo backup"
+        },
+        "hints": {
+          "password": "Inserisci la password mostrata quando è stato creato questo backup."
+        },
+        "errors": {
+          "wrong-password": "Password non corretta. Riprova."
         }
       },
       "exportImport-main": {

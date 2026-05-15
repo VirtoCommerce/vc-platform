@@ -192,7 +192,9 @@
           "detailed-log": "Vis detaljert logg",
           "copy-error": "Kopier feil",
           "copy-log": "Kopier logg",
-          "download-backup": "Last ned sikkerhetskopi"
+          "download-backup": "Last ned sikkerhetskopi",
+          "backup-password": "Sikkerhetskopipassord",
+          "password-shown-once": "Vises kun én gang"
         },
         "menu": {
           "security": {
@@ -210,11 +212,20 @@
           "dynamic-props": {
             "title": "Dynamiske egenskaper",
             "description": "Plattformens dynamiske egenskaper"
+          },
+          "password-protect": {
+            "title": "Beskytt med passord",
+            "description": "Krypter sikkerhetskopien med et engangspassord (AES-256). Anbefales."
           }
         },
         "warnings": {
           "security-data-title": "Denne sikkerhetskopien vil inneholde sensitive data",
-          "security-data-body": "Passord-hashes, API-nøkler og sikkerhetsstempler for alle brukere vil bli inkludert. Alle som har tilgang til sikkerhetskopifilen kan bruke den til å overta brukerkontoer. Lagre filen på et sikkert sted og begrens hvem som kan laste den ned."
+          "security-data-body": "Passordhasher, API-nøkler og sikkerhetsstempler for alle brukere vil bli inkludert. Alle med tilgang til sikkerhetskopifilen kan bruke den til å overta brukerkontoer. Oppbevar filen sikkert og begrens hvem som kan laste den ned.",
+          "no-encryption-title": "Denne sikkerhetskopien vil være ukryptert",
+          "no-encryption-body": "Alle som kan lese filen kan gjenopprette brukerpassord og API-nøkler. Fortsett kun hvis filen aldri forlater et sikret miljø."
+        },
+        "hints": {
+          "backup-password": "Dette passordet krypterer sikkerhetskopifilen. Lagre det trygt — uten det kan ikke sikkerhetskopien gjenopprettes. Det vises kun én gang på denne skjermen; hvis du navigerer bort kan det ikke gjenopprettes."
         }
       },
       "import-main": {
@@ -243,7 +254,9 @@
           "completed-with-errors": "Fullført med feil",
           "detailed-log": "Vis detaljert logg",
           "copy-error": "Kopier feil",
-          "copy-log": "Kopier logg"
+          "copy-log": "Kopier logg",
+          "password-section": "Sikkerhetskopipassord",
+          "password": "Sikkerhetskopipassord"
         },
         "menu": {
           "security": {
@@ -265,8 +278,17 @@
         },
         "warnings": {
           "security-data-title": "Denne gjenopprettingen vil overskrive sensitive data",
-          "security-data-body": "Brukerpassord, API-nøkler og sikkerhetsstempler fra sikkerhetskopien vil erstatte de gjeldende verdiene for hver bruker i filen.",
-          "security-data-admin-preserved": "Din egen administratorkonto ({{username}}) vil ikke bli endret — passordet og den aktive økten din bevares."
+          "security-data-body": "Brukerpassord, API-nøkler og sikkerhetsstempler fra sikkerhetskopien vil erstatte de nåværende verdiene for hver bruker i filen.",
+          "security-data-admin-preserved": "Din egen administratorkonto ({{username}}) vil ikke bli endret — passordet og den aktive økten beholdes."
+        },
+        "placeholders": {
+          "password": "Skriv inn passordet som ble vist da denne sikkerhetskopien ble opprettet"
+        },
+        "hints": {
+          "password": "Skriv inn passordet som ble vist da denne sikkerhetskopien ble opprettet."
+        },
+        "errors": {
+          "wrong-password": "Feil passord. Prøv igjen."
         }
       },
       "exportImport-main": {

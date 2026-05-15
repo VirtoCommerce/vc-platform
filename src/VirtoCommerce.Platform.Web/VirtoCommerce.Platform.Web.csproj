@@ -55,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.Platform.BackupRestore\VirtoCommerce.Platform.BackupRestore.csproj" />
     <ProjectReference Include="..\VirtoCommerce.Platform.Data.MySql\VirtoCommerce.Platform.Data.MySql.csproj" />
     <ProjectReference Include="..\VirtoCommerce.Platform.Data.PostgreSql\VirtoCommerce.Platform.Data.PostgreSql.csproj" />
     <ProjectReference Include="..\VirtoCommerce.Platform.Data.SqlServer\VirtoCommerce.Platform.Data.SqlServer.csproj" />

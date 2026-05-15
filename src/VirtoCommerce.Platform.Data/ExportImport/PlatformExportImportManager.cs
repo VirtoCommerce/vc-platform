@@ -19,6 +19,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
+    [Obsolete("Use VirtoCommerce.Platform.BackupRestore.BackupRestoreManager instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class PlatformExportImportManager : IPlatformExportImportManager
     {
         private const string ManifestZipEntryName = "Manifest.json";

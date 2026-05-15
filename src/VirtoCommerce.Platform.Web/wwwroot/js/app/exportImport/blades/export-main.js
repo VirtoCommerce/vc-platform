@@ -6,12 +6,16 @@ angular.module('platformWebApp')
         'platformWebApp.authService',
         'platformWebApp.toolbarService',
         'platformWebApp.exportImport.progressService',
-        function ($scope, bladeNavigationService, exportImportResourse, authService, toolbarService, progressService) {
+        'platformWebApp.clipboardService',
+        function ($scope, bladeNavigationService, exportImportResourse, authService, toolbarService, progressService, clipboardService) {
         var blade = $scope.blade;
         blade.headIcon = 'fa fa-upload';
         blade.title = 'platform.blades.export-main.title';
 
-        $scope.exportRequest = {};
+        // Default ON every time the blade opens. Intentionally not persisted in localStorage —
+        // a one-time untick (e.g. for an env handoff) should NOT silently apply to the next
+        // backup on the same machine.
+        $scope.exportRequest = { passwordProtect: true };
         // Wire up shared progress UI helpers (copy*, progressItems/Stats, detailed-log toggle).
         progressService.attach($scope, blade, 'export');
 
@@ -45,12 +49,35 @@ angular.module('platformWebApp')
             blade.isLoading = true;
             exportImportResourse.runExport($scope.exportRequest,
                 function (data) {
-                    blade.notification = data;
+                    // Server response shape: { notification, password? }. Password is present
+                    // exactly once, on this initial HTTP response, when the backup is encrypted.
+                    // We pull it into $scope so the template can display it inline next to the
+                    // download link (no modal), then drop the reference from `data` so it can't
+                    // leak into subsequent angular.copy() of the notification object.
+                    $scope.backupPassword = data && data.password;
+                    blade.notification = (data && data.notification) ? data.notification : data;
+                    if (data) {
+                        delete data.password;
+                    }
                     blade.isLoading = false;
                 });
 
             blade.toolbarCommands.splice(0, 2, commandCancel);
         };
+
+        $scope.copyBackupPassword = function () {
+            var el = document.getElementById('backupPasswordReadout');
+            if (el) {
+                clipboardService.copyText(el.value);
+            }
+        };
+
+        // When the blade closes, drop the password reference so it doesn't linger across
+        // navigation. The user has already been told they should save it; if they leave
+        // without copying, the password is gone — that's intentional.
+        $scope.$on('$destroy', function () {
+            $scope.backupPassword = null;
+        });
 
         var commandCancel = {
             name: 'platform.commands.cancel',

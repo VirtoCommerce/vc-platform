@@ -33,6 +33,7 @@ using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using Serilog;
+using VirtoCommerce.Platform.BackupRestore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
@@ -168,6 +169,7 @@ namespace VirtoCommerce.Platform.Web
             });
 
             services.AddPlatformServices(Configuration);
+            services.AddBackupRestoreService();
 
             services.AddSingleton<LicenseProvider>();
 
