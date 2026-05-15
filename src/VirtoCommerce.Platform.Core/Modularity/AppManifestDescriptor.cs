@@ -1,0 +1,34 @@
+using System.Collections.Generic;
+
+namespace VirtoCommerce.Platform.Core.Modularity;
+
+/// <summary>
+/// Service-layer descriptor returned by <see cref="IAppManifestService.GetManifest"/>.
+/// The web layer maps this to the public <c>AppManifestResponse</c> DTO.
+/// </summary>
+public class AppManifestDescriptor
+{
+    public string AppId { get; set; }
+
+    /// <summary>
+    /// Version of the host app — the running platform version for the reserved
+    /// <c>platform</c> app id, otherwise the version of the module that declares
+    /// the <c>&lt;app&gt;</c> element. Surfaces directly in the JSON response.
+    /// </summary>
+    public string Version { get; set; }
+    public string Title { get; set; }
+    public string AppPermission { get; set; }
+    public IList<PluginDescriptor> Plugins { get; set; } = new List<PluginDescriptor>();
+
+    /// <summary>
+    /// Strong content fingerprint of this descriptor. Covers <see cref="AppId"/>,
+    /// <see cref="Version"/>, the ordered <see cref="Plugins"/> list (id, version,
+    /// entry hash, content-file hashes, federation remote coordinates), and —
+    /// implicitly — the user-permission filter that produced the current
+    /// <see cref="Plugins"/> subset. Computed by <see cref="IAppManifestService"/>
+    /// during build; the web layer uses this as the response ETag so a follow-up
+    /// request with a matching <c>If-None-Match</c> can short-circuit to 304
+    /// with one field read instead of a second hash pass.
+    /// </summary>
+    public string Hash { get; set; }
+}
