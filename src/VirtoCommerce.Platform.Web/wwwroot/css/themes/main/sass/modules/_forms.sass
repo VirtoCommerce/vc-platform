@@ -1,5 +1,29 @@
 input::-ms-clear
   display: none
+input::-ms-reveal
+  display: none
+.form-input.form-input--password input
+  padding-right: 40px
+.form-input__password-switcher
+  position: absolute
+  top: 0
+  right: 0
+  bottom: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 0 11px
+  border: none
+  background: none
+  cursor: pointer
+  color: #319ED4
+  input:disabled ~ &
+    color: darkgray
+    cursor: not-allowed
+    pointer-events: none
+.form-input__password-icon
+  width: 18px
+  height: 18px
 .__error
   color: $genericErrorColor
 .form-input input.ng-invalid,
