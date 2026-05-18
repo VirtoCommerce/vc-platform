@@ -3,6 +3,7 @@ Azure.Identity.dll
 Dapper.dll
 EntityFrameworkCore.Triggers.dll
 FluentValidation.dll
+ICSharpCode.SharpZipLib.dll
 Hangfire.AspNetCore.dll
 Hangfire.Console.dll
 Hangfire.Core.dll

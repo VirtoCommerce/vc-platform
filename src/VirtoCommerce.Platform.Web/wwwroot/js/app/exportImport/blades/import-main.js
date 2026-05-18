@@ -1,30 +1,77 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'FileUploader', function ($scope, bladeNavigationService, exportImportResourse, FileUploader) {
+    .controller('platformWebApp.exportImport.importMainController', [
+        '$scope',
+        'platformWebApp.bladeNavigationService',
+        'platformWebApp.exportImport.resource',
+        'platformWebApp.authService',
+        'platformWebApp.exportImport.progressService',
+        'FileUploader',
+        function ($scope, bladeNavigationService, exportImportResourse, authService, progressService, FileUploader) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:import';
         blade.headIcon = 'fa fa-download';
         blade.title = 'platform.blades.import-main.title';
         blade.isLoading = false;
         $scope.importRequest = {};
+        // Surfaced in the sensitive-data warning banner so the admin sees exactly which account
+        // the backend will preserve during the user-import phase. Matches PlatformExportManifest.CallerUserName.
+        $scope.currentUserName = authService.userName;
+        // Wire up shared progress UI helpers (copy*, progressItems/Stats, detailed-log toggle).
+        progressService.attach($scope, blade, 'import');
+
+        $scope.passwordError = false;
+        $scope.clearPasswordError = function () { $scope.passwordError = false; };
 
         $scope.$on("new-notification-event", function (event, notification) {
+            if (!blade.notification || notification.id !== blade.notification.id) {
+                return;
+            }
+
+            // Intercept wrong-password failures BEFORE the generic "Import error" path: those
+            // are recoverable (the file uploaded fine, only decrypt failed), so we keep the
+            // user in the password-form state instead of flipping into the "Upload failed"
+            // / blade.error UI which would otherwise duplicate the file row on the blade.
+            if (notification.finished && notification.errors && notification.errors.length > 0) {
+                var hasPasswordError = _.any(notification.errors, function (e) {
+                    return typeof e === 'string' && e.toLowerCase().indexOf('invalid backup password') !== -1;
+                });
+                if (hasPasswordError) {
+                    $scope.passwordError = true;
+                    blade.notification = null;
+                    bladeNavigationService.setError(null, blade);
+                    $scope.switchCommandButton("start");
+                    blade.isLoading = false;
+                    // Drop the wrong password from the request so it doesn't get re-sent
+                    // unmodified on a quick second click — and so a stale value isn't kept
+                    // around in scope longer than it has to be.
+                    $scope.importRequest.password = '';
+                    return;
+                }
+            }
+
             if (notification.jobId && notification.finished) {
                 $scope.switchCommandButton("close");
             }
-            if (blade.notification && notification.id === blade.notification.id) {
-                angular.copy(notification, blade.notification);
-                if (notification.errorCount > 0) {
-                    bladeNavigationService.setError('Import error', blade);
-                }
+            angular.copy(notification, blade.notification);
+            progressService.parseProgressLog($scope, blade);
+            if (notification.errorCount > 0) {
+                bladeNavigationService.setError('Import error', blade);
             }
         });
 
         $scope.canStartProcess = function () {
-            return blade.hasUpdatePermission() && (_.any($scope.importRequest.modules) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData || $scope.importRequest.handleDynamicProperties);
+            var hasAnySection = _.any($scope.importRequest.modules) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData || $scope.importRequest.handleDynamicProperties;
+            // Disable the start button until a password is entered for encrypted backups —
+            // otherwise the request would fail at the first decrypt and the admin would have
+            // to retry. Catching it pre-submit is cheaper and clearer.
+            var hasRequiredPassword = !($scope.importRequest.exportManifest && $scope.importRequest.exportManifest.isEncrypted)
+                || !!$scope.importRequest.password;
+            return blade.hasUpdatePermission() && hasAnySection && hasRequiredPassword;
         }
 
         $scope.startProcess = function () {
             blade.isLoading = true;
+            $scope.passwordError = false;
 
             exportImportResourse.runImport($scope.importRequest, function (data) {
                 blade.notification = data;
@@ -41,6 +88,8 @@ angular.module('platformWebApp')
                 blade.toolbarCommands[stateCommandIndex] = commandCancel;
             } else if (state === "close") {
                 blade.toolbarCommands[stateCommandIndex] = commandClose;
+            } else if (state === "start") {
+                blade.toolbarCommands[stateCommandIndex] = commandStart;
             }
         }
 
@@ -116,13 +165,15 @@ angular.module('platformWebApp')
             };
         }
 
+        var commandStart = {
+            name: "platform.blades.import-main.labels.start-import", icon: 'fa fa-download',
+            executeMethod: () => $scope.startProcess(),
+            canExecuteMethod: () => $scope.canStartProcess() && !blade.notification,
+            target: 'import'
+        };
+
         blade.toolbarCommands = [
-            {
-                name: "platform.blades.import-main.labels.start-import", icon: 'fa fa-download',
-                executeMethod: () => $scope.startProcess(),
-                canExecuteMethod: () => $scope.canStartProcess() && !blade.notification,
-                target: 'import'
-            },
+            commandStart,
             {
                 name: "platform.commands.select-all", icon: 'far fa-check-square',
                 executeMethod: () => selectAll(true),

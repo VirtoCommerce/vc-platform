@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
@@ -11,6 +15,7 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Hangfire;
@@ -24,28 +29,39 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class PlatformBackupRestoreController : Controller
     {
+        // Purpose string for IDataProtector. Distinct enough that a key collision with another
+        // platform component is unrealistic — the protected blob's only consumer is this controller.
+        private const string DataProtectionPurpose = "PlatformBackup.ZipPassword";
+
+        // 24 random bytes → 32-char URL-safe base64 string → ~192 bits of entropy.
+        // Comfortable margin above what's practically brute-forceable for AES-256.
+        private const int PasswordRandomByteCount = 24;
+
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
         private readonly PlatformOptions _platformOptions;
+        private readonly IDataProtector _protector;
 
         public PlatformBackupRestoreController(
             IPlatformExportImportManager platformExportManager,
             IPushNotificationManager pushNotifier,
             IUserNameResolver userNameResolver,
-            IOptions<PlatformOptions> options)
+            IOptions<PlatformOptions> options,
+            IDataProtectionProvider dataProtectionProvider)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
             _platformOptions = options.Value;
+            _protector = dataProtectionProvider.CreateProtector(DataProtectionPurpose);
         }
 
 
         [HttpPost]
         [Route("export")]
         [Authorize(Permissions.PlatformExport)]
-        public ActionResult<PlatformExportPushNotification> ProcessExport([FromBody] PlatformImportExportRequest exportRequest)
+        public ActionResult<PlatformExportStartedResult> ProcessExport([FromBody] PlatformImportExportRequest exportRequest)
         {
             var notification = new PlatformExportPushNotification(_userNameResolver.GetCurrentUserName())
             {
@@ -54,9 +70,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, notification, JobCancellationToken.Null, null));
+            // Generate the one-time password up front so it can be returned in this HTTP
+            // response. The plaintext is shown to the user exactly once; the protected blob
+            // is what gets persisted as a Hangfire job argument so the password never lands
+            // unencrypted in Hangfire storage.
+            string plainPassword = null;
+            string protectedPassword = null;
+            if (exportRequest.PasswordProtect)
+            {
+                plainPassword = GeneratePassword();
+                protectedPassword = _protector.Protect(plainPassword);
+            }
+
+            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, protectedPassword, notification, JobCancellationToken.Null, null));
             notification.JobId = jobId;
-            return Ok(notification);
+            return Ok(new PlatformExportStartedResult
+            {
+                Notification = notification,
+                Password = plainPassword,
+            });
         }
 
         [HttpPost]
@@ -71,7 +103,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, notification, JobCancellationToken.Null, null));
+            // Protect the user-supplied password before handing it to Hangfire. Symmetric with
+            // the export path: Hangfire-persisted argument is opaque ciphertext.
+            var protectedPassword = string.IsNullOrEmpty(importRequest.Password)
+                ? null
+                : _protector.Protect(importRequest.Password);
+            // Strip the plaintext from the request object before the Hangfire serializer sees it.
+            importRequest.Password = null;
+
+            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, protectedPassword, notification, JobCancellationToken.Null, null));
             notification.JobId = jobId;
 
             return Ok(notification);
@@ -105,18 +145,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
 
-        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, string protectedPassword, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
             void ProgressCallback(ExportImportProgressInfo x)
             {
-                pushNotification.Path(x);
+                pushNotification.Patch(x);
                 pushNotification.JobId = context.BackgroundJob.Id;
                 _pushNotifier.Send(pushNotification);
             }
 
             var now = DateTime.UtcNow;
+            // Unprotect inside the job's local scope; the plaintext lives only for the duration
+            // of ImportAsync and never enters any logged/persisted object.
+            string plainPassword = null;
             try
             {
+                plainPassword = string.IsNullOrEmpty(protectedPassword) ? null : _protector.Unprotect(protectedPassword);
+
                 var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
 
                 var localPath = GetSafeFullPath(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl);
@@ -126,7 +171,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     var manifest = importRequest.ToManifest();
                     manifest.Created = now;
+                    // Preserve the admin who initiated this restore so the user-import phase
+                    // can skip overwriting their PasswordHash / SecurityStamp and avoid logging
+                    // them out mid-restore.
+                    manifest.CallerUserName = pushNotification.Creator;
+                    manifest.Password = plainPassword;
                     await _platformExportManager.ImportAsync(stream, manifest, ProgressCallback, cancellationTokenWrapper);
+                    manifest.Password = null;
                 }
             }
             catch (JobAbortedException)
@@ -135,27 +186,38 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             catch (Exception ex)
             {
-                pushNotification.Errors.Add(ex.ExpandExceptionMessage());
+                var message = ex.ExpandExceptionMessage();
+                pushNotification.Errors.Add(message);
+                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
             {
-                pushNotification.Description = "Platform restore process completed successfully.";
+                // Defense in depth: ensure plaintext password reference is cleared before the
+                // method returns so the GC can collect it promptly.
+                plainPassword = null;
+                pushNotification.Description = pushNotification.Errors.Count > 0
+                    ? "Platform restore process completed with errors."
+                    : "Platform restore process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }
         }
 
-        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, string protectedPassword, PlatformExportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
             void ProgressCallback(ExportImportProgressInfo x)
             {
-                pushNotification.Path(x);
+                pushNotification.Patch(x);
                 pushNotification.JobId = context.BackgroundJob.Id;
                 _pushNotifier.Send(pushNotification);
             }
 
+            string plainPassword = null;
             try
             {
+                plainPassword = string.IsNullOrEmpty(protectedPassword) ? null : _protector.Unprotect(protectedPassword);
+
                 var fileName = string.Format(_platformOptions.DefaultExportFileName, DateTime.UtcNow);
                 var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
                 var localTmpPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
@@ -174,7 +236,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 using (var stream = System.IO.File.OpenWrite(localTmpPath))
                 {
                     var manifest = exportRequest.ToManifest();
+                    manifest.Password = plainPassword;
                     await _platformExportManager.ExportAsync(stream, manifest, ProgressCallback, new JobCancellationTokenWrapper(cancellationToken));
+                    manifest.Password = null;
                     pushNotification.DownloadUrl = $"api/platform/export/download/{fileName}";
                 }
             }
@@ -184,11 +248,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             catch (Exception ex)
             {
-                pushNotification.Errors.Add(ex.ExpandExceptionMessage());
+                var message = ex.ExpandExceptionMessage();
+                pushNotification.Errors.Add(message);
+                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
             {
-                pushNotification.Description = "Platform backup process completed successfully.";
+                plainPassword = null;
+                pushNotification.Description = pushNotification.Errors.Count > 0
+                    ? "Platform backup process completed with errors."
+                    : "Platform backup process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }
@@ -205,6 +275,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             return result;
+        }
+
+        private static string GeneratePassword()
+        {
+            // URL-safe base64: replace '+' with '-' and '/' with '_', strip padding. Result is
+            // a 32-char [-A-Za-z0-9_] string that can be copy-pasted into any ZIP tool without
+            // shell-escaping concerns.
+            var bytes = RandomNumberGenerator.GetBytes(PasswordRandomByteCount);
+            return Convert.ToBase64String(bytes)
+                .Replace('+', '-')
+                .Replace('/', '_')
+                .TrimEnd('=');
         }
     }
 }

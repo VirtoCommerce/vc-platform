@@ -4,12 +4,14 @@
             <form class="form" ng-if="!blade.notification">
                 <fieldset>
                     <div ng-show="uploader.isHTML5 && !uploader.isUploading">
-                        <!-- 3. ng-file-over | ng-file-over="className" -->
-                        <div class="well my-drop-zone panel drag-area" uploader="uploader" nv-file-drop nv-file-over>
+                        <input type="file" id="importZipFileInput" nv-file-select uploader="uploader" accept=".zip" style="display: none">
+                        <label for="importZipFileInput" class="well my-drop-zone panel drag-area drag-area--clickable" uploader="uploader" nv-file-drop nv-file-over>
                             <div class="drag-content">
-                                {{ 'platform.blades.import-main.labels.drag-note' | translate }}
+                                <i class="fa fa-cloud-upload drag-area-icon"></i>
+                                <div class="drag-area-primary">{{ 'platform.blades.import-main.labels.drag-or-browse' | translate }}</div>
+                                <div class="drag-area-secondary">{{ 'platform.blades.import-main.labels.drag-note-detail' | translate }}</div>
                             </div>
-                        </div>
+                        </label>
                     </div>
                     <div ng-show="uploader.isUploading">
                         <div class="sub-t">{{ 'platform.blades.import-main.labels.upload-progress' | translate }}</div>
@@ -52,6 +54,54 @@
             </div>
 
             <form class="form ng-pristine ng-valid" ng-if="importRequest.exportManifest && !blade.notification">
+                <fieldset ng-if="importRequest.exportManifest.isEncrypted">
+                    <div class="sub-t __border">{{ 'platform.blades.import-main.labels.password-section' | translate }}</div>
+                    <div class="form-group">
+                        <label class="form-label required">
+                            {{ 'platform.blades.import-main.labels.password' | translate }}
+                            <i class="form-ico fa fa-question-circle __link __lightblue" ng-click="passwordDescrVisible = !passwordDescrVisible;"></i>
+                        </label>
+                        <div class="form-input">
+                            <!-- Intentionally `type="text"` rather than `type="password"`. Edge's
+                                 (and to a lesser extent Chrome's) password manager triggers
+                                 "Save your password?" on any `type=password` field that gets
+                                 submitted, regardless of autocomplete hints. A backup
+                                 decryption key is NOT a login credential and should not be
+                                 stored in a browser password manager. We mask the on-screen
+                                 value with CSS (-webkit-text-security: disc) so the UX still
+                                 looks like a password field in Chromium browsers. -->
+                            <input type="text" ng-model="importRequest.password"
+                                   ng-change="clearPasswordError()"
+                                   name="backup-key"
+                                   autocomplete="off"
+                                   data-lpignore="true"
+                                   data-1p-ignore="true"
+                                   data-form-type="other"
+                                   class="backup-password-input">
+                        </div>
+                        <div ng-if="passwordDescrVisible" class="backup-password-descr">
+                            <div class="form-hint">{{ 'platform.blades.import-main.hints.password' | translate }}</div>
+                            <a href="" ng-click="passwordDescrVisible = null;">{{ 'platform.blades.settings-detail.hide-description' | translate}}</a>
+                        </div>
+                        <div class="form-error" ng-if="passwordError">
+                            <span>{{ 'platform.blades.import-main.errors.wrong-password' | translate }}</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="security-warning-banner" ng-if="importRequest.handleSecurity">
+                    <i class="fa fa-exclamation-triangle security-warning-banner__icon"></i>
+                    <div class="security-warning-banner__content">
+                        <div class="security-warning-banner__title">
+                            {{ 'platform.blades.import-main.warnings.security-data-title' | translate }}
+                        </div>
+                        <div class="security-warning-banner__body">
+                            {{ 'platform.blades.import-main.warnings.security-data-body' | translate }}
+                        </div>
+                        <div class="security-warning-banner__reassurance" ng-if="currentUserName">
+                            {{ 'platform.blades.import-main.warnings.security-data-admin-preserved' | translate:{ username: currentUserName } }}
+                        </div>
+                    </div>
+                </div>
                 <fieldset>
                     <div class="sub-t">{{ 'platform.blades.import-main.labels.platform-entries' | translate }}</div>
                     <div class="table-wrapper">
@@ -129,24 +179,110 @@
             </form>
             <div class="form" ng-if="blade.notification">
                 <div class="block">
-                    <div>
-                        <div class="sub-t" ng-show="!blade.notification.jobId || !blade.notification.finished">{{ 'platform.blades.import-main.labels.import-progress' | translate }}</div>
-                        <div class="sub-t" ng-show="blade.notification.jobId && blade.notification.finished">{{ 'platform.blades.import-main.labels.import-finished' | translate }}</div>
-                        <hr>
-                        <div class="block" ng-if="blade.notification.created || blade.notification.finished">
-                            <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">{{ 'platform.blades.import-main.labels.start' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.created | amParse | date:'mediumTime' }}</p>
-                            <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">{{ 'platform.blades.import-main.labels.end' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.finished | amParse | date:'mediumTime' }}</p>
+                    <div class="module-progress-header">
+                        <div class="module-progress-title">
+                            <span class="fa" ng-class="{
+                                'fa-spinner fa-spin': !blade.notification.finished,
+                                'fa-check-circle module-progress-icon--success': blade.notification.finished && blade.notification.errorCount === 0,
+                                'fa-exclamation-circle module-progress-icon--error': blade.notification.finished && blade.notification.errorCount > 0
+                            }"></span>
+                            <span ng-if="!blade.notification.finished">{{ 'platform.blades.import-main.labels.import-progress' | translate }}</span>
+                            <span ng-if="blade.notification.finished">{{ 'platform.blades.import-main.labels.import-finished' | translate }}</span>
                         </div>
-                        <div ng-show="!blade.notification.jobId || !blade.notification.finished">
-                            <div class="progress-bar __aqua"></div>
-                            <div class="table-t">{{blade.notification.description}}</div>
+                        <div class="module-progress-time" ng-if="blade.notification.created">
+                            <i class="fa fa-clock-o"></i>
+                            {{ 'platform.blades.import-main.labels.start' | translate }}
+                            {{ blade.notification.created | amParse | date:'mediumTime' }}
+                            <span ng-if="blade.notification.finished">
+                                &mdash; {{ 'platform.blades.import-main.labels.end' | translate }}
+                                {{ blade.notification.finished | amParse | date:'mediumTime' }}
+                            </span>
                         </div>
+                    </div>
 
-                        <div ng-if="blade.notification.errorCount > 0">
-                            <span class="sub-t">{{ 'platform.blades.import-main.labels.errors' | translate }}</span>
-                            <div class="log">
-                                <p ng-repeat="error in blade.notification.errors track by $index" class="error" ng-bind-html="error">
+                    <div class="module-progress-bar-container" ng-if="!blade.notification.finished && progressStats.total > 0">
+                        <div class="progress-bar __aqua" ng-style="{'width': progressStats.percent + '%'}" style="margin: 0; transition: width 0.3s ease;"></div>
+                        <span class="module-progress-counter">{{progressStats.completed}} / {{progressStats.total}}</span>
+                    </div>
+                    <div ng-if="!blade.notification.finished && progressStats.total === 0">
+                        <span class="list-bar progress-bar __aqua" style="margin-left: 0"></span>
+                    </div>
+                    <div class="module-progress-current-step"
+                         ng-if="!blade.notification.finished && blade.notification.description"
+                         title="{{blade.notification.description}}">
+                        {{blade.notification.description}}
+                    </div>
+
+                    <div class="module-progress-timeline" ng-if="progressItems.length > 0">
+                        <div class="module-progress-item"
+                             ng-repeat="item in progressItems track by item.id"
+                             ng-class="{
+                                'module-progress-item--done': item.status === 'done',
+                                'module-progress-item--error': item.status === 'error',
+                                'module-progress-item--active': item.status === 'active',
+                                'module-progress-item--pending': item.status === 'pending'
+                             }">
+                            <div class="module-progress-item-header"
+                                 ng-class="{'module-progress-item-header--clickable': item.status === 'error' && item.messages.length > 0}"
+                                 ng-click="(item.status === 'error' && item.messages.length > 0) && (item.expanded = !item.expanded)">
+                                <span class="fa module-progress-item-icon"
+                                   ng-class="{
+                                       'fa-check-circle': item.status === 'done',
+                                       'fa-times-circle': item.status === 'error',
+                                       'fa-spinner fa-spin': item.status === 'active',
+                                       'fa-circle-o': item.status === 'pending'
+                                   }"></span>
+                                <span class="module-progress-item-name">{{item.name}}</span>
+                                <span class="fa module-progress-item-chevron"
+                                      ng-if="item.status === 'error' && item.messages.length > 0"
+                                      ng-class="{'fa-chevron-down': item.expanded, 'fa-chevron-right': !item.expanded}"></span>
                             </div>
+                            <div class="module-progress-item-messages"
+                                 ng-if="item.status === 'error' && item.messages.length > 0 && item.expanded">
+                                <button type="button" class="module-progress-copy-btn"
+                                        ng-click="copyItemErrors(item, $event)"
+                                        title="{{ 'platform.blades.import-main.labels.copy-error' | translate }}">
+                                    <i class="fa fa-copy"></i>
+                                    {{ 'platform.blades.import-main.labels.copy-error' | translate }}
+                                </button>
+                                <p ng-repeat="m in item.messages track by $index"
+                                   ng-class="{'module-progress-item-msg--error': m.level === 'Error', 'module-progress-item-msg--warning': m.level === 'Warning'}"
+                                   ng-bind-html="m.message"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="module-progress-summary" ng-if="blade.notification.finished">
+                        <div class="module-progress-summary-banner"
+                             ng-class="{'module-progress-summary--success': blade.notification.errorCount === 0, 'module-progress-summary--error': blade.notification.errorCount > 0}">
+                            <span class="fa" ng-class="{'fa-check-circle': blade.notification.errorCount === 0, 'fa-exclamation-triangle': blade.notification.errorCount > 0}"></span>
+                            <span ng-if="blade.notification.errorCount === 0">
+                                {{ 'platform.blades.import-main.labels.process-completed' | translate }}
+                            </span>
+                            <span ng-if="blade.notification.errorCount > 0">
+                                {{ 'platform.blades.import-main.labels.completed-with-errors' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="module-progress-log-toggle" ng-if="blade.notification.progressLog.length > 0">
+                        <a ng-click="toggleDetailedLog()">
+                            <span class="fa" ng-class="{'fa-chevron-right': !showDetailedLog, 'fa-chevron-down': showDetailedLog}"></span>
+                            {{ 'platform.blades.import-main.labels.detailed-log' | translate }}
+                        </a>
+                    </div>
+                    <div class="module-progress-log-wrap" ng-show="showDetailedLog">
+                        <button type="button" class="module-progress-copy-btn module-progress-copy-btn--pinned"
+                                ng-click="copyDetailedLog($event)"
+                                title="{{ 'platform.blades.import-main.labels.copy-log' | translate }}">
+                            <i class="fa fa-copy"></i>
+                            {{ 'platform.blades.import-main.labels.copy-log' | translate }}
+                        </button>
+                        <div class="log" scroll-glue>
+                            <p ng-repeat="x in blade.notification.progressLog | filter:{level: '!Error'} track by $index"
+                               ng-class="{'__info': x.level==='Info', '__warning': x.level==='Warning', '__debug': x.level==='Debug'}">
+                                {{x.message}}
+                            </p>
                         </div>
                     </div>
                 </div>

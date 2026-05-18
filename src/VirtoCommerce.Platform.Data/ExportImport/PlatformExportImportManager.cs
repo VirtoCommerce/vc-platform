@@ -19,6 +19,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
+    [Obsolete("Use VirtoCommerce.Platform.BackupRestore.BackupRestoreManager instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class PlatformExportImportManager : IPlatformExportImportManager
     {
         private const string ManifestZipEntryName = "Manifest.json";
@@ -85,65 +86,116 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             using (var package = new ZipArchive(stream, ZipArchiveMode.Read, true))
             {
                 var manifestPart = package.GetEntry(ManifestZipEntryName);
-                using (var manifestStream = manifestPart.Open())
-                {
-                    retVal = manifestStream.DeserializeJson<PlatformExportManifest>(GetJsonSerializer());
-                }
+                using var manifestStream = manifestPart.Open();
+                retVal = manifestStream.DeserializeJson<PlatformExportManifest>(GetJsonSerializer());
             }
             return retVal;
         }
 
         public async Task ExportAsync(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
         {
-            if (exportOptions == null)
+            ArgumentNullException.ThrowIfNull(exportOptions);
+
+            var progressInfo = new ExportImportProgressInfo
             {
-                throw new ArgumentNullException(nameof(exportOptions));
-            }
+                TotalCount = EstimateImportItemCount(exportOptions),
+            };
+            ReportProgress(progressInfo, progressCallback, "Starting platform export...");
 
-            using (var zipArchive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
-            {
-                //Export all selected platform entries
-                await ExportPlatformEntriesInternalAsync(zipArchive, exportOptions, progressCallback, сancellationToken);
-                //Export all selected  modules
-                await ExportModulesInternalAsync(zipArchive, exportOptions, progressCallback, сancellationToken);
+            using var zipArchive = new ZipArchive(outStream, ZipArchiveMode.Create, true);
+            //Export all selected platform entries
+            await ExportPlatformEntriesInternalAsync(zipArchive, exportOptions, progressInfo, progressCallback, сancellationToken);
+            //Export all selected  modules
+            await ExportModulesInternalAsync(zipArchive, exportOptions, progressInfo, progressCallback, сancellationToken);
 
-                //Write system information about exported modules
-                var manifestZipEntry = zipArchive.CreateEntry(ManifestZipEntryName, CompressionLevel.Optimal);
+            //Write system information about exported modules
+            var manifestZipEntry = zipArchive.CreateEntry(ManifestZipEntryName, CompressionLevel.Optimal);
 
-                //After all modules exported need write export manifest part
-                await using (var stream = await manifestZipEntry.OpenAsync())
-                {
-                    exportOptions.SerializeJson(stream, GetJsonSerializer());
-                }
-            }
+            //After all modules exported need write export manifest part
+            await using var stream = await manifestZipEntry.OpenAsync();
+            exportOptions.SerializeJson(stream, GetJsonSerializer());
         }
 
         public async Task ImportAsync(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
         {
-            if (importOptions == null)
-            {
-                throw new ArgumentNullException(nameof(importOptions));
-            }
+            ArgumentNullException.ThrowIfNull(importOptions);
 
-            var progressInfo = new ExportImportProgressInfo();
-            progressInfo.Description = "Starting platform import...";
-            progressCallback(progressInfo);
-
-            using (var zipArchive = new ZipArchive(inputStream, ZipArchiveMode.Read, true))
-            using (EventSuppressor.SuppressEvents())
+            var progressInfo = new ExportImportProgressInfo
             {
-                //Import selected platform entries
-                await ImportPlatformEntriesInternalAsync(zipArchive, importOptions, progressCallback, сancellationToken);
-                //Import selected modules
-                await ImportModulesInternalAsync(zipArchive, importOptions, progressCallback, сancellationToken);
-            }
+                TotalCount = EstimateImportItemCount(importOptions),
+            };
+            ReportProgress(progressInfo, progressCallback, "Starting platform import...");
+
+            using var zipArchive = new ZipArchive(inputStream, ZipArchiveMode.Read, true);
+            using var _ = EventSuppressor.SuppressEvents();
+
+            //Import selected platform entries
+            await ImportPlatformEntriesInternalAsync(zipArchive, importOptions, progressInfo, progressCallback, сancellationToken);
+            //Import selected modules
+            await ImportModulesInternalAsync(zipArchive, importOptions, progressInfo, progressCallback, сancellationToken);
         }
 
         #endregion IPlatformExportImportManager Members
 
-        private async Task ImportPlatformEntriesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private static int EstimateImportItemCount(PlatformExportManifest manifest)
         {
-            var progressInfo = new ExportImportProgressInfo();
+            var moduleCount = manifest.Modules?.Count ?? 0;
+            // Mirror the JSON tokens emitted on export: 3 security sections + 1 settings + 2 dynamic-property sections.
+            var platformSectionCount =
+                (manifest.HandleSecurity ? 3 : 0) +
+                (manifest.HandleSettings ? 1 : 0) +
+                (manifest.HandleDynamicProperties ? 2 : 0);
+            return moduleCount + platformSectionCount;
+        }
+
+        /// <summary>
+        /// Emits a structured progress message as a delta on <paramref name="progressInfo"/>,
+        /// invokes the callback, then clears the delta so subsequent legacy callbacks
+        /// (which only update <see cref="ExportImportProgressInfo.Description"/>) don't re-emit it.
+        /// Errors are also accumulated into the legacy <see cref="ExportImportProgressInfo.Errors"/> list.
+        /// </summary>
+        private static void ReportProgress(ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, string message, ProgressMessageLevel level = ProgressMessageLevel.Info)
+        {
+            progressInfo.Description = message;
+            progressInfo.ProgressLog =
+            [
+                new() { Level = level, Message = message },
+            ];
+            if (level == ProgressMessageLevel.Error)
+            {
+                progressInfo.Errors ??= new List<string>();
+                if (!progressInfo.Errors.Contains(message))
+                {
+                    progressInfo.Errors.Add(message);
+                }
+            }
+            try
+            {
+                progressCallback(progressInfo);
+            }
+            finally
+            {
+                progressInfo.ProgressLog = [];
+            }
+        }
+
+        private static List<string> AppendNewErrors(ICollection<string> target, ICollection<string> incoming)
+        {
+            var newErrors = new List<string>();
+            if (incoming == null || target == null)
+            {
+                return newErrors;
+            }
+            foreach (var error in incoming.Where(e => !target.Contains(e)))
+            {
+                target.Add(error);
+                newErrors.Add(error);
+            }
+            return newErrors;
+        }
+
+        private async Task ImportPlatformEntriesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        {
             var jsonSerializer = GetJsonSerializer();
 
             var platformZipEntries = zipArchive.GetEntry(PlatformZipEntryName);
@@ -154,9 +206,17 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             await using var stream = await platformZipEntries.OpenAsync();
             await using var reader = new JsonTextReader(new StreamReader(stream));
+
+            // Section names live at depth 1 — directly inside the root `{ ... }` of PlatformEntries.json.
+            // Anything deeper (e.g. property names inside individual Role / User / Settings objects) must be
+            // ignored by the dispatch: an exception during a section's deserialization can leave the reader
+            // anywhere in the section's array, and we don't want a stray nested property name to trigger
+            // a second import action. `SafeImportSectionAsync` also re-syncs the reader to depth 1 after a
+            // failure as belt-and-suspenders.
+            const int sectionDepth = 1;
             while (await reader.ReadAsync())
             {
-                if (reader.TokenType != JsonToken.PropertyName)
+                if (reader.TokenType != JsonToken.PropertyName || reader.Depth != sectionDepth)
                 {
                     continue;
                 }
@@ -166,31 +226,86 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 switch (token)
                 {
                     case "Roles" when manifest.HandleSecurity:
-                        await ImportRolesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportRolesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "Users" when manifest.HandleSecurity:
-                        await ImportUsersInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportUsersInternalAsync(reader, jsonSerializer, manifest.CallerUserName, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "Settings" when manifest.HandleSettings:
-                        await ImportSettingsInternalAsync(reader, jsonSerializer, manifest, progressInfo, progressCallback, cancellationToken);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportSettingsInternalAsync(reader, jsonSerializer, manifest, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "DynamicProperties" when manifest.HandleDynamicProperties:
-                        await ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "DynamicPropertyDictionaryItems" when manifest.HandleDynamicProperties:
-                        await ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     case "UserApiKeys" when manifest.HandleSecurity:
-                        await ImportUserApiKeysInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
+                        await SafeImportSectionAsync(token, reader, sectionDepth, () => ImportUserApiKeysInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken), progressInfo, progressCallback);
                         break;
 
                     default:
                         continue;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Invokes <paramref name="importAction"/> with try/catch around the per-section deserialization.
+        /// On failure, advances <paramref name="reader"/> back to <paramref name="sectionDepth"/> so the
+        /// outer dispatch loop resumes at the next top-level property and doesn't iterate over leftover
+        /// tokens inside the failed section's array.
+        /// </summary>
+        private static async Task SafeImportSectionAsync(
+            string sectionName,
+            JsonTextReader reader,
+            int sectionDepth,
+            Func<Task> importAction,
+            ExportImportProgressInfo progressInfo,
+            Action<ExportImportProgressInfo> progressCallback)
+        {
+            ReportProgress(progressInfo, progressCallback, $"Importing '{sectionName}'");
+            var errorsBefore = progressInfo.Errors?.Count ?? 0;
+            try
+            {
+                await importAction();
+
+                progressInfo.ProcessedCount++;
+                var newErrors = (progressInfo.Errors?.Count ?? 0) - errorsBefore;
+                if (newErrors > 0)
+                {
+                    // Surface the per-error details (which the inner action already accumulated into Errors)
+                    // as Error-level progress log entries so the timeline UI can attach them to the section.
+                    foreach (var error in progressInfo.Errors.Skip(errorsBefore).Take(newErrors).ToList())
+                    {
+                        ReportProgress(progressInfo, progressCallback, error, ProgressMessageLevel.Error);
+                    }
+                    ReportProgress(progressInfo, progressCallback, $"Imported '{sectionName}' with {newErrors} error(s)", ProgressMessageLevel.Error);
+                }
+                else
+                {
+                    ReportProgress(progressInfo, progressCallback, $"Successfully imported '{sectionName}'");
+                }
+            }
+            catch (Exception ex)
+            {
+                progressInfo.ProcessedCount++;
+                ReportProgress(progressInfo, progressCallback, $"Failed to import '{sectionName}': {ex.Message}", ProgressMessageLevel.Error);
+
+                // The reader is now somewhere inside the failed section's array (or part-way through a
+                // single item that threw mid-deserialization). Skip any remaining tokens until we're back
+                // at the section level so the next loop iteration starts at the next top-level property.
+                while (reader.Depth > sectionDepth)
+                {
+                    if (!await reader.ReadAsync())
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -220,12 +335,24 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }, cancellationToken);
         }
 
-        private Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, string callerUserName, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
             return reader.DeserializeArrayWithPagingAsync<ApplicationUser>(jsonSerializer, _batchSize, async items =>
             {
                 foreach (var user in items)
                 {
+                    // Protect the admin who initiated the restore: skip their record so the
+                    // backup's PasswordHash / SecurityStamp / LockoutEnd don't overwrite the
+                    // active session's credentials. Without this guard, the admin is logged out
+                    // mid-restore and can't log back in with the password they used to start it.
+                    if (!string.IsNullOrEmpty(callerUserName) &&
+                        string.Equals(user.UserName, callerUserName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ReportProgress(progressInfo, progressCallback,
+                            $"User '{user.UserName}' skipped to preserve your active session — password and security stamp left unchanged.");
+                        continue;
+                    }
+
                     var userExists = !(string.IsNullOrEmpty(user.Id) || await _userManager.FindByIdAsync(user.Id) is null)
                         || (await _userManager.FindByNameAsync(user.UserName)) != null;
 
@@ -240,7 +367,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }
             }, processedCount =>
             {
-                progressInfo.Description = $"{processedCount} roles have been imported";
+                progressInfo.Description = $"{processedCount} users have been imported";
                 progressCallback(progressInfo);
             }, cancellationToken);
         }
@@ -291,10 +418,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }, cancellationToken);
         }
 
-        private async Task ExportPlatformEntriesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private async Task ExportPlatformEntriesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            var progressInfo = new ExportImportProgressInfo();
-
             var serializer = GetJsonSerializer();
             //Create part for platform entries
             var platformEntriesPart = zipArchive.CreateEntry(PlatformZipEntryName, CompressionLevel.Optimal);
@@ -311,8 +436,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                progressInfo.Description = "Roles exporting...";
-                progressCallback(progressInfo);
+                ReportProgress(progressInfo, progressCallback, "Exporting 'Roles'");
                 cancellationToken.ThrowIfCancellationRequested();
 
                 await writer.WritePropertyNameAsync("Roles");
@@ -328,11 +452,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     }
 
                     await writer.FlushAsync();
-                    progressInfo.Description = $"{roles.Count} roles exported";
-                    progressCallback(progressInfo);
                 }
 
                 await writer.WriteEndArrayAsync();
+                progressInfo.ProcessedCount++;
+                ReportProgress(progressInfo, progressCallback, $"Successfully exported 'Roles' ({roles.Count})");
 
                 #endregion Roles
 
@@ -340,11 +464,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                 cancellationToken.ThrowIfCancellationRequested();
 
+                ReportProgress(progressInfo, progressCallback, "Exporting 'Users'");
                 await writer.WritePropertyNameAsync("Users");
                 await writer.WriteStartArrayAsync();
                 var usersResult = _userManager.Users.ToArray();
-                progressInfo.Description = $"Security: {usersResult.Length} users exporting...";
-                progressCallback(progressInfo);
                 var userExported = 0;
 
                 foreach (var user in usersResult)
@@ -358,25 +481,23 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }
 
                 await writer.FlushAsync();
-                progressInfo.Description = $"{userExported} of {usersResult.Length} users exported";
-                progressCallback(progressInfo);
-
                 await writer.WriteEndArrayAsync();
+                progressInfo.ProcessedCount++;
+                ReportProgress(progressInfo, progressCallback, $"Successfully exported 'Users' ({userExported} of {usersResult.Length})");
 
                 #endregion Users
 
-                await SerializeArray("UserApiKeys", "User API keys", _userApiKeySearchService, writer);
+                await SerializeArray("UserApiKeys", _userApiKeySearchService, writer);
             }
 
             if (manifest.HandleSettings)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
+                ReportProgress(progressInfo, progressCallback, "Exporting 'Settings'");
                 await writer.WritePropertyNameAsync("Settings");
                 await writer.WriteStartArrayAsync();
 
-                progressInfo.Description = "Settings: selected modules settings exporting...";
-                progressCallback(progressInfo);
                 foreach (var module in manifest.Modules)
                 {
                     var moduleSettings = await _settingsManager.GetObjectSettingsAsync(_settingsManager.AllRegisteredSettings.Where(x => x.ModuleId == module.Id).Select(x => x.Name));
@@ -389,15 +510,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     await writer.FlushAsync();
                 }
 
-                progressInfo.Description = $"Settings of modules exported";
-                progressCallback(progressInfo);
                 await writer.WriteEndArrayAsync();
+                progressInfo.ProcessedCount++;
+                ReportProgress(progressInfo, progressCallback, "Successfully exported 'Settings'");
             }
 
             if (manifest.HandleDynamicProperties)
             {
-                await SerializeArray("DynamicProperties", "Dynamic properties", _dynamicPropertySearchService, writer);
-                await SerializeArray("DynamicPropertyDictionaryItems", "Dynamic property dictionary items", _dynamicPropertyDictionaryItemsSearchService, writer);
+                await SerializeArray("DynamicProperties", _dynamicPropertySearchService, writer);
+                await SerializeArray("DynamicPropertyDictionaryItems", _dynamicPropertyDictionaryItemsSearchService, writer);
             }
 
             await writer.WriteEndObjectAsync();
@@ -405,15 +526,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             async Task SerializeArray<TModel, TCriteria, TResult>(
                 string name,
-                string displayName,
                 ISearchService<TCriteria, TResult, TModel> searchService,
                 JsonTextWriter jsonTextWriter)
                 where TCriteria : SearchCriteriaBase
                 where TResult : GenericSearchResult<TModel>
                 where TModel : IEntity
             {
-                progressInfo.Description = $"{displayName}: exporting...";
-                progressCallback(progressInfo);
+                ReportProgress(progressInfo, progressCallback, $"Exporting '{name}'");
 
                 await jsonTextWriter.WritePropertyNameAsync(name);
                 await jsonTextWriter.WriteStartArrayAsync();
@@ -434,31 +553,43 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 await jsonTextWriter.WriteEndArrayAsync();
                 await jsonTextWriter.FlushAsync();
 
-                progressInfo.Description = $"{displayName}: exported";
-                progressCallback(progressInfo);
+                progressInfo.ProcessedCount++;
+                ReportProgress(progressInfo, progressCallback, $"Successfully exported '{name}'");
             }
         }
 
-        private async Task ImportModulesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private async Task ImportModulesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            var errors = new StringBuilder();
-            var progressInfo = new ExportImportProgressInfo();
             foreach (var moduleInfo in manifest.Modules)
             {
                 var moduleDescriptor = GetModulesWithImportSupport().FirstOrDefault(x => x.Id == moduleInfo.Id);
                 if (moduleDescriptor != null)
                 {
+                    ReportProgress(progressInfo, progressCallback, $"Importing '{moduleInfo.Id}'");
                     var modulePart = zipArchive.GetEntry(moduleInfo.PartUri.TrimStart('/'));
                     await using (var modulePartStream = await modulePart.OpenAsync())
                     {
                         void ModuleProgressCallback(ExportImportProgressInfo x)
                         {
                             progressInfo.Description = $"{moduleInfo.Id}: {x.Description}";
-                            progressInfo.Errors = x.Errors;
-                            progressCallback(progressInfo);
+                            var newErrors = AppendNewErrors(progressInfo.Errors, x.Errors);
+                            // Surface each new error as an Error-level entry in the progress log so the
+                            // timeline parser can attach it to the current module item and flip its status.
+                            progressInfo.ProgressLog = newErrors
+                                .Select(e => new ProgressMessage { Level = ProgressMessageLevel.Error, Message = e })
+                                .ToList<ProgressMessage>();
+                            try
+                            {
+                                progressCallback(progressInfo);
+                            }
+                            finally
+                            {
+                                progressInfo.ProgressLog = new List<ProgressMessage>();
+                            }
                         }
                         if (moduleDescriptor.ModuleInstance is IImportSupport importer)
                         {
+                            var errorsBefore = progressInfo.Errors.Count;
                             try
                             {
                                 //TODO: Add JsonConverter which will be materialized concrete ExportImport option type
@@ -466,28 +597,32 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                     .DefaultIfEmpty(new ExportImportOptions { HandleBinaryData = manifest.HandleBinaryData, ModuleIdentity = new ModuleIdentity(moduleDescriptor.Identity.Id, moduleDescriptor.Identity.Version, false) })
                                     .FirstOrDefault(x => x.ModuleIdentity.Id == moduleDescriptor.Identity.Id);
                                 await importer.ImportAsync(modulePartStream, options, ModuleProgressCallback, cancellationToken);
+                                progressInfo.ProcessedCount++;
+                                var newErrors = progressInfo.Errors.Count - errorsBefore;
+                                if (newErrors > 0)
+                                {
+                                    // The module reported errors via its callback but didn't throw —
+                                    // close out the timeline item with an Error-level summary so the UI shows it red.
+                                    ReportProgress(progressInfo, progressCallback, $"Imported '{moduleInfo.Id}' with {newErrors} error(s)", ProgressMessageLevel.Error);
+                                }
+                                else
+                                {
+                                    ReportProgress(progressInfo, progressCallback, $"Successfully imported '{moduleInfo.Id}'");
+                                }
                             }
                             catch (Exception ex)
                             {
-                                errors.AppendLine($"<b> {moduleInfo.Id} </b>: {ex} <br><br>");
-                                progressInfo.Errors.Add($"{moduleInfo.Id}: {ex}");
-                                progressCallback(progressInfo);
+                                progressInfo.ProcessedCount++;
+                                ReportProgress(progressInfo, progressCallback, $"Failed to import '{moduleInfo.Id}': {ex.Message}", ProgressMessageLevel.Error);
                             }
                         }
                     }
                 }
             }
-
-            if (errors.Length != 0)
-            {
-                throw new InvalidOperationException(errors.ToString());
-            }
         }
 
-        private async Task ExportModulesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private async Task ExportModulesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            var progressInfo = new ExportImportProgressInfo();
-
             foreach (var module in manifest.Modules)
             {
                 var moduleDescriptor = GetModulesWithImportSupport().FirstOrDefault(x => x.Id == module.Id);
@@ -500,14 +635,24 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     void ModuleProgressCallback(ExportImportProgressInfo x)
                     {
                         progressInfo.Description = $"{module.Id}: {x.Description}";
-                        progressInfo.Errors = x.Errors;
-                        progressCallback(progressInfo);
+                        var newErrors = AppendNewErrors(progressInfo.Errors, x.Errors);
+                        progressInfo.ProgressLog = newErrors
+                            .Select(e => new ProgressMessage { Level = ProgressMessageLevel.Error, Message = e })
+                            .ToList();
+                        try
+                        {
+                            progressCallback(progressInfo);
+                        }
+                        finally
+                        {
+                            progressInfo.ProgressLog = new List<ProgressMessage>();
+                        }
                     }
 
-                    progressInfo.Description = $"{module.Id}: exporting...";
-                    progressCallback(progressInfo);
+                    ReportProgress(progressInfo, progressCallback, $"Exporting '{module.Id}'");
                     if (moduleDescriptor.ModuleInstance is IExportSupport exporter)
                     {
+                        var errorsBefore = progressInfo.Errors.Count;
                         try
                         {
                             //TODO: Add JsonConverter which will be materialized concrete ExportImport option type
@@ -521,11 +666,21 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                 await exporter.ExportAsync(stream, options, ModuleProgressCallback,
                                     cancellationToken);
                             }
+                            progressInfo.ProcessedCount++;
+                            var newErrors = progressInfo.Errors.Count - errorsBefore;
+                            if (newErrors > 0)
+                            {
+                                ReportProgress(progressInfo, progressCallback, $"Exported '{module.Id}' with {newErrors} error(s)", ProgressMessageLevel.Error);
+                            }
+                            else
+                            {
+                                ReportProgress(progressInfo, progressCallback, $"Successfully exported '{module.Id}'");
+                            }
                         }
                         catch (Exception ex)
                         {
-                            progressInfo.Errors.Add($"{module.Id}: {ex}");
-                            progressCallback(progressInfo);
+                            progressInfo.ProcessedCount++;
+                            ReportProgress(progressInfo, progressCallback, $"Failed to export '{module.Id}': {ex.Message}", ProgressMessageLevel.Error);
                         }
                     }
                     module.PartUri = moduleZipEntryName;
