@@ -34,6 +34,11 @@ angular.module('platformWebApp')
                 }
                 else {
                     blade.parentBlade.refresh();
+
+                    if (angular.isFunction(blade.onSuccessPasswordResetCallback)) {
+                        blade.onSuccessPasswordResetCallback();
+                    }
+
                     $scope.bladeClose();
                 }
             });
