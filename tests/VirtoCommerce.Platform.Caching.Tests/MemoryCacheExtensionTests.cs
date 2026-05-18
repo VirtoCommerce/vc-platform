@@ -107,5 +107,65 @@ namespace VirtoCommerce.Platform.Caching.Tests
             });
             Assert.Equal(2, result);
         }
+
+        [Fact]
+        public async Task GetOrLoadByIdsAsync_DoesNotCacheMissingIds()
+        {
+            // arrange
+            var sut = GetPlatformMemoryCache();
+            var loadCallCount = 0;
+            var ids = new[] { "missing-id" };
+
+            Task<IList<TestEntity>> LoadItems(IList<string> missingIds)
+            {
+                loadCallCount++;
+                return Task.FromResult<IList<TestEntity>>(Array.Empty<TestEntity>());
+            }
+
+            // act — first call: miss, loadItems returns nothing, null must NOT be cached
+            var first = await sut.GetOrLoadByIdsAsync(nameof(GetOrLoadByIdsAsync_DoesNotCacheMissingIds), ids, LoadItems, ConfigureCache);
+
+            // act — second call with same id: must hit loadItems again, not a cached null
+            var second = await sut.GetOrLoadByIdsAsync(nameof(GetOrLoadByIdsAsync_DoesNotCacheMissingIds), ids, LoadItems, ConfigureCache);
+
+            // assert
+            Assert.Empty(first);
+            Assert.Empty(second);
+            Assert.Equal(2, loadCallCount);
+        }
+
+        [Fact]
+        public async Task GetOrLoadByIdsAsync_CachesPresentIds()
+        {
+            // arrange
+            var sut = GetPlatformMemoryCache();
+            var loadCallCount = 0;
+            var ids = new[] { "present-id" };
+
+            Task<IList<TestEntity>> LoadItems(IList<string> missingIds)
+            {
+                loadCallCount++;
+                return Task.FromResult<IList<TestEntity>>([new TestEntity { Id = "present-id" }]);
+            }
+
+            // act
+            var first = await sut.GetOrLoadByIdsAsync(nameof(GetOrLoadByIdsAsync_CachesPresentIds), ids, LoadItems, ConfigureCache);
+            var second = await sut.GetOrLoadByIdsAsync(nameof(GetOrLoadByIdsAsync_CachesPresentIds), ids, LoadItems, ConfigureCache);
+
+            // assert
+            Assert.Single(first);
+            Assert.Single(second);
+            Assert.Equal(1, loadCallCount);
+        }
+
+        private static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestEntity item)
+        {
+            options.SlidingExpiration = TimeSpan.FromMinutes(1);
+        }
+
+        private sealed class TestEntity : IEntity
+        {
+            public string Id { get; set; }
+        }
     }
 }
