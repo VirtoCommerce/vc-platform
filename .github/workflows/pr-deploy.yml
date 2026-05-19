@@ -25,7 +25,7 @@ jobs:
       version: ${{ steps.artifactVer.outputs.shortVersion }}
     steps:
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
     - name: Get Artifact Version
       uses: VirtoCommerce/vc-github-actions/get-image-version@master
@@ -94,7 +94,7 @@ jobs:
       run: |
         echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} published" >> $GITHUB_ENV
 
-    - uses: actions/github-script@v5
+    - uses: actions/github-script@211cb3fefb35a799baa5156f9321bb774fe56294 # v5
       if: ${{ !(contains('skipped, cancelled', needs.publish.result ))  }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
@@ -121,7 +121,7 @@ jobs:
       run: |
         echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} deployed to QA argoCD" >> $GITHUB_ENV
 
-    - uses: actions/github-script@v5
+    - uses: actions/github-script@211cb3fefb35a799baa5156f9321bb774fe56294 # v5
       if: ${{ !(contains('skipped, cancelled', needs.deploy-argoCD.result )) }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
@@ -148,7 +148,7 @@ jobs:
       run: |
         echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} deployed to QA cloud" >> $GITHUB_ENV
 
-    - uses: actions/github-script@v5
+    - uses: actions/github-script@211cb3fefb35a799baa5156f9321bb774fe56294 # v5
       if: ${{ !(contains('skipped, cancelled', needs.deploy-cloud.result )) }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
