@@ -42,9 +42,12 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
                 }
             }
 
-            _logger.LogInformation(
-                "AutoAccountLockoutJob completed: matched={Matched}, locked={Locked}, failed={Failed}",
-                matched, locked, failed);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation(
+                    "AutoAccountLockoutJob completed: matched={Matched}, locked={Locked}, failed={Failed}",
+                    matched, locked, failed);
+            }
         }
 
         private async Task<IList<ApplicationUser>> FindUsersToLockAsync()
