@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +26,7 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
         {
             var usersToLock = await FindUsersToLockAsync();
 
+            var matched = usersToLock.Count;
             var locked = 0;
             var failed = 0;
 
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
 
             _logger.LogInformation(
                 "AutoAccountLockoutJob completed: matched={Matched}, locked={Locked}, failed={Failed}",
-                usersToLock.Count, locked, failed);
+                matched, locked, failed);
         }
 
         private async Task<IList<ApplicationUser>> FindUsersToLockAsync()
@@ -76,10 +76,11 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
                     return true;
                 }
 
-                _logger.LogWarning(
-                    "AutoAccountLockoutJob: failed to lock user {UserId} {UserName}: {Errors}",
-                    user.Id, user.UserName, string.Join("; ", result.Errors.Select(e => $"{e.Code}: {e.Description}")));
+                var errors = result.Errors;
 
+                _logger.LogWarning(
+                    "AutoAccountLockoutJob: failed to lock user {UserId} {UserName}: {@Errors}",
+                    user.Id, user.UserName, errors);
                 return false;
             }
             catch (Exception ex)
