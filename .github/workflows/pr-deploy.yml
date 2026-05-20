@@ -41,7 +41,7 @@ jobs:
   publish:
     needs:
       get-cache-key
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.14
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.33
     with:
       fullKey: ${{ needs.get-cache-key.outputs.dockerFullKey }}
       shortKey: '${{ needs.get-cache-key.outputs.dockerShortKey }}-'
@@ -54,7 +54,7 @@ jobs:
   deploy-argoCD:
     needs:
       publish
-    uses: VirtoCommerce/.github/.github/workflows/deploy.yml@v3.200.14
+    uses: VirtoCommerce/.github/.github/workflows/deploy.yml@v3.800.33
     with:
       argoServer: 'argo.govirto.com'
       artifactUrl: ${{ needs.publish.outputs.imagePath }}
@@ -67,7 +67,7 @@ jobs:
   deploy-cloud:
     needs:
       [get-cache-key, publish]
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.14
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.33
     with:
       releaseSource: platform
       releaseType: GithubReleases
@@ -94,7 +94,7 @@ jobs:
       run: |
         echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} published" >> $GITHUB_ENV
 
-    - uses: actions/github-script@211cb3fefb35a799baa5156f9321bb774fe56294 # v5
+    - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       if: ${{ !(contains('skipped, cancelled', needs.publish.result ))  }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
@@ -121,7 +121,7 @@ jobs:
       run: |
         echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} deployed to QA argoCD" >> $GITHUB_ENV
 
-    - uses: actions/github-script@211cb3fefb35a799baa5156f9321bb774fe56294 # v5
+    - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       if: ${{ !(contains('skipped, cancelled', needs.deploy-argoCD.result )) }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
@@ -148,7 +148,7 @@ jobs:
       run: |
         echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} deployed to QA cloud" >> $GITHUB_ENV
 
-    - uses: actions/github-script@211cb3fefb35a799baa5156f9321bb774fe56294 # v5
+    - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       if: ${{ !(contains('skipped, cancelled', needs.deploy-cloud.result )) }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}

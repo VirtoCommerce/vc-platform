@@ -314,7 +314,7 @@ jobs:
     needs: ci
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.31
+    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.33
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -330,7 +330,7 @@ jobs:
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.31    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.33    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
@@ -346,7 +346,7 @@ jobs:
       - deploy-cloud
     steps:
       - name: OWASP ZAP Full Scan
-        uses: zaproxy/action-baseline@7c4deb10e6261301961c86d65d54a516394f9aed # v0.14.0
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
         with:
           token: ${{ secrets.REPO_TOKEN }}
           target: 'https://vcptcore-dev.govirto.com'
@@ -355,7 +355,7 @@ jobs:
   trivy-scan:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     needs: 'ci'
-    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.31
+    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.33
     with:
       assigneeAccountId: '621c47c0302c6b006af0a1cd'
       assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'
