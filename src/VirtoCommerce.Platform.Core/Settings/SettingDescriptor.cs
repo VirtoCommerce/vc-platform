@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         public object[] AllowedValues { get; set; }
         public object DefaultValue { get; set; }
         /// <summary>
-        /// The flag indicates that current setting is just an editable dictionary and hasn't any concrete value 
+        /// The flag indicates that current setting is just an editable dictionary and hasn't any concrete value
         /// </summary>
         public bool IsDictionary { get; set; }
 
@@ -55,6 +55,23 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// This flag indicates that the setting value(s) can be localized
         /// </summary>
         public bool IsLocalizable { get; set; }
+
+        /// <summary>
+        /// Optional tenant-type name. Empty/null means a global setting;
+        /// any non-empty value means the setting is also registered for
+        /// that tenant type via
+        /// <see cref="ISettingsRegistrar.RegisterSettingsForType"/>.
+        /// Used by <c>UseSettingsFromModuleManifests</c> to mirror the
+        /// platform's own pattern (register globally first, then register
+        /// per-tenant subsets) without two parallel descriptor collections.
+        /// Populated automatically when a setting is parsed from
+        /// <c>module.manifest</c>'s <c>tenant="…"</c> attribute; left null
+        /// for settings registered programmatically from
+        /// <c>IModule.Initialize</c> (those are routed by the call-site
+        /// choosing <c>RegisterSettings</c> vs <c>RegisterSettingsForType</c>
+        /// directly).
+        /// </summary>
+        public string Tenant { get; set; }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

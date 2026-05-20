@@ -45,8 +45,6 @@ namespace VirtoCommerce.Platform.Data.MySql
             return new SecurityDbContext(builder.Options);
         }
 
-
-
         private static ServerVersion ResolveServerVersion(string? serverVersion, string connectionString)
         {
             if (serverVersion == "AutoDetect")

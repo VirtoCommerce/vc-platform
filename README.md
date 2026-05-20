@@ -1,12 +1,18 @@
 # Virto Commerce B2B Innovation Platform
 
-[![Share on Facebook](https://img.shields.io/badge/facebook--blue.svg?style=social&label=Share&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyNjYuODkzcHgiIGhlaWdodD0iMjY2Ljg5NXB4IiB2aWV3Qm94PSIwIDAgMjY2Ljg5MyAyNjYuODk1IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNjYuODkzIDI2Ni44OTUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGlkPSJCbHVlXzFfIiBmaWxsPSIjM0M1QTk5IiBkPSJNMjQ4LjA4MiwyNjIuMzA3YzcuODU0LDAsMTQuMjIzLTYuMzY5LDE0LjIyMy0xNC4yMjVWMTguODEyYzAtNy44NTctNi4zNjgtMTQuMjI0LTE0LjIyMy0xNC4yMjRIMTguODEyYy03Ljg1NywwLTE0LjIyNCw2LjM2Ny0xNC4yMjQsMTQuMjI0djIyOS4yN2MwLDcuODU1LDYuMzY2LDE0LjIyNSwxNC4yMjQsMTQuMjI1SDI0OC4wODJ6Ii8%2BPHBhdGggaWQ9ImYiIGZpbGw9IiNGRkZGRkYiIGQ9Ik0xODIuNDA5LDI2Mi4zMDd2LTk5LjgwM2gzMy40OTlsNS4wMTYtMzguODk1aC0zOC41MTVWOTguNzc3YzAtMTEuMjYxLDMuMTI3LTE4LjkzNSwxOS4yNzUtMTguOTM1bDIwLjU5Ni0wLjAwOVY0NS4wNDVjLTMuNTYyLTAuNDc0LTE1Ljc4OC0xLjUzMy0zMC4wMTItMS41MzNjLTI5LjY5NSwwLTUwLjAyNSwxOC4xMjYtNTAuMDI1LDUxLjQxM3YyOC42ODRoLTMzLjU4NXYzOC44OTVoMzMuNTg1djk5LjgwM0gxODIuNDA5eiIvPjwvc3ZnPg%3D%3D)](https://www.facebook.com/sharer.php?u=https://virtocommerce.com)&nbsp;[![Tweet](https://img.shields.io/twitter/url/https/virtocommerce.com.svg?style=social)](https://twitter.com/intent/tweet?text=%23VirtoCommerce%20puts%20the%20best%20of%20MS%20Azure%20Cloud%2C%20open%20source%20.Net%20code%20and%20agile%20development%20in%20a%20single%20enterprise%20%23ecommerce%20platform.) [![Latest release](https://img.shields.io/github/release/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/releases/latest) [![Total downloads](https://img.shields.io/github/downloads/VirtoCommerce/vc-platform/total.svg?colorB=007ec6)](https://github.com/VirtoCommerce/vc-platform/releases) [![License](https://img.shields.io/badge/license-VC%20OSL-blue.svg)](https://virtocommerce.com/open-source-license)
+[![Home](https://img.shields.io/badge/Website-virtocommerce.com-FF6B35?style=flat-square&logo=googlechrome&logoColor=white)](https://virtocommerce.com/)
+[![Interactive Demo](https://img.shields.io/badge/Live%20Demo-Try%20it%20now-22C55E?style=flat-square&logo=rocket&logoColor=white)](https://virtocommerce.com/interactive-demo)
+[![Documentation](https://img.shields.io/badge/Docs-docs.virtocommerce.org-0078D4?style=flat-square&logo=readthedocs&logoColor=white)](https://docs.virtocommerce.org/)
+[![Community](https://img.shields.io/badge/Community-virtocommerce.org-7B68EE?style=flat-square&logo=discourse&logoColor=white)](https://www.virtocommerce.org/)
+[![YouTube](https://img.shields.io/badge/YouTube-virtocommerce-FF0000?style=flat&logo=youtube&logoColor=white)](https://www.youtube.com/c/virtocommerce)
 
-[![CI status](https://github.com/VirtoCommerce/vc-platform/workflows/Platform%20CI/badge.svg?branch=dev)](https://github.com/VirtoCommerce/vc-platform/actions?query=workflow%3A"Platform+CI") [![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=alert_status&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform) [![Reliability rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=reliability_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform) [![Security rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=security_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform) [![Sqale rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=sqale_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform) [![Lines of code](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=ncloc&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform)&emsp;
+![CI status](https://github.com/VirtoCommerce/vc-platform/actions/workflows/platform-ci.yml/badge.svg?branch=dev)
+[![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=alert_status&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform)
+[![Reliability rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=reliability_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform)
+[![Security rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=security_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform)
+[![Sqale rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-platform&metric=sqale_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-platform)
 
-[![Documentation](https://img.shields.io/badge/docs-read-brightgreen.svg)](https://docs.virtocommerce.org)&nbsp; [![Commnunity](https://img.shields.io/badge/community-read-brightgreen.svg)](https://www.virtocommerce.org)&nbsp; [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/graphs/contributors)
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fdev%2FazureDeployPlatformAndFrontend.json)
+[![Latest release](https://img.shields.io/github/release/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/releases/latest) [![Total downloads](https://img.shields.io/github/downloads/VirtoCommerce/vc-platform/total.svg?colorB=007ec6)](https://github.com/VirtoCommerce/vc-platform/releases) [![License](https://img.shields.io/badge/license-VC%20OSL-blue.svg)](https://virtocommerce.com/open-source-license)
 
 Virto Commerce is an open-source platform for building extensible ecommerce applications. This includes complex digital commerce solutions for B2B, B2C, or B2B2C businesses, [marketplaces](https://virtocommerce.com/solutions/marketplace), and derived SaaS commerce platforms.
 
@@ -55,7 +61,7 @@ These Virto Commerce docs will help you learn and use the Virto Commerce platfor
 
 In our work, we make every effort to always use advanced technologies. We picked the techs below as a result of our extensive experience in working with Microsoft products:
 
-* .NET and ASP.NET Core as base platform
+* .NET 10 and ASP.NET Core 10 as base platform
 * EF Core as primary ORM
 * ASP.NET Core Identity for authentication and authorization
 * OpenIddict for OAuth authentication
@@ -64,6 +70,66 @@ In our work, we make every effort to always use advanced technologies. We picked
 * SignalR Core for push notifications
 * AngularJS as a primary framework for SPA
 * HangFire for running background tasks
+
+## 🚀 How to Start
+
+### Step 0. Hello World
+
+>[!TIP]
+> AI helps at every step: Ask Virto OZ for documentation-grounded answers, Install Claude Code with Context7 for instant code changes, Add llms.txt to your prompts for zero-install documentation grounding
+
+👨‍💻 [Ai Quick Start](https://docs.virtocommerce.org/platform/developer-guide/latest/Getting-Started/ai-quick-start/)
+
+### Step 1. Run a demo in minutes
+
+Use **[start-local](https://github.com/VirtoCommerce/start-local)** to bring up the full stack (platform, frontend, database, Redis, Elasticsearch, Kibana) on your machine with one PowerShell command.
+
+```powershell
+$installSCript = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/VirtoCommerce/start-local/dev/VirtoLocal_create_local_files.ps1" -UseBasicParsing; Set-Content -Path ".\VirtoLocal_create_local_files.ps1" -Value $installSCript.Content; .\VirtoLocal_create_local_files.ps1
+```
+
+Or
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fdev%2FazureDeployPlatformAndFrontend.json)
+
+### Step 2. Build a Proof of Concept (PoC) — extend, don't fork
+
+Virto Commerce is designed to be extended. Start with [Configure your custom solution](https://docs.virtocommerce.org/platform/developer-guide/latest/Getting-Started/quick-start/#configure-your-custom-solution)
+
+The Extensibility Framework lets you add entities, override services, extend APIs, and add admin UI — all without forking.
+
+### Step 3. Build your own solution — production-ready
+
+📖 [Deploy on Virto Cloud](https://docs.virtocommerce.org/platform/deployment-on-cloud/3.0/deploy-on-virto-cloud/)
+
+## Virto Commerce Release Strategy
+Virto Commerce ships as **modules** — independently versioned, independently deployable units. Modules combine into bundles you can pick from based on how you want to balance stability and speed.
+
+| Release Strategy | What it is | Use it for |
+|---|---|---|
+| **Stable** | Quarterly release; passed full regression, E2E, and load testing | Production, new solution development (default in vc-build) |
+| **Hotfix** | Bug fixes for the two most recent stable releases | Maintenance updates between stable cuts |
+| **Edge** | Latest features as they land — minimal risk, maximum freshness | Early access to new capabilities, prototyping |
+
+## Release Notes
+> [!TIP]
+> Open any deck via the links above, or clone the repo and open the `index.html` files directly in your browser. Add a feature to your backlog, then navigate to the Backlog screen and click **Copy as Markdown**. 
+
+| Month | Live deck | Source notes |
+| --- | --- | --- |
+| **May 2026** | [📊 View deck](https://virtocommerce.github.io/vc-release-notes/2026-05/) | [Notes](https://www.virtocommerce.org/t/virto-s-release-notes-may-2026-comics-edition/849/) |
+| **April 2026** | [📊 View deck](https://virtocommerce.github.io/vc-release-notes/2026-04/) | [Notes](https://www.virtocommerce.org/t/virto-s-release-notes-april-2026/847) |
+| **March 2026** | [📊 View deck](https://virtocommerce.github.io/vc-release-notes/2026-03/) | [Notes](https://www.virtocommerce.org/t/virto-s-release-notes-march-2026/839) |
+
+[Previuos Releases](https://www.virtocommerce.org/c/news-digest/15) 
+
+## 🤝 Contributing
+
+We welcome contributions — code, docs, bug reports, and feature ideas. The fastest path:
+
+- 🐛 Browse [open issues](https://github.com/search?q=org%3AVirtoCommerce+is%3Aissue+is%3Aopen&type=issues) — issues labelled **good first issue** are best for newcomers.
+- 💡 For larger ideas, [open a discussion](https://www.virtocommerce.org/) or an issue *before* coding so maintainers can shape the approach.
+- 📝 Code fixes are always welcome and the easiest way to get familiar with [Contribution guide](https://www.virtocommerce.org/t/how-to-contribute-to-virto-commerce/459)
 
 ## References
 * Documentation: https://docs.virtocommerce.org
