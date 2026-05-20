@@ -56,13 +56,9 @@ jobs:
       publish
     uses: VirtoCommerce/.github/.github/workflows/deploy.yml@v3.800.33
     with:
-      argoServer: 'argo.govirto.com'
       artifactUrl: ${{ needs.publish.outputs.imagePath }}
       matrix: '{"include":[{"envName": "qa", "confPath": "argoDeploy.json"}]}'
-    secrets:
-      envPAT: ${{ secrets.REPO_TOKEN }}
-      argoLogin: ${{ secrets.ARGOCD_LOGIN }}
-      argoPassword: ${{ secrets.ARGOCD_PASSWORD }}
+    secrets: inherit
 
   deploy-cloud:
     needs:
@@ -70,15 +66,10 @@ jobs:
     uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.33
     with:
       releaseSource: platform
-      releaseType: GithubReleases
       platformVer: ${{ needs.get-cache-key.outputs.version }}
       platformTag: ${{ needs.publish.outputs.tag }}
-      argoServer: 'argo.virtocommerce.cloud'
       matrix: '{"include":[{"envName": "qa", "confPath": "cloudDeploy.json"}]}'
-    secrets:
-      envPAT: ${{ secrets.REPO_TOKEN }}
-      argoLogin: ${{ secrets.ARGOCD_LOGIN }}
-      argoPassword: ${{ secrets.ARGOCD_PASSWORD }}
+    secrets: inherit
 
   comment-publish:
     if: ${{ always() && github.event.label.name == 'deploy-qa' }}
