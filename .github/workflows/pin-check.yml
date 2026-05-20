@@ -1,0 +1,39 @@
+name: Verify action pinning
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - '**/action.yml'
+      - '**/action.yaml'
+      - '.pinact.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  pinact:
+    runs-on: ubuntu-latest
+    env:
+      PINACT_VERSION: v3.10.1
+      # Used by `gh release download` and by pinact when calling the GitHub
+      # REST API to resolve latest tag SHAs. Without this, pinact falls back
+      # to unauthenticated requests (60/hour) and the update will likely
+      # rate-limit. GH_TOKEN is the alias gh CLI prefers; pinact reads
+      # GITHUB_TOKEN.
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Install pinact
+        run: |
+          cd "$RUNNER_TEMP"
+          gh release download "$PINACT_VERSION" \
+            --repo suzuki-shunsuke/pinact \
+            --pattern 'pinact_linux_amd64.tar.gz'
+          tar -xzf pinact_linux_amd64.tar.gz
+          sudo install pinact /usr/local/bin/
+
+      - name: Verify all third-party actions are pinned to SHAs
+        run: pinact run -check

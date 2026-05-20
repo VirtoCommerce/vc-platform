@@ -16,8 +16,13 @@
     <NoWarn>$(NoWarn);1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
 
+  <!-- Added to bump to latest version sp other modules can consume them -->
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.53.0" />
+    <PackageReference Include="Azure.Core" Version="1.56.0" />
+    <PackageReference Include="Azure.Identity" Version="1.21.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.7" />
