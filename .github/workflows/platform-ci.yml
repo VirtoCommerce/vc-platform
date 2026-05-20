@@ -326,6 +326,8 @@ jobs:
       envPAT: ${{ secrets.REPO_TOKEN }}
       testSecretEnvFile: ${{ secrets.VC_TESTING_MODULE_ENV_FILE }}
       sendgridApiKey: ${{ secrets.SENDGRID_APIKEY_4E2E_AUTOTESTS }}
+      appInsightsInstrumentationKey: ${{ secrets.appInsightsInstrumentationKey }}
+      appInsightsResourceId: ${{ secrets.appInsightsResourceId }}
 
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
