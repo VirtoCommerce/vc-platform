@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
@@ -16,29 +17,55 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
         IOptions<LockoutOptionsExtended> lockoutOptions,
         ILogger<AutoAccountLockoutJob> logger)
     {
+        private const int DefaultPageSize = 100;
+
         private readonly IUserSearchService _userSearchService = userSearchService;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly LockoutOptionsExtended _lockoutOptions = lockoutOptions.Value;
         private readonly ILogger<AutoAccountLockoutJob> _logger = logger;
 
         [DisableConcurrentExecution(10)]
-        public async Task Process()
+        public async Task Process(CancellationToken cancellationToken)
         {
-            var usersToLock = await FindUsersToLockAsync();
+            var lastLoginCutoff = DateTime.UtcNow.AddDays(-_lockoutOptions.LockoutMaximumDaysFromLastLogin);
+            var batchSize = _lockoutOptions.AutoAccountsLockoutJobBatchSize;
+            var unlimited = batchSize <= 0;
+            var pageSize = unlimited ? DefaultPageSize : batchSize;
 
-            var matched = usersToLock.Count;
+            var matched = 0;
             var locked = 0;
             var failed = 0;
 
-            foreach (var user in usersToLock)
+            while (true)
             {
-                if (await TryLockUserAsync(user))
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var users = await FetchPageAsync(lastLoginCutoff, skip: failed, take: pageSize);
+
+                if (users.Count == 0)
                 {
-                    locked++;
+                    break;
                 }
-                else
+
+                foreach (var user in users)
                 {
-                    failed++;
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    matched++;
+
+                    if (await TryLockUserAsync(user))
+                    {
+                        locked++;
+                    }
+                    else
+                    {
+                        failed++;
+                    }
+                }
+
+                if (!unlimited)
+                {
+                    break;
                 }
             }
 
@@ -50,16 +77,13 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
             }
         }
 
-        private async Task<IList<ApplicationUser>> FindUsersToLockAsync()
+        private async Task<IList<ApplicationUser>> FetchPageAsync(DateTime lastLoginCutoff, int skip, int take)
         {
-            var lastLoginCutoff = DateTime.UtcNow.AddDays(-_lockoutOptions.LockoutMaximumDaysFromLastLogin);
-            var batchSize = _lockoutOptions.AutoAccountsLockoutJobBatchSize;
-            var take = batchSize > 0 ? batchSize : int.MaxValue;
-
             var criteria = new UserSearchCriteria
             {
                 OnlyUnlocked = true,
                 LoginEndDate = lastLoginCutoff,
+                Skip = skip,
                 Take = take,
             };
 

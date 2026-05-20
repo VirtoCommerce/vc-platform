@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -42,7 +43,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
         }
 
         [Fact]
-        public async Task Process_PassesBatchSizeAsTake()
+        public async Task Process_BatchSizePositive_FetchesOnePageOfThatSize()
         {
             // Arrange
             var (search, userManager, job) = BuildJob(new LockoutOptionsExtended { AutoAccountsLockoutJobBatchSize = 5 });
@@ -55,34 +56,82 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            await job.Process();
+            await job.Process(CancellationToken.None);
 
             // Assert
             Assert.Equal(5, captured.Take);
+            Assert.Equal(0, captured.Skip);
             Assert.True(captured.OnlyUnlocked);
+            search.Verify(s => s.SearchUsersAsync(It.IsAny<UserSearchCriteria>()), Times.Once);
             userManager.Verify(u => u.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()), Times.Exactly(5));
         }
 
         [Fact]
-        public async Task Process_BatchSizeZero_PassesIntMaxAsTake()
+        public async Task Process_BatchSizeZero_PaginatesUntilEmpty()
         {
             // Arrange
             var (search, userManager, job) = BuildJob(new LockoutOptionsExtended { AutoAccountsLockoutJobBatchSize = 0 });
 
-            UserSearchCriteria captured = null;
+            var page1 = Enumerable.Range(1, 100).Select(i => User("p1-" + i)).ToList();
+            var page2 = Enumerable.Range(1, 47).Select(i => User("p2-" + i)).ToList();
+            var queue = new Queue<UserSearchResult>(new[]
+            {
+                PageOf(page1),
+                PageOf(page2),
+                PageOf(Array.Empty<ApplicationUser>()),
+            });
+
             search.Setup(s => s.SearchUsersAsync(It.IsAny<UserSearchCriteria>()))
-                .Callback<UserSearchCriteria>(c => captured = c)
-                .ReturnsAsync(PageOf(Enumerable.Range(1, 47).Select(i => User(i.ToString()))));
+                .ReturnsAsync(() => queue.Dequeue());
             userManager.Setup(u => u.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()))
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            await job.Process();
+            await job.Process(CancellationToken.None);
 
             // Assert
-            Assert.Equal(int.MaxValue, captured.Take);
-            userManager.Verify(u => u.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()), Times.Exactly(47));
-            search.Verify(s => s.SearchUsersAsync(It.IsAny<UserSearchCriteria>()), Times.Once);
+            userManager.Verify(u => u.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()), Times.Exactly(147));
+            search.Verify(s => s.SearchUsersAsync(It.IsAny<UserSearchCriteria>()), Times.Exactly(3));
+        }
+
+        [Fact]
+        public async Task Process_BatchSizeZero_AdvancesSkipPastFailedUsers()
+        {
+            // Arrange
+            var (search, userManager, job) = BuildJob(new LockoutOptionsExtended { AutoAccountsLockoutJobBatchSize = 0 });
+
+            var capturedCriterias = new List<UserSearchCriteria>();
+            var page1 = new[] { User("ok-1"), User("bad"), User("ok-2") };
+            var page2 = new[] { User("ok-3"), User("ok-4") };
+            var queue = new Queue<UserSearchResult>(new[]
+            {
+                PageOf(page1),
+                PageOf(page2),
+                PageOf(Array.Empty<ApplicationUser>()),
+            });
+
+            search.Setup(s => s.SearchUsersAsync(It.IsAny<UserSearchCriteria>()))
+                .Callback<UserSearchCriteria>(c => capturedCriterias.Add(new UserSearchCriteria
+                {
+                    OnlyUnlocked = c.OnlyUnlocked,
+                    LoginEndDate = c.LoginEndDate,
+                    Skip = c.Skip,
+                    Take = c.Take,
+                }))
+                .ReturnsAsync(() => queue.Dequeue());
+            userManager.Setup(u => u.SetLockoutEndDateAsync(It.Is<ApplicationUser>(x => x.Id == "bad"), It.IsAny<DateTimeOffset?>()))
+                .ThrowsAsync(new InvalidOperationException("boom"));
+            userManager.Setup(u => u.SetLockoutEndDateAsync(It.Is<ApplicationUser>(x => x.Id != "bad"), It.IsAny<DateTimeOffset?>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            // Act
+            await job.Process(CancellationToken.None);
+
+            // Assert
+            Assert.Equal(3, capturedCriterias.Count);
+            Assert.Equal(0, capturedCriterias[0].Skip);
+            Assert.Equal(1, capturedCriterias[1].Skip);
+            Assert.Equal(1, capturedCriterias[2].Skip);
         }
 
         [Fact]
@@ -100,7 +149,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            await job.Process();
+            await job.Process(CancellationToken.None);
 
             // Assert
             userManager.Verify(u => u.SetLockoutEndDateAsync(It.Is<ApplicationUser>(x => x.Id == "a"), It.IsAny<DateTimeOffset?>()), Times.Once);
@@ -123,10 +172,30 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            await job.Process();
+            await job.Process(CancellationToken.None);
 
             // Assert
             userManager.Verify(u => u.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()), Times.Exactly(3));
+        }
+
+        [Fact]
+        public async Task Process_CancellationRequested_StopsBeforeProcessingNextUser()
+        {
+            // Arrange
+            var (search, userManager, job) = BuildJob(new LockoutOptionsExtended { AutoAccountsLockoutJobBatchSize = 10 });
+
+            using var cts = new CancellationTokenSource();
+
+            var users = new[] { User("a"), User("b"), User("c") };
+            search.Setup(s => s.SearchUsersAsync(It.IsAny<UserSearchCriteria>()))
+                .ReturnsAsync(PageOf(users));
+            userManager.Setup(u => u.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()))
+                .Callback(() => cts.Cancel())
+                .ReturnsAsync(IdentityResult.Success);
+
+            // Act, Assert
+            await Assert.ThrowsAsync<OperationCanceledException>(() => job.Process(cts.Token));
+            userManager.Verify(u => u.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()), Times.Once);
         }
     }
 }
