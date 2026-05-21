@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
@@ -17,7 +19,6 @@ using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Hangfire;
 
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
@@ -34,6 +35,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserNameResolver _userNameResolver;
         private readonly PlatformOptions _platformOptions;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<PlatformExportImportController> _log;
 
         private static readonly object _lockObject = new();
 
@@ -43,7 +45,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             ISettingsManager settingManager,
             IUserNameResolver userNameResolver,
             IOptions<PlatformOptions> options,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            ILogger<PlatformExportImportController> log)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
@@ -51,6 +54,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userNameResolver = userNameResolver;
             _httpClientFactory = httpClientFactory;
             _platformOptions = options.Value;
+            _log = log;
+        }
+
+        [Obsolete("Use the constructor that accepts ILogger<PlatformExportImportController>.",
+            DiagnosticId = "VC0014",
+            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public PlatformExportImportController(
+            IPlatformExportImportManager platformExportManager,
+            IPushNotificationManager pushNotifier,
+            ISettingsManager settingManager,
+            IUserNameResolver userNameResolver,
+            IOptions<PlatformOptions> options,
+            IHttpClientFactory httpClientFactory)
+            : this(platformExportManager, pushNotifier, settingManager, userNameResolver, options, httpClientFactory, log: null)
+        {
         }
 
         [HttpGet]
@@ -116,7 +134,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     pushNotification.Title = "Sample data import process";
 
                     _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, JobCancellationToken.Null, null));
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, null, CancellationToken.None));
                     pushNotification.JobId = jobId;
                 }
             }
@@ -225,7 +243,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
@@ -265,18 +283,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 });
 
-                using (var stream = new FileStream(tmpFilePath, FileMode.Open))
+                using var stream = new FileStream(tmpFilePath, FileMode.Open);
+                var manifest = _platformExportManager.ReadExportManifest(stream);
+                if (manifest != null)
                 {
-                    var manifest = _platformExportManager.ReadExportManifest(stream);
-                    if (manifest != null)
-                    {
-                        await _platformExportManager.ImportAsync(stream, manifest, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
-                    }
+                    await _platformExportManager.ImportAsync(stream, manifest, progressCallback, cancellationToken);
                 }
             }
-            catch (JobAbortedException)
+            catch (OperationCanceledException)
             {
-                //do nothing
+                // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
+                _log?.LogWarning("Sample data import job {JobId} started by {User} was cancelled.",
+                    context?.BackgroundJob?.Id, pushNotification?.Creator);
             }
             catch (Exception ex)
             {
@@ -291,6 +309,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
+        // Shim for in-flight queue items: ShutdownToken only — UI delete won't cancel jobs on this path.
+        [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
+            DiagnosticId = "VC0014",
+            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+            => SampleDataImportBackgroundAsync(name, pushNotification, context, cancellationToken?.ShutdownToken ?? CancellationToken.None);
 
         private static string GetSafeFullPath(string basePath, string relativePath)
         {

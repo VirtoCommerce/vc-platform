@@ -1,11 +1,13 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Exceptions;
@@ -13,7 +15,6 @@ using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Hangfire;
 
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
@@ -28,17 +29,32 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
         private readonly PlatformOptions _platformOptions;
+        private readonly ILogger<PlatformBackupRestoreController> _log;
 
         public PlatformBackupRestoreController(
             IPlatformExportImportManager platformExportManager,
             IPushNotificationManager pushNotifier,
             IUserNameResolver userNameResolver,
-            IOptions<PlatformOptions> options)
+            IOptions<PlatformOptions> options,
+            ILogger<PlatformBackupRestoreController> log)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
             _platformOptions = options.Value;
+            _log = log;
+        }
+
+        [Obsolete("Use the constructor that accepts ILogger<PlatformBackupRestoreController>.",
+            DiagnosticId = "VC0014",
+            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public PlatformBackupRestoreController(
+            IPlatformExportImportManager platformExportManager,
+            IPushNotificationManager pushNotifier,
+            IUserNameResolver userNameResolver,
+            IOptions<PlatformOptions> options)
+            : this(platformExportManager, pushNotifier, userNameResolver, options, log: null)
+        {
         }
 
 
@@ -54,7 +70,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, notification, JobCancellationToken.Null, null));
+            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, notification, null, CancellationToken.None));
             notification.JobId = jobId;
             return Ok(notification);
         }
@@ -71,7 +87,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, notification, JobCancellationToken.Null, null));
+            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, notification, null, CancellationToken.None));
             notification.JobId = jobId;
 
             return Ok(notification);
@@ -104,8 +120,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-
-        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             void ProgressCallback(ExportImportProgressInfo x)
             {
@@ -117,21 +132,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var now = DateTime.UtcNow;
             try
             {
-                var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
-
                 var localPath = GetSafeFullPath(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl);
 
                 //Load source data only from local file system
-                using (var stream = new FileStream(localPath, FileMode.Open))
-                {
-                    var manifest = importRequest.ToManifest();
-                    manifest.Created = now;
-                    await _platformExportManager.ImportAsync(stream, manifest, ProgressCallback, cancellationTokenWrapper);
-                }
+                using var stream = new FileStream(localPath, FileMode.Open);
+                var manifest = importRequest.ToManifest();
+                manifest.Created = now;
+                await _platformExportManager.ImportAsync(stream, manifest, ProgressCallback, cancellationToken);
             }
-            catch (JobAbortedException)
+            catch (OperationCanceledException)
             {
-                //do nothing
+                // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
+                _log?.LogWarning("Platform restore job {JobId} started by {User} was cancelled.",
+                    context?.BackgroundJob?.Id, pushNotification?.Creator);
             }
             catch (Exception ex)
             {
@@ -145,7 +158,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             void ProgressCallback(ExportImportProgressInfo x)
             {
@@ -171,16 +184,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode
-                using (var stream = System.IO.File.OpenWrite(localTmpPath))
-                {
-                    var manifest = exportRequest.ToManifest();
-                    await _platformExportManager.ExportAsync(stream, manifest, ProgressCallback, new JobCancellationTokenWrapper(cancellationToken));
-                    pushNotification.DownloadUrl = $"api/platform/export/download/{fileName}";
-                }
+                using var stream = System.IO.File.OpenWrite(localTmpPath);
+                var manifest = exportRequest.ToManifest();
+                await _platformExportManager.ExportAsync(stream, manifest, ProgressCallback, cancellationToken);
+                pushNotification.DownloadUrl = $"api/platform/export/download/{fileName}";
             }
-            catch (JobAbortedException)
+            catch (OperationCanceledException)
             {
-                //do nothing
+                // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
+                _log?.LogWarning("Platform backup job {JobId} started by {User} was cancelled.",
+                    context?.BackgroundJob?.Id, pushNotification?.Creator);
             }
             catch (Exception ex)
             {
@@ -193,6 +206,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await _pushNotifier.SendAsync(pushNotification);
             }
         }
+
+        // Shim for in-flight queue items: ShutdownToken only - UI delete won't cancel jobs on this path.
+        [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
+            DiagnosticId = "VC0014",
+            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+            => PlatformRestoreBackgroundAsync(importRequest, pushNotification, context, cancellationToken?.ShutdownToken ?? CancellationToken.None);
+
+        [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
+            DiagnosticId = "VC0014",
+            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+            => PlatformBackupBackgroundAsync(exportRequest, pushNotification, context, cancellationToken?.ShutdownToken ?? CancellationToken.None);
 
         private static string GetSafeFullPath(string basePath, string relativePath)
         {
