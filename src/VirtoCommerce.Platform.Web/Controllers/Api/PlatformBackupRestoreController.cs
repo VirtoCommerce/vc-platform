@@ -146,7 +146,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
                 _log?.LogWarning("Platform restore job {JobId} started by {User} was cancelled.",
-                    context?.BackgroundJob?.Id, pushNotification?.Creator);
+                    context?.BackgroundJob?.Id, pushNotification.Creator);
             }
             catch (Exception ex)
             {
@@ -197,7 +197,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
                 _log?.LogWarning("Platform backup job {JobId} started by {User} was cancelled.",
-                    context?.BackgroundJob?.Id, pushNotification?.Creator);
+                    context?.BackgroundJob?.Id, pushNotification.Creator);
             }
             catch (Exception ex)
             {

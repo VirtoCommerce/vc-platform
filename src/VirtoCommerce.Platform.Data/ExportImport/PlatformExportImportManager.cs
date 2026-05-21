@@ -319,7 +319,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             {
                 await ExportRolesAsync(writer, serializer, progressInfo, progressCallback, cancellationToken);
                 await ExportUsersAsync(writer, serializer, progressInfo, progressCallback, cancellationToken);
-                await ExportSearchableArrayAsync("UserApiKeys", "User API keys", _userApiKeySearchService, writer, serializer, progressInfo, progressCallback, cancellationToken);
+                await SerializeArray("UserApiKeys", "User API keys", _userApiKeySearchService, writer);
             }
 
             if (manifest.HandleSettings)
@@ -329,12 +329,47 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             if (manifest.HandleDynamicProperties)
             {
-                await ExportSearchableArrayAsync("DynamicProperties", "Dynamic properties", _dynamicPropertySearchService, writer, serializer, progressInfo, progressCallback, cancellationToken);
-                await ExportSearchableArrayAsync("DynamicPropertyDictionaryItems", "Dynamic property dictionary items", _dynamicPropertyDictionaryItemsSearchService, writer, serializer, progressInfo, progressCallback, cancellationToken);
+                await SerializeArray("DynamicProperties", "Dynamic properties", _dynamicPropertySearchService, writer);
+                await SerializeArray("DynamicPropertyDictionaryItems", "Dynamic property dictionary items", _dynamicPropertyDictionaryItemsSearchService, writer);
             }
 
             await writer.WriteEndObjectAsync(cancellationToken);
             await writer.FlushAsync(cancellationToken);
+
+            async Task SerializeArray<TModel, TCriteria, TResult>(
+                string name,
+                string displayName,
+                ISearchService<TCriteria, TResult, TModel> searchService,
+                JsonTextWriter jsonTextWriter)
+                where TCriteria : SearchCriteriaBase
+                where TResult : GenericSearchResult<TModel>
+                where TModel : IEntity
+            {
+                progressInfo.Description = $"{displayName}: exporting...";
+                progressCallback(progressInfo);
+
+                await jsonTextWriter.WritePropertyNameAsync(name, cancellationToken);
+                await jsonTextWriter.WriteStartArrayAsync(cancellationToken);
+
+                var criteria = AbstractTypeFactory<TCriteria>.TryCreateInstance();
+                criteria.Take = _batchSize;
+
+                await foreach (var searchResult in searchService.SearchBatchesNoCloneAsync(criteria))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    foreach (var item in searchResult.Results)
+                    {
+                        serializer.Serialize(jsonTextWriter, item);
+                    }
+                }
+
+                await jsonTextWriter.WriteEndArrayAsync(cancellationToken);
+                await jsonTextWriter.FlushAsync(cancellationToken);
+
+                progressInfo.Description = $"{displayName}: exported";
+                progressCallback(progressInfo);
+            }
         }
 
         private async Task ExportRolesAsync(JsonTextWriter writer, JsonSerializer serializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
@@ -421,45 +456,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             progressInfo.Description = "Settings of modules exported";
             progressCallback(progressInfo);
             await writer.WriteEndArrayAsync(cancellationToken);
-        }
-
-        private async Task ExportSearchableArrayAsync<TModel, TCriteria, TResult>(
-            string name,
-            string displayName,
-            ISearchService<TCriteria, TResult, TModel> searchService,
-            JsonTextWriter jsonTextWriter,
-            JsonSerializer serializer,
-            ExportImportProgressInfo progressInfo,
-            Action<ExportImportProgressInfo> progressCallback,
-            CancellationToken cancellationToken)
-            where TCriteria : SearchCriteriaBase
-            where TResult : GenericSearchResult<TModel>
-            where TModel : IEntity
-        {
-            progressInfo.Description = $"{displayName}: exporting...";
-            progressCallback(progressInfo);
-
-            await jsonTextWriter.WritePropertyNameAsync(name, cancellationToken);
-            await jsonTextWriter.WriteStartArrayAsync(cancellationToken);
-
-            var criteria = AbstractTypeFactory<TCriteria>.TryCreateInstance();
-            criteria.Take = _batchSize;
-
-            await foreach (var searchResult in searchService.SearchBatchesNoCloneAsync(criteria))
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                foreach (var item in searchResult.Results)
-                {
-                    serializer.Serialize(jsonTextWriter, item);
-                }
-            }
-
-            await jsonTextWriter.WriteEndArrayAsync(cancellationToken);
-            await jsonTextWriter.FlushAsync(cancellationToken);
-
-            progressInfo.Description = $"{displayName}: exported";
-            progressCallback(progressInfo);
         }
 
         private async Task ImportModulesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
