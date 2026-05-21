@@ -318,10 +318,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private static string GetSafeFullPath(string basePath, string relativePath)
         {
-            var baseFullPath = Path.GetFullPath(basePath);
-            var result = Path.GetFullPath(Path.Combine(baseFullPath, relativePath));
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                throw new PlatformException("Path is empty.");
+            }
 
-            if (!result.StartsWith(baseFullPath + Path.DirectorySeparatorChar))
+            // Only allow a file name (single path component) from user input.
+            if (Path.IsPathRooted(relativePath) ||
+                !string.Equals(Path.GetFileName(relativePath), relativePath, StringComparison.Ordinal) ||
+                relativePath.Contains("..", StringComparison.Ordinal))
+            {
+                throw new PlatformException($"Invalid path {relativePath}");
+            }
+
+            var baseFullPath = Path.GetFullPath(basePath)
+                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            var result = Path.GetFullPath(Path.Combine(baseFullPath, relativePath));
+            var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+            if (!result.StartsWith(baseFullPath + Path.DirectorySeparatorChar, comparison))
             {
                 throw new PlatformException($"Invalid path {relativePath}");
             }
