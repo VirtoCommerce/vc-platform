@@ -28,6 +28,11 @@ namespace VirtoCommerce.Platform.Core.Security
         public bool AllowApiAccessForCustomers { get; set; }
 
         /// <summary>
+        /// Immediately validate token via database call. By default, false. 
+        /// </summary>
+        public bool EnablePersistentStorageTokenValidation { get; set; }
+
+        /// <summary>
         /// Legacy storefront scenario only. When true, the PUT users endpoint accepts
         /// caller-provided values for the protected user fields (PasswordExpired,
         /// LockoutEnabled, LockoutEnd, LastLoginDate, LastPasswordChangedDate,
