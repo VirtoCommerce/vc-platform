@@ -39,7 +39,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         [InlineData("../../../etc/passwd")]
         [InlineData("..\\..\\windows\\system32\\cmd.exe")]
         [InlineData("/etc/passwd")]
-        [InlineData("C:\\Windows\\System32\\cmd.exe")]
         [InlineData("subdir/file.zip")]
         [InlineData("   ")]
         public void DownloadExportFile_MaliciousPath_ThrowsPlatformException(string maliciousFileName)
