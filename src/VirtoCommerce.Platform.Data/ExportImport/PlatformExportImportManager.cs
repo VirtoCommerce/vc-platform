@@ -92,18 +92,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             return retVal;
         }
 
-        // Cancellation intentionally dropped - callers must migrate to the CancellationToken overload.
-        public Task ExportAsync(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
-            => ExportAsync(outStream, exportOptions, progressCallback, CancellationToken.None);
-
-        public Task ImportAsync(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
-            => ImportAsync(inputStream, importOptions, progressCallback, CancellationToken.None);
-
         public Task ExportAsync(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(exportOptions);
             return ExportAsyncCore(outStream, exportOptions, progressCallback, cancellationToken);
         }
+
+        // Cancellation intentionally dropped - callers must migrate to the CancellationToken overload.
+        public Task ExportAsync(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
+            => ExportAsync(outStream, exportOptions, progressCallback, CancellationToken.None);
 
         private async Task ExportAsyncCore(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
         {
@@ -128,6 +125,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             ArgumentNullException.ThrowIfNull(importOptions);
             return ImportAsyncCore(inputStream, importOptions, progressCallback, cancellationToken);
         }
+
+        // Cancellation intentionally dropped - callers must migrate to the CancellationToken overload.
+        public Task ImportAsync(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
+            => ImportAsync(inputStream, importOptions, progressCallback, CancellationToken.None);
 
         private async Task ImportAsyncCore(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
         {

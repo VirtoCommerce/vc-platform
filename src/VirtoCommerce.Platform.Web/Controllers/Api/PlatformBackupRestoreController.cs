@@ -160,6 +160,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
+        // Shim for in-flight queue items: ShutdownToken only - UI delete won't cancel jobs on this path.
+        [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
+            DiagnosticId = "VC0014",
+            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+            => PlatformRestoreBackgroundAsync(importRequest, pushNotification, context, cancellationToken?.ShutdownToken ?? CancellationToken.None);
+
         public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(pushNotification);
@@ -210,13 +217,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await _pushNotifier.SendAsync(pushNotification);
             }
         }
-
-        // Shim for in-flight queue items: ShutdownToken only - UI delete won't cancel jobs on this path.
-        [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
-            DiagnosticId = "VC0014",
-            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
-            => PlatformRestoreBackgroundAsync(importRequest, pushNotification, context, cancellationToken?.ShutdownToken ?? CancellationToken.None);
 
         [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
             DiagnosticId = "VC0014",
