@@ -68,12 +68,12 @@ jobs:
     steps:
 
     - name: Set up Node 24
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
       with:
         node-version: '24'
 
     - name: Set up Java 17
-      uses: actions/setup-java@v5
+      uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
       with:
         distribution: 'temurin'
         java-version: '17'
@@ -94,7 +94,7 @@ jobs:
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       with:
         fetch-depth: 0
 
@@ -188,7 +188,7 @@ jobs:
 
     - name: Docker Login
       if: ${{ env.BUILD_DOCKER == 'true' }}
-      uses: docker/login-action@v4
+      uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4
       with:
         registry: ${{ env.PACKAGE_SERVER }}
         username: $GITHUB_ACTOR
@@ -347,7 +347,7 @@ jobs:
       - deploy-cloud
     steps:
       - name: OWASP ZAP Full Scan
-        uses: zaproxy/action-baseline@v0.14.0
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
         with:
           token: ${{ secrets.REPO_TOKEN }}
           target: 'https://vcptcore-dev.govirto.com'
