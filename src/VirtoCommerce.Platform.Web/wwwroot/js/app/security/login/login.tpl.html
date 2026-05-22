@@ -18,9 +18,9 @@
                         <label class="vc-input__label"> {{ 'platform.blades.login.labels.password' | translate }} <span class="vc-input__asterisk">*</span> </label>
                         <div class="vc-input__container">
                             <input class="vc-input__field" name="password" type="{{ showPassword ? 'text' : 'password' }}" placeholder="{{ 'platform.blades.login.labels.password-placeholder' | translate }}" ng-model="user.password" required va-autofill>
-                            <button class="vc-input__password-switcher" type="button">
-                                <svg class="vc-input__icon" ng-if="!showPassword" ng-click="togglePassword()"><use href="/images/eye-off.svg#icon"></use></svg>
-                                <svg class="vc-input__icon" ng-if="showPassword" ng-click="togglePassword()"><use href="/images/eye.svg#icon"></use></svg>
+                            <button class="vc-input__password-switcher" type="button" ng-click="togglePassword()">
+                                <svg class="vc-input__icon" ng-if="!showPassword"><use href="/images/eye.svg#icon"></use></svg>
+                                <svg class="vc-input__icon" ng-if="showPassword"><use href="/images/eye-off.svg#icon"></use></svg>
                             </button>
                         </div>
                     </div>
