@@ -47,7 +47,8 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | User.RemindPasswordExpiryInDays | "RemindPasswordExpiryInDays": 7  | Number of days to start showing password expiry warning in Platform Manager UI. Used, if password expiration is enabled. 
 |  | Lockout.AutoAccountsLockoutJobEnabled | false  | Enable auto-lock for accounts whose last login date is older than configured.
 |  | Lockout.LockoutMaximumDaysFromLastLogin | 365  | The maximum number of days since the last login to lockout an account.
-|  | Lockout.AutoAccountsLockoutJobEnabled | "0 0 * * *"  | Cron expression for accounts auto-lock job.
+|  | Lockout.CronAutoAccountsLockoutJob | "0 0 * * *"  | Cron expression for accounts auto-lock job.
+|  | Lockout.AutoAccountsLockoutJobBatchSize | 20 | Maximum number of stale users a single auto-lock job execution will process. Set to `0` for no limit — every matching user is locked in a single execution (useful for the initial bulk catch-up on large installs; lower it afterwards for steady state).
 | ExternalModules | | | Configure external source to install modules.
 |  | IncludePrerelease | `false` | Show module versions marked as *Prerelease* if value is `true`.
 |  | ModulesManifestUrl | E.g., `"https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules_v3.json"` | Url to *.json* file containing modules' manifests.
