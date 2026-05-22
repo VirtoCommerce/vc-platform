@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -75,7 +76,7 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             if (lockoutOptions.AutoAccountsLockoutJobEnabled)
             {
-                RecurringJob.AddOrUpdate<AutoAccountLockoutJob>("AutoAccountLockoutJob", j => j.Process(), lockoutOptions.CronAutoAccountsLockoutJob);
+                RecurringJob.AddOrUpdate<AutoAccountLockoutJob>("AutoAccountLockoutJob", j => j.Process(CancellationToken.None), lockoutOptions.CronAutoAccountsLockoutJob);
             }
             else
             {
