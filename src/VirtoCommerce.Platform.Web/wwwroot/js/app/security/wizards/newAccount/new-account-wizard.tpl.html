@@ -44,6 +44,7 @@
             <input name="passwordConfirmation"
                    ng-model="blade.currentEntity.newPassword2"
                    required
+                   va-password-toggle
                    placeholder="{{ 'platform.blades.new-account-wizard.placeholders.repeat-password' | translate }}"
                    type="password"
                    ui-validate="'$value == blade.currentEntity.password'"
