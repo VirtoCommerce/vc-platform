@@ -9,6 +9,7 @@ using Hangfire;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
@@ -39,6 +40,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private static readonly object _lockObject = new();
 
+        [ActivatorUtilitiesConstructor]
         public PlatformExportImportController(
             IPlatformExportImportManager platformExportManager,
             IPushNotificationManager pushNotifier,
@@ -252,6 +254,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 _pushNotifier.Send(pushNotification);
             }
 
+            var wasCancelled = false;
             try
             {
                 var url = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => x.Name == name)?.Url;
@@ -293,6 +296,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             catch (OperationCanceledException)
             {
                 // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
+                wasCancelled = true;
                 _log?.LogWarning("Sample data import job {JobId} started by {User} was cancelled.",
                     context?.BackgroundJob?.Id, pushNotification?.Creator);
             }
@@ -303,7 +307,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             finally
             {
                 await _settingsManager.SetValueAsync(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
-                pushNotification.Description = "Sample data import process completed successfully.";
+                pushNotification.Description = wasCancelled
+                    ? "Sample data import process was cancelled."
+                    : "Sample data import process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }
