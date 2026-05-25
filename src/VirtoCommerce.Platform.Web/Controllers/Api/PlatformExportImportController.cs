@@ -136,7 +136,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     pushNotification.Title = "Sample data import process";
 
                     _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, null, CancellationToken.None));
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, CancellationToken.None, null));
                     pushNotification.JobId = jobId;
                 }
             }
@@ -245,7 +245,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
+        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, CancellationToken cancellationToken, PerformContext context)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
@@ -314,7 +314,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             DiagnosticId = "VC0014",
             UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
-            => SampleDataImportBackgroundAsync(name, pushNotification, context, cancellationToken?.ShutdownToken ?? CancellationToken.None);
+            => SampleDataImportBackgroundAsync(name, pushNotification, cancellationToken?.ShutdownToken ?? CancellationToken.None, context);
 
         private static string GetSafeFullPath(string basePath, string relativePath)
         {

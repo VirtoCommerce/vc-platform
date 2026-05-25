@@ -72,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, notification, null, CancellationToken.None));
+            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, notification, CancellationToken.None, null));
             notification.JobId = jobId;
             return Ok(notification);
         }
@@ -89,7 +89,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, notification, null, CancellationToken.None));
+            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, notification, CancellationToken.None, null));
             notification.JobId = jobId;
 
             return Ok(notification);
@@ -122,7 +122,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
+        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, CancellationToken cancellationToken, PerformContext context)
         {
             ArgumentNullException.ThrowIfNull(pushNotification);
 
@@ -165,9 +165,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             DiagnosticId = "VC0014",
             UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
-            => PlatformRestoreBackgroundAsync(importRequest, pushNotification, context, cancellationToken?.ShutdownToken ?? CancellationToken.None);
+            => PlatformRestoreBackgroundAsync(importRequest, pushNotification, cancellationToken?.ShutdownToken ?? CancellationToken.None, context);
 
-        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
+        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, CancellationToken cancellationToken, PerformContext context)
         {
             ArgumentNullException.ThrowIfNull(pushNotification);
 
@@ -221,7 +221,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             DiagnosticId = "VC0014",
             UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
-            => PlatformBackupBackgroundAsync(exportRequest, pushNotification, context, cancellationToken?.ShutdownToken ?? CancellationToken.None);
+            => PlatformBackupBackgroundAsync(exportRequest, pushNotification, cancellationToken?.ShutdownToken ?? CancellationToken.None, context);
 
         private static string GetSafeFullPath(string basePath, string relativePath)
         {
