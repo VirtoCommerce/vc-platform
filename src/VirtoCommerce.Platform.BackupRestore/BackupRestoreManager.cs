@@ -147,11 +147,11 @@ public class BackupRestoreManager : IPlatformExportImportManager
             //Import selected modules
             await ImportModulesInternalAsync(zipArchive, importOptions, progressInfo, progressCallback, сancellationToken);
         }
-        catch (ZipException ex) when (IsLikelyCryptoFailure(ex))
+        catch (ZipException ex) when (importOptions.IsEncrypted && IsLikelyCryptoFailure(ex))
         {
             throw new PlatformException("Invalid backup password", ex);
         }
-        catch (SharpZipBaseException ex) when (IsLikelyCryptoFailure(ex))
+        catch (SharpZipBaseException ex) when (importOptions.IsEncrypted && IsLikelyCryptoFailure(ex))
         {
             throw new PlatformException("Invalid backup password", ex);
         }
