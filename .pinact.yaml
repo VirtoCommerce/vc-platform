@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/suzuki-shunsuke/pinact/refs/heads/main/json-schema/pinact.json
+version: 3
+
+files:
+  - pattern: ^\.github/workflows/.*\.ya?ml$
+  - pattern: ^(.*/)?action\.ya?ml$
+
+ignore_actions:
+  - name: VirtoCommerce/.*
+    ref: .*

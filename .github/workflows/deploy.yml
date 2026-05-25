@@ -27,7 +27,7 @@ jobs:
         envName: ${{ github.event.inputs.deployBranch }}
 
     - name: Start deployment
-      uses: bobheadxi/deployments@master
+      uses: bobheadxi/deployments@a3240c495b599dc16f99f6816a6f1ea8d10dc07b # master
       id: deployment
       with:
         step: start
@@ -69,7 +69,7 @@ jobs:
       run: echo "BUILD_STATE=failed"  >> $GITHUB_ENV
 
     - name: Update GitHub deployment status
-      uses: bobheadxi/deployments@master
+      uses: bobheadxi/deployments@a3240c495b599dc16f99f6816a6f1ea8d10dc07b # master
       if: always()
       with:
         step: finish
