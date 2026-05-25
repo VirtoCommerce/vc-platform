@@ -1,5 +1,5 @@
-# v3.800.31
-# https://virtocommerce.atlassian.net/browse/VCST-4958
+# v3.800.35
+# https://virtocommerce.atlassian.net/browse/VCST-5063
 name: Release hotfix
 
 on:
