@@ -445,6 +445,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     _settingsManager.AllRegisteredSettings
                         .Where(x => x.ModuleId == module.Id)
                         .Select(x => x.Name));
+
                 //Export only settings with set values
                 foreach (var setting in moduleSettings.Where(x => x.ItHasValues))
                 {

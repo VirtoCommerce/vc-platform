@@ -294,7 +294,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             catch (OperationCanceledException)
             {
-                // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
                 _log?.LogWarning("Sample data import job {JobId} started by {User} was cancelled.",
                     context?.BackgroundJob?.Id, pushNotification?.Creator);
             }
@@ -311,7 +310,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        // Shim for in-flight queue items: ShutdownToken only — UI delete won't cancel jobs on this path.
         [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
             DiagnosticId = "VC0014",
             UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
@@ -325,7 +323,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new PlatformException("Path is empty.");
             }
 
-            // Only allow a file name (single path component) from user input.
             if (Path.IsPathRooted(relativePath) ||
                 !string.Equals(Path.GetFileName(relativePath), relativePath, StringComparison.Ordinal) ||
                 relativePath.Contains("..", StringComparison.Ordinal))
