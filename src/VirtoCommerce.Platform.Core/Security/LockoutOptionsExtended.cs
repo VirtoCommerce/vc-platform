@@ -5,5 +5,6 @@ namespace VirtoCommerce.Platform.Core.Security
         public bool AutoAccountsLockoutJobEnabled { get; set; } = false;
         public int LockoutMaximumDaysFromLastLogin { get; set; } = 365;
         public string CronAutoAccountsLockoutJob { get; set; } = "0 0 * * *";
+        public int AutoAccountsLockoutJobBatchSize { get; set; } = 20;
     }
 }
