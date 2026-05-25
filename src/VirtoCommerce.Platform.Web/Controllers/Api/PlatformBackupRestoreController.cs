@@ -134,7 +134,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var now = DateTime.UtcNow;
-            var wasCancelled = false;
             try
             {
                 var localPath = GetSafeFullPath(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl);
@@ -148,7 +147,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             catch (OperationCanceledException)
             {
                 // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
-                wasCancelled = true;
                 _log?.LogWarning("Platform restore job {JobId} started by {User} was cancelled.",
                     context?.BackgroundJob?.Id, pushNotification.Creator);
             }
@@ -158,9 +156,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
-                pushNotification.Description = wasCancelled
-                    ? "Platform restore process was cancelled."
-                    : "Platform restore process completed successfully.";
+                pushNotification.Description = "Platform restore process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }
@@ -184,7 +180,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 _pushNotifier.Send(pushNotification);
             }
 
-            var wasCancelled = false;
             try
             {
                 var fileName = string.Format(_platformOptions.DefaultExportFileName, DateTime.UtcNow);
@@ -210,7 +205,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             catch (OperationCanceledException)
             {
                 // Also catches Hangfire.JobAbortedException, which derives from OperationCanceledException.
-                wasCancelled = true;
                 _log?.LogWarning("Platform backup job {JobId} started by {User} was cancelled.",
                     context?.BackgroundJob?.Id, pushNotification.Creator);
             }
@@ -220,9 +214,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
-                pushNotification.Description = wasCancelled
-                    ? "Platform backup process was cancelled."
-                    : "Platform backup process completed successfully.";
+                pushNotification.Description = "Platform backup process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }
