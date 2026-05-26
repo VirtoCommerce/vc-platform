@@ -47,19 +47,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _log = log;
         }
 
-        [Obsolete("Use the constructor that accepts ILogger<PlatformBackupRestoreController>.",
-            DiagnosticId = "VC0014",
-            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public PlatformBackupRestoreController(
-            IPlatformExportImportManager platformExportManager,
-            IPushNotificationManager pushNotifier,
-            IUserNameResolver userNameResolver,
-            IOptions<PlatformOptions> options)
-            : this(platformExportManager, pushNotifier, userNameResolver, options, log: null)
-        {
-        }
-
-
         [HttpPost]
         [Route("export")]
         [Authorize(Permissions.PlatformExport)]
@@ -72,7 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, notification, CancellationToken.None, null));
+            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, notification, null, CancellationToken.None));
             notification.JobId = jobId;
             return Ok(notification);
         }
@@ -89,7 +76,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, notification, CancellationToken.None, null));
+            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, notification, null, CancellationToken.None));
             notification.JobId = jobId;
 
             return Ok(notification);
@@ -122,7 +109,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, CancellationToken cancellationToken, PerformContext context)
+        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(pushNotification);
 
@@ -161,13 +148,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
-            DiagnosticId = "VC0014",
-            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
-            => PlatformRestoreBackgroundAsync(importRequest, pushNotification, cancellationToken?.ShutdownToken ?? CancellationToken.None, context);
-
-        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, CancellationToken cancellationToken, PerformContext context)
+        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(pushNotification);
 
@@ -216,12 +197,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await _pushNotifier.SendAsync(pushNotification);
             }
         }
-
-        [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
-            DiagnosticId = "VC0014",
-            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
-            => PlatformBackupBackgroundAsync(exportRequest, pushNotification, cancellationToken?.ShutdownToken ?? CancellationToken.None, context);
 
         private static string GetSafeFullPath(string basePath, string relativePath)
         {

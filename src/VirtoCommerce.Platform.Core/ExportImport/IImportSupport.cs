@@ -9,11 +9,9 @@ namespace VirtoCommerce.Platform.Core.ExportImport
     public interface IImportSupport
     {
         [Obsolete("Use the cancellation-aware overload instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken);
+        Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+            => throw new NotImplementedException();
 
-        Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
-#pragma warning disable VC0014 // Type or member is obsolete
-            => ImportAsync(inputStream, options, progressCallback, new CancellationTokenWrapper(cancellationToken));
-#pragma warning restore VC0014
+        Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken);
     }
 }

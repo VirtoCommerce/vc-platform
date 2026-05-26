@@ -59,20 +59,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _log = log;
         }
 
-        [Obsolete("Use the constructor that accepts ILogger<PlatformExportImportController>.",
-            DiagnosticId = "VC0014",
-            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public PlatformExportImportController(
-            IPlatformExportImportManager platformExportManager,
-            IPushNotificationManager pushNotifier,
-            ISettingsManager settingManager,
-            IUserNameResolver userNameResolver,
-            IOptions<PlatformOptions> options,
-            IHttpClientFactory httpClientFactory)
-            : this(platformExportManager, pushNotifier, settingManager, userNameResolver, options, httpClientFactory, log: null)
-        {
-        }
-
         [HttpGet]
         [Route("sampledata/discover")]
         [AllowAnonymous]
@@ -136,7 +122,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     pushNotification.Title = "Sample data import process";
 
                     _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, CancellationToken.None, null));
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, null, CancellationToken.None));
                     pushNotification.JobId = jobId;
                 }
             }
@@ -245,7 +231,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, CancellationToken cancellationToken, PerformContext context)
+        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
@@ -309,12 +295,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await _pushNotifier.SendAsync(pushNotification);
             }
         }
-
-        [Obsolete("Hangfire compatibility shim for legacy queue items. Use the overload with CancellationToken.",
-            DiagnosticId = "VC0014",
-            UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
-            => SampleDataImportBackgroundAsync(name, pushNotification, cancellationToken?.ShutdownToken ?? CancellationToken.None, context);
 
         private static string GetSafeFullPath(string basePath, string relativePath)
         {

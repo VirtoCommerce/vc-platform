@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using Xunit;
 
@@ -11,80 +10,81 @@ namespace VirtoCommerce.Platform.Core.Tests.ExportImport;
 [Trait("Category", "Unit")]
 public class ExportImportBridgeTests
 {
-#pragma warning disable VC0014 // Tests intentionally implement the legacy obsolete overload.
-    private sealed class LegacyOnlyExporter : IExportSupport
+    private sealed class ModernExporter : IExportSupport
     {
-        public ICancellationToken ReceivedToken { get; private set; }
+        public CancellationToken ReceivedToken { get; private set; }
 
-        public Task ExportAsync(Stream outStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        public Task ExportAsync(Stream outStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
         {
             ReceivedToken = cancellationToken;
             return Task.CompletedTask;
         }
     }
 
-    private sealed class LegacyOnlyImporter : IImportSupport
+    private sealed class ModernImporter : IImportSupport
     {
-        public ICancellationToken ReceivedToken { get; private set; }
+        public CancellationToken ReceivedToken { get; private set; }
 
-        public Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        public Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
         {
             ReceivedToken = cancellationToken;
             return Task.CompletedTask;
         }
     }
+
+    [Fact]
+    public async Task IExportSupport_ModernOverload_ReceivesCancellationToken()
+    {
+        var impl = new ModernExporter();
+        IExportSupport exporter = impl;
+        using var cts = new CancellationTokenSource();
+
+        await exporter.ExportAsync(Stream.Null, new ExportImportOptions(), _ => { }, cts.Token);
+
+        Assert.Equal(cts.Token, impl.ReceivedToken);
+    }
+
+    [Fact]
+#pragma warning disable VC0014
+    public async Task IExportSupport_LegacyOverload_ThrowsNotImplementedException()
 #pragma warning restore VC0014
-
-    [Fact]
-    public async Task IExportSupport_ModernOverload_BridgesToLegacyImpl()
     {
-        var impl = new LegacyOnlyExporter();
-        // Default-interface-method overloads are only resolvable through the interface type.
+        //Arrange — class that only implements the modern overload
+        var impl = new ModernExporter();
         IExportSupport exporter = impl;
-        using var cts = new CancellationTokenSource();
 
-        await exporter.ExportAsync(Stream.Null, new ExportImportOptions(), _ => { }, cts.Token);
-
-        Assert.NotNull(impl.ReceivedToken);
-        Assert.IsType<CancellationTokenWrapper>(impl.ReceivedToken);
+        //Act & Assert — legacy DIM throws NotImplementedException
+#pragma warning disable VC0014
+        await Assert.ThrowsAsync<NotImplementedException>(
+            () => exporter.ExportAsync(Stream.Null, new ExportImportOptions(), _ => { }, null));
+#pragma warning restore VC0014
     }
 
     [Fact]
-    public async Task IExportSupport_ModernOverloadCancellation_FlowsThroughBridge()
+    public async Task IImportSupport_ModernOverload_ReceivesCancellationToken()
     {
-        var impl = new LegacyOnlyExporter();
-        IExportSupport exporter = impl;
-        using var cts = new CancellationTokenSource();
-        cts.Cancel();
-
-        await exporter.ExportAsync(Stream.Null, new ExportImportOptions(), _ => { }, cts.Token);
-
-        Assert.Throws<OperationCanceledException>(() => impl.ReceivedToken.ThrowIfCancellationRequested());
-    }
-
-    [Fact]
-    public async Task IImportSupport_ModernOverload_BridgesToLegacyImpl()
-    {
-        var impl = new LegacyOnlyImporter();
+        var impl = new ModernImporter();
         IImportSupport importer = impl;
         using var cts = new CancellationTokenSource();
 
         await importer.ImportAsync(Stream.Null, new ExportImportOptions(), _ => { }, cts.Token);
 
-        Assert.NotNull(impl.ReceivedToken);
-        Assert.IsType<CancellationTokenWrapper>(impl.ReceivedToken);
+        Assert.Equal(cts.Token, impl.ReceivedToken);
     }
 
     [Fact]
-    public async Task IImportSupport_ModernOverloadCancellation_FlowsThroughBridge()
+#pragma warning disable VC0014
+    public async Task IImportSupport_LegacyOverload_ThrowsNotImplementedException()
+#pragma warning restore VC0014
     {
-        var impl = new LegacyOnlyImporter();
+        //Arrange — class that only implements the modern overload
+        var impl = new ModernImporter();
         IImportSupport importer = impl;
-        using var cts = new CancellationTokenSource();
-        cts.Cancel();
 
-        await importer.ImportAsync(Stream.Null, new ExportImportOptions(), _ => { }, cts.Token);
-
-        Assert.Throws<OperationCanceledException>(() => impl.ReceivedToken.ThrowIfCancellationRequested());
+        //Act & Assert — legacy DIM throws NotImplementedException
+#pragma warning disable VC0014
+        await Assert.ThrowsAsync<NotImplementedException>(
+            () => importer.ImportAsync(Stream.Null, new ExportImportOptions(), _ => { }, null));
+#pragma warning restore VC0014
     }
 }
