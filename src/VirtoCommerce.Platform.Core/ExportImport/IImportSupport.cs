@@ -12,6 +12,9 @@ namespace VirtoCommerce.Platform.Core.ExportImport
         Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken);
+        Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
+#pragma warning disable VC0014
+            => ImportAsync(inputStream, options, progressCallback, new CancellationTokenWrapper(cancellationToken));
+#pragma warning restore VC0014
     }
 }
