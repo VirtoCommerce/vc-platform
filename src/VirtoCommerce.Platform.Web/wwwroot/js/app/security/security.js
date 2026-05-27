@@ -5,8 +5,8 @@ angular.module('platformWebApp')
                 url: '/login',
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 controller: [
-                    '$scope', '$window', '$translate', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
-                    function ($scope, $window, $translate, authService, externalSignInService, loginResources, externalSignInStorage) {
+                    '$scope', '$window', '$translate', '$log', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
+                    function ($scope, $window, $translate, $log, authService, externalSignInService, loginResources, externalSignInStorage) {
                         $scope.loginProviders = [];
                         $scope.showPassword = false;
                         $scope.showPlainLogin = true;
@@ -56,22 +56,35 @@ angular.module('platformWebApp')
                                 function (result) {
                                     $scope.loginProgress = false;
                                     if (!result || !result.succeeded) {
-                                        $scope.authError = 'The login or password is incorrect.';
+                                        $scope.authError = resolveSignInError(result);
                                     }
                                 },
-                                function (x) {
+                                function (response) {
                                     $scope.loginProgress = false;
-                                    if (angular.isDefined(x.status)) {
-                                        if (x.status === 401) {
-                                            $scope.authError = 'The login or password is incorrect.';
-                                        } else {
-                                            $scope.authError = 'Authentication error (code: ' + x.status + ').';
-                                        }
-                                    } else {
-                                        $scope.authError = 'Authentication error ' + x;
-                                    }
+                                    $scope.authError = resolveTechnicalError(response);
                                 });
                         };
+
+                        function resolveSignInError(result) {
+                            if (result && result.isLockedOut) {
+                                return $translate.instant('platform.blades.login.errors.account-locked');
+                            }
+                            return $translate.instant('platform.blades.login.errors.login-failed');
+                        }
+
+                        function resolveTechnicalError(response) {
+                            // Do not expose raw exception details to the user — log them instead and show a generic, localized message.
+                            $log.error('Login request failed', response);
+
+                            var status = response && response.status;
+                            if (status === 401) {
+                                return $translate.instant('platform.blades.login.errors.login-failed');
+                            }
+                            if (status > 0) {
+                                return $translate.instant('platform.blades.login.errors.technical-error', { code: status });
+                            }
+                            return $translate.instant('platform.blades.login.errors.unknown-error');
+                        }
 
                         $scope.togglePassword = function () {
                             $scope.showPassword = !$scope.showPassword;
