@@ -573,6 +573,12 @@
           "password-log-in-type": "Systembruker",
           "or": "eller",
           "signing-in": "Logger inn..."
+        },
+        "errors": {
+          "login-failed": "Påloggingsforsøket mislyktes. Kontroller legitimasjonen din.",
+          "account-locked": "Kontoen din er låst. Prøv igjen senere eller kontakt administrator.",
+          "technical-error": "Autentiseringsfeil. Prøv igjen senere eller kontakt administrator. (Kode: {{code}})",
+          "unknown-error": "Autentiseringsfeil. Prøv igjen senere eller kontakt administrator."
         }
       },
       "forgotpassword": {

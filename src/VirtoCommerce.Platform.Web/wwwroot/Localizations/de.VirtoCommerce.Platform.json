@@ -574,6 +574,12 @@
           "password-log-in-type": "Systembenutzer",
           "or": "oder",
           "signing-in": "Anmeldung läuft..."
+        },
+        "errors": {
+          "login-failed": "Anmeldeversuch fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.",
+          "account-locked": "Ihr Konto wurde gesperrt. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator.",
+          "technical-error": "Authentifizierungsfehler. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator. (Code: {{code}})",
+          "unknown-error": "Authentifizierungsfehler. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator."
         }
       },
       "forgotpassword": {

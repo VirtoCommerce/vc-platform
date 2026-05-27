@@ -573,6 +573,12 @@
           "password-log-in-type": "Järjestelmän käyttäjä",
           "or": "tai",
           "signing-in": "Kirjaudutaan sisään..."
+        },
+        "errors": {
+          "login-failed": "Kirjautumisyritys epäonnistui. Tarkista käyttäjätunnuksesi.",
+          "account-locked": "Tilisi on lukittu. Yritä myöhemmin uudelleen tai ota yhteyttä järjestelmänvalvojaan.",
+          "technical-error": "Todennusvirhe. Yritä myöhemmin uudelleen tai ota yhteyttä järjestelmänvalvojaan. (Koodi: {{code}})",
+          "unknown-error": "Todennusvirhe. Yritä myöhemmin uudelleen tai ota yhteyttä järjestelmänvalvojaan."
         }
       },
       "forgotpassword": {

@@ -572,6 +572,12 @@
           "password-log-in-type": "Użytkownik systemowy",
           "or": "lub",
           "signing-in": "Logowanie..."
+        },
+        "errors": {
+          "login-failed": "Próba logowania nie powiodła się. Sprawdź swoje dane uwierzytelniające.",
+          "account-locked": "Twoje konto zostało zablokowane. Spróbuj ponownie później lub skontaktuj się z administratorem.",
+          "technical-error": "Błąd uwierzytelniania. Spróbuj ponownie później lub skontaktuj się z administratorem. (Kod: {{code}})",
+          "unknown-error": "Błąd uwierzytelniania. Spróbuj ponownie później lub skontaktuj się z administratorem."
         }
       },
       "forgotpassword": {

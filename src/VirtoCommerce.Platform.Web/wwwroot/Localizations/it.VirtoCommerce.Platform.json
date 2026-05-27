@@ -572,6 +572,12 @@
           "password-log-in-type": "Utente di sistema",
           "or": "oppure",
           "signing-in": "Accesso in corso..."
+        },
+        "errors": {
+          "login-failed": "Tentativo di accesso non riuscito. Verifica le tue credenziali.",
+          "account-locked": "Il tuo account è stato bloccato. Riprova più tardi o contatta l'amministratore.",
+          "technical-error": "Errore di autenticazione. Riprova più tardi o contatta l'amministratore. (Codice: {{code}})",
+          "unknown-error": "Errore di autenticazione. Riprova più tardi o contatta l'amministratore."
         }
       },
       "forgotpassword": {
