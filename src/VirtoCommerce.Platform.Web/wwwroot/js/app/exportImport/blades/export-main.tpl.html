@@ -234,8 +234,8 @@
                             {{ 'platform.blades.export-main.labels.copy-log' | translate }}
                         </button>
                         <div class="log" scroll-glue>
-                            <p ng-repeat="x in blade.notification.progressLog | filter:{level: '!Error'} track by $index"
-                               ng-class="{'__info': x.level==='Info', '__warning': x.level==='Warning', '__debug': x.level==='Debug'}">
+                            <p ng-repeat="x in blade.notification.progressLog track by $index"
+                               ng-class="{'__info': x.level==='Info', '__warning': x.level==='Warning', '__debug': x.level==='Debug', '__error': x.level==='Error'}">
                                 {{x.message}}
                             </p>
                         </div>

@@ -10,7 +10,7 @@
 //   // later, when a push notification arrives:
 //   exportImportProgress.parseProgressLog($scope, blade);
 angular.module('platformWebApp')
-    .factory('platformWebApp.exportImport.progressService', [function () {
+    .factory('platformWebApp.exportImport.progressService', ['$translate', function ($translate) {
         var VERB_PATTERNS = {
             'export': {
                 start: /^Exporting '(.+?)'/,
@@ -118,6 +118,35 @@ angular.module('platformWebApp')
                 last.status = 'error';
                 _.each(legacyErrors, function (e) {
                     last.messages.push({ level: 'Error', message: e });
+                });
+            }
+
+            // Pre-flight failure: nothing started processing (no "Importing 'X'" lines), but the
+            // backend reported errors (e.g., file-not-found, ZIP corrupt, bad password). Without
+            // this fallback the timeline UI is empty and the user has nowhere to read the actual
+            // error text. Synthesize a single auto-expanded item carrying every error so the
+            // existing copyItemErrors + expand-on-click UI just works.
+            if (items.length === 0 && legacyErrors.length > 0) {
+                var fallbackKey = (verb === 'import')
+                    ? 'platform.blades.import-main.labels.preflight-failure'
+                    : 'platform.blades.export-main.labels.preflight-failure';
+                var fallbackName = $translate.instant(fallbackKey);
+                // $translate.instant returns the key itself when the translation is missing — fall
+                // back to a plain English noun in that case so the UI doesn't show a dotted path.
+                if (!fallbackName || fallbackName === fallbackKey) {
+                    fallbackName = (verb === 'import') ? 'Restore' : 'Backup';
+                }
+                // Preserve the user's expand toggle across notification updates (the user may
+                // collapse the panel; we shouldn't keep re-expanding it on every push).
+                var prevFallback = previousByName[fallbackName];
+                items.push({
+                    id: 0,
+                    name: fallbackName,
+                    status: 'error',
+                    messages: _.map(legacyErrors, function (e) {
+                        return { level: 'Error', message: e };
+                    }),
+                    expanded: prevFallback ? !!prevFallback.expanded : true
                 });
             }
 

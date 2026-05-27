@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Route("api/platform")]
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
-    public class PlatformExportImportController : Controller
+    public class PlatformSampleDataController : Controller
     {
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private static readonly object _lockObject = new();
 
-        public PlatformExportImportController(
+        public PlatformSampleDataController(
             IPlatformExportImportManager platformExportManager,
             IPushNotificationManager pushNotifier,
             ISettingsManager settingManager,
