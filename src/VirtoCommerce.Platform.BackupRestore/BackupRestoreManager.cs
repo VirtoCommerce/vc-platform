@@ -38,7 +38,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
     private readonly IDynamicPropertyDictionaryItemsSearchService _dynamicPropertyDictionaryItemsSearchService;
     private readonly IZipBackupArchiveFactory _zipFactory;
 
-    private readonly int _batchSize = 20;
+    private readonly int _batchSize = 50;
 
     public BackupRestoreManager(
         UserManager<ApplicationUser> userManager
