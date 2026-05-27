@@ -606,6 +606,12 @@
           "password-log-in-type": "Usuário do sistema",
           "or": "ou",
           "signing-in": "Entrando..."
+        },
+        "errors": {
+          "login-failed": "Falha na tentativa de login. Verifique suas credenciais.",
+          "account-locked": "Sua conta foi bloqueada. Tente novamente mais tarde ou entre em contato com o administrador.",
+          "technical-error": "Erro de autenticação. Tente novamente mais tarde ou entre em contato com o administrador. (Código: {{code}})",
+          "unknown-error": "Erro de autenticação. Tente novamente mais tarde ou entre em contato com o administrador."
         }
       },
       "forgotpassword": {
