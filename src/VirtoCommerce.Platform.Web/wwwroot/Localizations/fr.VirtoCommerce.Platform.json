@@ -606,6 +606,12 @@
           "password-log-in-type": "Utilisateur système",
           "or": "ou",
           "signing-in": "Connexion en cours..."
+        },
+        "errors": {
+          "login-failed": "Échec de la tentative de connexion. Vérifiez vos identifiants.",
+          "account-locked": "Votre compte a été verrouillé. Veuillez réessayer plus tard ou contacter l'administrateur.",
+          "technical-error": "Erreur d'authentification. Veuillez réessayer plus tard ou contacter l'administrateur. (Code : {{code}})",
+          "unknown-error": "Erreur d'authentification. Veuillez réessayer plus tard ou contacter l'administrateur."
         }
       },
       "forgotpassword": {
