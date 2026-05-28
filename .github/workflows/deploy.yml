@@ -21,7 +21,7 @@ jobs:
     steps: 
 
     - name: Read deployment config
-      uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
+      uses: VirtoCommerce/vc-github-actions/get-deploy-param@VCST-5054 #master
       id: deployConfig
       with:
         envName: ${{ github.event.inputs.deployBranch }}
@@ -36,7 +36,7 @@ jobs:
         no_override: false
 
     - name: Update deployment-cm
-      uses: VirtoCommerce/vc-github-actions/create-deploy-pr@master
+      uses: VirtoCommerce/vc-github-actions/create-deploy-pr@VCST-5054 #master
       with:
         deployRepo: ${{ steps.deployConfig.outputs.deployRepo }}
         deployBranch: ${{ steps.deployConfig.outputs.deployBranch }}

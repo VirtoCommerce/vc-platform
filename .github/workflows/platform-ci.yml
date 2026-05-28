@@ -99,18 +99,18 @@ jobs:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@VCST-5054 #master
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
 
     - name: Get Image Version
-      uses: VirtoCommerce/vc-github-actions/get-image-version@master
+      uses: VirtoCommerce/vc-github-actions/get-image-version@VCST-5054 #master
       id: image
 
     - name: Get changelog
       id: changelog
-      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@VCST-5054 #master
 
     - name: Set VERSION_SUFFIX variable
       run: |
@@ -149,12 +149,12 @@ jobs:
         }
     - name: Add version suffix
       if: ${{ github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main' }}
-      uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
+      uses: VirtoCommerce/vc-github-actions/add-version-suffix@VCST-5054 #master
       with:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
 
     - name: SonarCloud Begin
-      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@master
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@VCST-5054 #master
 
     - name: Build
       run: vc-build Compile
@@ -167,10 +167,10 @@ jobs:
       run: echo "BUILD_STATE=successful" >> $GITHUB_ENV
 
     - name: SonarCloud End
-      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@master
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@VCST-5054 #master
 
     - name: Quality Gate
-      uses: VirtoCommerce/vc-github-actions/sonar-quality-gate@master
+      uses: VirtoCommerce/vc-github-actions/sonar-quality-gate@VCST-5054 #master
       with:
         login: ${{secrets.SONAR_TOKEN}}
 
@@ -180,7 +180,7 @@ jobs:
     - name: Build Docker Image
       if: ${{ env.BUILD_DOCKER == 'true' }}
       id: dockerBuild
-      uses: VirtoCommerce/vc-github-actions/build-docker-image@master
+      uses: VirtoCommerce/vc-github-actions/build-docker-image@VCST-5054 #master
       with:
         tag: ${{ env.DOCKER_TAG }}
         imageName: 'platform'
@@ -195,7 +195,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Swagger validation
-      uses: VirtoCommerce/vc-github-actions/docker-env@master
+      uses: VirtoCommerce/vc-github-actions/docker-env@VCST-5054 #master
       if: ${{ github.ref == 'refs/heads/dev' }}
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
@@ -206,12 +206,12 @@ jobs:
 
     - name: Publish Nuget
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
-      uses: VirtoCommerce/vc-github-actions/publish-nuget@master
+      uses: VirtoCommerce/vc-github-actions/publish-nuget@VCST-5054 #master
 
     - name: Publish to Blob
       if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && (github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main')) }}
       id: blobRelease
-      uses: VirtoCommerce/vc-github-actions/publish-blob-release@master
+      uses: VirtoCommerce/vc-github-actions/publish-blob-release@VCST-5054 #master
       with:
         blobSAS: ${{ secrets.BLOB_TOKEN }}
         blobUrl: ${{ vars.BLOB_URL }}
@@ -224,7 +224,7 @@ jobs:
 
     - name: Add Jira link
       if: ${{ github.event_name == 'pull_request' }}
-      uses: VirtoCommerce/vc-github-actions/publish-jira-link@master
+      uses: VirtoCommerce/vc-github-actions/publish-jira-link@VCST-5054 #master
       with:
         branchName: ${{ github.head_ref }}
         repoOrg: ${{ github.repository_owner }}
@@ -233,7 +233,7 @@ jobs:
 
     - name: Add link to PR
       if: ${{ github.event_name == 'pull_request' }}
-      uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
+      uses: VirtoCommerce/vc-github-actions/publish-artifact-link@VCST-5054 #master
       with:
         artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
         repoOrg: ${{ github.repository_owner }}
@@ -244,11 +244,11 @@ jobs:
       with:
         changelog: ${{ steps.changelog.outputs.changelog }}
         organization: ${{ github.repository_owner }}
-      uses: VirtoCommerce/vc-github-actions/publish-github-release@master
+      uses: VirtoCommerce/vc-github-actions/publish-github-release@VCST-5054 #master
 
     - name: Create deployment matrix
       if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
-      uses: VirtoCommerce/vc-github-actions/cloud-create-deploy-matrix@master
+      uses: VirtoCommerce/vc-github-actions/cloud-create-deploy-matrix@VCST-5054 #master
       id: deployment-matrix
       with:
         deployConfigPath: 'cloudDeploy.json'
@@ -268,7 +268,7 @@ jobs:
 
     - name: Publish Docker Image
       if: ${{ env.BUILD_DOCKER == 'true' }}
-      uses: VirtoCommerce/vc-github-actions/publish-docker-image@master
+      uses: VirtoCommerce/vc-github-actions/publish-docker-image@VCST-5054 #master
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
           tag: ${{ env.DOCKER_TAG }}
@@ -278,7 +278,7 @@ jobs:
           update_latest: ${{ env.UPDATE_LATEST_TAG }}
 
     - name: Parse Jira Keys from All Commits
-      uses: VirtoCommerce/vc-github-actions/get-jira-keys@master
+      uses: VirtoCommerce/vc-github-actions/get-jira-keys@VCST-5054 #master
       if: always()
       id: jira_keys
       with:
@@ -314,7 +314,7 @@ jobs:
     needs: ci
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.35
+    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@VCST-5054 #v3.800.35
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -331,7 +331,7 @@ jobs:
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@VCST-5054 #v3.800.35    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
@@ -356,7 +356,7 @@ jobs:
   trivy-scan:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     needs: 'ci'
-    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.35
+    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@VCST-5054 #v3.800.35
     with:
       assigneeAccountId: '621c47c0302c6b006af0a1cd'
       assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'

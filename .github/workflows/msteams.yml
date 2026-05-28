@@ -11,7 +11,7 @@ jobs:
     steps:
 
     - name: Send a message to Microsoft Teams
-      uses: VirtoCommerce/vc-github-actions/msteams-send-message@master
+      uses: VirtoCommerce/vc-github-actions/msteams-send-message@VCST-5054 #master
       with:
         body: '{
     "@type": "MessageCard",

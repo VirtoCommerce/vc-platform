@@ -40,7 +40,7 @@ jobs:
     steps:
     # Initializes vc-build  for solution build.
     - name: Install VirtoCommerce.GlobalTool
-      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@VCST-5054 #master
 
     - name: Checkout repository
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
