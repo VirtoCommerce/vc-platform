@@ -654,6 +654,12 @@
           "password-log-in-type": "System user",
           "or": "or",
           "signing-in": "Signing in..."
+        },
+        "errors": {
+          "login-failed": "Login attempt failed. Check your credentials.",
+          "account-locked": "Your account has been locked. Please try again later or contact administrator.",
+          "technical-error": "Authentication error. Please try again later or contact administrator. (Code: {{code}})",
+          "unknown-error": "Authentication error. Please try again later or contact administrator."
         }
       },
       "forgotpassword": {

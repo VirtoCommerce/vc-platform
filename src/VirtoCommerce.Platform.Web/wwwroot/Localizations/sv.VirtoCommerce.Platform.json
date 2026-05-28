@@ -653,6 +653,12 @@
           "password-log-in-type": "Systemanvändare",
           "or": "eller",
           "signing-in": "Loggar in..."
+        },
+        "errors": {
+          "login-failed": "Inloggningsförsöket misslyckades. Kontrollera dina inloggningsuppgifter.",
+          "account-locked": "Ditt konto har låsts. Försök igen senare eller kontakta administratören.",
+          "technical-error": "Autentiseringsfel. Försök igen senare eller kontakta administratören. (Kod: {{code}})",
+          "unknown-error": "Autentiseringsfel. Försök igen senare eller kontakta administratören."
         }
       },
       "forgotpassword": {
