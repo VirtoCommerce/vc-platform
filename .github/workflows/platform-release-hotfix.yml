@@ -13,12 +13,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@VCST-5054 #v3.800.35    
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@VCST-5054 #v3.800.35    
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
@@ -42,12 +42,12 @@ jobs:
 
     - name: Get Changelog
       id: changelog
-      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@VCST-5054 #master
 
   publish-docker:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@VCST-5054 #v3.800.35    
     with:
       fullKey: ${{ needs.build.outputs.dockerFullKey }}
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
@@ -61,7 +61,7 @@ jobs:
   publish-github-release:
     needs:
       [build, test, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@VCST-5054 #v3.800.35    
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
@@ -81,10 +81,10 @@ jobs:
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
     - name: Install VirtoCommerce.GlobalTool
-      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@VCST-5054 #master
 
     - name: Setup Git Credentials
-      uses: VirtoCommerce/vc-github-actions/setup-git-credentials-github@master
+      uses: VirtoCommerce/vc-github-actions/setup-git-credentials-github@VCST-5054 #master
       with:
         githubToken: ${{ secrets.REPO_TOKEN }}
 

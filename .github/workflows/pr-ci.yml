@@ -17,12 +17,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.35 
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@VCST-5054 #v3.800.35 
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.35 
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@VCST-5054 #v3.800.35 
     with:
       uploadDocker: 'true'
     secrets:
@@ -36,7 +36,7 @@ jobs:
     steps:
     - name: publish-tag  
       if: ${{ github.event_name == 'pull_request' }}
-      uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
+      uses: VirtoCommerce/vc-github-actions/publish-artifact-link@VCST-5054 #master
       with:
         artifactUrl: ${{ needs.build.outputs.imageTag}}
         repoOrg: ${{ github.repository_owner }}

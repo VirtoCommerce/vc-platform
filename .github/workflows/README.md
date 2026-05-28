@@ -28,4 +28,4 @@ uses: actions/checkout@v6
   gh api repos/OWNER/REPO/commits/TAG --jq '.sha'
   ```
 
-- `VirtoCommerce/vc-github-actions/<dir>@master` and other `VirtoCommerce/*` refs remain version-/branch-pinned as before — only non-VirtoCommerce owners require SHA pinning.
+- `VirtoCommerce/vc-github-actions/<dir>@VCST-5054 #master` and other `VirtoCommerce/*` refs remain version-/branch-pinned as before — only non-VirtoCommerce owners require SHA pinning.
