@@ -943,6 +943,11 @@
         "instruction": "Geben Sie 'yes' ein, um zu löschen:"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Filter löschen"
+      }
+    },
     "commands": {
       "login-on-behalf": "Im Namen von anmelden",
       "cache-reset": {

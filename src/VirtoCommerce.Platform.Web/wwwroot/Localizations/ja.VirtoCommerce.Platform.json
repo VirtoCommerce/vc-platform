@@ -941,6 +941,11 @@
         "instruction": "削除するには「yes」と入力してください:"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "フィルターをクリア"
+      }
+    },
     "commands": {
       "login-on-behalf": "代理ログイン",
       "cache-reset": {

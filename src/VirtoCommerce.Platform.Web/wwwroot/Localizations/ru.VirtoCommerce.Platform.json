@@ -943,6 +943,11 @@
         "instruction": "Введите «yes», чтобы удалить:"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Очистить фильтры"
+      }
+    },
     "commands": {
       "login-on-behalf": "Войти от имени",
       "cache-reset": {

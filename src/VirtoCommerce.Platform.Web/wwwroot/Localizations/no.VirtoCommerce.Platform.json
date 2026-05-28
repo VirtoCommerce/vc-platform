@@ -942,6 +942,11 @@
         "instruction": "Skriv \"yes\" for å slette:"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Tøm filtre"
+      }
+    },
     "commands": {
       "login-on-behalf": "Logg inn på vegne av",
       "cache-reset": {

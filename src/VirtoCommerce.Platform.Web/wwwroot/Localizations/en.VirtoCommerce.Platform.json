@@ -857,8 +857,8 @@
         "message": "The settings has been modified. Do you want to save changes?"
       },
       "settings-delete": {
-        "title": "Delete confirmation",
-        "message": "The settings has been modified. Do you want to save changes?"
+        "title": "Save changes",
+        "message": "The settings have been modified. Do you want to save changes?"
       },
       "localizable-setting-value-delete": {
         "title": "Delete confirmation",
@@ -940,6 +940,11 @@
         "warning": "WARNING: This change is permanent and cannot be undone. Applying this change may result in data loss.",
         "message": "The following data will be deleted:",
         "instruction": "Type 'yes' to delete:"
+      }
+    },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Clear filters"
       }
     },
     "commands": {

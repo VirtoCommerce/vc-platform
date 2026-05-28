@@ -941,6 +941,11 @@
         "instruction": "Tapez « yes » pour supprimer :"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Effacer les filtres"
+      }
+    },
     "commands": {
       "login-on-behalf": "Se connecter au nom de",
       "cache-reset": {

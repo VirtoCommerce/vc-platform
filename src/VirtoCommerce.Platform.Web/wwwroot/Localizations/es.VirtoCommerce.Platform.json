@@ -941,6 +941,11 @@
         "instruction": "Escriba 'yes' para eliminar:"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Borrar filtros"
+      }
+    },
     "commands": {
       "login-on-behalf": "Iniciar sesión en nombre de",
       "cache-reset": {

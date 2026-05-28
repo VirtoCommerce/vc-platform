@@ -941,6 +941,11 @@
         "instruction": "请输入\"yes\"以删除："
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "清除筛选"
+      }
+    },
     "commands": {
       "login-on-behalf": "代表登录",
       "cache-reset": {

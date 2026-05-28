@@ -942,6 +942,11 @@
         "instruction": "Kirjoita 'yes' poistaaksesi:"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Tyhjennä suodattimet"
+      }
+    },
     "commands": {
       "login-on-behalf": "Kirjaudu sisään puolesta",
       "cache-reset": {

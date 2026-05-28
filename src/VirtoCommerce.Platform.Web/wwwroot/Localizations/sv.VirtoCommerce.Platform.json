@@ -942,6 +942,11 @@
         "instruction": "Skriv \"yes\" för att ta bort:"
       }
     },
+    "directives": {
+      "filter-panel": {
+        "clear-filters": "Rensa filter"
+      }
+    },
     "commands": {
       "login-on-behalf": "Logga in å andras vägnar",
       "cache-reset": {
