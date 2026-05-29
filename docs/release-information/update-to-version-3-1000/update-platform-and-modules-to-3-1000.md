@@ -72,8 +72,7 @@ public void Initialize(IServiceCollection serviceCollection)
         options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 
         options.UseSqlServer(
-            configuration.GetConnectionString(ModuleInfo.Id)
-            ?? configuration.GetConnectionString("VirtoCommerce.Customer")
+            configuration.GetConnectionString("VirtoCommerce.Customer")
             ?? configuration.GetConnectionString("VirtoCommerce"));
     });
 }
