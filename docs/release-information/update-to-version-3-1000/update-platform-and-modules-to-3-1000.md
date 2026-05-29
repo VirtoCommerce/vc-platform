@@ -54,6 +54,30 @@ Forgetting to add a new migration after making model changes is a common mistake
 
 You can find more information about PendingModelChangesWarning warning by [following link](https://www.virtocommerce.org/t/pendingmodelchangeswarning-in-net-10-ef-core-10-what-happened-how-we-diagnosed-it/817). 
 
+### DB Context Extension
+If your custom module extends a Virto Commerce DbContext (for example, deriving from OrderDbContext, CustomerDbContext, or SecurityDbContext to add custom properties or entities), suppress the PendingModelChangesWarning event when registering your DbContext. This is required because the base module's ModelSnapshot is shared, and when the Virto Commerce team adds a new property or entity to the base model in a future release, your derived DbContext will detect the new model state as a "pending change" relative to your last migration — even though you didn't make the change. Without this suppression, the application throws at startup the first time it calls Migrate().Configure the warning in your module's Initialize method:
+
+```cs
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+
+public void Initialize(IServiceCollection serviceCollection)
+{
+    serviceCollection.AddDbContext<CustomerSampleDbContext>((provider, options) =>
+    {
+        var configuration = provider.GetRequiredService<IConfiguration>();
+
+        // Suppress PendingModelChangesWarning so platform-side model updates
+        // in the base DbContext do not throw at startup in derived modules.
+        options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
+
+        options.UseSqlServer(
+            configuration.GetConnectionString("VirtoCommerce.Customer")
+            ?? configuration.GetConnectionString("VirtoCommerce"));
+    });
+}
+```
+
 ### Breaking changes in Microsoft.OpenApi
 
 Virto Commerce updated Microsoft.OpenApi from version 1.0.0 to 2.3.0 that includes some breaking changes. You will need to update and rebuild your custom module if you use Microsoft.OpenApi.
