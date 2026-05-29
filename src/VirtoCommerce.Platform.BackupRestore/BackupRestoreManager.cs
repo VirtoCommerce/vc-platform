@@ -261,7 +261,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         // a second import action. `SafeImportSectionAsync` also re-syncs the reader to depth 1 after a
         // failure as belt-and-suspenders.
         const int sectionDepth = 1;
-        while (await reader.ReadAsync())
+        while (await reader.ReadAsync(cancellationToken))
         {
             if (reader.TokenType != JsonToken.PropertyName || reader.Depth != sectionDepth)
             {
@@ -473,7 +473,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         await using var sw = new StreamWriter(partStream, Encoding.UTF8);
         await using var writer = new JsonTextWriter(sw);
 
-        await writer.WriteStartObjectAsync();
+        await writer.WriteStartObjectAsync(cancellationToken);
 
         if (manifest.HandleSecurity)
         {
@@ -485,7 +485,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
             cancellationToken.ThrowIfCancellationRequested();
 
             await writer.WritePropertyNameAsync("Roles");
-            await writer.WriteStartArrayAsync();
+            await writer.WriteStartArrayAsync(cancellationToken);
 
             var roles = _roleManager.Roles.ToList();
             if (_roleManager.SupportsRoleClaims)
@@ -496,10 +496,10 @@ public class BackupRestoreManager : IPlatformExportImportManager
                     serializer.Serialize(writer, fullyLoadedRole);
                 }
 
-                await writer.FlushAsync();
+                await writer.FlushAsync(cancellationToken);
             }
 
-            await writer.WriteEndArrayAsync();
+            await writer.WriteEndArrayAsync(cancellationToken);
             progressInfo.ProcessedCount++;
             ReportProgress(progressInfo, progressCallback, $"Successfully exported 'Roles' ({roles.Count})");
 
@@ -510,8 +510,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
             cancellationToken.ThrowIfCancellationRequested();
 
             ReportProgress(progressInfo, progressCallback, "Exporting 'Users'");
-            await writer.WritePropertyNameAsync("Users");
-            await writer.WriteStartArrayAsync();
+            await writer.WritePropertyNameAsync("Users", cancellationToken);
+            await writer.WriteStartArrayAsync(cancellationToken);
             var usersResult = _userManager.Users.ToArray();
             var userExported = 0;
 
@@ -525,8 +525,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
                 }
             }
 
-            await writer.FlushAsync();
-            await writer.WriteEndArrayAsync();
+            await writer.FlushAsync(cancellationToken);
+            await writer.WriteEndArrayAsync(cancellationToken);
             progressInfo.ProcessedCount++;
             ReportProgress(progressInfo, progressCallback, $"Successfully exported 'Users' ({userExported} of {usersResult.Length})");
 
@@ -540,8 +540,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
             cancellationToken.ThrowIfCancellationRequested();
 
             ReportProgress(progressInfo, progressCallback, "Exporting 'Settings'");
-            await writer.WritePropertyNameAsync("Settings");
-            await writer.WriteStartArrayAsync();
+            await writer.WritePropertyNameAsync("Settings", cancellationToken);
+            await writer.WriteStartArrayAsync(cancellationToken);
 
             foreach (var module in manifest.Modules)
             {
@@ -552,10 +552,10 @@ public class BackupRestoreManager : IPlatformExportImportManager
                     serializer.Serialize(writer, setting);
                 }
 
-                await writer.FlushAsync();
+                await writer.FlushAsync(cancellationToken);
             }
 
-            await writer.WriteEndArrayAsync();
+            await writer.WriteEndArrayAsync(cancellationToken);
             progressInfo.ProcessedCount++;
             ReportProgress(progressInfo, progressCallback, "Successfully exported 'Settings'");
         }
@@ -566,8 +566,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
             await SerializeArray("DynamicPropertyDictionaryItems", _dynamicPropertyDictionaryItemsSearchService, writer);
         }
 
-        await writer.WriteEndObjectAsync();
-        await writer.FlushAsync();
+        await writer.WriteEndObjectAsync(cancellationToken);
+        await writer.FlushAsync(cancellationToken);
 
         async Task SerializeArray<TModel, TCriteria, TResult>(
             string name,
@@ -579,8 +579,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
         {
             ReportProgress(progressInfo, progressCallback, $"Exporting '{name}'");
 
-            await jsonTextWriter.WritePropertyNameAsync(name);
-            await jsonTextWriter.WriteStartArrayAsync();
+            await jsonTextWriter.WritePropertyNameAsync(name, cancellationToken);
+            await jsonTextWriter.WriteStartArrayAsync(cancellationToken);
 
             var criteria = AbstractTypeFactory<TCriteria>.TryCreateInstance();
             criteria.Take = _batchSize;
@@ -595,8 +595,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
                 }
             }
 
-            await jsonTextWriter.WriteEndArrayAsync();
-            await jsonTextWriter.FlushAsync();
+            await jsonTextWriter.WriteEndArrayAsync(cancellationToken);
+            await jsonTextWriter.FlushAsync(cancellationToken);
 
             progressInfo.ProcessedCount++;
             ReportProgress(progressInfo, progressCallback, $"Successfully exported '{name}'");

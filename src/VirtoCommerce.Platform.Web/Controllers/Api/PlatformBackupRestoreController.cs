@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
@@ -190,7 +189,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 var message = ex.ExpandExceptionMessage();
                 pushNotification.Errors.Add(message);
-                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog ??= [];
                 pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
@@ -253,7 +252,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 var message = ex.ExpandExceptionMessage();
                 pushNotification.Errors.Add(message);
-                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog ??= [];
                 pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
@@ -288,7 +287,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 throw new PlatformException("File name is required");
             }
-            if (relativePath.IndexOfAny(new[] { '/', '\\' }) >= 0)
+            if (relativePath.IndexOfAny(['/', '\\']) >= 0)
             {
                 throw new PlatformException($"Invalid path {relativePath}");
             }
