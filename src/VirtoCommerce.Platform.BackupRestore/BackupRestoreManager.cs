@@ -484,7 +484,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
             ReportProgress(progressInfo, progressCallback, "Exporting 'Roles'");
             cancellationToken.ThrowIfCancellationRequested();
 
-            await writer.WritePropertyNameAsync("Roles");
+            await writer.WritePropertyNameAsync("Roles", cancellationToken);
             await writer.WriteStartArrayAsync(cancellationToken);
 
             var roles = _roleManager.Roles.ToList();
