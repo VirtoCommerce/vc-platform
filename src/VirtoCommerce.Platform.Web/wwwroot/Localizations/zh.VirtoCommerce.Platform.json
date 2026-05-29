@@ -184,7 +184,17 @@
           "download-url": "下载URL",
           "errors": "错误",
           "start": "开始",
-          "end": "结束"
+          "end": "结束",
+          "export-progress": "备份进度",
+          "export-finished": "备份完成",
+          "process-completed": "备份过程已完成",
+          "completed-with-errors": "已完成（有错误）",
+          "detailed-log": "显示详细日志",
+          "copy-error": "复制错误",
+          "copy-log": "复制日志",
+          "download-backup": "下载备份",
+          "backup-password": "备份密码",
+          "password-shown-once": "仅显示一次"
         },
         "menu": {
           "security": {
@@ -202,7 +212,20 @@
           "dynamic-props": {
             "title": "动态属性",
             "description": "平台动态属性"
+          },
+          "password-protect": {
+            "title": "密码保护",
+            "description": "使用一次性密码(AES-256)加密备份。推荐。"
           }
+        },
+        "warnings": {
+          "security-data-title": "此备份将包含敏感数据",
+          "security-data-body": "所有用户的密码哈希、API 密钥和安全戳都将被包含在内。任何能够访问备份文件的人都可以利用它接管用户账户。请将文件保存在安全的位置,并限制下载权限。",
+          "no-encryption-title": "此备份将不加密",
+          "no-encryption-body": "任何能够读取文件的人都可以恢复用户密码和 API 密钥。只有在文件永远不会离开安全环境时才继续。"
+        },
+        "hints": {
+          "backup-password": "此密码用于加密备份文件。请将其保存在安全的地方 — 没有它,备份将无法恢复。此密码仅在此屏幕显示一次;如果您离开,将无法再找回。"
         }
       },
       "import-main": {
@@ -224,7 +247,16 @@
           "no-data": "无数据",
           "errors": "错误",
           "start": "开始",
-          "end": "结束"
+          "end": "结束",
+          "drag-or-browse": "将 .zip 文件拖放到此处，或点击浏览",
+          "drag-note-detail": "该文件必须由 Virto Commerce 数据备份生成",
+          "process-completed": "还原过程已完成",
+          "completed-with-errors": "已完成（有错误）",
+          "detailed-log": "显示详细日志",
+          "copy-error": "复制错误",
+          "copy-log": "复制日志",
+          "password-section": "备份密码",
+          "password": "备份密码"
         },
         "menu": {
           "security": {
@@ -243,6 +275,20 @@
             "title": "动态属性",
             "description": "平台动态属性"
           }
+        },
+        "warnings": {
+          "security-data-title": "此恢复操作将覆盖敏感数据",
+          "security-data-body": "备份中的用户密码、API 密钥和安全戳将替换文件中每个用户的当前值。",
+          "security-data-admin-preserved": "您自己的管理员账户 ({{username}}) 不会被修改 — 您的密码和当前会话将被保留。"
+        },
+        "placeholders": {
+          "password": "请输入创建此备份时显示的密码"
+        },
+        "hints": {
+          "password": "请输入创建此备份时显示的密码。"
+        },
+        "errors": {
+          "wrong-password": "密码不正确。请重试。"
         }
       },
       "exportImport-main": {

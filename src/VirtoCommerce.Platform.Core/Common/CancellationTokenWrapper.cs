@@ -1,13 +1,12 @@
+using System;
 using System.Threading;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-    /// <summary>
-    /// Implements cancellation abstraction standard System.Threading.CancellationToken.
-    /// </summary>
-    /// <remarks>
-    /// See remarks on ICancellationToken.
-    /// </remarks>
+
+    [Obsolete("Hangfire compatibility shim for legacy queue items. Use CancellationToken.",
+        DiagnosticId = "VC0014",
+        UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class CancellationTokenWrapper : ICancellationToken
     {
         public CancellationToken CancellationToken { get; }

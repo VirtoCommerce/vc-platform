@@ -9,14 +9,13 @@ using Hangfire;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
@@ -28,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Route("api/platform")]
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
-    public class PlatformExportImportController : Controller
+    public class PlatformSampleDataController : Controller
     {
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
@@ -36,19 +35,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserNameResolver _userNameResolver;
         private readonly PlatformOptions _platformOptions;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<PlatformExportImportController> _log;
 
         private static readonly object _lockObject = new();
 
-        [ActivatorUtilitiesConstructor]
-        public PlatformExportImportController(
+        public PlatformSampleDataController(
             IPlatformExportImportManager platformExportManager,
             IPushNotificationManager pushNotifier,
             ISettingsManager settingManager,
             IUserNameResolver userNameResolver,
             IOptions<PlatformOptions> options,
-            IHttpClientFactory httpClientFactory,
-            ILogger<PlatformExportImportController> log)
+            IHttpClientFactory httpClientFactory)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
@@ -56,7 +52,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userNameResolver = userNameResolver;
             _httpClientFactory = httpClientFactory;
             _platformOptions = options.Value;
-            _log = log;
         }
 
         [HttpGet]
@@ -235,7 +230,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             void progressCallback(ExportImportProgressInfo x)
             {
-                pushNotification.Path(x);
+                pushNotification.Patch(x);
                 pushNotification.JobId = context.BackgroundJob.Id;
                 _pushNotifier.Send(pushNotification);
             }
@@ -271,51 +266,44 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 });
 
-                using var stream = new FileStream(tmpFilePath, FileMode.Open);
-                var manifest = _platformExportManager.ReadExportManifest(stream);
-                if (manifest != null)
+                using (var stream = new FileStream(tmpFilePath, FileMode.Open))
                 {
-                    await _platformExportManager.ImportAsync(stream, manifest, progressCallback, cancellationToken);
+                    var manifest = _platformExportManager.ReadExportManifest(stream);
+                    if (manifest != null)
+                    {
+                        await _platformExportManager.ImportAsync(stream, manifest, progressCallback, cancellationToken);
+                    }
                 }
             }
-            catch (OperationCanceledException)
+            catch (JobAbortedException)
             {
-                _log?.LogWarning("Sample data import job {JobId} started by {User} was cancelled.",
-                    context?.BackgroundJob?.Id, pushNotification?.Creator);
+                //do nothing
             }
             catch (Exception ex)
             {
-                pushNotification.Errors.Add(ex.ExpandExceptionMessage());
+                var message = ex.ExpandExceptionMessage();
+                pushNotification.Errors.Add(message);
+                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
             {
                 await _settingsManager.SetValueAsync(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
-                pushNotification.Description = "Sample data import process completed successfully.";
+                pushNotification.Description = pushNotification.Errors.Count > 0
+                    ? "Sample data import process completed with errors."
+                    : "Sample data import process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }
         }
 
+
         private static string GetSafeFullPath(string basePath, string relativePath)
         {
-            if (string.IsNullOrWhiteSpace(relativePath))
-            {
-                throw new PlatformException("Path is empty.");
-            }
-
-            if (Path.IsPathRooted(relativePath) ||
-                !string.Equals(Path.GetFileName(relativePath), relativePath, StringComparison.Ordinal) ||
-                relativePath.Contains("..", StringComparison.Ordinal))
-            {
-                throw new PlatformException($"Invalid path {relativePath}");
-            }
-
-            var baseFullPath = Path.GetFullPath(basePath)
-                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            var baseFullPath = Path.GetFullPath(basePath);
             var result = Path.GetFullPath(Path.Combine(baseFullPath, relativePath));
-            var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
-            if (!result.StartsWith(baseFullPath + Path.DirectorySeparatorChar, comparison))
+            if (!result.StartsWith(baseFullPath + Path.DirectorySeparatorChar))
             {
                 throw new PlatformException($"Invalid path {relativePath}");
             }

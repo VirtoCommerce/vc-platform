@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using FluentAssertions;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -32,6 +33,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 Mock.Of<IPushNotificationManager>(),
                 Mock.Of<IUserNameResolver>(),
                 options,
+                Mock.Of<IDataProtectionProvider>(),
                 Mock.Of<ILogger<PlatformBackupRestoreController>>());
         }
 

@@ -184,7 +184,17 @@
           "download-url": "Lataus-URL",
           "errors": "Virheet",
           "start": "Alku",
-          "end": "Loppu"
+          "end": "Loppu",
+          "export-progress": "Varmuuskopioinnin edistyminen",
+          "export-finished": "Varmuuskopiointi valmis",
+          "process-completed": "Varmuuskopiointiprosessi on valmis",
+          "completed-with-errors": "Valmistui virheillä",
+          "detailed-log": "Näytä yksityiskohtainen loki",
+          "copy-error": "Kopioi virhe",
+          "copy-log": "Kopioi loki",
+          "download-backup": "Lataa varmuuskopio",
+          "backup-password": "Varmuuskopion salasana",
+          "password-shown-once": "Näytetään vain kerran"
         },
         "menu": {
           "security": {
@@ -202,7 +212,20 @@
           "dynamic-props": {
             "title": "Dynamiset ominaisuudet",
             "description": "Alustan dynamiset ominaisuudet"
+          },
+          "password-protect": {
+            "title": "Suojaa salasanalla",
+            "description": "Salaa varmuuskopio kertakäyttöisellä salasanalla (AES-256). Suositeltu."
           }
+        },
+        "warnings": {
+          "security-data-title": "Tämä varmuuskopio sisältää arkaluonteisia tietoja",
+          "security-data-body": "Kaikkien käyttäjien salasanatiivisteet, API-avaimet ja suojausleimat sisällytetään. Kuka tahansa, jolla on pääsy varmuuskopiotiedostoon, voi käyttää sitä käyttäjätilien haltuunottoon. Säilytä tiedosto turvallisessa paikassa ja rajoita lataajia.",
+          "no-encryption-title": "Tämä varmuuskopio on salaamaton",
+          "no-encryption-body": "Kuka tahansa, joka voi lukea tiedoston, voi palauttaa käyttäjien salasanat ja API-avaimet. Jatka vain, jos tiedosto ei koskaan poistu suojatusta ympäristöstä."
+        },
+        "hints": {
+          "backup-password": "Tämä salasana salaa varmuuskopiotiedoston. Säilytä se turvallisessa paikassa — ilman sitä varmuuskopiota ei voi palauttaa. Se näytetään vain kerran tällä näytöllä; jos poistut, sitä ei voi palauttaa."
         }
       },
       "import-main": {
@@ -224,7 +247,16 @@
           "no-data": "Ei dataa",
           "errors": "Virheet",
           "start": "Alku",
-          "end": "Loppu"
+          "end": "Loppu",
+          "drag-or-browse": "Vedä ja pudota .zip-tiedosto tähän tai napsauta selataksesi",
+          "drag-note-detail": "Tiedoston on oltava Virto Commerce -datan varmuuskopioinnin tuottama",
+          "process-completed": "Palautusprosessi on valmis",
+          "completed-with-errors": "Valmistui virheillä",
+          "detailed-log": "Näytä yksityiskohtainen loki",
+          "copy-error": "Kopioi virhe",
+          "copy-log": "Kopioi loki",
+          "password-section": "Varmuuskopion salasana",
+          "password": "Varmuuskopion salasana"
         },
         "menu": {
           "security": {
@@ -243,6 +275,20 @@
             "title": "Dynamiset ominaisuudet",
             "description": "Alustan dynamiset ominaisuudet"
           }
+        },
+        "warnings": {
+          "security-data-title": "Tämä palautus ylikirjoittaa arkaluonteisia tietoja",
+          "security-data-body": "Varmuuskopiosta tulevat käyttäjäsalasanat, API-avaimet ja suojausleimat korvaavat tiedoston jokaisen käyttäjän nykyiset arvot.",
+          "security-data-admin-preserved": "Omaa ylläpitäjätiliäsi ({{username}}) ei muuteta — salasanasi ja aktiivinen istuntosi säilyvät."
+        },
+        "placeholders": {
+          "password": "Anna salasana, joka näytettiin tämän varmuuskopion luonnin yhteydessä"
+        },
+        "hints": {
+          "password": "Anna salasana, joka näytettiin tämän varmuuskopion luonnin yhteydessä."
+        },
+        "errors": {
+          "wrong-password": "Virheellinen salasana. Yritä uudelleen."
         }
       },
       "exportImport-main": {
