@@ -214,7 +214,7 @@
             "description": "平台动态属性"
           },
           "password-protect": {
-            "title": "密码保护",
+            "title": "使用密码加密",
             "description": "使用一次性密码(AES-256)加密备份。推荐。"
           }
         },
