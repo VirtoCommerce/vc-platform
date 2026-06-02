@@ -118,6 +118,19 @@ namespace VirtoCommerce.Platform.Core.Tests.Extensions
             actual.Length.Should().Be(10);
         }
 
+        [Fact]
+        public void Truncate_MaxLengthSmallerThanSuffix_DoesNotThrow()
+        {
+            // Arrange
+            var value = "Hello";
+
+            // Act
+            var actual = value.Truncate(2);
+
+            // Assert
+            actual.Should().Be("...");
+        }
+
         #endregion Truncate
     }
 }
