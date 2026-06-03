@@ -1,5 +1,6 @@
 using Hangfire.Client;
 using Hangfire.Server;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using static VirtoCommerce.Platform.Core.Common.ThreadSlotNames;
 
@@ -11,6 +12,8 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
     /// </summary>
     public class HangfireUserContextMiddleware : IClientFilter, IServerFilter
     {
+        public const int UserNameLength = 64;
+
         private readonly IUserNameResolver _userNameResolver;
 
         public HangfireUserContextMiddleware(IUserNameResolver userNameResolver)
@@ -47,7 +50,7 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
 
             if (IsRecurringJob(filterContext, out var recurringJobId))
             {
-                userName = $"system:{recurringJobId}";
+                userName = $"system:{recurringJobId}".Truncate(UserNameLength);
             }
             else
             {
