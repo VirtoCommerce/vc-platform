@@ -168,8 +168,16 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 return value;
             }
+            suffix ??= string.Empty;
 
-            return value.Length <= maxLength ? value : value.Substring(0, maxLength) + suffix;
+            if (value.Length <= maxLength)
+            {
+                return value;
+            }
+
+            maxLength = Math.Max(0, maxLength - suffix.Length);
+
+            return string.Concat(value.AsSpan(0, maxLength), suffix);
         }
 
         public static string EscapeSearchTerm(this string term)
