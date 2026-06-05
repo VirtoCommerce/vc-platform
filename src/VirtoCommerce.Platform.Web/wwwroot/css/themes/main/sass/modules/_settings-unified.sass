@@ -194,13 +194,26 @@ legend:hover .settings-copy-link
         content: ''
         position: absolute
         top: -6px
-        right: 8px
+        // overridden per-instance by the va-reset-confirm-popover directive so the
+        // arrow keeps pointing at the icon after the popover is clamped to the viewport
+        right: var(--arrow-right, 8px)
         width: 11px
         height: 11px
         background: #fff
         border-left: 1px solid #d4dde6
         border-top: 1px solid #d4dde6
         transform: rotate(45deg)
+
+// When flipped above the icon (no room below), move the arrow to the bottom edge
+// and point it downward.
+.settings-reset__popover--up
+    &:before
+        top: auto
+        bottom: -6px
+        border-left: none
+        border-top: none
+        border-right: 1px solid #d4dde6
+        border-bottom: 1px solid #d4dde6
 
 .settings-reset__text
     display: block

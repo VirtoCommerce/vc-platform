@@ -77,7 +77,7 @@
                                        ng-click="$event.preventDefault(); $event.stopPropagation(); data.confirmReset = !data.confirmReset;"></i>
                                     <span class="settings-reset__backdrop" ng-if="data.confirmReset"
                                           ng-click="$event.preventDefault(); $event.stopPropagation(); data.confirmReset = false;"></span>
-                                    <span class="settings-reset__popover" ng-if="data.confirmReset"
+                                    <span class="settings-reset__popover" va-reset-confirm-popover ng-if="data.confirmReset"
                                           ng-click="$event.preventDefault(); $event.stopPropagation();">
                                         <span class="settings-reset__text">{{ 'platform.blades.settings-detail.reset-to-default-confirm' | translate }}</span>
                                         <span class="settings-reset__actions">
