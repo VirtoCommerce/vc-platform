@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib;
 using ICSharpCode.SharpZipLib.Zip;
@@ -100,9 +101,11 @@ public class BackupRestoreManager : IPlatformExportImportManager
         return retVal;
     }
 
-    public async Task ExportAsync(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
+    public async Task ExportAsync(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, CancellationToken сancellationToken)
     {
         ArgumentNullException.ThrowIfNull(exportOptions);
+
+        сancellationToken.ThrowIfCancellationRequested();
 
         var progressInfo = new ExportImportProgressInfo
         {
@@ -127,9 +130,10 @@ public class BackupRestoreManager : IPlatformExportImportManager
         exportOptions.SerializeJson(stream, GetJsonSerializer());
     }
 
-    public async Task ImportAsync(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
+    public async Task ImportAsync(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback, CancellationToken сancellationToken)
     {
         ArgumentNullException.ThrowIfNull(importOptions);
+        сancellationToken.ThrowIfCancellationRequested();
 
         var progressInfo = new ExportImportProgressInfo
         {
@@ -237,7 +241,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         return newErrors;
     }
 
-    private async Task ImportPlatformEntriesInternalAsync(IZipBackupArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private async Task ImportPlatformEntriesInternalAsync(IZipBackupArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         var jsonSerializer = GetJsonSerializer();
 
@@ -257,7 +261,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         // a second import action. `SafeImportSectionAsync` also re-syncs the reader to depth 1 after a
         // failure as belt-and-suspenders.
         const int sectionDepth = 1;
-        while (await reader.ReadAsync())
+        while (await reader.ReadAsync(cancellationToken))
         {
             if (reader.TokenType != JsonToken.PropertyName || reader.Depth != sectionDepth)
             {
@@ -353,7 +357,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         }
     }
 
-    private Task ImportRolesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private Task ImportRolesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         return reader.DeserializeArrayWithPagingAsync<Role>(jsonSerializer, _batchSize, async items =>
         {
@@ -378,7 +382,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         }, cancellationToken);
     }
 
-    private Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, string callerUserName, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, string callerUserName, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         return reader.DeserializeArrayWithPagingAsync<ApplicationUser>(jsonSerializer, _batchSize, async items =>
         {
@@ -415,7 +419,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         }, cancellationToken);
     }
 
-    private Task ImportSettingsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private Task ImportSettingsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         var moduleIds = manifest.Modules.Select(x => x.Id).ToHashSet();
 
@@ -428,7 +432,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
             }, cancellationToken);
     }
 
-    private Task ImportDynamicPropertiesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private Task ImportDynamicPropertiesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         return reader.DeserializeArrayWithPagingAsync<DynamicProperty>(jsonSerializer, _batchSize,
             items => _dynamicPropertyService.SaveDynamicPropertiesAsync(items.ToArray()),
@@ -439,7 +443,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
             }, cancellationToken);
     }
 
-    private Task ImportDynamicPropertyDictionaryItemsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private Task ImportDynamicPropertyDictionaryItemsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         return reader.DeserializeArrayWithPagingAsync<DynamicPropertyDictionaryItem>(jsonSerializer, _batchSize,
             items => _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items.ToArray()),
@@ -450,7 +454,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
             }, cancellationToken);
     }
 
-    private Task ImportUserApiKeysInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private Task ImportUserApiKeysInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         return reader.DeserializeArrayWithPagingAsync<UserApiKey>(jsonSerializer, _batchSize,
             items => _userApiKeyService.SaveApiKeysAsync(items.ToArray()),
@@ -461,7 +465,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
             }, cancellationToken);
     }
 
-    private async Task ExportPlatformEntriesInternalAsync(IZipBackupArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private async Task ExportPlatformEntriesInternalAsync(IZipBackupArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         var serializer = GetJsonSerializer();
         //Create part for platform entries (encrypted if the archive has a password)
@@ -469,7 +473,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         await using var sw = new StreamWriter(partStream, Encoding.UTF8);
         await using var writer = new JsonTextWriter(sw);
 
-        await writer.WriteStartObjectAsync();
+        await writer.WriteStartObjectAsync(cancellationToken);
 
         if (manifest.HandleSecurity)
         {
@@ -480,8 +484,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
             ReportProgress(progressInfo, progressCallback, "Exporting 'Roles'");
             cancellationToken.ThrowIfCancellationRequested();
 
-            await writer.WritePropertyNameAsync("Roles");
-            await writer.WriteStartArrayAsync();
+            await writer.WritePropertyNameAsync("Roles", cancellationToken);
+            await writer.WriteStartArrayAsync(cancellationToken);
 
             var roles = _roleManager.Roles.ToList();
             if (_roleManager.SupportsRoleClaims)
@@ -492,10 +496,10 @@ public class BackupRestoreManager : IPlatformExportImportManager
                     serializer.Serialize(writer, fullyLoadedRole);
                 }
 
-                await writer.FlushAsync();
+                await writer.FlushAsync(cancellationToken);
             }
 
-            await writer.WriteEndArrayAsync();
+            await writer.WriteEndArrayAsync(cancellationToken);
             progressInfo.ProcessedCount++;
             ReportProgress(progressInfo, progressCallback, $"Successfully exported 'Roles' ({roles.Count})");
 
@@ -506,8 +510,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
             cancellationToken.ThrowIfCancellationRequested();
 
             ReportProgress(progressInfo, progressCallback, "Exporting 'Users'");
-            await writer.WritePropertyNameAsync("Users");
-            await writer.WriteStartArrayAsync();
+            await writer.WritePropertyNameAsync("Users", cancellationToken);
+            await writer.WriteStartArrayAsync(cancellationToken);
             var usersResult = _userManager.Users.ToArray();
             var userExported = 0;
 
@@ -521,8 +525,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
                 }
             }
 
-            await writer.FlushAsync();
-            await writer.WriteEndArrayAsync();
+            await writer.FlushAsync(cancellationToken);
+            await writer.WriteEndArrayAsync(cancellationToken);
             progressInfo.ProcessedCount++;
             ReportProgress(progressInfo, progressCallback, $"Successfully exported 'Users' ({userExported} of {usersResult.Length})");
 
@@ -536,8 +540,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
             cancellationToken.ThrowIfCancellationRequested();
 
             ReportProgress(progressInfo, progressCallback, "Exporting 'Settings'");
-            await writer.WritePropertyNameAsync("Settings");
-            await writer.WriteStartArrayAsync();
+            await writer.WritePropertyNameAsync("Settings", cancellationToken);
+            await writer.WriteStartArrayAsync(cancellationToken);
 
             foreach (var module in manifest.Modules)
             {
@@ -548,10 +552,10 @@ public class BackupRestoreManager : IPlatformExportImportManager
                     serializer.Serialize(writer, setting);
                 }
 
-                await writer.FlushAsync();
+                await writer.FlushAsync(cancellationToken);
             }
 
-            await writer.WriteEndArrayAsync();
+            await writer.WriteEndArrayAsync(cancellationToken);
             progressInfo.ProcessedCount++;
             ReportProgress(progressInfo, progressCallback, "Successfully exported 'Settings'");
         }
@@ -562,8 +566,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
             await SerializeArray("DynamicPropertyDictionaryItems", _dynamicPropertyDictionaryItemsSearchService, writer);
         }
 
-        await writer.WriteEndObjectAsync();
-        await writer.FlushAsync();
+        await writer.WriteEndObjectAsync(cancellationToken);
+        await writer.FlushAsync(cancellationToken);
 
         async Task SerializeArray<TModel, TCriteria, TResult>(
             string name,
@@ -575,8 +579,8 @@ public class BackupRestoreManager : IPlatformExportImportManager
         {
             ReportProgress(progressInfo, progressCallback, $"Exporting '{name}'");
 
-            await jsonTextWriter.WritePropertyNameAsync(name);
-            await jsonTextWriter.WriteStartArrayAsync();
+            await jsonTextWriter.WritePropertyNameAsync(name, cancellationToken);
+            await jsonTextWriter.WriteStartArrayAsync(cancellationToken);
 
             var criteria = AbstractTypeFactory<TCriteria>.TryCreateInstance();
             criteria.Take = _batchSize;
@@ -591,15 +595,15 @@ public class BackupRestoreManager : IPlatformExportImportManager
                 }
             }
 
-            await jsonTextWriter.WriteEndArrayAsync();
-            await jsonTextWriter.FlushAsync();
+            await jsonTextWriter.WriteEndArrayAsync(cancellationToken);
+            await jsonTextWriter.FlushAsync(cancellationToken);
 
             progressInfo.ProcessedCount++;
             ReportProgress(progressInfo, progressCallback, $"Successfully exported '{name}'");
         }
     }
 
-    private async Task ImportModulesInternalAsync(IZipBackupArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private async Task ImportModulesInternalAsync(IZipBackupArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         foreach (var moduleInfo in manifest.Modules)
         {
@@ -667,7 +671,7 @@ public class BackupRestoreManager : IPlatformExportImportManager
         }
     }
 
-    private async Task ExportModulesInternalAsync(IZipBackupArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    private async Task ExportModulesInternalAsync(IZipBackupArchive zipArchive, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         foreach (var module in manifest.Modules)
         {

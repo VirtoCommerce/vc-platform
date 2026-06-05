@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -18,7 +19,6 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Hangfire;
 
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
@@ -117,7 +117,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     pushNotification.Title = "Sample data import process";
 
                     _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, JobCancellationToken.Null, null));
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, null, CancellationToken.None));
                     pushNotification.JobId = jobId;
                 }
             }
@@ -226,7 +226,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
@@ -271,7 +271,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var manifest = _platformExportManager.ReadExportManifest(stream);
                     if (manifest != null)
                     {
-                        await _platformExportManager.ImportAsync(stream, manifest, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
+                        await _platformExportManager.ImportAsync(stream, manifest, progressCallback, cancellationToken);
                     }
                 }
             }

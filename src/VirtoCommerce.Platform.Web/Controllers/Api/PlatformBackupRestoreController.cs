@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Exceptions;
@@ -18,7 +18,6 @@ using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Hangfire;
 
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
@@ -41,6 +40,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
         private readonly PlatformOptions _platformOptions;
+        private readonly ILogger<PlatformBackupRestoreController> _logger;
         private readonly IDataProtector _protector;
 
         public PlatformBackupRestoreController(
@@ -48,13 +48,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IPushNotificationManager pushNotifier,
             IUserNameResolver userNameResolver,
             IOptions<PlatformOptions> options,
-            IDataProtectionProvider dataProtectionProvider)
+            IDataProtectionProvider dataProtectionProvider,
+            ILogger<PlatformBackupRestoreController> logger)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
             _platformOptions = options.Value;
             _protector = dataProtectionProvider.CreateProtector(DataProtectionPurpose);
+            _logger = logger;
         }
 
 
@@ -82,7 +84,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 protectedPassword = _protector.Protect(plainPassword);
             }
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, protectedPassword, notification, JobCancellationToken.Null, null));
+            var jobId = BackgroundJob.Enqueue(() => PlatformBackupBackgroundAsync(exportRequest, protectedPassword, notification, null, CancellationToken.None));
             notification.JobId = jobId;
             return Ok(new PlatformExportStartedResult
             {
@@ -111,7 +113,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // Strip the plaintext from the request object before the Hangfire serializer sees it.
             importRequest.Password = null;
 
-            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, protectedPassword, notification, JobCancellationToken.Null, null));
+            var jobId = BackgroundJob.Enqueue(() => PlatformRestoreBackgroundAsync(importRequest, protectedPassword, notification, null, CancellationToken.None));
             notification.JobId = jobId;
 
             return Ok(notification);
@@ -145,7 +147,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
 
-        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, string protectedPassword, PlatformImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task PlatformRestoreBackgroundAsync(PlatformImportExportRequest importRequest, string protectedPassword, PlatformImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             void ProgressCallback(ExportImportProgressInfo x)
             {
@@ -162,8 +164,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 plainPassword = string.IsNullOrEmpty(protectedPassword) ? null : _protector.Unprotect(protectedPassword);
 
-                var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
-
                 var localPath = GetSafeFullPath(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl);
 
                 //Load source data only from local file system
@@ -176,19 +176,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     // them out mid-restore.
                     manifest.CallerUserName = pushNotification.Creator;
                     manifest.Password = plainPassword;
-                    await _platformExportManager.ImportAsync(stream, manifest, ProgressCallback, cancellationTokenWrapper);
+                    await _platformExportManager.ImportAsync(stream, manifest, ProgressCallback, cancellationToken);
                     manifest.Password = null;
                 }
             }
-            catch (JobAbortedException)
+            catch (OperationCanceledException)
             {
-                //do nothing
+                _logger.LogWarning("Platform restore job {JobId} started by {User} was cancelled.",
+                    context?.BackgroundJob?.Id, pushNotification.Creator);
             }
             catch (Exception ex)
             {
                 var message = ex.ExpandExceptionMessage();
                 pushNotification.Errors.Add(message);
-                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog ??= [];
                 pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
@@ -204,7 +205,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, string protectedPassword, PlatformExportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task PlatformBackupBackgroundAsync(PlatformImportExportRequest exportRequest, string protectedPassword, PlatformExportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             void ProgressCallback(ExportImportProgressInfo x)
             {
@@ -237,20 +238,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     var manifest = exportRequest.ToManifest();
                     manifest.Password = plainPassword;
-                    await _platformExportManager.ExportAsync(stream, manifest, ProgressCallback, new JobCancellationTokenWrapper(cancellationToken));
+                    await _platformExportManager.ExportAsync(stream, manifest, ProgressCallback, cancellationToken);
                     manifest.Password = null;
                     pushNotification.DownloadUrl = $"api/platform/export/download/{fileName}";
                 }
             }
-            catch (JobAbortedException)
+            catch (OperationCanceledException)
             {
-                //do nothing
+                _logger.LogWarning("Platform restore job {JobId} started by {User} was cancelled.",
+                    context?.BackgroundJob?.Id, pushNotification.Creator);
             }
             catch (Exception ex)
             {
                 var message = ex.ExpandExceptionMessage();
                 pushNotification.Errors.Add(message);
-                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog ??= [];
                 pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
@@ -266,6 +268,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private static string GetSafeFullPath(string basePath, string relativePath)
         {
+            // Reject inputs that should never be accepted as a filename in the export/upload
+            // folder before they reach `Path.Combine` / `Path.GetFullPath`. Two cases this
+            // catches that the post-resolution StartsWith check below misses:
+            //
+            //  * Whitespace-only input: `Path.GetFullPath(baseFullPath + "\\   ")` normalizes
+            //    the trailing whitespace away and returns `baseFullPath + "\\"`, which then
+            //    passes the StartsWith guard and lets the caller File.Open() the directory
+            //    itself (yielding a confusing FileNotFoundException instead of a clear 400).
+            //
+            //  * Embedded separators: `subdir/file.zip` resolves to a real path INSIDE the
+            //    base folder, so the StartsWith guard happily accepts it. But the download
+            //    endpoint's contract is "serve files DIRECTLY in the export folder, not
+            //    arbitrary descendants" — nested access widens the attack surface (e.g. an
+            //    operator who can write into a subfolder shouldn't be able to download from
+            //    it via this API). Reject any path separator outright.
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                throw new PlatformException("File name is required");
+            }
+            if (relativePath.IndexOfAny(['/', '\\']) >= 0)
+            {
+                throw new PlatformException($"Invalid path {relativePath}");
+            }
+
             var baseFullPath = Path.GetFullPath(basePath);
             var result = Path.GetFullPath(Path.Combine(baseFullPath, relativePath));
 

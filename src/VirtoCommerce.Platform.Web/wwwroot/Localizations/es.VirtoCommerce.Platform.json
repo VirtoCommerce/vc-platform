@@ -214,7 +214,7 @@
             "description": "Propiedades dinámicas de la plataforma"
           },
           "password-protect": {
-            "title": "Proteger con contraseña",
+            "title": "Cifrar con contraseña",
             "description": "Cifrar la copia de seguridad con una contraseña de un solo uso (AES-256). Recomendado."
           }
         },

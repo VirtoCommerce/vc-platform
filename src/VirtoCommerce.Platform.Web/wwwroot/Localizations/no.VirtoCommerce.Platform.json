@@ -214,7 +214,7 @@
             "description": "Plattformens dynamiske egenskaper"
           },
           "password-protect": {
-            "title": "Beskytt med passord",
+            "title": "Krypter med passord",
             "description": "Krypter sikkerhetskopien med et engangspassord (AES-256). Anbefales."
           }
         },

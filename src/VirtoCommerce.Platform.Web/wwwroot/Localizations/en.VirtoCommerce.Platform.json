@@ -202,7 +202,7 @@
         },
         "menu": {
           "password-protect": {
-            "title": "Password protect",
+            "title": "Encrypt with password",
             "description": "Encrypt the backup with a one-time password (AES-256). Recommended."
           },
           "security": {

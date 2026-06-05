@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.BackupRestore\VirtoCommerce.Platform.BackupRestore.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />
