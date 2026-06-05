@@ -214,7 +214,7 @@
             "description": "Alustan dynamiset ominaisuudet"
           },
           "password-protect": {
-            "title": "Suojaa salasanalla",
+            "title": "Salaa salasanalla",
             "description": "Salaa varmuuskopio kertakäyttöisellä salasanalla (AES-256). Suositeltu."
           }
         },

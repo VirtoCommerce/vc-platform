@@ -214,7 +214,7 @@
             "description": "Propriétés dynamiques de la plateforme"
           },
           "password-protect": {
-            "title": "Protéger par mot de passe",
+            "title": "Chiffrer avec un mot de passe",
             "description": "Chiffrer la sauvegarde avec un mot de passe à usage unique (AES-256). Recommandé."
           }
         },

@@ -214,7 +214,7 @@
             "description": "Właściwości dynamiczne platformy"
           },
           "password-protect": {
-            "title": "Chroń hasłem",
+            "title": "Zaszyfruj hasłem",
             "description": "Zaszyfruj kopię zapasową hasłem jednorazowym (AES-256). Zalecane."
           }
         },

@@ -214,7 +214,7 @@
             "description": "Dynamische Eigenschaften der Plattform"
           },
           "password-protect": {
-            "title": "Passwortschutz",
+            "title": "Mit Passwort verschlüsseln",
             "description": "Sicherung mit einem Einmal-Passwort verschlüsseln (AES-256). Empfohlen."
           }
         },

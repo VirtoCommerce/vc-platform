@@ -214,7 +214,7 @@
             "description": "Proprietà dinamiche della piattaforma"
           },
           "password-protect": {
-            "title": "Proteggi con password",
+            "title": "Cifra con password",
             "description": "Cifra il backup con una password monouso (AES-256). Consigliato."
           }
         },

@@ -214,7 +214,7 @@
             "description": "Plattformens dynamiska egenskaper"
           },
           "password-protect": {
-            "title": "Skydda med lösenord",
+            "title": "Kryptera med lösenord",
             "description": "Kryptera säkerhetskopian med ett engångslösenord (AES-256). Rekommenderas."
           }
         },

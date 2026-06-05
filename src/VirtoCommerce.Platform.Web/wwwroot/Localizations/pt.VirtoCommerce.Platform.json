@@ -214,7 +214,7 @@
             "description": "Propriedades dinâmicas da plataforma"
           },
           "password-protect": {
-            "title": "Proteger com senha",
+            "title": "Criptografar com senha",
             "description": "Criptografar o backup com uma senha de uso único (AES-256). Recomendado."
           }
         },
