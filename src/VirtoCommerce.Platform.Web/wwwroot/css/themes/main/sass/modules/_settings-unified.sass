@@ -143,3 +143,96 @@ legend:hover .settings-copy-link
     margin-left: 6px
     vertical-align: middle
     font-weight: 500
+
+// ============================
+// Reset-to-default control: icon-only, parked at the far right of the
+// property label (away from the "?" info icon) with a confirmation popover
+// so a stray click can no longer wipe a value. Shared by the unified and
+// legacy (settings-detail) blades — both compile into platform.css.
+// ============================
+
+.settings-property-label
+    position: relative
+    display: block
+    // reserve room so a long setting name never runs under the reset icon
+    padding-right: 26px
+
+.settings-reset
+    position: absolute
+    top: 0
+    right: 0
+    line-height: 1
+
+.settings-reset__ico
+    margin: 0
+    cursor: pointer
+
+// transparent full-screen layer: clicking anywhere closes the popover
+.settings-reset__backdrop
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 1040
+
+.settings-reset__popover
+    position: absolute
+    top: 22px
+    right: 0
+    z-index: 1041
+    width: 230px
+    padding: 12px
+    background: #fff
+    border: 1px solid #d4dde6
+    border-radius: 6px
+    box-shadow: 0 6px 22px rgba(40, 60, 80, 0.18)
+    white-space: normal
+    text-align: left
+    cursor: default
+    &:before
+        content: ''
+        position: absolute
+        top: -6px
+        right: 8px
+        width: 11px
+        height: 11px
+        background: #fff
+        border-left: 1px solid #d4dde6
+        border-top: 1px solid #d4dde6
+        transform: rotate(45deg)
+
+.settings-reset__text
+    display: block
+    font-size: 13px
+    font-weight: 400
+    color: #333
+    margin-bottom: 10px
+
+.settings-reset__actions
+    display: flex
+    justify-content: flex-end
+    gap: 8px
+
+.settings-reset__btn
+    display: inline-block
+    font-size: 12px
+    font-weight: 600
+    border-radius: 4px
+    padding: 5px 12px
+    cursor: pointer
+    text-decoration: none
+    background: #f1f4f7
+    border: 1px solid #d4dde6
+    color: #5a6b7b
+    &:hover
+        text-decoration: none
+        background: #e9eef3
+        color: #5a6b7b
+    &.__danger
+        background: #e0573e
+        border-color: #e0573e
+        color: #fff
+        &:hover
+            background: #d2492f
+            color: #fff
