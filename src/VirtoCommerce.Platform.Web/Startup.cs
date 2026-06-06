@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -34,11 +35,11 @@ using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using Serilog;
-using VirtoCommerce.Platform.BackupRestore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Logger;
@@ -70,6 +71,7 @@ using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
+using VirtoCommerce.Platform.Web.Infrastructure.ExportImport;
 using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
 using VirtoCommerce.Platform.Web.Json;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -165,7 +167,6 @@ namespace VirtoCommerce.Platform.Web
             });
 
             services.AddPlatformServices(Configuration);
-            services.AddBackupRestoreService();
 
             services.AddSingleton<LicenseProvider>();
 
@@ -592,7 +593,14 @@ namespace VirtoCommerce.Platform.Web
             // Register backward-compat DI services
             // (needed by UseModulesAndAppsFiles, health checks, external modules, etc.)
             services.AddSingleton(services);
-#pragma warning disable VC0014
+
+            // Backup/restore (export/import) moved to the VirtoCommerce.BackupRestore module. Register a
+            // fallback so legacy/3rd-party modules that still resolve IPlatformExportImportManager get a clear,
+            // actionable error when that module is NOT installed. TryAdd runs AFTER InitializeModules above, so
+            // when the module IS installed its real registration wins and this stub is never used.
+#pragma warning disable VC0014 // IPlatformExportImportManager is obsolete; used here only as a back-compat fallback key.
+            services.TryAddScoped<IPlatformExportImportManager, UninstalledPlatformExportImportManager>();
+
             services.AddSingleton<ILocalModuleCatalog>(moduleCatalogAdapter);
             services.AddSingleton<IModuleCatalog>(sp => sp.GetRequiredService<ILocalModuleCatalog>());
 #pragma warning restore VC0014

@@ -11,7 +11,6 @@
       "dynamic-properties": "Właściwości dynamiczne",
       "security": "Bezpieczeństwo",
       "modules": "Moduły",
-      "export-import": "Kopia zapasowa i Przywracanie",
       "user-profile": "Profil użytkownika",
       "assets": "Zasoby",
       "toggle-favorites": "Shift + Spacja, aby przełączyć ulubione",
@@ -174,134 +173,6 @@
         },
         "placeholders": {
           "value": "Wprowadź wartość"
-        }
-      },
-      "export-main": {
-        "title": "Kopia zapasowa danych",
-        "labels": {
-          "platform-entries": "Wpisy platformy",
-          "choose-modules": "Wybierz moduły do eksportu",
-          "download-url": "URL do pobrania",
-          "errors": "Błędy",
-          "start": "Start",
-          "end": "Koniec",
-          "export-progress": "Postęp tworzenia kopii zapasowej",
-          "export-finished": "Kopia zapasowa zakończona",
-          "process-completed": "Proces tworzenia kopii zapasowej został zakończony",
-          "completed-with-errors": "Zakończono z błędami",
-          "detailed-log": "Pokaż szczegółowy dziennik",
-          "copy-error": "Kopiuj błąd",
-          "copy-log": "Kopiuj dziennik",
-          "download-backup": "Pobierz kopię zapasową",
-          "backup-password": "Hasło kopii zapasowej",
-          "password-shown-once": "Pokazane tylko raz"
-        },
-        "menu": {
-          "security": {
-            "title": "Bezpieczeństwo",
-            "description": "Konta i role"
-          },
-          "binary": {
-            "title": "Dane binarne",
-            "description": "Dane binarne"
-          },
-          "settings": {
-            "title": "Ustawienia",
-            "description": "Ustawienia platformy"
-          },
-          "dynamic-props": {
-            "title": "Właściwości dynamiczne",
-            "description": "Właściwości dynamiczne platformy"
-          },
-          "password-protect": {
-            "title": "Zaszyfruj hasłem",
-            "description": "Zaszyfruj kopię zapasową hasłem jednorazowym (AES-256). Zalecane."
-          }
-        },
-        "warnings": {
-          "security-data-title": "Ta kopia zapasowa będzie zawierać dane wrażliwe",
-          "security-data-body": "Skróty haseł, klucze API i znaczniki bezpieczeństwa wszystkich użytkowników zostaną dołączone. Każdy z dostępem do pliku kopii zapasowej może go użyć do przejęcia kont użytkowników. Przechowuj plik w bezpiecznym miejscu i ogranicz osoby uprawnione do pobierania.",
-          "no-encryption-title": "Ta kopia zapasowa nie będzie zaszyfrowana",
-          "no-encryption-body": "Każdy, kto może odczytać plik, może odzyskać hasła użytkowników i klucze API. Kontynuuj tylko, jeśli plik nigdy nie opuści bezpiecznego środowiska."
-        },
-        "hints": {
-          "backup-password": "To hasło szyfruje plik kopii zapasowej. Zapisz je w bezpiecznym miejscu — bez niego nie można przywrócić kopii. Pokazywane jest tylko raz na tym ekranie; po opuszczeniu strony nie będzie można go odzyskać."
-        }
-      },
-      "import-main": {
-        "title": "Przywracanie danych",
-        "labels": {
-          "start-import": "Rozpocznij przywracanie",
-          "select-file": "Wybierz plik .zip do przywrócenia. Plik musi zostać utworzony przez kopię zapasową danych Virto Commerce",
-          "drag-note": "Przeciągnij i upuść plik .zip, aby go przywrócić. Plik musi zostać utworzony przez kopię zapasową danych Virto Commerce",
-          "upload-failed": "Przesyłanie nie powiodło się",
-          "upload-progress": "Postęp przesyłania",
-          "import-progress": "Postęp przywracania",
-          "import-finished": "Przywracanie zakończone",
-          "import-data-information": "Przywracanie informacji o danych",
-          "author": "Autor",
-          "data-file-created": "Plik danych utworzony",
-          "created-platform-version": "Utworzono w wersji platformy",
-          "platform-entries": "Wpisy platformy",
-          "choose-modules": "Wybierz moduły do przywrócenia",
-          "no-data": "Brak danych",
-          "errors": "Błędy",
-          "start": "Start",
-          "end": "Koniec",
-          "drag-or-browse": "Przeciągnij i upuść plik .zip tutaj lub kliknij, aby przeglądać",
-          "drag-note-detail": "Plik musi zostać utworzony przez kopię zapasową danych Virto Commerce",
-          "process-completed": "Proces przywracania został zakończony",
-          "completed-with-errors": "Zakończono z błędami",
-          "detailed-log": "Pokaż szczegółowy dziennik",
-          "copy-error": "Kopiuj błąd",
-          "copy-log": "Kopiuj dziennik",
-          "password-section": "Hasło kopii zapasowej",
-          "password": "Hasło kopii zapasowej"
-        },
-        "menu": {
-          "security": {
-            "title": "Bezpieczeństwo",
-            "description": "Konta i role"
-          },
-          "binary": {
-            "title": "Dane binarne",
-            "description": "Dane binarne"
-          },
-          "settings": {
-            "title": "Ustawienia",
-            "description": "Ustawienia platformy"
-          },
-          "dynamic-props": {
-            "title": "Właściwości dynamiczne",
-            "description": "Właściwości dynamiczne platformy"
-          }
-        },
-        "warnings": {
-          "security-data-title": "To przywracanie nadpisze dane wrażliwe",
-          "security-data-body": "Hasła użytkowników, klucze API i znaczniki bezpieczeństwa z kopii zapasowej zastąpią bieżące wartości dla każdego użytkownika w pliku.",
-          "security-data-admin-preserved": "Twoje konto administratora ({{username}}) nie zostanie zmienione — Twoje hasło i aktywna sesja są zachowane."
-        },
-        "placeholders": {
-          "password": "Wprowadź hasło pokazane podczas tworzenia tej kopii zapasowej"
-        },
-        "hints": {
-          "password": "Wprowadź hasło pokazane podczas tworzenia tej kopii zapasowej."
-        },
-        "errors": {
-          "wrong-password": "Nieprawidłowe hasło. Spróbuj ponownie."
-        }
-      },
-      "exportImport-main": {
-        "title": "Kopia zapasowa i przywracanie danych",
-        "menu": {
-          "export": {
-            "title": "Kopia zapasowa",
-            "description": "Dane zostaną zapisane w pliku do późniejszego przywrócenia"
-          },
-          "import": {
-            "title": "Przywracanie",
-            "description": "Przywróć dane z pliku kopii zapasowej do późniejszego użycia"
-          }
         }
       },
       "resolve-result": {
@@ -1086,9 +957,6 @@
     "platform:security:delete": "Usuń użytkowników i role",
     "platform:security:verifyEmail": "Zmień stan weryfikacji i wyślij email weryfikacyjny",
     "background_jobs:manage": "Dostęp do konsoli Hangfire",
-    "platform:exportImport:access": "Wyświetl Kopia zapasowa/Przywracanie w menu głównym",
-    "platform:import": "Przywróć dane platformy i modułów",
-    "platform:export": "Utwórz kopię zapasową danych platformy i modułów",
     "platform:security:loginOnBehalf": "Zaloguj się w imieniu klienta"
   },
   "settings": {

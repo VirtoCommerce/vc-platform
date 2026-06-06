@@ -11,7 +11,6 @@
       "dynamic-properties": "Dynamische Eigenschaften",
       "security": "Sicherheit",
       "modules": "Module",
-      "export-import": "Sicherung & Wiederherstellung",
       "user-profile": "Benutzerprofil",
       "assets": "Ressourcen",
       "toggle-favorites": "Umschalt + Leertaste zum Umschalten der Favoriten",
@@ -174,134 +173,6 @@
         },
         "placeholders": {
           "value": "Wert eingeben"
-        }
-      },
-      "export-main": {
-        "title": "Datensicherung",
-        "labels": {
-          "platform-entries": "Plattformeinträge",
-          "choose-modules": "Wählen Sie Module für die Sicherung",
-          "download-url": "Download-URL",
-          "errors": "Fehler",
-          "start": "Start",
-          "end": "Ende",
-          "export-progress": "Sicherungsfortschritt",
-          "export-finished": "Sicherung abgeschlossen",
-          "process-completed": "Der Sicherungsvorgang ist abgeschlossen",
-          "completed-with-errors": "Mit Fehlern abgeschlossen",
-          "detailed-log": "Detailliertes Protokoll anzeigen",
-          "copy-error": "Fehler kopieren",
-          "copy-log": "Protokoll kopieren",
-          "download-backup": "Sicherung herunterladen",
-          "backup-password": "Sicherungspasswort",
-          "password-shown-once": "Nur einmal angezeigt"
-        },
-        "menu": {
-          "security": {
-            "title": "Sicherheit",
-            "description": "Konten und Rollen"
-          },
-          "binary": {
-            "title": "Binär",
-            "description": "Binärdaten"
-          },
-          "settings": {
-            "title": "Einstellungen",
-            "description": "Plattformeinstellungen"
-          },
-          "dynamic-props": {
-            "title": "Dynamische Eigenschaften",
-            "description": "Dynamische Eigenschaften der Plattform"
-          },
-          "password-protect": {
-            "title": "Mit Passwort verschlüsseln",
-            "description": "Sicherung mit einem Einmal-Passwort verschlüsseln (AES-256). Empfohlen."
-          }
-        },
-        "warnings": {
-          "security-data-title": "Diese Sicherung enthält sensible Daten",
-          "security-data-body": "Passwort-Hashes, API-Schlüssel und Sicherheits-Stempel aller Benutzer werden enthalten sein. Jeder mit Zugriff auf die Sicherungsdatei kann damit Benutzerkonten übernehmen. Bewahren Sie die Datei an einem sicheren Ort auf und beschränken Sie den Zugriff auf den Download.",
-          "no-encryption-title": "Diese Sicherung wird unverschlüsselt sein",
-          "no-encryption-body": "Jeder, der die Datei lesen kann, kann Benutzerpasswörter und API-Schlüssel wiederherstellen. Nur fortfahren, wenn die Datei niemals eine gesicherte Umgebung verlässt."
-        },
-        "hints": {
-          "backup-password": "Dieses Passwort verschlüsselt Ihre Sicherungsdatei. Bewahren Sie es an einem sicheren Ort auf — ohne dieses Passwort kann die Sicherung nicht wiederhergestellt werden. Es wird nur einmal auf diesem Bildschirm angezeigt; wenn Sie diese Seite verlassen, kann es nicht wiederhergestellt werden."
-        }
-      },
-      "import-main": {
-        "title": "Datenwiederherstellung",
-        "labels": {
-          "start-import": "Wiederherstellung starten",
-          "select-file": "Wählen Sie die .zip-Datei zur Wiederherstellung aus. Die Datei muss von der Virto Commerce-Datensicherung erstellt worden sein",
-          "drag-note": "Ziehen Sie die .zip-Datei hierher, um sie wiederherzustellen. Die Datei muss von der Virto Commerce-Datensicherung erstellt worden sein",
-          "upload-failed": "Upload fehlgeschlagen",
-          "upload-progress": "Upload-Fortschritt",
-          "import-progress": "Wiederherstellungsfortschritt",
-          "import-finished": "Wiederherstellung abgeschlossen",
-          "import-data-information": "Dateninformationen wiederherstellen",
-          "author": "Autor",
-          "data-file-created": "Datendatei erstellt",
-          "created-platform-version": "Erstellt in Plattformversion",
-          "platform-entries": "Plattformeinträge",
-          "choose-modules": "Wählen Sie Module zur Wiederherstellung",
-          "no-data": "Keine Daten",
-          "errors": "Fehler",
-          "start": "Start",
-          "end": "Ende",
-          "drag-or-browse": "Ziehen Sie eine .zip-Datei hierher oder klicken Sie zum Auswählen",
-          "drag-note-detail": "Die Datei muss durch Virto Commerce-Datensicherung erstellt worden sein",
-          "process-completed": "Der Wiederherstellungsvorgang ist abgeschlossen",
-          "completed-with-errors": "Mit Fehlern abgeschlossen",
-          "detailed-log": "Detailliertes Protokoll anzeigen",
-          "copy-error": "Fehler kopieren",
-          "copy-log": "Protokoll kopieren",
-          "password-section": "Sicherungspasswort",
-          "password": "Sicherungspasswort"
-        },
-        "menu": {
-          "security": {
-            "title": "Sicherheit",
-            "description": "Konten und Rollen"
-          },
-          "binary": {
-            "title": "Binär",
-            "description": "Binärdaten"
-          },
-          "settings": {
-            "title": "Einstellungen",
-            "description": "Plattformeinstellungen"
-          },
-          "dynamic-props": {
-            "title": "Dynamische Eigenschaften",
-            "description": "Dynamische Eigenschaften der Plattform"
-          }
-        },
-        "warnings": {
-          "security-data-title": "Diese Wiederherstellung überschreibt sensible Daten",
-          "security-data-body": "Benutzerpasswörter, API-Schlüssel und Sicherheits-Stempel aus der Sicherung ersetzen die aktuellen Werte für jeden Benutzer in der Datei.",
-          "security-data-admin-preserved": "Ihr eigenes Administrator-Konto ({{username}}) wird nicht geändert — Ihr Passwort und Ihre aktive Sitzung bleiben erhalten."
-        },
-        "placeholders": {
-          "password": "Geben Sie das bei der Erstellung dieser Sicherung angezeigte Passwort ein"
-        },
-        "hints": {
-          "password": "Geben Sie das bei der Erstellung dieser Sicherung angezeigte Passwort ein."
-        },
-        "errors": {
-          "wrong-password": "Falsches Passwort. Bitte versuchen Sie es erneut."
-        }
-      },
-      "exportImport-main": {
-        "title": "Daten sichern und wiederherstellen",
-        "menu": {
-          "export": {
-            "title": "Sicherung",
-            "description": "Daten werden in einer Datei gespeichert, um sie später wiederherzustellen"
-          },
-          "import": {
-            "title": "Wiederherstellung",
-            "description": "Stellen Sie Daten aus einer Sicherungsdatei für die zukünftige Nutzung wieder her"
-          }
         }
       },
       "resolve-result": {
@@ -1088,9 +959,6 @@
     "platform:security:delete": "Benutzer und Rollen löschen",
     "platform:security:verifyEmail": "Verifizierten Status ändern und Verifizierungs-E-Mail senden",
     "background_jobs:manage": "Zugriff auf die Hangfire-Konsole",
-    "platform:exportImport:access": "Backup/Wiederherstellung im Hauptmenü anzeigen",
-    "platform:import": "Plattform- und Modul-Daten wiederherstellen",
-    "platform:export": "Plattform- und Modul-Daten sichern",
     "platform:security:loginOnBehalf": "Im Namen eines Kunden anmelden"
   },
   "settings": {

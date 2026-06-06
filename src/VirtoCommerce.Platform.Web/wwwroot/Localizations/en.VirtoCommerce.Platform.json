@@ -11,7 +11,6 @@
       "dynamic-properties": "Dynamic properties",
       "security": "Security",
       "modules": "Modules",
-      "export-import": "Backup and restore",
       "user-profile": "User profile",
       "assets": "Assets",
       "toggle-favorites": "Shift + Space to toggle favorites",
@@ -175,134 +174,6 @@
         },
         "placeholders": {
           "value": "Enter value"
-        }
-      },
-      "export-main": {
-        "title": "Data backup",
-        "labels": {
-          "platform-entries": "Platform entries",
-          "choose-modules": "Choose modules to backup",
-          "download-url": "Download URL",
-          "errors": "Errors",
-          "start": "Start",
-          "end": "End",
-          "export-progress": "Backup progress",
-          "export-finished": "Backup finished",
-          "process-completed": "The backup process is completed",
-          "completed-with-errors": "Completed with errors",
-          "detailed-log": "Show detailed log",
-          "copy-error": "Copy error",
-          "copy-log": "Copy log",
-          "download-backup": "Download backup",
-          "backup-password": "Backup password",
-          "password-shown-once": "Shown only once"
-        },
-        "hints": {
-          "backup-password": "This password encrypts your backup file. Save it somewhere safe — without it, the backup cannot be restored. It is shown only once on this screen; if you navigate away it cannot be recovered."
-        },
-        "menu": {
-          "password-protect": {
-            "title": "Encrypt with password",
-            "description": "Encrypt the backup with a one-time password (AES-256). Recommended."
-          },
-          "security": {
-            "title": "Security",
-            "description": "Accounts and roles"
-          },
-          "binary": {
-            "title": "Binary",
-            "description": "Binary data"
-          },
-          "settings": {
-            "title": "Settings",
-            "description": "Platform settings"
-          },
-          "dynamic-props": {
-            "title": "Dynamic properties",
-            "description": "Platform dynamic properties"
-          }
-        },
-        "warnings": {
-          "security-data-title": "This backup will contain sensitive data",
-          "security-data-body": "Password hashes, API keys, and security stamps for all users will be included. Anyone with access to the backup file can use it to take over user accounts. Store the file in a secure location and limit who can download it.",
-          "no-encryption-title": "This backup will be unencrypted",
-          "no-encryption-body": "Anyone who can read the file can recover user passwords and API keys. Only proceed if the file will never leave a secured environment."
-        }
-      },
-      "import-main": {
-        "title": "Data restore",
-        "labels": {
-          "start-import": "Start restore",
-          "select-file": "Select .zip file to restore. The file must be produced by Virto Commerce data backup",
-          "drag-note": "Drag and drop .zip file to restore. The file must be produced by Virto Commerce data backup",
-          "drag-or-browse": "Drag and drop a .zip file here, or click to browse",
-          "drag-note-detail": "The file must be produced by Virto Commerce data backup",
-          "upload-failed": "Upload failed",
-          "upload-progress": "Upload progress",
-          "import-progress": "Restore progress",
-          "import-finished": "Restore finished",
-          "import-data-information": "Restore data information",
-          "author": "Author",
-          "data-file-created": "Data file created",
-          "created-platform-version": "Created in Platform version",
-          "platform-entries": "Platform entries",
-          "choose-modules": "Choose modules to restore",
-          "no-data": "No data",
-          "errors": "Errors",
-          "start": "Start",
-          "end": "End",
-          "process-completed": "The restore process is completed",
-          "completed-with-errors": "Completed with errors",
-          "detailed-log": "Show detailed log",
-          "copy-error": "Copy error",
-          "copy-log": "Copy log",
-          "password-section": "Backup password",
-          "password": "Backup password"
-        },
-        "placeholders": {
-          "password": "Enter the password shown when this backup was created"
-        },
-        "hints": {
-          "password": "Enter the password shown when this backup was created."
-        },
-        "errors": {
-          "wrong-password": "Incorrect password. Please try again."
-        },
-        "menu": {
-          "security": {
-            "title": "Security",
-            "description": "Accounts and roles"
-          },
-          "binary": {
-            "title": "Binary",
-            "description": "Binary data"
-          },
-          "settings": {
-            "title": "Settings",
-            "description": "Platform settings"
-          },
-          "dynamic-props": {
-            "title": "Dynamic properties",
-            "description": "Platform dynamic properties"
-          }
-        },
-        "warnings": {
-          "security-data-title": "This restore will overwrite sensitive data",
-          "security-data-body": "User passwords, API keys, and security stamps from the backup will replace the current values for every user in the file.",
-          "security-data-admin-preserved": "Your own admin account ({{username}}) will not be modified — your password and active session are preserved."
-        }
-      },
-      "exportImport-main": {
-        "title": "Data backup and restore",
-        "menu": {
-          "export": {
-            "title": "Backup",
-            "description": "Data will be saved to a file for future restoration"
-          },
-          "import": {
-            "title": "Restore",
-            "description": "Restore data from a backup file for future use"
-          }
         }
       },
       "resolve-result": {
@@ -1088,9 +959,6 @@
     "platform:security:delete": "Delete users and roles",
     "platform:security:verifyEmail": "Change verified state and send verification email",
     "background_jobs:manage": "Access to the Hangfire console",
-    "platform:exportImport:access": "View Backup/Restore in the main menu",
-    "platform:import": "Restore Platform and modules data",
-    "platform:export": "Backup Platform and modules data",
     "platform:security:loginOnBehalf": "Login on behalf of a customer"
   },
   "settings": {
