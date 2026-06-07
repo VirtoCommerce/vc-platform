@@ -63,6 +63,7 @@ White/multi-color glyphs pass contrast on all of these.
 | **PIM** | Profile / PIM experience | `#4FD2EE` | `#0E9BC4` |
 | **Identity / Security** | IdP, Security, GDPR | `#6E7E97` | `#3E4C63` |
 | **Integration / Connectors** | ERP / payment / shipping / search / SSO connectors | `#5FD080` | `#2FA85A` |
+| **AI / Intelligence** | AI, AI Document Processing, AI Categorization, Document Parser | `#A66BFF` | `#7C3AED` |
 | **Other / default** | uncategorized / extension modules | `#94A6BA` | `#5B6B7E` |
 
 **Accent palette** (pick 2–3 per glyph; they recur across the set so icons feel related):
@@ -102,7 +103,12 @@ shadow tint `{SHADOW}` (a dark version of the tile color), and the glyph.
 
 Shadow tints used per PBC (a deep shade of the tile): Core `#0B3F66`, Catalog `#064F40`,
 Purchase `#7A3D00`, Order `#2C1670`, CRM `#7A1A40`, Marketing `#7A1417`, Content `#3A1D7A`,
-PIM `#064E63`, Identity `#10161F`, Integration `#0B4F2A`.
+PIM `#064E63`, Identity `#10161F`, Integration `#0B4F2A`, AI `#3A1473`.
+
+> **Brand connectors:** prefer a generic *functional* glyph (search, payment-card + plug, content
+> blocks, chart, …) on the Integration-green tile, with the small **connector-plug badge**, rather
+> than recreating a vendor's trademarked logo. Only drop in a vendor's mark when it's an officially
+> distributed brand asset (e.g. Elastic's published SVG).
 
 ---
 
