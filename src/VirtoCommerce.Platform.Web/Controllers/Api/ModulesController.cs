@@ -539,6 +539,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private static bool IconFileExists(ManifestModuleInfo module)
         {
+            if (string.IsNullOrEmpty(module.IconUrl))
+            {
+                return false;
+            }
+
             var moduleIconUrl = module.IconUrl;
             if (!moduleIconUrl.StartsWith('/'))
             {
