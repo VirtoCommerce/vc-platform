@@ -184,7 +184,17 @@
           "download-url": "Nedlastings-URL",
           "errors": "Feil",
           "start": "Start",
-          "end": "Slutt"
+          "end": "Slutt",
+          "export-progress": "Sikkerhetskopieringsfremdrift",
+          "export-finished": "Sikkerhetskopiering fullført",
+          "process-completed": "Sikkerhetskopieringsprosessen er fullført",
+          "completed-with-errors": "Fullført med feil",
+          "detailed-log": "Vis detaljert logg",
+          "copy-error": "Kopier feil",
+          "copy-log": "Kopier logg",
+          "download-backup": "Last ned sikkerhetskopi",
+          "backup-password": "Sikkerhetskopipassord",
+          "password-shown-once": "Vises kun én gang"
         },
         "menu": {
           "security": {
@@ -202,7 +212,20 @@
           "dynamic-props": {
             "title": "Dynamiske egenskaper",
             "description": "Plattformens dynamiske egenskaper"
+          },
+          "password-protect": {
+            "title": "Krypter med passord",
+            "description": "Krypter sikkerhetskopien med et engangspassord (AES-256). Anbefales."
           }
+        },
+        "warnings": {
+          "security-data-title": "Denne sikkerhetskopien vil inneholde sensitive data",
+          "security-data-body": "Passordhasher, API-nøkler og sikkerhetsstempler for alle brukere vil bli inkludert. Alle med tilgang til sikkerhetskopifilen kan bruke den til å overta brukerkontoer. Oppbevar filen sikkert og begrens hvem som kan laste den ned.",
+          "no-encryption-title": "Denne sikkerhetskopien vil være ukryptert",
+          "no-encryption-body": "Alle som kan lese filen kan gjenopprette brukerpassord og API-nøkler. Fortsett kun hvis filen aldri forlater et sikret miljø."
+        },
+        "hints": {
+          "backup-password": "Dette passordet krypterer sikkerhetskopifilen. Lagre det trygt — uten det kan ikke sikkerhetskopien gjenopprettes. Det vises kun én gang på denne skjermen; hvis du navigerer bort kan det ikke gjenopprettes."
         }
       },
       "import-main": {
@@ -224,7 +247,16 @@
           "no-data": "Ingen data",
           "errors": "Feil",
           "start": "Start",
-          "end": "Slutt"
+          "end": "Slutt",
+          "drag-or-browse": "Dra og slipp en .zip-fil her, eller klikk for å bla",
+          "drag-note-detail": "Filen må være opprettet av Virto Commerce datasikkerhetskopiering",
+          "process-completed": "Gjenopprettingsprosessen er fullført",
+          "completed-with-errors": "Fullført med feil",
+          "detailed-log": "Vis detaljert logg",
+          "copy-error": "Kopier feil",
+          "copy-log": "Kopier logg",
+          "password-section": "Sikkerhetskopipassord",
+          "password": "Sikkerhetskopipassord"
         },
         "menu": {
           "security": {
@@ -243,6 +275,20 @@
             "title": "Dynamiske egenskaper",
             "description": "Plattformens dynamiske egenskaper"
           }
+        },
+        "warnings": {
+          "security-data-title": "Denne gjenopprettingen vil overskrive sensitive data",
+          "security-data-body": "Brukerpassord, API-nøkler og sikkerhetsstempler fra sikkerhetskopien vil erstatte de nåværende verdiene for hver bruker i filen.",
+          "security-data-admin-preserved": "Din egen administratorkonto ({{username}}) vil ikke bli endret — passordet og den aktive økten beholdes."
+        },
+        "placeholders": {
+          "password": "Skriv inn passordet som ble vist da denne sikkerhetskopien ble opprettet"
+        },
+        "hints": {
+          "password": "Skriv inn passordet som ble vist da denne sikkerhetskopien ble opprettet."
+        },
+        "errors": {
+          "wrong-password": "Feil passord. Prøv igjen."
         }
       },
       "exportImport-main": {
@@ -607,6 +653,12 @@
           "password-log-in-type": "Systembruker",
           "or": "eller",
           "signing-in": "Logger inn..."
+        },
+        "errors": {
+          "login-failed": "Påloggingsforsøket mislyktes. Kontroller legitimasjonen din.",
+          "account-locked": "Kontoen din er låst. Prøv igjen senere eller kontakt administrator.",
+          "technical-error": "Autentiseringsfeil. Prøv igjen senere eller kontakt administrator. (Kode: {{code}})",
+          "unknown-error": "Autentiseringsfeil. Prøv igjen senere eller kontakt administrator."
         }
       },
       "forgotpassword": {

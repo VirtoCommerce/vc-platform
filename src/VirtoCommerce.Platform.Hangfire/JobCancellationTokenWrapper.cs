@@ -1,11 +1,12 @@
+using System;
 using Hangfire;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Hangfire
 {
-    /// <summary>
-    /// Wrapper for Hangfire's IJobCancellationToken
-    /// </summary>
+    [Obsolete("Hangfire compatibility shim for legacy queue items. Use CancellationToken.",
+    DiagnosticId = "VC0014",
+    UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class JobCancellationTokenWrapper : ICancellationToken
     {
         public IJobCancellationToken JobCancellationToken { get; }

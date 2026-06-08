@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -14,10 +15,10 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Hangfire;
 
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
@@ -26,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Route("api/platform")]
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
-    public class PlatformExportImportController : Controller
+    public class PlatformSampleDataController : Controller
     {
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private static readonly object _lockObject = new();
 
-        public PlatformExportImportController(
+        public PlatformSampleDataController(
             IPlatformExportImportManager platformExportManager,
             IPushNotificationManager pushNotifier,
             ISettingsManager settingManager,
@@ -116,7 +117,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     pushNotification.Title = "Sample data import process";
 
                     _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, JobCancellationToken.Null, null));
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, null, CancellationToken.None));
                     pushNotification.JobId = jobId;
                 }
             }
@@ -225,11 +226,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, PerformContext context, CancellationToken cancellationToken)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
-                pushNotification.Path(x);
+                pushNotification.Patch(x);
                 pushNotification.JobId = context.BackgroundJob.Id;
                 _pushNotifier.Send(pushNotification);
             }
@@ -270,7 +271,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var manifest = _platformExportManager.ReadExportManifest(stream);
                     if (manifest != null)
                     {
-                        await _platformExportManager.ImportAsync(stream, manifest, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
+                        await _platformExportManager.ImportAsync(stream, manifest, progressCallback, cancellationToken);
                     }
                 }
             }
@@ -280,12 +281,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             catch (Exception ex)
             {
-                pushNotification.Errors.Add(ex.ExpandExceptionMessage());
+                var message = ex.ExpandExceptionMessage();
+                pushNotification.Errors.Add(message);
+                pushNotification.ProgressLog ??= new List<ProgressMessage>();
+                pushNotification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
             }
             finally
             {
                 await _settingsManager.SetValueAsync(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
-                pushNotification.Description = "Sample data import process completed successfully.";
+                pushNotification.Description = pushNotification.Errors.Count > 0
+                    ? "Sample data import process completed with errors."
+                    : "Sample data import process completed successfully.";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }

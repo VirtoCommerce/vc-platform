@@ -184,7 +184,17 @@
           "download-url": "Hämtnings-URL",
           "errors": "Fel",
           "start": "Start",
-          "end": "Slut"
+          "end": "Slut",
+          "export-progress": "Säkerhetskopieringsförlopp",
+          "export-finished": "Säkerhetskopiering slutförd",
+          "process-completed": "Säkerhetskopieringsprocessen är slutförd",
+          "completed-with-errors": "Slutförd med fel",
+          "detailed-log": "Visa detaljerad logg",
+          "copy-error": "Kopiera fel",
+          "copy-log": "Kopiera logg",
+          "download-backup": "Ladda ner säkerhetskopia",
+          "backup-password": "Säkerhetskopielösenord",
+          "password-shown-once": "Visas endast en gång"
         },
         "menu": {
           "security": {
@@ -202,7 +212,20 @@
           "dynamic-props": {
             "title": "Dynamiska egenskaper",
             "description": "Plattformens dynamiska egenskaper"
+          },
+          "password-protect": {
+            "title": "Kryptera med lösenord",
+            "description": "Kryptera säkerhetskopian med ett engångslösenord (AES-256). Rekommenderas."
           }
+        },
+        "warnings": {
+          "security-data-title": "Denna säkerhetskopia kommer att innehålla känsliga data",
+          "security-data-body": "Lösenordshashar, API-nycklar och säkerhetsstämplar för alla användare kommer att inkluderas. Vem som helst med tillgång till säkerhetskopiefilen kan använda den för att ta över användarkonton. Förvara filen säkert och begränsa vem som kan ladda ner den.",
+          "no-encryption-title": "Denna säkerhetskopia kommer inte att vara krypterad",
+          "no-encryption-body": "Den som kan läsa filen kan återställa användarlösenord och API-nycklar. Fortsätt endast om filen aldrig lämnar en säker miljö."
+        },
+        "hints": {
+          "backup-password": "Detta lösenord krypterar säkerhetskopiefilen. Förvara det säkert — utan det kan säkerhetskopian inte återställas. Det visas endast en gång på den här skärmen; om du navigerar bort kan det inte återskapas."
         }
       },
       "import-main": {
@@ -224,7 +247,16 @@
           "no-data": "Inga data",
           "errors": "Fel",
           "start": "Start",
-          "end": "Slut"
+          "end": "Slut",
+          "drag-or-browse": "Dra och släpp en .zip-fil här eller klicka för att bläddra",
+          "drag-note-detail": "Filen måste ha skapats av Virto Commerce databackup",
+          "process-completed": "Återställningsprocessen är slutförd",
+          "completed-with-errors": "Slutförd med fel",
+          "detailed-log": "Visa detaljerad logg",
+          "copy-error": "Kopiera fel",
+          "copy-log": "Kopiera logg",
+          "password-section": "Säkerhetskopielösenord",
+          "password": "Säkerhetskopielösenord"
         },
         "menu": {
           "security": {
@@ -243,6 +275,20 @@
             "title": "Dynamiska egenskaper",
             "description": "Plattformens dynamiska egenskaper"
           }
+        },
+        "warnings": {
+          "security-data-title": "Denna återställning kommer att skriva över känsliga data",
+          "security-data-body": "Användarlösenord, API-nycklar och säkerhetsstämplar från säkerhetskopian ersätter aktuella värden för varje användare i filen.",
+          "security-data-admin-preserved": "Ditt eget administratörskonto ({{username}}) kommer inte att ändras — ditt lösenord och din aktiva session bevaras."
+        },
+        "placeholders": {
+          "password": "Ange lösenordet som visades när den här säkerhetskopian skapades"
+        },
+        "hints": {
+          "password": "Ange lösenordet som visades när den här säkerhetskopian skapades."
+        },
+        "errors": {
+          "wrong-password": "Felaktigt lösenord. Försök igen."
         }
       },
       "exportImport-main": {
@@ -607,6 +653,12 @@
           "password-log-in-type": "Systemanvändare",
           "or": "eller",
           "signing-in": "Loggar in..."
+        },
+        "errors": {
+          "login-failed": "Inloggningsförsöket misslyckades. Kontrollera dina inloggningsuppgifter.",
+          "account-locked": "Ditt konto har låsts. Försök igen senare eller kontakta administratören.",
+          "technical-error": "Autentiseringsfel. Försök igen senare eller kontakta administratören. (Kod: {{code}})",
+          "unknown-error": "Autentiseringsfel. Försök igen senare eller kontakta administratören."
         }
       },
       "forgotpassword": {

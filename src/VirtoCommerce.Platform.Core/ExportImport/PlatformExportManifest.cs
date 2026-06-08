@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.ExportImport
@@ -40,6 +41,31 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 
         public DateTime Created { get; set; }
         public string Checksum { get; set; }
+
+        /// <summary>
+        /// Username of the admin who initiated the import job. Set at restore start time by the
+        /// platform controller; not persisted into the backup .zip's Manifest.json (transient
+        /// runtime context only). Used by `ImportUsersInternalAsync` to skip the caller's own
+        /// account during user import so the running session isn't invalidated by a password /
+        /// security-stamp overwrite. Null/empty means "no skip" (legacy behavior).
+        /// </summary>
+        [JsonIgnore]
+        public string CallerUserName { get; set; }
+
+        /// <summary>
+        /// True when this backup's entries (all but Manifest.json) are AES-256 encrypted with
+        /// the password generated at export time. Serialized into Manifest.json so the import
+        /// side can detect encryption without trying to decrypt blindly. Set to true at export
+        /// when a Password is present; read at import to drive the password-prompt UX.
+        /// </summary>
+        public bool IsEncrypted { get; set; }
+
+        /// <summary>
+        /// Transient ZIP password threaded from the controller (after Data Protection unprotect)
+        /// down to the archive writer/reader. Never serialized into the backup, never logged.
+        /// </summary>
+        [JsonIgnore]
+        public string Password { get; set; }
     }
 
 

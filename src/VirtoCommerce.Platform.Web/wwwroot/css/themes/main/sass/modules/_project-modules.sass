@@ -81,6 +81,7 @@ $dashboardHeadHeight: 80px
   color: #a6a6a6
 .log .__error
   color: $genericErrorColor
+  font-weight: 500
 
 /* Module progress timeline */
 .module-progress-header
@@ -111,6 +112,44 @@ $dashboardHeadHeight: 80px
   height: 20px
   margin: 12px 0
   border-radius: 2px
+
+.module-progress-current-step
+  margin: -6px 0 12px
+  font-size: 12px
+  color: #666
+  font-style: italic
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+/* Download backup — rendered as a plain text link (icon + label), no banner background.
+   Previous "banner" treatment (green box) made it look like a notification rather than an
+   actionable link, so users sometimes missed it as a download affordance. */
+.module-progress-download
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  margin: 12px 0
+  padding: 0
+  background: transparent
+  border: none
+  color: $baseColor
+  font-size: 14px
+  font-weight: 500
+  text-decoration: none
+  &:hover, &:focus
+    color: darken($baseColor, 10%)
+    text-decoration: underline
+
+.module-progress-download-icon
+  font-size: 14px
+
+.module-progress-download-label
+  // no flex grow on a link
+
+.module-progress-download-chevron
+  font-size: 10px
+  opacity: 0.7
 
 .module-progress-counter
   position: absolute
@@ -148,6 +187,79 @@ $dashboardHeadHeight: 80px
   gap: 8px
   font-size: 14px
 
+.module-progress-item-header--clickable
+  cursor: pointer
+  user-select: none
+
+.module-progress-item-chevron
+  margin-left: auto
+  font-size: 10px
+  color: $genericErrorColor
+
+.module-progress-item-messages
+  position: relative
+
+.module-progress-copy-btn
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  background: transparent
+  border: 1px solid $baseBrd
+  border-radius: 3px
+  padding: 2px 8px
+  font-size: 11px
+  color: $colorText
+  cursor: pointer
+  float: right
+  margin: 0 0 6px 8px
+  &:hover
+    background: $lightBg
+    border-color: $baseColor
+    color: $baseColor
+  i
+    font-size: 11px
+
+.module-progress-copy-btn--inline
+  float: none
+  margin-left: 12px
+  vertical-align: middle
+
+.module-progress-log-wrap
+  position: relative
+
+.module-progress-copy-btn--pinned
+  position: absolute
+  top: 6px
+  right: 6px
+  z-index: 2
+  float: none
+  margin: 0
+  background: rgba(255, 255, 255, 0.9)
+  &:hover
+    background: $lightBg
+
+.drag-area--clickable
+  cursor: pointer
+  display: block
+  &:hover
+    border-color: $baseColor
+    background: $lightBg
+
+.drag-area-icon
+  font-size: 32px
+  color: $baseColor
+  display: block
+  margin-bottom: 8px
+
+.drag-area-primary
+  font-weight: 500
+  font-size: 14px
+  margin-bottom: 4px
+
+.drag-area-secondary
+  font-size: 12px
+  color: #999
+
 .module-progress-item-icon
   font-size: 14px
 
@@ -173,6 +285,9 @@ $dashboardHeadHeight: 80px
   line-height: 1.5
   overflow-wrap: break-word
   word-break: break-all
+  max-height: 240px
+  overflow-y: auto
+  padding-right: 6px
 
 .module-progress-item-msg--error
   color: $genericErrorColor
@@ -286,3 +401,162 @@ $dashboardHeadHeight: 80px
 .list-ico.__customers,
 .menu-ico.__customers
   position: relative
+
+/* Sensitive-data warning banner — shown above the Platform Entries section on
+   export/import blades when the Security toggle is enabled. Sits above the fieldset
+   so users see the warning before they scroll through the entry checkboxes. */
+.security-warning-banner
+  display: flex
+  align-items: flex-start
+  gap: 12px
+  padding: 12px 16px
+  margin: 0 0 16px
+  background: lighten($genericWarningColor, 38%)
+  border: 1px solid $genericWarningColor
+  border-left-width: 4px
+  border-radius: 3px
+
+.security-warning-banner__icon
+  color: $genericWarningColor
+  font-size: 20px
+  flex-shrink: 0
+  margin-top: 2px
+
+.security-warning-banner__content
+  flex: 1
+  font-size: 13px
+  line-height: 1.5
+
+.security-warning-banner__title
+  font-weight: 600
+  margin-bottom: 4px
+  color: darken($genericWarningColor, 15%)
+
+.security-warning-banner__body
+  color: $colorText
+
+.security-warning-banner__reassurance
+  margin-top: 8px
+  padding-top: 8px
+  border-top: 1px solid lighten($genericWarningColor, 25%)
+  font-size: 12px
+  color: $colorText
+
+/* Danger variant — used when the admin opts out of password encryption on a backup.
+   Same layout as the default warning banner; red instead of amber so the higher-risk
+   choice gets a visually distinct treatment. */
+.security-warning-banner.security-warning-banner__danger
+  background: lighten($genericErrorColor, 38%)
+  border-left-color: $genericErrorColor
+
+  .security-warning-banner__icon
+    color: $genericErrorColor
+
+  .security-warning-banner__title
+    color: darken($genericErrorColor, 10%)
+
+/* One-time backup password modal — emphasizes the password and the must-acknowledge
+   gate so admins are unlikely to dismiss without saving it. */
+.backup-password-dialog
+  .backup-password-dialog__body
+    margin: 0 0 12px
+    font-size: 14px
+    line-height: 1.5
+
+  .backup-password-dialog__warning
+    margin: 0 0 16px
+    padding: 10px 12px
+    background: lighten($genericWarningColor, 35%)
+    border-left: 4px solid $genericWarningColor
+    border-radius: 3px
+    font-size: 13px
+
+    i
+      color: $genericWarningColor
+      margin-right: 6px
+
+  .backup-password-dialog__value
+    font-family: "Courier New", Consolas, monospace
+    font-size: 14px
+    letter-spacing: 1px
+
+  .backup-password-dialog__ack
+    display: flex
+    align-items: center
+    gap: 8px
+    margin-top: 12px
+    font-size: 13px
+    cursor: pointer
+
+/* The import-side password field renders as `type="text"` (to keep browser password
+   managers from offering to save it) but is visually masked here so the user still sees
+   bullets. -webkit-text-security covers Chromium/Edge/Safari, which is the platform's
+   primary admin-browser audience. Firefox shows the text in cleartext — acceptable
+   trade-off vs. polluting a user's saved-password list with one-shot backup keys.
+   The explicit `font: inherit` is defensive: Chromium tends to fall back to a built-in
+   "password font" when -webkit-text-security is set, which leaks into the placeholder
+   and makes it visually mismatch the surrounding labels. Pinning to inherit keeps the
+   placeholder in the platform's body font ($font). */
+.backup-password-input
+  -webkit-text-security: disc
+  font: inherit
+  // re-apply the platform's standard input styling that font: inherit just clobbered
+  font-size: 13px
+  color: #4c4c4c
+  &::placeholder
+    font: inherit
+    font-size: 13px
+
+/* Export-side one-time password callout. Amber-tinted card with a key icon and a
+   "shown only once" badge so it visually outranks the surrounding progress / download
+   UI — the surrounding admin is unlikely to skim past it and miss the copy step. */
+.backup-password-card
+  background: lighten($genericWarningColor, 40%)
+  border: 1px solid lighten($genericWarningColor, 25%)
+  border-left: 4px solid $genericWarningColor
+  border-radius: 3px
+  padding: 12px 14px
+  margin: 16px 0
+
+  .backup-password-card__head
+    display: flex
+    align-items: center
+    gap: 8px
+    margin-bottom: 8px
+
+  .backup-password-card__icon
+    color: $genericWarningColor
+    font-size: 18px
+    flex-shrink: 0
+
+  .backup-password-card__label
+    flex: 1
+    margin: 0
+    font-weight: 600
+    color: darken($genericWarningColor, 18%)
+
+  .backup-password-card__badge
+    display: inline-block
+    padding: 2px 8px
+    background: $genericWarningColor
+    color: #fff
+    font-size: 11px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.5px
+    border-radius: 2px
+    flex-shrink: 0
+
+  .backup-password-card__value
+    font-family: "Courier New", Consolas, monospace
+    font-size: 15px
+    font-weight: 600
+    letter-spacing: 1px
+    background: #fff
+
+/* Matches the spacing the platform's standard `.form-input ~ .form-hint` rule gives —
+   re-applied here because our help-icon-toggleable description sits inside an
+   `ng-if`'d wrapper, so the natural-sibling selector in _forms.sass doesn't match. */
+.backup-password-card__descr,
+.backup-password-descr
+  margin: 5px 0 0

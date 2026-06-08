@@ -184,7 +184,17 @@
           "download-url": "URL de téléchargement",
           "errors": "Erreurs",
           "start": "Début",
-          "end": "Fin"
+          "end": "Fin",
+          "export-progress": "Progression de la sauvegarde",
+          "export-finished": "Sauvegarde terminée",
+          "process-completed": "Le processus de sauvegarde est terminé",
+          "completed-with-errors": "Terminé avec des erreurs",
+          "detailed-log": "Afficher le journal détaillé",
+          "copy-error": "Copier l'erreur",
+          "copy-log": "Copier le journal",
+          "download-backup": "Télécharger la sauvegarde",
+          "backup-password": "Mot de passe de sauvegarde",
+          "password-shown-once": "Affiché une seule fois"
         },
         "menu": {
           "security": {
@@ -202,7 +212,20 @@
           "dynamic-props": {
             "title": "Propriétés dynamiques",
             "description": "Propriétés dynamiques de la plateforme"
+          },
+          "password-protect": {
+            "title": "Chiffrer avec un mot de passe",
+            "description": "Chiffrer la sauvegarde avec un mot de passe à usage unique (AES-256). Recommandé."
           }
+        },
+        "warnings": {
+          "security-data-title": "Cette sauvegarde contiendra des données sensibles",
+          "security-data-body": "Les hachages de mots de passe, clés API et empreintes de sécurité de tous les utilisateurs seront inclus. Toute personne ayant accès au fichier de sauvegarde peut l'utiliser pour s'emparer des comptes utilisateurs. Conservez le fichier dans un endroit sûr et limitez les téléchargements.",
+          "no-encryption-title": "Cette sauvegarde ne sera pas chiffrée",
+          "no-encryption-body": "Quiconque peut lire le fichier peut récupérer les mots de passe utilisateurs et les clés API. Ne continuez que si le fichier ne quittera jamais un environnement sécurisé."
+        },
+        "hints": {
+          "backup-password": "Ce mot de passe chiffre votre fichier de sauvegarde. Conservez-le en lieu sûr — sans lui, la sauvegarde ne peut pas être restaurée. Il n'est affiché qu'une seule fois sur cet écran ; si vous quittez la page il ne pourra pas être récupéré."
         }
       },
       "import-main": {
@@ -224,7 +247,16 @@
           "no-data": "Pas de données",
           "errors": "Erreurs",
           "start": "Début",
-          "end": "Fin"
+          "end": "Fin",
+          "drag-or-browse": "Glissez-déposez un fichier .zip ici, ou cliquez pour parcourir",
+          "drag-note-detail": "Le fichier doit avoir été produit par la sauvegarde de données Virto Commerce",
+          "process-completed": "Le processus de restauration est terminé",
+          "completed-with-errors": "Terminé avec des erreurs",
+          "detailed-log": "Afficher le journal détaillé",
+          "copy-error": "Copier l'erreur",
+          "copy-log": "Copier le journal",
+          "password-section": "Mot de passe de sauvegarde",
+          "password": "Mot de passe de sauvegarde"
         },
         "menu": {
           "security": {
@@ -243,6 +275,20 @@
             "title": "Propriétés dynamiques",
             "description": "Propriétés dynamiques de la plateforme"
           }
+        },
+        "warnings": {
+          "security-data-title": "Cette restauration écrasera des données sensibles",
+          "security-data-body": "Les mots de passe utilisateurs, clés API et empreintes de sécurité de la sauvegarde remplaceront les valeurs actuelles de chaque utilisateur du fichier.",
+          "security-data-admin-preserved": "Votre propre compte administrateur ({{username}}) ne sera pas modifié — votre mot de passe et votre session active sont préservés."
+        },
+        "placeholders": {
+          "password": "Saisissez le mot de passe affiché lors de la création de cette sauvegarde"
+        },
+        "hints": {
+          "password": "Saisissez le mot de passe affiché lors de la création de cette sauvegarde."
+        },
+        "errors": {
+          "wrong-password": "Mot de passe incorrect. Veuillez réessayer."
         }
       },
       "exportImport-main": {
@@ -606,6 +652,12 @@
           "password-log-in-type": "Utilisateur système",
           "or": "ou",
           "signing-in": "Connexion en cours..."
+        },
+        "errors": {
+          "login-failed": "Échec de la tentative de connexion. Vérifiez vos identifiants.",
+          "account-locked": "Votre compte a été verrouillé. Veuillez réessayer plus tard ou contacter l'administrateur.",
+          "technical-error": "Erreur d'authentification. Veuillez réessayer plus tard ou contacter l'administrateur. (Code : {{code}})",
+          "unknown-error": "Erreur d'authentification. Veuillez réessayer plus tard ou contacter l'administrateur."
         }
       },
       "forgotpassword": {

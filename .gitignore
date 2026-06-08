@@ -297,3 +297,4 @@ app_data/
 BenchmarkDotNet.Artifacts/
 
 /.claude/settings.local.json
+/.serena

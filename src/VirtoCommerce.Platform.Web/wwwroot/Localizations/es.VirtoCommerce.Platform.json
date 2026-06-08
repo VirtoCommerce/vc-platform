@@ -184,7 +184,17 @@
           "download-url": "URL de descarga",
           "errors": "Errores",
           "start": "Inicio",
-          "end": "Fin"
+          "end": "Fin",
+          "export-progress": "Progreso de la copia de seguridad",
+          "export-finished": "Copia de seguridad finalizada",
+          "process-completed": "El proceso de copia de seguridad está completo",
+          "completed-with-errors": "Completado con errores",
+          "detailed-log": "Mostrar registro detallado",
+          "copy-error": "Copiar error",
+          "copy-log": "Copiar registro",
+          "download-backup": "Descargar copia de seguridad",
+          "backup-password": "Contraseña de copia de seguridad",
+          "password-shown-once": "Mostrada solo una vez"
         },
         "menu": {
           "security": {
@@ -202,7 +212,20 @@
           "dynamic-props": {
             "title": "Propiedades dinámicas",
             "description": "Propiedades dinámicas de la plataforma"
+          },
+          "password-protect": {
+            "title": "Cifrar con contraseña",
+            "description": "Cifrar la copia de seguridad con una contraseña de un solo uso (AES-256). Recomendado."
           }
+        },
+        "warnings": {
+          "security-data-title": "Esta copia de seguridad contendrá datos sensibles",
+          "security-data-body": "Se incluirán los hashes de contraseñas, claves de API y sellos de seguridad de todos los usuarios. Cualquier persona con acceso al archivo de copia de seguridad podrá usarlo para apoderarse de cuentas de usuario. Guarde el archivo en un lugar seguro y limite quién puede descargarlo.",
+          "no-encryption-title": "Esta copia de seguridad no estará cifrada",
+          "no-encryption-body": "Cualquiera que pueda leer el archivo podrá recuperar contraseñas de usuario y claves de API. Continúe solo si el archivo nunca saldrá de un entorno seguro."
+        },
+        "hints": {
+          "backup-password": "Esta contraseña cifra su archivo de copia de seguridad. Guárdela en un lugar seguro — sin ella, la copia de seguridad no se puede restaurar. Se muestra solo una vez en esta pantalla; si abandona la página no se podrá recuperar."
         }
       },
       "import-main": {
@@ -224,7 +247,16 @@
           "no-data": "Sin datos",
           "errors": "Errores",
           "start": "Inicio",
-          "end": "Fin"
+          "end": "Fin",
+          "drag-or-browse": "Arrastre y suelte un archivo .zip aquí, o haga clic para examinar",
+          "drag-note-detail": "El archivo debe haber sido generado por la copia de seguridad de datos de Virto Commerce",
+          "process-completed": "El proceso de restauración está completo",
+          "completed-with-errors": "Completado con errores",
+          "detailed-log": "Mostrar registro detallado",
+          "copy-error": "Copiar error",
+          "copy-log": "Copiar registro",
+          "password-section": "Contraseña de copia de seguridad",
+          "password": "Contraseña de copia de seguridad"
         },
         "menu": {
           "security": {
@@ -243,6 +275,20 @@
             "title": "Propiedades dinámicas",
             "description": "Propiedades dinámicas de la plataforma"
           }
+        },
+        "warnings": {
+          "security-data-title": "Esta restauración sobrescribirá datos sensibles",
+          "security-data-body": "Las contraseñas de usuario, claves de API y sellos de seguridad de la copia de seguridad reemplazarán los valores actuales para cada usuario del archivo.",
+          "security-data-admin-preserved": "Su propia cuenta de administrador ({{username}}) no se modificará — se conserva su contraseña y su sesión activa."
+        },
+        "placeholders": {
+          "password": "Introduzca la contraseña mostrada cuando se creó esta copia de seguridad"
+        },
+        "hints": {
+          "password": "Introduzca la contraseña mostrada cuando se creó esta copia de seguridad."
+        },
+        "errors": {
+          "wrong-password": "Contraseña incorrecta. Inténtelo de nuevo."
         }
       },
       "exportImport-main": {
@@ -606,6 +652,12 @@
           "password-log-in-type": "Usuario del sistema",
           "or": "o",
           "signing-in": "Iniciando sesión..."
+        },
+        "errors": {
+          "login-failed": "Error en el intento de inicio de sesión. Compruebe sus credenciales.",
+          "account-locked": "Su cuenta ha sido bloqueada. Inténtelo de nuevo más tarde o póngase en contacto con el administrador.",
+          "technical-error": "Error de autenticación. Inténtelo de nuevo más tarde o póngase en contacto con el administrador. (Código: {{code}})",
+          "unknown-error": "Error de autenticación. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."
         }
       },
       "forgotpassword": {
