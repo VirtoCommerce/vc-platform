@@ -13,12 +13,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@VCST-4492 #v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.38    
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@VCST-4492 #v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.38    
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
@@ -47,7 +47,7 @@ jobs:
   publish-docker:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@VCST-4492 #v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.38    
     with:
       fullKey: ${{ needs.build.outputs.dockerFullKey }}
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
@@ -61,7 +61,7 @@ jobs:
   publish-github-release:
     needs:
       [build, test, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@VCST-4492 #v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.38    
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
