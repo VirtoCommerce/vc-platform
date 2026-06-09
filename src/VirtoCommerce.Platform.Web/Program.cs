@@ -52,7 +52,8 @@ namespace VirtoCommerce.Platform.Web
             var isDevelopmentEnvironment = environment.EqualsIgnoreCase(Environments.Development);
 
             ModuleBootstrapper.Instance = new ModuleBootstrapper(loggerFactory, options)
-                .Discover(PlatformVersion.CurrentVersion)
+                .Discover()
+                .Validate(PlatformVersion.CurrentVersion)
                 .Copy(RuntimeInformation.ProcessArchitecture)
                 .Load(isDevelopmentEnvironment);
         }
