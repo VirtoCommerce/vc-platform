@@ -163,7 +163,7 @@ public class ModuleRegistryTests
     private static ModuleBootstrapper CreateBootstrapperWithModules(List<ManifestModuleInfo> modules)
     {
         var bootstrapper = new ModuleBootstrapper(NullLoggerFactory.Instance, new LocalStorageModuleCatalogOptions());
-        bootstrapper.RegisterModules(modules);
+        bootstrapper.RegisterModulesInternal(modules);
 
         return bootstrapper;
     }
