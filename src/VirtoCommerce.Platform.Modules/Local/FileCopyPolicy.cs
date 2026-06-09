@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
 namespace VirtoCommerce.Platform.Modules.Local;
 
@@ -24,7 +23,7 @@ public class FileCopyPolicy : IFileCopyPolicy
     {
         var fileName = Path.GetFileName(sourceRelativeFilePath);
 
-        if (IsTpaFile(fileName) || IsReferenceDirectory(sourceRelativeFilePath))
+        if (IsReferenceDirectory(sourceRelativeFilePath))
         {
             return null;
         }
@@ -45,11 +44,6 @@ public class FileCopyPolicy : IFileCopyPolicy
         }
 
         return null;
-    }
-
-    private static bool IsTpaFile(string fileName)
-    {
-        return Tpa.ContainsAssembly(fileName);
     }
 
     private bool IsReferenceDirectory(string relativeFilePath)

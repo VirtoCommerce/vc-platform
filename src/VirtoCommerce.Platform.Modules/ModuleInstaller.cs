@@ -193,15 +193,12 @@ namespace VirtoCommerce.Platform.Modules
                     Report(progress, ProgressMessageLevel.Info, "Downloading '{0}' ", module.Ref);
                     webStream.CopyTo(fileStream);
                 }
+                ModulePackageInstaller.Install(moduleZipPath, dstModuleDir, deleteZip: true);
             }
             else if (_fileSystem.File.Exists(module.Ref))
             {
                 moduleZipPath = module.Ref;
-            }
-
-            if (File.Exists(moduleZipPath))
-            {
-                ModulePackageInstaller.Install(moduleZipPath, dstModuleDir);
+                ModulePackageInstaller.Install(moduleZipPath, dstModuleDir, deleteZip: false);
             }
 
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
