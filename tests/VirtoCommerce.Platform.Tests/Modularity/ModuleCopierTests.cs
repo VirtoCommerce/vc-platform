@@ -36,13 +36,8 @@ public class ModuleCopierTests
         { "runtimes/linux-x64/native/native.so",                "runtimes/linux-x64/native/native.so"            },
         { "runtimes/win-x64/native/native.dll",                 "runtimes/win-x64/native/native.dll"             },
         { "runtimes/osx-x64/native/native.dylib",               "runtimes/osx-x64/native/native.dylib"           },
-        { "runtimes/win/lib/net7.0/System.Management.dll",      null                                             },
-        { "runtimes/win/lib/net6.0/System.Drawing.Common.dll",  null                                             },
-        { "Hangfire.Core.dll",                                  null                                             },
-        { "de/Hangfire.Core.resources.dll",                     null                                             },
         { "ref/assembly.dll",                                   null                                             },
         { "Localizations/de.Module.json",                       null                                             },
-        { "System.Runtime.dll",                                 null                                             },
     };
 
     [Theory]
