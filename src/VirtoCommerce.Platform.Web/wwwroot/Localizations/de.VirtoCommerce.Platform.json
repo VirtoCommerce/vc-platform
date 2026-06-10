@@ -765,7 +765,10 @@
       "settings-detail": {
         "title": "Einstellungswerte",
         "hide-description": "Ausblenden",
-        "reset-to-default": "Auf Standardwert zurücksetzen"
+        "reset-to-default": "Auf Standardwert zurücksetzen",
+        "reset-to-default-confirm": "Diese Einstellung auf den Standardwert zurücksetzen?",
+        "reset-confirm-apply": "Zurücksetzen",
+        "reset-confirm-cancel": "Abbrechen"
       },
       "settingGroup-list": {
         "title": "Einstellungen",

@@ -763,7 +763,10 @@
       "settings-detail": {
         "title": "设置值",
         "hide-description": "隐藏",
-        "reset-to-default": "重置为默认值"
+        "reset-to-default": "重置为默认值",
+        "reset-to-default-confirm": "将此设置重置为默认值？",
+        "reset-confirm-apply": "重置",
+        "reset-confirm-cancel": "取消"
       },
       "settingGroup-list": {
         "title": "设置",

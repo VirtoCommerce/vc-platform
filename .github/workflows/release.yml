@@ -7,6 +7,6 @@ on:
 
 jobs:
   release:
-    uses: VirtoCommerce/.github/.github/workflows/release.yml@v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/release.yml@v3.800.38    
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
