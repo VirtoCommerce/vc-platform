@@ -545,6 +545,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var moduleIconUrl = module.IconUrl;
+            if (string.IsNullOrEmpty(moduleIconUrl))
+            {
+                return false;
+            }
+
             if (!moduleIconUrl.StartsWith('/'))
             {
                 moduleIconUrl = "/" + moduleIconUrl;

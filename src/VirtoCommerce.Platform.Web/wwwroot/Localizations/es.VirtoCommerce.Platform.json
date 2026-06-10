@@ -634,7 +634,10 @@
       "settings-detail": {
         "title": "Valores de configuración",
         "hide-description": "Ocultar",
-        "reset-to-default": "Restablecer al valor predeterminado"
+        "reset-to-default": "Restablecer al valor predeterminado",
+        "reset-to-default-confirm": "¿Restablecer esta configuración a su valor predeterminado?",
+        "reset-confirm-apply": "Restablecer",
+        "reset-confirm-cancel": "Cancelar"
       },
       "settingGroup-list": {
         "title": "Configuraciones",

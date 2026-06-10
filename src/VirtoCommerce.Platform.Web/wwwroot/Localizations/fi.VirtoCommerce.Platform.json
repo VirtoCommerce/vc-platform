@@ -635,7 +635,10 @@
       "settings-detail": {
         "title": "Asetusarvot",
         "hide-description": "Piilota",
-        "reset-to-default": "Palauta oletusarvoon"
+        "reset-to-default": "Palauta oletusarvoon",
+        "reset-to-default-confirm": "Palautetaanko tämä asetus oletusarvoon?",
+        "reset-confirm-apply": "Palauta",
+        "reset-confirm-cancel": "Peruuta"
       },
       "settingGroup-list": {
         "title": "Asetukset",

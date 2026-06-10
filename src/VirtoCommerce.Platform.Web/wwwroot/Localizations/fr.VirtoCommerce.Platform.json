@@ -634,7 +634,10 @@
       "settings-detail": {
         "title": "Valeurs des paramètres",
         "hide-description": "Masquer",
-        "reset-to-default": "Rétablir la valeur par défaut"
+        "reset-to-default": "Rétablir la valeur par défaut",
+        "reset-to-default-confirm": "Rétablir ce paramètre à sa valeur par défaut ?",
+        "reset-confirm-apply": "Rétablir",
+        "reset-confirm-cancel": "Annuler"
       },
       "settingGroup-list": {
         "title": "Paramètres",

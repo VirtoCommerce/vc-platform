@@ -94,7 +94,7 @@ jobs:
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         fetch-depth: 0
 
@@ -314,7 +314,7 @@ jobs:
     needs: ci
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.35
+    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.38
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -331,7 +331,7 @@ jobs:
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.35    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.38    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
@@ -356,7 +356,7 @@ jobs:
   trivy-scan:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     needs: 'ci'
-    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.35
+    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.38
     with:
       assigneeAccountId: '621c47c0302c6b006af0a1cd'
       assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'

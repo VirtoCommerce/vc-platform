@@ -634,7 +634,10 @@
       "settings-detail": {
         "title": "Wartości ustawień",
         "hide-description": "Ukryj",
-        "reset-to-default": "Przywróć wartość domyślną"
+        "reset-to-default": "Przywróć wartość domyślną",
+        "reset-to-default-confirm": "Przywrócić to ustawienie do wartości domyślnej?",
+        "reset-confirm-apply": "Przywróć",
+        "reset-confirm-cancel": "Anuluj"
       },
       "settingGroup-list": {
         "title": "Ustawienia",
