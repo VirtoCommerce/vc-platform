@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Azure.Identity;
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +43,7 @@ namespace VirtoCommerce.Platform.Web
                         {
                             options
                             .Connect(connectionString)
+                            .ConfigureKeyVault(keyVaultOptions => keyVaultOptions.SetCredential(new DefaultAzureCredential()))
                             .Select(KeyFilter.Any)
                             .Select(KeyFilter.Any, context.HostingEnvironment.EnvironmentName)
                             .ConfigureRefresh(refreshOptions =>
