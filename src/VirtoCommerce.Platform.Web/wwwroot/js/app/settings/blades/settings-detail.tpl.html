@@ -8,11 +8,27 @@
                         {{groupName==='undefined'?'General':groupName}}
                     </legend>
                     <div class="list __info form-group" ng-repeat="data in blade.currentEntities[groupName]">
-                        <label class="form-label">
+                        <label class="form-label settings-property-label">
                           {{ 'settings.' + data.name + '.title' | translate }}
                           <i class="form-ico fa fa-question-circle __link __lightblue" ng-click="data.descrVisible = !data.descrVisible;"></i>
-                          <i class="form-ico fa fa-rotate-left __link __blue" title="{{ 'platform.blades.settings-detail.reset-to-default' | translate }}" ng-click="resetToDefaultValue(data);" ng-if="resetToDefaultValue && !isDefaultValue(data)"></i>
                           <a href="" ng-click="editArray(data);" ng-if="data.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
+                          <span class="settings-reset" ng-if="resetToDefaultValue && !isDefaultValue(data) && data.valueType !== 'Boolean'">
+                            <i class="form-ico fa fa-rotate-left __link __blue settings-reset__ico"
+                               title="{{ 'platform.blades.settings-detail.reset-to-default' | translate }}"
+                               ng-click="$event.preventDefault(); $event.stopPropagation(); data.confirmReset = !data.confirmReset;"></i>
+                            <span class="settings-reset__backdrop" ng-if="data.confirmReset"
+                                  ng-click="$event.preventDefault(); $event.stopPropagation(); data.confirmReset = false;"></span>
+                            <span class="settings-reset__popover" va-reset-confirm-popover ng-if="data.confirmReset"
+                                  ng-click="$event.preventDefault(); $event.stopPropagation();">
+                              <span class="settings-reset__text">{{ 'platform.blades.settings-detail.reset-to-default-confirm' | translate }}</span>
+                              <span class="settings-reset__actions">
+                                <a href="" class="settings-reset__btn"
+                                   ng-click="$event.preventDefault(); data.confirmReset = false;">{{ 'platform.blades.settings-detail.reset-confirm-cancel' | translate }}</a>
+                                <a href="" class="settings-reset__btn __danger"
+                                   ng-click="$event.preventDefault(); data.confirmReset = false; resetToDefaultValue(data);">{{ 'platform.blades.settings-detail.reset-confirm-apply' | translate }}</a>
+                              </span>
+                            </span>
+                          </span>
                         </label>
                         <va-generic-value-input ng-model="data" get-dictionary-values="getDictionaryValues" ng-if="!data.isDictionary && (!data.allowedValues || data.isReadOnly)"></va-generic-value-input>
                         <div class="form-input" ng-if="!data.isDictionary && (data.allowedValues && !data.isReadOnly)">
