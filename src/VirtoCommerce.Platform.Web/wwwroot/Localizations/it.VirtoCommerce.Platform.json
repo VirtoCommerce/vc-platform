@@ -717,7 +717,10 @@
       "settings-detail": {
         "title": "Valori delle impostazioni",
         "hide-description": "Nascondi",
-        "reset-to-default": "Ripristina valore predefinito"
+        "reset-to-default": "Ripristina valore predefinito",
+        "reset-to-default-confirm": "Ripristinare questa impostazione al valore predefinito?",
+        "reset-confirm-apply": "Ripristina",
+        "reset-confirm-cancel": "Annulla"
       },
       "settingGroup-list": {
         "title": "Impostazioni",

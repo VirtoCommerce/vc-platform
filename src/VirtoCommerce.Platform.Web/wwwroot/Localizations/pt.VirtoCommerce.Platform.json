@@ -717,7 +717,10 @@
       "settings-detail": {
         "title": "Valores de configuração",
         "hide-description": "Ocultar",
-        "reset-to-default": "Restaurar para o valor padrão"
+        "reset-to-default": "Restaurar para o valor padrão",
+        "reset-to-default-confirm": "Redefinir esta configuração para o valor padrão?",
+        "reset-confirm-apply": "Redefinir",
+        "reset-confirm-cancel": "Cancelar"
       },
       "settingGroup-list": {
         "title": "Configurações",

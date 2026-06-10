@@ -718,7 +718,10 @@
       "settings-detail": {
         "title": "Innstillingverdier",
         "hide-description": "Skjul",
-        "reset-to-default": "Tilbakestill til standardverdi"
+        "reset-to-default": "Tilbakestill til standardverdi",
+        "reset-to-default-confirm": "Vil du tilbakestille denne innstillingen til standardverdien?",
+        "reset-confirm-apply": "Tilbakestill",
+        "reset-confirm-cancel": "Avbryt"
       },
       "settingGroup-list": {
         "title": "Innstillinger",

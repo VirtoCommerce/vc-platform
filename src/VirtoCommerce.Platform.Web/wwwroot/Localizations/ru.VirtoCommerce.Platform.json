@@ -719,7 +719,10 @@
       "settings-detail": {
         "title": "Значения настроек",
         "hide-description": "Скрыть",
-        "reset-to-default": "Сбросить к значению по умолчанию"
+        "reset-to-default": "Сбросить к значению по умолчанию",
+        "reset-to-default-confirm": "Сбросить этот параметр к значению по умолчанию?",
+        "reset-confirm-apply": "Сбросить",
+        "reset-confirm-cancel": "Отмена"
       },
       "settingGroup-list": {
         "title": "Настройки",

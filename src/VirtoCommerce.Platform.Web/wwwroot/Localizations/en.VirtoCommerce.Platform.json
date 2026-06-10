@@ -719,7 +719,10 @@
       "settings-detail": {
         "title": "Setting values",
         "hide-description": "Hide",
-        "reset-to-default": "Reset to default value"
+        "reset-to-default": "Reset to default value",
+        "reset-to-default-confirm": "Reset this setting to its default value?",
+        "reset-confirm-apply": "Reset",
+        "reset-confirm-cancel": "Cancel"
       },
       "settingGroup-list": {
         "title": "Settings",
