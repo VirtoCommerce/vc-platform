@@ -11,7 +11,6 @@
       "dynamic-properties": "Dynamiset ominaisuudet",
       "security": "Turvallisuus",
       "modules": "Moduulit",
-      "export-import": "Varmuuskopiointi ja palautus",
       "user-profile": "Käyttäjäprofiili",
       "assets": "Resurssit",
       "toggle-favorites": "Shift + Välilyönti vaihtaaksesi suosikkeja",
@@ -174,134 +173,6 @@
         },
         "placeholders": {
           "value": "Syötä arvo"
-        }
-      },
-      "export-main": {
-        "title": "Datan varmuuskopiointi",
-        "labels": {
-          "platform-entries": "Alustan merkinnät",
-          "choose-modules": "Valitse moduulit varmuuskopioitavaksi",
-          "download-url": "Lataus-URL",
-          "errors": "Virheet",
-          "start": "Alku",
-          "end": "Loppu",
-          "export-progress": "Varmuuskopioinnin edistyminen",
-          "export-finished": "Varmuuskopiointi valmis",
-          "process-completed": "Varmuuskopiointiprosessi on valmis",
-          "completed-with-errors": "Valmistui virheillä",
-          "detailed-log": "Näytä yksityiskohtainen loki",
-          "copy-error": "Kopioi virhe",
-          "copy-log": "Kopioi loki",
-          "download-backup": "Lataa varmuuskopio",
-          "backup-password": "Varmuuskopion salasana",
-          "password-shown-once": "Näytetään vain kerran"
-        },
-        "menu": {
-          "security": {
-            "title": "Turvallisuus",
-            "description": "Tilit ja roolit"
-          },
-          "binary": {
-            "title": "Binäärinen",
-            "description": "Binääridata"
-          },
-          "settings": {
-            "title": "Asetukset",
-            "description": "Alustan asetukset"
-          },
-          "dynamic-props": {
-            "title": "Dynamiset ominaisuudet",
-            "description": "Alustan dynamiset ominaisuudet"
-          },
-          "password-protect": {
-            "title": "Salaa salasanalla",
-            "description": "Salaa varmuuskopio kertakäyttöisellä salasanalla (AES-256). Suositeltu."
-          }
-        },
-        "warnings": {
-          "security-data-title": "Tämä varmuuskopio sisältää arkaluonteisia tietoja",
-          "security-data-body": "Kaikkien käyttäjien salasanatiivisteet, API-avaimet ja suojausleimat sisällytetään. Kuka tahansa, jolla on pääsy varmuuskopiotiedostoon, voi käyttää sitä käyttäjätilien haltuunottoon. Säilytä tiedosto turvallisessa paikassa ja rajoita lataajia.",
-          "no-encryption-title": "Tämä varmuuskopio on salaamaton",
-          "no-encryption-body": "Kuka tahansa, joka voi lukea tiedoston, voi palauttaa käyttäjien salasanat ja API-avaimet. Jatka vain, jos tiedosto ei koskaan poistu suojatusta ympäristöstä."
-        },
-        "hints": {
-          "backup-password": "Tämä salasana salaa varmuuskopiotiedoston. Säilytä se turvallisessa paikassa — ilman sitä varmuuskopiota ei voi palauttaa. Se näytetään vain kerran tällä näytöllä; jos poistut, sitä ei voi palauttaa."
-        }
-      },
-      "import-main": {
-        "title": "Datan palautus",
-        "labels": {
-          "start-import": "Aloita palautus",
-          "select-file": "Valitse .zip-tiedosto palautettavaksi. Tiedoston on tuotettava Virto Commerce -datan varmuuskopioinnilla",
-          "drag-note": "Vedä ja pudota .zip-tiedosto palautettavaksi. Tiedoston on tuotettava Virto Commerce -datan varmuuskopioinnilla",
-          "upload-failed": "Lataus epäonnistui",
-          "upload-progress": "Latauksen edistyminen",
-          "import-progress": "Palautuksen edistyminen",
-          "import-finished": "Palautus valmis",
-          "import-data-information": "Palautusdatan tiedot",
-          "author": "Tekijä",
-          "data-file-created": "Data tiedosto luotu",
-          "created-platform-version": "Luotu alustaversiossa",
-          "platform-entries": "Alustan merkinnät",
-          "choose-modules": "Valitse moduulit palautettavaksi",
-          "no-data": "Ei dataa",
-          "errors": "Virheet",
-          "start": "Alku",
-          "end": "Loppu",
-          "drag-or-browse": "Vedä ja pudota .zip-tiedosto tähän tai napsauta selataksesi",
-          "drag-note-detail": "Tiedoston on oltava Virto Commerce -datan varmuuskopioinnin tuottama",
-          "process-completed": "Palautusprosessi on valmis",
-          "completed-with-errors": "Valmistui virheillä",
-          "detailed-log": "Näytä yksityiskohtainen loki",
-          "copy-error": "Kopioi virhe",
-          "copy-log": "Kopioi loki",
-          "password-section": "Varmuuskopion salasana",
-          "password": "Varmuuskopion salasana"
-        },
-        "menu": {
-          "security": {
-            "title": "Turvallisuus",
-            "description": "Tilit ja roolit"
-          },
-          "binary": {
-            "title": "Binäärinen",
-            "description": "Binääridata"
-          },
-          "settings": {
-            "title": "Asetukset",
-            "description": "Alustan asetukset"
-          },
-          "dynamic-props": {
-            "title": "Dynamiset ominaisuudet",
-            "description": "Alustan dynamiset ominaisuudet"
-          }
-        },
-        "warnings": {
-          "security-data-title": "Tämä palautus ylikirjoittaa arkaluonteisia tietoja",
-          "security-data-body": "Varmuuskopiosta tulevat käyttäjäsalasanat, API-avaimet ja suojausleimat korvaavat tiedoston jokaisen käyttäjän nykyiset arvot.",
-          "security-data-admin-preserved": "Omaa ylläpitäjätiliäsi ({{username}}) ei muuteta — salasanasi ja aktiivinen istuntosi säilyvät."
-        },
-        "placeholders": {
-          "password": "Anna salasana, joka näytettiin tämän varmuuskopion luonnin yhteydessä"
-        },
-        "hints": {
-          "password": "Anna salasana, joka näytettiin tämän varmuuskopion luonnin yhteydessä."
-        },
-        "errors": {
-          "wrong-password": "Virheellinen salasana. Yritä uudelleen."
-        }
-      },
-      "exportImport-main": {
-        "title": "Datan varmuuskopiointi ja palautus",
-        "menu": {
-          "export": {
-            "title": "Varmuuskopiointi",
-            "description": "Data tallennetaan tiedostoon tulevaa palautusta varten"
-          },
-          "import": {
-            "title": "Palautus",
-            "description": "Palauta data varmuuskopiotiedostosta tulevaa käyttöä varten"
-          }
         }
       },
       "resolve-result": {
@@ -1090,9 +961,6 @@
     "platform:security:delete": "Poista käyttäjiä ja rooleja",
     "platform:security:verifyEmail": "Muuta vahvistettu tila ja lähetä vahvistussähköposti",
     "background_jobs:manage": "Pääsy Hangfire-konsoliin",
-    "platform:exportImport:access": "Näytä Varmuuskopiointi/Palautus päävalikossa",
-    "platform:import": "Palauta alustan ja moduulien data",
-    "platform:export": "Varmuuskopioi alustan ja moduulien data",
     "platform:security:loginOnBehalf": "Kirjaudu sisään asiakkaan puolesta"
   },
   "settings": {

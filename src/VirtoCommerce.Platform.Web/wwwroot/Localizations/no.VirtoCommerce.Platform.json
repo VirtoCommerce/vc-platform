@@ -11,7 +11,6 @@
       "dynamic-properties": "Dynamiske egenskaper",
       "security": "Sikkerhet",
       "modules": "Moduler",
-      "export-import": "Sikkerhetskopiering og gjenoppretting",
       "user-profile": "Brukerprofil",
       "assets": "Ressurser",
       "toggle-favorites": "Shift + Mellomrom for å veksle favoritter",
@@ -174,134 +173,6 @@
         },
         "placeholders": {
           "value": "Angi verdi"
-        }
-      },
-      "export-main": {
-        "title": "Datasikkerhetskopiering",
-        "labels": {
-          "platform-entries": "Plattformoppføringer",
-          "choose-modules": "Velg moduler å sikkerhetskopiere",
-          "download-url": "Nedlastings-URL",
-          "errors": "Feil",
-          "start": "Start",
-          "end": "Slutt",
-          "export-progress": "Sikkerhetskopieringsfremdrift",
-          "export-finished": "Sikkerhetskopiering fullført",
-          "process-completed": "Sikkerhetskopieringsprosessen er fullført",
-          "completed-with-errors": "Fullført med feil",
-          "detailed-log": "Vis detaljert logg",
-          "copy-error": "Kopier feil",
-          "copy-log": "Kopier logg",
-          "download-backup": "Last ned sikkerhetskopi",
-          "backup-password": "Sikkerhetskopipassord",
-          "password-shown-once": "Vises kun én gang"
-        },
-        "menu": {
-          "security": {
-            "title": "Sikkerhet",
-            "description": "Kontoer og roller"
-          },
-          "binary": {
-            "title": "Binær",
-            "description": "Binærdata"
-          },
-          "settings": {
-            "title": "Innstillinger",
-            "description": "Plattforminnstillinger"
-          },
-          "dynamic-props": {
-            "title": "Dynamiske egenskaper",
-            "description": "Plattformens dynamiske egenskaper"
-          },
-          "password-protect": {
-            "title": "Krypter med passord",
-            "description": "Krypter sikkerhetskopien med et engangspassord (AES-256). Anbefales."
-          }
-        },
-        "warnings": {
-          "security-data-title": "Denne sikkerhetskopien vil inneholde sensitive data",
-          "security-data-body": "Passordhasher, API-nøkler og sikkerhetsstempler for alle brukere vil bli inkludert. Alle med tilgang til sikkerhetskopifilen kan bruke den til å overta brukerkontoer. Oppbevar filen sikkert og begrens hvem som kan laste den ned.",
-          "no-encryption-title": "Denne sikkerhetskopien vil være ukryptert",
-          "no-encryption-body": "Alle som kan lese filen kan gjenopprette brukerpassord og API-nøkler. Fortsett kun hvis filen aldri forlater et sikret miljø."
-        },
-        "hints": {
-          "backup-password": "Dette passordet krypterer sikkerhetskopifilen. Lagre det trygt — uten det kan ikke sikkerhetskopien gjenopprettes. Det vises kun én gang på denne skjermen; hvis du navigerer bort kan det ikke gjenopprettes."
-        }
-      },
-      "import-main": {
-        "title": "Datagjenoppretting",
-        "labels": {
-          "start-import": "Start gjenoppretting",
-          "select-file": "Velg .zip-fil å gjenopprette. Filen må være opprettet av Virto Commerce datasikkerhetskopiering",
-          "drag-note": "Dra og slipp .zip-fil for gjenoppretting. Filen må være opprettet av Virto Commerce datasikkerhetskopiering",
-          "upload-failed": "Opplasting mislyktes",
-          "upload-progress": "Opplastingsfremdrift",
-          "import-progress": "Gjenopprettingsfremdrift",
-          "import-finished": "Gjenoppretting fullført",
-          "import-data-information": "Informasjon om gjenopprettingsdata",
-          "author": "Forfatter",
-          "data-file-created": "Datafil opprettet",
-          "created-platform-version": "Opprettet i plattformversjon",
-          "platform-entries": "Plattformoppføringer",
-          "choose-modules": "Velg moduler å gjenopprette",
-          "no-data": "Ingen data",
-          "errors": "Feil",
-          "start": "Start",
-          "end": "Slutt",
-          "drag-or-browse": "Dra og slipp en .zip-fil her, eller klikk for å bla",
-          "drag-note-detail": "Filen må være opprettet av Virto Commerce datasikkerhetskopiering",
-          "process-completed": "Gjenopprettingsprosessen er fullført",
-          "completed-with-errors": "Fullført med feil",
-          "detailed-log": "Vis detaljert logg",
-          "copy-error": "Kopier feil",
-          "copy-log": "Kopier logg",
-          "password-section": "Sikkerhetskopipassord",
-          "password": "Sikkerhetskopipassord"
-        },
-        "menu": {
-          "security": {
-            "title": "Sikkerhet",
-            "description": "Kontoer og roller"
-          },
-          "binary": {
-            "title": "Binær",
-            "description": "Binærdata"
-          },
-          "settings": {
-            "title": "Innstillinger",
-            "description": "Plattforminnstillinger"
-          },
-          "dynamic-props": {
-            "title": "Dynamiske egenskaper",
-            "description": "Plattformens dynamiske egenskaper"
-          }
-        },
-        "warnings": {
-          "security-data-title": "Denne gjenopprettingen vil overskrive sensitive data",
-          "security-data-body": "Brukerpassord, API-nøkler og sikkerhetsstempler fra sikkerhetskopien vil erstatte de nåværende verdiene for hver bruker i filen.",
-          "security-data-admin-preserved": "Din egen administratorkonto ({{username}}) vil ikke bli endret — passordet og den aktive økten beholdes."
-        },
-        "placeholders": {
-          "password": "Skriv inn passordet som ble vist da denne sikkerhetskopien ble opprettet"
-        },
-        "hints": {
-          "password": "Skriv inn passordet som ble vist da denne sikkerhetskopien ble opprettet."
-        },
-        "errors": {
-          "wrong-password": "Feil passord. Prøv igjen."
-        }
-      },
-      "exportImport-main": {
-        "title": "Datasikkerhetskopiering og gjenoppretting",
-        "menu": {
-          "export": {
-            "title": "Sikkerhetskopiering",
-            "description": "Data lagres til en fil for fremtidig gjenoppretting"
-          },
-          "import": {
-            "title": "Gjenoppretting",
-            "description": "Gjenopprett data fra en sikkerhetskopifil for fremtidig bruk"
-          }
         }
       },
       "resolve-result": {
@@ -1090,9 +961,6 @@
     "platform:security:delete": "Slett brukere og roller",
     "platform:security:verifyEmail": "Endre verifisert tilstand og send verifiserings-e-post",
     "background_jobs:manage": "Tilgang til Hangfire-konsollen",
-    "platform:exportImport:access": "Vis Sikkerhetskopiering/Gjenoppretting i hovedmenyen",
-    "platform:import": "Gjenopprett plattform- og moduldata",
-    "platform:export": "Sikkerhetskopier plattform- og moduldata",
     "platform:security:loginOnBehalf": "Logg inn på vegne av kunden"
   },
   "settings": {

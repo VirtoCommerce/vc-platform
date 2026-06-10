@@ -11,7 +11,6 @@
       "dynamic-properties": "Propriedades dinâmicas",
       "security": "Segurança",
       "modules": "Módulos",
-      "export-import": "Backup e Restauração",
       "user-profile": "Perfil do usuário",
       "assets": "Recursos",
       "toggle-favorites": "Shift + Espaço para alternar favoritos",
@@ -174,134 +173,6 @@
         },
         "placeholders": {
           "value": "Digite o valor"
-        }
-      },
-      "export-main": {
-        "title": "Backup de dados",
-        "labels": {
-          "platform-entries": "Entradas da plataforma",
-          "choose-modules": "Escolha os módulos para backup",
-          "download-url": "URL de download",
-          "errors": "Erros",
-          "start": "Início",
-          "end": "Fim",
-          "export-progress": "Progresso do backup",
-          "export-finished": "Backup concluído",
-          "process-completed": "O processo de backup está concluído",
-          "completed-with-errors": "Concluído com erros",
-          "detailed-log": "Mostrar registro detalhado",
-          "copy-error": "Copiar erro",
-          "copy-log": "Copiar registro",
-          "download-backup": "Baixar backup",
-          "backup-password": "Senha do backup",
-          "password-shown-once": "Exibida apenas uma vez"
-        },
-        "menu": {
-          "security": {
-            "title": "Segurança",
-            "description": "Contas e funções"
-          },
-          "binary": {
-            "title": "Binário",
-            "description": "Dados binários"
-          },
-          "settings": {
-            "title": "Configurações",
-            "description": "Configurações da plataforma"
-          },
-          "dynamic-props": {
-            "title": "Propriedades dinâmicas",
-            "description": "Propriedades dinâmicas da plataforma"
-          },
-          "password-protect": {
-            "title": "Criptografar com senha",
-            "description": "Criptografar o backup com uma senha de uso único (AES-256). Recomendado."
-          }
-        },
-        "warnings": {
-          "security-data-title": "Este backup conterá dados sensíveis",
-          "security-data-body": "Hashes de senhas, chaves de API e selos de segurança de todos os usuários serão incluídos. Qualquer pessoa com acesso ao arquivo de backup pode usá-lo para assumir contas de usuário. Guarde o arquivo em local seguro e limite quem pode fazer o download.",
-          "no-encryption-title": "Este backup não será criptografado",
-          "no-encryption-body": "Qualquer pessoa que possa ler o arquivo pode recuperar senhas de usuários e chaves de API. Prossiga apenas se o arquivo nunca sair de um ambiente seguro."
-        },
-        "hints": {
-          "backup-password": "Esta senha criptografa seu arquivo de backup. Guarde-a em local seguro — sem ela, o backup não pode ser restaurado. É exibida apenas uma vez nesta tela; se você sair, não poderá recuperá-la."
-        }
-      },
-      "import-main": {
-        "title": "Restauração de dados",
-        "labels": {
-          "start-import": "Iniciar restauração",
-          "select-file": "Selecione o arquivo .zip para restaurar. O arquivo deve ter sido gerado pelo backup de dados do Virto Commerce",
-          "drag-note": "Arraste e solte o arquivo .zip para restaurá-lo. O arquivo deve ter sido gerado pelo backup de dados do Virto Commerce",
-          "upload-failed": "Falha no upload",
-          "upload-progress": "Progresso do upload",
-          "import-progress": "Progresso da restauração",
-          "import-finished": "Restauração concluída",
-          "import-data-information": "Restaurar informações dos dados",
-          "author": "Autor",
-          "data-file-created": "Arquivo de dados criado",
-          "created-platform-version": "Criado na versão da Plataforma",
-          "platform-entries": "Entradas da plataforma",
-          "choose-modules": "Escolha os módulos para restaurar",
-          "no-data": "Sem dados",
-          "errors": "Erros",
-          "start": "Início",
-          "end": "Fim",
-          "drag-or-browse": "Arraste e solte um arquivo .zip aqui, ou clique para procurar",
-          "drag-note-detail": "O arquivo deve ter sido gerado pelo backup de dados do Virto Commerce",
-          "process-completed": "O processo de restauração está concluído",
-          "completed-with-errors": "Concluído com erros",
-          "detailed-log": "Mostrar registro detalhado",
-          "copy-error": "Copiar erro",
-          "copy-log": "Copiar registro",
-          "password-section": "Senha do backup",
-          "password": "Senha do backup"
-        },
-        "menu": {
-          "security": {
-            "title": "Segurança",
-            "description": "Contas e funções"
-          },
-          "binary": {
-            "title": "Binário",
-            "description": "Dados binários"
-          },
-          "settings": {
-            "title": "Configurações",
-            "description": "Configurações da plataforma"
-          },
-          "dynamic-props": {
-            "title": "Propriedades dinâmicas",
-            "description": "Propriedades dinâmicas da plataforma"
-          }
-        },
-        "warnings": {
-          "security-data-title": "Esta restauração sobrescreverá dados sensíveis",
-          "security-data-body": "Senhas de usuários, chaves de API e selos de segurança do backup substituirão os valores atuais para cada usuário no arquivo.",
-          "security-data-admin-preserved": "Sua própria conta de administrador ({{username}}) não será modificada — sua senha e sessão ativa são preservadas."
-        },
-        "placeholders": {
-          "password": "Digite a senha exibida quando este backup foi criado"
-        },
-        "hints": {
-          "password": "Digite a senha exibida quando este backup foi criado."
-        },
-        "errors": {
-          "wrong-password": "Senha incorreta. Tente novamente."
-        }
-      },
-      "exportImport-main": {
-        "title": "Backup e restauração de dados",
-        "menu": {
-          "export": {
-            "title": "Backup",
-            "description": "Os dados serão salvos em um arquivo para futura restauração"
-          },
-          "import": {
-            "title": "Restauração",
-            "description": "Restaurar dados a partir de um arquivo de backup para uso futuro"
-          }
         }
       },
       "resolve-result": {
@@ -1089,9 +960,6 @@
     "platform:security:delete": "Excluir usuários e funções",
     "platform:security:verifyEmail": "Alterar estado verificado e enviar e-mail de verificação",
     "background_jobs:manage": "Acesso ao console Hangfire",
-    "platform:exportImport:access": "Exibir Backup/Restauração no menu principal",
-    "platform:import": "Restaurar dados da plataforma e dos módulos",
-    "platform:export": "Fazer backup dos dados da plataforma e dos módulos",
     "platform:security:loginOnBehalf": "Login em nome de um cliente"
   },
   "settings": {

@@ -11,7 +11,6 @@
       "dynamic-properties": "動的プロパティ",
       "security": "セキュリティ",
       "modules": "モジュール",
-      "export-import": "バックアップと復元",
       "user-profile": "ユーザープロフィール",
       "assets": "リソース",
       "toggle-favorites": "Shift + スペースでお気に入りを切り替え",
@@ -174,134 +173,6 @@
         },
         "placeholders": {
           "value": "値を入力"
-        }
-      },
-      "export-main": {
-        "title": "データのバックアップ",
-        "labels": {
-          "platform-entries": "プラットフォームエントリー",
-          "choose-modules": "バックアップするモジュールを選択",
-          "download-url": "ダウンロードURL",
-          "errors": "エラー",
-          "start": "開始",
-          "end": "終了",
-          "export-progress": "バックアップの進行状況",
-          "export-finished": "バックアップ完了",
-          "process-completed": "バックアップ処理が完了しました",
-          "completed-with-errors": "エラーありで完了しました",
-          "detailed-log": "詳細ログを表示",
-          "copy-error": "エラーをコピー",
-          "copy-log": "ログをコピー",
-          "download-backup": "バックアップをダウンロード",
-          "backup-password": "バックアップパスワード",
-          "password-shown-once": "一度だけ表示されます"
-        },
-        "menu": {
-          "security": {
-            "title": "セキュリティ",
-            "description": "アカウントとロール"
-          },
-          "binary": {
-            "title": "バイナリ",
-            "description": "バイナリデータ"
-          },
-          "settings": {
-            "title": "設定",
-            "description": "プラットフォーム設定"
-          },
-          "dynamic-props": {
-            "title": "動的プロパティ",
-            "description": "プラットフォームの動的プロパティ"
-          },
-          "password-protect": {
-            "title": "パスワードで暗号化",
-            "description": "ワンタイムパスワード(AES-256)でバックアップを暗号化します。推奨。"
-          }
-        },
-        "warnings": {
-          "security-data-title": "このバックアップには機密データが含まれます",
-          "security-data-body": "全ユーザーのパスワードハッシュ、APIキー、セキュリティスタンプが含まれます。バックアップファイルにアクセスできる人は、それを使ってユーザーアカウントを乗っ取ることができます。ファイルは安全な場所に保管し、ダウンロードできる人を制限してください。",
-          "no-encryption-title": "このバックアップは暗号化されません",
-          "no-encryption-body": "ファイルを読める人なら誰でも、ユーザーパスワードやAPIキーを復元できます。ファイルがセキュアな環境を出ることがない場合にのみ続行してください。"
-        },
-        "hints": {
-          "backup-password": "このパスワードはバックアップファイルを暗号化します。安全な場所に保存してください — このパスワードがないとバックアップを復元できません。この画面で一度だけ表示されます。離れると復元できません。"
-        }
-      },
-      "import-main": {
-        "title": "データの復元",
-        "labels": {
-          "start-import": "復元を開始",
-          "select-file": ".zipファイルを選択して復元します。このファイルはVirto Commerceのデータバックアップによって作成されたものである必要があります。",
-          "drag-note": ".zipファイルをドラッグ＆ドロップして復元します。このファイルはVirto Commerceのデータバックアップによって作成されたものである必要があります。",
-          "upload-failed": "アップロード失敗",
-          "upload-progress": "復元の進行状況",
-          "import-progress": "復元が完了しました",
-          "import-finished": "データ情報の復元",
-          "import-data-information": "データ情報の復元",
-          "author": "作成者",
-          "data-file-created": "データファイル作成日時",
-          "created-platform-version": "作成されたプラットフォームバージョン",
-          "platform-entries": "プラットフォームエントリー",
-          "choose-modules": "復元するモジュールを選択",
-          "no-data": "データなし",
-          "errors": "エラー",
-          "start": "開始",
-          "end": "終了",
-          "drag-or-browse": ".zip ファイルをここにドラッグ＆ドロップするか、クリックして参照",
-          "drag-note-detail": "ファイルは Virto Commerce のデータバックアップで作成されたものである必要があります",
-          "process-completed": "復元処理が完了しました",
-          "completed-with-errors": "エラーありで完了しました",
-          "detailed-log": "詳細ログを表示",
-          "copy-error": "エラーをコピー",
-          "copy-log": "ログをコピー",
-          "password-section": "バックアップパスワード",
-          "password": "バックアップパスワード"
-        },
-        "menu": {
-          "security": {
-            "title": "セキュリティ",
-            "description": "アカウントとロール"
-          },
-          "binary": {
-            "title": "バイナリ",
-            "description": "バイナリデータ"
-          },
-          "settings": {
-            "title": "設定",
-            "description": "プラットフォーム設定"
-          },
-          "dynamic-props": {
-            "title": "動的プロパティ",
-            "description": "プラットフォームの動的プロパティ"
-          }
-        },
-        "warnings": {
-          "security-data-title": "この復元は機密データを上書きします",
-          "security-data-body": "バックアップ内のユーザーパスワード、APIキー、セキュリティスタンプが、ファイル内の全ユーザーの現在の値を置き換えます。",
-          "security-data-admin-preserved": "あなた自身の管理者アカウント ({{username}}) は変更されません — パスワードとアクティブセッションは保持されます。"
-        },
-        "placeholders": {
-          "password": "このバックアップが作成された際に表示されたパスワードを入力してください"
-        },
-        "hints": {
-          "password": "このバックアップが作成された際に表示されたパスワードを入力してください。"
-        },
-        "errors": {
-          "wrong-password": "パスワードが正しくありません。もう一度お試しください。"
-        }
-      },
-      "exportImport-main": {
-        "title": "データのバックアップと復元",
-        "menu": {
-          "export": {
-            "title": "バックアップ",
-            "description": "データは将来の復元のためにファイルに保存されます"
-          },
-          "import": {
-            "title": "復元",
-            "description": "バックアップファイルからデータを復元し、将来使用できるようにします"
-          }
         }
       },
       "resolve-result": {
@@ -1089,9 +960,6 @@
     "platform:security:delete": "ユーザーとロールの削除",
     "platform:security:verifyEmail": "確認済み状態の変更と確認メールの送信",
     "background_jobs:manage": "Hangfireコンソールへのアクセス",
-    "platform:exportImport:access": "メインメニューでバックアップ/復元を表示",
-    "platform:import": "プラットフォームとモジュールのデータを復元",
-    "platform:export": "プラットフォームとモジュールのデータをバックアップ",
     "platform:security:loginOnBehalf": "顧客の代理としてログイン"
   },
   "settings": {

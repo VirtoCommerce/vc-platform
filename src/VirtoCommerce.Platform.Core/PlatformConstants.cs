@@ -94,8 +94,11 @@ namespace VirtoCommerce.Platform.Core
 
                 public const string BackgroundJobsManage = "background_jobs:manage";
 
+                [Obsolete("Backup/restore moved to the VirtoCommerce.BackupRestore module, which registers this permission. Use VirtoCommerce.BackupRestore.Core.ModuleConstants.Security.Permissions.Access. The constant is kept (with its original value) for backward compatibility.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
                 public const string PlatformExportImportAccess = "platform:exportImport:access";
+                [Obsolete("Backup/restore moved to the VirtoCommerce.BackupRestore module, which registers this permission. Use VirtoCommerce.BackupRestore.Core.ModuleConstants.Security.Permissions.Import. The constant is kept (with its original value) for backward compatibility.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
                 public const string PlatformImport = "platform:import";
+                [Obsolete("Backup/restore moved to the VirtoCommerce.BackupRestore module, which registers this permission. Use VirtoCommerce.BackupRestore.Core.ModuleConstants.Security.Permissions.Export. The constant is kept (with its original value) for backward compatibility.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
                 public const string PlatformExport = "platform:export";
 
                 public static string[] AllPermissions { get; } =
@@ -110,7 +113,8 @@ namespace VirtoCommerce.Platform.Core
                     SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken, SecurityRevokeToken,
                     SecurityOAuthApplicationsCreate, SecurityOAuthApplicationsRead, SecurityOAuthApplicationsUpdate, SecurityOAuthApplicationsDelete,
                     BackgroundJobsManage,
-                    PlatformExportImportAccess, PlatformImport, PlatformExport,
+                    // platform:export / platform:import / platform:exportImport:access are now registered
+                    // by the VirtoCommerce.BackupRestore module (same string values) — see ModuleConstants there.
                 ];
             }
 

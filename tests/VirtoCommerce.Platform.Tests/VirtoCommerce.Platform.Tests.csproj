@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.18.1" />
-    <PackageReference Include="coverlet.collector" Version="10.0.0">
+    <PackageReference Include="coverlet.collector" Version="10.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.BackupRestore\VirtoCommerce.Platform.BackupRestore.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />

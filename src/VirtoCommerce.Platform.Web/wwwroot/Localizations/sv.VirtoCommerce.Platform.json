@@ -11,7 +11,6 @@
       "dynamic-properties": "Dynamiska egenskaper",
       "security": "Säkerhet",
       "modules": "Moduler",
-      "export-import": "Säkerhetskopiering och återställning",
       "user-profile": "Användarprofil",
       "assets": "Tillgångar",
       "toggle-favorites": "Skift + Mellanslag för att växla favoriter",
@@ -174,134 +173,6 @@
         },
         "placeholders": {
           "value": "Ange värde"
-        }
-      },
-      "export-main": {
-        "title": "Databackup",
-        "labels": {
-          "platform-entries": "Plattformsposter",
-          "choose-modules": "Välj moduler att säkerhetskopiera",
-          "download-url": "Hämtnings-URL",
-          "errors": "Fel",
-          "start": "Start",
-          "end": "Slut",
-          "export-progress": "Säkerhetskopieringsförlopp",
-          "export-finished": "Säkerhetskopiering slutförd",
-          "process-completed": "Säkerhetskopieringsprocessen är slutförd",
-          "completed-with-errors": "Slutförd med fel",
-          "detailed-log": "Visa detaljerad logg",
-          "copy-error": "Kopiera fel",
-          "copy-log": "Kopiera logg",
-          "download-backup": "Ladda ner säkerhetskopia",
-          "backup-password": "Säkerhetskopielösenord",
-          "password-shown-once": "Visas endast en gång"
-        },
-        "menu": {
-          "security": {
-            "title": "Säkerhet",
-            "description": "Konton och roller"
-          },
-          "binary": {
-            "title": "Binär",
-            "description": "Binärdata"
-          },
-          "settings": {
-            "title": "Inställningar",
-            "description": "Plattformsinställningar"
-          },
-          "dynamic-props": {
-            "title": "Dynamiska egenskaper",
-            "description": "Plattformens dynamiska egenskaper"
-          },
-          "password-protect": {
-            "title": "Kryptera med lösenord",
-            "description": "Kryptera säkerhetskopian med ett engångslösenord (AES-256). Rekommenderas."
-          }
-        },
-        "warnings": {
-          "security-data-title": "Denna säkerhetskopia kommer att innehålla känsliga data",
-          "security-data-body": "Lösenordshashar, API-nycklar och säkerhetsstämplar för alla användare kommer att inkluderas. Vem som helst med tillgång till säkerhetskopiefilen kan använda den för att ta över användarkonton. Förvara filen säkert och begränsa vem som kan ladda ner den.",
-          "no-encryption-title": "Denna säkerhetskopia kommer inte att vara krypterad",
-          "no-encryption-body": "Den som kan läsa filen kan återställa användarlösenord och API-nycklar. Fortsätt endast om filen aldrig lämnar en säker miljö."
-        },
-        "hints": {
-          "backup-password": "Detta lösenord krypterar säkerhetskopiefilen. Förvara det säkert — utan det kan säkerhetskopian inte återställas. Det visas endast en gång på den här skärmen; om du navigerar bort kan det inte återskapas."
-        }
-      },
-      "import-main": {
-        "title": "Dataåterställning",
-        "labels": {
-          "start-import": "Starta återställning",
-          "select-file": "Välj .zip-fil att återställa. Filen måste ha skapats av Virto Commerce databackup",
-          "drag-note": "Dra och släpp .zip-fil för återställning. Filen måste ha skapats av Virto Commerce databackup",
-          "upload-failed": "Uppladdning misslyckades",
-          "upload-progress": "Uppladdningsförlopp",
-          "import-progress": "Återställningsförlopp",
-          "import-finished": "Återställning slutförd",
-          "import-data-information": "Information om återställningsdata",
-          "author": "Författare",
-          "data-file-created": "Datafil skapad",
-          "created-platform-version": "Skapad i plattformsversion",
-          "platform-entries": "Plattformsposter",
-          "choose-modules": "Välj moduler att återställa",
-          "no-data": "Inga data",
-          "errors": "Fel",
-          "start": "Start",
-          "end": "Slut",
-          "drag-or-browse": "Dra och släpp en .zip-fil här eller klicka för att bläddra",
-          "drag-note-detail": "Filen måste ha skapats av Virto Commerce databackup",
-          "process-completed": "Återställningsprocessen är slutförd",
-          "completed-with-errors": "Slutförd med fel",
-          "detailed-log": "Visa detaljerad logg",
-          "copy-error": "Kopiera fel",
-          "copy-log": "Kopiera logg",
-          "password-section": "Säkerhetskopielösenord",
-          "password": "Säkerhetskopielösenord"
-        },
-        "menu": {
-          "security": {
-            "title": "Säkerhet",
-            "description": "Konton och roller"
-          },
-          "binary": {
-            "title": "Binär",
-            "description": "Binärdata"
-          },
-          "settings": {
-            "title": "Inställningar",
-            "description": "Plattformsinställningar"
-          },
-          "dynamic-props": {
-            "title": "Dynamiska egenskaper",
-            "description": "Plattformens dynamiska egenskaper"
-          }
-        },
-        "warnings": {
-          "security-data-title": "Denna återställning kommer att skriva över känsliga data",
-          "security-data-body": "Användarlösenord, API-nycklar och säkerhetsstämplar från säkerhetskopian ersätter aktuella värden för varje användare i filen.",
-          "security-data-admin-preserved": "Ditt eget administratörskonto ({{username}}) kommer inte att ändras — ditt lösenord och din aktiva session bevaras."
-        },
-        "placeholders": {
-          "password": "Ange lösenordet som visades när den här säkerhetskopian skapades"
-        },
-        "hints": {
-          "password": "Ange lösenordet som visades när den här säkerhetskopian skapades."
-        },
-        "errors": {
-          "wrong-password": "Felaktigt lösenord. Försök igen."
-        }
-      },
-      "exportImport-main": {
-        "title": "Databackup och återställning",
-        "menu": {
-          "export": {
-            "title": "Säkerhetskopiering",
-            "description": "Data sparas till en fil för framtida återställning"
-          },
-          "import": {
-            "title": "Återställning",
-            "description": "Återställ data från en säkerhetskopieringsfil för framtida användning"
-          }
         }
       },
       "resolve-result": {
@@ -1090,9 +961,6 @@
     "platform:security:delete": "Radera användare och roller",
     "platform:security:verifyEmail": "Ändra verifierat tillstånd och skicka verifieringsmail",
     "background_jobs:manage": "Tillgång till Hangfire-konsolen",
-    "platform:exportImport:access": "Visa Säkerhetskopiering/Återställning i huvudmenyn",
-    "platform:import": "Återställ plattforms- och moduldata",
-    "platform:export": "Säkerhetskopiera plattforms- och moduldata",
     "platform:security:loginOnBehalf": "Logga in å kundens vägnar"
   },
   "settings": {
