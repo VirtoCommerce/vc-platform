@@ -790,15 +790,20 @@ namespace VirtoCommerce.Platform.Web
                 // Register platform permissions
                 app.UsePlatformPermissions();
                 app.UseSecurityHandlers();
+
+                // Post-initialize all modules in dependency order
+                Log.ForContext<Startup>().Information("Post initializing modules");
+                ModuleBootstrapper.Instance.PostInitializeModules(app);
+
+                // Register platform recurring jobs AFTER modules are post-initialized, so the active
+                // background-job engine module (e.g. Hangfire) has created its storage schema first.
+                // Registering a recurring job touches the engine store (e.g. the HangFire.* tables), which
+                // only exists once the engine module's PostInitialize (UseHangfire) has run.
                 app.UsePruneExpiredTokensJob();
 
                 var options = app.ApplicationServices.GetService<IOptions<LockoutOptionsExtended>>();
 
                 app.UseAutoAccountsLockoutJob(options.Value);
-
-                // Post-initialize all modules in dependency order
-                Log.ForContext<Startup>().Information("Post initializing modules");
-                ModuleBootstrapper.Instance.PostInitializeModules(app);
             });
 
             app.UseEndpoints(SetupEndpoints);
