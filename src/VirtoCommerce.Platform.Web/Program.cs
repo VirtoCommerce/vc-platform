@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -106,30 +105,12 @@ namespace VirtoCommerce.Platform.Web
                 })
                 .ConfigureServices((hostingContext, services) =>
                 {
-                    // Let modules register host-level services
+                    // Let modules register host-level services.
+                    // The Hangfire background-job server is now registered by the VirtoCommerce.BackgroundJobs
+                    // module via IPlatformStartup.ConfigureHostServices (it owns the Hangfire engine).
                     ModuleBootstrapper.Instance.RunConfigureHostServices(
                         services,
                         hostingContext.Configuration);
-
-                    //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs
-                    if (hostingContext.Configuration.GetValue("VirtoCommerce:Hangfire:UseHangfireServer", true))
-                    {
-                        services.AddHangfireServer(options =>
-                        {
-                            var queues = hostingContext.Configuration.GetSection("VirtoCommerce:Hangfire:Queues").Get<List<string>>();
-                            if (!queues.IsNullOrEmpty())
-                            {
-                                queues.Add("default");
-                                options.Queues = queues.Select(x => x.ToLower()).Distinct().ToArray();
-                            }
-
-                            var workerCount = hostingContext.Configuration.GetValue<int?>("VirtoCommerce:Hangfire:WorkerCount", null);
-                            if (workerCount != null)
-                            {
-                                options.WorkerCount = workerCount.Value;
-                            }
-                        });
-                    }
                 });
         }
     }

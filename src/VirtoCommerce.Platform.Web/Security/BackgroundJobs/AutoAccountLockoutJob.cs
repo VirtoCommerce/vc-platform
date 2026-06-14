@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -24,7 +23,8 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
         private readonly LockoutOptionsExtended _lockoutOptions = lockoutOptions.Value;
         private readonly ILogger<AutoAccountLockoutJob> _logger = logger;
 
-        [DisableConcurrentExecution(10)]
+        // Concurrency protection (previously Hangfire's [DisableConcurrentExecution(10)]) is now an
+        // engine-level concern owned by the background-job engine module.
         public async Task Process(CancellationToken cancellationToken)
         {
             var lastLoginCutoff = DateTime.UtcNow.AddDays(-_lockoutOptions.LockoutMaximumDaysFromLastLogin);

@@ -4,7 +4,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -16,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.PushNotifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
@@ -42,6 +42,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ExternalModuleCatalogOptions _externalModuleCatalogOptions;
         private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly IPlatformRestarter _platformRestarter;
+        private readonly IBackgroundJobProcessor _backgroundJobProcessor;
         private readonly ILogger<ModulesController> _logger;
         private static readonly Lock _lockObject = new();
         private static readonly FormOptions _defaultFormOptions = new();
@@ -56,6 +57,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
             IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
             IPlatformRestarter platformRestarter,
+            IBackgroundJobProcessor backgroundJobProcessor,
             ILogger<ModulesController> logger)
         {
             _moduleService = moduleService;
@@ -67,6 +69,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
+            _backgroundJobProcessor = backgroundJobProcessor;
             _logger = logger;
         }
 
@@ -532,7 +535,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             _pushNotifier.Send(notification);
 
-            BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
+            try
+            {
+                _backgroundJobProcessor.Enqueue(() => ModuleBackgroundJob(options, notification));
+            }
+            catch (BackgroundJobEngineNotInstalledException ex)
+            {
+                // No background-job engine module is installed. Surface the actionable install instructions
+                // instead of failing with an opaque 500. The engine module itself can still be installed via
+                // the Virto Commerce CLI (filesystem-based) or the auto-install path, which do not enqueue jobs.
+                notification.Finished = DateTime.UtcNow;
+                notification.Description = ex.Message;
+                notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = ex.Message });
+                _pushNotifier.Send(notification);
+            }
 
             return notification;
         }

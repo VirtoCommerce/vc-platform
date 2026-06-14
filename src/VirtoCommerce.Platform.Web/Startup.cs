@@ -60,8 +60,8 @@ using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.SqlServer;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.HealthCheck;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.DistributedLock;
-using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.Local;
 using VirtoCommerce.Platform.Security;
@@ -605,6 +605,13 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<IModuleCatalog>(sp => sp.GetRequiredService<ILocalModuleCatalog>());
 #pragma warning restore VC0014
 
+            // The background-job engine (Hangfire) moved to the VirtoCommerce.BackgroundJobs module. Register
+            // no-engine fallbacks so the platform boots and surfaces an actionable error when no engine module
+            // is installed. TryAdd runs AFTER InitializeModules above, so when an engine module IS installed its
+            // real registrations win and these fallbacks are never used.
+            services.TryAddSingleton<IBackgroundJobProcessor, NoEngineBackgroundJobProcessor>();
+            services.TryAddSingleton<IRecurringJobService, NoEngineRecurringJobService>();
+
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
 
             services.AddExternalModules();
@@ -623,9 +630,6 @@ namespace VirtoCommerce.Platform.Web
                 // Preserve static logger (i.e. create new logger for DI, instead of reconfiguring existing)
                 // to avoid exception about frozen logger because BuildServiceProvider is called multiple times
             }, preserveStaticLogger: true);
-
-            // HangFire
-            services.AddHangfire(Configuration);
 
             // Register the Swagger generator
             services.AddSwagger(Configuration, platformOptions.UseAllOfToExtendReferenceSchemas);
@@ -782,9 +786,6 @@ namespace VirtoCommerce.Platform.Web
 
                 // Register Settings from module manifests (if any)
                 app.UseSettingsFromModuleManifests();
-
-                // Complete hangfire init and apply Hangfire migrations
-                app.UseHangfire(Configuration);
 
                 // Register platform permissions
                 app.UsePlatformPermissions();

@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading;
-using Hangfire;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -9,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
-using VirtoCommerce.Platform.Hangfire;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 
@@ -56,12 +55,10 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             var recurringJobService = appBuilder.ApplicationServices.GetService<IRecurringJobService>();
 
-            recurringJobService.WatchJobSetting(
-                new SettingCronJobBuilder()
-                    .SetEnablerSetting(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob)
-                    .SetCronSetting(PlatformConstants.Settings.Security.CronPruneExpiredTokensJob)
-                    .ToJob<PruneExpiredTokensJob>(x => x.Process())
-                    .Build());
+            recurringJobService.WatchJobSetting<PruneExpiredTokensJob>(
+                PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob,
+                PlatformConstants.Settings.Security.CronPruneExpiredTokensJob,
+                x => x.Process());
 
             return appBuilder;
         }
@@ -74,13 +71,15 @@ namespace VirtoCommerce.Platform.Web.Security
         /// <returns></returns>
         public static IApplicationBuilder UseAutoAccountsLockoutJob(this IApplicationBuilder appBuilder, LockoutOptionsExtended lockoutOptions)
         {
+            var recurringJobService = appBuilder.ApplicationServices.GetService<IRecurringJobService>();
+
             if (lockoutOptions.AutoAccountsLockoutJobEnabled)
             {
-                RecurringJob.AddOrUpdate<AutoAccountLockoutJob>("AutoAccountLockoutJob", j => j.Process(CancellationToken.None), lockoutOptions.CronAutoAccountsLockoutJob);
+                recurringJobService.AddOrUpdate<AutoAccountLockoutJob>("AutoAccountLockoutJob", j => j.Process(CancellationToken.None), lockoutOptions.CronAutoAccountsLockoutJob);
             }
             else
             {
-                RecurringJob.RemoveIfExists("AutoAccountLockoutJob");
+                recurringJobService.RemoveIfExists("AutoAccountLockoutJob");
             }
 
             return appBuilder;
