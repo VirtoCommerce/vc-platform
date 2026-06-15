@@ -35,44 +35,11 @@ public class RedisHealthCheck : IHealthCheck
 
         try
         {
-            foreach (var endPoint in _connection.GetEndPoints(configuredOnly: true))
-            {
-                var server = _connection.GetServer(endPoint);
-
-                if (server.ServerType != ServerType.Cluster)
-                {
-                    await _connection.GetDatabase().PingAsync();
-                    await server.PingAsync();
-                }
-                else
-                {
-                    // Confirm this node is responsive. PING is not an admin command.
-                    await server.PingAsync();
-
-                    // Since StackExchange.Redis 3.0.0 every live CLUSTER command (CLUSTER INFO/NODES, and
-                    // therefore ClusterNodesAsync) is admin-gated and throws unless AllowAdmin=true is set on
-                    // the connection. Instead, read the ClusterConfiguration property: it returns the topology
-                    // the multiplexer already cached during its own cluster discovery, issuing no command and
-                    // requiring no admin mode. It may be null until discovery has populated it.
-                    var clusterConfig = server.ClusterConfiguration;
-
-                    if (clusterConfig is null || clusterConfig.Nodes.Count == 0)
-                    {
-                        //cluster topology is not available, so keyspace health cannot be confirmed for this node
-                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"CLUSTER topology is null or can't be read for endpoint {endPoint}");
-                    }
-
-                    // Only slot-owning masters affect keyspace availability (cluster_state:ok == all slots served).
-                    // A failed replica or a demoted old master owns no slots and must not flip the cluster to Unhealthy.
-                    var unhealthyNode = clusterConfig.Nodes.FirstOrDefault(node =>
-                        node.Slots.Count > 0 && (node.IsFail || node.IsNoAddr || !node.IsConnected));
-                    if (unhealthyNode != null)
-                    {
-                        //a slot-owning node is unreachable, so part of the keyspace is not served
-                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"CLUSTER is not in an OK state for endpoint {endPoint}: slot-owning node {unhealthyNode.NodeId} ({unhealthyNode.EndPoint}) is unreachable or failed");
-                    }
-                }
-            }
+            // PING through the multiplexer rather than pinging each node directly: the multiplexer routes
+            // to an available node and handles failover, so a single degraded node in a cluster (where
+            // replicas take over and slots stay covered) does not fail the check. PING is also not
+            // admin-gated, unlike the live CLUSTER commands that require AllowAdmin since SE.Redis 3.0.0.
+            await _connection.GetDatabase().PingAsync();
 
             return HealthCheckResult.Healthy();
         }
