@@ -35,17 +35,27 @@ public class RedisHealthCheck : IHealthCheck
 
         try
         {
-            // PING through the multiplexer rather than pinging each node directly: the multiplexer routes
-            // to an available node and handles failover, so a single degraded node in a cluster (where
-            // replicas take over and slots stay covered) does not fail the check. PING is also not
-            // admin-gated, unlike the live CLUSTER commands that require AllowAdmin since SE.Redis 3.0.0.
-            await _connection.GetDatabase().PingAsync();
+            // PING through the multiplexer rather than pinging each node directly: the multiplexer is a
+            // shared, self-healing singleton that routes to an available node and handles failover, so a
+            // single degraded node in a cluster (where replicas take over and slots stay covered) does not
+            // fail the check. PING is also not admin-gated, unlike the live CLUSTER commands that require
+            // AllowAdmin since StackExchange.Redis 3.0.0.
+            // WaitAsync honors the health-check timeout/cancellation (PingAsync itself takes no token).
+            var latency = await _connection.GetDatabase().PingAsync().WaitAsync(cancellationToken);
 
-            return HealthCheckResult.Healthy();
+            // IsConnected is surfaced for observability only; PING succeeding is the source of truth, since
+            // IsConnected can be transiently false while the multiplexer reconnects in the background.
+            var data = new Dictionary<string, object>
+            {
+                ["isConnected"] = _connection.IsConnected,
+                ["latencyMs"] = latency.TotalMilliseconds,
+            };
+
+            return HealthCheckResult.Healthy(description: $"Redis responded to PING in {latency.TotalMilliseconds:F0} ms", data: data);
         }
         catch (Exception ex)
         {
-            return new HealthCheckResult(context.Registration.FailureStatus, exception: ex);
+            return new HealthCheckResult(context.Registration.FailureStatus, description: "Redis did not respond to PING", exception: ex);
         }
     }
 
