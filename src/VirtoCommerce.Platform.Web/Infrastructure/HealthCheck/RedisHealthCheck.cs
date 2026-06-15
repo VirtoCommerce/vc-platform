@@ -41,25 +41,28 @@ public class RedisHealthCheck : IHealthCheck
 
                 if (server.ServerType != ServerType.Cluster)
                 {
-                    await _connection.GetDatabase().PingAsync().ConfigureAwait(false);
-                    await server.PingAsync().ConfigureAwait(false);
+                    await _connection.GetDatabase().PingAsync();
+                    await server.PingAsync();
                 }
                 else
                 {
-                    var clusterInfo = await server.ExecuteAsync("CLUSTER", "INFO").ConfigureAwait(false);
+                    // Use the typed CLUSTER NODES API instead of a raw "CLUSTER INFO" command.
+                    // Since StackExchange.Redis 3.0.0 the raw server.Execute("CLUSTER", ...) path is
+                    // classified as an admin command and throws unless AllowAdmin=true is set on the
+                    // connection. ClusterNodesAsync() reads the same topology without requiring admin mode.
+                    var clusterConfig = await server.ClusterNodesAsync();
 
-                    if (clusterInfo is object && !clusterInfo.IsNull)
-                    {
-                        if (!clusterInfo.ToString()!.Contains("cluster_state:ok"))
-                        {
-                            //cluster info is not ok!
-                            return new HealthCheckResult(context.Registration.FailureStatus, description: $"INFO CLUSTER is not on OK state for endpoint {endPoint}");
-                        }
-                    }
-                    else
+                    if (clusterConfig is null || clusterConfig.Nodes.Count == 0)
                     {
                         //cluster info cannot be read for this cluster node
-                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"INFO CLUSTER is null or can't be read for endpoint {endPoint}");
+                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"CLUSTER NODES is null or can't be read for endpoint {endPoint}");
+                    }
+
+                    var unhealthyNode = clusterConfig.Nodes.FirstOrDefault(node => node.IsFail || node.IsNoAddr || !node.IsConnected);
+                    if (unhealthyNode != null)
+                    {
+                        //one or more cluster nodes are not in an OK state
+                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"CLUSTER is not in an OK state for endpoint {endPoint}: node {unhealthyNode.NodeId} ({unhealthyNode.EndPoint}) is unreachable or failed");
                     }
                 }
             }
