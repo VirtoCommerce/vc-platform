@@ -56,9 +56,15 @@ public class RedisHealthCheck : IHealthCheck
                     // requiring no admin mode. It may be null until discovery has populated it.
                     var clusterConfig = server.ClusterConfiguration;
 
+                    if (clusterConfig is null || clusterConfig.Nodes.Count == 0)
+                    {
+                        //cluster topology is not available, so keyspace health cannot be confirmed for this node
+                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"CLUSTER topology is null or can't be read for endpoint {endPoint}");
+                    }
+
                     // Only slot-owning masters affect keyspace availability (cluster_state:ok == all slots served).
                     // A failed replica or a demoted old master owns no slots and must not flip the cluster to Unhealthy.
-                    var unhealthyNode = clusterConfig?.Nodes.FirstOrDefault(node =>
+                    var unhealthyNode = clusterConfig.Nodes.FirstOrDefault(node =>
                         node.Slots.Count > 0 && (node.IsFail || node.IsNoAddr || !node.IsConnected));
                     if (unhealthyNode != null)
                     {
