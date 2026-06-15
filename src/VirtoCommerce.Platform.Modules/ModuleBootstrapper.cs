@@ -509,6 +509,16 @@ public class ModuleBootstrapper : IModuleService
                     hasHost.HostEnvironment = hostEnvironment;
                 }
 
+                if (instance is IHasLogger hasLogger)
+                {
+                    hasLogger.Logger = _loggerFactory.CreateLogger(instance.GetType());
+                }
+
+                if (instance is IHasModuleService hasModuleService)
+                {
+                    hasModuleService.ModuleService = this;
+                }
+
 #pragma warning disable VC0014
                 if (instance is IHasModuleCatalog hasModuleCatalog && moduleCatalog != null)
                 {
@@ -1218,6 +1228,11 @@ public class ModuleBootstrapper : IModuleService
 
                 if (Activator.CreateInstance(startupType) is IPlatformStartup instance)
                 {
+                    if (instance is IHasLogger hasLogger)
+                    {
+                        hasLogger.Logger = _loggerFactory.CreateLogger(startupType);
+                    }
+
                     startups.Add(instance);
                     logger.LogInformation("Discovered {StartupTypeName} from {ModuleId}", startupType.Name, module.Id);
                 }
