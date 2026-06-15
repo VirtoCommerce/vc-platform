@@ -83,7 +83,6 @@ OpenIddict.Validation.ServerIntegration.dll
 OpenIddict.Validation.SystemNetHttp.dll
 package.json
 package-lock.json
-Pipelines.Sockets.Unofficial.dll
 Polly.Core.dll
 Polly.dll
 Polly.Extensions.dll
