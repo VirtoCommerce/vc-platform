@@ -19,7 +19,6 @@
   <ItemGroup>
     <PackageReference Include="Azure.Core" Version="1.59.0" />
     <PackageReference Include="Azure.Identity" Version="1.21.0" />
-    <PackageReference Include="Pipelines.Sockets.Unofficial" Version="2.2.16" />
   </ItemGroup>
 
   <ItemGroup>
