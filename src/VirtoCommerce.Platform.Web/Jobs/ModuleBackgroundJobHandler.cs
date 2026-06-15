@@ -1,0 +1,133 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Jobs;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.PushNotifications;
+using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Web.Model.Modularity;
+
+namespace VirtoCommerce.Platform.Web.Jobs
+{
+    /// <summary>
+    /// Background-job handler for module install/update/uninstall. Reconstructs the
+    /// <see cref="ModulePushNotification"/> from the payload (so the existing admin UI keeps working) and performs
+    /// the work with progress reporting.
+    /// <para>
+    /// Used both by the active engine for enqueued jobs and inline by the controller's bootstrap auto-install
+    /// path (which runs before any engine may be installed — see <c>ModulesController.TryToAutoInstallModules</c>).
+    /// </para>
+    /// </summary>
+    public class ModuleBackgroundJobHandler : IBackgroundJobHandler<ModuleBackgroundJobPayload>
+    {
+        private const string ManagementIsDisabledMessage = "Module management is disabled.";
+        private static readonly Lock _lockObject = new();
+
+        private readonly IModuleManagementService _moduleManagementService;
+        private readonly IPushNotificationManager _pushNotifier;
+        private readonly ISettingsManager _settingsManager;
+        private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
+
+        public ModuleBackgroundJobHandler(
+            IModuleManagementService moduleManagementService,
+            IPushNotificationManager pushNotifier,
+            ISettingsManager settingsManager,
+            IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions)
+        {
+            _moduleManagementService = moduleManagementService;
+            _pushNotifier = pushNotifier;
+            _settingsManager = settingsManager;
+            _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
+        }
+
+        public Task Execute(ModuleBackgroundJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
+        {
+            var notification = new ModulePushNotification(payload.Creator ?? "system")
+            {
+                Id = payload.NotificationId,
+                Title = payload.Title,
+                TotalCount = payload.TotalCount,
+            };
+
+            var options = new ModuleBackgroundJobOptions
+            {
+                Action = payload.Action,
+                Modules = payload.Modules,
+            };
+
+            try
+            {
+                notification.Started = DateTime.UtcNow;
+
+                if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
+                {
+                    var reportProgress = new Progress<ProgressMessage>(x =>
+                    {
+                        lock (_lockObject)
+                        {
+                            notification.Description = x.Message;
+                            notification.ProgressLog.Add(x);
+                            _pushNotifier.Send(notification);
+                        }
+                    });
+
+                    switch (options.Action)
+                    {
+                        case ModuleAction.Install:
+                        case ModuleAction.Update:
+                            _moduleManagementService.InstallModules(options.Modules, reportProgress);
+                            break;
+                        case ModuleAction.Uninstall:
+                            _moduleManagementService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
+                            break;
+                    }
+                }
+                else
+                {
+                    notification.Finished = DateTime.UtcNow;
+                    notification.Description = ManagementIsDisabledMessage;
+                    notification.ProgressLog.Add(new ProgressMessage
+                    {
+                        Level = ProgressMessageLevel.Error,
+                        Message = notification.Description,
+                    });
+                    _pushNotifier.Send(notification);
+                }
+            }
+            catch (Exception ex)
+            {
+                notification.ProgressLog.Add(new ProgressMessage
+                {
+                    Level = ProgressMessageLevel.Error,
+                    Message = ex.ToString(),
+                });
+            }
+            finally
+            {
+                _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Completed);
+
+                notification.Finished = DateTime.UtcNow;
+                notification.Description = options.Action switch
+                {
+                    ModuleAction.Install => "Installation finished.",
+                    ModuleAction.Update => "Updating finished.",
+                    _ => "Uninstalling finished."
+                };
+
+                notification.ProgressLog.Add(new ProgressMessage
+                {
+                    Level = ProgressMessageLevel.Info,
+                    Message = notification.Description,
+                });
+
+                _pushNotifier.Send(notification);
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+}

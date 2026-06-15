@@ -1,0 +1,26 @@
+#nullable enable
+using System;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Jobs;
+
+namespace VirtoCommerce.Platform.Data.Jobs;
+
+/// <summary>
+/// Fallback <see cref="IBackgroundJob"/> registered by the platform (via <c>TryAdd</c>) when no background-job
+/// engine module is installed. Every enqueue throws <see cref="BackgroundJobEngineNotInstalledException"/> so
+/// callers fail fast with an actionable message instead of silently dropping work. When an engine module IS
+/// installed, its real registration wins and this fallback is never used.
+/// </summary>
+public sealed class NoEngineBackgroundJob : IBackgroundJob
+{
+    public string Enqueue(Expression<Action> methodCall) => throw new BackgroundJobEngineNotInstalledException();
+
+    public string Enqueue(Expression<Func<Task>> methodCall) => throw new BackgroundJobEngineNotInstalledException();
+
+    public Task<string> Enqueue<TPayload>(TPayload payload, EnqueueOptions? options = null,
+        CancellationToken cancellationToken = default)
+        where TPayload : class
+        => throw new BackgroundJobEngineNotInstalledException();
+}

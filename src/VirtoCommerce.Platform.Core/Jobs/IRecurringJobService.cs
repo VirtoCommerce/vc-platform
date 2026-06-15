@@ -9,9 +9,8 @@ namespace VirtoCommerce.Platform.Core.Jobs;
 /// Engine-agnostic facade for registering recurring (cron) jobs.
 /// <para>
 /// The active implementation is provided by an installed background-job engine module. When no engine
-/// module is installed, <see cref="NoEngineRecurringJobService"/> is registered as a fallback that logs a
-/// warning and no-ops, so the platform still boots without an engine (the recurring job simply is not
-/// scheduled until an engine is installed).
+/// module is installed, a no-op fallback is registered that logs a warning, so the platform still boots
+/// without an engine (the recurring job simply is not scheduled until an engine is installed).
 /// </para>
 /// <para>
 /// This is the platform-facing, Hangfire-free contract. It is distinct from the legacy

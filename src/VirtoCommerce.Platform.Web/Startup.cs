@@ -61,7 +61,9 @@ using VirtoCommerce.Platform.Data.SqlServer;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.HealthCheck;
 using VirtoCommerce.Platform.Core.Jobs;
+using VirtoCommerce.Platform.Data.Jobs;
 using VirtoCommerce.Platform.DistributedLock;
+using VirtoCommerce.Platform.Web.Jobs;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.Local;
 using VirtoCommerce.Platform.Security;
@@ -609,8 +611,12 @@ namespace VirtoCommerce.Platform.Web
             // no-engine fallbacks so the platform boots and surfaces an actionable error when no engine module
             // is installed. TryAdd runs AFTER InitializeModules above, so when an engine module IS installed its
             // real registrations win and these fallbacks are never used.
-            services.TryAddSingleton<IBackgroundJobProcessor, NoEngineBackgroundJobProcessor>();
+            services.TryAddSingleton<IBackgroundJob, NoEngineBackgroundJob>();
             services.TryAddSingleton<IRecurringJobService, NoEngineRecurringJobService>();
+
+            // Module management (install/update/uninstall) runs as a message-based background job, dispatched to
+            // ModuleBackgroundJobHandler by the active engine (and invoked inline for the bootstrap auto-install path).
+            services.AddBackgroundJob<ModuleBackgroundJobPayload, ModuleBackgroundJobHandler>();
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
 

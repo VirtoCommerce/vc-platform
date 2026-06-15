@@ -2,15 +2,16 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Settings;
 
-namespace VirtoCommerce.Platform.Core.Jobs;
+namespace VirtoCommerce.Platform.Data.Jobs;
 
 /// <summary>
 /// Fallback <see cref="IRecurringJobService"/> registered by the platform (via <c>TryAdd</c>) when no
 /// background-job engine module is installed.
 /// <para>
-/// Recurring jobs are registered during application startup. Unlike <see cref="NoEngineBackgroundJobProcessor"/>,
+/// Recurring jobs are registered during application startup. Unlike <see cref="NoEngineBackgroundJob"/>,
 /// this fallback must NOT throw (that would crash boot); instead it logs a warning and no-ops, so the platform
 /// starts normally and simply schedules nothing until an engine module is installed. When an engine module IS
 /// installed, its real registration wins and this fallback is never used.
