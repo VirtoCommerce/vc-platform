@@ -58,11 +58,14 @@ public class RedisHealthCheck : IHealthCheck
                         return new HealthCheckResult(context.Registration.FailureStatus, description: $"CLUSTER NODES is null or can't be read for endpoint {endPoint}");
                     }
 
-                    var unhealthyNode = clusterConfig.Nodes.FirstOrDefault(node => node.IsFail || node.IsNoAddr || !node.IsConnected);
+                    // Only slot-owning masters affect keyspace availability (cluster_state:ok == all slots served).
+                    // A failed replica or a demoted old master owns no slots and must not flip the cluster to Unhealthy.
+                    var unhealthyNode = clusterConfig.Nodes.FirstOrDefault(node =>
+                        node.Slots.Count > 0 && (node.IsFail || node.IsNoAddr || !node.IsConnected));
                     if (unhealthyNode != null)
                     {
-                        //one or more cluster nodes are not in an OK state
-                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"CLUSTER is not in an OK state for endpoint {endPoint}: node {unhealthyNode.NodeId} ({unhealthyNode.EndPoint}) is unreachable or failed");
+                        //a slot-owning node is unreachable, so part of the keyspace is not served
+                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"CLUSTER is not in an OK state for endpoint {endPoint}: slot-owning node {unhealthyNode.NodeId} ({unhealthyNode.EndPoint}) is unreachable or failed");
                     }
                 }
             }
