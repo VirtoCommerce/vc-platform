@@ -39,6 +39,7 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
@@ -48,6 +49,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Data.DeveloperTools;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.MySql;
@@ -61,7 +63,6 @@ using VirtoCommerce.Platform.Data.SqlServer;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.HealthCheck;
 using VirtoCommerce.Platform.Core.Jobs;
-using VirtoCommerce.Platform.Data.Jobs;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Web.Jobs;
 using VirtoCommerce.Platform.Modules;
@@ -84,6 +85,7 @@ using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
+using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Swagger;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using MsTokens = Microsoft.IdentityModel.Tokens;
@@ -538,6 +540,25 @@ namespace VirtoCommerce.Platform.Web
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
             services.Configure<LockoutOptionsExtended>(Configuration.GetSection("IdentityOptions:Lockout"));
+
+            // Platform recurring maintenance jobs as engine-agnostic message-based recurring jobs: the active
+            // background-job engine module's scheduler fires them on cron and enqueues to the active engine
+            // (Hangfire or RabbitMQ). Token pruning is setting-driven (enabler + cron settings); auto account
+            // lockout uses the fixed cron from options and is registered only when enabled.
+            services.AddRecurringJob<PruneExpiredTokensJobPayload, PruneExpiredTokensJob>(schedule => schedule
+                .WithId("PruneExpiredTokensJob")
+                .FromSettings(
+                    PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob,
+                    PlatformConstants.Settings.Security.CronPruneExpiredTokensJob));
+
+            var lockoutOptions = Configuration.GetSection("IdentityOptions:Lockout").Get<LockoutOptionsExtended>() ?? new LockoutOptionsExtended();
+            if (lockoutOptions.AutoAccountsLockoutJobEnabled)
+            {
+                services.AddRecurringJob<AutoAccountLockoutJobPayload, AutoAccountLockoutJob>(schedule => schedule
+                    .WithId("AutoAccountLockoutJob")
+                    .WithCron(lockoutOptions.CronAutoAccountsLockoutJob));
+            }
+
             services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
             services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
@@ -607,12 +628,12 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<IModuleCatalog>(sp => sp.GetRequiredService<ILocalModuleCatalog>());
 #pragma warning restore VC0014
 
-            // The background-job engine (Hangfire) moved to the VirtoCommerce.BackgroundJobs module. Register
-            // no-engine fallbacks so the platform boots and surfaces an actionable error when no engine module
-            // is installed. TryAdd runs AFTER InitializeModules above, so when an engine module IS installed its
-            // real registrations win and these fallbacks are never used.
-            services.TryAddSingleton<IBackgroundJob, NoEngineBackgroundJob>();
-            services.TryAddSingleton<IRecurringJobService, NoEngineRecurringJobService>();
+            // The background-job engine (Hangfire) moved to the VirtoCommerce.BackgroundJobs module. The engine
+            // services (IBackgroundJob, IRecurringJobService, IRecurringJobScheduler) and the recurring-jobs
+            // applier are provided ONLY by an installed engine module — there are no stub fallbacks. Platform
+            // consumers inject them as OPTIONAL (nullable) dependencies and surface an actionable message when
+            // absent, so an engine-less platform still boots (see ModulesController). The platform only DECLARES
+            // recurring jobs via AddRecurringJob; the engine module's RecurringJobsApplier applies them.
 
             // Module management (install/update/uninstall) runs as a message-based background job, dispatched to
             // ModuleBackgroundJobHandler by the active engine (and invoked inline for the bootstrap auto-install path).
@@ -801,15 +822,9 @@ namespace VirtoCommerce.Platform.Web
                 Log.ForContext<Startup>().Information("Post initializing modules");
                 ModuleBootstrapper.Instance.PostInitializeModules(app);
 
-                // Register platform recurring jobs AFTER modules are post-initialized, so the active
-                // background-job engine module (e.g. Hangfire) has created its storage schema first.
-                // Registering a recurring job touches the engine store (e.g. the HangFire.* tables), which
-                // only exists once the engine module's PostInitialize (UseHangfire) has run.
-                app.UsePruneExpiredTokensJob();
-
-                var options = app.ApplicationServices.GetService<IOptions<LockoutOptionsExtended>>();
-
-                app.UseAutoAccountsLockoutJob(options.Value);
+                // Platform recurring maintenance jobs (token prune, auto account lockout) are registered as
+                // engine-agnostic message-based recurring jobs in ConfigureServices (AddRecurringJob); the active
+                // engine module's scheduler fires them after startup. Nothing to do here.
             });
 
             app.UseEndpoints(SetupEndpoints);

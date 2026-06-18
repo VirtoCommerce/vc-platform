@@ -1,14 +1,17 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenIddict.Core;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 
 namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
 {
     /// <summary>
-    /// Periodic job for prune expired/invalid authorization tokens
+    /// Periodic job for prune expired/invalid authorization tokens. Runs as an engine-agnostic message-based
+    /// recurring job via <see cref="Execute"/>; the parameterless <see cref="Process"/> is retained for direct use.
     /// </summary>
-    public class PruneExpiredTokensJob
+    public class PruneExpiredTokensJob : IBackgroundJobHandler<PruneExpiredTokensJobPayload>
     {
         private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _openIddictTokenManager;
         private readonly OpenIddictAuthorizationManager<VirtoOpenIddictEntityFrameworkCoreAuthorization> _openIddictAuthorizationManager;
@@ -28,5 +31,8 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
             await _openIddictTokenManager.PruneAsync(DateTimeOffset.UtcNow);
             await _openIddictAuthorizationManager.PruneAsync(DateTimeOffset.UtcNow);
         }
+
+        public Task Execute(PruneExpiredTokensJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
+            => Process();
     }
 }

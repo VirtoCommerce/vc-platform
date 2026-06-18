@@ -46,45 +46,6 @@ namespace VirtoCommerce.Platform.Web.Security
             return appBuilder;
         }
 
-        /// <summary>
-        /// Schedule a periodic job for prune expired/invalid authorization tokens
-        /// </summary>
-        /// <param name="appBuilder"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder UsePruneExpiredTokensJob(this IApplicationBuilder appBuilder)
-        {
-            var recurringJobService = appBuilder.ApplicationServices.GetService<IRecurringJobService>();
-
-            recurringJobService.WatchJobSetting<PruneExpiredTokensJob>(
-                PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob,
-                PlatformConstants.Settings.Security.CronPruneExpiredTokensJob,
-                x => x.Process());
-
-            return appBuilder;
-        }
-
-        /// <summary>
-        /// Schedule a periodic job to lock out accounts whose last login date is older than the configured one
-        /// </summary>
-        /// <param name="appBuilder"></param>
-        /// <param name="lockoutOptions"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseAutoAccountsLockoutJob(this IApplicationBuilder appBuilder, LockoutOptionsExtended lockoutOptions)
-        {
-            var recurringJobService = appBuilder.ApplicationServices.GetService<IRecurringJobService>();
-
-            if (lockoutOptions.AutoAccountsLockoutJobEnabled)
-            {
-                recurringJobService.AddOrUpdate<AutoAccountLockoutJob>("AutoAccountLockoutJob", j => j.Process(CancellationToken.None), lockoutOptions.CronAutoAccountsLockoutJob);
-            }
-            else
-            {
-                recurringJobService.RemoveIfExists("AutoAccountLockoutJob");
-            }
-
-            return appBuilder;
-        }
-
         public static IApplicationBuilder UseAccountLockoutMiddleware(this IApplicationBuilder appBuilder, string identityCookieName)
         {
             appBuilder.Use(async (context, next) =>

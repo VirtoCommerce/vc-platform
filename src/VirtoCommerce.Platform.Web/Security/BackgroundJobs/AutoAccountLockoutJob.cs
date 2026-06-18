@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
 
@@ -15,6 +16,7 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
         UserManager<ApplicationUser> userManager,
         IOptions<LockoutOptionsExtended> lockoutOptions,
         ILogger<AutoAccountLockoutJob> logger)
+        : IBackgroundJobHandler<AutoAccountLockoutJobPayload>
     {
         private const int DefaultPageSize = 100;
 
@@ -22,6 +24,9 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly LockoutOptionsExtended _lockoutOptions = lockoutOptions.Value;
         private readonly ILogger<AutoAccountLockoutJob> _logger = logger;
+
+        public Task Execute(AutoAccountLockoutJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
+            => Process(cancellationToken);
 
         // Concurrency protection (previously Hangfire's [DisableConcurrentExecution(10)]) is now an
         // engine-level concern owned by the background-job engine module.

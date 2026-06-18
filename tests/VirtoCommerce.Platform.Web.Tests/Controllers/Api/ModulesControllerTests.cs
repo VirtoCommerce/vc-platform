@@ -38,9 +38,9 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             Options.Create(new ExternalModuleCatalogOptions()),
             Options.Create(new LocalStorageModuleCatalogOptions()),
             _platformRestarter.Object,
-            _backgroundJob.Object,
             Mock.Of<IBackgroundJobHandler<ModuleBackgroundJobPayload>>(),
-            _logger.Object);
+            _logger.Object,
+            _backgroundJob.Object);
 
         private static ManifestModuleInfo CreateModule(string id, string iconUrl)
         {

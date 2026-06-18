@@ -59,9 +59,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
             IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
             IPlatformRestarter platformRestarter,
-            IBackgroundJob backgroundJob,
             IBackgroundJobHandler<ModuleBackgroundJobPayload> moduleBackgroundJobHandler,
-            ILogger<ModulesController> logger)
+            ILogger<ModulesController> logger,
+            // Optional: provided by an installed background-job engine module. Null when none is installed — the
+            // module-install endpoints then surface an actionable "install an engine" message (see ScheduleJob).
+            IBackgroundJob backgroundJob = null)
         {
             _moduleService = moduleService;
             _moduleManagementService = moduleManagementService;
@@ -72,9 +74,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
-            _backgroundJob = backgroundJob;
             _moduleBackgroundJobHandler = moduleBackgroundJobHandler;
             _logger = logger;
+            _backgroundJob = backgroundJob;
         }
 
         /// <summary>
@@ -486,20 +488,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 TotalCount = notification.TotalCount,
             };
 
-            try
+            if (_backgroundJob is null)
+            {
+                // No background-job engine module is installed (the optional dependency wasn't provided). Surface
+                // the actionable install instructions instead of failing with an opaque 500. The engine module
+                // itself can still be installed via the Virto Commerce CLI or the auto-install path, which do not
+                // enqueue jobs.
+                var message = BackgroundJobEngineNotInstalledException.DefaultMessage;
+                notification.Finished = DateTime.UtcNow;
+                notification.Description = message;
+                notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
+                _pushNotifier.Send(notification);
+            }
+            else
             {
                 // Enqueue the message-based job; the active engine dispatches it to ModuleBackgroundJobHandler.
                 await _backgroundJob.Enqueue(payload);
-            }
-            catch (BackgroundJobEngineNotInstalledException ex)
-            {
-                // No background-job engine module is installed. Surface the actionable install instructions
-                // instead of failing with an opaque 500. The engine module itself can still be installed via
-                // the Virto Commerce CLI (filesystem-based) or the auto-install path, which do not enqueue jobs.
-                notification.Finished = DateTime.UtcNow;
-                notification.Description = ex.Message;
-                notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = ex.Message });
-                _pushNotifier.Send(notification);
             }
 
             return notification;
