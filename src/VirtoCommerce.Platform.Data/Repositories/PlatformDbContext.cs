@@ -10,12 +10,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
 {
     public class PlatformDbContext : DbContextBase
     {
-        [Obsolete("Use Length64 or UserNameLength", DiagnosticId = "VC0010", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        protected const int _idLength64 = 64;
-
-        [Obsolete("Use Length2048", DiagnosticId = "VC0010", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        protected const int _idLength2048 = 2048;
-
         public PlatformDbContext(DbContextOptions<PlatformDbContext> options)
             : base(options)
         {
