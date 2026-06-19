@@ -91,6 +91,14 @@ public class ModuleBootstrapper : IModuleService
         "System.Composition.Hosting",
         "System.Composition.Runtime",
         "System.Composition.TypedParts",
+
+        // AppInsights 2x version
+        "Microsoft.AI.DependencyCollector",
+        "Microsoft.AI.EventCounterCollector",
+        "Microsoft.AI.PerfCounterCollector",
+        "Microsoft.AI.WindowsServer",
+        "Microsoft.AI.ServerTelemetryChannel",
+        "Microsoft.Extensions.Logging.ApplicationInsights"
     ];
 
     private const string _rebuildMarkerFileName = ".rebuild";
