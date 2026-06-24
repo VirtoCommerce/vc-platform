@@ -336,7 +336,6 @@ jobs:
 
       - name: Swagger validation
         uses: VirtoCommerce/vc-github-actions/docker-env@VCST-5246 #master
-        if: ${{ github.ref == 'refs/heads/dev' }}
         with:
           appInsightsInstrumentationKey: ${{ secrets.E2E_APPINSIGHTSINSTRUMENTATIONKEY }}
           githubUser: ${{ github.actor }}
