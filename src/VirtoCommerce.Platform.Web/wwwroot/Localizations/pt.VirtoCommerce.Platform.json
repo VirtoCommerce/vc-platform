@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "A sua loja num relance"
+    },
     "menu": {
       "home": "Início",
       "browse": "Navegar",

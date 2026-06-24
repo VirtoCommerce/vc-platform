@@ -43,7 +43,10 @@
             <header class="dashboard-head">
                 <div class="dashboard-title">
                     <img class="__logo" ng-src="{{uiCustomization.logo || '/images/logo.png'}}" />
-                    <h1>{{uiCustomization.title || 'Virto Commerce'}}</h1>
+                    <div class="dashboard-title__text">
+                        <h1>{{uiCustomization.title || 'Virto Commerce'}}</h1>
+                        <div class="dashboard-subtitle">{{uiCustomization.subtitle || ('platform.dashboard.subtitle' | translate)}}</div>
+                    </div>
                 </div>
             </header>
             <div class="dashboard-area">

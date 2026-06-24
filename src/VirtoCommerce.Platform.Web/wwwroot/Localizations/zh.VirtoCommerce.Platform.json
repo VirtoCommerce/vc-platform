@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "您的商店概览"
+    },
     "menu": {
       "home": "首页",
       "browse": "浏览",

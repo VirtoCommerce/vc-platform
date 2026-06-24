@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Votre boutique en un coup d'œil"
+    },
     "menu": {
       "home": "Accueil",
       "browse": "Parcourir",

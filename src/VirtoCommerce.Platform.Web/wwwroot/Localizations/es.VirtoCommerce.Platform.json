@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Tu tienda de un vistazo"
+    },
     "menu": {
       "home": "Inicio",
       "browse": "Explorar",

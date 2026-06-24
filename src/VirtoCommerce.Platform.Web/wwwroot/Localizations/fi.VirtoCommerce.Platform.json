@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Kauppasi yhdellä silmäyksellä"
+    },
     "menu": {
       "home": "Koti",
       "browse": "Selaa",

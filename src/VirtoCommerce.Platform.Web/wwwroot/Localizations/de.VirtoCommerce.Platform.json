@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Ihr Shop auf einen Blick"
+    },
     "menu": {
       "home": "Startseite",
       "browse": "Durchsuchen",

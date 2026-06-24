@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Din butik i överblick"
+    },
     "menu": {
       "home": "Hem",
       "browse": "Bläddra",

@@ -20,6 +20,9 @@
     "navigation": {
       "back": "Back"
     },
+    "dashboard": {
+      "subtitle": "Your store at a glance"
+    },
     "blades": {
       "developer-tools": {
         "title": "Developer tools"

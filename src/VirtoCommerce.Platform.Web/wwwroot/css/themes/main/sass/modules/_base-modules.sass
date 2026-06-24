@@ -2147,16 +2147,20 @@ tags-input
     height: 100%
   > .list.__editing
     background: url(../../../../images/grid.png) repeat scroll 0 0
+  // Card chrome aligned to the system-operations design tokens
+  // (--card-radius 8px, --color-border #E1E8ED, --card-shadow, --vc-base hover)
   gridster-item,
   .list-item
-    background: $lightBg
+    background: $whiteColor
     box-sizing: border-box
-    box-shadow: 0 0 0 1px #dee9f0 inset
+    border-radius: 8px
+    box-shadow: 0 0 0 1px #e1e8ed, 0 2px 8px rgba(0, 0, 0, .08)
     padding: 2px
     position: absolute
     text-align: center
+    transition: box-shadow .2s ease
     &:hover
-      box-shadow: 0 0 0 2px #a1c0d4 inset
+      box-shadow: 0 0 0 1px $baseColor, 0 4px 12px rgba(66, 133, 244, .12)
   .list-item.error
     background: #f2dede
     box-shadow: 0 0 0 1px #ebccd1 inset
@@ -2210,6 +2214,16 @@ tags-input
   position: absolute
   right: 10px
   top: 10px
+  display: flex
+  flex-direction: column
+  overflow-y: auto
+  overflow-x: hidden
+  scrollbar-width: thin
+  &::-webkit-scrollbar
+    width: 6px
+  &::-webkit-scrollbar-thumb
+    background: #c3d3df
+    border-radius: 3px
 .gridster [ng-model="widget"]
   cursor: move
   height: 100%
@@ -2225,17 +2239,14 @@ tags-input
   cursor: pointer
 .gridster .gridster-cnt
   &::after
-    content: ''
-    display: inline-block
-    height: 100%
-    vertical-align: middle
+    display: none
 .gridster-cnt .cnt-inner
-  display: inline-block
+  display: block
   height: auto
   line-height: 1.4
-  margin: -24px 0 0
+  margin: auto 0
   padding: 0
-  vertical-align: middle
+  width: 100%
   word-spacing: 0
 .gridster .image
   border: 1px solid $baseBrd
@@ -2254,7 +2265,13 @@ tags-input
     display: block
     max-height: 100%
     max-width: 100%
-.gridster .list-t,
+.gridster .list-t
+  color: #333
+  font-size: 11px
+  font-weight: 500
+  letter-spacing: .07em
+  text-transform: uppercase
+  word-spacing: 0
 .gridster .gallery-descr
   color: $colorText
   font-size: 12px
@@ -2264,15 +2281,19 @@ tags-input
   color: $baseColor
   font-size: 12px
 .gridster .list-count
-  color: $baseColor
+  color: $colorText
   font-size: 22px
-  font-weight: 300
+  font-weight: 500
+  > div
+    color: $baseColor
+    font-weight: 500
 .gridster .list-count + .list-t
-  font-size: 12px
+  font-size: 11px
+  margin-top: 4px
 .gridster .list-ico,
 .gridster .gallery-ico,
 .gridster .comment-ico
-  color: #dee9f0
+  color: rgb(97, 97, 97)
   font-size: 24px
 .gridster .gallery-ico,
 .gridster .comment-ico

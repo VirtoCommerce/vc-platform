@@ -462,6 +462,7 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.Json,
                     DefaultValue = "{\n" +
                                                "  \"title\": \"Virto Commerce\",\n" +
+                                               "  \"subtitle\": \"Your store at a glance\",\n" +
                                                "  \"logo\": \"/images/logo.png\",\n" +
                                                "  \"contrast_logo\": \"/images/logo-small.svg\"\n" +
                                                "}"

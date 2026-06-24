@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Il tuo negozio in sintesi"
+    },
     "menu": {
       "home": "Home",
       "browse": "Sfoglia",

@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Butikken din på et øyeblikk"
+    },
     "menu": {
       "home": "Hjem",
       "browse": "Bla gjennom",

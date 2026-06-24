@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "ストアの概要"
+    },
     "menu": {
       "home": "ホーム",
       "browse": "ブラウズ",

@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Ваш магазин с первого взгляда"
+    },
     "menu": {
       "home": "Главная",
       "browse": "Обзор",
