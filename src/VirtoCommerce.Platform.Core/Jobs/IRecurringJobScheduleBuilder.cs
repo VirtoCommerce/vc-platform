@@ -28,4 +28,12 @@ public interface IRecurringJobScheduleBuilder
 
     /// <summary>Time zone the cron expression is evaluated in (defaults to UTC).</summary>
     IRecurringJobScheduleBuilder WithTimeZone(TimeZoneInfo timeZone);
+
+    /// <summary>
+    /// Whether a fixed-cron job is enabled (defaults to <c>true</c>). When <c>false</c>, the scheduler removes the
+    /// job by id instead of scheduling it — so a job disabled by configuration is also cleared from engine storage
+    /// if it had been scheduled previously. Use this for jobs toggled by a deployment flag (e.g. appsettings).
+    /// Ignored when the schedule is setting-driven (<see cref="FromSettings"/>), where the enabler setting governs.
+    /// </summary>
+    IRecurringJobScheduleBuilder WithEnabled(bool enabled);
 }

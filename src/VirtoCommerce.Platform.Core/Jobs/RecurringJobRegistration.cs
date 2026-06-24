@@ -30,6 +30,14 @@ public sealed record RecurringJobRegistration
     /// <summary>Time zone the cron is evaluated in.</summary>
     public TimeZoneInfo TimeZone { get; init; } = TimeZoneInfo.Utc;
 
+    /// <summary>
+    /// Whether the job is currently enabled. Applies to a fixed-cron schedule (set via
+    /// <c>WithEnabled</c>): when <c>false</c> the scheduler removes the job by <see cref="Id"/> instead of
+    /// scheduling it, so a job disabled by configuration is also cleared from engine storage if it was scheduled
+    /// before. Ignored for a setting-driven schedule, where <see cref="EnablerSetting"/> governs enablement.
+    /// </summary>
+    public bool Enabled { get; init; } = true;
+
     /// <summary>Enqueues a fresh payload instance through <see cref="IBackgroundJob"/>; invoked once per due occurrence.</summary>
     public required Func<IBackgroundJob, CancellationToken, Task> Trigger { get; init; }
 }

@@ -551,13 +551,14 @@ namespace VirtoCommerce.Platform.Web
                     PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob,
                     PlatformConstants.Settings.Security.CronPruneExpiredTokensJob));
 
+            // Always register so the scheduler reconciles state: when disabled, WithEnabled(false) removes any
+            // AutoAccountLockoutJob left in engine storage from a previous run when it was enabled (previously this
+            // was an explicit RecurringJob.RemoveIfExists on boot).
             var lockoutOptions = Configuration.GetSection("IdentityOptions:Lockout").Get<LockoutOptionsExtended>() ?? new LockoutOptionsExtended();
-            if (lockoutOptions.AutoAccountsLockoutJobEnabled)
-            {
-                services.AddRecurringJob<AutoAccountLockoutJobPayload, AutoAccountLockoutJob>(schedule => schedule
-                    .WithId("AutoAccountLockoutJob")
-                    .WithCron(lockoutOptions.CronAutoAccountsLockoutJob));
-            }
+            services.AddRecurringJob<AutoAccountLockoutJobPayload, AutoAccountLockoutJob>(schedule => schedule
+                .WithId("AutoAccountLockoutJob")
+                .WithCron(lockoutOptions.CronAutoAccountsLockoutJob)
+                .WithEnabled(lockoutOptions.AutoAccountsLockoutJobEnabled));
 
             services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));

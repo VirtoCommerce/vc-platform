@@ -15,6 +15,7 @@ internal sealed class RecurringJobScheduleBuilder : IRecurringJobScheduleBuilder
     private SettingDescriptor? _cronSetting;
     private string? _queue;
     private TimeZoneInfo _timeZone = TimeZoneInfo.Utc;
+    private bool _enabled = true;
 
     public IRecurringJobScheduleBuilder WithId(string recurringJobId)
     {
@@ -44,6 +45,12 @@ internal sealed class RecurringJobScheduleBuilder : IRecurringJobScheduleBuilder
     public IRecurringJobScheduleBuilder WithTimeZone(TimeZoneInfo timeZone)
     {
         _timeZone = timeZone ?? TimeZoneInfo.Utc;
+        return this;
+    }
+
+    public IRecurringJobScheduleBuilder WithEnabled(bool enabled)
+    {
+        _enabled = enabled;
         return this;
     }
 
@@ -80,6 +87,7 @@ internal sealed class RecurringJobScheduleBuilder : IRecurringJobScheduleBuilder
             EnablerSetting = _enablerSetting,
             CronSetting = _cronSetting,
             TimeZone = _timeZone,
+            Enabled = _enabled,
             Trigger = (jobs, cancellationToken) => enqueue(jobs, options, cancellationToken),
         };
     }

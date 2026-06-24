@@ -63,6 +63,8 @@ namespace VirtoCommerce.Platform.Web.Jobs
                 Modules = payload.Modules,
             };
 
+            var completedSuccessfully = false;
+
             try
             {
                 notification.Started = DateTime.UtcNow;
@@ -101,6 +103,8 @@ namespace VirtoCommerce.Platform.Web.Jobs
                             _moduleManagementService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
                             break;
                     }
+
+                    completedSuccessfully = true;
                 }
                 else
                 {
@@ -116,6 +120,15 @@ namespace VirtoCommerce.Platform.Web.Jobs
             }
             catch (Exception ex)
             {
+                // Record the failure as the terminal state. The finally block must NOT overwrite this with a
+                // "finished." success message, so the description is set here and the success branch is gated on
+                // completedSuccessfully.
+                notification.Description = options.Action switch
+                {
+                    ModuleAction.Install => "Installation failed.",
+                    ModuleAction.Update => "Update failed.",
+                    _ => "Uninstall failed."
+                };
                 notification.ProgressLog.Add(new ProgressMessage
                 {
                     Level = ProgressMessageLevel.Error,
@@ -127,18 +140,24 @@ namespace VirtoCommerce.Platform.Web.Jobs
                 _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Completed);
 
                 notification.Finished = DateTime.UtcNow;
-                notification.Description = options.Action switch
-                {
-                    ModuleAction.Install => "Installation finished.",
-                    ModuleAction.Update => "Updating finished.",
-                    _ => "Uninstalling finished."
-                };
 
-                notification.ProgressLog.Add(new ProgressMessage
+                // Only report success when the work actually completed. On failure (catch) or when module
+                // management is disabled, the description/error already recorded above is preserved.
+                if (completedSuccessfully)
                 {
-                    Level = ProgressMessageLevel.Info,
-                    Message = notification.Description,
-                });
+                    notification.Description = options.Action switch
+                    {
+                        ModuleAction.Install => "Installation finished.",
+                        ModuleAction.Update => "Updating finished.",
+                        _ => "Uninstalling finished."
+                    };
+
+                    notification.ProgressLog.Add(new ProgressMessage
+                    {
+                        Level = ProgressMessageLevel.Info,
+                        Message = notification.Description,
+                    });
+                }
 
                 _pushNotifier.Send(notification);
             }
