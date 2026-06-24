@@ -343,9 +343,11 @@ jobs:
           installSampleData: 'false'
 
   deploy-cloud:
-    if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
-    needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.39    
+    if: ${{ !failure() && !cancelled() && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
+    needs:
+      - ci
+      - swagger-validation
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.39
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
