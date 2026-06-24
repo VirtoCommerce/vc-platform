@@ -7,10 +7,16 @@ public sealed record EnqueueOptions
     /// <summary>Target queue. Falls back to the configured default queue when null.</summary>
     public string? Queue { get; init; }
 
+    /// <summary>
+    /// Friendly title shown on the job's progress notification in the admin UI. Falls back to
+    /// <c>"Background job: {PayloadType}"</c> when null.
+    /// </summary>
+    public string? Title { get; init; }
+
     /// <summary>Maximum automatic retry attempts on failure. Falls back to the platform default when null.</summary>
     public int? MaxRetryAttempts { get; init; }
 
-    /// <summary>De-duplication key — re-enqueuing with the same key collapses to a single job.</summary>
+    /// <summary>Unique key — re-enqueuing with the same key collapses to a single job.</summary>
     public string? UniqueKey { get; init; }
 
     /// <summary>When true, the job reports progress to the admin UI over SignalR.</summary>

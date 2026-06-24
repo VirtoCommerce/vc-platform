@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Core.Jobs;
 /// </summary>
 public sealed record RecurringJobRegistration
 {
-    /// <summary>Stable, unique recurring-job id (de-duplication/lock key).</summary>
+    /// <summary>Stable, unique recurring-job id.</summary>
     public required string Id { get; init; }
 
     /// <summary>Fixed cron expression, or null when the schedule is setting-driven (see <see cref="CronSetting"/>).</summary>

@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Core.Jobs;
 /// </summary>
 public interface IRecurringJobScheduleBuilder
 {
-    /// <summary>Stable, unique recurring-job id (used as the de-duplication/lock key). Required.</summary>
+    /// <summary>Stable, unique recurring-job id. Required.</summary>
     IRecurringJobScheduleBuilder WithId(string recurringJobId);
 
     /// <summary>Fixed cron expression (5- or 6-field). Mutually exclusive with <see cref="FromSettings"/>.</summary>
