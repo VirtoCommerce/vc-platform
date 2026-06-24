@@ -20,5 +20,12 @@ namespace VirtoCommerce.Platform.Web.Jobs
         public string Title { get; set; }
 
         public int TotalCount { get; set; }
+
+        /// <summary>
+        /// True for the bootstrap auto-install flow, so the handler reconstructs a
+        /// <c>ModuleAutoInstallPushNotification</c> (the setup wizard listens for that notify type) instead of a plain
+        /// <c>ModulePushNotification</c>.
+        /// </summary>
+        public bool AutoInstall { get; set; }
     }
 }

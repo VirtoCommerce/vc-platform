@@ -46,12 +46,16 @@ namespace VirtoCommerce.Platform.Web.Jobs
 
         public Task Execute(ModuleBackgroundJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
-            var notification = new ModulePushNotification(payload.Creator ?? "system")
-            {
-                Id = payload.NotificationId,
-                Title = payload.Title,
-                TotalCount = payload.TotalCount,
-            };
+            // Reconstruct the same notification SUBTYPE the controller created under this id: the bootstrap
+            // auto-install flow uses ModuleAutoInstallPushNotification (the setup wizard dispatches on that notify
+            // type), everything else uses the plain ModulePushNotification.
+            ModulePushNotification notification = payload.AutoInstall
+                ? new ModuleAutoInstallPushNotification(payload.Creator ?? "system")
+                : new ModulePushNotification(payload.Creator ?? "system");
+
+            notification.Id = payload.NotificationId;
+            notification.Title = payload.Title;
+            notification.TotalCount = payload.TotalCount;
 
             var options = new ModuleBackgroundJobOptions
             {
@@ -62,6 +66,18 @@ namespace VirtoCommerce.Platform.Web.Jobs
             try
             {
                 notification.Started = DateTime.UtcNow;
+
+                // The handler owns the progress log for the shared notification id. ScheduleJob only pushes the
+                // notification shell (no log entry), so emitting the "Starting…" line here keeps it from being
+                // overwritten when push storage replaces the notification by id.
+                notification.Description = options.Action switch
+                {
+                    ModuleAction.Install => "Starting installation...",
+                    ModuleAction.Update => "Starting update...",
+                    _ => "Starting uninstall...",
+                };
+                notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = notification.Description });
+                _pushNotifier.Send(notification);
 
                 if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
                 {

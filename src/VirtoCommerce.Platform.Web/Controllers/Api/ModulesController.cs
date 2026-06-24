@@ -336,6 +336,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                                         Creator = notification.Creator,
                                         Title = notification.Title,
                                         TotalCount = modules.Length,
+                                        AutoInstall = true,
                                     };
 
                                     // Bootstrap auto-install runs the handler INLINE: no background-job engine may be
@@ -464,21 +465,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var notification = new ModulePushNotification(_userNameResolver.GetCurrentUserName());
 
-            switch (options.Action)
+            // Only the shell here (title + count). The handler owns the progress log under this notification id, so
+            // we don't seed a "Starting…" entry that the handler's first push would overwrite (push storage replaces
+            // by id).
+            notification.Title = options.Action switch
             {
-                case ModuleAction.Install:
-                    notification.Title = "Install Module";
-                    notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting installation..." });
-                    break;
-                case ModuleAction.Uninstall:
-                    notification.Title = "Uninstall Module";
-                    notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting uninstall..." });
-                    break;
-                case ModuleAction.Update:
-                    notification.Title = "Update Module";
-                    notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting update..." });
-                    break;
-            }
+                ModuleAction.Install => "Install Module",
+                ModuleAction.Uninstall => "Uninstall Module",
+                ModuleAction.Update => "Update Module",
+                _ => notification.Title,
+            };
 
             notification.TotalCount = options.Modules?.Length ?? 0;
 

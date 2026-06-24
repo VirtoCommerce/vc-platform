@@ -65,6 +65,12 @@ internal sealed class RecurringJobScheduleBuilder : IRecurringJobScheduleBuilder
                 $"Recurring job '{_id}' requires a schedule — call WithCron(...) or FromSettings(...).");
         }
 
+        if (!string.IsNullOrEmpty(_cronExpression) && _cronSetting is not null)
+        {
+            throw new InvalidOperationException(
+                $"Recurring job '{_id}' must use either WithCron(...) or FromSettings(...), not both — they are mutually exclusive.");
+        }
+
         var options = _queue is null ? null : new EnqueueOptions { Queue = _queue };
 
         return new RecurringJobRegistration
