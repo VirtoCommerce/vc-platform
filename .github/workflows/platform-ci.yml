@@ -194,16 +194,6 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Swagger validation
-      uses: VirtoCommerce/vc-github-actions/docker-env@master
-      if: ${{ github.ref == 'refs/heads/dev' }}
-      with:
-        githubUser: ${{ env.GITHUB_ACTOR }}
-        githubToken: ${{ env.GITHUB_TOKEN }}
-        platformDockerTag: ${{ env.DOCKER_TAG }}
-        platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
-        installSampleData: 'false'
-
     - name: Publish Nuget
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
       uses: VirtoCommerce/vc-github-actions/publish-nuget@master
@@ -314,7 +304,7 @@ jobs:
     needs: ci
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.38
+    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@VCST-5246 #v3.800.38
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -327,6 +317,33 @@ jobs:
       testSecretEnvFile: ${{ secrets.VC_TESTING_MODULE_ENV_FILE }}
       sendgridApiKey: ${{ secrets.SENDGRID_APIKEY_4E2E_AUTOTESTS }}
       appInsightsInstrumentationKey: ${{ secrets.E2E_APPINSIGHTSINSTRUMENTATIONKEY }}
+
+  swagger-validation:
+    if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push')) ||
+        (github.event_name == 'workflow_dispatch') || ((github.base_ref == 'dev') && (github.event_name == 'pull_request')) }}
+    needs: ci
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    env:
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      DOCKER_TAG: ${{ needs.ci.outputs.tag }}
+      PACKAGE_SERVER: 'ghcr.io'
+    steps:
+      - name: Install VirtoCommerce.GlobalTool
+        uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+
+      - name: Swagger validation
+        uses: VirtoCommerce/vc-github-actions/docker-env@VCST-5246 #master
+        if: ${{ github.ref == 'refs/heads/dev' }}
+        with:
+          appInsightsInstrumentationKey: ${{ secrets.E2E_APPINSIGHTSINSTRUMENTATIONKEY }}
+          githubUser: ${{ github.actor }}
+          githubToken: ${{ env.GITHUB_TOKEN }}
+          platformDockerTag: ${{ env.DOCKER_TAG }}
+          platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
+          installSampleData: 'false'
 
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
