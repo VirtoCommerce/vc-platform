@@ -17,12 +17,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.38 
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.39 
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.38 
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.39 
     with:
       uploadDocker: 'true'
     secrets:
