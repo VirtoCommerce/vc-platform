@@ -85,6 +85,7 @@ public class ModuleBootstrapper : IModuleService
         "Microsoft.CodeAnalysis.CSharp.Workspaces",
         "Microsoft.CodeAnalysis.Workspaces",
         "Mono.TextTemplating",
+        "Pipelines.Sockets.Unofficial",
         "System.Composition",
         "System.Composition.AttributedModel",
         "System.Composition.Convention",
