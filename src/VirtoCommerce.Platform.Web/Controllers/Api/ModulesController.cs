@@ -340,13 +340,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                                     // Bootstrap auto-install runs the handler INLINE: no background-job engine may be
                                     // installed yet, since this is the very mechanism that installs modules (including
-                                    // the engine module itself) on a fresh platform.
-                                    new Thread(() =>
+                                    // the engine module itself) on a fresh platform. Fire-and-forget off the request
+                                    // thread so the response returns immediately; failures are logged, not fatal.
+                                    _ = Task.Run(async () =>
                                     {
-                                        Thread.CurrentThread.IsBackground = true;
-                                        _moduleBackgroundJobHandler.Execute(payload, new InlineJobExecutionContext(), CancellationToken.None)
-                                            .GetAwaiter().GetResult();
-                                    }).Start();
+                                        try
+                                        {
+                                            await _moduleBackgroundJobHandler.Execute(payload, new InlineJobExecutionContext(), CancellationToken.None);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            _logger.LogError(ex, "Bootstrap auto-install of modules failed.");
+                                        }
+                                    });
                                 }
                             }
                         }

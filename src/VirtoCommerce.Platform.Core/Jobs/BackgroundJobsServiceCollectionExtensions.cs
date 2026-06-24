@@ -30,7 +30,23 @@ public static class BackgroundJobsServiceCollectionExtensions
         this IServiceCollection services, Action<IRecurringJobScheduleBuilder> configure)
         where TPayload : class
         where THandler : class, IBackgroundJobHandler<TPayload>
+        => services.AddRecurringJob<TPayload, THandler>(
+            () => AbstractTypeFactory<TPayload>.TryCreateInstance(), configure);
+
+    /// <summary>
+    /// Registers an <see cref="IBackgroundJobHandler{TPayload}"/> AND a recurring (cron) schedule that enqueues a
+    /// payload built by <paramref name="payloadFactory"/>. Use this overload to pass parameters to the recurring job
+    /// (e.g. <c>() =&gt; new SendDigestPayload { Top = 10 }</c>). The factory is invoked <b>once per occurrence</b>, so
+    /// it may also produce per-run values. To keep the payload partner-overridable, build it via
+    /// <see cref="AbstractTypeFactory{TPayload}"/> inside the factory. Configure a fixed cron or a setting-driven
+    /// schedule via <paramref name="configure"/>.
+    /// </summary>
+    public static IServiceCollection AddRecurringJob<TPayload, THandler>(
+        this IServiceCollection services, Func<TPayload> payloadFactory, Action<IRecurringJobScheduleBuilder> configure)
+        where TPayload : class
+        where THandler : class, IBackgroundJobHandler<TPayload>
     {
+        ArgumentNullException.ThrowIfNull(payloadFactory);
         ArgumentNullException.ThrowIfNull(configure);
 
         services.AddBackgroundJob<TPayload, THandler>();
@@ -39,7 +55,7 @@ public static class BackgroundJobsServiceCollectionExtensions
         configure(builder);
 
         var registration = builder.Build((jobs, options, cancellationToken) =>
-            jobs.Enqueue(AbstractTypeFactory<TPayload>.TryCreateInstance(), options, cancellationToken));
+            jobs.Enqueue(payloadFactory(), options, cancellationToken));
 
         services.AddSingleton(registration);
 

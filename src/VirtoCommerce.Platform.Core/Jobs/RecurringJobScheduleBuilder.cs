@@ -49,7 +49,7 @@ internal sealed class RecurringJobScheduleBuilder : IRecurringJobScheduleBuilder
 
     /// <summary>
     /// Builds the registration. <paramref name="enqueue"/> enqueues the (typed) payload — supplied by
-    /// <see cref="BackgroundJobsServiceCollectionExtensions.AddRecurringJob{TPayload, THandler}"/> — and is wrapped
+    /// <c>AddRecurringJob</c> — and is wrapped
     /// with the configured queue.
     /// </summary>
     internal RecurringJobRegistration Build(Func<IBackgroundJob, EnqueueOptions?, CancellationToken, Task> enqueue)

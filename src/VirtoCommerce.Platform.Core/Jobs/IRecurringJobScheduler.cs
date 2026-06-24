@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Core.Jobs;
 
 /// <summary>
 /// Engine-specific scheduler for message-based recurring jobs. The platform applies every recurring job declared
-/// via <see cref="BackgroundJobsServiceCollectionExtensions.AddRecurringJob{TPayload, THandler}"/> to the active
+/// via <c>AddRecurringJob</c> to the active
 /// implementation (resolving the effective cron from settings first).
 /// <para>
 /// The active implementation is provided by an installed background-job engine module (e.g. Hangfire uses its

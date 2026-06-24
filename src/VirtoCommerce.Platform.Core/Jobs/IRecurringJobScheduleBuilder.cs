@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Core.Jobs;
 
 /// <summary>
 /// Fluent configuration for a recurring (cron) job registered via
-/// <see cref="BackgroundJobsServiceCollectionExtensions.AddRecurringJob{TPayload, THandler}"/>.
+/// <c>AddRecurringJob</c>.
 /// Supply either a fixed cron (<see cref="WithCron"/>) or a setting-driven schedule (<see cref="FromSettings"/>).
 /// </summary>
 public interface IRecurringJobScheduleBuilder

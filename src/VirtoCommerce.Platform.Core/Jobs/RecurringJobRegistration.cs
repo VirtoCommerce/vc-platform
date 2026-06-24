@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Core.Jobs;
 
 /// <summary>
 /// A recurring-job registration captured by
-/// <see cref="BackgroundJobsServiceCollectionExtensions.AddRecurringJob{TPayload, THandler}"/> and registered as a
+/// <c>AddRecurringJob</c> and registered as a
 /// singleton. The background-job engine's scheduler discovers all registrations via
 /// <c>IEnumerable&lt;RecurringJobRegistration&gt;</c>, computes occurrences from the cron, and on each occurrence
 /// invokes <see cref="Trigger"/> (which enqueues the payload through <see cref="IBackgroundJob"/>).
