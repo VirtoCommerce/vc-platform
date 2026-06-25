@@ -1061,6 +1061,10 @@
             "description": "Unité du seuil de date complète",
             "title": "Unité du seuil de date complète"
           },
+          "WidgetColorMarkers": {
+            "title": "Marqueurs de couleur des widgets",
+            "description": "Affiche une barre de couleur sur chaque widget du tableau de bord et des volets pour les distinguer d'un coup d'œil."
+          },
           "Customization": {
             "description": "JSON contenant les paramètres de personnalisation de l'interface utilisateur du gestionnaire",
             "title": "Personnalisation de l'interface utilisateur du gestionnaire"

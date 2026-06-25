@@ -72,3 +72,22 @@ Widget visibility is controlled by defining isVisible method in widget registra
 ```
 isVisible: function (blade) { return authService.checkPermission('pricing:query'); },
 ```
+
+## Color markers
+
+To make widgets easier to tell apart at a glance, every widget tile rendered by a **widget container** (the dashboard and all blades) shows a thin colored accent bar along its left edge.
+
+* **Grouped by module** — the color is derived from the widget's **module**, so all widgets that belong to the same module share one color. The module is the controller prefix up to its `*Module` segment, e.g. `virtoCommerce.pricingModule.pricesWidgetController` → `virtoCommerce.pricingModule`. Controllers without a `*Module` segment (e.g. `platformWebApp.*`) fall back to their first namespace segment.
+* **Deterministic** — the module key is hashed into a fixed, curated 64-color palette, so a module always gets the same color, across reloads and across every container its widgets appear in. Users build muscle memory (e.g. all pricing widgets are one color, all order widgets another).
+* **Secondary cue** — the bar is layered on top of the existing number, label and icon; it never replaces them, so the UI stays usable for color‑blind users (the marker is an aid, not the only signal).
+* **Automatic** — no module action is required. Any widget registered through `widgetService.registerWidget` is marked; nested `.list-item` elements inside a widget's own content are not.
+
+### Enabling / disabling
+
+The feature is controlled by a single platform setting, **on by default**:
+
+|Setting|Default|Location|
+|-------|-------|--------|
+|`VirtoCommerce.Platform.UI.WidgetColorMarkers`|`true`|Settings → User Interface|
+
+When turned off, the accent bars are removed everywhere. The flag is loaded into `$rootScope.widgetColorMarkersEnabled` at startup and the container adds the `__widget-markers` class only when it is enabled.

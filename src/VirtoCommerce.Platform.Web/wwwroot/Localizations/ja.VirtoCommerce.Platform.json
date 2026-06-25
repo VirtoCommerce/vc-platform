@@ -1061,6 +1061,10 @@
             "description": "完全な日付のしきい値の単位",
             "title": "完全な日付のしきい値の単位"
           },
+          "WidgetColorMarkers": {
+            "title": "ウィジェットのカラーマーカー",
+            "description": "ダッシュボードやブレードの各ウィジェットに色付きのバーを表示し、ひと目で見分けやすくします。"
+          },
           "Customization": {
             "description": "マネージャーUIのパーソナライゼーション設定を含むJSON",
             "title": "マネージャーUIのカスタマイズ"

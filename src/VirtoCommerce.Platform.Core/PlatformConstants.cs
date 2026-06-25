@@ -468,11 +468,20 @@ namespace VirtoCommerce.Platform.Core
                                                "}"
                 };
 
+                public static SettingDescriptor WidgetColorMarkers { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.UI.WidgetColorMarkers",
+                    GroupName = "Platform|User Interface",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
                     {
                         yield return Customization;
+                        yield return WidgetColorMarkers;
                     }
                 }
             }

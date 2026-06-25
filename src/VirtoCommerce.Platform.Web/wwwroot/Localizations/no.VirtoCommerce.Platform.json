@@ -1062,6 +1062,10 @@
             "description": "Enhet for terskel for fullt datoformat",
             "title": "Enhet for terskel for fullt datoformat"
           },
+          "WidgetColorMarkers": {
+            "title": "Fargemarkører for moduler",
+            "description": "Viser en farget stripe på hver dashbord- og blade-widget for å skille dem enklere."
+          },
           "Customization": {
             "description": "JSON som inneholder tilpasningsinnstillinger for administratorens brukergrensesnitt",
             "title": "Tilpasning av administratorens brukergrensesnitt"

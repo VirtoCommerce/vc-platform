@@ -1063,6 +1063,10 @@
             "description": "Einheit des Schwellenwerts für vollständiges Datum",
             "title": "Einheit des Schwellenwerts für vollständiges Datum"
           },
+          "WidgetColorMarkers": {
+            "title": "Farbmarkierungen für Widgets",
+            "description": "Zeigt an jedem Dashboard- und Blade-Widget einen farbigen Akzentstreifen an, damit Widgets leichter zu unterscheiden sind."
+          },
           "Customization": {
             "description": "JSON enthält Personalisierungseinstellungen der Manager-Benutzeroberfläche",
             "title": "Die Anpassung der Manager-Benutzeroberfläche"

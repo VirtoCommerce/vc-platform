@@ -1061,6 +1061,10 @@
             "description": "Jednostka progu pełnej daty",
             "title": "Jednostka progu pełnej daty"
           },
+          "WidgetColorMarkers": {
+            "title": "Kolorowe oznaczenia widżetów",
+            "description": "Wyświetla kolorowy pasek na każdym widżecie pulpitu i blade, aby łatwiej je rozróżnić."
+          },
           "Customization": {
             "description": "JSON zawierający ustawienia personalizacji interfejsu menedżera",
             "title": "Dostosowanie interfejsu menedżera"

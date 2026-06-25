@@ -1,4 +1,20 @@
 angular.module('platformWebApp')
+// Curated 64-color palette for per-widget color markers.
+// Golden-angle hue distribution (deterministic), cycling 3 lightness/saturation
+// bands tuned for white card surfaces. Same widget id -> same color, always.
+.constant('platformWebApp.widgetColorPalette', (function () {
+    // Hue via golden-angle; lightness and saturation via independent low-discrepancy
+    // (irrational-step) sequences, so any few modules shown together differ in hue
+    // AND lightness AND saturation — maximizing visual separation.
+    var palette = [];
+    for (var i = 0; i < 64; i++) {
+        var hue = (i * 137.508) % 360;
+        var lightness = Math.round(38 + ((i * 0.6180339887) % 1) * 30);   // 38..68
+        var saturation = Math.round(72 + ((i * 0.7548776662) % 1) * 22);  // 72..94
+        palette.push('hsl(' + hue.toFixed(1) + ', ' + saturation + '%, ' + lightness + '%)');
+    }
+    return palette;
+})())
 .factory('platformWebApp.widgetService', function () {
 
     var retVal = {
@@ -26,7 +42,7 @@ angular.module('platformWebApp')
     };
     return retVal;
 })
-.directive('vaWidgetContainer', ['$compile', '$localStorage', 'platformWebApp.widgetService', function ($compile, $localStorage, widgetService) {
+.directive('vaWidgetContainer', ['$compile', '$localStorage', 'platformWebApp.widgetService', 'platformWebApp.widgetColorPalette', function ($compile, $localStorage, widgetService, widgetColorPalette) {
     return {
         restrict: 'E',
         replace: true,
@@ -52,6 +68,20 @@ angular.module('platformWebApp')
 
             scope.getKey = function (prefix, widget) {
                 return (prefix + widget.controller + widget.template + scope.group).hashCode();
+            }
+
+            // Deterministic color marker grouped by MODULE, so all widgets from the same
+            // module share one color. The module is the controller prefix up to the
+            // "*Module" segment, e.g.
+            //   virtoCommerce.pricingModule.pricesWidgetController       -> virtoCommerce.pricingModule
+            //   virtoCommerce.orderModule.dashboard.statisticsWidgetCtrl -> virtoCommerce.orderModule
+            // Controllers without a "*Module" segment (e.g. platformWebApp.*) fall back to
+            // their first namespace segment.
+            scope.getWidgetColor = function (widget) {
+                var controller = widget.controller || '';
+                var match = controller.match(/^(.*?Module)\b/);
+                var key = match ? match[1] : controller.split('.')[0];
+                return widgetColorPalette[Math.abs((key || '').hashCode()) % widgetColorPalette.length];
             }
         }
     }

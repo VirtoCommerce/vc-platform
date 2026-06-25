@@ -2161,6 +2161,25 @@ tags-input
     transition: box-shadow .2s ease
     &:hover
       box-shadow: 0 0 0 1px $baseColor, 0 4px 12px rgba(66, 133, 244, .12)
+  // Per-widget color marker: deterministic left accent bar (toggled by the
+  // VirtoCommerce.Platform.UI.WidgetColorMarkers setting via .__widget-markers).
+  // Scoped to top-level widget tiles only (> .list > .list-item) so nested
+  // .list-item rows inside a widget (e.g. the store CMS widget) are NOT marked.
+  // Anchored to the gridster-managed absolute .list-item; never set position here.
+  &.__widget-markers > .list > .list-item
+    overflow: hidden   // clip the bar to the card's 8px rounded corner
+    &::before
+      content: ''
+      position: absolute
+      left: 0
+      top: 0
+      bottom: 0
+      width: 4px
+      background: var(--widget-accent)
+      pointer-events: none
+    // keep full-bleed chart widgets clear of the bar (KPI/list use inset .gridster-cnt)
+    &:has([google-chart])
+      padding-left: 12px
   .list-item.error
     background: #f2dede
     box-shadow: 0 0 0 1px #ebccd1 inset
@@ -2235,6 +2254,7 @@ tags-input
   left: 2px
   right: 2px
   top: 2px
+  margin-left: 2px
 .gridster .gridster-cnt.__note
   cursor: pointer
 .gridster .gridster-cnt

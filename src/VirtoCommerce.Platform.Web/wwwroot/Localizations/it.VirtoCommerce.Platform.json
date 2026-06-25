@@ -1061,6 +1061,10 @@
             "description": "Unità della soglia di data completa",
             "title": "Unità soglia data completa"
           },
+          "WidgetColorMarkers": {
+            "title": "Indicatori di colore dei widget",
+            "description": "Mostra una barra colorata su ogni widget della dashboard e dei pannelli per distinguerli a colpo d'occhio."
+          },
           "Customization": {
             "description": "JSON contiene le impostazioni di personalizzazione dell'interfaccia utente del gestore",
             "title": "Personalizzazione dell'interfaccia utente del gestore"
