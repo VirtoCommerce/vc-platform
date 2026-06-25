@@ -3,15 +3,32 @@ angular.module('platformWebApp')
 // Golden-angle hue distribution (deterministic), cycling 3 lightness/saturation
 // bands tuned for white card surfaces. Same widget id -> same color, always.
 .constant('platformWebApp.widgetColorPalette', (function () {
-    // Hue via golden-angle; lightness and saturation via independent low-discrepancy
-    // (irrational-step) sequences, so any few modules shown together differ in hue
-    // AND lightness AND saturation — maximizing visual separation.
+    // Perceptually-uniform OKLCH palette for module color markers (UX best practice for panels):
+    //  - hue spread (golden-ratio low-discrepancy) over the wheel EXCLUDING reserved status arcs
+    //    (amber ~35deg and green ~140deg) so a module bar never reads as a warning/success color;
+    //  - CONSTANT chroma -> every bar has the same perceived vividness (consistent visual weight);
+    //  - lightness varied on an independent low-discrepancy sequence to separate close hues.
+    // OKLCH keeps perceived lightness/saturation equal across hues (no muddy colors, unlike HSL).
+    var reserved = [[25, 60], [110, 155]];  // amber/warning + green/success hue zones (degrees)
+    var segments = [], start = 0, span = 0, r, s;
+    for (r = 0; r < reserved.length; r++) { segments.push([start, reserved[r][0]]); start = reserved[r][1]; }
+    segments.push([start, 360]);
+    for (s = 0; s < segments.length; s++) { span += segments[s][1] - segments[s][0]; }
+    function allowedHue(t) {
+        var x = t * span;
+        for (var k = 0; k < segments.length; k++) {
+            var len = segments[k][1] - segments[k][0];
+            if (x <= len) { return segments[k][0] + x; }
+            x -= len;
+        }
+        return 360;
+    }
+    function frac(v) { return v - Math.floor(v); }
     var palette = [];
     for (var i = 0; i < 64; i++) {
-        var hue = (i * 137.508) % 360;
-        var lightness = Math.round(38 + ((i * 0.6180339887) % 1) * 30);   // 38..68
-        var saturation = Math.round(72 + ((i * 0.7548776662) % 1) * 22);  // 72..94
-        palette.push('hsl(' + hue.toFixed(1) + ', ' + saturation + '%, ' + lightness + '%)');
+        var hue = allowedHue(frac(i * 0.6180339887));
+        var lightness = Math.round((0.50 + frac(i * 0.7548776662) * 0.16) * 100); // 50..66%
+        palette.push('oklch(' + lightness + '% 0.13 ' + hue.toFixed(1) + ')');
     }
     return palette;
 })())
