@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Virto Commerce – Release Strategy | A Guide for Business Users</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --virto-navy: #07254A;
+    --virto-navy-2: #0B3270;
+    --virto-blue: #2B7FFF;
+    --virto-blue-2: #1A6CFF;
+    --virto-cyan: #38BDF8;
+    --virto-accent: #FF6A3D;
+    --virto-gold: #FBBF24;
+    --virto-bg: #F4F7FB;
+    --virto-bg-2: #EAF1FA;
+    --virto-white: #FFFFFF;
+    --virto-text: #0F172A;
+    --virto-muted: #5B6B82;
+    --virto-line: #DCE5F1;
+    --virto-green: #22C55E;
+
+    --shadow-soft: 0 10px 40px -12px rgba(7, 37, 74, 0.18);
+    --shadow-deep: 0 30px 80px -30px rgba(7, 37, 74, 0.35);
+
+    --radius: 16px;
+    --radius-lg: 24px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--virto-bg);
+    color: var(--virto-text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .slide {
+    position: absolute;
+    width: min(1200px, calc(100vw - 48px));
+    height: min(720px, calc(100vh - 48px));
+    background: var(--virto-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-deep);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(40px) scale(0.98);
+    transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s linear 0.45s;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    pointer-events: auto;
+    visibility: visible;
+    transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s linear 0s;
+  }
+
+  .slide-inner {
+    position: relative;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 36px 50px 24px;
+  }
+
+  .slide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--virto-gold);
+    gap: 12px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--virto-blue), var(--virto-navy));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 800; font-size: 18px;
+    letter-spacing: -0.5px;
+    box-shadow: 0 4px 12px rgba(43, 127, 255, 0.4);
+    overflow: hidden;
+  }
+  .brand-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .brand-text .b1 { font-weight: 700; font-size: 14px; color: var(--virto-navy); letter-spacing: -0.2px; }
+  .brand-text .b2 { font-size: 11px; color: var(--virto-muted); text-transform: uppercase; letter-spacing: 1.2px; }
+  .header-meta {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: var(--virto-muted);
+    text-transform: uppercase; letter-spacing: 1.4px;
+    flex-wrap: wrap; justify-content: flex-end;
+  }
+  .header-meta .pill {
+    background: var(--virto-bg-2); color: var(--virto-navy);
+    padding: 6px 12px; border-radius: 999px;
+    font-weight: 600; letter-spacing: 0.8px;
+  }
+
+  .slide-body {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 32px;
+    padding: 22px 0;
+    overflow: hidden;
+  }
+  .content-col {
+    display: flex; flex-direction: column;
+    gap: 13px;
+    overflow: hidden; min-width: 0;
+    justify-content: center;
+  }
+
+  .topic-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    width: max-content;
+    background: linear-gradient(90deg, rgba(43, 127, 255, 0.1), rgba(43, 127, 255, 0));
+    color: var(--virto-blue);
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.2px;
+  }
+  .topic-tag::before {
+    content: ""; width: 6px; height: 6px;
+    background: var(--virto-blue); border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(43, 127, 255, 0.18);
+  }
+
+  .slide-title {
+    font-size: clamp(20px, 2.4vw, 28px);
+    line-height: 1.15; font-weight: 800;
+    color: var(--virto-navy); letter-spacing: -0.7px;
+  }
+  .slide-title .accent {
+    background: linear-gradient(90deg, var(--virto-blue), var(--virto-cyan));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  .ps-block {
+    border-left: 3px solid var(--virto-line);
+    padding: 2px 0 2px 14px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .ps-block.question { border-left-color: var(--virto-blue); }
+  .ps-block.answer { border-left-color: var(--virto-navy); }
+  .ps-block.takeaway { border-left-color: var(--virto-green); }
+
+  .ps-label {
+    font-size: 10.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--virto-muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ps-block.question .ps-label { color: var(--virto-blue); }
+  .ps-block.answer .ps-label { color: var(--virto-navy); }
+  .ps-block.takeaway .ps-label { color: #15803D; }
+
+  .ps-text {
+    font-size: 13px; line-height: 1.5;
+    color: var(--virto-text);
+  }
+  .ps-text strong { color: var(--virto-navy); font-weight: 600; }
+  .ps-text em { font-style: normal; color: var(--virto-blue); font-weight: 600; }
+  .ps-text mark, .demo-cap mark { background: linear-gradient(180deg, transparent 55%, rgba(251,191,36,0.5) 55%); color: var(--virto-navy); font-weight: 700; padding: 0 2px; border-radius: 2px; }
+  .ps-text code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    background: var(--virto-bg-2);
+    color: var(--virto-navy);
+    padding: 2px 6px; border-radius: 6px;
+  }
+  .ps-text ul { margin-top: 4px; padding-left: 18px; }
+  .ps-text li { margin-bottom: 3px; }
+  .ps-text a { color: var(--virto-blue); text-decoration: none; border-bottom: 1px solid rgba(43,127,255,0.4); }
+
+  .visual-col {
+    background: linear-gradient(135deg, var(--virto-bg) 0%, var(--virto-bg-2) 100%);
+    border-radius: var(--radius);
+    border: 1px solid var(--virto-line);
+    overflow: hidden; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 0;
+  }
+  .diagram-col { padding: 22px; }
+  .diagram-col > * { width: 100%; }
+
+  .no-visual {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 40px; gap: 18px;
+    color: var(--virto-navy);
+  }
+  .no-visual .icon-circle {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--virto-blue), var(--virto-navy));
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    box-shadow: 0 12px 30px -8px rgba(43, 127, 255, 0.5);
+  }
+  .no-visual h3 { font-size: 17px; font-weight: 700; color: var(--virto-navy); letter-spacing: -0.3px; }
+  .no-visual p { font-size: 13px; color: var(--virto-muted); line-height: 1.5; max-width: 280px; }
+
+  /* ---------- DIAGRAMS ---------- */
+  .dg-stack { display: flex; flex-direction: column; gap: 7px; }
+  .dg-cap { font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--virto-muted); font-weight: 700; }
+  .dg-layer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 13px; border-radius: 10px; font-size: 12px; font-weight: 600;
+    border: 1px solid var(--virto-line); background: white;
+    box-shadow: var(--shadow-soft); color: var(--virto-navy);
+  }
+  .dg-layer.own { border-color: var(--virto-blue); background: linear-gradient(90deg, rgba(43,127,255,0.10), white); }
+  .dg-layer .tag { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+  .dg-layer.own .tag { background: var(--virto-blue); color: white; }
+  .dg-layer.vendor .tag { background: var(--virto-bg-2); color: var(--virto-navy); }
+  .dg-arrow { text-align: center; font-size: 10px; letter-spacing: 2px; color: var(--virto-blue); font-weight: 700; padding: 1px 0; }
+  .dg-foot { font-size: 10.5px; color: var(--virto-muted); text-align: center; margin-top: 4px; }
+  .dg-foot code { font-family: 'JetBrains Mono', monospace; background: var(--virto-bg-2); padding: 2px 6px; border-radius: 5px; color: var(--virto-navy); }
+
+  .dg-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dg-box { border-radius: 12px; padding: 14px; border: 1px solid var(--virto-line); background: white; display: flex; flex-direction: column; gap: 8px; }
+  .dg-box h5 { font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .dg-box.bad { border-color: rgba(255,106,61,0.5); }
+  .dg-box.bad h5 { color: var(--virto-accent); }
+  .dg-box.good { border-color: rgba(34,197,94,0.6); }
+  .dg-box.good h5 { color: #15803D; }
+  .dg-box p { font-size: 11px; color: var(--virto-muted); line-height: 1.45; }
+  .dg-mark { width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
+  .dg-box.bad .dg-mark { background: var(--virto-accent); }
+  .dg-box.good .dg-mark { background: var(--virto-green); }
+
+  .dg-channels { display: flex; flex-direction: column; gap: 9px; }
+  .dg-ch { border: 1px solid var(--virto-line); border-radius: 11px; padding: 11px 13px; background: white; display: flex; flex-direction: column; gap: 5px; }
+  .dg-ch-top { display: flex; align-items: center; justify-content: space-between; }
+  .dg-ch-name { font-size: 13px; font-weight: 700; color: var(--virto-navy); display: flex; align-items: center; gap: 8px; }
+  .dg-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dg-ch-cad { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--virto-muted); }
+  .dg-ch-desc { font-size: 10.5px; color: var(--virto-muted); line-height: 1.4; }
+  .dg-ch.stable { border-color: rgba(34,197,94,0.55); }
+  .dg-ch.stable .dg-dot { background: var(--virto-green); }
+  .dg-ch.edge .dg-dot { background: var(--virto-blue); }
+  .dg-ch.preview .dg-dot { background: var(--virto-gold); }
+
+  .dg-steps { display: flex; flex-direction: column; gap: 11px; }
+  .dg-step { display: flex; gap: 12px; align-items: flex-start; }
+  .dg-step .n { width: 25px; height: 25px; flex-shrink: 0; border-radius: 50%; background: var(--virto-blue); color: white; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+  .dg-step .tx { font-size: 12px; color: var(--virto-navy); line-height: 1.4; padding-top: 3px; }
+  .dg-step .tx code { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--virto-bg-2); padding: 1px 5px; border-radius: 5px; }
+  .dg-step.optional .n { background: var(--virto-muted); }
+  .dg-step .opt-tag { display: inline-block; margin-left: 6px; font-size: 8.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--virto-muted); background: var(--virto-bg-2); border: 1px solid var(--virto-line); padding: 2px 7px; border-radius: 999px; vertical-align: middle; }
+  .dg-fallback { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; font-size: 10px; line-height: 1.4; color: var(--virto-navy); background: rgba(43,127,255,0.07); border: 1px solid rgba(43,127,255,0.3); border-radius: 9px; padding: 8px 11px; }
+  .dg-fallback svg { flex-shrink: 0; color: var(--virto-blue); margin-top: 1px; }
+  .dg-fallback strong { color: var(--virto-blue); }
+
+  .dg-timeline { display: flex; flex-direction: column; gap: 18px; padding: 6px 0; }
+  .dg-tl-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.4px; font-weight: 700; color: var(--virto-muted); margin-bottom: 9px; }
+  .dg-quarters { display: flex; align-items: flex-start; }
+  .dg-q { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; position: relative; }
+  .dg-q::before { content: ""; position: absolute; top: 8px; left: -50%; width: 100%; height: 2px; background: rgba(34,197,94,0.3); z-index: 0; }
+  .dg-q:first-child::before { display: none; }
+  .dg-q .node { width: 16px; height: 16px; border-radius: 50%; background: var(--virto-green); box-shadow: 0 0 0 4px rgba(34,197,94,0.18); z-index: 1; }
+  .dg-q .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--virto-navy); font-weight: 600; }
+  .dg-q .sub { font-size: 9px; color: var(--virto-muted); }
+  .dg-ticks { display: flex; gap: 3px; align-items: center; }
+  .dg-ticks .t { flex: 1; height: 9px; border-radius: 2px; background: rgba(43,127,255,0.3); }
+
+  .slide-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 12px; border-top: 2px solid var(--virto-gold);
+    font-size: 12px; color: var(--virto-muted);
+  }
+  .slide-counter { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--virto-navy); }
+  .slide-counter .total { color: var(--virto-muted); }
+  .slide-category { text-transform: uppercase; letter-spacing: 1.4px; font-weight: 600; font-size: 11px; }
+
+  /* COVER */
+  .cover {
+    background:
+      radial-gradient(ellipse at top right, rgba(43, 127, 255, 0.15), transparent 60%),
+      radial-gradient(ellipse at bottom left, rgba(56, 189, 248, 0.12), transparent 55%),
+      linear-gradient(135deg, #07254A 0%, #0B3270 50%, #07254A 100%);
+    color: white;
+  }
+  .cover .slide-header { border-bottom-color: rgba(251,191,36,0.55); }
+  .cover .brand-text .b1 { color: white; }
+  .cover .brand-text .b2 { color: rgba(255,255,255,0.6); }
+  .cover .brand-mark { background: white; padding: 2px; }
+  .cover .header-meta { color: rgba(255,255,255,0.7); }
+  .cover .header-meta .pill { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.2); }
+  .cover-body { display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 22px 0; }
+  .cover-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    width: max-content; color: var(--virto-cyan);
+    font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 2.5px;
+  }
+  .cover-eyebrow::before { content: ""; width: 28px; height: 1.5px; background: var(--virto-cyan); }
+  .cover-title { font-size: clamp(34px, 5.2vw, 58px); font-weight: 800; line-height: 1; letter-spacing: -2.5px; }
+  .cover-title .grad {
+    background: linear-gradient(90deg, #38BDF8, #FFFFFF);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .cover-sub { font-size: 15px; line-height: 1.55; color: rgba(255,255,255,0.8); max-width: 720px; font-weight: 300; }
+  .cover-highlights { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
+  .cover-chip {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    padding: 9px 16px; border-radius: 12px; font-size: 13px; color: white;
+    backdrop-filter: blur(10px); display: flex; align-items: center; gap: 10px;
+  }
+  .cover-chip .num { color: var(--virto-cyan); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .cover .slide-footer { border-top-color: rgba(251,191,36,0.55); color: rgba(255,255,255,0.6); }
+  .cover .slide-counter, .cover .slide-counter .total { color: rgba(255,255,255,0.85); }
+
+  /* SECTION DIVIDER */
+  .section-divider { background: linear-gradient(135deg, var(--virto-navy) 0%, var(--virto-navy-2) 100%); color: white; overflow: hidden; }
+  .section-divider .slide-inner { padding: 0; }
+  .divider-body { height: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+  .divider-left { padding: 60px; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+  .divider-right {
+    background: linear-gradient(135deg, rgba(43,127,255,0.2), transparent),
+                radial-gradient(circle at 30% 30%, rgba(56,189,248,0.4), transparent 60%);
+    position: relative; overflow: hidden;
+  }
+  .divider-right::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .divider-num { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--virto-cyan); letter-spacing: 3px; }
+  .divider-title { font-size: clamp(32px, 4.4vw, 50px); font-weight: 800; line-height: 1.05; letter-spacing: -1.5px; }
+  .divider-title .grad {
+    background: linear-gradient(90deg, #38BDF8, #2B7FFF);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .divider-desc { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.7); max-width: 440px; }
+  .divider-stat { display: flex; align-items: baseline; gap: 14px; margin-top: 8px; }
+  .divider-stat .v { font-size: 52px; font-weight: 800; color: var(--virto-cyan); letter-spacing: -2px; line-height: 1; }
+  .divider-stat .l { font-size: 12px; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 1.5px; max-width: 160px; }
+  .shape { position: absolute; border-radius: 50%; filter: blur(40px); }
+  .shape.s1 { width: 280px; height: 280px; background: rgba(43,127,255,0.5); top: -40px; right: -40px; }
+  .shape.s2 { width: 220px; height: 220px; background: rgba(56,189,248,0.4); bottom: -60px; left: 30%; }
+  .divider-toc { display: flex; flex-direction: column; padding: 28px 24px; overflow-y: auto; position: relative; z-index: 1; }
+  .divider-toc::-webkit-scrollbar { width: 6px; }
+  .divider-toc::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+  .divider-toc-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin-bottom: 14px; padding-left: 12px; }
+  .dtoc-slide {
+    display: flex; align-items: center; gap: 10px; width: 100%; padding: 7px 12px;
+    border: none; background: transparent; cursor: pointer; text-align: left; font-family: inherit;
+    font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.35; transition: all 0.15s;
+    border-left: 2px solid rgba(255,255,255,0.15); border-radius: 0 6px 6px 0;
+  }
+  .dtoc-slide:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
+  .dtoc-slide-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; opacity: 0.5; min-width: 18px; flex-shrink: 0; }
+  .dtoc-slide-label { flex: 1; min-width: 0; }
+
+  /* GLOSSARY */
+  .gloss-wrap { display: flex; flex-direction: column; gap: 14px; overflow: hidden; padding: 16px 0; }
+  .gloss-head { display: flex; flex-direction: column; gap: 6px; }
+  .gloss-eyebrow { color: var(--virto-blue); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+  .gloss-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; overflow-y: auto; padding-right: 6px; }
+  .gloss-grid::-webkit-scrollbar { width: 6px; }
+  .gloss-grid::-webkit-scrollbar-thumb { background: var(--virto-line); border-radius: 3px; }
+  .gloss-card { border: 1px solid var(--virto-line); border-radius: 12px; padding: 11px 13px; background: white; box-shadow: 0 4px 14px -10px rgba(7,37,74,0.18); }
+  .gloss-term { font-size: 12.5px; font-weight: 700; color: var(--virto-navy); margin-bottom: 4px; }
+  .gloss-term code { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .gloss-def { font-size: 10.8px; color: var(--virto-muted); line-height: 1.45; }
+  .gloss-def strong { color: var(--virto-navy); }
+
+  /* MYTHS */
+  .myths-wrap { display: flex; flex-direction: column; gap: 14px; overflow: hidden; padding: 14px 0; }
+  .myths-head { display: flex; flex-direction: column; gap: 6px; }
+  .myths-list { display: flex; flex-direction: column; gap: 9px; overflow-y: auto; padding-right: 6px; }
+  .myths-list::-webkit-scrollbar { width: 6px; }
+  .myths-list::-webkit-scrollbar-thumb { background: var(--virto-line); border-radius: 3px; }
+  .myth-row { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--virto-line); border-radius: 12px; overflow: hidden; }
+  .myth-x { padding: 11px 14px; background: rgba(255,106,61,0.05); border-right: 1px solid var(--virto-line); }
+  .myth-y { padding: 11px 14px; background: rgba(34,197,94,0.05); }
+  .myth-tag { font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .myth-x .myth-tag { color: var(--virto-accent); }
+  .myth-y .myth-tag { color: #15803D; }
+  .myth-text { font-size: 11.5px; line-height: 1.45; color: var(--virto-navy); }
+  .myth-text strong { font-weight: 700; }
+
+  /* COMPARE (Edge vs Stable) */
+  .cmp-wrap { display: flex; flex-direction: column; gap: 12px; overflow: hidden; padding: 12px 0; }
+  .cmp-head { display: flex; flex-direction: column; gap: 6px; }
+  .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; overflow-y: auto; padding-right: 4px; }
+  .cmp-grid::-webkit-scrollbar { width: 6px; }
+  .cmp-grid::-webkit-scrollbar-thumb { background: var(--virto-line); border-radius: 3px; }
+  .cmp-card { border: 1px solid var(--virto-line); border-radius: 14px; padding: 14px 16px; background: white; display: flex; flex-direction: column; gap: 9px; box-shadow: 0 6px 18px -12px rgba(7,37,74,0.2); }
+  .cmp-card.stable { border-color: rgba(34,197,94,0.5); }
+  .cmp-card.edge { border-color: rgba(43,127,255,0.5); }
+  .cmp-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .cmp-name { font-size: 16px; font-weight: 800; color: var(--virto-navy); display: flex; align-items: center; gap: 9px; letter-spacing: -0.3px; }
+  .cmp-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .cmp-card.stable .cmp-dot { background: var(--virto-green); }
+  .cmp-card.edge .cmp-dot { background: var(--virto-blue); }
+  .cmp-cad { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--virto-muted); background: var(--virto-bg-2); padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+  .cmp-sec-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--virto-muted); }
+  .cmp-list { display: flex; flex-direction: column; gap: 5px; }
+  .cmp-item { display: flex; gap: 8px; font-size: 11px; line-height: 1.4; color: var(--virto-navy); }
+  .cmp-ic { width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; color: #fff; margin-top: 1px; }
+  .cmp-ic.pro { background: var(--virto-green); }
+  .cmp-ic.con { background: var(--virto-accent); }
+  .cmp-best { margin-top: 2px; font-size: 10.5px; color: var(--virto-navy); border-radius: 9px; padding: 8px 11px; line-height: 1.4; }
+  .cmp-best .lab { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 3px; }
+  .cmp-card.stable .cmp-best { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.35); }
+  .cmp-card.stable .cmp-best .lab { color: #15803D; }
+  .cmp-card.edge .cmp-best { background: rgba(43,127,255,0.07); border: 1px solid rgba(43,127,255,0.35); }
+  .cmp-card.edge .cmp-best .lab { color: var(--virto-blue); }
+  .cmp-rule { text-align: center; font-size: 12px; color: var(--virto-muted); line-height: 1.45; }
+  .cmp-rule strong { color: var(--virto-navy); }
+
+  /* TOC panel */
+  .toc-backdrop {
+    position: fixed; inset: 0; background: rgba(7, 37, 74, 0.4); backdrop-filter: blur(4px);
+    z-index: 150; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  }
+  .toc-backdrop.open { opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0s linear 0s; }
+  .toc-panel {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 320px;
+    background: rgba(244, 247, 251, 0.97); backdrop-filter: blur(20px);
+    border-right: 1px solid var(--virto-line); box-shadow: 10px 0 40px -12px rgba(7, 37, 74, 0.25);
+    z-index: 160; transform: translateX(-100%); transition: transform 0.3s ease;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .toc-panel.open { transform: translateX(0); }
+  .toc-header { padding: 24px 24px 16px; border-bottom: 1px solid var(--virto-line); display: flex; align-items: center; justify-content: space-between; }
+  .toc-header h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--virto-navy); }
+  .toc-close { width: 32px; height: 32px; border: none; background: transparent; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--virto-muted); transition: all 0.15s; }
+  .toc-close:hover { background: var(--virto-bg-2); color: var(--virto-navy); }
+  .toc-entries { flex: 1; overflow-y: auto; padding: 12px 0; }
+  .toc-entries::-webkit-scrollbar { width: 6px; }
+  .toc-entries::-webkit-scrollbar-thumb { background: var(--virto-line); border-radius: 3px; }
+  .toc-entry {
+    display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 24px;
+    border: none; background: transparent; cursor: pointer; text-align: left; font-family: inherit;
+    color: var(--virto-text); transition: all 0.15s; border-left: 3px solid transparent;
+  }
+  .toc-entry:hover { background: var(--virto-bg-2); }
+  .toc-entry.active { border-left-color: var(--virto-blue); background: rgba(43, 127, 255, 0.06); }
+  .toc-entry.active .toc-entry-title { font-weight: 700; color: var(--virto-navy); }
+  .toc-entry-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--virto-muted); min-width: 20px; flex-shrink: 0; }
+  .toc-entry-body { flex: 1; min-width: 0; }
+  .toc-entry-title { font-size: 13px; font-weight: 500; color: var(--virto-navy); line-height: 1.3; }
+  .toc-entry-count { font-size: 11px; color: var(--virto-muted); margin-top: 2px; }
+  .toc-sub-entries { padding: 2px 0 4px 35px; display: none; }
+  .toc-sub-entries.expanded { display: block; }
+  .toc-sub-entry {
+    display: block; width: 100%; padding: 5px 24px 5px 0; border: none; background: transparent;
+    cursor: pointer; text-align: left; font-family: inherit; font-size: 12px; color: var(--virto-muted);
+    line-height: 1.35; transition: color 0.15s;
+  }
+  .toc-sub-entry:hover { color: var(--virto-navy); }
+  .toc-sub-entry.active { color: var(--virto-blue); font-weight: 600; }
+  .toc-nav-btn { width: 36px; height: 36px; border: none; background: transparent; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--virto-navy); transition: all 0.2s; }
+  .toc-nav-btn:hover { background: var(--virto-bg-2); transform: translateY(-1px); }
+
+  /* NAV */
+  .nav {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+    border: 1px solid var(--virto-line); box-shadow: var(--shadow-soft);
+    padding: 8px 12px; border-radius: 999px; z-index: 100;
+  }
+  .nav-btn { width: 36px; height: 36px; border: none; background: transparent; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--virto-navy); transition: all 0.2s; }
+  .nav-btn:hover { background: var(--virto-bg-2); transform: translateY(-1px); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .nav-progress { display: flex; align-items: center; gap: 6px; padding: 0 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--virto-navy); font-weight: 600; }
+  .nav-progress .total { color: var(--virto-muted); font-weight: 400; }
+  .nav-jump { border-left: 1px solid var(--virto-line); padding-left: 12px; display: flex; gap: 4px; }
+  .jump-btn { background: transparent; border: none; cursor: pointer; padding: 6px 10px; font-size: 11px; color: var(--virto-muted); text-transform: uppercase; letter-spacing: 1px; border-radius: 6px; font-weight: 600; transition: all 0.2s; }
+  .jump-btn:hover { background: var(--virto-bg-2); color: var(--virto-navy); }
+
+  .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--virto-blue), var(--virto-cyan)); transition: width 0.3s ease; z-index: 200; box-shadow: 0 0 12px rgba(43,127,255,0.5); }
+
+  .hint { position: fixed; top: 24px; right: 28px; font-size: 11px; color: var(--virto-muted); text-transform: uppercase; letter-spacing: 1.4px; font-weight: 500; display: flex; align-items: center; gap: 8px; z-index: 100; }
+  .key { background: white; border: 1px solid var(--virto-line); padding: 3px 8px; border-radius: 5px; font-family: 'JetBrains Mono', monospace; color: var(--virto-navy); font-weight: 600; box-shadow: 0 2px 4px rgba(7,37,74,0.06); }
+  button.key-btn { cursor: pointer; font-size: inherit; line-height: 1; transition: all 0.15s; user-select: none; }
+  button.key-btn:hover { background: var(--virto-blue); color: white; border-color: var(--virto-blue); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(43, 127, 255, 0.3); }
+  button.key-btn:active { transform: translateY(0); box-shadow: 0 1px 2px rgba(7,37,74,0.1); }
+
+  /* THANKS */
+  .thanks { background: radial-gradient(ellipse at center, rgba(43,127,255,0.18), transparent 60%), linear-gradient(135deg, #07254A 0%, #0B3270 100%); color: white; }
+  .thanks .slide-inner { padding: 0; }
+  .thanks-body { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px; gap: 22px; position: relative; }
+  .thanks-eyebrow { color: var(--virto-cyan); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; }
+  .thanks-title { font-size: clamp(40px, 6vw, 80px); font-weight: 800; line-height: 0.98; letter-spacing: -3px; }
+  .thanks-title .grad { background: linear-gradient(90deg, #38BDF8, #FFFFFF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .thanks-sub { font-size: 17px; color: rgba(255,255,255,0.75); max-width: 640px; line-height: 1.6; font-weight: 300; }
+  .thanks-cta { display: flex; gap: 14px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+  .cta-btn { background: var(--virto-blue); color: white; padding: 13px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.25s; border: 1px solid var(--virto-blue); display: inline-flex; align-items: center; gap: 10px; }
+  .cta-btn:hover { background: var(--virto-blue-2); transform: translateY(-2px); box-shadow: 0 8px 20px -8px rgba(43,127,255,0.6); }
+  .cta-btn.outline { background: transparent; border-color: rgba(255,255,255,0.3); }
+  .cta-btn.outline:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); }
+  .thanks-footer { position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* ============================================================
+     ANIMATED PROCESS DEMOS
+     Animations are scoped under .slide.active so they (re)play
+     each time the slide is opened.
+     ============================================================ */
+  .demo { display: flex; flex-direction: column; gap: 13px; width: 100%; height: 100%; justify-content: center; }
+  .demo-cap { font-size: 10.5px; color: var(--virto-muted); text-align: center; line-height: 1.45; margin-top: 2px; }
+  .demo-cap strong { color: var(--virto-navy); }
+  .demo-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; color: var(--virto-muted); }
+
+  /* --- 1. EVOLVE: edge lanes stream, stable snapshot pulses --- */
+  .evolve { gap: 9px; }
+  .ev-lane { display: flex; align-items: center; gap: 10px; }
+  .ev-name { width: 56px; font-size: 10px; font-weight: 700; color: var(--virto-navy); text-align: right; flex-shrink: 0; }
+  .ev-track { position: relative; flex: 1; height: 13px; border-radius: 7px; background: rgba(43,127,255,0.08); overflow: hidden; }
+  .ev-dot { position: absolute; top: 2.5px; left: -12px; width: 8px; height: 8px; border-radius: 50%; background: var(--virto-blue); box-shadow: 0 0 6px rgba(43,127,255,0.7); opacity: 0; }
+  .slide.active .ev-dot { animation: evMove 3.4s linear infinite; }
+  @keyframes evMove { 0% { left: -12px; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+  .ev-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 3px; }
+  .ev-foot .lab { font-size: 10px; color: var(--virto-muted); }
+  .ev-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #15803D; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); padding: 5px 11px; border-radius: 999px; }
+  .slide.active .ev-badge { animation: evPulse 3.4s ease-in-out infinite; }
+  @keyframes evPulse { 0%, 72% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34,197,94,0); } 82% { transform: scale(1.07); box-shadow: 0 0 0 8px rgba(34,197,94,0.16); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+
+  /* --- 2. UPDATE FLOW: virto layers refresh, custom layers stay --- */
+  .uflow { gap: 7px; }
+  .uf-layer { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: 9px; font-size: 11px; font-weight: 600; border: 1px solid var(--virto-line); background: white; color: var(--virto-navy); position: relative; overflow: hidden; }
+  .uf-layer.you { border-color: var(--virto-blue); background: linear-gradient(90deg, rgba(43,127,255,0.08), white); }
+  .uf-tag { font-size: 8.5px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 3px 8px; border-radius: 999px; position: relative; z-index: 1; }
+  .uf-layer.you .uf-tag { background: var(--virto-blue); color: #fff; }
+  .uf-layer.virto .uf-tag { background: rgba(56,189,248,0.18); color: var(--virto-navy); }
+  .uf-layer.virto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(56,189,248,0.45), transparent); transform: translateX(-110%); }
+  .slide.active .uf-layer.virto::after { animation: ufWave 3s ease-in-out infinite; }
+  .slide.active .uf-layer.virto:nth-of-type(4)::after { animation-delay: 0.18s; }
+  @keyframes ufWave { 0% { transform: translateX(-110%); } 55% { transform: translateX(110%); } 100% { transform: translateX(110%); } }
+  .uf-result { align-self: center; display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #15803D; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); padding: 7px 14px; border-radius: 999px; opacity: 0; margin-top: 3px; }
+  .slide.active .uf-result { animation: ufPop 3s ease-in-out infinite; }
+  @keyframes ufPop { 0%, 55% { opacity: 0; transform: scale(0.85); } 70% { opacity: 1; transform: scale(1.06); } 92% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+
+  /* --- 3. GAUNTLET: a module passes test gates into Stable --- */
+  .gauntlet { gap: 16px; }
+  .gt-row { position: relative; display: flex; align-items: stretch; gap: 8px; padding: 0 2px; }
+  .gt-gate { flex: 1; text-align: center; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--virto-muted); background: var(--virto-bg-2); border: 1px solid var(--virto-line); border-radius: 9px; padding: 14px 4px; transition: none; }
+  .slide.active .gt-gate { animation: gtLight 4.4s ease-in-out infinite; }
+  .slide.active .gt-gate.g2 { animation-delay: 1s; }
+  .slide.active .gt-gate.g3 { animation-delay: 2s; }
+  @keyframes gtLight { 0%, 12% { background: var(--virto-bg-2); border-color: var(--virto-line); color: var(--virto-muted); box-shadow: none; } 22%, 30% { background: rgba(43,127,255,0.12); border-color: var(--virto-blue); color: var(--virto-blue); box-shadow: 0 0 0 4px rgba(43,127,255,0.12); } 45%, 100% { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.5); color: #15803D; } }
+  .gt-chip { position: absolute; top: -16px; left: 0; font-size: 9px; font-weight: 800; color: #fff; background: var(--virto-navy); padding: 3px 9px; border-radius: 999px; box-shadow: var(--shadow-soft); }
+  .slide.active .gt-chip { animation: gtMove 4.4s ease-in-out infinite; }
+  @keyframes gtMove { 0% { left: 0%; } 30% { left: 0%; } 50% { left: 34%; } 70% { left: 68%; } 88%, 100% { left: 88%; } }
+  .gt-stamp { display: flex; align-items: center; justify-content: center; gap: 9px; }
+  .gt-stamp .s { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #15803D; border: 2px solid rgba(34,197,94,0.5); border-radius: 10px; padding: 7px 14px; opacity: 0.35; }
+  .slide.active .gt-stamp .s { animation: gtStamp 4.4s ease-in-out infinite; }
+  @keyframes gtStamp { 0%, 82% { opacity: 0.3; transform: scale(0.96); } 90% { opacity: 1; transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
+
+  /* --- 4. DRIFT: small steps vs one big leap --- */
+  .drift { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: end; }
+  .drift-col { display: flex; flex-direction: column; gap: 9px; }
+  .drift-bars { display: flex; gap: 6px; align-items: flex-end; height: 130px; }
+  .drift-bar { flex: 1; border-radius: 5px 5px 0 0; transform-origin: bottom; transform: scaleY(0.04); }
+  .drift.good .drift-bar { background: linear-gradient(180deg, var(--virto-green), #16a34a); }
+  .drift.bad .drift-bar { background: var(--virto-bg-2); }
+  .drift.bad .drift-bar.leap { background: linear-gradient(180deg, var(--virto-accent), #e04f25); }
+  .slide.active .drift .drift-bar { animation: dGrow 0.7s cubic-bezier(.34,1.4,.5,1) forwards; }
+  .slide.active .drift .drift-bar:nth-child(1) { animation-delay: 0.15s; }
+  .slide.active .drift .drift-bar:nth-child(2) { animation-delay: 0.30s; }
+  .slide.active .drift .drift-bar:nth-child(3) { animation-delay: 0.45s; }
+  .slide.active .drift .drift-bar:nth-child(4) { animation-delay: 0.60s; }
+  @keyframes dGrow { to { transform: scaleY(1); } }
+  .drift-lab { font-size: 11px; font-weight: 700; color: var(--virto-navy); text-align: center; }
+  .drift-sub { font-size: 9.5px; color: var(--virto-muted); text-align: center; }
+
+  /* --- 5. BUNDLES: three channels, stable glows --- */
+  .bundles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-items: start; }
+  .bnd { border: 1px solid var(--virto-line); border-radius: 11px; padding: 11px 9px; background: white; display: flex; flex-direction: column; gap: 6px; }
+  .bnd h6 { font-size: 11px; font-weight: 800; color: var(--virto-navy); display: flex; align-items: center; gap: 6px; }
+  .bnd h6 .d { width: 8px; height: 8px; border-radius: 50%; }
+  .bnd.alfa h6 .d { background: var(--virto-gold); }
+  .bnd.edge h6 .d { background: var(--virto-blue); }
+  .bnd.stable h6 .d { background: var(--virto-green); }
+  .bnd .bchip { font-size: 9px; font-weight: 600; color: var(--virto-navy); background: var(--virto-bg); border: 1px solid var(--virto-line); border-radius: 6px; padding: 4px 7px; }
+  .bnd.stable { border-color: rgba(34,197,94,0.5); }
+  .slide.active .bnd.stable { animation: bGlow 2.8s ease-in-out infinite; }
+  @keyframes bGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } 50% { box-shadow: 0 0 0 6px rgba(34,197,94,0.12); } }
+  .bnd .tier { font-size: 8.5px; text-transform: uppercase; letter-spacing: 1px; color: var(--virto-muted); font-weight: 700; }
+
+  /* --- 6. CONVEYOR: feature travels Edge -> harden -> Stable --- */
+  .conveyor { position: relative; display: flex; align-items: center; gap: 8px; padding-top: 26px; }
+  .cv-stage { flex: 1; text-align: center; border: 1px dashed var(--virto-line); border-radius: 10px; padding: 16px 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--virto-muted); }
+  .cv-stage.edge { border-color: rgba(43,127,255,0.5); color: var(--virto-blue); }
+  .cv-stage.stable { border-style: solid; border-color: rgba(34,197,94,0.5); color: #15803D; }
+  .cv-arrow { color: var(--virto-blue); flex-shrink: 0; }
+  .cv-ticket { position: absolute; top: 0; left: 4%; font-size: 9px; font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--virto-blue), var(--virto-navy)); padding: 4px 10px; border-radius: 999px; box-shadow: var(--shadow-soft); }
+  .slide.active .cv-ticket { animation: cvMove 5s ease-in-out infinite; }
+  @keyframes cvMove { 0%, 12% { left: 4%; } 38%, 50% { left: 42%; } 76%, 100% { left: 80%; } }
+
+  /* --- 7. HOTFIX: patch flows to the two latest stables --- */
+  .hotfix { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+  .hf-bug { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: var(--virto-accent); background: rgba(255,106,61,0.08); border: 1px solid rgba(255,106,61,0.4); padding: 7px 13px; border-radius: 999px; }
+  .slide.active .hf-bug { animation: hfShake 3.2s ease-in-out infinite; }
+  @keyframes hfShake { 0%, 60%, 100% { transform: translateX(0); } 66% { transform: translateX(-3px); } 72% { transform: translateX(3px); } 78% { transform: translateX(-2px); } 84% { transform: translateX(0); } }
+  .hf-arrow { color: var(--virto-blue); }
+  .slide.active .hf-arrow { animation: hfDrop 3.2s ease-in-out infinite; }
+  @keyframes hfDrop { 0%, 40% { opacity: 0.3; transform: translateY(-3px); } 55% { opacity: 1; transform: translateY(2px); } 100% { opacity: 0.3; transform: translateY(-3px); } }
+  .hf-targets { display: flex; gap: 12px; }
+  .hf-box { border: 1px solid var(--virto-line); border-radius: 11px; padding: 11px 14px; text-align: center; background: white; }
+  .hf-box .t { font-size: 11px; font-weight: 800; color: var(--virto-navy); }
+  .hf-box .v { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--virto-muted); margin-top: 3px; }
+  .slide.active .hf-box { animation: hfBump 3.2s ease-in-out infinite; }
+  .slide.active .hf-box.b2 { animation-delay: 0.15s; }
+  @keyframes hfBump { 0%, 55% { border-color: var(--virto-line); box-shadow: none; } 70% { border-color: rgba(34,197,94,0.6); box-shadow: 0 0 0 5px rgba(34,197,94,0.12); } 100% { border-color: var(--virto-line); box-shadow: none; } }
+
+  /* --- 8. NEWS: fanned release-note cards, top one floats --- */
+  .news-demo { position: relative; height: 180px; display: flex; align-items: center; justify-content: center; }
+  .news-card { position: absolute; width: 150px; height: 100px; border-radius: 13px; background: white; border: 1px solid var(--virto-line); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; gap: 6px; padding: 12px; }
+  .news-card .bar { height: 7px; border-radius: 4px; background: var(--virto-bg-2); }
+  .news-card .bar.w1 { width: 70%; background: linear-gradient(90deg, var(--virto-blue), var(--virto-cyan)); }
+  .news-card .bar.w2 { width: 90%; } .news-card .bar.w3 { width: 55%; }
+  .news-card.c1 { transform: rotate(-9deg) translate(-30px, 8px); opacity: 0.5; }
+  .news-card.c2 { transform: rotate(6deg) translate(26px, 4px); opacity: 0.7; }
+  .news-card.c3 { z-index: 2; }
+  .slide.active .news-card.c3 { animation: newsFloat 3s ease-in-out infinite; }
+  @keyframes newsFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  .news-badge { position: absolute; top: 7px; right: 7px; font-size: 8px; font-weight: 800; letter-spacing: 1px; color: #fff; background: var(--virto-accent); padding: 2px 7px; border-radius: 999px; }
+  .slide.active .news-badge { animation: evPulse 3s ease-in-out infinite; }
+
+  /* --- 9. WHO TESTS WHAT --- */
+  .ytests { gap: 9px; }
+  .yt-row { display: flex; align-items: center; gap: 11px; padding: 9px 12px; border: 1px solid var(--virto-line); border-radius: 10px; background: white; font-size: 11px; font-weight: 600; color: var(--virto-navy); }
+  .yt-row.done { opacity: 0.6; }
+  .yt-row.you { border-color: var(--virto-blue); }
+  .yt-check { width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; background: var(--virto-green); flex-shrink: 0; }
+  .yt-row.you .yt-check { background: var(--virto-blue); opacity: 0; transform: scale(0.5); }
+  .slide.active .yt-row.you .yt-check { animation: ytTick 0.5s cubic-bezier(.34,1.4,.5,1) forwards; animation-delay: var(--d, 0s); }
+  @keyframes ytTick { to { opacity: 1; transform: scale(1); } }
+
+  /* --- 10. COMPATIBLE FEATURE: a new module plugs into current Stable --- */
+  .compat { gap: 11px; }
+  .cf-set { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .cf-mod { font-size: 10px; font-weight: 700; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--virto-line); background: white; color: var(--virto-navy); display: inline-flex; align-items: center; gap: 6px; }
+  .cf-mod.locked { border-color: rgba(34,197,94,0.5); color: #15803D; background: rgba(34,197,94,0.07); }
+  .cf-mod.locked svg { width: 11px; height: 11px; }
+  .cf-mod.new { border-color: var(--virto-blue); color: var(--virto-blue); background: rgba(43,127,255,0.08); opacity: 0; transform: translateX(44px); }
+  .slide.active .cf-mod.new { animation: cfSlide 3.6s ease-in-out infinite; }
+  @keyframes cfSlide { 0% { opacity: 0; transform: translateX(44px); } 20% { opacity: 1; transform: translateX(0); } 88% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(44px); } }
+  .cf-badge { align-self: flex-start; display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #15803D; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); padding: 6px 11px; border-radius: 999px; opacity: 0; }
+  .slide.active .cf-badge { animation: cfBadge 3.6s ease-in-out infinite; }
+  @keyframes cfBadge { 0%, 30% { opacity: 0; transform: scale(0.85); } 42% { opacity: 1; transform: scale(1.05); } 88% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+
+  /* --- STABLE-BY-QUARTER timeline (the "second timeline", slow + patches) --- */
+  .ql-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .ql-track { position: relative; height: 56px; margin: 16px 12px 2px; }
+  .ql-track::before { content: ""; position: absolute; top: 28px; left: 0; right: 0; height: 3px; border-radius: 2px; background: var(--virto-line); }
+  .ql-fill { position: absolute; top: 28px; left: 0; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--virto-green), #16a34a); width: 6%; }
+  .slide.active .ql-fill { animation: qlFill 12s cubic-bezier(.65,0,.2,1) infinite; }
+  @keyframes qlFill { 0%, 8% { width: 6%; } 25%, 33% { width: 35%; } 50%, 58% { width: 64%; } 75%, 96% { width: 93%; } 100% { width: 93%; } }
+  .ql-marker { position: absolute; top: -3px; left: 6%; transform: translateX(-50%); font-size: 9px; font-weight: 800; letter-spacing: 0.5px; color: #fff; background: linear-gradient(135deg, var(--virto-green), #16a34a); padding: 3px 9px; border-radius: 999px; box-shadow: var(--shadow-soft); white-space: nowrap; z-index: 3; }
+  .slide.active .ql-marker { animation: qlMove 12s cubic-bezier(.65,0,.2,1) infinite; }
+  @keyframes qlMove { 0%, 8% { left: 6%; } 25%, 33% { left: 35%; } 50%, 58% { left: 64%; } 75%, 96% { left: 93%; } 100% { left: 93%; } }
+  .ql-q { position: absolute; top: 21px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 5px; z-index: 1; }
+  .ql-q i { width: 15px; height: 15px; border-radius: 50%; background: #fff; border: 3px solid var(--virto-line); box-sizing: border-box; }
+  .ql-q span { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--virto-muted); }
+  .ql-patch { position: absolute; top: 24px; transform: translateX(-50%) scale(.4); width: 10px; height: 10px; border-radius: 50%; background: var(--virto-gold); box-shadow: 0 0 0 3px rgba(251,191,36,0.22); opacity: 0; z-index: 2; }
+  .slide.active .ql-patch.p1 { animation: qlP1 12s ease-in-out infinite; }
+  .slide.active .ql-patch.p2 { animation: qlP2 12s ease-in-out infinite; }
+  .slide.active .ql-patch.p3 { animation: qlP3 12s ease-in-out infinite; }
+  @keyframes qlP1 { 0%, 12% { opacity: 0; transform: translateX(-50%) scale(.4); } 18% { opacity: 1; transform: translateX(-50%) scale(1.15); } 24%, 100% { opacity: 1; transform: translateX(-50%) scale(1); } }
+  @keyframes qlP2 { 0%, 37% { opacity: 0; transform: translateX(-50%) scale(.4); } 43% { opacity: 1; transform: translateX(-50%) scale(1.15); } 49%, 100% { opacity: 1; transform: translateX(-50%) scale(1); } }
+  @keyframes qlP3 { 0%, 62% { opacity: 0; transform: translateX(-50%) scale(.4); } 68% { opacity: 1; transform: translateX(-50%) scale(1.15); } 74%, 100% { opacity: 1; transform: translateX(-50%) scale(1); } }
+  .ql-legend { display: flex; gap: 16px; justify-content: center; }
+  .ql-leg { display: inline-flex; align-items: center; gap: 6px; font-size: 9.5px; color: var(--virto-muted); }
+  .ql-leg i { width: 9px; height: 9px; border-radius: 50%; }
+  .ql-leg.s i { background: var(--virto-green); }
+  .ql-leg.p i { background: var(--virto-gold); box-shadow: 0 0 0 2px rgba(251,191,36,0.25); }
+
+  /* --- KEEP CUSTOM: every update — redo (old way) vs kept (Virto way) --- */
+  .keepc { gap: 13px; }
+  .kc-lane { border: 1px solid var(--virto-line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+  .kc-lane.other { background: rgba(255,106,61,0.04); border-color: rgba(255,106,61,0.35); }
+  .kc-lane.virto { background: rgba(34,197,94,0.05); border-color: rgba(34,197,94,0.45); }
+  .kc-head { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 7px; }
+  .kc-lane.other .kc-head { color: var(--virto-accent); }
+  .kc-lane.virto .kc-head { color: #15803D; }
+  .kc-body { display: flex; align-items: center; gap: 8px; }
+  .kc-mod { font-size: 11px; font-weight: 700; color: var(--virto-navy); background: white; border: 1px solid var(--virto-line); border-radius: 8px; padding: 7px 11px; flex-shrink: 0; }
+  .kc-track { position: relative; flex: 1; height: 2px; background: var(--virto-line); }
+  .kc-pulse { position: absolute; top: -5px; left: 0; width: 11px; height: 11px; border-radius: 50%; opacity: 0; }
+  .kc-pulse::after { content: "update"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 7.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--virto-muted); white-space: nowrap; }
+  .kc-lane.other .kc-pulse { background: var(--virto-accent); box-shadow: 0 0 6px rgba(255,106,61,0.7); }
+  .kc-lane.virto .kc-pulse { background: var(--virto-blue); box-shadow: 0 0 6px rgba(43,127,255,0.7); }
+  .slide.active .kc-pulse { animation: kcMove 2.8s ease-in-out infinite; }
+  @keyframes kcMove { 0% { left: 0; opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+  .kc-out { font-size: 10.5px; font-weight: 800; border-radius: 8px; padding: 7px 11px; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; color: #fff; }
+  .kc-out.bad { background: var(--virto-accent); }
+  .kc-out.good { background: var(--virto-green); }
+  .slide.active .kc-lane.other .kc-out { animation: kcShake 2.8s ease-in-out infinite; }
+  @keyframes kcShake { 0%, 72%, 100% { transform: translateX(0); } 78% { transform: translateX(-2px); } 84% { transform: translateX(2px); } 90% { transform: translateX(0); } }
+  .slide.active .kc-lane.virto .kc-out { animation: kcPop 2.8s ease-in-out infinite; }
+  @keyframes kcPop { 0%, 72% { transform: scale(1); } 80% { transform: scale(1.09); } 100% { transform: scale(1); } }
+  .kc-note { font-size: 9.5px; line-height: 1.35; color: var(--virto-muted); margin-top: 1px; }
+  .kc-lane.other .kc-note strong { color: var(--virto-accent); }
+  .kc-lane.virto .kc-note strong { color: #15803D; }
+
+  /* --- BIG UPDATES: routine vs the few larger steps (S / M / L) --- */
+  .bigup { gap: 10px; }
+  .bu-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; border: 1px solid var(--virto-line); border-radius: 11px; background: white; opacity: 0; transform: translateY(8px); }
+  .slide.active .bu-row { animation: buIn 0.6s ease forwards; }
+  .slide.active .bu-row.m { animation-delay: 0.5s; }
+  .slide.active .bu-row.l { animation-delay: 1.0s; }
+  @keyframes buIn { to { opacity: 1; transform: translateY(0); } }
+  .bu-size { width: 30px; height: 26px; border-radius: 7px; color: #fff; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .bu-row.s .bu-size { background: var(--virto-green); }
+  .bu-row.m .bu-size { background: var(--virto-gold); }
+  .bu-row.l .bu-size { background: #F97316; }
+  .bu-row.l { border-color: rgba(249,115,22,0.5); }
+  .bu-txt { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .bu-txt b { font-size: 12px; color: var(--virto-navy); }
+  .bu-txt span { font-size: 10px; color: var(--virto-muted); }
+  .bu-freq { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--virto-muted); background: var(--virto-bg-2); padding: 4px 9px; border-radius: 999px; flex-shrink: 0; white-space: nowrap; }
+  .bu-note { display: flex; align-items: flex-start; gap: 8px; font-size: 10.5px; line-height: 1.4; color: #15803D; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.35); border-radius: 9px; padding: 9px 11px; opacity: 0; margin-top: 2px; }
+  .bu-note svg { flex-shrink: 0; margin-top: 1px; }
+  .slide.active .bu-note { animation: buNote 0.6s ease forwards; animation-delay: 1.5s; }
+  @keyframes buNote { to { opacity: 1; } }
+
+  /* --- CI/CD FLOW: two source lanes -> converge -> manifest -> image -> env --- */
+  .cicd { gap: 0; align-items: stretch; }
+  .fl-node { border: 1px solid var(--virto-line); border-radius: 10px; padding: 9px 12px; background: white; font-size: 11px; font-weight: 700; color: var(--virto-navy); display: flex; align-items: center; gap: 8px; justify-content: center; text-align: center; }
+  .fl-node svg { flex-shrink: 0; }
+  .fl-logo { width: 15px; height: 15px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+  .fl-node.man { border-color: var(--virto-gold); color: #B45309; background: rgba(251,191,36,0.09); }
+  .fl-node.man svg { color: #B45309; }
+  .fl-node.img { border-color: rgba(34,197,94,0.5); }
+  .fl-node.img svg { color: #15803D; }
+  .fl-node.env { border-color: rgba(7,37,74,0.35); background: linear-gradient(135deg, rgba(7,37,74,0.06), white); color: var(--virto-navy); }
+  .fl-node.env svg { color: var(--virto-navy); }
+
+  /* two source lanes */
+  .fl-sources { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .fl-lane { display: flex; flex-direction: column; align-items: stretch; }
+  .fl-src { font-size: 10px; padding: 7px 9px; min-height: 48px; }
+  .fl-lane.sol .fl-src { border-color: var(--virto-blue); color: var(--virto-blue); }
+  .fl-lane.sol .fl-src svg { color: var(--virto-blue); }
+  .fl-lane.vc .fl-src { border-color: var(--virto-gold); color: #B45309; }
+  .fl-store { flex-direction: column; gap: 1px; line-height: 1.2; padding: 9px 10px; min-height: 48px; justify-content: center; }
+  .fl-store .nm { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; }
+  .fl-store .sub { font-size: 8.5px; font-weight: 600; }
+  .fl-lane.sol .fl-store { border-color: var(--virto-blue); border-width: 2px; background: rgba(43,127,255,0.07); color: var(--virto-blue); }
+  .fl-lane.sol .fl-store svg { color: var(--virto-blue); }
+  .fl-lane.sol .fl-store .sub { color: rgba(43,127,255,0.75); }
+  .fl-lane.vc .fl-store { border-color: var(--virto-gold); border-width: 2px; background: rgba(251,191,36,0.12); color: #B45309; }
+  .fl-lane.vc .fl-store .sub { color: #B4530999; }
+
+  .fl-conn { position: relative; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .fl-conn::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-50%); background: var(--virto-line); }
+  .fl-conn.mini { height: 17px; }
+  .fl-conn.sol::before { background: rgba(43,127,255,0.45); }
+  .fl-conn.vc::before { background: rgba(251,191,36,0.6); }
+  .fl-lbl { position: relative; z-index: 1; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; color: var(--virto-navy); background: white; border: 1px solid var(--virto-line); border-radius: 999px; padding: 3px 9px; }
+  .fl-lbl.mini { font-size: 7.5px; padding: 2px 7px; }
+  .fl-pulse { position: absolute; left: 50%; top: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--virto-blue); transform: translateX(-50%); box-shadow: 0 0 6px rgba(43,127,255,0.75); opacity: 0; }
+  .fl-conn.vc .fl-pulse { background: var(--virto-gold); box-shadow: 0 0 6px rgba(251,191,36,0.8); }
+  .slide.active .fl-conn .fl-pulse { animation: flDrop 4s linear infinite; }
+  .slide.active .fl-conn.c2 .fl-pulse { animation-delay: 1s; }
+  .slide.active .fl-conn.c3 .fl-pulse { animation-delay: 2s; }
+  .slide.active .fl-conn.c4 .fl-pulse { animation-delay: 3s; }
+  @keyframes flDrop { 0% { top: 0; opacity: 0; } 4% { opacity: 1; } 80% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+  /* --- UPDATE LADDER: how much custom-code work an update needs --- */
+  .ladder { gap: 9px; }
+  .ld-row { display: flex; align-items: center; gap: 12px; padding: 10px 13px; border: 1px solid var(--virto-line); border-radius: 11px; background: white; opacity: 0; transform: translateX(-8px); }
+  .slide.active .ld-row { animation: ldIn 0.5s ease forwards; }
+  .slide.active .ld-row.s { animation-delay: 0.32s; }
+  .slide.active .ld-row.m { animation-delay: 0.64s; }
+  .slide.active .ld-row.l { animation-delay: 0.96s; }
+  @keyframes ldIn { to { opacity: 1; transform: translateX(0); } }
+  .ld-row.none { --mc: var(--virto-green); }
+  .ld-row.s { --mc: var(--virto-green); }
+  .ld-row.m { --mc: var(--virto-gold); }
+  .ld-row.l { --mc: #F97316; border-color: rgba(249,115,22,0.45); }
+  .ld-size { width: 30px; height: 26px; border-radius: 7px; color: #fff; background: var(--mc); font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ld-txt { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .ld-txt b { font-size: 12px; color: var(--virto-navy); }
+  .ld-txt span { font-size: 10px; color: var(--virto-muted); }
+  .ld-meter { display: flex; gap: 3px; align-items: center; flex-shrink: 0; }
+  .ld-meter i { width: 6px; height: 16px; border-radius: 2px; background: var(--virto-bg-2); }
+  .ld-meter i.on { background: var(--mc); }
+
+  /* --- CADENCE CHOICE: pick your update rhythm --- */
+  .cadc { gap: 10px; }
+  .cadc-note { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--virto-navy); background: var(--virto-bg-2); border-radius: 9px; padding: 8px 11px; text-align: center; line-height: 1.35; }
+  .cadc-note strong { color: var(--virto-blue); }
+  .cadc-opts { display: flex; flex-direction: column; gap: 7px; }
+  .cadc-opt { display: flex; align-items: center; gap: 11px; padding: 9px 12px; border: 1px solid var(--virto-line); border-radius: 10px; background: white; opacity: 0; transform: translateX(-7px); }
+  .slide.active .cadc-opt { animation: ldIn 0.45s ease forwards; }
+  .slide.active .cadc-opt:nth-child(2) { animation-delay: 0.13s; }
+  .slide.active .cadc-opt:nth-child(3) { animation-delay: 0.26s; }
+  .slide.active .cadc-opt:nth-child(4) { animation-delay: 0.39s; }
+  .cadc-opt .ic { width: 26px; height: 26px; border-radius: 7px; background: var(--virto-bg-2); color: var(--virto-navy); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cadc-opt .lab { flex: 1; font-size: 12.5px; font-weight: 700; color: var(--virto-navy); }
+  .cadc-opt .freq { display: flex; gap: 3px; align-items: center; flex-shrink: 0; }
+  .cadc-opt .freq i { width: 5px; height: 5px; border-radius: 50%; background: var(--virto-line); }
+  .cadc-opt .freq i.on { background: var(--virto-blue); }
+  .cadc-opt.rec { border-color: rgba(34,197,94,0.55); background: rgba(34,197,94,0.07); }
+  .cadc-opt.rec .ic { background: var(--virto-green); color: #fff; }
+  .cadc-opt.rec .lab { color: #15803D; }
+  .cadc-opt.rec .freq i.on { background: var(--virto-green); }
+  .cadc-badge { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; color: #fff; background: var(--virto-green); padding: 3px 8px; border-radius: 999px; flex-shrink: 0; }
+  .slide.active .cadc-badge { animation: evPulse 2.6s ease-in-out infinite; }
+  .cadc-win { display: flex; align-items: center; gap: 10px; border: 1px solid rgba(43,127,255,0.4); background: rgba(43,127,255,0.06); border-radius: 11px; padding: 9px 12px; }
+  .cadc-win .star { color: var(--virto-gold); flex-shrink: 0; }
+  .cadc-win .t { font-size: 10px; color: var(--virto-navy); line-height: 1.4; }
+  .cadc-win .t b { color: var(--virto-blue); }
+
+  /* --- EXPERT SERVICES grid --- */
+  .svc-wrap { display: flex; flex-direction: column; gap: 11px; overflow: hidden; padding: 10px 0; }
+  .svc-head { display: flex; flex-direction: column; gap: 5px; }
+  .svc-eyebrow { color: var(--virto-blue); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; overflow-y: auto; padding-right: 4px; }
+  .svc-grid::-webkit-scrollbar { width: 6px; }
+  .svc-grid::-webkit-scrollbar-thumb { background: var(--virto-line); border-radius: 3px; }
+  .svc-card { border: 1px solid var(--virto-line); border-radius: 12px; padding: 10px 12px; background: white; display: flex; gap: 10px; align-items: flex-start; box-shadow: 0 4px 14px -11px rgba(7,37,74,0.2); }
+  .svc-card.full { grid-column: 1 / -1; }
+  .svc-ic { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: rgba(43,127,255,0.10); color: var(--virto-blue); }
+  .svc-body { min-width: 0; flex: 1; }
+  .svc-title { font-size: 12px; font-weight: 700; color: var(--virto-navy); display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .svc-tag { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; padding: 2px 7px; border-radius: 999px; background: var(--virto-bg-2); color: var(--virto-muted); }
+  .svc-tag.invest { background: rgba(251,191,36,0.16); color: #B45309; }
+  .svc-tag.preview { background: rgba(56,189,248,0.18); color: #0369A1; }
+  .svc-desc { font-size: 10px; color: var(--virto-muted); line-height: 1.42; margin-top: 3px; }
+  .svc-desc strong { color: var(--virto-navy); }
+  .svc-card.preview { border-color: rgba(56,189,248,0.55); background: linear-gradient(135deg, rgba(56,189,248,0.08), white); }
+  .svc-card.preview .svc-ic { background: rgba(56,189,248,0.18); color: #0369A1; }
+
+  @media (max-width: 900px) {
+    .slide-body { grid-template-columns: 1fr; gap: 16px; padding: 16px 0; overflow-y: auto; }
+    .visual-col { min-height: 200px; max-height: 280px; }
+    .diagram-col { min-height: auto; max-height: none; }
+    .slide-inner { padding: 22px 26px; }
+    .divider-body { grid-template-columns: 1fr; }
+    .divider-right { display: none; }
+    .divider-left { padding: 36px; }
+    .nav { bottom: 16px; padding: 6px 8px; gap: 6px; }
+    .jump-btn { display: none; }
+    .nav-jump { border: none; padding: 0; }
+    .hint { display: none; }
+    .header-meta { gap: 6px; }
+    .gloss-grid { grid-template-columns: 1fr 1fr; }
+    .myth-row { grid-template-columns: 1fr; }
+    .myth-x { border-right: none; border-bottom: 1px solid var(--virto-line); }
+    .toc-panel { width: 100%; }
+    .toc-entry { min-height: 44px; }
+  }
+
+  @media print {
+    .nav, .progress-bar, .hint, .toc-panel, .toc-backdrop { display: none; }
+    .stage { padding: 0; }
+    .slide { position: relative; opacity: 1; transform: none; visibility: visible; page-break-after: always; box-shadow: none; width: 100%; height: 100vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="hint">
+  <button class="key key-btn" id="hintPrev" aria-label="Previous slide">←</button><button class="key key-btn" id="hintNext" aria-label="Next slide">→</button> Navigate
+  <span style="margin: 0 6px;">·</span>
+  <button class="key key-btn" id="hintFullscreen" aria-label="Toggle fullscreen">F</button> Fullscreen
+  <span style="margin: 0 6px;">·</span>
+  <button class="key key-btn" id="hintToc" aria-label="Toggle table of contents">T</button> Contents
+</div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<aside class="toc-panel" id="tocPanel" role="navigation" aria-label="Table of contents">
+  <div class="toc-header">
+    <h2>Contents</h2>
+    <button class="toc-close" id="tocClose" aria-label="Close table of contents">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="toc-entries" id="tocEntries"></div>
+</aside>
+
+<div class="stage" id="stage"></div>
+
+<nav class="nav">
+  <button class="nav-btn" id="prevBtn" aria-label="Previous slide">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="nav-progress">
+    <span id="currentSlide">01</span><span class="total">/<span id="totalSlides">00</span></span>
+  </div>
+  <button class="nav-btn" id="nextBtn" aria-label="Next slide">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <div class="nav-jump">
+    <button class="jump-btn" data-jump="0">Start</button>
+    <button class="jump-btn" data-jump="end">End</button>
+    <button class="toc-nav-btn" id="tocToggleNav" aria-label="Table of contents" title="Table of contents (T)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><rect x="3" y="4.5" width="3" height="3" rx="0.5" fill="currentColor" stroke="none"/><rect x="3" y="10.5" width="3" height="3" rx="0.5" fill="currentColor" stroke="none"/><rect x="3" y="16.5" width="3" height="3" rx="0.5" fill="currentColor" stroke="none"/></svg>
+    </button>
+  </div>
+</nav>
+
+<script>
+/* ============================================================
+   VIRTO COMMERCE — RELEASE STRATEGY FOR BUSINESS USERS
+   Sources:
+   - https://docs.virtocommerce.org/.../release-strategy-overview/
+   - https://github.com/VirtoCommerce/vc-modules (modules_v3.json, bundles)
+   - https://github.com/VirtoCommerce/vc-release-notes
+   - https://github.com/VirtoCommerce/vc-testing-module
+   ============================================================ */
+
+const icons = {
+  spark: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>',
+  home: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  shield: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  refresh: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+  wrench: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+  news: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9h4"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg>',
+  check: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  test: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><path d="M8 2h8M7.5 14h9"/></svg>'
+};
+
+// Small inline icons used inside diagram/myth headers
+const SI = {
+  q:  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  a:  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  t:  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  x:  '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  ok: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  folder: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'
+};
+
+const BLOCK_META = {
+  q: { cls: 'question', label: 'The Question',            icon: SI.q },
+  a: { cls: 'answer',   label: 'In Plain Terms',          icon: SI.a },
+  t: { cls: 'takeaway', label: 'What This Means For You',  icon: SI.t }
+};
+
+/* ---------------- DIAGRAM SNIPPETS ---------------- */
+const DG = {
+  stack: `
+    <div class="dg-stack">
+      <div class="dg-cap">Your Virto Commerce project</div>
+      <div class="dg-layer own"><span>Custom Frontend / Theme</span><span class="tag">Yours</span></div>
+      <div class="dg-layer own"><span>Custom Modules</span><span class="tag">Yours</span></div>
+      <div class="dg-arrow">▲ extends, never modifies ▲</div>
+      <div class="dg-layer vendor"><span>Virto Modules &nbsp;(100+)</span><span class="tag">Virto</span></div>
+      <div class="dg-layer vendor"><span>Virto Platform</span><span class="tag">Virto</span></div>
+      <div class="dg-foot"><code>vc-package.json</code> pins every Virto version</div>
+    </div>`,
+
+  extend: `
+    <div class="dg-two">
+      <div class="dg-box bad">
+        <h5><span class="dg-mark">${SI.x}</span> Modify the source</h5>
+        <p>Edit a Virto module directly and your changes collide with every new release. Each update becomes a manual merge — slow, risky, easy to break.</p>
+        <p><strong style="color:var(--virto-accent)">Result: “merge hell”.</strong></p>
+      </div>
+      <div class="dg-box good">
+        <h5><span class="dg-mark">${SI.ok}</span> Extend in a module</h5>
+        <p>Add a custom module that plugs into the existing one — new field, API, logic, even DB columns — without touching vendor code.</p>
+        <p><strong style="color:#15803D">Result: updates just flow in.</strong></p>
+      </div>
+    </div>`,
+
+  channels: `
+    <div class="dg-channels">
+      <div class="dg-ch stable">
+        <div class="dg-ch-top"><span class="dg-ch-name"><span class="dg-dot"></span>Stable</span><span class="dg-ch-cad">~ every 3 months</span></div>
+        <div class="dg-ch-desc">Full regression, E2E &amp; load testing. The CLI default. Recommended for production.</div>
+      </div>
+      <div class="dg-ch edge">
+        <div class="dg-ch-top"><span class="dg-ch-name"><span class="dg-dot"></span>Edge</span><span class="dg-ch-cad">daily</span></div>
+        <div class="dg-ch-desc">Latest features &amp; fixes, lighter testing. For early adopters who want something now.</div>
+      </div>
+      <div class="dg-ch preview">
+        <div class="dg-ch-top"><span class="dg-ch-name"><span class="dg-dot"></span>Preview</span><span class="dg-ch-cad">per PR</span></div>
+        <div class="dg-ch-desc">Work in progress from pull requests &amp; contributions. May contain bugs.</div>
+      </div>
+    </div>`,
+
+  cadence: `
+    <div class="dg-timeline">
+      <div>
+        <div class="dg-tl-label">Stable — one tested release per quarter</div>
+        <div class="dg-quarters">
+          <div class="dg-q"><div class="node"></div><div class="lbl">Q1</div><div class="sub">stable</div></div>
+          <div class="dg-q"><div class="node"></div><div class="lbl">Q2</div><div class="sub">stable</div></div>
+          <div class="dg-q"><div class="node"></div><div class="lbl">Q3</div><div class="sub">stable</div></div>
+          <div class="dg-q"><div class="node"></div><div class="lbl">Q4</div><div class="sub">stable</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="dg-tl-label">Edge — published daily</div>
+        <div class="dg-ticks">
+          ${Array.from({length: 24}).map(()=>'<div class="t"></div>').join('')}
+        </div>
+      </div>
+      <div class="dg-foot">Versions follow <code>MAJOR.MINOR.PATCH</code> (SemVer)</div>
+    </div>`,
+
+  steps: `
+    <div class="dg-steps">
+      <div class="dg-step"><span class="n">1</span><span class="tx">Start from a clean folder pointing at your <code>vc-package.json</code></span></div>
+      <div class="dg-step"><span class="n">2</span><span class="tx">Manually set the target versions in <code>vc-package.json</code>, then run <code>vc-build update</code></span></div>
+      <div class="dg-step optional"><span class="n">3</span><span class="tx">Bump your custom modules’ dependency on the <strong>Virto Commerce</strong> modules to unlock the new features <span class="opt-tag">optional · by demand</span></span></div>
+      <div class="dg-step"><span class="n">4</span><span class="tx">Run your tests, smoke-check, deploy</span></div>
+      <div class="dg-fallback">${SI.a}<span>Hit any issue? <strong>Contact the Virto Commerce team</strong> — we can take it from there.</span></div>
+    </div>`
+};
+
+/* ---------------- ANIMATED PROCESS DEMOS ---------------- */
+function evolveLane(name, delays) {
+  const dots = delays.map(d => `<i class="ev-dot" style="animation-delay:${d}s"></i>`).join('');
+  return `<div class="ev-lane"><span class="ev-name">${name}</span><div class="ev-track">${dots}</div></div>`;
+}
+const ANIM = {
+  // 1. Edge releases stream per module; Stable bundles them periodically
+  evolve: `
+    <div class="demo evolve">
+      <div class="demo-title">Edge — daily, in different modules</div>
+      ${evolveLane('Catalog', [0, 1.7, 2.9])}
+      ${evolveLane('Cart',    [0.7, 2.2])}
+      ${evolveLane('Orders',  [0.3, 1.9, 3.1])}
+      <div class="ql-wrap">
+        <div class="demo-title">Stable — one step per quarter <span style="color:#B45309">+ hotfix patches</span></div>
+        <div class="ql-track">
+          <div class="ql-fill"></div>
+          <div class="ql-q" style="left:6%"><i></i><span>Q1</span></div>
+          <div class="ql-q" style="left:35%"><i></i><span>Q2</span></div>
+          <div class="ql-q" style="left:64%"><i></i><span>Q3</span></div>
+          <div class="ql-q" style="left:93%"><i></i><span>Q4</span></div>
+          <div class="ql-patch p1" style="left:20%"></div>
+          <div class="ql-patch p2" style="left:49%"></div>
+          <div class="ql-patch p3" style="left:78%"></div>
+          <div class="ql-marker">STABLE</div>
+        </div>
+        <div class="ql-legend">
+          <span class="ql-leg s"><i></i>Stable release · quarterly</span>
+          <span class="ql-leg p"><i></i>Hotfix patch · in between</span>
+        </div>
+      </div>
+      <div class="demo-cap">Modules ship on <strong>Edge</strong> continuously. <strong>Stable</strong> advances one tested step per quarter — with <strong>hotfix patches</strong> in between when needed.</div>
+    </div>`,
+
+  // 2. How a client project receives an update
+  updateFlow: `
+    <div class="demo uflow">
+      <div class="uf-layer you"><span>Custom Frontend</span><span class="uf-tag">stays put</span></div>
+      <div class="uf-layer you"><span>Custom Modules</span><span class="uf-tag">stays put</span></div>
+      <div class="uf-layer virto"><span>Virto Modules (100+)</span><span class="uf-tag">updates</span></div>
+      <div class="uf-layer virto"><span>Virto Platform</span><span class="uf-tag">updates</span></div>
+      <div class="uf-result">${SI.t} Recompile + retest — done</div>
+      <div class="demo-cap">An update refreshes the <strong>Virto layers</strong>. Your custom layers are untouched — you just rebuild and re-test them.</div>
+    </div>`,
+
+  // 3. Stable test gauntlet
+  gauntlet: `
+    <div class="demo gauntlet">
+      <div class="demo-title">Every stable set runs the full gauntlet</div>
+      <div class="gt-row">
+        <span class="gt-chip">module set</span>
+        <div class="gt-gate g1">Regression</div>
+        <div class="gt-gate g2">End&#8209;to&#8209;End</div>
+        <div class="gt-gate g3">Load</div>
+      </div>
+      <div class="gt-stamp"><span class="s">${SI.t} Stable — verified</span></div>
+      <div class="demo-cap">A release becomes <strong>Stable</strong> only after passing <strong>regression, E2E and load</strong> testing — as a complete, compatible set.</div>
+    </div>`,
+
+  // 4. Drift: small steps vs one big leap
+  drift: `
+    <div class="demo">
+      <div class="drift">
+        <div class="drift-col">
+          <div class="drift-bars">
+            <div class="drift-bar"></div><div class="drift-bar"></div>
+            <div class="drift-bar"></div><div class="drift-bar"></div>
+          </div>
+          <div class="drift-lab">Update each quarter</div>
+          <div class="drift-sub">small, predictable effort</div>
+        </div>
+        <div class="drift-col">
+          <div class="drift-bars">
+            <div class="drift-bar"></div><div class="drift-bar"></div>
+            <div class="drift-bar"></div><div class="drift-bar leap"></div>
+          </div>
+          <div class="drift-lab">Wait two years</div>
+          <div class="drift-sub">one painful leap</div>
+        </div>
+      </div>
+      <div class="demo-cap">The work doesn’t disappear — it <strong>compounds</strong>. Small quarterly steps stay easy; a long wait becomes a project.</div>
+    </div>`,
+
+  // 5. Bundles
+  bundles: `
+    <div class="demo">
+      <div class="bundles">
+        <div class="bnd alfa">
+          <h6><span class="d"></span>Alfa</h6>
+          <span class="tier">Preview</span>
+          <span class="bchip">experimental</span>
+          <span class="bchip">earliest access</span>
+        </div>
+        <div class="bnd edge">
+          <h6><span class="d"></span>Edge</h6>
+          <span class="tier">Edge releases</span>
+          <span class="bchip">latest features</span>
+          <span class="bchip">daily</span>
+        </div>
+        <div class="bnd stable">
+          <h6><span class="d"></span>Stable</h6>
+          <span class="tier">Production</span>
+          <span class="bchip">fully tested</span>
+          <span class="bchip">recommended</span>
+        </div>
+      </div>
+      <div class="demo-cap">A <strong>bundle</strong> is a ready-made set of compatible module versions. Pick your appetite for <em>new</em> vs <em>proven</em>.</div>
+    </div>`,
+
+  // 6. Feature conveyor Edge -> harden -> Stable
+  conveyor: `
+    <div class="demo">
+      <div class="conveyor">
+        <span class="cv-ticket">your feature</span>
+        <div class="cv-stage edge">Edge</div>
+        <span class="cv-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        <div class="cv-stage">Hardening</div>
+        <span class="cv-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        <div class="cv-stage stable">Stable</div>
+      </div>
+      <div class="demo-cap">Adopt it early on your <strong>current Stable</strong>; when it reaches the next Stable it merges in <strong>automatically</strong> — already tested in your project.</div>
+    </div>`,
+
+  // 7. Hotfix to the two latest stables
+  hotfix: `
+    <div class="demo hotfix">
+      <div class="hf-bug">${SI.x} Bug found in production</div>
+      <div class="hf-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
+      <div class="hf-targets">
+        <div class="hf-box b1"><div class="t">Stable N</div><div class="v">x.y.<strong>z+1</strong></div></div>
+        <div class="hf-box b2"><div class="t">Stable N&#8209;1</div><div class="v">x.y.<strong>z+1</strong></div></div>
+      </div>
+      <div class="demo-cap">A hotfix is a backwards-compatible <strong>PATCH</strong>, shipped to the <strong>two latest stable</strong> releases. No new features, no migration.</div>
+    </div>`,
+
+  // 8. News feed
+  news: `
+    <div class="demo">
+      <div class="news-demo">
+        <div class="news-card c1"><div class="bar w2"></div><div class="bar w3"></div></div>
+        <div class="news-card c2"><div class="bar w2"></div><div class="bar w3"></div></div>
+        <div class="news-card c3">
+          <span class="news-badge">NEW</span>
+          <div class="bar w1"></div><div class="bar w2"></div><div class="bar w3"></div>
+        </div>
+      </div>
+      <div class="demo-cap">Every release ships a deck just like this in <strong>vc-release-notes</strong> — each item sized by integration effort.</div>
+    </div>`,
+
+  // 9. Who tests what
+  ytests: `
+    <div class="demo ytests">
+      <div class="demo-title">Who tests what</div>
+      <div class="yt-row done"><span class="yt-check">${SI.ok}</span>Virto Platform &amp; modules — already tested</div>
+      <div class="yt-row you" style="--d:0.3s"><span class="yt-check">${SI.ok}</span>Your custom module logic</div>
+      <div class="yt-row you" style="--d:0.7s"><span class="yt-check">${SI.ok}</span>Your storefront flows</div>
+      <div class="yt-row you" style="--d:1.1s"><span class="yt-check">${SI.ok}</span>Your integrations</div>
+      <div class="demo-cap">Don’t re-test what Virto already covers. <mark>Automate tests</mark> for <strong>your</strong> code — the way Virto uses <strong>vc-testing-module</strong>.</div>
+    </div>`,
+
+  // 10. A new feature plugs into the CURRENT stable as its own module
+  compatFeature: `
+    <div class="demo compat">
+      <div class="demo-title">Your current Stable release</div>
+      <div class="cf-set">
+        <span class="cf-mod locked">${SI.ok}Catalog</span>
+        <span class="cf-mod locked">${SI.ok}Cart</span>
+        <span class="cf-mod locked">${SI.ok}Orders</span>
+        <span class="cf-mod new">+ Your Feature</span>
+      </div>
+      <span class="cf-badge">${SI.t} Compatible · targets current Stable versions</span>
+      <div class="demo-cap">Each capability is its own <strong>single-responsibility module</strong>. Build the feature as a custom module that depends on your <strong>current Stable</strong> versions — it plugs in without a full upgrade.</div>
+    </div>`,
+
+  // 11. Every update: redo it (other platforms) vs kept untouched (Virto)
+  keepCustom: `
+    <div class="demo keepc">
+      <div class="kc-lane other">
+        <div class="kc-head">${SI.x} Other platforms — you modify the core</div>
+        <div class="kc-body">
+          <span class="kc-mod">Your code</span>
+          <span class="kc-track"><i class="kc-pulse"></i></span>
+          <span class="kc-out bad">${SI.x} re-do it</span>
+        </div>
+        <div class="kc-note">Each update means you <strong>re-do your work</strong> by hand.</div>
+      </div>
+      <div class="kc-lane virto">
+        <div class="kc-head">${SI.ok} Virto — you extend in a module</div>
+        <div class="kc-body">
+          <span class="kc-mod">Your code</span>
+          <span class="kc-track"><i class="kc-pulse"></i></span>
+          <span class="kc-out good">${SI.ok} kept</span>
+        </div>
+        <div class="kc-note">The same update <strong>leaves your code untouched</strong>.</div>
+      </div>
+    </div>`,
+
+  // 12. When updates are bigger: routine (S) vs 3rd-party (M) vs .NET LTS (L)
+  bigUpdates: `
+    <div class="demo bigup">
+      <div class="bu-row s">
+        <span class="bu-size">S</span>
+        <div class="bu-txt"><b>Routine update</b><span>recompile + re-test</span></div>
+        <span class="bu-freq">most updates</span>
+      </div>
+      <div class="bu-row m">
+        <span class="bu-size">M</span>
+        <div class="bu-txt"><b>3rd-party bump</b><span>refreshed dependencies</span></div>
+        <span class="bu-freq">~ yearly</span>
+      </div>
+      <div class="bu-row l">
+        <span class="bu-size">L</span>
+        <div class="bu-txt"><b>.NET LTS upgrade</b><span>new target framework</span></div>
+        <span class="bu-freq">~ 2 years</span>
+      </div>
+      <div class="bu-note">${SI.t} Breaking changes ship with <strong>migration notes</strong> — and we design to keep them rare &amp; small.</div>
+    </div>`,
+
+  // 13. Real CI/CD flow: two source lanes -> converge -> manifest -> image -> environment
+  projectArch: `
+    <div class="demo cicd">
+      <div class="fl-sources">
+        <div class="fl-lane sol">
+          <div class="fl-node fl-src">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7M8.4 8.1A6 6 0 0 0 15.5 11"/></svg>
+            Your Git
+          </div>
+          <div class="fl-conn mini sol"><span class="fl-pulse"></span><span class="fl-lbl mini">CI build</span></div>
+          <div class="fl-node fl-store">
+            <span class="nm">${SI.folder} Custom Modules</span>
+            <span class="sub">Artifact Storage</span>
+          </div>
+        </div>
+        <div class="fl-lane vc">
+          <div class="fl-node fl-src">
+            <img class="fl-logo" src="https://avatars.githubusercontent.com/u/5762443?s=200&v=4" alt="Virto" />
+            Virto releases
+          </div>
+          <div class="fl-conn mini vc"><span class="fl-pulse"></span><span class="fl-lbl mini">publish</span></div>
+          <div class="fl-node fl-store">
+            <span class="nm"><img class="fl-logo" src="https://avatars.githubusercontent.com/u/5762443?s=200&v=4" alt="Virto" /> Virto Commerce</span>
+            <span class="sub">Artifact Storage</span>
+          </div>
+        </div>
+      </div>
+      <div class="fl-conn c2"><span class="fl-pulse"></span><span class="fl-lbl">both storages feed →</span></div>
+      <div class="fl-node man">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        vc-package.json — selects modules + versions
+      </div>
+      <div class="fl-conn c3"><span class="fl-pulse"></span><span class="fl-lbl">CD · restore &amp; assemble</span></div>
+      <div class="fl-node img">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>
+        Container Image
+      </div>
+      <div class="fl-conn c4"><span class="fl-pulse"></span><span class="fl-lbl">deploy</span></div>
+      <div class="fl-node env">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="6" rx="1"/><rect x="2" y="11" width="20" height="6" rx="1"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="14" x2="6.01" y2="14"/></svg>
+        Environment — Dev · Stage · Prod
+      </div>
+    </div>`,
+
+  // 14. Update ladder: how much custom-code work an update needs
+  updateLadder: `
+    <div class="demo ladder">
+      <div class="ld-row none">
+        <span class="ld-size">—</span>
+        <div class="ld-txt"><b>Bump a version · add a VC module</b><span>edit vc-package.json only</span></div>
+        <span class="ld-meter"><i></i><i></i><i></i></span>
+      </div>
+      <div class="ld-row s">
+        <span class="ld-size">S</span>
+        <div class="ld-txt"><b>New feature for your customization</b><span>add a C# class / extension point</span></div>
+        <span class="ld-meter"><i class="on"></i><i></i><i></i></span>
+      </div>
+      <div class="ld-row m">
+        <span class="ld-size">M</span>
+        <div class="ld-txt"><b>Documented breaking changes</b><span>resolve obsolete APIs, apply the fixes</span></div>
+        <span class="ld-meter"><i class="on"></i><i class="on"></i><i></i></span>
+      </div>
+      <div class="ld-row l">
+        <span class="ld-size">L</span>
+        <div class="ld-txt"><b>Platform update path</b><span>follow recommendations (Microsoft / .NET changes)</span></div>
+        <span class="ld-meter"><i class="on"></i><i class="on"></i><i class="on"></i></span>
+      </div>
+    </div>`,
+
+  // 15. Choose your update cadence — recommended: every stable release
+  cadenceChoice: `
+    <div class="demo cadc">
+      <div class="cadc-note">Most projects stay within the <strong>latest two stable releases</strong> — pick the rhythm that fits your team:</div>
+      <div class="cadc-opts">
+        <div class="cadc-opt">
+          <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+          <span class="lab">Every sprint</span>
+          <span class="freq"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+        </div>
+        <div class="cadc-opt">
+          <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+          <span class="lab">Every month</span>
+          <span class="freq"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+        </div>
+        <div class="cadc-opt rec">
+          <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="lab">Every stable release</span>
+          <span class="cadc-badge">★ Recommended</span>
+        </div>
+        <div class="cadc-opt">
+          <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+          <span class="lab">Once a year</span>
+          <span class="freq"><i class="on"></i><i></i><i></i><i></i></span>
+        </div>
+      </div>
+      <div class="cadc-win">
+        <span class="star"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15 9 22 9.3 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 9.3 9 9"/></svg></span>
+        <span class="t">Real case: a <b>10-year-old VC 2.x</b> solution → latest Stable + new frontend, <b>17 modules</b>, by <b>1 developer in 2 months</b> — now live.</span>
+      </div>
+    </div>`
+};
+
+/* ---------------- SLIDE DATA ---------------- */
+const slides = [
+  { type: 'cover' },
+
+  /* ===== SECTION 01 ===== */
+  {
+    type: 'divider',
+    num: 'Section 01  ·  Foundations',
+    title: 'Why a',
+    titleAccent: 'Release Strategy?',
+    desc: 'Where it comes from, what it protects, and why it lets you customize heavily without ever falling behind.',
+    statValue: '100+',
+    statLabel: 'Independent modules to keep in sync'
+  },
+  {
+    category: 'Foundations',
+    title: 'Why the strategy <span class="accent">exists</span>',
+    visualHTML: ANIM.evolve,
+    blocks: [
+      { kind: 'q', html: 'Coming from a single, monolithic platform, teams expect one big version number and one annual “upgrade project”. Virto works differently — and that difference is the whole point.' },
+      { kind: 'a', html: 'Virto Commerce is built from <strong>100+ independent modules</strong> plus the Platform. Instead of one giant release once a year, each part evolves and ships continuously. The Release Strategy is the simple set of rules that keeps all those moving parts <strong>predictable and safe to combine</strong>.' },
+      { kind: 't', html: 'You get new capabilities <em>faster</em>, with far <em>less risk</em> than a once-a-year “big bang” upgrade.' }
+    ]
+  },
+  {
+    type: 'compare',
+    category: 'Foundations',
+    title: 'Edge vs Stable — <span class="accent">which, and when</span>',
+    stable: {
+      cls: 'stable',
+      name: 'Stable',
+      cadence: '~ every 3 months',
+      pros: [
+        'Passed full <strong>regression, E2E &amp; load</strong> testing',
+        'Production-ready &amp; predictable; the CLI default',
+        '<strong>Hotfixes</strong> for the two latest stable releases',
+        'Breaking changes come with <strong>migration guides</strong>',
+        'A natural <strong>checkpoint</strong> to review new features &amp; align roadmaps'
+      ],
+      cons: [
+        'Newest features arrive <strong>later</strong> — after hardening',
+        'Moves in quarterly steps, not continuously'
+      ],
+      best: 'Production, new builds &amp; maintenance. <strong>Use each release as a moment to sit together — review what’s new and plan both roadmaps, yours and ours.</strong>'
+    },
+    edge: {
+      cls: 'edge',
+      name: 'Edge',
+      cadence: 'published daily',
+      pros: [
+        'Passed <strong>automated</strong> regression, E2E &amp; load testing',
+        'The <strong>latest features &amp; fixes</strong>, right away',
+        'Access innovation <strong>faster</strong> than the next quarter',
+        'Great for dev / staging experimentation'
+      ],
+      cons: [
+        '<strong>Lighter testing</strong> than Stable',
+        'May include adjustments or <strong>breaking changes</strong>',
+        'More frequent updates for your team to absorb'
+      ],
+      best: 'Pre-production work — <strong>pilots, MVPs &amp; proofs of concept</strong> — and early adopters who need a feature <strong>now</strong>, before it lands in the next Stable.'
+    },
+    rule: 'Rule of thumb: <strong>run Stable in production</strong>, and reach for <strong>Edge selectively</strong> when one feature can’t wait.'
+  },
+  {
+    category: 'Foundations',
+    title: 'Are we re-doing our customizations <span class="accent">every update</span>?',
+    visualHTML: ANIM.keepCustom,
+    blocks: [
+      { kind: 'q', html: 'This is the real fear coming from other systems: on many platforms, <strong>every vendor upgrade means re-applying — or rebuilding — your custom work by hand</strong>. It’s exactly why teams postpone upgrades for years and drift dangerously out of date.' },
+      { kind: 'a', html: 'Not here — and the easiest way to see why is your <strong>house</strong>. Virto maintains the <strong>building, plumbing and wiring</strong> (the Platform &amp; modules); the <strong>room you added and its furniture</strong> are yours (your custom code). When the city upgrades the water mains, you don’t rebuild your room. Because you <strong>extend</strong> Virto instead of editing it, each update flows in <em>around</em> your room — so it’s a <strong>recompile + re-test</strong>, not a rewrite.' },
+      { kind: 't', html: 'The pain you’re bracing for doesn’t exist when you extend. Customization and staying current stop being a trade-off.' }
+    ]
+  },
+  {
+    category: 'Foundations',
+    title: 'When <span class="accent">can</span> an update be more involved?',
+    visualHTML: ANIM.bigUpdates,
+    blocks: [
+      { kind: 'q', html: 'We said most updates are just a recompile + re-test. So when is an update genuinely bigger — and how honest are you about it?' },
+      { kind: 'a', html: 'A few times the step is larger, and we flag it up front:<ul><li><strong>.NET LTS, ~every 2 years.</strong> Virto follows Microsoft’s Long-Term-Support cadence; moving to a new LTS means a new target framework and refreshed dependencies across the whole solution.</li><li><strong>Yearly 3rd-party bumps.</strong> Once a year we refresh the libraries Virto builds on.</li><li><strong>Security-driven fixes.</strong> A security finding can occasionally force a fix that is breaking.</li></ul>' },
+      { kind: 't', html: 'Even then, every breaking change ships with <strong>migration notes</strong> — and we actively design to keep them <em>rare and small</em>.' }
+    ]
+  },
+
+  /* ===== SECTION 02 ===== */
+  {
+    type: 'divider',
+    num: 'Section 02  ·  Anatomy',
+    title: 'Your Project,',
+    titleAccent: 'in Layers',
+    desc: 'What “our Virto project” is actually made of — and which layers you own versus which Virto delivers and tests.',
+    statValue: '4',
+    statLabel: 'Layers in a typical project'
+  },
+  {
+    category: 'Anatomy',
+    title: 'What a customer <span class="accent">project</span> is made of',
+    visualHTML: ANIM.projectArch,
+    blocks: [
+      { kind: 'q', html: 'For a Solution Architect — what’s the real CI/CD path from source to a running environment?' },
+      { kind: 'a', html: '<strong>Git</strong> holds your custom source. <strong>CI</strong> builds your custom modules and publishes them to your <strong>Custom Modules artifact storage</strong>; Virto’s modules already live in the <strong>Virto Commerce artifact storage</strong>. Your <strong>vc-package.json</strong> picks modules + versions from <em>both</em>. <strong>CD</strong> assembles them into one <strong>container image</strong>, which then deploys to each <strong>environment</strong>.' },
+      { kind: 't', html: '<code>vc-package.json</code> is the control point — it chooses which artifacts (Virto <em>and</em> custom) go into the image. One image then promotes across Dev → Stage → Prod.' }
+    ]
+  },
+  {
+    category: 'Anatomy',
+    title: 'When does an update <span class="accent">touch your code</span>?',
+    visualHTML: ANIM.updateLadder,
+    blocks: [
+      { kind: 'q', html: 'After an update, does our custom code always need changing — or can we just bump versions?' },
+      { kind: 'a', html: 'Most of the time you simply <strong>bump a version, or add a VC module, in <code>vc-package.json</code></strong> — no custom code touched. Beyond that the work is small and predictable: <strong>S</strong> — add a C# class / extension point when your customization needs a new feature; <strong>M</strong> — resolve obsolete APIs &amp; apply the <em>documented</em> breaking-change fixes; <strong>L</strong> — follow the update path &amp; recommendations when the change comes from Microsoft / .NET.' },
+      { kind: 't', html: 'The default is a manifest edit. Touching custom code is the exception — and when it happens, its size (S / M / L) is known up front.' }
+    ]
+  },
+  {
+    category: 'Anatomy',
+    title: 'The golden rule: <span class="accent">extend, don’t modify</span>',
+    visualHTML: DG.extend,
+    blocks: [
+      { kind: 'q', html: 'How do we add our own behavior to a standard Virto module?' },
+      { kind: 'a', html: 'Follow the <strong>Open-Closed Principle</strong>: modules are <strong>open for extension, closed for modification</strong>. You create a custom module that plugs into the existing one — adding a field, an API, business logic, even database columns — without touching the original source.' },
+      { kind: 't', html: 'This one habit is what makes <em>seamless delivery</em> possible. Modify vendor code, and you inherit a merge conflict on every update.' }
+    ]
+  },
+
+  /* ===== SECTION 04 ===== */
+  {
+    type: 'divider',
+    num: 'Section 03  ·  Updating',
+    title: 'Keeping Up',
+    titleAccent: 'to Date',
+    desc: 'Why you update, what the process really looks like, and how to make it a fast, repeatable routine.',
+    statValue: '~3 mo',
+    statLabel: 'A comfortable update interval'
+  },
+  {
+    category: 'Updating',
+    title: 'Why &amp; how often to <span class="accent">update</span>',
+    visualHTML: ANIM.cadenceChoice,
+    blocks: [
+      { kind: 'q', html: 'How often should we update — and what if we’ve already drifted years behind?' },
+      { kind: 'a', html: '<strong>Choose your own path.</strong> Most projects keep within the <strong>latest two stable releases</strong>, then update on a rhythm that suits the team: every sprint, every month, <strong>every stable release (our recommendation)</strong>, or once a year. You update for <strong>security, fixes and new capabilities</strong> — and the longer you wait, the more change piles up.' },
+      { kind: 't', html: 'Even big catch-ups are doable: a <strong>10-year-old VC 2.x</strong> solution reached the latest Stable with a new frontend — <strong>17 modules, one developer, two months</strong> — and is now live.' }
+    ]
+  },
+  {
+    category: 'Updating',
+    title: 'What an update <span class="accent">looks like</span>',
+    visualHTML: DG.steps,
+    blocks: [
+      { kind: 'q', html: 'What does the team actually <em>do</em> to update?' },
+      { kind: 'a', html: 'Point the CLI at your manifest and run <code>vc-build update</code>. It fetches the latest Stable Platform and Virto modules; you then rebuild your custom modules, run your tests, and deploy. Tip: keep <code>vc-package.json</code> in source control and use a clean folder per stable update.' },
+      { kind: 't', html: 'The Virto layers swap in automatically — your work centres on your own modules.' }
+    ]
+  },
+  {
+    category: 'QA',
+    title: '<span class="accent">QA</span> — keep updating safely',
+    visualHTML: ANIM.ytests,
+    blocks: [
+      { kind: 'q', html: 'How do we keep updating regularly without fear of breaking something?' },
+      { kind: 'a', html: '<mark>Automate tests</mark> that cover <strong>your custom functionality</strong>. Virto already tests the Platform and modules, so don’t re-test what’s tested. Virto itself drives this with the open <strong>vc-testing-module</strong> — you can adopt the same approach for your extensions. <a href="https://github.com/VirtoCommerce/vc-testing-module" target="_blank" rel="noopener">github.com/VirtoCommerce/vc-testing-module</a>' },
+      { kind: 't', html: 'Don’t re-test Virto. Test the part only <em>you</em> can: your customizations.' }
+    ]
+  },
+
+  /* ===== SECTION 05 ===== */
+  {
+    type: 'divider',
+    num: 'Section 04  ·  Getting What You Need',
+    title: 'Hotfixes, Features',
+    titleAccent: '&amp; News',
+    desc: 'How to pull in an urgent fix, how to request a feature that stays Stable-compatible, and where to follow what’s new.',
+    statValue: '2',
+    statLabel: 'Latest stable releases get hotfixes'
+  },
+  {
+    category: 'Getting What You Need',
+    title: 'Getting a <span class="accent">hotfix</span> from Stable',
+    visualHTML: ANIM.hotfix,
+    blocks: [
+      { kind: 'q', html: 'We hit a bug in production. How do we get a fix without jumping a whole version?' },
+      { kind: 'a', html: 'Virto issues <strong>hotfixes for the two most recent Stable releases</strong>. A hotfix is a backwards-compatible <strong>PATCH</strong>: you bump the patch version in your manifest and update — no new features, no migration, no surprises.' },
+      { kind: 't', html: 'Stay within one of the two latest Stable lines and hotfixes reach you quickly.' }
+    ]
+  },
+  {
+    category: 'Getting What You Need',
+    title: 'Requesting a <span class="accent">Stable-compatible</span> feature',
+    visualHTML: ANIM.conveyor,
+    blocks: [
+      { kind: 'q', html: 'We need a new feature. How do we request it so it stays compatible with Stable?' },
+      { kind: 'a', html: 'Raise it with your account team or on GitHub. New features land on <strong>Edge</strong> first, get hardened, then roll into the next <strong>Stable</strong> bundle. Need it sooner? You can <strong>adopt the Edge feature onto your current Stable</strong> right away — as we’re doing today with a Loyalty feature for an enterprise customer.' },
+      { kind: 't', html: '<mark>When that feature later ships in Stable, your next update folds it in automatically</mark> — and by then it’s already <strong>tested and running in your project</strong>. No re-work, no risk.' }
+    ]
+  },
+  {
+    category: 'Getting What You Need',
+    title: 'Where to get the <span class="accent">news</span>',
+    visualHTML: ANIM.news,
+    blocks: [
+      { kind: 'q', html: 'Where do we follow what’s new each release?' },
+      { kind: 'a', html: 'The <strong>vc-release-notes</strong> repository — a slide deck just like this one, published every release. Features, fixes and “WOW” business items are announced there, each with a T-shirt size estimating integration effort. <a href="https://github.com/VirtoCommerce/vc-release-notes" target="_blank" rel="noopener">github.com/VirtoCommerce/vc-release-notes</a>' },
+      { kind: 't', html: 'Bookmark it and skim each release — <em>five minutes</em> keeps your team current.' }
+    ]
+  },
+
+  /* ===== SECTION 06 ===== */
+  {
+    type: 'divider',
+    num: 'Section 05  ·  Mindset',
+    title: 'Coming From',
+    titleAccent: 'Another Platform?',
+    desc: 'The assumptions that travel with you from other systems — and what is actually true in Virto Commerce.',
+    statValue: '5',
+    statLabel: 'Myths, busted'
+  },
+  {
+    type: 'myths',
+    category: 'Mindset',
+    title: 'Myths vs <span class="accent">reality</span>',
+    intro: 'If you’ve worked with a monolithic suite or a closed SaaS, these instincts are natural — and worth unlearning.',
+    pairs: [
+      { x: 'I must pick ONE version and stay on it for years.', y: 'You move forward a small step each quarter. Staying current is the easy path, not a big project.' },
+      { x: 'Every update breaks my customizations.', y: 'If you extend instead of modify, updates are a recompile + retest. Breaking changes are rare and documented.' },
+      { x: 'Stable means no new features.', y: 'Stable means features that are already proven. You get everything — just hardened first.' },
+      { x: 'It’s customization OR staying up to date — pick one.', y: 'Virto’s extension model is designed so you get both at the same time.' },
+      { x: 'Upgrading is a big, risky IT project.', y: 'It’s a routine, repeatable task — especially with automated tests on your custom code.' }
+    ]
+  },
+
+  /* ===== GLOSSARY ===== */
+  {
+    type: 'glossary',
+    category: 'Reference',
+    title: 'Glossary — words <span class="accent">we use</span>',
+    intro: 'A shared vocabulary so “Stable”, “module”, and “bundle” mean the same thing across the room.',
+    terms: [
+      { t: 'Platform', d: 'The core runtime everything plugs into. Maintained and tested by Virto.' },
+      { t: 'Module', d: 'A self-contained unit of functionality (Catalog, Cart, Orders…). Virto ships <strong>100+</strong>.' },
+      { t: 'Custom Module', d: 'Your own module that <strong>extends</strong> Virto modules without editing their source.' },
+      { t: '<code>vc-package.json</code>', d: 'The manifest listing the Platform + module versions for your project. Keep it in source control.' },
+      { t: 'Bundle', d: 'A curated set of module versions: <strong>Stable</strong>, <strong>Edge</strong>, or <strong>Alfa</strong>.' },
+      { t: 'PBC', d: 'Packaged Business Capability — modules grouped around a business capability as a ready building block.' },
+      { t: 'Stable', d: 'Fully tested, quarterly release. The CLI default and the recommendation for production.' },
+      { t: 'Edge', d: 'Daily releases with the latest features and lighter testing. For early adopters.' },
+      { t: 'Preview', d: 'Work-in-progress builds from pull requests. May contain bugs.' },
+      { t: 'Hotfix', d: 'A backwards-compatible PATCH for an urgent bug. Issued for the two latest Stable releases.' },
+      { t: 'SemVer', d: '<strong>MAJOR.MINOR.PATCH</strong> versioning: breaking / feature / fix.' },
+      { t: 'Seamless Delivery', d: 'Receiving vendor updates without “merge hell”, because you never modified vendor code.' },
+      { t: 'Open-Closed', d: 'Design principle: open for extension, closed for modification. The basis of customizing Virto.' },
+      { t: '<code>vc-build</code>', d: 'The Virto CLI that installs and updates the Platform and modules.' },
+      { t: 'Manifest', d: 'The published list of module versions for a channel (e.g. the Stable Module Manifest on GitHub).' }
+    ]
+  },
+
+  /* ===== SECTION 06 ===== */
+  {
+    type: 'divider',
+    num: 'Section 06  ·  Expert Service',
+    title: 'Virto Commerce',
+    titleAccent: 'Expert Service',
+    desc: 'Ways our team works alongside you and your partners — from co-building features into the platform to running updates, QA and hosting for you.',
+    statValue: '7',
+    statLabel: 'Ways our team helps you'
+  },
+  {
+    type: 'services',
+    category: 'Expert Service',
+    title: 'How our team <span class="accent">helps you</span>',
+    items: [
+      {
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+        title: 'Feature &amp; request reviews',
+        desc: 'Regular sessions on your requests. If it’s a common need, we build it <strong>into the platform</strong> — and it reaches you as a standard update.'
+      },
+      {
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>',
+        title: 'Contribution',
+        desc: 'Hand a piece of your custom functionality to the platform; <strong>we adopt and maintain it</strong> — less for your team to own.'
+      },
+      {
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>',
+        title: 'Update assistance',
+        desc: 'No time to upgrade (especially <strong>.NET</strong>)? We update it, deploy to your test env, confirm your automated tests pass, and hand it back — <strong>faster, because we built it</strong>.'
+      },
+      {
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><path d="M8 2h8M7.5 14h9"/></svg>',
+        title: 'QA Automation setup',
+        desc: 'We set up QA automation <strong>tailored to your project</strong> — yours to extend and adapt.'
+      },
+      {
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+        title: 'Solution &amp; Performance Audit',
+        tag: 'Technical Investment', tagCls: 'invest',
+        desc: 'How well your solution meets best practices, and where it can improve — a clear technical-investment review.'
+      },
+      {
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',
+        title: 'Virto Cloud Hosting',
+        desc: 'Managed, production-grade hosting — deployment, scaling, monitoring and backups handled for you.'
+      },
+      {
+        full: true, preview: true,
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1l2.1-2.1M17 7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></svg>',
+        title: 'AI / Agentic Dev, QA &amp; DevOps',
+        tag: 'Preview', tagCls: 'preview',
+        desc: 'Automated development, QA, QA-fix, delivery and updates — let AI troubleshoot, fix and build features in a far more automated way.'
+      }
+    ]
+  },
+
+  { type: 'thanks' }
+];
+
+/* ---------------- ELEMENTS / HELPERS ---------------- */
+const stage = document.getElementById('stage');
+const totalSlides = slides.length;
+let currentIndex = 0;
+
+function stripHTML(str) { return String(str).replace(/<[^>]*>/g, ''); }
+
+/* ---------------- RENDERERS ---------------- */
+function header(category) {
+  return `
+    <div class="slide-header">
+      <div class="brand">
+        <div class="brand-mark"><img src="https://avatars.githubusercontent.com/u/5762443?s=200&v=4" alt="Virto Commerce logo" /></div>
+        <div class="brand-text">
+          <span class="b1">Virto Commerce</span>
+          <span class="b2">Release Strategy — Business Guide</span>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="pill">${category || 'Release Strategy'}</span>
+      </div>
+    </div>`;
+}
+
+function renderCover() {
+  return `
+    <div class="slide cover" data-index="0">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="brand">
+            <div class="brand-mark"><img src="https://avatars.githubusercontent.com/u/5762443?s=200&v=4" alt="Virto Commerce logo" /></div>
+            <div class="brand-text">
+              <span class="b1">Virto Commerce</span>
+              <span class="b2">Enterprise Commerce Platform</span>
+            </div>
+          </div>
+          <div class="header-meta">
+            <span class="pill">Guide</span>
+            <span>For Business Users</span>
+          </div>
+        </div>
+
+        <div class="cover-body">
+          <span class="cover-eyebrow">Understand how we ship</span>
+          <h1 class="cover-title">
+            Release Strategy<br/>
+            <span class="grad">made simple</span>
+          </h1>
+          <p class="cover-sub">
+            A plain-language guide to how Virto Commerce delivers updates — what a <strong>stable release</strong> is, how often things change, what your project is made of, and how you stay current <strong>without rebuilding your custom work</strong>. Built for business users, with simple examples instead of jargon.
+          </p>
+          <div class="cover-highlights">
+            <span class="cover-chip"><span class="num">3</span>Release channels</span>
+            <span class="cover-chip"><span class="num">~3 mo</span>Between stable releases</span>
+            <span class="cover-chip"><span class="num">100+</span>Modular building blocks</span>
+            <span class="cover-chip"><span class="num">0</span>“Big bang” rewrites</span>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span class="slide-category">Virto Commerce · Release Strategy</span>
+          <span class="slide-counter">01 <span class="total">/ ${String(totalSlides).padStart(2,'0')}</span></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildDividerToc(dividerIdx) {
+  let html = '<div class="divider-toc-title">In this section</div>';
+  let n = 0;
+  for (let j = dividerIdx + 1; j < slides.length; j++) {
+    const s = slides[j];
+    if (s.type === 'divider' || s.type === 'thanks') break;
+    n++;
+    html += `<button class="dtoc-slide" data-goto="${j}">
+      <span class="dtoc-slide-num">${String(n).padStart(2,'0')}</span>
+      <span class="dtoc-slide-label">${stripHTML(s.title)}</span>
+    </button>`;
+  }
+  return html;
+}
+
+function renderDivider(slide, idx) {
+  const tocHtml = buildDividerToc(idx);
+  return `
+    <div class="slide section-divider" data-index="${idx}">
+      <div class="slide-inner">
+        <div class="divider-body">
+          <div class="divider-left">
+            <span class="divider-num">${slide.num}</span>
+            <h2 class="divider-title">${slide.title}<br/><span class="grad">${slide.titleAccent}</span></h2>
+            <p class="divider-desc">${slide.desc}</p>
+            <div class="divider-stat">
+              <span class="v">${slide.statValue}</span>
+              <span class="l">${slide.statLabel}</span>
+            </div>
+          </div>
+          <div class="divider-right">
+            <div class="shape s1"></div>
+            <div class="shape s2"></div>
+            <div class="divider-toc">${tocHtml}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderContent(slide, idx) {
+  const visualHTML = slide.visualHTML
+    ? `<div class="visual-col diagram-col">${slide.visualHTML}</div>`
+    : `<div class="visual-col">
+         <div class="no-visual">
+           <div class="icon-circle">${icons[slide.icon] || icons.spark}</div>
+           <h3>${stripHTML(slide.title)}</h3>
+           <p>${slide.category}</p>
+         </div>
+       </div>`;
+
+  const blocksHTML = slide.blocks.map(b => {
+    const m = BLOCK_META[b.kind];
+    return `
+      <div class="ps-block ${m.cls}">
+        <span class="ps-label">${m.icon}${m.label}</span>
+        <div class="ps-text">${b.html}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="slide" data-index="${idx}">
+      <div class="slide-inner">
+        ${header(slide.category)}
+        <div class="slide-body">
+          <div class="content-col">
+            <span class="topic-tag">Question &amp; Answer</span>
+            <h2 class="slide-title">${slide.title}</h2>
+            ${blocksHTML}
+          </div>
+          ${visualHTML}
+        </div>
+        <div class="slide-footer">
+          <span class="slide-category">${slide.category}</span>
+          <span class="slide-counter">${String(idx+1).padStart(2,'0')} <span class="total">/ ${String(totalSlides).padStart(2,'0')}</span></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderMyths(slide, idx) {
+  const rows = slide.pairs.map(p => `
+    <div class="myth-row">
+      <div class="myth-x">
+        <div class="myth-tag">${SI.x} Myth</div>
+        <div class="myth-text">${p.x}</div>
+      </div>
+      <div class="myth-y">
+        <div class="myth-tag">${SI.ok} Reality</div>
+        <div class="myth-text">${p.y}</div>
+      </div>
+    </div>`).join('');
+
+  return `
+    <div class="slide" data-index="${idx}">
+      <div class="slide-inner">
+        ${header(slide.category)}
+        <div class="myths-wrap">
+          <div class="myths-head">
+            <span class="topic-tag">Mindset shift</span>
+            <h2 class="slide-title">${slide.title}</h2>
+            <p class="ps-text" style="color:var(--virto-muted)">${slide.intro}</p>
+          </div>
+          <div class="myths-list">${rows}</div>
+        </div>
+        <div class="slide-footer">
+          <span class="slide-category">${slide.category}</span>
+          <span class="slide-counter">${String(idx+1).padStart(2,'0')} <span class="total">/ ${String(totalSlides).padStart(2,'0')}</span></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderCompare(slide, idx) {
+  const card = (c) => {
+    const list = (items, kind) => items.map(t =>
+      `<div class="cmp-item"><span class="cmp-ic ${kind}">${kind === 'pro' ? SI.ok : SI.x}</span><span>${t}</span></div>`
+    ).join('');
+    return `
+      <div class="cmp-card ${c.cls}">
+        <div class="cmp-top">
+          <span class="cmp-name"><span class="cmp-dot"></span>${c.name}</span>
+          <span class="cmp-cad">${c.cadence}</span>
+        </div>
+        <div>
+          <div class="cmp-sec-label">Pros</div>
+          <div class="cmp-list">${list(c.pros, 'pro')}</div>
+        </div>
+        <div>
+          <div class="cmp-sec-label">Trade-offs</div>
+          <div class="cmp-list">${list(c.cons, 'con')}</div>
+        </div>
+        <div class="cmp-best"><span class="lab">Recommended for</span>${c.best}</div>
+      </div>`;
+  };
+  return `
+    <div class="slide" data-index="${idx}">
+      <div class="slide-inner">
+        ${header(slide.category)}
+        <div class="cmp-wrap">
+          <div class="cmp-head">
+            <span class="topic-tag">Choosing a channel</span>
+            <h2 class="slide-title">${slide.title}</h2>
+          </div>
+          <div class="cmp-grid">
+            ${card(slide.stable)}
+            ${card(slide.edge)}
+          </div>
+          <div class="cmp-rule">${slide.rule}</div>
+        </div>
+        <div class="slide-footer">
+          <span class="slide-category">${slide.category}</span>
+          <span class="slide-counter">${String(idx+1).padStart(2,'0')} <span class="total">/ ${String(totalSlides).padStart(2,'0')}</span></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderServices(slide, idx) {
+  const card = s => `
+    <div class="svc-card ${s.full ? 'full' : ''} ${s.preview ? 'preview' : ''}">
+      <span class="svc-ic">${s.icon}</span>
+      <div class="svc-body">
+        <div class="svc-title">${s.title}${s.tag ? `<span class="svc-tag ${s.tagCls || ''}">${s.tag}</span>` : ''}</div>
+        <div class="svc-desc">${s.desc}</div>
+      </div>
+    </div>`;
+  return `
+    <div class="slide" data-index="${idx}">
+      <div class="slide-inner">
+        ${header(slide.category)}
+        <div class="svc-wrap">
+          <div class="svc-head">
+            <span class="svc-eyebrow">Work with our team</span>
+            <h2 class="slide-title">${slide.title}</h2>
+          </div>
+          <div class="svc-grid">${slide.items.map(card).join('')}</div>
+        </div>
+        <div class="slide-footer">
+          <span class="slide-category">${slide.category}</span>
+          <span class="slide-counter">${String(idx+1).padStart(2,'0')} <span class="total">/ ${String(totalSlides).padStart(2,'0')}</span></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderGlossary(slide, idx) {
+  const cards = slide.terms.map(tm => `
+    <div class="gloss-card">
+      <div class="gloss-term">${tm.t}</div>
+      <div class="gloss-def">${tm.d}</div>
+    </div>`).join('');
+
+  return `
+    <div class="slide" data-index="${idx}">
+      <div class="slide-inner">
+        ${header(slide.category)}
+        <div class="gloss-wrap">
+          <div class="gloss-head">
+            <span class="gloss-eyebrow">Reference</span>
+            <h2 class="slide-title">${slide.title}</h2>
+            <p class="ps-text" style="color:var(--virto-muted)">${slide.intro}</p>
+          </div>
+          <div class="gloss-grid">${cards}</div>
+        </div>
+        <div class="slide-footer">
+          <span class="slide-category">${slide.category}</span>
+          <span class="slide-counter">${String(idx+1).padStart(2,'0')} <span class="total">/ ${String(totalSlides).padStart(2,'0')}</span></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderThanks(idx) {
+  return `
+    <div class="slide thanks" data-index="${idx}">
+      <div class="slide-inner">
+        <div class="thanks-body">
+          <span class="thanks-eyebrow">The strategy works</span>
+          <h1 class="thanks-title">Stay <span class="grad">current</span></h1>
+          <p class="thanks-sub">
+            Customize boldly, update in small quarterly steps, and let Virto’s tested releases carry you forward. The approach is proven in production — and we’re always open to improving the process with you.
+          </p>
+          <div class="thanks-cta">
+            <a class="cta-btn" href="https://docs.virtocommerce.org/platform/developer-guide/latest/Updating-Virto-Commerce-Based-Project/release-strategy-overview/" target="_blank" rel="noopener">
+              Release Strategy docs
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a class="cta-btn outline" href="https://github.com/VirtoCommerce/vc-release-notes" target="_blank" rel="noopener">Release notes</a>
+            <a class="cta-btn outline" href="https://github.com/VirtoCommerce/vc-testing-module" target="_blank" rel="noopener">Testing module</a>
+          </div>
+          <div class="thanks-footer">virtocommerce.com · Release Strategy for Business Users</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function render() {
+  let html = '';
+  slides.forEach((s, i) => {
+    if (s.type === 'cover') html += renderCover();
+    else if (s.type === 'divider') html += renderDivider(s, i);
+    else if (s.type === 'myths') html += renderMyths(s, i);
+    else if (s.type === 'compare') html += renderCompare(s, i);
+    else if (s.type === 'glossary') html += renderGlossary(s, i);
+    else if (s.type === 'services') html += renderServices(s, i);
+    else if (s.type === 'thanks') html += renderThanks(i);
+    else html += renderContent(s, i);
+  });
+  stage.innerHTML = html;
+  document.getElementById('totalSlides').textContent = String(totalSlides).padStart(2,'0');
+  document.querySelectorAll('[data-goto]').forEach(btn => {
+    btn.addEventListener('click', (e) => { e.stopPropagation(); showSlide(parseInt(btn.dataset.goto, 10)); });
+  });
+  showSlide(0);
+}
+
+function showSlide(i) {
+  if (i < 0 || i >= totalSlides) return;
+  currentIndex = i;
+  document.querySelectorAll('.slide').forEach((el, idx) => el.classList.toggle('active', idx === i));
+  document.getElementById('currentSlide').textContent = String(i+1).padStart(2,'0');
+  document.getElementById('progressBar').style.width = `${((i+1)/totalSlides)*100}%`;
+  document.getElementById('prevBtn').disabled = i === 0;
+  document.getElementById('nextBtn').disabled = i === totalSlides - 1;
+  if (tocOpen) updateTocActive();
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => showSlide(currentIndex - 1));
+document.getElementById('nextBtn').addEventListener('click', () => showSlide(currentIndex + 1));
+document.querySelectorAll('.jump-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.jump;
+    showSlide(target === 'end' ? totalSlides - 1 : 0);
+  });
+});
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); showSlide(currentIndex + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); showSlide(currentIndex - 1); }
+  else if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+  else if (e.key === 'End') { e.preventDefault(); showSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 't' || e.key === 'T') { toggleToc(); }
+  else if (e.key === 'Escape') { closeToc(); }
+});
+
+document.getElementById('hintPrev').addEventListener('click', () => showSlide(currentIndex - 1));
+document.getElementById('hintNext').addEventListener('click', () => showSlide(currentIndex + 1));
+document.getElementById('hintFullscreen').addEventListener('click', toggleFullscreen);
+document.getElementById('hintToc').addEventListener('click', toggleToc);
+
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', (e) => {
+  const delta = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(delta) > 60) { if (delta < 0) showSlide(currentIndex + 1); else showSlide(currentIndex - 1); }
+});
+
+/* ---------------- TOC PANEL ---------------- */
+const tocPanel = document.getElementById('tocPanel');
+const tocBackdrop = document.getElementById('tocBackdrop');
+const tocEntries = document.getElementById('tocEntries');
+const tocCloseBtn = document.getElementById('tocClose');
+const tocToggleNavBtn = document.getElementById('tocToggleNav');
+let tocOpen = false;
+
+function renderTocPanel() {
+  let html = '';
+  for (let i = 0; i < slides.length; i++) {
+    const s = slides[i];
+    if (s.type === 'cover') {
+      html += `<button class="toc-entry" data-toc-slide="0"><span class="toc-entry-num">—</span><div class="toc-entry-body"><div class="toc-entry-title">Cover</div></div></button>`;
+    } else if (s.type === 'divider') {
+      const label = (s.title + ' ' + s.titleAccent).replace(/&amp;/g, '&');
+      const children = [];
+      for (let j = i + 1; j < slides.length; j++) {
+        if (slides[j].type === 'divider' || slides[j].type === 'thanks') break;
+        children.push(j);
+      }
+      html += `<button class="toc-entry" data-toc-slide="${i}">
+        <span class="toc-entry-num">${s.num.replace(/Section\s*/i,'').replace(/\s*·.*/, '')}</span>
+        <div class="toc-entry-body">
+          <div class="toc-entry-title">${label}</div>
+          <div class="toc-entry-count">${children.length} slide${children.length !== 1 ? 's' : ''}</div>
+        </div>
+      </button>`;
+      if (children.length) {
+        html += '<div class="toc-sub-entries">';
+        children.forEach(j => { html += `<button class="toc-sub-entry" data-toc-slide="${j}">${stripHTML(slides[j].title)}</button>`; });
+        html += '</div>';
+      }
+    } else if (s.type === 'thanks') {
+      html += `<button class="toc-entry" data-toc-slide="${i}"><span class="toc-entry-num">—</span><div class="toc-entry-body"><div class="toc-entry-title">Wrap-up</div></div></button>`;
+    }
+  }
+  tocEntries.innerHTML = html;
+  tocEntries.querySelectorAll('[data-toc-slide]').forEach(btn => {
+    btn.addEventListener('click', () => { closeToc(); showSlide(parseInt(btn.dataset.tocSlide, 10)); });
+  });
+}
+
+function updateTocActive() {
+  let activeSection = 0;
+  for (let i = currentIndex; i >= 0; i--) {
+    if (i === 0 || slides[i].type === 'divider' || slides[i].type === 'thanks') { activeSection = i; break; }
+  }
+  tocEntries.querySelectorAll('.toc-entry').forEach(btn => {
+    const idx = parseInt(btn.dataset.tocSlide, 10);
+    const isActive = idx === activeSection;
+    btn.classList.toggle('active', isActive);
+    const subs = btn.nextElementSibling;
+    if (subs && subs.classList.contains('toc-sub-entries')) subs.classList.toggle('expanded', isActive);
+  });
+  tocEntries.querySelectorAll('.toc-sub-entry').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.tocSlide, 10) === currentIndex);
+  });
+}
+
+function openToc() {
+  tocOpen = true;
+  tocPanel.classList.add('open');
+  tocBackdrop.classList.add('open');
+  updateTocActive();
+  const first = tocEntries.querySelector('.toc-entry.active') || tocEntries.querySelector('.toc-entry');
+  if (first) first.focus();
+}
+function closeToc() {
+  if (!tocOpen) return;
+  tocOpen = false;
+  tocPanel.classList.remove('open');
+  tocBackdrop.classList.remove('open');
+  tocToggleNavBtn.focus();
+}
+function toggleToc() { if (tocOpen) closeToc(); else openToc(); }
+
+tocCloseBtn.addEventListener('click', closeToc);
+tocBackdrop.addEventListener('click', closeToc);
+tocToggleNavBtn.addEventListener('click', toggleToc);
+
+let tocTouchStartX = 0;
+tocPanel.addEventListener('touchstart', (e) => { tocTouchStartX = e.changedTouches[0].screenX; });
+tocPanel.addEventListener('touchend', (e) => { if (e.changedTouches[0].screenX - tocTouchStartX < -60) closeToc(); });
+
+render();
+renderTocPanel();
+</script>
+</body>
+</html>
