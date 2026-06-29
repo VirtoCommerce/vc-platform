@@ -61,7 +61,7 @@ public class ValueObjectBenchmarks
             OptionalRank = i % 3 == 0 ? null : i,
             IsActive = i % 2 == 0,
             // Half the instances leave Tags null (the null branch); the rest hit the list branch.
-            Tags = i % 2 == 0 ? null : new List<string> { "a" + i, "b" + i },
+            Tags = i % 2 == 0 ? null : ["a" + i, "b" + i],
         };
     }
 
