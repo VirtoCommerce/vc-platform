@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Butikken din på et øyeblikk"
+    },
     "menu": {
       "home": "Hjem",
       "browse": "Bla gjennom",
@@ -1144,6 +1147,10 @@
           "FullDateThresholdUnit": {
             "description": "Enhet for terskel for fullt datoformat",
             "title": "Enhet for terskel for fullt datoformat"
+          },
+          "WidgetColorMarkers": {
+            "title": "Fargemarkører for moduler",
+            "description": "Viser en farget stripe på hver dashbord- og blade-widget for å skille dem enklere."
           },
           "Customization": {
             "description": "JSON som inneholder tilpasningsinnstillinger for administratorens brukergrensesnitt",

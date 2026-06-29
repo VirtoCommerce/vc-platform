@@ -21,6 +21,9 @@
     "navigation": {
       "back": "Back"
     },
+    "dashboard": {
+      "subtitle": "Your store at a glance"
+    },
     "blades": {
       "developer-tools": {
         "title": "Developer tools"
@@ -1145,6 +1148,10 @@
           "FullDateThresholdUnit": {
             "description": "Unit of full date threshold",
             "title": "Full date threshold unit"
+          },
+          "WidgetColorMarkers": {
+            "title": "Widget color markers",
+            "description": "Show a colored accent bar on each dashboard and blade widget so they're easier to tell apart at a glance."
           },
           "Customization": {
             "description": "JSON contains personalization settings of manager UI",

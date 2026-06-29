@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Kauppasi yhdellä silmäyksellä"
+    },
     "menu": {
       "home": "Koti",
       "browse": "Selaa",
@@ -1144,6 +1147,10 @@
           "FullDateThresholdUnit": {
             "description": "Täyden päivämäärän rajan yksikkö",
             "title": "Täyden päivämäärän rajayksikkö"
+          },
+          "WidgetColorMarkers": {
+            "title": "Widgetien värimerkinnät",
+            "description": "Näyttää värillisen korostuspalkin jokaisessa työpöytä- ja blade-widgetissä, jotta ne erottuvat helpommin."
           },
           "Customization": {
             "description": "JSON sisältää hallinnan käyttöliittymän personointiasetukset",

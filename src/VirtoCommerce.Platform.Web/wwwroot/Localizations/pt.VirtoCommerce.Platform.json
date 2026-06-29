@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "A sua loja num relance"
+    },
     "menu": {
       "home": "Início",
       "browse": "Navegar",
@@ -1143,6 +1146,10 @@
           "FullDateThresholdUnit": {
             "description": "Unidade do limite para data completa",
             "title": "Unidade do limite para data completa"
+          },
+          "WidgetColorMarkers": {
+            "title": "Marcadores de cor dos widgets",
+            "description": "Mostra uma barra colorida em cada widget do painel e dos blades para os distinguir num relance."
           },
           "Customization": {
             "description": "JSON contém configurações de personalização da interface do gerenciador",
