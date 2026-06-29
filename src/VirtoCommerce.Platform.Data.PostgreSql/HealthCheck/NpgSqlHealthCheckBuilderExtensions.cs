@@ -219,6 +219,6 @@ public static class NpgSqlHealthCheckBuilderExtensions
 
         return versionNum >= minServerVersionNum
             ? HealthCheckResult.Healthy($"PostgreSQL OK")
-            : HealthCheckResult.Unhealthy($"PostgreSQL {versionNum} is not supported. Virto Commerce requires PostgreSQL ");
+            : HealthCheckResult.Unhealthy($"PostgreSQL {versionNum} is not supported. Virto Commerce requires PostgreSQL 18+.");
     }
 }
