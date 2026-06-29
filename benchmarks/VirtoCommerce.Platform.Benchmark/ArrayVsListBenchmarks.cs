@@ -1,5 +1,4 @@
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
 using GenFu;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,12 +45,5 @@ namespace ArrayVsListBench
 
         [Benchmark]
         public IList<Something> BenchEFToArray() => repo.Somethings.ToArray();
-    }
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            BenchmarkRunner.Run<ArrayVsList>();
-        }
     }
 }
