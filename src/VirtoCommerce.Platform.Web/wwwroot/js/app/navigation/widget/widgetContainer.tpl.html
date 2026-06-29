@@ -1,7 +1,7 @@
 <div>
-    <div ng-if="widgets.length > 0" gridster="gridsterOpts">
+    <div ng-if="widgets.length > 0" gridster="gridsterOpts" ng-class="{'__widget-markers': $root.widgetColorMarkersEnabled !== false}">
         <ul class="list">
-            <li style="line-height: 120px;" class="list-item" ng-class="widget.UIclass" ng-repeat="widget in widgets" va-permission='{{widget.permission}}' securityScopes='{{widget.scopes}}' gridster-item row="$storage[getKey('row', widget)]" col="$storage[getKey('col', widget)]" size-x="widget.size[0]" size-y="widget.size[1]">
+            <li ng-attr-style="line-height:120px; --widget-accent: {{getWidgetColor(widget)}};" class="list-item" ng-class="widget.UIclass" ng-repeat="widget in widgets" va-permission='{{widget.permission}}' securityScopes='{{widget.scopes}}' gridster-item row="$storage[getKey('row', widget)]" col="$storage[getKey('col', widget)]" size-x="widget.size[0]" size-y="widget.size[1]">
                 <div va-widget="widget" ng-include="widget.template"></div>
             </li>
         </ul>

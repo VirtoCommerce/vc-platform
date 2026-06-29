@@ -207,6 +207,11 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             })
         });
 
+        // Per-widget color markers on/off (default on; stays enabled if the setting is unavailable).
+        settings.get({ id: 'VirtoCommerce.Platform.UI.WidgetColorMarkers' }, function (setting) {
+            $rootScope.widgetColorMarkersEnabled = setting.value !== false;
+        });
+
         // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
         $scope.initExpiration = function (x) {
             if (x && x.expirationDate) {
