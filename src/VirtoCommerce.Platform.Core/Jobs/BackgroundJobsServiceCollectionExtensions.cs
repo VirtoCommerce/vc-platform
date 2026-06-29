@@ -28,7 +28,11 @@ public static class BackgroundJobsServiceCollectionExtensions
         where TPayload : class
         where THandler : class, IBackgroundJobHandler<TPayload>
     {
-        services.AddTransient<IBackgroundJobHandler<TPayload>, THandler>();
+        // Register the concrete handler so it resolves by type for handler-explicit enqueue (Enqueue<THandler>) —
+        // this is what lets several handlers share one payload type. Also bind the payload interface to the same
+        // concrete handler for payload-typed enqueue (Enqueue<TPayload>); later registrations win there (partner override).
+        services.AddTransient<THandler>();
+        services.AddTransient<IBackgroundJobHandler<TPayload>>(sp => sp.GetRequiredService<THandler>());
         return services;
     }
 
@@ -54,9 +58,12 @@ public static class BackgroundJobsServiceCollectionExtensions
             throw new ArgumentException($"{handlerType.Name} must implement IBackgroundJobHandler<TPayload>.", nameof(THandler));
         }
 
+        // Register the concrete handler so it resolves by type for handler-explicit enqueue (Enqueue<THandler>),
+        // then bind each closed payload interface to that concrete handler for payload-typed enqueue.
+        services.AddTransient(handlerType);
         foreach (var serviceType in handlerInterfaces)
         {
-            services.AddTransient(serviceType, handlerType);
+            services.AddTransient(serviceType, sp => sp.GetRequiredService(handlerType));
         }
 
         return services;
@@ -74,6 +81,23 @@ public static class BackgroundJobsServiceCollectionExtensions
         where THandler : class, IBackgroundJobHandler<TPayload>
         => services.AddRecurringJob<TPayload, THandler>(
             () => AbstractTypeFactory<TPayload>.TryCreateInstance(), configure);
+
+    /// <summary>
+    /// Registers an <see cref="IBackgroundJobHandler{TPayload}"/> AND a recurring (cron) schedule that enqueues the
+    /// supplied <paramref name="payload"/> on each occurrence — the simple way to pass parameters (e.g.
+    /// <c>AddRecurringJob&lt;SendDigestPayload, SendDigestJob&gt;(new SendDigestPayload { Top = 10 }, s =&gt; ...)</c>)
+    /// without writing a factory. The same instance is serialized each occurrence; use the
+    /// <see cref="AddRecurringJob{TPayload, THandler}(IServiceCollection, System.Func{TPayload}, Action{IRecurringJobScheduleBuilder})"/>
+    /// factory overload when each run needs a fresh or dynamic value (e.g. a timestamp).
+    /// </summary>
+    public static IServiceCollection AddRecurringJob<TPayload, THandler>(
+        this IServiceCollection services, TPayload payload, Action<IRecurringJobScheduleBuilder> configure)
+        where TPayload : class
+        where THandler : class, IBackgroundJobHandler<TPayload>
+    {
+        ArgumentNullException.ThrowIfNull(payload);
+        return services.AddRecurringJob<TPayload, THandler>(() => payload, configure);
+    }
 
     /// <summary>
     /// Registers a recurring (cron) job, inferring the payload type from the handler's
@@ -124,8 +148,9 @@ public static class BackgroundJobsServiceCollectionExtensions
         var builder = new RecurringJobScheduleBuilder();
         configure(builder);
 
+        // Enqueue to the specific handler each occurrence, so the recurring job's action is explicit.
         var registration = builder.Build((jobs, options, cancellationToken) =>
-            jobs.Enqueue(payloadFactory(), options, cancellationToken));
+            jobs.Enqueue<THandler>(payloadFactory(), options, cancellationToken));
 
         services.AddSingleton(registration);
 

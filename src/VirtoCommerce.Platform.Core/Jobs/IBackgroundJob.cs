@@ -1,6 +1,4 @@
 #nullable enable
-using System;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,21 +15,20 @@ namespace VirtoCommerce.Platform.Core.Jobs;
 /// </summary>
 public interface IBackgroundJob
 {
-    /// <summary>Enqueue a fire-and-forget job expressed as a method call. Requires the Hangfire provider.</summary>
-    /// <returns>The engine-specific job id.</returns>
-    string Enqueue(Expression<Action> methodCall);
-
-    /// <summary>Enqueue a fire-and-forget asynchronous job expressed as a method call. Requires the Hangfire provider.</summary>
-    /// <returns>The engine-specific job id.</returns>
-    string Enqueue(Expression<Func<Task>> methodCall);
-
     /// <summary>
-    /// Enqueue a message-based job: a serializable <paramref name="payload"/> handled by a registered
-    /// <see cref="IBackgroundJobHandler{TPayload}"/>. Works on any active engine (Hangfire, RabbitMQ, …), with or
-    /// without progress (see <see cref="EnqueueOptions.ReportProgress"/>).
+    /// Enqueue a message-based job: <typeparamref name="THandler"/> processes the supplied <paramref name="payload"/>
+    /// on the active engine (Hangfire, RabbitMQ, …), with or without progress (see
+    /// <see cref="EnqueueOptions.ReportProgress"/>). Naming the handler makes the enqueue self-documenting and lets
+    /// several handlers share one payload type. The payload is validated against the handler at enqueue time:
+    /// <typeparamref name="THandler"/> must implement <see cref="IBackgroundJobHandler{TPayload}"/> for the payload's
+    /// runtime type, otherwise this throws.
     /// </summary>
+    /// <typeparam name="THandler">The handler that will run the payload.</typeparam>
+    /// <param name="payload">The serializable payload instance; its runtime type selects the handler's payload contract.</param>
+    /// <param name="options">Per-enqueue options (queue, title, progress, retries, unique key).</param>
+    /// <param name="cancellationToken">Cancels the enqueue operation.</param>
     /// <returns>The engine-specific job id.</returns>
-    Task<string> Enqueue<TPayload>(TPayload payload, EnqueueOptions? options = null,
+    Task<string> Enqueue<THandler>(object payload, EnqueueOptions? options = null,
         CancellationToken cancellationToken = default)
-        where TPayload : class;
+        where THandler : class;
 }

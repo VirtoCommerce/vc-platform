@@ -505,7 +505,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             else
             {
                 // Enqueue the message-based job; the active engine dispatches it to ModuleBackgroundJobHandler.
-                await _backgroundJob.Enqueue(payload);
+                await _backgroundJob.Enqueue<ModuleBackgroundJobHandler>(payload);
             }
 
             return notification;
