@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Ihr Shop auf einen Blick"
+    },
     "menu": {
       "home": "Startseite",
       "browse": "Durchsuchen",
@@ -1059,6 +1062,10 @@
           "FullDateThresholdUnit": {
             "description": "Einheit des Schwellenwerts für vollständiges Datum",
             "title": "Einheit des Schwellenwerts für vollständiges Datum"
+          },
+          "WidgetColorMarkers": {
+            "title": "Farbmarkierungen für Widgets",
+            "description": "Zeigt an jedem Dashboard- und Blade-Widget einen farbigen Akzentstreifen an, damit Widgets leichter zu unterscheiden sind."
           },
           "Customization": {
             "description": "JSON enthält Personalisierungseinstellungen der Manager-Benutzeroberfläche",
