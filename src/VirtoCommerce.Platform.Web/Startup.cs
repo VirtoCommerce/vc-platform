@@ -545,6 +545,11 @@ namespace VirtoCommerce.Platform.Web
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = platformOptions.ApplicationCookieName;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.ExpireTimeSpan = authorizationOptions?.CookieExpireTimeSpan ?? TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = authorizationOptions?.CookieSlidingExpiration ?? true;
                 options.LoginPath = "/";
             });
 
