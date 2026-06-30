@@ -651,7 +651,7 @@ namespace VirtoCommerce.Platform.Web
                         tags: ["Database"]);
                     break;
                 case "PostgreSql":
-                    healthBuilder.AddNpgSql(connectionString,
+                    healthBuilder.AddNpgSqlVersionCheck(connectionString,
                         name: "PostgreSql health",
                         failureStatus: HealthStatus.Unhealthy,
                         tags: ["Database"]);
