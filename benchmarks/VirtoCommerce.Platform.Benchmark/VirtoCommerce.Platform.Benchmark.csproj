@@ -7,6 +7,9 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <!-- Not a NuGet package: the root Directory.Build.props treats any non-"Tests" project as packable. -->
     <IsPackable>false</IsPackable>
+    <!-- Exclude from SonarCloud: benchmark code legitimately uses magic params, static-field setup, etc.;
+         it is dev tooling, not production code subject to the quality gate. -->
+    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>

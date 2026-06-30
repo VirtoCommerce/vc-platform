@@ -194,23 +194,27 @@ public static class ReflectionUtility
             else if (value is not string && value is IEnumerable enumerable)
             {
                 // Handle collections and arrays
-                foreach (var item in enumerable)
-                {
-                    if (item is T)
-                    {
-                        GetFlatObjectsListWithInterface(item, resultList, allObjects);
-                    }
-                }
+                FlattenEnumerable(enumerable, resultList, allObjects);
             }
         }
     }
 
-    // Builds the visit plan once per (source runtime type, target type) pair. Indexers are skipped (the
-    // legacy single-object branch would have thrown on a T-assignable indexer; the collection branch
-    // already skipped them). A property is a "single" when its declared type is assignable to T;
-    // otherwise it is a collection candidate only when its runtime value can be a non-string IEnumerable
-    // (any reference type except string, or a value type that implements IEnumerable). Property order is
-    // preserved so the flattened result order is identical to the legacy implementation.
+    private static void FlattenEnumerable<T>(IEnumerable enumerable, List<T> resultList, HashSet<object> allObjects)
+    {
+        foreach (var item in enumerable)
+        {
+            if (item is T)
+            {
+                GetFlatObjectsListWithInterface(item, resultList, allObjects);
+            }
+        }
+    }
+
+    // Builds the visit plan once per source-runtime-type and target-type pair, in declared property order
+    // so the flattened result matches the original implementation. Indexer properties are skipped. A
+    // property counts as a single object when its declared type is assignable to the target type.
+    // Otherwise it counts as a collection candidate when its runtime value is a non-string IEnumerable,
+    // meaning any reference type other than string, or a value type that implements IEnumerable.
     private static FlattenEntry[] GetFlattenPlan(Type sourceType, Type targetType)
     {
         return _flattenPlans.GetOrAdd((sourceType, targetType), static key => BuildFlattenPlan(key.Source, key.Target));

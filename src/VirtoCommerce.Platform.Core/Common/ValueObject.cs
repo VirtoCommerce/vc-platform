@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -170,6 +171,8 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
         return _componentAccessors.GetOrAdd(type, BuildComponentAccessors);
     }
 
+    [SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null",
+        Justification = "null is the sentinel for 'this type uses the legacy component path'; an empty array would mean 'fast path with zero components', which is a different behaviour.")]
     private static ComponentAccessor[] BuildComponentAccessors(Type type)
     {
         // The fast path enumerates the public properties directly, so it is only valid when the type
@@ -188,6 +191,8 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
             .ToArray();
     }
 
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields",
+        Justification = "Reflection only detects whether a subtype overrides the protected virtual GetEqualityComponents/GetProperties (the fast-path gate); it neither invokes them nor widens their accessibility.")]
     private static bool IsOverridden(Type type, string methodName)
     {
         var method = type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
