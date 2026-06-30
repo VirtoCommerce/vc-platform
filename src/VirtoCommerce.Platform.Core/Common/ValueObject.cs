@@ -132,11 +132,15 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
 
     protected virtual IEnumerable<PropertyInfo> GetProperties()
     {
-        return _typeProperties.GetOrAdd(GetType(),
-            type => type.GetTypeInfo()
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .OrderBy(p => p.Name)
-                .ToList());
+        return _typeProperties.GetOrAdd(GetType(), type => GetProperties(type).ToList());
+    }
+
+    private static IEnumerable<PropertyInfo> GetProperties(Type type)
+    {
+        return type
+            .GetTypeInfo()
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .OrderBy(p => p.Name);
     }
 
     // PropertyInfo.DeclaringType is typed as nullable, but for properties enumerated from a type it is
@@ -184,11 +188,7 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
             return null;
         }
 
-        return type.GetTypeInfo()
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .OrderBy(p => p.Name)
-            .Select(ComponentAccessor.Create)
-            .ToArray();
+        return GetProperties(type).Select(ComponentAccessor.Create).ToArray();
     }
 
     [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields",
