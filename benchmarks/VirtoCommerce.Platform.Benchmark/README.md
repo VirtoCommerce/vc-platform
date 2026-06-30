@@ -1,16 +1,18 @@
 # VirtoCommerce.Platform.Benchmark
 
-BenchmarkDotNet micro-benchmarks for `VirtoCommerce.Platform.Core` primitives. Consolidates the
-previously separate `Benchmark.AbstractTypeFactory` and `Benchmark.ArrayVsList` projects and adds the
-`ValueObject` equality/hashing benchmarks.
+BenchmarkDotNet micro-benchmarks for `VirtoCommerce.Platform.Core` primitives. Consolidates what used
+to be several separate benchmark projects into one.
 
-Benchmark classes:
+## Layout
 
-- `ValueObjectBenchmarks` — structural equality / hashing / cache-key cost over a large collection of a
-  `ValueObject` subtype (`GetHashCode`, `Distinct()`, `Equals`, `GetCacheKey`).
-- `AbstractTypeFactoryBenchmarks` / `ThreadSafetyOverheadBenchmarks` — `AbstractTypeFactory<T>` creation
-  paths vs baselines.
-- `ArrayVsList` — array-vs-list materialization micro-benchmarks.
+Each benchmark suite lives in its own subfolder with a matching `VirtoCommerce.Platform.Benchmark.<Suite>`
+namespace (e.g. `AbstractTypeFactory/`, `ArrayVsList/`, `ValueObjects/`, `ReflectionUtility/`). To see the
+suites and benchmarks that actually exist, ask the runner rather than trusting a hand-maintained list:
+
+```bash
+cd benchmarks/VirtoCommerce.Platform.Benchmark
+dotnet run -c Release -- --list tree
+```
 
 ## Prerequisites
 
@@ -24,8 +26,8 @@ cd benchmarks/VirtoCommerce.Platform.Benchmark
 # All benchmarks
 dotnet run -c Release -- --filter '*'
 
-# A specific class
-dotnet run -c Release -- --filter '*ValueObjectBenchmarks*'
+# A suite or class (glob over the fully-qualified name)
+dotnet run -c Release -- --filter '*ValueObject*'
 
 # A specific method
 dotnet run -c Release -- --filter '*ValueObjectBenchmarks.HashCode_Sum'
