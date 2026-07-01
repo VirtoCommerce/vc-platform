@@ -1,47 +1,47 @@
 using BenchmarkDotNet.Attributes;
-using GenFu;
 using System.Collections.Generic;
 using System.Linq;
+using A = GenFu.GenFu;
 
 namespace VirtoCommerce.Platform.Benchmark.ArrayVsList;
 
 [MemoryDiagnoser]
 public class ArrayVsListBenchmarks
 {
-    private List<string> DataList;
-    private string[] DataArray;
-    private Repo repo;
+    private List<string> _dataList;
+    private string[] _dataArray;
+    private Repo _repo;
 
     [GlobalSetup]
     public void Setup()
     {
-        var n = 10000;
-        DataList = A.ListOf<Something>(n).Select(x => x.Id).ToList();
-        DataArray = DataList.ToArray();
-        repo = new Repo();
-        repo.Ctx.AddRange(A.ListOf<Something>(n));
-        repo.Ctx.SaveChanges();
+        const int n = 10000;
+        _dataList = A.ListOf<Something>(n).Select(x => x.Id).ToList();
+        _dataArray = _dataList.ToArray();
+        _repo = new Repo();
+        _repo.Ctx.AddRange(A.ListOf<Something>(n));
+        _repo.Ctx.SaveChanges();
     }
 
 
     [Benchmark]
-    public List<string> BenchArrayToList() => DataArray.ToList();
+    public List<string> BenchArrayToList() => _dataArray.ToList();
 
     [Benchmark]
-    public string[] BenchArrayToArray() => DataArray.ToArray();
+    public string[] BenchArrayToArray() => _dataArray.ToArray();
 
     [Benchmark]
-    public List<string> BenchListToList() => DataList.ToList();
+    public List<string> BenchListToList() => _dataList.ToList();
 
     [Benchmark]
-    public string[] BenchListoArray() => DataList.ToArray();
+    public string[] BenchListToArray() => _dataList.ToArray();
 
     [Benchmark]
-    public List<string> BenchListFromArray() => new(DataArray);
+    public List<string> BenchListFromArray() => [.._dataArray];
 
     [Benchmark]
-    public IList<Something> BenchEFToList() => repo.Somethings.ToList();
+    public IList<Something> BenchEfToList() => _repo.Somethings.ToList();
 
     [Benchmark]
-    public IList<Something> BenchEFToArray() => repo.Somethings.ToArray();
+    public IList<Something> BenchEfToArray() => _repo.Somethings.ToArray();
 }

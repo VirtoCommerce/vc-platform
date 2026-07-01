@@ -29,6 +29,8 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
 
     private delegate bool ValueEqualityCheck(object left, object right);
 
+    [SuppressMessage("Minor Code Smell", "S3267:Loops should be simplified with \"LINQ\" expressions",
+        Justification = "This is the equality hot path. A LINQ 'accessors.All(a => a.AreEqual(this, obj))' allocates a closure capturing 'this'/'obj' on every Equals call — the exact per-call allocation this compiled fast path exists to avoid.")]
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(this, obj))
@@ -49,6 +51,7 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
         var accessors = GetComponentAccessors(GetType());
         if (accessors is not null)
         {
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var accessor in accessors)
             {
                 if (!accessor.AreEqual(this, obj))
@@ -99,19 +102,16 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
     {
         var properties = GetProperties().Select(x => $"{x.Name}: {GetPropertyGetter(x)(this)}");
 
-        return $"{string.Join(", ", properties)}";
+        return $"{{{string.Join(", ", properties)}}}";
     }
 
     public virtual string GetCacheKey()
     {
-        var keyValues = GetEqualityComponents().Select(x =>
+        var keyValues = GetEqualityComponents().Select(obj => obj switch
         {
-            if (x is string text)
-            {
-                return $"'{text}'";
-            }
-
-            return x is ICacheKey cacheKey ? cacheKey.GetCacheKey() : x?.ToString();
+            string text => $"'{text}'",
+            ICacheKey cacheKey => cacheKey.GetCacheKey(),
+            _ => obj?.ToString(),
         });
 
         return string.Join("|", keyValues);

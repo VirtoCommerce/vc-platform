@@ -12,23 +12,20 @@ public class InMemCtx : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Something>(o =>
+        modelBuilder.Entity<Something>(builder =>
        {
-           o.Property(o => o.Id);
-       }
-       );
+           builder.Property(x => x.Id);
+       });
     }
 }
 
 public class Repo
 {
-
     public InMemCtx Ctx { get; set; }
 
     public Repo()
     {
-        Ctx = new InMemCtx(new DbContextOptionsBuilder<InMemCtx>()
-            .UseInMemoryDatabase("UseInMemoryDatabase").Options);
+        Ctx = new InMemCtx(new DbContextOptionsBuilder<InMemCtx>().UseInMemoryDatabase("UseInMemoryDatabase").Options);
     }
 
     public IQueryable<Something> Somethings => Ctx.Set<Something>();

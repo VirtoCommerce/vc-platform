@@ -22,6 +22,7 @@ public static class ReflectionUtility
     public static IEnumerable<string> GetPropertyNames<T>(params Expression<Func<T, object>>[] propertyExpressions)
     {
         var retVal = new List<string>();
+        // ReSharper disable once LoopCanBeConvertedToQuery
         foreach (var propertyExpression in propertyExpressions)
         {
             retVal.Add(GetPropertyName(propertyExpression));
@@ -133,9 +134,9 @@ public static class ReflectionUtility
         return _isDictionaryCache.GetOrAdd(type, static inputType =>
         {
             var retVal = typeof(IDictionary).IsAssignableFrom(inputType);
-            if (!retVal && inputType is not null)
+            if (!retVal && inputType is { IsGenericType: true })
             {
-                retVal = inputType.IsGenericType && typeof(IDictionary<,>).IsAssignableFrom(inputType.GetGenericTypeDefinition());
+                retVal = typeof(IDictionary<,>).IsAssignableFrom(inputType.GetGenericTypeDefinition());
             }
 
             return retVal;
@@ -148,6 +149,7 @@ public static class ReflectionUtility
         // ValueObject equality/hash hot path (once per list-typed component).
         return _assignableFromGenericListCache.GetOrAdd(type, static inputType =>
         {
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var intType in inputType.GetInterfaces())
             {
                 if (intType.IsGenericType && intType.GetGenericTypeDefinition() == typeof(IList<>))

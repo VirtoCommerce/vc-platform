@@ -18,18 +18,12 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             public List<Node> Many { get; set; }
         }
 
-        private class MidNode : Entity
-        {
-        }
+        private class MidNode : Entity;
 
-        private sealed class LeafNode : MidNode
-        {
-        }
+        private sealed class LeafNode : MidNode;
 
         [AttributeUsage(AttributeTargets.Property)]
-        private sealed class MarkAttribute : Attribute
-        {
-        }
+        private sealed class MarkAttribute : Attribute;
 
         private sealed class Marked
         {
@@ -44,6 +38,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             var container = new CommandBase();
             var result = container.GetFlatObjectsListWithInterface<IEntity>();
+
             Assert.Single(result);
         }
 
@@ -52,6 +47,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             var container = new { Entity = new CommandBase() };
             var result = container.GetFlatObjectsListWithInterface<IEntity>();
+
             Assert.Single(result);
         }
 
@@ -60,6 +56,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             var container = new { NonEntity = new { Entity = new CommandBase() } };
             var result = container.GetFlatObjectsListWithInterface<IEntity>();
+
             Assert.Empty(result);
         }
 
@@ -68,6 +65,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             var container = new { Entities = new[] { new CommandBase() } };
             var result = container.GetFlatObjectsListWithInterface<IEntity>();
+
             Assert.Single(result);
         }
 
@@ -78,6 +76,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             // nested entity is still found via the single-object branch.
             var node = new Node { Name = "x", Number = 42, Flag = true, Single = new Node { Id = "child" } };
             var result = node.GetFlatObjectsListWithInterface<IEntity>();
+
             Assert.Equal(2, result.Length);
         }
 
@@ -86,6 +85,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         {
             var container = new { Items = new[] { "a", "b" } };
             var result = container.GetFlatObjectsListWithInterface<IEntity>();
+
             Assert.Empty(result);
         }
 
@@ -105,7 +105,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         [Fact]
         public void GetFlatObjectsListWithInterface_RecursesCollectionMembers()
         {
-            var root = new Node { Id = "root", Many = new List<Node> { new Node { Id = "1" }, new Node { Id = "2" } } };
+            var root = new Node { Id = "root", Many = [new Node { Id = "1" }, new Node { Id = "2" }] };
 
             var result = root.GetFlatObjectsListWithInterface<IEntity>();
 
@@ -141,7 +141,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             var chain = typeof(LeafNode).GetTypeInheritanceChain();
 
             // Stops before Entity and object.
-            Assert.Equal(new[] { typeof(LeafNode), typeof(MidNode) }, chain);
+            Assert.Equal([typeof(LeafNode), typeof(MidNode)], chain);
             Assert.Same(chain, typeof(LeafNode).GetTypeInheritanceChain());
         }
 
@@ -149,10 +149,10 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
         public void GetTypeInheritanceChainTo_StopsAtTargetBaseType()
         {
             var toEntity = typeof(LeafNode).GetTypeInheritanceChainTo(typeof(Entity));
-            Assert.Equal(new[] { typeof(LeafNode), typeof(MidNode) }, toEntity);
+            Assert.Equal([typeof(LeafNode), typeof(MidNode)], toEntity);
 
             var toObject = typeof(LeafNode).GetTypeInheritanceChainTo(typeof(object));
-            Assert.Equal(new[] { typeof(LeafNode), typeof(MidNode), typeof(Entity) }, toObject);
+            Assert.Equal([typeof(LeafNode), typeof(MidNode), typeof(Entity)], toObject);
         }
 
         [Fact]

@@ -31,7 +31,14 @@ public class GetFlatObjectsBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _root = new BenchEntity { Id = "root", Name = "r", Code = "c", Tags = new List<string> { "a", "b" }, Children = new List<BenchEntity>() };
+        _root = new BenchEntity
+        {
+            Id = "root",
+            Name = "r",
+            Code = "c",
+            Tags = ["a", "b"],
+            Children = [],
+        };
 
         var remaining = NodeCount - 1;
         var queue = new Queue<BenchEntity>();
@@ -50,8 +57,8 @@ public class GetFlatObjectsBenchmarks
                     Code = "code-" + index,
                     Number = index,
                     Flag = index % 2 == 0,
-                    Tags = new List<string> { "x" + index, "y" + index },
-                    Children = new List<BenchEntity>(),
+                    Tags = ["x" + index, "y" + index],
+                    Children = [],
                 };
                 parent.Children.Add(child);
                 queue.Enqueue(child);
