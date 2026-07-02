@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -18,12 +19,21 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// <summary>
     /// Generic service to simplify search implementation.
     /// To implement the service for applied purpose, inherit your search service from this.
+    /// <para>
+    /// <see cref="SearchAllAsync"/> reads the identifiers of all matching data with a single query
+    /// (no count query, no offset paging) and then loads the models by identifiers in batches
+    /// of <see cref="CrudOptions.SearchAllBatchSize"/>. Compared to Skip/Take paging via
+    /// <see cref="SearchAsync"/>, this avoids re-evaluating the search query and counting the records
+    /// for every batch, and makes the returned data immune to page drift caused by concurrent modifications.
+    /// A derived class that overrides <see cref="SearchAsync"/> in a way that changes the result membership
+    /// must also override <see cref="SearchAllAsync"/> and <see cref="CountAllAsync"/> to keep them consistent.
+    /// </para>
     /// </summary>
     /// <typeparam name="TCriteria">Search criteria type (a descendant of <see cref="SearchCriteriaBase"/>)</typeparam>
     /// <typeparam name="TResult">Search result (<see cref="GenericSearchResult{TModel}"/>)</typeparam>
     /// <typeparam name="TModel">The type of service layer model</typeparam>
     /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
-    public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : ISearchService<TCriteria, TResult, TModel>
+    public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : IExtendedSearchService<TCriteria, TResult, TModel>
         where TCriteria : SearchCriteriaBase
         where TResult : GenericSearchResult<TModel>
         where TModel : IEntity, ICloneable
@@ -83,6 +93,73 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return await ProcessSearchResultAsync(result, criteria);
         }
 
+        /// <inheritdoc cref="IExtendedSearchService{TCriteria, TResult, TModel}.SearchAllAsync" />
+        public virtual async Task<IList<TModel>> SearchAllAsync(TCriteria criteria, bool clone = true, CancellationToken cancellationToken = default)
+        {
+            var result = new List<TModel>();
+
+            var ids = await SearchAllIdsAsync(criteria, cancellationToken);
+
+            foreach (var batchIds in ids.Paginate(_crudOptions.SearchAllBatchSize))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var models = await _crudService.GetAsync(batchIds, criteria.ResponseGroup, clone);
+
+                // Run the same post-processing as the regular search pipeline
+                var searchResult = AbstractTypeFactory<TResult>.TryCreateInstance();
+                searchResult.TotalCount = ids.Count;
+                searchResult.Results.AddRange(models);
+                searchResult = await ProcessSearchResultAsync(searchResult, criteria);
+
+                result.AddRange(searchResult.Results);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc cref="IExtendedSearchService{TCriteria, TResult, TModel}.SearchAllIdsAsync" />
+        public virtual Task<IList<string>> SearchAllIdsAsync(TCriteria criteria, CancellationToken cancellationToken = default)
+        {
+            var cacheKey = CacheKey.With(GetType(), nameof(SearchAllIdsAsync), criteria.GetCacheKey());
+
+            return _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, cacheOptions =>
+            {
+                cacheOptions.AddExpirationToken(CreateCacheToken(criteria));
+                return SearchAllIdsNoCacheAsync(criteria, cancellationToken);
+            });
+        }
+
+        /// <inheritdoc cref="IExtendedSearchService{TCriteria, TResult, TModel}.CountAllAsync" />
+        public virtual Task<int> CountAllAsync(TCriteria criteria, CancellationToken cancellationToken = default)
+        {
+            var cacheKey = CacheKey.With(GetType(), nameof(CountAllAsync), criteria.GetCacheKey());
+
+            return _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheOptions =>
+            {
+                cacheOptions.AddExpirationToken(CreateCacheToken(criteria));
+
+                using var repository = _repositoryFactory();
+
+                return await BuildQuery(repository, criteria).CountAsync(cancellationToken);
+            });
+        }
+
+        /// <inheritdoc cref="IExtendedSearchService{TCriteria, TResult, TModel}.ExistsAsync" />
+        public virtual Task<bool> ExistsAsync(TCriteria criteria, CancellationToken cancellationToken = default)
+        {
+            var cacheKey = CacheKey.With(GetType(), nameof(ExistsAsync), criteria.GetCacheKey());
+
+            return _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheOptions =>
+            {
+                cacheOptions.AddExpirationToken(CreateCacheToken(criteria));
+
+                using var repository = _repositoryFactory();
+
+                return await BuildQuery(repository, criteria).AnyAsync(cancellationToken);
+            });
+        }
+
 
         protected virtual void ValidateSearchCriteria(TCriteria criteria)
         {
@@ -135,6 +212,20 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             }
 
             return result;
+        }
+
+        protected virtual async Task<IList<string>> SearchAllIdsNoCacheAsync(TCriteria criteria, CancellationToken cancellationToken)
+        {
+            using var repository = _repositoryFactory();
+
+            var query = BuildQuery(repository, criteria);
+            var orderedQuery = await GetOrderedQueryAsync(query, criteria);
+
+            IList<string> ids = await orderedQuery
+                .Select(x => x.Id)
+                .ToListAsync(cancellationToken);
+
+            return ids;
         }
 
         protected virtual Task<IOrderedQueryable<TEntity>> GetOrderedQueryAsync(IQueryable<TEntity> query, TCriteria criteria)
