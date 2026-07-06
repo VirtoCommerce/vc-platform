@@ -20,20 +20,27 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// Generic service to simplify search implementation.
     /// To implement the service for applied purpose, inherit your search service from this.
     /// <para>
+    /// This base provides the <see cref="IExtendedSearchService{TCriteria, TResult, TModel}"/> members
+    /// (<see cref="SearchAllAsync"/>, <see cref="SearchAllIdsAsync"/>, <see cref="CountAllAsync"/>, <see cref="ExistsAsync"/>)
+    /// but does NOT implement the interface itself, so the optimized "search all" path is opt-in.
     /// <see cref="SearchAllAsync"/> reads the identifiers of all matching data with a single query
     /// (no count query, no offset paging) and then loads the models by identifiers in batches
     /// of <see cref="CrudOptions.SearchAllBatchSize"/>. Compared to Skip/Take paging via
     /// <see cref="SearchAsync"/>, this avoids re-evaluating the search query and counting the records
     /// for every batch, and makes the returned data immune to page drift caused by concurrent modifications.
-    /// A derived class that overrides <see cref="SearchAsync"/> in a way that changes the result membership
-    /// must also override <see cref="SearchAllAsync"/> and <see cref="CountAllAsync"/> to keep them consistent.
+    /// It follows that these members are correct only when the result membership is fully defined by
+    /// <see cref="BuildQuery"/>/<see cref="GetOrderedQueryAsync"/>. A service that meets this condition
+    /// enables the optimized path by deriving from <see cref="ExtendedSearchService{TCriteria, TResult, TModel, TEntity}"/>
+    /// or by declaring <see cref="IExtendedSearchService{TCriteria, TResult, TModel}"/> on the service itself;
+    /// a service whose <see cref="SearchAsync"/> changes the result membership must additionally override
+    /// <see cref="SearchAllAsync"/>, <see cref="SearchAllIdsAsync"/>, <see cref="CountAllAsync"/> and <see cref="ExistsAsync"/>.
     /// </para>
     /// </summary>
     /// <typeparam name="TCriteria">Search criteria type (a descendant of <see cref="SearchCriteriaBase"/>)</typeparam>
     /// <typeparam name="TResult">Search result (<see cref="GenericSearchResult{TModel}"/>)</typeparam>
     /// <typeparam name="TModel">The type of service layer model</typeparam>
     /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
-    public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : IExtendedSearchService<TCriteria, TResult, TModel>
+    public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : ISearchService<TCriteria, TResult, TModel>
         where TCriteria : SearchCriteriaBase
         where TResult : GenericSearchResult<TModel>
         where TModel : IEntity, ICloneable
