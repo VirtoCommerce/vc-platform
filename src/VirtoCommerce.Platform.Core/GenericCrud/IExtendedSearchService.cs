@@ -10,11 +10,11 @@ namespace VirtoCommerce.Platform.Core.GenericCrud;
 /// can enumerate all data matching the criteria in an optimized way (e.g. a single identifiers query
 /// without a count query and without offset paging, followed by loading models by identifiers in batches).
 /// <para>
-/// Enabling the optimized path is opt-in. Services built on the generic <c>SearchService</c> already carry
-/// the member implementations but do not expose this interface by default; enable it by deriving from
-/// <c>ExtendedSearchService</c> or by declaring this interface on the service, once the author has confirmed
-/// the result membership is fully defined by the service's query building. A service whose <c>SearchAsync</c>
-/// uses non-standard search logic must also override the members here to keep them consistent with it.
+/// Enabling the optimized path is opt-in. A service built on the generic <c>SearchService</c> enables it by
+/// deriving from <c>ExtendedSearchService</c> (which implements this interface) instead — appropriate only when
+/// the result membership is fully defined by the service's query building. A service that implements
+/// <c>ISearchService</c> directly enables it by declaring this interface and providing its own members. Either way,
+/// a service whose <c>SearchAsync</c> uses non-standard search logic must implement these members consistently with it.
 /// </para>
 /// <para>
 /// Versioning policy: any member added to this interface in the future must be declared with a default
