@@ -96,7 +96,18 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             if (ids.Count > 0)
             {
                 var models = await _crudService.GetAsync(ids, criteria.ResponseGroup, clone);
-                result.Results.AddRange(models.OrderBy(x => ids.IndexOf(x.Id)));
+
+                // GetAsync returns models in cache order; restore the order of the identifiers query.
+                // A position map keeps this O(n): ids.IndexOf(x.Id) per model would be O(n^2), which is
+                // negligible for a default page but significant at SearchAllBatchSize (and grows if raised).
+                // TryAdd keeps the first position for an id, matching the old IndexOf semantics.
+                var orderById = new Dictionary<string, int>(ids.Count, StringComparer.OrdinalIgnoreCase);
+                for (var i = 0; i < ids.Count; i++)
+                {
+                    orderById.TryAdd(ids[i], i);
+                }
+
+                result.Results.AddRange(models.OrderBy(x => orderById.GetValueOrDefault(x.Id, int.MaxValue)));
             }
 
             return await ProcessSearchResultAsync(result, criteria);
