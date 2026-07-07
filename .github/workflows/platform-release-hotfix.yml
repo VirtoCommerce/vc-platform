@@ -110,7 +110,7 @@ jobs:
   # forceNuget:false - the push is done by publish-nuget above; this only cuts the GitHub release.
   publish-github-release:
     needs:
-      [build, test, get-metadata]
+      [build, test, get-metadata, publish-nuget]
     uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.39
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
