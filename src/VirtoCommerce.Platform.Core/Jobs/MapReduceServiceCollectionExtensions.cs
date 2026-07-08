@@ -43,10 +43,10 @@ public static class MapReduceServiceCollectionExtensions
         var (mapInterface, reduceInterface) = MapReduceHandlerTypes.ResolveInterfaces(typeof(TMap), typeof(TReduce));
 
         // Register the concrete handlers (so the coordinators resolve them by type) plus the interface fallbacks.
-        services.AddTransient(typeof(TMap));
-        services.AddTransient(typeof(TReduce));
-        services.AddTransient(mapInterface, sp => sp.GetRequiredService(typeof(TMap)));
-        services.AddTransient(reduceInterface, sp => sp.GetRequiredService(typeof(TReduce)));
+        services.AddTransient<TMap>();
+        services.AddTransient<TReduce>();
+        services.AddTransient(mapInterface, sp => sp.GetRequiredService<TMap>());
+        services.AddTransient(reduceInterface, sp => sp.GetRequiredService<TReduce>());
         return services;
     }
 }
