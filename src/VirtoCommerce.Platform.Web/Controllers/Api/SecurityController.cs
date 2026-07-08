@@ -195,6 +195,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await GetCurrentUserAsync();
             if (user != null)
             {
+                // Rotate the security stamp so any previously issued (and potentially captured)
+                // authentication cookie is rejected at the next security-stamp validation.
+                // This enforces server-side session revocation on logout.
+                await UserManager.UpdateSecurityStampAsync(user);
                 await _signInManager.SignOutAsync();
                 await _eventPublisher.Publish(new UserLogoutEvent(user));
             }
