@@ -569,6 +569,11 @@ namespace VirtoCommerce.Platform.Web
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = platformOptions.ApplicationCookieName;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.ExpireTimeSpan = authorizationOptions?.CookieExpireTimeSpan ?? TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = authorizationOptions?.CookieSlidingExpiration ?? true;
                 options.LoginPath = "/";
             });
 
@@ -683,7 +688,7 @@ namespace VirtoCommerce.Platform.Web
                         tags: ["Database"]);
                     break;
                 case "PostgreSql":
-                    healthBuilder.AddNpgSql(connectionString,
+                    healthBuilder.AddNpgSqlVersionCheck(connectionString,
                         name: "PostgreSql health",
                         failureStatus: HealthStatus.Unhealthy,
                         tags: ["Database"]);
