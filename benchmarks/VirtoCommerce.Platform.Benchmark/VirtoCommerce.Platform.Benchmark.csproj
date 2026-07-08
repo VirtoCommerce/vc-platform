@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Exploratory benchmark code; don't fail the build on warnings inherited from Directory.Build.props. -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <!-- Not a NuGet package: the root Directory.Build.props treats any non-"Tests" project as packable. -->
+    <IsPackable>false</IsPackable>
+    <!-- Exclude from SonarCloud: benchmark code legitimately uses magic params, static-field setup, etc.;
+         it is dev tooling, not production code subject to the quality gate. -->
+    <SonarQubeExclude>true</SonarQubeExclude>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <!-- Used by the ArrayVsList benchmarks (test-data generation + in-memory EF query source). -->
+    <PackageReference Include="GenFu" Version="1.6.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+  </ItemGroup>
+
+</Project>
