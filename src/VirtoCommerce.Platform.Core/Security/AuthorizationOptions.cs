@@ -9,6 +9,25 @@ namespace VirtoCommerce.Platform.Core.Security
         public TimeSpan RefreshTokenLifeTime { get; set; }
         public TimeSpan AccessTokenLifeTime { get; set; }
 
+        /// <summary>
+        /// Interval after which the authentication cookie's security stamp is re-validated
+        /// against the store. Lower values reject stale or replayed cookies faster at the cost
+        /// of more frequent database calls. By default, 5 minutes.
+        /// </summary>
+        public TimeSpan SecurityStampValidationInterval { get; set; } = TimeSpan.FromMinutes(5);
+
+        /// <summary>
+        /// Lifetime of the application authentication cookie. With sliding expiration enabled,
+        /// this acts as the inactivity timeout. By default, 60 minutes.
+        /// </summary>
+        public TimeSpan CookieExpireTimeSpan { get; set; } = TimeSpan.FromMinutes(60);
+
+        /// <summary>
+        /// When true, the authentication cookie is reissued with a new expiration once a request
+        /// is made more than halfway through the expiration window. By default, true.
+        /// </summary>
+        public bool CookieSlidingExpiration { get; set; } = true;
+
         // LimitedPermissions claims that will be granted to the user by cookies when bearer token authentication is enabled.
         // This can help to authorize the user for direct(non - AJAX) GET requests to the VC platform API and / or to use some 3rd - party web applications for the VC platform(like Hangfire dashboard).
         //
