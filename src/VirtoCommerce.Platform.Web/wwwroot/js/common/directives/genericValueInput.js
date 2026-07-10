@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService',
-        function ($compile, $templateCache, $http, objComparer, bladeNavigationService) {
+    .directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', '$filter', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService',
+        function ($compile, $templateCache, $http, $filter, objComparer, bladeNavigationService) {
             return {
                 restrict: 'E',
                 require: 'ngModel',
@@ -377,6 +377,52 @@ angular.module('platformWebApp')
                     scope.openUrl = function (url) {
                         window.open(url, '_blank');
                     }
+
+                    /* Cron (SettingValueType.Cron) */
+                    // Curated presets the admin can pick instead of hand-writing cron; selecting one sets the value.
+                    // Titles are pre-translated to plain strings here (rather than piping `| translate` inside
+                    // ng-options, which interferes with the select's value binding) and refreshed on language change.
+                    scope.cronPresets = [
+                        { titleKey: 'platform.genericValueInput.cron.presets.every-minute', value: '* * * * *' },
+                        { titleKey: 'platform.genericValueInput.cron.presets.every-5-minutes', value: '*/5 * * * *' },
+                        { titleKey: 'platform.genericValueInput.cron.presets.every-15-minutes', value: '*/15 * * * *' },
+                        { titleKey: 'platform.genericValueInput.cron.presets.every-hour', value: '0 * * * *' },
+                        { titleKey: 'platform.genericValueInput.cron.presets.daily-midnight', value: '0 0 * * *' },
+                        { titleKey: 'platform.genericValueInput.cron.presets.daily-7am', value: '0 7 * * *' },
+                        { titleKey: 'platform.genericValueInput.cron.presets.weekly-monday-7am', value: '0 7 * * 1' },
+                        { titleKey: 'platform.genericValueInput.cron.presets.monthly-first-7am', value: '0 7 1 * *' }
+                    ];
+                    var localizeCronPresets = function () {
+                        var translate = $filter('translate');
+                        scope.cronPresets.forEach(function (preset) { preset.title = translate(preset.titleKey); });
+                    };
+                    localizeCronPresets();
+                    scope.$on('$translateChangeSuccess', localizeCronPresets);
+
+                    // The picker is a separate model (not the cron value itself), so a hand-typed custom expression
+                    // never becomes an unmatched <select> value (which would add a blank row to the open list).
+                    // It MUST be an object property (a "dot") — the template compiles into a child scope, and binding
+                    // ng-model to a bare primitive would shadow a copy there, leaving this value null. Picking a preset
+                    // writes it to the expression via ng-change.
+                    scope.cronPreset = { selection: null };
+                    scope.applyCronPreset = function () {
+                        if (scope.cronPreset.selection) {
+                            scope.context.currentPropValues[0].value = scope.cronPreset.selection;
+                        }
+                    };
+
+                    // Live, plain-English description of a cron expression for non-developers (via cronstrue).
+                    // Returns '' for empty and null for an unparseable expression so the template can show a hint.
+                    scope.describeCron = function (expression) {
+                        if (!expression) {
+                            return '';
+                        }
+                        try {
+                            return window.cronstrue.toString(expression, { throwExceptionOnParseError: true, use24HourTimeFormat: true });
+                        } catch (e) {
+                            return null;
+                        }
+                    };
 
                     scope.isLanguageVisible = function (language) {
                         if (scope.hiddenLanguages) {

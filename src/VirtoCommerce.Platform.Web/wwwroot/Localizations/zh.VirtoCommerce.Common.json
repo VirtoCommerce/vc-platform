@@ -155,7 +155,23 @@
         "short-text-multivalue-multilang": "添加值",
         "short-text-dictionary-multilang": "选择值",
         "short-text-dictionary-multivalue-multilang": "选择值",
-        "long-text-dictionary-multivalue-multilang": "选择值"
+        "long-text-dictionary-multivalue-multilang": "选择值",
+        "cron": "输入 cron 表达式，例如 0 7 * * *"
+      },
+      "cron": {
+        "choose-preset": "预设",
+        "runs": "运行",
+        "invalid": "这不是有效的 cron 表达式",
+        "presets": {
+          "every-minute": "每分钟",
+          "every-5-minutes": "每 5 分钟",
+          "every-15-minutes": "每 15 分钟",
+          "every-hour": "每小时",
+          "daily-midnight": "每天午夜",
+          "daily-7am": "每天 07:00",
+          "weekly-monday-7am": "每周一 07:00",
+          "monthly-first-7am": "每月 1 日 07:00"
+        }
       }
     },
     "short-text-input": {

@@ -155,7 +155,23 @@
         "short-text-multivalue-multilang": "Lisää arvo",
         "short-text-dictionary-multilang": "Valitse arvo",
         "short-text-dictionary-multivalue-multilang": "Valitse arvo",
-        "long-text-dictionary-multivalue-multilang": "Valitse arvo"
+        "long-text-dictionary-multivalue-multilang": "Valitse arvo",
+        "cron": "Anna cron-lauseke, esim. 0 7 * * *"
+      },
+      "cron": {
+        "choose-preset": "Esiasetukset",
+        "runs": "Suoritetaan",
+        "invalid": "Tämä ei ole kelvollinen cron-lauseke",
+        "presets": {
+          "every-minute": "Joka minuutti",
+          "every-5-minutes": "5 minuutin välein",
+          "every-15-minutes": "15 minuutin välein",
+          "every-hour": "Joka tunti",
+          "daily-midnight": "Joka päivä keskiyöllä",
+          "daily-7am": "Joka päivä klo 07:00",
+          "weekly-monday-7am": "Joka maanantai klo 07:00",
+          "monthly-first-7am": "Kuukauden ensimmäisenä päivänä klo 07:00"
+        }
       }
     },
     "short-text-input": {

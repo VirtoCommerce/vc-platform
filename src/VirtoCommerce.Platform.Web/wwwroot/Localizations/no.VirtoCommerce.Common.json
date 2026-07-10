@@ -155,7 +155,23 @@
         "short-text-multivalue-multilang": "Legg til verdi",
         "short-text-dictionary-multilang": "Velg verdi",
         "short-text-dictionary-multivalue-multilang": "Velg verdi",
-        "long-text-dictionary-multivalue-multilang": "Velg verdi"
+        "long-text-dictionary-multivalue-multilang": "Velg verdi",
+        "cron": "Skriv inn et cron-uttrykk, f.eks. 0 7 * * *"
+      },
+      "cron": {
+        "choose-preset": "Forhåndsinnstillinger",
+        "runs": "Kjører",
+        "invalid": "Dette er ikke et gyldig cron-uttrykk",
+        "presets": {
+          "every-minute": "Hvert minutt",
+          "every-5-minutes": "Hvert 5. minutt",
+          "every-15-minutes": "Hvert 15. minutt",
+          "every-hour": "Hver time",
+          "daily-midnight": "Hver dag ved midnatt",
+          "daily-7am": "Hver dag kl. 07:00",
+          "weekly-monday-7am": "Hver mandag kl. 07:00",
+          "monthly-first-7am": "Den første dagen i måneden kl. 07:00"
+        }
       }
     },
     "short-text-input": {
