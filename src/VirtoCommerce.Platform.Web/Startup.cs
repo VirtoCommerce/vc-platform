@@ -545,7 +545,7 @@ namespace VirtoCommerce.Platform.Web
             // background-job engine module's scheduler fires them on cron and enqueues to the active engine
             // (Hangfire or RabbitMQ). Token pruning is setting-driven (enabler + cron settings); auto account
             // lockout uses the fixed cron from options and is registered only when enabled.
-            services.AddRecurringJob<PruneExpiredTokensJobPayload, PruneExpiredTokensJob>(schedule => schedule
+            services.AddRecurringJob<PruneExpiredTokensJob, PruneExpiredTokensJobPayload>(schedule => schedule
                 .WithId("PruneExpiredTokensJob")
                 .FromSettings(
                     PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob,
@@ -555,7 +555,7 @@ namespace VirtoCommerce.Platform.Web
             // AutoAccountLockoutJob left in engine storage from a previous run when it was enabled (previously this
             // was an explicit RecurringJob.RemoveIfExists on boot).
             var lockoutOptions = Configuration.GetSection("IdentityOptions:Lockout").Get<LockoutOptionsExtended>() ?? new LockoutOptionsExtended();
-            services.AddRecurringJob<AutoAccountLockoutJobPayload, AutoAccountLockoutJob>(schedule => schedule
+            services.AddRecurringJob<AutoAccountLockoutJob, AutoAccountLockoutJobPayload>(schedule => schedule
                 .WithId("AutoAccountLockoutJob")
                 .WithCron(lockoutOptions.CronAutoAccountsLockoutJob)
                 .WithEnabled(lockoutOptions.AutoAccountsLockoutJobEnabled));
@@ -643,7 +643,7 @@ namespace VirtoCommerce.Platform.Web
 
             // Module management (install/update/uninstall) runs as a message-based background job, dispatched to
             // ModuleBackgroundJobHandler by the active engine (and invoked inline for the bootstrap auto-install path).
-            services.AddBackgroundJob<ModuleBackgroundJobPayload, ModuleBackgroundJobHandler>();
+            services.AddBackgroundJob<ModuleBackgroundJobHandler, ModuleBackgroundJobPayload>();
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
 

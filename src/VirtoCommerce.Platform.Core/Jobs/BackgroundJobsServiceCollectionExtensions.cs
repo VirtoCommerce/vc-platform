@@ -24,9 +24,9 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// Registers an <see cref="IBackgroundJobHandler{TPayload}"/>. Later registrations win, so a partner module
     /// can override a handler by registering its own implementation after the base module is loaded.
     /// </summary>
-    public static IServiceCollection AddBackgroundJob<TPayload, THandler>(this IServiceCollection services)
-        where TPayload : class
+    public static IServiceCollection AddBackgroundJob<THandler, TPayload>(this IServiceCollection services)
         where THandler : class, IBackgroundJobHandler<TPayload>
+        where TPayload : class
     {
         // Register the concrete handler so it resolves by type for handler-explicit enqueue (Enqueue<THandler>) —
         // this is what lets several handlers share one payload type. Also bind the payload interface to the same
@@ -40,7 +40,7 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// Registers a handler, inferring the payload type(s) from the <see cref="IBackgroundJobHandler{TPayload}"/>
     /// interface(s) it implements — a convenience over the two-type-parameter overload. If the handler implements the
     /// interface for several payloads, all are registered. Later registrations win (partner override).
-    /// <para>Prefer <see cref="AddBackgroundJob{TPayload, THandler}"/> when you already know the payload — it is
+    /// <para>Prefer <see cref="AddBackgroundJob{THandler, TPayload}"/> when you already know the payload — it is
     /// compile-time checked and trim/AOT-friendly; this overload resolves the payload via reflection.</para>
     /// </summary>
     public static IServiceCollection AddBackgroundJob<THandler>(this IServiceCollection services)
@@ -75,28 +75,28 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// <see cref="AbstractTypeFactory{TPayload}"/>) through <see cref="IBackgroundJob"/>, so the same handler runs on
     /// the active engine. Configure a fixed cron or a setting-driven schedule via <paramref name="configure"/>.
     /// </summary>
-    public static IServiceCollection AddRecurringJob<TPayload, THandler>(
+    public static IServiceCollection AddRecurringJob<THandler, TPayload>(
         this IServiceCollection services, Action<IRecurringJobScheduleBuilder> configure)
-        where TPayload : class
         where THandler : class, IBackgroundJobHandler<TPayload>
-        => services.AddRecurringJob<TPayload, THandler>(
+        where TPayload : class
+        => services.AddRecurringJob<THandler, TPayload>(
             () => AbstractTypeFactory<TPayload>.TryCreateInstance(), configure);
 
     /// <summary>
     /// Registers an <see cref="IBackgroundJobHandler{TPayload}"/> AND a recurring (cron) schedule that enqueues the
     /// supplied <paramref name="payload"/> on each occurrence — the simple way to pass parameters (e.g.
-    /// <c>AddRecurringJob&lt;SendDigestPayload, SendDigestJob&gt;(new SendDigestPayload { Top = 10 }, s =&gt; ...)</c>)
+    /// <c>AddRecurringJob&lt;SendDigestJob, SendDigestPayload&gt;(new SendDigestPayload { Top = 10 }, schedule =&gt; ...)</c>)
     /// without writing a factory. The same instance is serialized each occurrence; use the
-    /// <see cref="AddRecurringJob{TPayload, THandler}(IServiceCollection, System.Func{TPayload}, Action{IRecurringJobScheduleBuilder})"/>
+    /// <see cref="AddRecurringJob{THandler, TPayload}(IServiceCollection, System.Func{TPayload}, Action{IRecurringJobScheduleBuilder})"/>
     /// factory overload when each run needs a fresh or dynamic value (e.g. a timestamp).
     /// </summary>
-    public static IServiceCollection AddRecurringJob<TPayload, THandler>(
+    public static IServiceCollection AddRecurringJob<THandler, TPayload>(
         this IServiceCollection services, TPayload payload, Action<IRecurringJobScheduleBuilder> configure)
-        where TPayload : class
         where THandler : class, IBackgroundJobHandler<TPayload>
+        where TPayload : class
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return services.AddRecurringJob<TPayload, THandler>(() => payload, configure);
+        return services.AddRecurringJob<THandler, TPayload>(() => payload, configure);
     }
 
     /// <summary>
@@ -104,7 +104,7 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// <see cref="IBackgroundJobHandler{TPayload}"/> interface — a convenience over the two-type-parameter overload.
     /// Each occurrence enqueues a payload created via <see cref="AbstractTypeFactory{TPayload}"/>. The handler must
     /// implement the interface for exactly one payload; to pass parameters or pick among several payloads, use
-    /// <see cref="AddRecurringJob{TPayload, THandler}(IServiceCollection, Func{TPayload}, Action{IRecurringJobScheduleBuilder})"/>.
+    /// <see cref="AddRecurringJob{THandler, TPayload}(IServiceCollection, Func{TPayload}, Action{IRecurringJobScheduleBuilder})"/>.
     /// </summary>
     public static IServiceCollection AddRecurringJob<THandler>(
         this IServiceCollection services, Action<IRecurringJobScheduleBuilder> configure)
@@ -113,7 +113,7 @@ public static class BackgroundJobsServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configure);
 
         var payloadType = GetSingleHandlerPayloadType(typeof(THandler));
-        var register = _addRecurringJobConfigureMethod.MakeGenericMethod(payloadType, typeof(THandler));
+        var register = _addRecurringJobConfigureMethod.MakeGenericMethod(typeof(THandler), payloadType);
 
         try
         {
@@ -135,15 +135,15 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// <see cref="AbstractTypeFactory{TPayload}"/> inside the factory. Configure a fixed cron or a setting-driven
     /// schedule via <paramref name="configure"/>.
     /// </summary>
-    public static IServiceCollection AddRecurringJob<TPayload, THandler>(
+    public static IServiceCollection AddRecurringJob<THandler, TPayload>(
         this IServiceCollection services, Func<TPayload> payloadFactory, Action<IRecurringJobScheduleBuilder> configure)
-        where TPayload : class
         where THandler : class, IBackgroundJobHandler<TPayload>
+        where TPayload : class
     {
         ArgumentNullException.ThrowIfNull(payloadFactory);
         ArgumentNullException.ThrowIfNull(configure);
 
-        services.AddBackgroundJob<TPayload, THandler>();
+        services.AddBackgroundJob<THandler, TPayload>();
 
         var builder = new RecurringJobScheduleBuilder();
         configure(builder);
@@ -171,7 +171,7 @@ public static class BackgroundJobsServiceCollectionExtensions
             1 => payloadTypes[0],
             0 => throw new ArgumentException($"{handlerType.Name} must implement IBackgroundJobHandler<TPayload>."),
             _ => throw new ArgumentException(
-                $"{handlerType.Name} implements IBackgroundJobHandler<> for multiple payloads; use AddRecurringJob<TPayload, THandler>(...) to choose one."),
+                $"{handlerType.Name} implements IBackgroundJobHandler<> for multiple payloads; use AddRecurringJob<THandler, TPayload>(...) to choose one."),
         };
     }
 }
