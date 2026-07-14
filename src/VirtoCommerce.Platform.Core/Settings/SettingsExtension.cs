@@ -85,17 +85,8 @@ namespace VirtoCommerce.Platform.Core.Settings
                 foreach (var haveSettingsObject in haveSettingsObjects.Where(x => x.Settings != null))
                 {
                     //Save settings
-                    foreach (var setting in haveSettingsObject.Settings)
+                    foreach (var setting in haveSettingsObject.Settings.Where(x => !IsUntouchedEmptyDictionaryDefault(x, emptyDictionaryDefaults)))
                     {
-                        // Do not turn an untouched empty dictionary default into an explicit DB override.
-                        if (setting.Id == null &&
-                            setting.IsDictionary &&
-                            setting.AllowedValues is { Length: 0 } &&
-                            emptyDictionaryDefaults.Contains(setting.Name))
-                        {
-                            continue;
-                        }
-
                         setting.ObjectId = haveSettingsObject.Id;
                         setting.ObjectType = haveSettingsObject.TypeName;
                         forSaveSettings.Add(setting);
@@ -106,6 +97,14 @@ namespace VirtoCommerce.Platform.Core.Settings
             {
                 await manager.SaveObjectSettingsAsync(forSaveSettings);
             }
+        }
+
+        private static bool IsUntouchedEmptyDictionaryDefault(ObjectSettingEntry setting, ISet<string> emptyDictionaryDefaults)
+        {
+            return setting.Id == null &&
+                   setting.IsDictionary &&
+                   setting.AllowedValues is { Length: 0 } &&
+                   emptyDictionaryDefaults.Contains(setting.Name);
         }
 
         /// <summary>
