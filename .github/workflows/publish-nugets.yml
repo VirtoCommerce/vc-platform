@@ -13,12 +13,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.41    
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.42    
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.41    
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.42    
     with:
       uploadPackage: 'true'
       uploadDocker: 'false'
@@ -26,15 +26,70 @@ jobs:
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
 
+  # Trusted Publishing: mint the OIDC key and push in ONE job. A short-lived key can't cross
+  # job boundaries (GitHub redacts masked values from job outputs), and the push can't move
+  # into the cross-repo publish-github.yml (its job_workflow_ref wouldn't match this repo's
+  # policy - NuGet/login issues #6/#9). job_workflow_ref here is publish-nugets.yml, which matches.
   publish-nuget:
-    needs:
-      [build, test]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.41
+    needs: [build, test]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+    steps:
+      - name: Install VirtoCommerce.GlobalTool
+        uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      # Reuse the package built by the `build` job (same cache key/path it wrote).
+      - name: Get package from cache
+        id: restore-build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: ${{ needs.build.outputs.packageFullKey }}
+          path: |
+            ${{ github.workspace }}/artifacts
+            ${{ github.workspace }}/publish
+
+      - name: Exit if cache not restored
+        if: steps.restore-build.outputs.cache-hit != 'true'
+        env:
+          FULL_KEY: ${{ needs.build.outputs.packageFullKey }}
+        run: |
+          echo "::error::Package cache not found for key ${FULL_KEY}"
+          exit 1
+
+      - name: NuGet login (OIDC -> temp API key)
+        id: nuget_login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          # nuget.org user that created the trust policy (shared service account); org-level var.
+          user: virto
+
+      - name: Publish Nuget
+        uses: VirtoCommerce/vc-github-actions/publish-nuget@master
+        with:
+          skipString: 'Clean+Restore+Compile+Test+Pack'
+        env:
+          NUGET_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
+
+  # Blob upload. forceNuget:false - the push is done by publish-nuget above.
+  publish-blob:
+    needs: [build, test, publish-nuget]
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.42
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       forceGithub: false
+      forceNuget: false
       forceBlob: true
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
-      nugetKey: ${{ secrets.NUGET_KEY }}
       BLOB_TOKEN: ${{ secrets.BLOB_TOKEN }}
