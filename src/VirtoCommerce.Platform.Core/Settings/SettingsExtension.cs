@@ -85,7 +85,7 @@ namespace VirtoCommerce.Platform.Core.Settings
                 foreach (var haveSettingsObject in haveSettingsObjects.Where(x => x.Settings != null))
                 {
                     //Save settings
-                    foreach (var setting in haveSettingsObject.Settings.Where(x => !IsUntouchedEmptyDictionaryDefault(x, emptyDictionaryDefaults)))
+                    foreach (var setting in haveSettingsObject.Settings.Where(x => !x.IsUntouchedEmptyDictionaryDefault(emptyDictionaryDefaults)))
                     {
                         setting.ObjectId = haveSettingsObject.Id;
                         setting.ObjectType = haveSettingsObject.TypeName;
@@ -99,7 +99,10 @@ namespace VirtoCommerce.Platform.Core.Settings
             }
         }
 
-        private static bool IsUntouchedEmptyDictionaryDefault(ObjectSettingEntry setting, ISet<string> emptyDictionaryDefaults)
+        /// <summary>
+        /// Determines whether the setting represents an untouched empty dictionary default.
+        /// </summary>
+        private static bool IsUntouchedEmptyDictionaryDefault(this ObjectSettingEntry setting, HashSet<string> emptyDictionaryDefaults)
         {
             return setting.Id == null &&
                    setting.IsDictionary &&
