@@ -78,7 +78,7 @@ jobs:
         node-version: '24'
 
     - name: Set up Java 17
-      uses: actions/setup-java@ad2b38190b15e4d6bdf0c97fb4fca8412226d287 # v5
+      uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5
       with:
         distribution: 'temurin'
         java-version: '17'
@@ -193,7 +193,7 @@ jobs:
 
     - name: Docker Login
       if: ${{ env.BUILD_DOCKER == 'true' }}
-      uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4
+      uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
       with:
         registry: ${{ env.PACKAGE_SERVER }}
         username: $GITHUB_ACTOR

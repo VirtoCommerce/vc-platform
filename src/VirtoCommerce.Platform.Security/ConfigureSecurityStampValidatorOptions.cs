@@ -1,17 +1,24 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Extensions;
 
 namespace VirtoCommerce.Platform.Security
 {
     public class ConfigureSecurityStampValidatorOptions : IConfigureOptions<SecurityStampValidatorOptions>
     {
+        private readonly AuthorizationOptions _authorizationOptions;
+
+        public ConfigureSecurityStampValidatorOptions(IOptions<AuthorizationOptions> authorizationOptions)
+        {
+            _authorizationOptions = authorizationOptions.Value;
+        }
+
         public void Configure(SecurityStampValidatorOptions options)
         {
-            options.ValidationInterval = TimeSpan.FromMinutes(30);
+            options.ValidationInterval = _authorizationOptions.SecurityStampValidationInterval;
 
             // When refreshing the principal, ensure custom claims that
             // might have been set with an external identity continue
