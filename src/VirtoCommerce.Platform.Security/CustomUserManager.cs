@@ -44,74 +44,95 @@ namespace VirtoCommerce.Platform.Security
             _passwordHasher = passwordHasher;
         }
 
-        public override Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
+        public override async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(FindByLoginAsync), loginProvider, providerKey);
-            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
+            var user = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
-                var user = await base.FindByLoginAsync(loginProvider, providerKey);
-                if (user is not null)
+                var loadedUser = await base.FindByLoginAsync(loginProvider, providerKey);
+                if (loadedUser is not null)
                 {
-                    await LoadUserDetailsAsync(user);
-                    ConfigureCache(cacheEntry, user);
+                    await LoadUserDetailsAsync(loadedUser);
+                    ConfigureCache(cacheEntry, loadedUser);
                 }
-                return user;
+                return loadedUser;
             }, cacheNullValue: false);
+
+            return CloneUser(user);
         }
 
-        public override Task<ApplicationUser> FindByEmailAsync(string email)
+        public override async Task<ApplicationUser> FindByEmailAsync(string email)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(FindByEmailAsync), email);
-            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
+            var user = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
-                ApplicationUser user;
+                ApplicationUser loadedUser;
 
                 try
                 {
-                    user = await base.FindByEmailAsync(email);
+                    loadedUser = await base.FindByEmailAsync(email);
                 }
                 catch (InvalidOperationException ex) when (ex.StackTrace?.Contains("SingleOrDefault") == true)
                 {
                     throw new DuplicateEmailException(email, ex);
                 }
 
-                if (user is not null)
+                if (loadedUser is not null)
                 {
-                    await LoadUserDetailsAsync(user);
-                    ConfigureCache(cacheEntry, user);
+                    await LoadUserDetailsAsync(loadedUser);
+                    ConfigureCache(cacheEntry, loadedUser);
                 }
-                return user;
+                return loadedUser;
             }, cacheNullValue: false);
+
+            return CloneUser(user);
         }
 
-        public override Task<ApplicationUser> FindByNameAsync(string userName)
+        public override async Task<ApplicationUser> FindByNameAsync(string userName)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(FindByNameAsync), userName);
-            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
+            var user = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
-                var user = await base.FindByNameAsync(userName);
-                if (user is not null)
+                var loadedUser = await base.FindByNameAsync(userName);
+                if (loadedUser is not null)
                 {
-                    await LoadUserDetailsAsync(user);
-                    ConfigureCache(cacheEntry, user);
+                    await LoadUserDetailsAsync(loadedUser);
+                    ConfigureCache(cacheEntry, loadedUser);
                 }
-                return user;
+                return loadedUser;
             }, cacheNullValue: false);
+
+            return CloneUser(user);
         }
 
-        public override Task<ApplicationUser> FindByIdAsync(string userId)
+        public override async Task<ApplicationUser> FindByIdAsync(string userId)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(FindByIdAsync), userId);
-            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
+            var user = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
-                var user = await base.FindByIdAsync(userId);
-                if (user is not null)
+                var loadedUser = await base.FindByIdAsync(userId);
+                if (loadedUser is not null)
                 {
-                    await LoadUserDetailsAsync(user);
-                    ConfigureCache(cacheEntry, user);
+                    await LoadUserDetailsAsync(loadedUser);
+                    ConfigureCache(cacheEntry, loadedUser);
                 }
-                return user;
+                return loadedUser;
             }, cacheNullValue: false);
+
+            return CloneUser(user);
+        }
+
+        /// <summary>
+        /// Returns a detached copy of a cached user. The cached instance is shared between requests and, right
+        /// after a cache miss, is also tracked by the store's DbContext. Handing the instance itself out would
+        /// let callers corrupt the cache by mutating it, and passing it back into <see cref="UpdateAsync"/> would
+        /// silently drop role and login changes: <see cref="UpdateUserAsync"/> resolves the existing user through
+        /// the same context (getting the very same instance back) and <see cref="LoadUserDetailsAsync"/> resets
+        /// its Roles and Logins to the persisted state before the update diff runs.
+        /// </summary>
+        protected virtual ApplicationUser CloneUser(ApplicationUser user)
+        {
+            return user?.CloneTyped();
         }
 
         protected virtual void ConfigureCache(MemoryCacheEntryOptions cacheOptions, ApplicationUser user)
@@ -186,7 +207,13 @@ namespace VirtoCommerce.Platform.Security
             };
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
 
-            var result = await base.DeleteAsync(user);
+            // Find* methods return detached copies, but the store's context may already track the same user
+            // (loaded there by the cache-miss path). Deleting the copy would make EF reject the operation
+            // ("another instance with the same key value is already being tracked"), so resolve and delete
+            // the store's own instance instead.
+            var existentUser = await LoadExistingUser(user) ?? user;
+
+            var result = await base.DeleteAsync(existentUser);
             if (result.Succeeded)
             {
                 SecurityCacheRegion.ExpireUser(user);
