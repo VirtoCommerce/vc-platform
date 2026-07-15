@@ -35,13 +35,20 @@ jobs:
          (github.event.pull_request.head.repo.full_name == github.repository ||
          github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-24.04
+    # No explicit block before, so the job ran with the repo default. Declaring one is required to
+    # add id-token: write (OIDC is never granted by default) - list the scopes the job already uses:
+    # contents (GitHub release), pull-requests (PR links), packages (ghcr docker push).
+    permissions:
+      contents: write
+      pull-requests: write
+      packages: write
+      id-token: write
     env:
       CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
       CLIENT_ID: ${{secrets.CLIENT_ID}}
       CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-      NUGET_KEY: ${{ secrets.NUGET_KEY }}
       BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
       PUBLISH_TO_DOCKER: 'true'
       UPDATE_LATEST_TAG: 'true'
@@ -192,9 +199,20 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    # Trusted Publishing: swap the GitHub OIDC token for a ~1h nuget.org key, minted right before push.
+    - name: NuGet login (OIDC -> temp API key)
+      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+      id: nuget_login
+      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+      with:
+        # nuget.org user that created the trust policy (shared service account)
+        user: virto
+
     - name: Publish Nuget
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
       uses: VirtoCommerce/vc-github-actions/publish-nuget@master
+      env:
+        NUGET_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
 
     - name: Publish to Blob
       if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && (github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main')) }}
@@ -302,7 +320,7 @@ jobs:
     needs: ci
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.41
+    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.800.42
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -347,7 +365,7 @@ jobs:
     needs:
       - ci
       - swagger-validation
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.41
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.42
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
@@ -372,7 +390,7 @@ jobs:
   trivy-scan:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     needs: 'ci'
-    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.41
+    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.800.42
     with:
       assigneeAccountId: '621c47c0302c6b006af0a1cd'
       assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'
