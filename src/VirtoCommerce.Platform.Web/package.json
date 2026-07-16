@@ -21,7 +21,7 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "@aspnet/signalr": "~1.1.4",
+    "@microsoft/signalr": "^8.0.7",
     "@fortawesome/fontawesome-free": "~5.15.2",
     "@uirouter/angularjs": "~1.0.20",
     "angular": "1.8.3",
