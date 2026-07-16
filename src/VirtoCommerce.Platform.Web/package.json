@@ -64,6 +64,7 @@
     "ng-tags-input": "~3.2.0",
     "ngstorage": "~0.3.11",
     "select2": "~3.4.5",
+    "textangular": "~1.5.16",
     "ui-grid-draggable-rows": "~0.3.3",
     "ui-select": "~0.19.8",
     "uikit": "2.27.4",
