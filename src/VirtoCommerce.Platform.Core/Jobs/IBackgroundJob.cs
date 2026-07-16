@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,4 +32,18 @@ public interface IBackgroundJob
     Task<string> Enqueue<THandler>(object payload, EnqueueOptions? options = null,
         CancellationToken cancellationToken = default)
         where THandler : class;
+
+    /// <summary>
+    /// Non-generic overload of <see cref="Enqueue{THandler}"/> for callers that only have the handler
+    /// <see cref="Type"/> at runtime — e.g. a REST "run by name" endpoint that resolved a registered
+    /// <see cref="BackgroundJobDescriptor"/>. <paramref name="handlerType"/> must be a concrete class implementing
+    /// <see cref="IBackgroundJobHandler{TPayload}"/> for the payload's runtime type, otherwise this throws.
+    /// </summary>
+    /// <param name="handlerType">The concrete handler type that will run the payload.</param>
+    /// <param name="payload">The serializable payload instance; its runtime type selects the handler's payload contract.</param>
+    /// <param name="options">Per-enqueue options (queue, title, progress, retries, unique key).</param>
+    /// <param name="cancellationToken">Cancels the enqueue operation.</param>
+    /// <returns>The engine-specific job id.</returns>
+    Task<string> Enqueue(Type handlerType, object payload, EnqueueOptions? options = null,
+        CancellationToken cancellationToken = default);
 }

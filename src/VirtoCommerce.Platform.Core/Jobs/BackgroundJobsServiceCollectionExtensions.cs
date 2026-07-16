@@ -24,7 +24,11 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// Registers an <see cref="IBackgroundJobHandler{TPayload}"/>. Later registrations win, so a partner module
     /// can override a handler by registering its own implementation after the base module is loaded.
     /// </summary>
-    public static IServiceCollection AddBackgroundJob<THandler, TPayload>(this IServiceCollection services)
+    /// <param name="services">The service collection.</param>
+    /// <param name="name">
+    /// Optional friendly name for the admin catalog and name-addressed triggering; defaults to the handler's type name.
+    /// </param>
+    public static IServiceCollection AddBackgroundJob<THandler, TPayload>(this IServiceCollection services, string? name = null)
         where THandler : class, IBackgroundJobHandler<TPayload>
         where TPayload : class
     {
@@ -33,6 +37,12 @@ public static class BackgroundJobsServiceCollectionExtensions
         // concrete handler for payload-typed enqueue (Enqueue<TPayload>); later registrations win there (partner override).
         services.AddTransient<THandler>();
         services.AddTransient<IBackgroundJobHandler<TPayload>>(sp => sp.GetRequiredService<THandler>());
+        services.AddSingleton(new BackgroundJobDescriptor
+        {
+            Name = name ?? typeof(THandler).Name,
+            HandlerType = typeof(THandler).AssemblyQualifiedName!,
+            PayloadType = typeof(TPayload).AssemblyQualifiedName!,
+        });
         return services;
     }
 
@@ -43,7 +53,7 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// <para>Prefer <see cref="AddBackgroundJob{THandler, TPayload}"/> when you already know the payload — it is
     /// compile-time checked and trim/AOT-friendly; this overload resolves the payload via reflection.</para>
     /// </summary>
-    public static IServiceCollection AddBackgroundJob<THandler>(this IServiceCollection services)
+    public static IServiceCollection AddBackgroundJob<THandler>(this IServiceCollection services, string? name = null)
         where THandler : class
     {
         var handlerType = typeof(THandler);
@@ -64,6 +74,16 @@ public static class BackgroundJobsServiceCollectionExtensions
         foreach (var serviceType in handlerInterfaces)
         {
             services.AddTransient(serviceType, sp => sp.GetRequiredService(handlerType));
+
+            // Record a catalog entry per payload. When the handler serves a single payload the friendly name is just
+            // the handler's type name; with several payloads each is suffixed so names stay unique/addressable.
+            var payloadType = serviceType.GetGenericArguments()[0];
+            services.AddSingleton(new BackgroundJobDescriptor
+            {
+                Name = name ?? (handlerInterfaces.Length == 1 ? handlerType.Name : $"{handlerType.Name}:{payloadType.Name}"),
+                HandlerType = handlerType.AssemblyQualifiedName!,
+                PayloadType = payloadType.AssemblyQualifiedName!,
+            });
         }
 
         return services;
@@ -150,7 +170,13 @@ public static class BackgroundJobsServiceCollectionExtensions
 
         // Enqueue to the specific handler each occurrence, so the recurring job's action is explicit.
         var registration = builder.Build((jobs, options, cancellationToken) =>
-            jobs.Enqueue<THandler>(payloadFactory(), options, cancellationToken));
+            jobs.Enqueue<THandler>(payloadFactory(), options, cancellationToken)) with
+        {
+            // Surface the handler/payload behind the (otherwise opaque) Trigger closure so the admin "list recurring
+            // jobs" view can show what each schedule runs.
+            HandlerTypeName = typeof(THandler).FullName,
+            PayloadTypeName = typeof(TPayload).FullName,
+        };
 
         services.AddSingleton(registration);
 

@@ -40,4 +40,10 @@ public sealed record RecurringJobRegistration
 
     /// <summary>Enqueues a fresh payload instance through <see cref="IBackgroundJob"/>; invoked once per due occurrence.</summary>
     public required Func<IBackgroundJob, CancellationToken, Task> Trigger { get; init; }
+
+    /// <summary>Handler type name this schedule enqueues (informational, for the admin catalog); null if unknown.</summary>
+    public string? HandlerTypeName { get; init; }
+
+    /// <summary>Payload type name this schedule enqueues (informational, for the admin catalog); null if unknown.</summary>
+    public string? PayloadTypeName { get; init; }
 }
