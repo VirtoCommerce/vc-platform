@@ -5,9 +5,11 @@
   "scripts": {
     "webpack:dev": "webpack --mode=development",
     "webpack:build": "webpack --mode=production",
-    "webpack:watch": "webpack --watch --mode=development"
+    "webpack:watch": "webpack --watch --mode=development",
+    "audit": "better-npm-audit audit"
   },
   "devDependencies": {
+    "better-npm-audit": "^3.11.0",
     "css-loader": "^6.5.1",
     "fast-glob": "^3.3.2",
     "html-loader": "^5.1.0",
@@ -62,7 +64,6 @@
     "ng-tags-input": "~3.2.0",
     "ngstorage": "~0.3.11",
     "select2": "~3.4.5",
-    "textangular": "~1.5.16",
     "ui-grid-draggable-rows": "~0.3.3",
     "ui-select": "~0.19.8",
     "uikit": "2.27.4",

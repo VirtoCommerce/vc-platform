@@ -61,8 +61,6 @@ import 'moment';
 import 'moment-timezone';
 import 'ng-tags-input';
 import 'ngstorage';
-import 'textangular';
-import 'textangular/dist/textAngular-sanitize';
 import 'ng-focus-on';
 import 'angular-filter';
 
@@ -81,7 +79,6 @@ import 'angular-ui-grid/ui-grid.css';
 import 'angular-gridster/dist/angular-gridster.css';
 import 'ui-select/dist/select.css';
 import 'ng-tags-input/build/ng-tags-input.css';
-import 'textangular/dist/textAngular.css';
 import 'select2/select2.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'font-awesome/css/font-awesome.css';
