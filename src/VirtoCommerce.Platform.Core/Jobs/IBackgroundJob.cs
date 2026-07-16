@@ -44,6 +44,12 @@ public interface IBackgroundJob
     /// <param name="options">Per-enqueue options (queue, title, progress, retries, unique key).</param>
     /// <param name="cancellationToken">Cancels the enqueue operation.</param>
     /// <returns>The engine-specific job id.</returns>
+    /// <remarks>
+    /// A default (throwing) implementation is provided so this member can be added without breaking existing external
+    /// implementers of <see cref="IBackgroundJob"/>; the platform's facade overrides it with the real behavior.
+    /// </remarks>
     Task<string> Enqueue(Type handlerType, object payload, EnqueueOptions? options = null,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default)
+        => throw new NotSupportedException(
+            $"This {nameof(IBackgroundJob)} implementation does not support the non-generic Enqueue(Type, ...) overload.");
 }

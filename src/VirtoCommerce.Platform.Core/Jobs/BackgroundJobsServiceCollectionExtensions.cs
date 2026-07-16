@@ -28,7 +28,11 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// <param name="name">
     /// Optional friendly name for the admin catalog and name-addressed triggering; defaults to the handler's type name.
     /// </param>
-    public static IServiceCollection AddBackgroundJob<THandler, TPayload>(this IServiceCollection services, string? name = null)
+    /// <param name="triggerable">
+    /// When <c>false</c>, the handler is listed for troubleshooting but cannot be triggered on demand by name via the
+    /// admin/integration API — use this for internal plumbing (e.g. map/reduce coordinators) and sensitive system jobs.
+    /// </param>
+    public static IServiceCollection AddBackgroundJob<THandler, TPayload>(this IServiceCollection services, string? name = null, bool triggerable = true)
         where THandler : class, IBackgroundJobHandler<TPayload>
         where TPayload : class
     {
@@ -42,6 +46,7 @@ public static class BackgroundJobsServiceCollectionExtensions
             Name = name ?? typeof(THandler).Name,
             HandlerType = typeof(THandler).AssemblyQualifiedName!,
             PayloadType = typeof(TPayload).AssemblyQualifiedName!,
+            Triggerable = triggerable,
         });
         return services;
     }
@@ -53,7 +58,7 @@ public static class BackgroundJobsServiceCollectionExtensions
     /// <para>Prefer <see cref="AddBackgroundJob{THandler, TPayload}"/> when you already know the payload — it is
     /// compile-time checked and trim/AOT-friendly; this overload resolves the payload via reflection.</para>
     /// </summary>
-    public static IServiceCollection AddBackgroundJob<THandler>(this IServiceCollection services, string? name = null)
+    public static IServiceCollection AddBackgroundJob<THandler>(this IServiceCollection services, string? name = null, bool triggerable = true)
         where THandler : class
     {
         var handlerType = typeof(THandler);
@@ -83,6 +88,7 @@ public static class BackgroundJobsServiceCollectionExtensions
                 Name = name ?? (handlerInterfaces.Length == 1 ? handlerType.Name : $"{handlerType.Name}:{payloadType.Name}"),
                 HandlerType = handlerType.AssemblyQualifiedName!,
                 PayloadType = payloadType.AssemblyQualifiedName!,
+                Triggerable = triggerable,
             });
         }
 

@@ -643,7 +643,9 @@ namespace VirtoCommerce.Platform.Web
 
             // Module management (install/update/uninstall) runs as a message-based background job, dispatched to
             // ModuleBackgroundJobHandler by the active engine (and invoked inline for the bootstrap auto-install path).
-            services.AddBackgroundJob<ModuleBackgroundJobHandler, ModuleBackgroundJobPayload>();
+            // Not triggerable by name via the admin API — module operations must go through the modules controller,
+            // not an arbitrary background-job payload.
+            services.AddBackgroundJob<ModuleBackgroundJobHandler, ModuleBackgroundJobPayload>(triggerable: false);
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
 

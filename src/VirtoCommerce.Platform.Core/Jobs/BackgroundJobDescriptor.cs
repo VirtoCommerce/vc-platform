@@ -17,4 +17,11 @@ public sealed record BackgroundJobDescriptor
 
     /// <summary>Assembly-qualified name of the payload contract type the handler runs.</summary>
     public required string PayloadType { get; init; }
+
+    /// <summary>
+    /// Whether this handler may be triggered on demand via the admin/integration API. Internal plumbing handlers
+    /// (e.g. the map/reduce coordinators) and sensitive system handlers register with <c>false</c>: they are still
+    /// listed for troubleshooting but cannot be run by name with a caller-supplied payload. Defaults to <c>true</c>.
+    /// </summary>
+    public bool Triggerable { get; init; } = true;
 }
