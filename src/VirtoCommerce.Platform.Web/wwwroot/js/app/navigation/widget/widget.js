@@ -78,11 +78,6 @@ angular.module('platformWebApp')
                 return (prefix + widget.controller + widget.template + scope.group).hashCode();
             }
 
-            // Persisted row/col may no longer fit the current grid (widget set changed,
-            // module uninstalled, layout saved by an older version). Gridster clamps
-            // out-of-bounds coordinates into the last row/column ON TOP of already
-            // occupied cells, so widgets render overlapped. Drop such positions and let
-            // gridster auto-place the widget instead.
             function resetInvalidStoredPosition(widget) {
                 var columns = scope.gridsterOpts.columns || gridsterConfig.columns;
                 var maxRows = scope.gridsterOpts.maxRows || gridsterConfig.maxRows;
@@ -92,6 +87,7 @@ angular.module('platformWebApp')
                 var colKey = scope.getKey('col', widget);
                 var row = scope.$storage[rowKey];
                 var col = scope.$storage[colKey];
+                
                 if (angular.isDefined(row) || angular.isDefined(col)) {
                     var valid = angular.isNumber(row) && angular.isNumber(col) &&
                         row >= 0 && col >= 0 && row + sizeY <= maxRows && col + sizeX <= columns;
