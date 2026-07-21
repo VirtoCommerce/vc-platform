@@ -91,6 +91,7 @@ angular.module('platformWebApp')
                 if (angular.isDefined(row) || angular.isDefined(col)) {
                     var valid = angular.isNumber(row) && angular.isNumber(col) &&
                         row >= 0 && col >= 0 && row + sizeY <= maxRows && col + sizeX <= columns;
+                    
                     if (!valid) {
                         delete scope.$storage[rowKey];
                         delete scope.$storage[colKey];
@@ -101,12 +102,15 @@ angular.module('platformWebApp')
             var renderedWidgetsKey = null;
             function refreshWidgets() {
                 var groupWidgets = _.filter(widgetService.widgetsMap[scope.group], function (w) { return !angular.isFunction(w.isVisible) || w.isVisible(scope.blade); });
+                
                 // re-render only when the set of visible widgets actually changed
                 var widgetsKey = _.map(groupWidgets, function (w) { return w.controller + w.template; }).join('|');
                 if (widgetsKey === renderedWidgetsKey) {
                     return;
                 }
+                
                 renderedWidgetsKey = widgetsKey;
+                
                 scope.widgets = angular.copy(groupWidgets);
                 angular.forEach(scope.widgets, function (w) {
                     w.blade = scope.blade;
@@ -116,11 +120,6 @@ angular.module('platformWebApp')
             }
 
             scope.$watch('gridsterOpts', refreshWidgets, true);
-            // Widgets are filtered by isVisible() which commonly calls
-            // authService.checkPermission(). When a blade is opened by a deep link
-            // (e.g. #!/workspace/catalog?productId=...), this directive links before
-            // the current user (and their permissions) is loaded, so such widgets get
-            // filtered out and never come back. Re-evaluate when auth state arrives.
             scope.$on('loginStatusChanged', refreshWidgets);
 
             // Deterministic color marker grouped by MODULE, so all widgets from the same
