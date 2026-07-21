@@ -134,6 +134,25 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
+        public async Task GetOrLoadByIdsAsync_IdCasingDiffers_MatchesCaseInsensitively()
+        {
+            var sut = new RequestScopedCache();
+            var batches = new List<string[]>();
+            // The loader returns the entity with a different id casing than requested (as a
+            // case-insensitive DB collation would): request "ABC", stored id "abc".
+            var loadMissing = CreateLoader(batches, x => new Item(x.ToLowerInvariant()));
+
+            var first = await sut.GetOrLoadByIdsAsync("prefix", ["ABC"], x => x.Id, loadMissing);
+            var second = await sut.GetOrLoadByIdsAsync("prefix", ["abc"], x => x.Id, loadMissing);
+
+            // The loaded item publishes to the requested reservation despite the casing difference,
+            // and a differently-cased repeat dedups against the cached entry instead of re-loading.
+            Assert.Single(batches);
+            Assert.NotNull(first["ABC"]);
+            Assert.Same(first["ABC"], second["abc"]);
+        }
+
+        [Fact]
         public async Task GetOrLoadByIdsAsync_NotFoundId_OmittedAndNegativelyCached()
         {
             var sut = new RequestScopedCache();

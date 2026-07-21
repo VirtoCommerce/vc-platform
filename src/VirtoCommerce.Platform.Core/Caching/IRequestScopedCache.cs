@@ -45,6 +45,10 @@ namespace VirtoCommerce.Platform.Core.Caching
         /// every id is loaded at most once per request.
         /// </summary>
         /// <remarks>
+        /// Ids are matched case-insensitively (OrdinalIgnoreCase), matching the platform's id-cache convention
+        /// (a load may return an entity whose <c>Id</c> casing differs from the requested id under a
+        /// case-insensitive database collation).
+        /// <br/><br/>
         /// An id the load does not return is negatively cached: omitted from results for the rest of the request,
         /// not retried. Loaded items with unrequested ids are ignored; duplicate ids - first wins. The returned
         /// dictionary is created per call and may be mutated; the item instances in it are shared within the

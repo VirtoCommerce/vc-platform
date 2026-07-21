@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Caching
 {
@@ -12,10 +13,22 @@ namespace VirtoCommerce.Platform.Caching
         // The Task<T> itself is stored (not its unwrapped result), so value-type results are never boxed.
         private readonly ConcurrentDictionary<string, Lazy<Task>> _cache = new();
 
+        // OrdinalIgnoreCase per the platform id-cache convention (MemoryCacheExtensions): a case-insensitive DB
+        // collation can return an entity Id cased differently from the requested id, which would otherwise miss
+        // its reservation and be negatively cached. No standard ignore-case comparer exists for a string tuple;
+        // capture-free lambdas keep this static singleton alloc-free per call (vs. an allocating per-id ToLower key).
+        private static readonly IEqualityComparer<(string Prefix, string Id)> _byIdKeyComparer =
+            AnonymousComparer.Create<(string Prefix, string Id)>(
+                (x, y) => string.Equals(x.Prefix, y.Prefix, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(x.Id, y.Id, StringComparison.OrdinalIgnoreCase),
+                obj => HashCode.Combine(
+                    obj.Prefix is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Prefix),
+                    obj.Id is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Id)));
+
         // By-id entries store the Task<T> directly - single-flight comes from promise reservation, so there
         // is no per-id factory whose start a Lazy could defer. The tuple key avoids the aliasing of string
         // concatenation ("P:A"+"B" vs "P"+"A:B") and can't collide with by-key entries (separate dictionary).
-        private readonly ConcurrentDictionary<(string Prefix, string Id), Task> _cacheById = new();
+        private readonly ConcurrentDictionary<(string Prefix, string Id), Task> _cacheById = new(_byIdKeyComparer);
 
         public virtual Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> factory)
         {
@@ -48,7 +61,7 @@ namespace VirtoCommerce.Platform.Caching
             Func<ICollection<string>, Task<IList<T>>> loadMissing)
             where T : class
         {
-            var result = new Dictionary<string, T>(ids.Count);
+            var result = new Dictionary<string, T>(ids.Count, StringComparer.OrdinalIgnoreCase);
             List<KeyValuePair<string, Task<T>>> pending = null;
             Dictionary<string, TaskCompletionSource<T>> owned = null;
 
@@ -66,7 +79,7 @@ namespace VirtoCommerce.Platform.Caching
                     var task = GetOrReserve<T>((keyPrefix, id), out var reservation);
                     if (reservation is not null)
                     {
-                        (owned ??= new Dictionary<string, TaskCompletionSource<T>>()).Add(id, reservation);
+                        (owned ??= new Dictionary<string, TaskCompletionSource<T>>(StringComparer.OrdinalIgnoreCase)).Add(id, reservation);
                     }
 
                     // A just-won reservation task is never completed here, so it lands in pending.
