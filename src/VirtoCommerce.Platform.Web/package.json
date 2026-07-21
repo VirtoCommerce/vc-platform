@@ -71,7 +71,8 @@
     "yaml": "^2.5.1"
   },
   "overrides": {
-    "serialize-javascript": "^7.0.3"
+    "serialize-javascript": "^7.0.3",
+    "bootstrap": "^5.3.3"
   },
   "webpack": {
     "stats": "verbose"

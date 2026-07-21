@@ -1,7 +1,12 @@
 // leftClickMenu based on: ng-context-menu - v1.0.2 - An AngularJS directive to display a context menu when a right-click event is triggered
 angular
     .module('platformWebApp')
-    .directive("leftClickMenu", ["$document", "ContextMenuService", function ($document, ContextMenuService) {
+    .directive("leftClickMenu", ["$document", "ContextMenuService", "$rootScope", function ($document, ContextMenuService, $rootScope) {
+        // Shared coordination event so only one transient overlay (this context menu,
+        // the filter panel, ...) is visible at a time. Payload is the opener's kind;
+        // an overlay ignores events from its own kind (same-kind coordination is handled locally).
+        var overlayOpenedEvent = 'platformWebApp.transientOverlay.opened';
+        var overlayKind = 'contextMenu';
         return {
             restrict: 'A',
             scope: {
@@ -84,6 +89,8 @@ angular
                         });
                         $scope.$apply(function () {
                             open(event, ContextMenuService.menuElement);
+                            // Opening this menu dismisses any other open transient overlay.
+                            $rootScope.$broadcast(overlayOpenedEvent, overlayKind);
                         });
                     }
                 });
@@ -107,6 +114,13 @@ angular
                     }
                 }
 
+                // Close this menu when another kind of transient overlay opens.
+                var unsubscribeOverlay = $scope.$on(overlayOpenedEvent, function (event, sourceKind) {
+                    if (sourceKind !== overlayKind && opened) {
+                        close(ContextMenuService.menuElement);
+                    }
+                });
+
                 $document.bind('keyup', handleKeyUpEvent);
                 // Firefox treats a right-click as a click and a contextmenu event
                 // while other browsers just treat it as a contextmenu event
@@ -117,6 +131,7 @@ angular
                     $document.unbind('keyup', handleKeyUpEvent);
                     $document.unbind('click', handleClickEvent);
                     $document.unbind('contextmenu', handleClickEvent);
+                    unsubscribeOverlay();
                 });
             }
         };
