@@ -13,13 +13,38 @@ namespace VirtoCommerce.Platform.Core.Caching
         private static readonly StringComparer _ignoreCase = StringComparer.OrdinalIgnoreCase;
         private static readonly ConcurrentDictionary<string, object> _lockLookup = new();
 
-        public static async Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
+        public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
             this IMemoryCache memoryCache,
             string keyPrefix,
             IList<string> ids,
             Func<IList<string>, Task<IList<TItem>>> loadItems,
             Action<MemoryCacheEntryOptions, string, TItem> configureCache)
             where TItem : IEntity
+        {
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, x => x.Id, loadItems, configureCache);
+        }
+
+        public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
+            this IMemoryCache memoryCache,
+            string keyPrefix,
+            IList<string> ids,
+            Func<TItem, string> idSelector,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache)
+            where TItem : class
+        {
+            ArgumentNullException.ThrowIfNull(idSelector);
+
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadItems, configureCache);
+        }
+
+        private static async Task<IList<TItem>> GetOrLoadByIdsCoreAsync<TItem>(
+            this IMemoryCache memoryCache,
+            string keyPrefix,
+            IList<string> ids,
+            Func<TItem, string> idSelector,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache)
         {
             ids = ids
                 ?.Where(id => !string.IsNullOrEmpty(id))
@@ -41,7 +66,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
                         var itemsByIds = items
                             .Where(x => x != null)
-                            .ToDictionary(x => x.Id, _ignoreCase);
+                            .ToDictionary(idSelector, _ignoreCase);
 
                         foreach (var id in missingIds)
                         {

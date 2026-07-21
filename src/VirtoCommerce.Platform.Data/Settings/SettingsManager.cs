@@ -131,36 +131,57 @@ namespace VirtoCommerce.Platform.Data.Settings
             ArgumentNullException.ThrowIfNull(names);
 
             var settingNames = names as string[] ?? names.ToArray();
-            var cacheKey = CacheKey.With(GetType(), "GetSettingByNamesAsync", string.Join(";", settingNames), objectType, objectId);
-            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
-            {
-                var resultObjectSettings = new List<ObjectSettingEntry>();
-                var dbStoredSettings = new List<SettingEntity>();
 
-                //Try to load setting value from DB
-                using (var repository = _repositoryFactory())
+            // Cache each setting under its own per-name entry (prefix scoped by objectType/objectId) rather than one
+            // entry per requested name-set. Distinct single-name reads issued concurrently (e.g. the OrderChangedEvent
+            // handler fan-out) then share the per-prefix load lock and serialize into brief loads instead of piling up
+            // as concurrent cold-cache DB reads of the same hot PlatformSetting partition.
+            var keyPrefix = CacheKey.With(GetType(), "GetSettingByNamesAsync", objectType, objectId);
+
+            var loadedSettings = await _memoryCache.GetOrLoadByIdsAsync<ObjectSettingEntry>(
+                keyPrefix,
+                settingNames,
+                objectSetting => objectSetting.Name,
+                async missingNames =>
                 {
-                    repository.DisableChangesTracking();
-                    //try to load setting from db
-                    dbStoredSettings.AddRange(await repository.GetObjectSettingsByNamesAsync(settingNames, objectType, objectId));
-                }
+                    var dbStoredSettings = new List<SettingEntity>();
 
-                foreach (var name in settingNames)
+                    //Try to load setting value from DB
+                    using (var repository = _repositoryFactory())
+                    {
+                        repository.DisableChangesTracking();
+                        //try to load setting from db
+                        dbStoredSettings.AddRange(await repository.GetObjectSettingsByNamesAsync(missingNames.ToArray(), objectType, objectId));
+                    }
+
+                    var loaded = new List<ObjectSettingEntry>(missingNames.Count);
+                    foreach (var name in missingNames)
+                    {
+                        var objectSetting = _fixedSettingsDict.ContainsKey(name)
+                            ? GetFixedSetting(name)
+                            : GetSettingWithOverrides(name, dbStoredSettings, objectType, objectId);
+
+                        loaded.Add(objectSetting);
+                    }
+
+                    return loaded;
+                },
+                (options, name, objectSetting) =>
                 {
-                    var objectSetting = _fixedSettingsDict.ContainsKey(name)
-                        ? GetFixedSetting(name)
-                        : GetSettingWithOverrides(name, dbStoredSettings, objectType, objectId);
+                    //Add cache expiration token for setting
+                    if (objectSetting != null)
+                    {
+                        options.AddExpirationToken(SettingsCacheRegion.CreateChangeToken(objectSetting));
+                    }
+                });
 
-                    resultObjectSettings.Add(objectSetting);
+            // Preserve the requested order (and any repeated names) of the previous name-set implementation
+            var settingsByName = loadedSettings.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
 
-                    //Add cache  expiration token for setting
-                    cacheEntry.AddExpirationToken(SettingsCacheRegion.CreateChangeToken(objectSetting));
-                }
-
-                return resultObjectSettings;
-            });
-
-            return result;
+            return settingNames
+                .Select(name => settingsByName.TryGetValue(name, out var setting) ? setting : null)
+                .Where(x => x != null)
+                .ToList();
         }
 
         public virtual async Task RemoveObjectSettingsAsync(IEnumerable<ObjectSettingEntry> objectSettings)

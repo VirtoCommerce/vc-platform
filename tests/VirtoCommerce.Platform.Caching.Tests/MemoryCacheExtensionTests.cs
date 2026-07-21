@@ -89,6 +89,40 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
+        public async Task GetOrLoadByIdsAsync_WithIdSelector_CachesPerIdKeyedByNonEntityField_AndLoadsOnlyMissing()
+        {
+            var sut = GetPlatformMemoryCache();
+            const string keyPrefix = "settings-like";
+            var loadCalls = new List<string[]>();
+
+            Task<IList<TestCacheItem>> LoadItems(IList<string> ids)
+            {
+                loadCalls.Add(ids.ToArray());
+                IList<TestCacheItem> items = ids.Select(id => new TestCacheItem(id)).ToList();
+                return Task.FromResult(items);
+            }
+
+            static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestCacheItem item)
+            {
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            }
+
+            // First (cold) call: both ids come from the batch loader, keyed by the non-IEntity Name field.
+            var first = await sut.GetOrLoadByIdsAsync(keyPrefix, ["Alpha", "Beta"], x => x.Name, LoadItems, ConfigureCache);
+
+            Assert.Equal(["Alpha", "Beta"], first.Select(x => x.Name).OrderBy(x => x));
+            Assert.Single(loadCalls);
+            Assert.Equal(["Alpha", "Beta"], loadCalls[0].OrderBy(x => x));
+
+            // Second call: "Alpha" is served warm from its own per-id entry; only "Gamma" hits the loader.
+            var second = await sut.GetOrLoadByIdsAsync(keyPrefix, ["Alpha", "Gamma"], x => x.Name, LoadItems, ConfigureCache);
+
+            Assert.Equal(["Alpha", "Gamma"], second.Select(x => x.Name).OrderBy(x => x));
+            Assert.Equal(2, loadCalls.Count);
+            Assert.Equal(["Gamma"], loadCalls[1]);
+        }
+
+        [Fact]
         public void DefaultCachingOptions_Are_Applied()
         {
             var defaultOptions = Options.Create(new CachingOptions() { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });
@@ -107,5 +141,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             });
             Assert.Equal(2, result);
         }
+
+        private sealed record TestCacheItem(string Name);
     }
 }
