@@ -530,7 +530,11 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             gridsterConfig.colWidth = 130;
             gridsterConfig.defaultSizeX = 1;
             gridsterConfig.resizable = { enabled: false, handles: [] };
-            gridsterConfig.maxRows = 8;
+            // Must comfortably exceed the number of cells widgets can occupy in the most
+            // populated container (itemDetail easily exceeds 32 cells = 8 rows x 4 columns
+            // with many modules installed). When the grid is full, gridster throws
+            // "Unable to place item!" and renders the leftover widgets on top of each other.
+            gridsterConfig.maxRows = 24;
             gridsterConfig.mobileModeEnabled = false;
             gridsterConfig.outerMargin = false;
 
