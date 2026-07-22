@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Settings;
+using VirtoCommerce.Platform.Tests.Common;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.UnitTests
@@ -114,7 +112,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
 
             return new SettingsManager(
                 () => repositoryMock.Object,
-                GetPlatformMemoryCache(),
+                MemoryCacheMockHelper.GetPlatformMemoryCache(),
                 new Mock<IEventPublisher>().Object,
                 Options.Create(new FixedSettings { Settings = [] }),
                 overrideProvider.Object);
@@ -123,12 +121,6 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         private static SettingDescriptor Descriptor(string name)
         {
             return new SettingDescriptor { Name = name, ValueType = SettingValueType.ShortText };
-        }
-
-        private static PlatformMemoryCache GetPlatformMemoryCache()
-        {
-            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
-            return new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
         }
     }
 }
