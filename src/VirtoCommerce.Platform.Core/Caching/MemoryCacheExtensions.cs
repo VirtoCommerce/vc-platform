@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -109,6 +110,8 @@ namespace VirtoCommerce.Platform.Core.Caching
                 .ToList();
         }
 
+        [SuppressMessage("Major Code Smell", "S3267:Loops should be simplified using the \"Where\" LINQ method",
+            Justification = "Perf-critical cache path: the explicit loop avoids the Where iterator and delegate allocation this method exists to eliminate.")]
         private static IList<string> DistinctNonEmpty(IList<string> ids)
         {
             if (ids is null || ids.Count == 0)
