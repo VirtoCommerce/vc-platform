@@ -154,6 +154,62 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
+        public async Task GetOrLoadByIds_DeduplicatesCaseInsensitively_AndFiltersEmpty()
+        {
+            var sut = GetPlatformMemoryCache();
+            var loadedBatches = new List<string[]>();
+
+            Task<IList<TestCacheItem>> LoadItems(IList<string> ids)
+            {
+                loadedBatches.Add(ids.ToArray());
+                IList<TestCacheItem> items = ids.Select(id => new TestCacheItem(id)).ToList();
+                return Task.FromResult(items);
+            }
+
+            static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestCacheItem item)
+            {
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            }
+
+            await sut.GetOrLoadByIdsAsync("dedup-prefix", ["Alpha", "alpha", "", "Beta", "Alpha"], x => x.Name, LoadItems, ConfigureCache);
+
+            // Empty ids dropped; "Alpha"/"alpha" collapse case-insensitively -> loader sees two distinct ids, once.
+            Assert.Single(loadedBatches);
+            Assert.Equal(["Alpha", "Beta"], loadedBatches[0].OrderBy(x => x));
+        }
+
+        [Fact]
+        public async Task GetOrLoadByIds_NegativeCachedNull_CountsAsHit_ExcludedFromResult()
+        {
+            var sut = GetPlatformMemoryCache();
+            const string keyPrefix = "neg-cache";
+            var loadCalls = 0;
+
+            Task<IList<TestCacheItem>> LoadItems(IList<string> ids)
+            {
+                loadCalls++;
+                IList<TestCacheItem> items = ids.Where(id => id != "Missing").Select(id => new TestCacheItem(id)).ToList();
+                return Task.FromResult(items);
+            }
+
+            static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestCacheItem item)
+            {
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            }
+
+            var first = await sut.GetOrLoadByIdsAsync(keyPrefix, ["Present", "Missing"], x => x.Name, LoadItems, ConfigureCache);
+
+            Assert.Equal(["Present"], first.Select(x => x.Name));
+            Assert.Equal(1, loadCalls);
+
+            // "Missing" is cached as null; the re-read is all-hit (null counts as present), so the loader is not called again.
+            var second = await sut.GetOrLoadByIdsAsync(keyPrefix, ["Present", "Missing"], x => x.Name, LoadItems, ConfigureCache);
+
+            Assert.Equal(["Present"], second.Select(x => x.Name));
+            Assert.Equal(1, loadCalls);
+        }
+
+        [Fact]
         public void DefaultCachingOptions_Are_Applied()
         {
             var defaultOptions = Options.Create(new CachingOptions() { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });

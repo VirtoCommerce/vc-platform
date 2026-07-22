@@ -46,41 +46,60 @@ namespace VirtoCommerce.Platform.Core.Caching
             Func<IList<string>, Task<IList<TItem>>> loadItems,
             Action<MemoryCacheEntryOptions, string, TItem> configureCache)
         {
-            ids = ids
-                ?.Where(id => !string.IsNullOrEmpty(id))
-                .Distinct(_ignoreCase)
-                .ToArray()
-                ?? Array.Empty<string>();
+            ids = DistinctNonEmpty(ids);
 
-            if (!TryGetByIds<TItem>(memoryCache, keyPrefix, ids, out var result))
+            var normalizedPrefix = CacheKey.Normalize(keyPrefix);
+
+            var hits = new List<TItem>(ids.Count);
+            var allCached = true;
+
+            foreach (var id in ids)
             {
-                using (await AsyncLock.GetLockByKey(keyPrefix).LockAsync())
+                if (memoryCache.TryGetValue(CacheKey.With(normalizedPrefix, CacheKey.Normalize(id)), out var cached))
                 {
-                    if (!TryGetByIds(memoryCache, keyPrefix, ids, out result))
+                    if (cached is not null)
                     {
-                        var missingIds = ids
-                            .Except(result.Keys)
-                            .ToList();
+                        hits.Add((TItem)cached);
+                    }
+                }
+                else
+                {
+                    allCached = false;
+                    break;
+                }
+            }
 
-                        var items = await loadItems(missingIds) ?? Array.Empty<TItem>();
+            if (allCached)
+            {
+                return hits;
+            }
 
-                        var itemsByIds = items
-                            .Where(x => x != null)
-                            .ToDictionary(idSelector, _ignoreCase);
+            IDictionary<string, TItem> result;
 
-                        var normalizedPrefix = CacheKey.Normalize(keyPrefix);
+            using (await AsyncLock.GetLockByKey(normalizedPrefix).LockAsync())
+            {
+                if (!TryGetByIds(memoryCache, keyPrefix, ids, out result))
+                {
+                    var missingIds = ids
+                        .Except(result.Keys)
+                        .ToList();
 
-                        foreach (var id in missingIds)
+                    var items = await loadItems(missingIds) ?? Array.Empty<TItem>();
+
+                    var itemsByIds = items
+                        .Where(x => x != null)
+                        .ToDictionary(idSelector, _ignoreCase);
+
+                    foreach (var id in missingIds)
+                    {
+                        var cacheKey = CacheKey.With(normalizedPrefix, CacheKey.Normalize(id));
+
+                        result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
                         {
-                            var cacheKey = CacheKey.With(normalizedPrefix, CacheKey.Normalize(id));
-
-                            result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
-                            {
-                                var item = itemsByIds.GetValueSafe(id);
-                                configureCache(options, id, item);
-                                return item;
-                            });
-                        }
+                            var item = itemsByIds.GetValueSafe(id);
+                            configureCache(options, id, item);
+                            return item;
+                        });
                     }
                 }
             }
@@ -90,9 +109,29 @@ namespace VirtoCommerce.Platform.Core.Caching
                 .ToList();
         }
 
+        private static IList<string> DistinctNonEmpty(IList<string> ids)
+        {
+            if (ids is null || ids.Count == 0)
+            {
+                return Array.Empty<string>();
+            }
+
+            var distinct = new HashSet<string>(ids.Count, _ignoreCase);
+
+            foreach (var id in ids)
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    distinct.Add(id);
+                }
+            }
+
+            return distinct.ToList();
+        }
+
         public static bool TryGetByIds<TItem>(this IMemoryCache memoryCache, string keyPrefix, IList<string> ids, out IDictionary<string, TItem> result)
         {
-            result = new Dictionary<string, TItem>(_ignoreCase);
+            result = new Dictionary<string, TItem>(ids.Count, _ignoreCase);
 
             var normalizedPrefix = CacheKey.Normalize(keyPrefix);
 
@@ -150,7 +189,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             key = CacheKey.Normalize(key);
             if (!cache.TryGetValue(key, out var result))
             {
-                lock (_lockLookup.GetOrAdd(key, new object()))
+                lock (_lockLookup.GetOrAdd(key, static _ => new object()))
                 {
                     try
                     {
