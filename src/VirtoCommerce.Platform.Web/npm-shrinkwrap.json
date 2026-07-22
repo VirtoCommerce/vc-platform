@@ -204,6 +204,17 @@
         "node": ">= 8"
       }
     },
+    "node_modules/@popperjs/core": {
+      "version": "2.11.8",
+      "resolved": "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz",
+      "integrity": "sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==",
+      "license": "MIT",
+      "peer": true,
+      "funding": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/popperjs"
+      }
+    },
     "node_modules/@types/angular": {
       "version": "1.8.9",
       "resolved": "https://registry.npmjs.org/@types/angular/-/angular-1.8.9.tgz",
@@ -952,13 +963,23 @@
       }
     },
     "node_modules/bootstrap": {
-      "version": "3.4.1",
-      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.4.1.tgz",
-      "integrity": "sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA==",
+      "version": "5.3.8",
+      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-5.3.8.tgz",
+      "integrity": "sha512-HP1SZDqaLDPwsNiqRqi5NcP0SSXciX2s9E+RyqJIIqGo+vJeN5AJVM98CXmW/Wux0nQ5L7jeWUdplCEf0Ee+tg==",
+      "funding": [
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/twbs"
+        },
+        {
+          "type": "opencollective",
+          "url": "https://opencollective.com/bootstrap"
+        }
+      ],
       "license": "MIT",
       "peer": true,
-      "engines": {
-        "node": ">=6"
+      "peerDependencies": {
+        "@popperjs/core": "^2.11.8"
       }
     },
     "node_modules/bourbon": {
@@ -3563,9 +3584,9 @@
       "license": "MIT"
     },
     "node_modules/ws": {
-      "version": "6.2.3",
-      "resolved": "https://registry.npmjs.org/ws/-/ws-6.2.3.tgz",
-      "integrity": "sha512-jmTjYU0j60B+vHey6TfR3Z7RD61z/hmxBS3VMSGIrroOWXQEneK1zNuotOUrGyBHQj0yrpsLHPWtigEFd13ndA==",
+      "version": "6.2.5",
+      "resolved": "https://registry.npmjs.org/ws/-/ws-6.2.5.tgz",
+      "integrity": "sha512-T7pPl+DnmNrKRuttAIQwueReX5GqsedYEWp3/H//CG35+DyUOe1+/voAeE8idxgfLsQf2tO+rdtBd1FnPopgTQ==",
       "license": "MIT",
       "dependencies": {
         "async-limiter": "~1.0.0"
