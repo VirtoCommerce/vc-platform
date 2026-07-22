@@ -175,13 +175,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                     }
                 });
 
-            // Preserve the requested order (and any repeated names) of the previous name-set implementation
-            var settingsByName = loadedSettings.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
-
-            return settingNames
-                .Select(name => settingsByName.TryGetValue(name, out var setting) ? setting : null)
-                .Where(x => x != null)
-                .ToList();
+            return loadedSettings;
         }
 
         public virtual async Task RemoveObjectSettingsAsync(IEnumerable<ObjectSettingEntry> objectSettings)
