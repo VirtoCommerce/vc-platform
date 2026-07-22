@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using VirtoCommerce.Platform.Core.Extensions;
 
 namespace VirtoCommerce.Platform.Core.Caching
@@ -10,7 +11,17 @@ namespace VirtoCommerce.Platform.Core.Caching
             return string.Join("-", keys);
         }
 
+        public static string With(params ReadOnlySpan<string> keys)
+        {
+            return string.Join("-", keys);
+        }
+
         public static string With(Type ownerType, params string[] keys)
+        {
+            return $"{ownerType.GetCacheKey()}:{string.Join("-", keys)}";
+        }
+
+        public static string With(Type ownerType, params ReadOnlySpan<string> keys)
         {
             return $"{ownerType.GetCacheKey()}:{string.Join("-", keys)}";
         }
@@ -24,7 +35,15 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         public static string Normalize(string key)
         {
-            return key.ToLowerInvariant();
+            foreach (var rune in key.EnumerateRunes())
+            {
+                if (Rune.ToLowerInvariant(rune) != rune)
+                {
+                    return key.ToLowerInvariant();
+                }
+            }
+
+            return key;
         }
     }
 }

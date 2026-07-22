@@ -123,6 +123,37 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
+        public async Task GetOrLoadByIds_TryGetByIds_RemoveByIds_RoundTrip_IsCaseInsensitive()
+        {
+            var sut = GetPlatformMemoryCache();
+            const string keyPrefix = "MixedCase-Prefix";
+
+            static Task<IList<TestCacheItem>> LoadItems(IList<string> ids)
+            {
+                IList<TestCacheItem> items = ids.Select(id => new TestCacheItem(id)).ToList();
+                return Task.FromResult(items);
+            }
+
+            static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestCacheItem item)
+            {
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            }
+
+            await sut.GetOrLoadByIdsAsync(keyPrefix, ["Alpha", "Beta"], x => x.Name, LoadItems, ConfigureCache);
+
+            // A differently-cased prefix and ids resolve to the same stored entries.
+            var hit = sut.TryGetByIds<TestCacheItem>("mixedcase-prefix", ["alpha", "beta"], out var found);
+
+            Assert.True(hit);
+            Assert.Equal(["Alpha", "Beta"], found.Values.Select(x => x.Name).OrderBy(x => x));
+
+            // RemoveByIds builds raw keys, but the cache normalizes them, so the normalized entries still evict.
+            sut.RemoveByIds(keyPrefix, ["Alpha", "Beta"]);
+
+            Assert.False(sut.TryGetByIds<TestCacheItem>(keyPrefix, ["Alpha", "Beta"], out _));
+        }
+
+        [Fact]
         public void DefaultCachingOptions_Are_Applied()
         {
             var defaultOptions = Options.Create(new CachingOptions() { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });

@@ -68,9 +68,11 @@ namespace VirtoCommerce.Platform.Core.Caching
                             .Where(x => x != null)
                             .ToDictionary(idSelector, _ignoreCase);
 
+                        var normalizedPrefix = CacheKey.Normalize(keyPrefix);
+
                         foreach (var id in missingIds)
                         {
-                            var cacheKey = CacheKey.With(keyPrefix, id);
+                            var cacheKey = CacheKey.With(normalizedPrefix, CacheKey.Normalize(id));
 
                             result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
                             {
@@ -92,9 +94,11 @@ namespace VirtoCommerce.Platform.Core.Caching
         {
             result = new Dictionary<string, TItem>(_ignoreCase);
 
+            var normalizedPrefix = CacheKey.Normalize(keyPrefix);
+
             foreach (var id in ids)
             {
-                var key = CacheKey.With(keyPrefix, id);
+                var key = CacheKey.With(normalizedPrefix, CacheKey.Normalize(id));
 
                 if (memoryCache.TryGetValue(key, out var itemFromCache))
                 {
