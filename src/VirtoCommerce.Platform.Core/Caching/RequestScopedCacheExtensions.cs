@@ -33,6 +33,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             Func<ICollection<string>, Task<IList<T>>> loadMissing)
             where T : class
         {
+            // Interface method (not a sibling extension) - must be called on the instance.
             return (await cache.GetOrLoadMapByIdsAsync(keyPrefix, ids, idSelector, loadMissing)).Values;
         }
 
@@ -47,7 +48,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             Func<ICollection<string>, Task<IList<T>>> loadMissing)
             where T : class, IEntity
         {
-            return (await cache.GetOrLoadMapByIdsAsync(keyPrefix, ids, loadMissing)).Values;
+            return (await GetOrLoadMapByIdsAsync(cache, keyPrefix, ids, loadMissing)).Values;
         }
     }
 }

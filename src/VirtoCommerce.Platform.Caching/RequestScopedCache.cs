@@ -92,18 +92,31 @@ namespace VirtoCommerce.Platform.Caching
                         (pending ??= []).Add(new KeyValuePair<string, Task<T>>(id, task));
                     }
                 }
-
-                if (owned is not null)
-                {
-                    await LoadAndPublishAsync(owned, idSelector, loadMissing);
-                }
             }
             catch (Exception ex)
             {
-                // Owned reservations must never leak incomplete - concurrent awaiters would hang. The
-                // cached fault makes same-id calls rethrow (by-key failure semantics).
-                FaultReservations(owned, ex);
+                // A failure while still reserving (e.g. a wrong-typed cached id throws InvalidCastException)
+                // leaves the ids this call already owned reserved-but-unloaded. Release them - drop each from
+                // the cache so it stays retryable, and fault its promise to unblock any awaiter - so one id's
+                // type mismatch does not negatively cache the innocent ids this call happened to own.
+                ReleaseReservations(keyPrefix, owned, ex);
                 throw;
+            }
+
+            if (owned is not null)
+            {
+                try
+                {
+                    await LoadAndPublishAsync(owned, idSelector, loadMissing);
+                }
+                catch (Exception ex)
+                {
+                    // The load itself failed: owned reservations must never leak incomplete (awaiters would
+                    // hang). The cached fault applies the documented by-id failure semantics - same-id calls
+                    // for the rest of the request rethrow, they are not retried.
+                    FaultReservations(owned, ex);
+                    throw;
+                }
             }
 
             await CollectPendingAsync(pending, result);
@@ -169,6 +182,23 @@ namespace VirtoCommerce.Platform.Caching
             foreach (var reservation in owned.Values)
             {
                 reservation.TrySetResult(null);
+            }
+        }
+
+        private void ReleaseReservations<T>(string keyPrefix, Dictionary<string, TaskCompletionSource<T>> owned, Exception exception)
+            where T : class
+        {
+            if (owned is null)
+            {
+                return;
+            }
+
+            foreach (var (id, reservation) in owned)
+            {
+                // Remove only our own reservation (match the stored task), then fault it: a later call for
+                // this id re-reserves and loads it fresh instead of hitting a negatively-cached entry.
+                _cacheById.TryRemove(new KeyValuePair<(string Prefix, string Id), Task>((keyPrefix, id), reservation.Task));
+                reservation.TrySetException(exception);
             }
         }
 

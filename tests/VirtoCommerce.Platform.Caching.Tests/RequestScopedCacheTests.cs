@@ -379,6 +379,25 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
+        public async Task GetOrLoadMapByIdsAsync_TypeMismatchOnOneId_LeavesInnocentOwnedIdsRetryable()
+        {
+            var sut = new RequestScopedCache();
+            var batches = new List<string[]>();
+
+            // Cache "b" under a different type first, so a later Item-typed request for it throws on the cast.
+            await sut.GetOrLoadMapByIdsAsync("prefix", ["b"], x => x.Id, _ => Task.FromResult<IList<OtherItem>>([new OtherItem("b")]));
+
+            // This call owns "a" (processed first), then hits the type mismatch on "b" and must throw.
+            Func<Task<IDictionary<string, Item>>> mismatch = () => sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], x => x.Id, CreateLoader(batches));
+            await Assert.ThrowsAsync<InvalidCastException>(mismatch);
+
+            // The innocent "a" must NOT be negatively cached by "b"'s type conflict: a later correctly-typed
+            // call re-reserves and loads it successfully.
+            var recovered = await sut.GetOrLoadMapByIdsAsync("prefix", ["a"], x => x.Id, CreateLoader(batches));
+            Assert.Equal("a", recovered["a"].Id);
+        }
+
+        [Fact]
         public async Task GetOrLoadMapByIdsAsync_InvalidArguments_Throw()
         {
             var sut = new RequestScopedCache();
