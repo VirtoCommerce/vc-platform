@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Caching
             return (Task<T>)lazy.Value;
         }
 
-        public virtual Task<IDictionary<string, T>> GetOrLoadByIdsAsync<T>(
+        public virtual Task<IDictionary<string, T>> GetOrLoadMapByIdsAsync<T>(
             string keyPrefix,
             ICollection<string> ids,
             Func<T, string> idSelector,
@@ -51,10 +51,10 @@ namespace VirtoCommerce.Platform.Caching
             ArgumentNullException.ThrowIfNull(idSelector);
             ArgumentNullException.ThrowIfNull(loadMissing);
 
-            return GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadMissing);
+            return GetOrLoadMapByIdsCoreAsync(keyPrefix, ids, idSelector, loadMissing);
         }
 
-        private async Task<IDictionary<string, T>> GetOrLoadByIdsCoreAsync<T>(
+        private async Task<IDictionary<string, T>> GetOrLoadMapByIdsCoreAsync<T>(
             string keyPrefix,
             ICollection<string> ids,
             Func<T, string> idSelector,

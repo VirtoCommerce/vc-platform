@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Core.Caching
         /// <returns>Found ids mapped to their items; not-found ids are omitted.</returns>
         /// <exception cref="ArgumentNullException">Any argument is null.</exception>
         /// <exception cref="InvalidCastException">A (<paramref name="keyPrefix"/>, id) pair was previously used with a different <typeparamref name="T"/>.</exception>
-        Task<IDictionary<string, T>> GetOrLoadByIdsAsync<T>(
+        Task<IDictionary<string, T>> GetOrLoadMapByIdsAsync<T>(
             string keyPrefix,
             ICollection<string> ids,
             Func<T, string> idSelector,

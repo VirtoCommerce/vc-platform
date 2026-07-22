@@ -101,12 +101,12 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_LoadsAllMissingIdsInOneBatch()
+        public async Task GetOrLoadMapByIdsAsync_LoadsAllMissingIdsInOneBatch()
         {
             var sut = new RequestScopedCache();
             var batches = new List<string[]>();
 
-            var result = await sut.GetOrLoadByIdsAsync("prefix", ["a", "b", "c"], x => x.Id, CreateLoader(batches));
+            var result = await sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b", "c"], x => x.Id, CreateLoader(batches));
 
             AssertSameIds(["a", "b", "c"], Assert.Single(batches));
             AssertSameIds(["a", "b", "c"], result.Keys);
@@ -114,15 +114,15 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_OverlappingCall_LoadsOnlyNotYetCachedIds()
+        public async Task GetOrLoadMapByIdsAsync_OverlappingCall_LoadsOnlyNotYetCachedIds()
         {
             var sut = new RequestScopedCache();
             var batches = new List<string[]>();
             var loadMissing = CreateLoader(batches);
 
-            var first = await sut.GetOrLoadByIdsAsync("prefix", ["a", "b"], x => x.Id, loadMissing);
-            var second = await sut.GetOrLoadByIdsAsync("prefix", ["b", "c"], x => x.Id, loadMissing);
-            var third = await sut.GetOrLoadByIdsAsync("prefix", ["a", "b"], x => x.Id, loadMissing);
+            var first = await sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], x => x.Id, loadMissing);
+            var second = await sut.GetOrLoadMapByIdsAsync("prefix", ["b", "c"], x => x.Id, loadMissing);
+            var third = await sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], x => x.Id, loadMissing);
 
             // The second call must load only the ids the first call did not cache, and the third must load nothing.
             Assert.Equal(2, batches.Count);
@@ -134,7 +134,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_IdCasingDiffers_MatchesCaseInsensitively()
+        public async Task GetOrLoadMapByIdsAsync_IdCasingDiffers_MatchesCaseInsensitively()
         {
             var sut = new RequestScopedCache();
             var batches = new List<string[]>();
@@ -142,8 +142,8 @@ namespace VirtoCommerce.Platform.Caching.Tests
             // case-insensitive DB collation would): request "ABC", stored id "abc".
             var loadMissing = CreateLoader(batches, x => new Item(x.ToLowerInvariant()));
 
-            var first = await sut.GetOrLoadByIdsAsync("prefix", ["ABC"], x => x.Id, loadMissing);
-            var second = await sut.GetOrLoadByIdsAsync("prefix", ["abc"], x => x.Id, loadMissing);
+            var first = await sut.GetOrLoadMapByIdsAsync("prefix", ["ABC"], x => x.Id, loadMissing);
+            var second = await sut.GetOrLoadMapByIdsAsync("prefix", ["abc"], x => x.Id, loadMissing);
 
             // The loaded item publishes to the requested reservation despite the casing difference,
             // and a differently-cased repeat dedups against the cached entry instead of re-loading.
@@ -153,15 +153,15 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_NotFoundId_OmittedAndNegativelyCached()
+        public async Task GetOrLoadMapByIdsAsync_NotFoundId_OmittedAndNegativelyCached()
         {
             var sut = new RequestScopedCache();
             var batches = new List<string[]>();
             // The loader never returns an item for "ghost".
             var loadMissing = CreateLoader(batches, x => x == "ghost" ? null : new Item(x));
 
-            var first = await sut.GetOrLoadByIdsAsync("prefix", ["a", "ghost"], x => x.Id, loadMissing);
-            var second = await sut.GetOrLoadByIdsAsync("prefix", ["a", "ghost"], x => x.Id, loadMissing);
+            var first = await sut.GetOrLoadMapByIdsAsync("prefix", ["a", "ghost"], x => x.Id, loadMissing);
+            var second = await sut.GetOrLoadMapByIdsAsync("prefix", ["a", "ghost"], x => x.Id, loadMissing);
 
             AssertSameIds(["a"], first.Keys);
             AssertSameIds(["a"], second.Keys);
@@ -170,31 +170,31 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_NullEmptyAndDuplicateIds_NormalizedWithinCall()
+        public async Task GetOrLoadMapByIdsAsync_NullEmptyAndDuplicateIds_NormalizedWithinCall()
         {
             var sut = new RequestScopedCache();
             var batches = new List<string[]>();
 
-            var result = await sut.GetOrLoadByIdsAsync("prefix", [null, "", "a", "a", "b"], x => x.Id, CreateLoader(batches));
+            var result = await sut.GetOrLoadMapByIdsAsync("prefix", [null, "", "a", "a", "b"], x => x.Id, CreateLoader(batches));
 
             AssertSameIds(["a", "b"], Assert.Single(batches));
             AssertSameIds(["a", "b"], result.Keys);
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_EmptyIds_ReturnsEmptyWithoutLoad()
+        public async Task GetOrLoadMapByIdsAsync_EmptyIds_ReturnsEmptyWithoutLoad()
         {
             var sut = new RequestScopedCache();
             var batches = new List<string[]>();
 
-            var result = await sut.GetOrLoadByIdsAsync("prefix", Array.Empty<string>(), x => x.Id, CreateLoader(batches));
+            var result = await sut.GetOrLoadMapByIdsAsync("prefix", Array.Empty<string>(), x => x.Id, CreateLoader(batches));
 
             Assert.Empty(result);
             Assert.Empty(batches);
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_FaultedLoad_CachedForTheRequestAndRethrown()
+        public async Task GetOrLoadMapByIdsAsync_FaultedLoad_CachedForTheRequestAndRethrown()
         {
             var sut = new RequestScopedCache();
             var callCount = 0;
@@ -205,8 +205,8 @@ namespace VirtoCommerce.Platform.Caching.Tests
                 throw new InvalidOperationException("boom");
             }
 
-            Func<Task<IDictionary<string, Item>>> firstCall = () => sut.GetOrLoadByIdsAsync("prefix", ["a", "b"], x => x.Id, LoadMissing);
-            Func<Task<IDictionary<string, Item>>> secondCall = () => sut.GetOrLoadByIdsAsync("prefix", ["a"], x => x.Id, LoadMissing);
+            Func<Task<IDictionary<string, Item>>> firstCall = () => sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], x => x.Id, LoadMissing);
+            Func<Task<IDictionary<string, Item>>> secondCall = () => sut.GetOrLoadMapByIdsAsync("prefix", ["a"], x => x.Id, LoadMissing);
 
             var firstEx = await Assert.ThrowsAsync<InvalidOperationException>(firstCall);
             var secondEx = await Assert.ThrowsAsync<InvalidOperationException>(secondCall);
@@ -217,7 +217,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_NullLoaderResult_TreatedAsEmptyAndNegativelyCached()
+        public async Task GetOrLoadMapByIdsAsync_NullLoaderResult_TreatedAsEmptyAndNegativelyCached()
         {
             var sut = new RequestScopedCache();
             var callCount = 0;
@@ -228,8 +228,8 @@ namespace VirtoCommerce.Platform.Caching.Tests
                 return Task.FromResult<IList<Item>>(null);
             }
 
-            var first = await sut.GetOrLoadByIdsAsync("prefix", ["a"], x => x.Id, LoadMissing);
-            var second = await sut.GetOrLoadByIdsAsync("prefix", ["a"], x => x.Id, LoadMissing);
+            var first = await sut.GetOrLoadMapByIdsAsync("prefix", ["a"], x => x.Id, LoadMissing);
+            var second = await sut.GetOrLoadMapByIdsAsync("prefix", ["a"], x => x.Id, LoadMissing);
 
             Assert.Empty(first);
             Assert.Empty(second);
@@ -238,7 +238,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_InFlightLoad_SharedByLaterCallInsteadOfSecondLoad()
+        public async Task GetOrLoadMapByIdsAsync_InFlightLoad_SharedByLaterCallInsteadOfSecondLoad()
         {
             var sut = new RequestScopedCache();
             var release = new TaskCompletionSource();
@@ -252,8 +252,8 @@ namespace VirtoCommerce.Platform.Caching.Tests
             }
 
             // The first call dispatches the load synchronously up to the await, then stays in flight.
-            var firstTask = sut.GetOrLoadByIdsAsync("prefix", ["a", "b"], x => x.Id, LoadMissing);
-            var secondTask = sut.GetOrLoadByIdsAsync("prefix", ["a", "b"], x => x.Id, LoadMissing);
+            var firstTask = sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], x => x.Id, LoadMissing);
+            var secondTask = sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], x => x.Id, LoadMissing);
 
             Assert.False(firstTask.IsCompleted);
             Assert.False(secondTask.IsCompleted);
@@ -268,7 +268,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_ConcurrentOverlappingCallers_EachIdLoadedAtMostOnce()
+        public async Task GetOrLoadMapByIdsAsync_ConcurrentOverlappingCallers_EachIdLoadedAtMostOnce()
         {
             // Regression guard for per-caller full-batch amplification: under concurrent overlapping
             // misses, each id must be loaded by exactly one caller, so the total load across all
@@ -295,7 +295,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             for (var i = 0; i < callers; i++)
             {
                 var callerIds = Enumerable.Range(i * windowStride, windowSize).Select(x => $"id-{x}").ToArray();
-                tasks[i] = Task.Run(() => sut.GetOrLoadByIdsAsync("prefix", callerIds, x => x.Id, LoadMissing));
+                tasks[i] = Task.Run(() => sut.GetOrLoadMapByIdsAsync("prefix", callerIds, x => x.Id, LoadMissing));
             }
 
             // Give every caller a chance to reserve its ids before any load completes.
@@ -323,15 +323,15 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_TupleKeys_DoNotCollideAcrossPrefixesOrWithByKeyEntries()
+        public async Task GetOrLoadMapByIdsAsync_TupleKeys_DoNotCollideAcrossPrefixesOrWithByKeyEntries()
         {
             var sut = new RequestScopedCache();
             var batches = new List<string[]>();
             var loadMissing = CreateLoader(batches);
 
             // "P" + "A:B" and "P:A" + "B" would alias under naive string concatenation.
-            var first = await sut.GetOrLoadByIdsAsync("P", ["A:B"], x => x.Id, loadMissing);
-            var second = await sut.GetOrLoadByIdsAsync("P:A", ["B"], x => x.Id, loadMissing);
+            var first = await sut.GetOrLoadMapByIdsAsync("P", ["A:B"], x => x.Id, loadMissing);
+            var second = await sut.GetOrLoadMapByIdsAsync("P:A", ["B"], x => x.Id, loadMissing);
             var byKey = await sut.GetOrAddAsync("P:A:B", () => Task.FromResult("by-key value"));
 
             // Entries under different prefixes must not alias.
@@ -342,7 +342,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_ExtraAndDuplicateLoadedItems_FirstWinsAndExtrasIgnored()
+        public async Task GetOrLoadMapByIdsAsync_ExtraAndDuplicateLoadedItems_FirstWinsAndExtrasIgnored()
         {
             var sut = new RequestScopedCache();
             var requestedFirst = new Item("a");
@@ -350,7 +350,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             var batches = new List<string[]>();
             var loadMissing = CreateLoader(batches);
 
-            var result = await sut.GetOrLoadByIdsAsync(
+            var result = await sut.GetOrLoadMapByIdsAsync(
                 "prefix",
                 ["a"],
                 x => x.Id,
@@ -361,33 +361,33 @@ namespace VirtoCommerce.Platform.Caching.Tests
             Assert.Same(requestedFirst, result["a"]);
 
             // The unrequested extra item must not have been cached.
-            var extra = await sut.GetOrLoadByIdsAsync("prefix", ["x"], x => x.Id, loadMissing);
+            var extra = await sut.GetOrLoadMapByIdsAsync("prefix", ["x"], x => x.Id, loadMissing);
             AssertSameIds(["x"], Assert.Single(batches));
             Assert.NotNull(extra["x"]);
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_SamePrefixAndIdWithDifferentType_ThrowsInvalidCast()
+        public async Task GetOrLoadMapByIdsAsync_SamePrefixAndIdWithDifferentType_ThrowsInvalidCast()
         {
             var sut = new RequestScopedCache();
 
-            await sut.GetOrLoadByIdsAsync("prefix", ["a"], x => x.Id, CreateLoader([]));
+            await sut.GetOrLoadMapByIdsAsync("prefix", ["a"], x => x.Id, CreateLoader([]));
 
-            Func<Task<IDictionary<string, OtherItem>>> act = () => sut.GetOrLoadByIdsAsync<OtherItem>("prefix", ["a"], x => x.Id, _ => Task.FromResult<IList<OtherItem>>([]));
+            Func<Task<IDictionary<string, OtherItem>>> act = () => sut.GetOrLoadMapByIdsAsync<OtherItem>("prefix", ["a"], x => x.Id, _ => Task.FromResult<IList<OtherItem>>([]));
 
             await Assert.ThrowsAsync<InvalidCastException>(act);
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_InvalidArguments_Throw()
+        public async Task GetOrLoadMapByIdsAsync_InvalidArguments_Throw()
         {
             var sut = new RequestScopedCache();
             var loadMissing = CreateLoader([]);
 
-            Func<Task<IDictionary<string, Item>>> emptyPrefix = () => sut.GetOrLoadByIdsAsync("", ["a"], x => x.Id, loadMissing);
-            Func<Task<IDictionary<string, Item>>> nullIds = () => sut.GetOrLoadByIdsAsync("prefix", null, x => x.Id, loadMissing);
-            Func<Task<IDictionary<string, Item>>> nullSelector = () => sut.GetOrLoadByIdsAsync<Item>("prefix", ["a"], null, loadMissing);
-            Func<Task<IDictionary<string, Item>>> nullLoader = () => sut.GetOrLoadByIdsAsync<Item>("prefix", ["a"], x => x.Id, null);
+            Func<Task<IDictionary<string, Item>>> emptyPrefix = () => sut.GetOrLoadMapByIdsAsync("", ["a"], x => x.Id, loadMissing);
+            Func<Task<IDictionary<string, Item>>> nullIds = () => sut.GetOrLoadMapByIdsAsync("prefix", null, x => x.Id, loadMissing);
+            Func<Task<IDictionary<string, Item>>> nullSelector = () => sut.GetOrLoadMapByIdsAsync<Item>("prefix", ["a"], null, loadMissing);
+            Func<Task<IDictionary<string, Item>>> nullLoader = () => sut.GetOrLoadMapByIdsAsync<Item>("prefix", ["a"], x => x.Id, null);
 
             await Assert.ThrowsAsync<ArgumentException>(emptyPrefix);
             await Assert.ThrowsAsync<ArgumentNullException>(nullIds);
@@ -396,7 +396,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async Task GetOrLoadByIdsAsync_EntityOverload_KeysByEntityIdAndSharesEntries()
+        public async Task GetOrLoadMapByIdsAsync_EntityOverload_KeysByEntityIdAndSharesEntries()
         {
             var sut = new RequestScopedCache();
             var batches = new List<string[]>();
@@ -411,13 +411,58 @@ namespace VirtoCommerce.Platform.Caching.Tests
                 return Task.FromResult<IList<EntityItem>>(missingIds.Select(x => new EntityItem { Id = x }).ToList());
             }
 
-            var viaEntityOverload = await sut.GetOrLoadByIdsAsync("prefix", ["a", "b"], LoadMissing);
-            var viaCoreOverload = await sut.GetOrLoadByIdsAsync("prefix", ["a", "b"], x => x.Id, LoadMissing);
+            var viaEntityOverload = await sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], LoadMissing);
+            var viaCoreOverload = await sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], x => x.Id, LoadMissing);
 
             // The IEntity overload must delegate to the core overload and share its cache entries.
             Assert.Single(batches);
             AssertSameIds(["a", "b"], viaEntityOverload.Keys);
             Assert.Same(viaEntityOverload["a"], viaCoreOverload["a"]);
+        }
+
+        [Fact]
+        public async Task GetOrLoadByIdsAsync_ReturnsResolvedItemValuesSharingTheMapCache()
+        {
+            var sut = new RequestScopedCache();
+            var batches = new List<string[]>();
+
+            var values = await sut.GetOrLoadByIdsAsync(
+                "prefix",
+                ["a", "b", "ghost"],
+                x => x.Id,
+                CreateLoader(batches, x => x == "ghost" ? null : new Item(x)));
+
+            // The values-only overload returns the resolved items, with not-found ids omitted.
+            AssertSameIds(["a", "b"], values.Select(x => x.Id));
+
+            // It shares the underlying cache with the map overload: the same ids resolve without a reload,
+            // to the same instances.
+            var map = await sut.GetOrLoadMapByIdsAsync("prefix", ["a", "b"], x => x.Id, CreateLoader(batches));
+            Assert.Single(batches);
+            Assert.Same(map["a"], values.Single(x => x.Id == "a"));
+        }
+
+        [Fact]
+        public async Task GetOrLoadByIdsAsync_EntityOverload_ReturnsResolvedItemValues()
+        {
+            var sut = new RequestScopedCache();
+            var batches = new List<string[]>();
+
+            Task<IList<EntityItem>> LoadMissing(ICollection<string> missingIds)
+            {
+                lock (batches)
+                {
+                    batches.Add([.. missingIds]);
+                }
+
+                return Task.FromResult<IList<EntityItem>>(missingIds.Select(x => new EntityItem { Id = x }).ToList());
+            }
+
+            var values = await sut.GetOrLoadByIdsAsync("prefix", ["a", "b"], LoadMissing);
+
+            // The IEntity values-only overload keys by entity Id and returns just the items.
+            AssertSameIds(["a", "b"], values.Select(x => x.Id));
+            Assert.Single(batches);
         }
 
         private static void AssertSameIds(IEnumerable<string> expected, IEnumerable<string> actual)
