@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using VirtoCommerce.Platform.Core.Extensions;
 
@@ -33,6 +34,8 @@ namespace VirtoCommerce.Platform.Core.Caching
                 : key;
         }
 
+        [SuppressMessage("Major Code Smell", "S3267:Loops should be simplified using the \"Where\" LINQ method",
+            Justification = "Perf-critical cache-key normalization: a LINQ Any/Where over EnumerateRunes() would box the StringRuneEnumerator and allocate a delegate on every call — the explicit alloc-free scan is the whole point of this hot path.")]
         public static string Normalize(string key)
         {
             foreach (var rune in key.EnumerateRunes())
