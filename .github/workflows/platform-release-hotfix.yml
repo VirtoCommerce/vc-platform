@@ -13,12 +13,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.39    
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.42    
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.39    
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.42    
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
@@ -47,7 +47,7 @@ jobs:
   publish-docker:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.39    
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.42    
     with:
       fullKey: ${{ needs.build.outputs.dockerFullKey }}
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
@@ -58,22 +58,72 @@ jobs:
       dockerUser: ${{ secrets.DOCKER_USERNAME }}
       dockerToken: ${{ secrets.DOCKER_TOKEN }}
 
+  # Trusted Publishing: mint the OIDC key and push in ONE job (see publish-nugets.yml for why the
+  # push can't live in the cross-repo publish-github.yml). job_workflow_ref = platform-release-hotfix.yml.
+  publish-nuget:
+    needs: [build, test]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+    steps:
+      - name: Install VirtoCommerce.GlobalTool
+        uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Get package from cache
+        id: restore-build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: ${{ needs.build.outputs.packageFullKey }}
+          path: |
+            ${{ github.workspace }}/artifacts
+            ${{ github.workspace }}/publish
+
+      - name: Exit if cache not restored
+        if: steps.restore-build.outputs.cache-hit != 'true'
+        env:
+          FULL_KEY: ${{ needs.build.outputs.packageFullKey }}
+        run: |
+          echo "::error::Package cache not found for key ${FULL_KEY}"
+          exit 1
+
+      - name: NuGet login (OIDC -> temp API key)
+        id: nuget_login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          # nuget.org user that created the trust policy (shared service account)
+          user: virto
+
+      - name: Publish Nuget
+        uses: VirtoCommerce/vc-github-actions/publish-nuget@master
+        with:
+          skipString: 'Clean+Restore+Compile+Test+Pack'
+        env:
+          NUGET_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
+
+  # forceNuget:false - the push is done by publish-nuget above; this only cuts the GitHub release.
   publish-github-release:
     needs:
-      [build, test, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.39    
+      [build, test, get-metadata, publish-nuget]
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.42
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
       incrementPatch: ${{ github.event.inputs.incrementPatch }}
       makeLatest: 'false'
+      forceNuget: false
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
-      nugetKey: ${{ secrets.NUGET_KEY }}
 
   increment-version:
     needs:
-      [publish-github-release, publish-docker, test]
+      [publish-nuget, publish-github-release, publish-docker, test]
     if: ${{ github.event.inputs.incrementPatch == 'true' }}
     runs-on: ubuntu-24.04
     steps:
