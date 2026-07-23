@@ -8,17 +8,17 @@ namespace VirtoCommerce.Platform.Core.Caching
     public static class RequestScopedCacheExtensions
     {
         /// <summary>
-        /// By-id form for items keyed by <see cref="IEntity.Id"/>: delegates to
-        /// <see cref="IRequestScopedCache.GetOrLoadMapByIdsAsync{T}(string, ICollection{string}, Func{T, string}, Func{ICollection{string}, Task{IList{T}}})"/>.
+        /// Values-only, by-<see cref="IEntity.Id"/> form: returns just the resolved items (not-found ids omitted),
+        /// for callers that do not need the id map.
         /// </summary>
-        public static Task<IDictionary<string, T>> GetOrLoadMapByIdsAsync<T>(
+        public static async Task<ICollection<T>> GetOrLoadByIdsAsync<T>(
             this IRequestScopedCache cache,
             string keyPrefix,
             ICollection<string> ids,
             Func<ICollection<string>, Task<IList<T>>> loadMissing)
             where T : class, IEntity
         {
-            return cache.GetOrLoadMapByIdsAsync(keyPrefix, ids, static x => x.Id, loadMissing);
+            return (await GetOrLoadMapByIdsAsync(cache, keyPrefix, ids, loadMissing)).Values;
         }
 
         /// <summary>
@@ -33,22 +33,21 @@ namespace VirtoCommerce.Platform.Core.Caching
             Func<ICollection<string>, Task<IList<T>>> loadMissing)
             where T : class
         {
-            // Interface method (not a sibling extension) - must be called on the instance.
             return (await cache.GetOrLoadMapByIdsAsync(keyPrefix, ids, idSelector, loadMissing)).Values;
         }
 
         /// <summary>
-        /// Values-only, by-<see cref="IEntity.Id"/> form: returns just the resolved items (not-found ids omitted),
-        /// for callers that do not need the id map.
+        /// By-id form for items keyed by <see cref="IEntity.Id"/>: delegates to
+        /// <see cref="IRequestScopedCache.GetOrLoadMapByIdsAsync{T}(string, ICollection{string}, Func{T, string}, Func{ICollection{string}, Task{IList{T}}})"/>.
         /// </summary>
-        public static async Task<ICollection<T>> GetOrLoadByIdsAsync<T>(
+        public static Task<IDictionary<string, T>> GetOrLoadMapByIdsAsync<T>(
             this IRequestScopedCache cache,
             string keyPrefix,
             ICollection<string> ids,
             Func<ICollection<string>, Task<IList<T>>> loadMissing)
             where T : class, IEntity
         {
-            return (await GetOrLoadMapByIdsAsync(cache, keyPrefix, ids, loadMissing)).Values;
+            return cache.GetOrLoadMapByIdsAsync(keyPrefix, ids, static x => x.Id, loadMissing);
         }
     }
 }
