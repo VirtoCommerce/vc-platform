@@ -1,4 +1,4 @@
-import * as signalR from '@aspnet/signalr';
+import * as signalR from '@microsoft/signalr';
 
 angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$rootScope', function ($rootScope) {
     function signalRHubProxyFactory() {
