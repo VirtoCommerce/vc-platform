@@ -1,0 +1,15 @@
+{
+  "GHSA-5cp4-xmrw-59wf": { "active": true, "notes": "AngularJS 1.8 EOL: XSS via JQLite DOM manipulation. Admin-only UI, no untrusted content rendered. See docs/security/angularjs-eol.md.", "expiry": "2027-07-16" },
+  "GHSA-prc3-vjfx-vhm9": { "active": true, "notes": "AngularJS 1.8 EOL: XSS in deprecated angular package. Admin-only UI.", "expiry": "2027-07-16" },
+  "GHSA-j58c-ww9w-pwp5": { "active": true, "notes": "AngularJS 1.8 EOL: improper SVG element sanitization (low). Admin-only UI.", "expiry": "2027-07-16" },
+  "GHSA-m2h2-264f-f486": { "active": true, "notes": "AngularJS 1.8 EOL: ReDoS. Admin-only UI, trusted operator input.", "expiry": "2027-07-16" },
+  "GHSA-m9gf-397r-hwpg": { "active": true, "notes": "AngularJS 1.8 EOL: image-source restriction bypass (low). Admin-only UI.", "expiry": "2027-07-16" },
+  "GHSA-mqm9-c95h-x2p6": { "active": true, "notes": "AngularJS 1.8 EOL: image-source restriction bypass (low). Admin-only UI.", "expiry": "2027-07-16" },
+  "GHSA-4w4v-5hc9-xrr2": { "active": true, "notes": "AngularJS 1.8 EOL: super-linear runtime via backtracking (high). Admin-only UI, no upstream fix will ship. Migration tracked separately.", "expiry": "2027-07-16" },
+  "GHSA-2vrf-hf26-jrp5": { "active": true, "notes": "AngularJS 1.8 EOL: ReDoS via angular.copy(). Admin-only UI.", "expiry": "2027-07-16" },
+  "GHSA-2qqx-w9hr-q5gx": { "active": true, "notes": "AngularJS 1.8 EOL: ReDoS via $resource. Admin-only UI.", "expiry": "2027-07-16" },
+  "GHSA-qwqh-hm9m-p5hr": { "active": true, "notes": "AngularJS 1.8 EOL: ReDoS via <input type=url>. Admin-only UI.", "expiry": "2027-07-16" },
+  "GHSA-89mq-4x47-5v83": { "active": true, "notes": "AngularJS 1.8 EOL: prototype pollution (high). Admin-only UI, no upstream fix. Migration tracked separately.", "expiry": "2027-07-16" },
+  "GHSA-mhp6-pxh8-r675": { "active": true, "notes": "AngularJS 1.8 EOL: XSS. Admin-only UI.", "expiry": "2027-07-16" },
+  "GHSA-7h4w-6p98-r3wx": { "active": true, "notes": "textAngular 1.5.16 XSS — package unmaintained, no upstream fix. Consumed by vc-module-notification and possibly third-party modules; ripping it out is deferred to a v4 platform. Mitigation: apply a strong Content Security Policy (CSP) via HTTP headers to restrict script sources and forbid inline script. See docs/security/textangular-csp.md.", "expiry": "2027-07-16" }
+}
