@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             services.AddSingleton<IDynamicPropertyDictionaryItemsSearchService, DynamicPropertyDictionaryItemsSearchService>();
             services.AddSingleton<IDynamicPropertyDictionaryItemsService, DynamicPropertyDictionaryItemsService>();
             services.AddSingleton<IDynamicPropertyMetaDataResolver, DynamicPropertyMetaDataResolver>();
-            services.AddTransient<AbstractValidator<DynamicProperty>, DynamicPropertyTypeValidator>();
+            services.AddSingleton<AbstractValidator<DynamicProperty>, DynamicPropertyTypeValidator>();
 
             return services;
         }
