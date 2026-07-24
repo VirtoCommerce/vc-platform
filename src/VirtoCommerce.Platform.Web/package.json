@@ -54,6 +54,7 @@
     "angularjs-scroll-glue": "~2.2.0",
     "bourbon": "~7.3.0",
     "codemirror": "~5.65.15",
+    "cronstrue": "~2.50.0",
     "font-awesome": "~4.7.0",
     "jquery": "^3.7.0",
     "jquery-ui": "^1.14.1",

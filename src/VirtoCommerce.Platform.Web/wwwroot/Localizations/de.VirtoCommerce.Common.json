@@ -155,7 +155,23 @@
         "short-text-multivalue-multilang": "Wert hinzufügen",
         "short-text-dictionary-multilang": "Wert auswählen",
         "short-text-dictionary-multivalue-multilang": "Wert auswählen",
-        "long-text-dictionary-multivalue-multilang": "Wert auswählen"
+        "long-text-dictionary-multivalue-multilang": "Wert auswählen",
+        "cron": "Cron-Ausdruck eingeben, z. B. 0 7 * * *"
+      },
+      "cron": {
+        "choose-preset": "Vorlagen",
+        "runs": "Ausführung",
+        "invalid": "Dies ist kein gültiger Cron-Ausdruck",
+        "presets": {
+          "every-minute": "Jede Minute",
+          "every-5-minutes": "Alle 5 Minuten",
+          "every-15-minutes": "Alle 15 Minuten",
+          "every-hour": "Jede Stunde",
+          "daily-midnight": "Täglich um Mitternacht",
+          "daily-7am": "Täglich um 07:00 Uhr",
+          "weekly-monday-7am": "Jeden Montag um 07:00 Uhr",
+          "monthly-first-7am": "Am ersten Tag des Monats um 07:00 Uhr"
+        }
       }
     },
     "short-text-input": {

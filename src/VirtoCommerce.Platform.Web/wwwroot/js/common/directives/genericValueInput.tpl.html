@@ -7,6 +7,43 @@
                placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.short-text' | translate}}">
     </div>
 </script>
+<script type="text/ng-template" id="dCron.html">
+    <div class="form-input">
+        <div class="cron-editor"
+             ng-class="{ 'cron-editor--invalid': context.currentPropValues[0].value && describeCron(context.currentPropValues[0].value) === null }">
+            <div class="cron-editor__field">
+                <input class="cron-editor__expr"
+                       ng-required="currentEntity.isRequired"
+                       ng-readonly="currentEntity.isReadOnly"
+                       ng-disabled="currentEntity.disabled"
+                       ng-model="context.currentPropValues[0].value"
+                       spellcheck="false" autocomplete="off" autocapitalize="off"
+                       placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.cron' | translate}}">
+                <span class="cron-editor__preset-icon fa fa-list-ul" aria-hidden="true"
+                      title="{{ 'platform.genericValueInput.cron.choose-preset' | translate }}"></span>
+                <select class="cron-editor__preset"
+                        ng-disabled="currentEntity.isReadOnly || currentEntity.disabled"
+                        ng-model="cronPreset.selection"
+                        ng-change="applyCronPreset()"
+                        title="{{ 'platform.genericValueInput.cron.choose-preset' | translate }}"
+                        ng-options="preset.value as preset.title for preset in cronPresets">
+                    <option value="" hidden></option>
+                </select>
+            </div>
+            <div class="cron-editor__feedback" ng-if="context.currentPropValues[0].value">
+                <span class="cron-editor__desc" ng-if="describeCron(context.currentPropValues[0].value) !== null">
+                    <span class="fa fa-clock-o" aria-hidden="true"></span>
+                    <span class="cron-editor__desc-label">{{ 'platform.genericValueInput.cron.runs' | translate }}:</span>
+                    <strong>{{ describeCron(context.currentPropValues[0].value) }}</strong>
+                </span>
+                <span class="cron-editor__error" ng-if="describeCron(context.currentPropValues[0].value) === null">
+                    <span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+                    <span>{{ 'platform.genericValueInput.cron.invalid' | translate }}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="dEmail.html">
     <div class="form-input">
         <input ng-required="currentEntity.isRequired"
