@@ -92,7 +92,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
                                  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType)
                                  .Where(x => names.Contains(x.Name))
                                  .OrderBy(x => x.Name)
-                                 .AsSplitQuery()
                                  .ToArrayAsync();
             return result;
         }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Moq;
@@ -10,6 +9,7 @@ using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Data.Localizations;
+using VirtoCommerce.Platform.Tests.Common;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.UnitTests
@@ -67,9 +67,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
 
         private static IPlatformMemoryCache GetCache()
         {
-            var defaultOptions = Options.Create(new CachingOptions() { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });
-            var logger = new Moq.Mock<ILogger<PlatformMemoryCache>>();
-            return new PlatformMemoryCache(new MemoryCache(new MemoryCacheOptions()), defaultOptions, logger.Object);
+            return MemoryCacheMockHelper.GetPlatformMemoryCache(new CachingOptions { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });
         }
 
     }

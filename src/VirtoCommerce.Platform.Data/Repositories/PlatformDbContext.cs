@@ -35,9 +35,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
             #region Settings
             modelBuilder.Entity<SettingEntity>().ToAuditableEntityTable("PlatformSetting");
             modelBuilder.Entity<SettingEntity>()
-                        .HasIndex(x => new { x.ObjectType, x.ObjectId })
+                        .HasIndex(x => new { x.ObjectType, x.ObjectId, x.Name })
                         .IsUnique(false)
-                        .HasDatabaseName("IX_ObjectType_ObjectId");
+                        .HasDatabaseName("IX_ObjectType_ObjectId_Name");
 
             modelBuilder.Entity<SettingValueEntity>().ToAuditableEntityTable("PlatformSettingValue");
             modelBuilder.Entity<SettingValueEntity>().Property(x => x.DecimalValue).HasColumnType("decimal(18,5)");
