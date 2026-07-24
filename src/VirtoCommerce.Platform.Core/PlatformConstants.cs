@@ -210,7 +210,7 @@ namespace VirtoCommerce.Platform.Core
                 {
                     Name = "VirtoCommerce.Platform.Security.CronPruneExpiredTokensJob",
                     GroupName = "Platform|Security",
-                    ValueType = SettingValueType.ShortText,
+                    ValueType = SettingValueType.Cron,
                     DefaultValue = "0 0 */1 * *"
                 };
                 public static SettingDescriptor FileExtensionsBlackList { get; } = new SettingDescriptor
