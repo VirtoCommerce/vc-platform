@@ -59,7 +59,7 @@ angular.module('platformWebApp')
     };
     return retVal;
 })
-.directive('vaWidgetContainer', ['$compile', '$localStorage', 'platformWebApp.widgetService', 'platformWebApp.widgetColorPalette', function ($compile, $localStorage, widgetService, widgetColorPalette) {
+.directive('vaWidgetContainer', ['$compile', '$localStorage', 'platformWebApp.widgetService', 'platformWebApp.widgetColorPalette', 'gridsterConfig', function ($compile, $localStorage, widgetService, widgetColorPalette, gridsterConfig) {
     return {
         restrict: 'E',
         replace: true,
@@ -74,18 +74,53 @@ angular.module('platformWebApp')
             if (!scope.gridsterOpts) { scope.gridsterOpts = {}; }
             scope.$storage = $localStorage;
 
-            scope.$watch('gridsterOpts', function () {
+            scope.getKey = function (prefix, widget) {
+                return (prefix + widget.controller + widget.template + scope.group).hashCode();
+            }
+
+            function resetInvalidStoredPosition(widget) {
+                var columns = scope.gridsterOpts.columns || gridsterConfig.columns;
+                var maxRows = scope.gridsterOpts.maxRows || gridsterConfig.maxRows;
+                var sizeX = (widget.size && widget.size[0]) || gridsterConfig.defaultSizeX;
+                var sizeY = (widget.size && widget.size[1]) || gridsterConfig.defaultSizeY;
+                var rowKey = scope.getKey('row', widget);
+                var colKey = scope.getKey('col', widget);
+                var row = scope.$storage[rowKey];
+                var col = scope.$storage[colKey];
+                
+                if (angular.isDefined(row) || angular.isDefined(col)) {
+                    var valid = angular.isNumber(row) && angular.isNumber(col) &&
+                        row >= 0 && col >= 0 && row + sizeY <= maxRows && col + sizeX <= columns;
+                    
+                    if (!valid) {
+                        delete scope.$storage[rowKey];
+                        delete scope.$storage[colKey];
+                    }
+                }
+            }
+
+            var renderedWidgetsKey = null;
+            function refreshWidgets() {
                 var groupWidgets = _.filter(widgetService.widgetsMap[scope.group], function (w) { return !angular.isFunction(w.isVisible) || w.isVisible(scope.blade); });
+                
+                // re-render only when the set of visible widgets actually changed
+                var widgetsKey = _.map(groupWidgets, function (w) { return w.controller + w.template; }).join('|');
+                if (widgetsKey === renderedWidgetsKey) {
+                    return;
+                }
+                
+                renderedWidgetsKey = widgetsKey;
+                
                 scope.widgets = angular.copy(groupWidgets);
                 angular.forEach(scope.widgets, function (w) {
                     w.blade = scope.blade;
                     w.widgetsInContainer = scope.widgets;
+                    resetInvalidStoredPosition(w);
                 });
-            }, true);
-
-            scope.getKey = function (prefix, widget) {
-                return (prefix + widget.controller + widget.template + scope.group).hashCode();
             }
+
+            scope.$watch('gridsterOpts', refreshWidgets, true);
+            scope.$on('loginStatusChanged', refreshWidgets);
 
             // Deterministic color marker grouped by MODULE, so all widgets from the same
             // module share one color. The module is the controller prefix up to the
