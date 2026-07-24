@@ -18,6 +18,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// <summary>
     /// Generic service to simplify search implementation.
     /// To implement the service for applied purpose, inherit your search service from this.
+    /// <para>
+    /// To additionally expose the optimized "search all" operations
+    /// (<see cref="IExtendedSearchService{TCriteria, TResult, TModel}"/> — a single identifiers query without
+    /// per-page counting, then loading models by identifiers in batches), derive from
+    /// <see cref="ExtendedSearchService{TCriteria, TResult, TModel, TEntity}"/> instead of this class.
+    /// Do so only when the result membership is fully defined by <see cref="BuildQuery"/>/<see cref="GetOrderedQueryAsync"/>
+    /// (i.e. <see cref="SearchAsync"/> is not overridden in a way that changes which records are returned).
+    /// </para>
     /// </summary>
     /// <typeparam name="TCriteria">Search criteria type (a descendant of <see cref="SearchCriteriaBase"/>)</typeparam>
     /// <typeparam name="TResult">Search result (<see cref="GenericSearchResult{TModel}"/>)</typeparam>
@@ -71,18 +79,39 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return await SearchIdsNoCacheAsync(criteria);
             });
 
-            var result = AbstractTypeFactory<TResult>.TryCreateInstance();
-            result.TotalCount = idsResult.TotalCount;
+            return await CreateSearchResultAsync(idsResult.Results, idsResult.TotalCount, criteria, clone);
+        }
 
-            if (idsResult.Results.Any())
+        /// <summary>
+        /// Builds a <typeparamref name="TResult"/> for the given ordered identifiers: loads the models,
+        /// restores the identifier order (<see cref="ICrudService{TModel}.GetAsync"/> returns them in cache order),
+        /// and runs <see cref="ProcessSearchResultAsync"/>. Shared by <see cref="SearchAsync"/> (one page) and
+        /// the optimized "search all" path (one batch) so both assemble and post-process results identically.
+        /// </summary>
+        protected virtual async Task<TResult> CreateSearchResultAsync(IList<string> ids, int totalCount, TCriteria criteria, bool clone)
+        {
+            var result = AbstractTypeFactory<TResult>.TryCreateInstance();
+            result.TotalCount = totalCount;
+
+            if (ids.Count > 0)
             {
-                var models = await _crudService.GetAsync(idsResult.Results, criteria.ResponseGroup, clone);
-                result.Results.AddRange(models.OrderBy(x => idsResult.Results.IndexOf(x.Id)));
+                var models = await _crudService.GetAsync(ids, criteria.ResponseGroup, clone);
+
+                // GetAsync returns models in cache order; restore the order of the identifiers query.
+                // A position map keeps this O(n): ids.IndexOf(x.Id) per model would be O(n^2), which is
+                // negligible for a default page but significant at SearchAllBatchSize (and grows if raised).
+                // TryAdd keeps the first position for an id, matching the old IndexOf semantics.
+                var orderById = new Dictionary<string, int>(ids.Count, StringComparer.OrdinalIgnoreCase);
+                for (var i = 0; i < ids.Count; i++)
+                {
+                    orderById.TryAdd(ids[i], i);
+                }
+
+                result.Results.AddRange(models.OrderBy(x => orderById.GetValueOrDefault(x.Id, int.MaxValue)));
             }
 
             return await ProcessSearchResultAsync(result, criteria);
         }
-
 
         protected virtual void ValidateSearchCriteria(TCriteria criteria)
         {

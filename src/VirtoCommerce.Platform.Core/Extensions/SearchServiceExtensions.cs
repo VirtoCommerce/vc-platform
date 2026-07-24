@@ -23,6 +23,12 @@ namespace VirtoCommerce.Platform.Core.Common
             where TResult : GenericSearchResult<TModel>
             where TModel : IEntity
         {
+            // IExtendedSearchService implementations can read all matching data in an optimized way
+            if (searchService is IExtendedSearchService<TCriteria, TResult, TModel> extendedSearchService)
+            {
+                return await extendedSearchService.SearchAllAsync(searchCriteria, clone);
+            }
+
             var result = new List<TModel>();
 
             await foreach (var searchResult in searchService.SearchBatchesAsync(searchCriteria, clone))
