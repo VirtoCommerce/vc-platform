@@ -2,28 +2,37 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.Data.MySql;
+using VirtoCommerce.Platform.Data.MySql.Extensions;
+using VirtoCommerce.Platform.Data.PostgreSql;
+using VirtoCommerce.Platform.Data.PostgreSql.Extensions;
+using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.SqlServer;
+using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.Security.Model.OpenIddict;
+using VirtoCommerce.Platform.Security.Repositories;
 
 namespace VirtoCommerce.Platform.MigrationScripter
 {
     /// <summary>
-    /// Companion tool that reuses the real platform host to grab the EF Core migrations that startup would
-    /// apply (platform + security + every installed module), without applying anything or starting a web server.
+    /// Companion tool that grabs the EF Core migrations startup would apply (platform + security + every
+    /// installed module) and writes them to .sql files, without applying anything or starting a web server.
     /// <para>
-    /// It replicates the platform's module-loading bootstrap, then builds the real host up to — but not past —
-    /// <c>Build()</c>. Building runs <c>Startup.ConfigureServices</c>, which registers the platform and security
-    /// DbContexts and calls each module's <c>IModule.Initialize</c> (where module <c>AddDbContext</c> lives).
-    /// <c>Configure</c> (the migration apply path) and Kestrel never run, so nothing is applied.
-    /// </para>
-    /// <para>
-    /// Referencing <c>Platform.Web</c> is required so the platform assemblies are in this process's Trusted
-    /// Platform Assemblies set; the module loader then loads them by name (like the running platform) instead of
-    /// each module's bundled copy, avoiding "assembly already loaded" conflicts.
+    /// It replicates the platform's module-loading bootstrap, registers the platform + security DbContexts,
+    /// runs each module's <c>IModule.Initialize</c> (where module <c>AddDbContext</c> lives) into a service
+    /// collection, then scripts every registered DbContext. It depends only on the platform data / security /
+    /// modules assemblies (not Platform.Web), which is enough to keep those assemblies in the process's Trusted
+    /// Platform Assemblies set so modules' bundled copies load by name.
     /// </para>
     /// </summary>
     public static class Program
@@ -61,12 +70,14 @@ namespace VirtoCommerce.Platform.MigrationScripter
 
             try
             {
-                LoadModules(platformPath, loggerFactory, logger);
+                var environment = ResolveEnvironmentName();
+                var configuration = BuildConfiguration(platformPath, environment);
 
-                logger.LogInformation("Building platform host (no web server will start, no migrations will be applied)...");
-                using var host = Web.Program.CreateHostBuilder([]).Build();
+                LoadModules(platformPath, configuration, environment, loggerFactory, logger);
 
-                var generator = new MigrationScriptGenerator(host.Services, ModuleBootstrapper.Instance, logger);
+                var serviceProvider = BuildServiceProvider(configuration, environment, platformPath, loggerFactory, logger);
+
+                var generator = new MigrationScriptGenerator(serviceProvider, ModuleBootstrapper.Instance, logger);
                 generator.Generate(outputPath, options.IncludeEmpty);
 
                 logger.LogInformation("Done. Migration scripts written to {OutputPath}", outputPath);
@@ -79,34 +90,34 @@ namespace VirtoCommerce.Platform.MigrationScripter
             }
         }
 
-        /// <summary>
-        /// Replicates <c>VirtoCommerce.Platform.Web.Program.LoadModules()</c> using public APIs so that
-        /// <see cref="ModuleBootstrapper.Instance"/> is populated (discovered, validated, copied, loaded)
-        /// before the host is built. The platform version is taken from the deployed Platform.Web assembly so
-        /// modules validate against the target platform's version.
-        /// </summary>
-        private static void LoadModules(string platformPath, ILoggerFactory loggerFactory, ILogger logger)
+        private static string ResolveEnvironmentName()
         {
-            var platformWebDll = Path.Combine(platformPath, "VirtoCommerce.Platform.Web.dll");
-            var versionSource = File.Exists(platformWebDll) ? platformWebDll : typeof(Web.Startup).Assembly.Location;
-
-            PlatformVersion.CurrentVersion = SemanticVersion.Parse(
-                FileVersionInfo.GetVersionInfo(versionSource).ProductVersion);
-
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            if (string.IsNullOrEmpty(environment))
-            {
-                environment = Environments.Production;
-            }
+            return string.IsNullOrEmpty(environment) ? Environments.Production : environment;
+        }
 
-            var bootConfig = new ConfigurationBuilder()
+        private static IConfigurationRoot BuildConfiguration(string platformPath, string environment)
+        {
+            return new ConfigurationBuilder()
                 .SetBasePath(platformPath)
                 .AddJsonFile("appsettings.json", optional: true)
                 .AddJsonFile($"appsettings.{environment}.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();
+        }
 
-            var moduleOptions = bootConfig.GetSection("VirtoCommerce").Get<LocalStorageModuleCatalogOptions>()
+        /// <summary>
+        /// Replicates the platform's module-loading bootstrap using public APIs: discover, validate, copy, load.
+        /// </summary>
+        private static void LoadModules(string platformPath, IConfiguration configuration, string environment, ILoggerFactory loggerFactory, ILogger logger)
+        {
+            var platformWebDll = Path.Combine(platformPath, "VirtoCommerce.Platform.Web.dll");
+            var versionSource = File.Exists(platformWebDll) ? platformWebDll : typeof(ModuleBootstrapper).Assembly.Location;
+
+            PlatformVersion.CurrentVersion = SemanticVersion.Parse(
+                FileVersionInfo.GetVersionInfo(versionSource).ProductVersion);
+
+            var moduleOptions = configuration.GetSection("VirtoCommerce").Get<LocalStorageModuleCatalogOptions>()
                 ?? new LocalStorageModuleCatalogOptions();
             moduleOptions.DiscoveryPath = Path.GetFullPath(moduleOptions.DiscoveryPath);
             moduleOptions.ProbingPath = Path.GetFullPath(moduleOptions.ProbingPath);
@@ -122,6 +133,80 @@ namespace VirtoCommerce.Platform.MigrationScripter
                 .Validate(PlatformVersion.CurrentVersion)
                 .Copy(RuntimeInformation.ProcessArchitecture)
                 .Load(isDevelopment);
+        }
+
+        /// <summary>
+        /// Builds a service collection with the platform + security DbContexts (mirroring the web host's
+        /// registrations) and every module's own registrations, then builds the provider.
+        /// </summary>
+        private static IServiceProvider BuildServiceProvider(
+            IConfiguration configuration, string environment, string platformPath, ILoggerFactory loggerFactory, ILogger logger)
+        {
+            var services = new ServiceCollection();
+
+            services.AddSingleton(configuration);
+            services.AddSingleton(loggerFactory);
+            services.AddLogging();
+
+            var databaseProvider = configuration.GetValue("DatabaseProvider", "SqlServer");
+
+            services.AddDbContext<PlatformDbContext>(options =>
+            {
+                var connectionString = configuration.GetConnectionString("VirtoCommerce");
+                UseDatabase(options, databaseProvider, connectionString, configuration);
+            });
+
+            services.AddDbContext<SecurityDbContext>(options =>
+            {
+                var connectionString = configuration["Auth:ConnectionString"] ?? configuration.GetConnectionString("VirtoCommerce");
+                UseDatabase(options, databaseProvider, connectionString, configuration);
+                options.UseOpenIddict<VirtoOpenIddictEntityFrameworkCoreApplication,
+                                      VirtoOpenIddictEntityFrameworkCoreAuthorization,
+                                      VirtoOpenIddictEntityFrameworkCoreScope,
+                                      VirtoOpenIddictEntityFrameworkCoreToken,
+                                      string>();
+            });
+
+            // Base platform services (lives in Platform.Data, not Platform.Web) — improves the chance that
+            // module DbContexts with extra constructor dependencies can be resolved. Best-effort.
+            try
+            {
+                services.AddPlatformServices(configuration);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning("AddPlatformServices skipped: {Message}", ex.Message);
+            }
+
+            var hostEnvironment = new SimpleHostEnvironment
+            {
+                EnvironmentName = environment,
+                ApplicationName = "VirtoCommerce.Platform.MigrationScripter",
+                ContentRootPath = platformPath,
+                ContentRootFileProvider = new PhysicalFileProvider(platformPath),
+            };
+
+            logger.LogInformation("Initializing modules to collect DbContext registrations...");
+            ModuleBootstrapper.Instance.RunConfigureServices(services, configuration);
+            ModuleBootstrapper.Instance.InitializeModules(services, configuration, hostEnvironment);
+
+            return services.BuildServiceProvider();
+        }
+
+        private static void UseDatabase(DbContextOptionsBuilder options, string databaseProvider, string connectionString, IConfiguration configuration)
+        {
+            switch (databaseProvider)
+            {
+                case "MySql":
+                    options.UseMySqlDatabase(connectionString, typeof(MySqlDataAssemblyMarker), configuration);
+                    break;
+                case "PostgreSql":
+                    options.UsePostgreSqlDatabase(connectionString, typeof(PostgreSqlDataAssemblyMarker), configuration);
+                    break;
+                default:
+                    options.UseSqlServerDatabase(connectionString, typeof(SqlServerDataAssemblyMarker), configuration);
+                    break;
+            }
         }
 
         private static void PrintHelp()

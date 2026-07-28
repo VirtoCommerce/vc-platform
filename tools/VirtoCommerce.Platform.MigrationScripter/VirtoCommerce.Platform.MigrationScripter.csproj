@@ -16,14 +16,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Reference the platform host. This is required (not just convenient): the module loader treats
-         platform assemblies (Caching, Security, Data.*, Hangfire, ...) as Trusted Platform Assemblies and
-         loads the host's copy by name. Modules bundle their own (often older) copies of these; without them
-         in this tool's TPA set, loading a module's bundled copy by path fails with "assembly already loaded".
-         Referencing Platform.Web puts the full platform assembly closure into the TPA set, exactly like a
-         real platform host, and lets us reuse Program.CreateHostBuilder + Startup for faithful registration
-         (platform + security + all module DbContexts). -->
-    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" />
+    <!-- Platform data + security + the module loader only (NOT Platform.Web).
+         This still puts the full platform assembly closure into this process's Trusted Platform
+         Assemblies set, so installed modules that bundle their own copies of platform assemblies load
+         the host copy by name (avoiding "assembly already loaded"). It drops the ASP.NET web app and its
+         packages (MVC, SignalR, Swagger/Swashbuckle, OpenIddict.AspNetCore, Azure SignalR, Serilog.AspNetCore). -->
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data.SqlServer\VirtoCommerce.Platform.Data.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data.PostgreSql\VirtoCommerce.Platform.Data.PostgreSql.csproj" />
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data.MySql\VirtoCommerce.Platform.Data.MySql.csproj" />
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />
   </ItemGroup>
 
 </Project>

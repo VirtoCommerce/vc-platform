@@ -10,17 +10,20 @@ Use it to review (and optionally hand-apply) schema changes *before* the platfor
 
 The platform applies migrations programmatically at web startup (`Database.Migrate()`); there is no built-in
 way to preview that SQL. `dotnet ef migrations script` needs buildable `.csproj` projects, so it cannot see
-installed modules in a **deployed binaries folder**. This tool solves that by reusing the platform's own host:
-it replicates the module-loading bootstrap (`ModuleBootstrapper`) and builds the real host up to `Build()` —
-which runs `Startup.ConfigureServices` (registering the platform + security DbContexts and calling every
-module's `IModule.Initialize`, where module `AddDbContext` registrations happen) — then scripts every
-registered `DbContext`. `Configure`/Kestrel never run, so nothing is applied.
+installed modules in a **deployed binaries folder**. This tool solves that by replicating the platform's
+module-loading bootstrap (`ModuleBootstrapper`), registering the platform + security DbContexts and running
+every module's `IModule.Initialize` (where module `AddDbContext` registrations happen) into a service
+collection, then scripting every registered `DbContext`. It never calls `Migrate()` and never starts a web
+server, so nothing is applied.
 
-**Why it references `Platform.Web`:** the module loader treats platform assemblies (`Caching`, `Security`,
-`Data.*`, `Hangfire`, …) as *Trusted Platform Assemblies* and loads the host's copy by name. Modules bundle
-their own (often older) copies of these; unless the platform assemblies are in this process's TPA set, loading
-a module's bundled copy fails with *"assembly already loaded"*. Referencing `Platform.Web` puts the full
-platform assembly closure into the TPA set — exactly like a real platform host.
+**Dependencies — data / security / modules only (no `Platform.Web`):** the module loader treats platform
+assemblies (`Caching`, `Security`, `Data.*`, `Hangfire`, …) as *Trusted Platform Assemblies* and loads the
+host's copy by name. Modules bundle their own (often older) copies; unless those assemblies are in this
+process's TPA set, loading a module's bundled copy fails with *"assembly already loaded"*. Referencing the
+platform **data + security + modules** projects (`Platform.Data`, `Platform.Data.{SqlServer,PostgreSql,MySql}`,
+`Platform.Security`, `Platform.Modules`) puts the full platform assembly closure into the TPA set — the same
+coverage a real host has — **without** pulling in the ASP.NET web app (MVC, SignalR, Swagger, OpenIddict-web).
+Verified equivalent to a `Platform.Web`-based build on a live 52-module deployment.
 
 ## Scope
 
