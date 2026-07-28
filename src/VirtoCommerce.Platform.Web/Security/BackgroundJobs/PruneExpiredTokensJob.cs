@@ -1,15 +1,17 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Hangfire;
 using OpenIddict.Core;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 
 namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
 {
     /// <summary>
-    /// Periodic job for prune expired/invalid authorization tokens
+    /// Periodic job for prune expired/invalid authorization tokens. Runs as an engine-agnostic message-based
+    /// recurring job via <see cref="Execute"/>; the parameterless <see cref="Process"/> is retained for direct use.
     /// </summary>
-    public class PruneExpiredTokensJob
+    public class PruneExpiredTokensJob : IBackgroundJobHandler<PruneExpiredTokensJobPayload>
     {
         private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _openIddictTokenManager;
         private readonly OpenIddictAuthorizationManager<VirtoOpenIddictEntityFrameworkCoreAuthorization> _openIddictAuthorizationManager;
@@ -20,17 +22,17 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
             _openIddictAuthorizationManager = openIddictAuthorizationManager;
         }
 
-        [DisableConcurrentExecution(10)]
-        // "DisableConcurrentExecutionAttribute" prevents to start simultaneous job payloads.
-        // Should have short timeout, because this attribute implemented by following manner: newly started job falls into "processing" state immediately.
-        // Then it tries to receive job lock during timeout. If the lock received, the job starts payload.
-        // When the job is awaiting desired timeout for lock release, it stucks in "processing" anyway. (Therefore, you should not to set long timeouts (like 24*60*60), this will cause a lot of stucked jobs and performance degradation.)
-        // Then, if timeout is over and the lock NOT acquired, the job falls into "scheduled" state (this is default fail-retry scenario).
-        // Failed job goes to "Failed" state (by default) after retries exhausted.
+        // NOTE: concurrency protection (previously Hangfire's [DisableConcurrentExecution(10)]) is now an
+        // engine-level concern owned by the background-job engine module. The attribute was removed to keep the
+        // platform free of a direct Hangfire dependency; overlap handling will be reintroduced via the
+        // recurring-job facade's overlap policy.
         public async Task Process()
         {
             await _openIddictTokenManager.PruneAsync(DateTimeOffset.UtcNow);
             await _openIddictAuthorizationManager.PruneAsync(DateTimeOffset.UtcNow);
         }
+
+        public Task Execute(PruneExpiredTokensJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
+            => Process();
     }
 }

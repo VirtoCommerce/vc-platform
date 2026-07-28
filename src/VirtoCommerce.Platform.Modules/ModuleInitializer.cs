@@ -79,6 +79,16 @@ namespace VirtoCommerce.Platform.Modules
                         hasModuleCatalog.ModuleCatalog = _moduleCatalog;
                     }
 
+                    if (moduleInstance is IHasLogger hasLogger)
+                    {
+                        hasLogger.Logger = _loggerFacade;
+                    }
+
+                    if (moduleInstance is IHasModuleService hasModuleService)
+                    {
+                        hasModuleService.ModuleService = ModuleBootstrapper.Instance;
+                    }
+
                     _loggerFacade.LogDebug("Initializing module {ModuleName}.", moduleInfo.ModuleName);
                     moduleInstance.Initialize(_serviceCollection);
                     moduleInfo.State = ModuleState.Initialized;

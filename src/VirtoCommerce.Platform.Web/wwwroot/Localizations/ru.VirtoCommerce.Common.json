@@ -155,7 +155,23 @@
         "short-text-multivalue-multilang": "Добавить значение",
         "short-text-dictionary-multilang": "Выберите значение",
         "short-text-dictionary-multivalue-multilang": "Выберите значение",
-        "long-text-dictionary-multivalue-multilang": "Выберите значение"
+        "long-text-dictionary-multivalue-multilang": "Выберите значение",
+        "cron": "Введите выражение cron, напр. 0 7 * * *"
+      },
+      "cron": {
+        "choose-preset": "Шаблоны",
+        "runs": "Запуск",
+        "invalid": "Это недопустимое выражение cron",
+        "presets": {
+          "every-minute": "Каждую минуту",
+          "every-5-minutes": "Каждые 5 минут",
+          "every-15-minutes": "Каждые 15 минут",
+          "every-hour": "Каждый час",
+          "daily-midnight": "Каждый день в полночь",
+          "daily-7am": "Каждый день в 07:00",
+          "weekly-monday-7am": "Каждый понедельник в 07:00",
+          "monthly-first-7am": "В первый день месяца в 07:00"
+        }
       }
     },
     "short-text-input": {

@@ -155,7 +155,23 @@
         "short-text-multivalue-multilang": "値を追加",
         "short-text-dictionary-multilang": "値を選択",
         "short-text-dictionary-multivalue-multilang": "値を選択",
-        "long-text-dictionary-multivalue-multilang": "値を選択"
+        "long-text-dictionary-multivalue-multilang": "値を選択",
+        "cron": "cron式を入力してください（例: 0 7 * * *）"
+      },
+      "cron": {
+        "choose-preset": "プリセット",
+        "runs": "実行",
+        "invalid": "有効なcron式ではありません",
+        "presets": {
+          "every-minute": "毎分",
+          "every-5-minutes": "5分ごと",
+          "every-15-minutes": "15分ごと",
+          "every-hour": "1時間ごと",
+          "daily-midnight": "毎日 深夜0時",
+          "daily-7am": "毎日 07:00",
+          "weekly-monday-7am": "毎週月曜日 07:00",
+          "monthly-first-7am": "毎月1日 07:00"
+        }
       }
     },
     "short-text-input": {

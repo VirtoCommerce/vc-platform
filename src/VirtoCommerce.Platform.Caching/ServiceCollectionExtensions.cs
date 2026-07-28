@@ -28,6 +28,8 @@ namespace VirtoCommerce.Platform.Caching
                 services.AddSingleton<IPlatformMemoryCache, PlatformMemoryCache>();
             }
 
+            services.AddScoped<IRequestScopedCache, RequestScopedCache>();
+
             return services;
         }
     }

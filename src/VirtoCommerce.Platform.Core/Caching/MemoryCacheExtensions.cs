@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -13,7 +14,7 @@ namespace VirtoCommerce.Platform.Core.Caching
         private static readonly StringComparer _ignoreCase = StringComparer.OrdinalIgnoreCase;
         private static readonly ConcurrentDictionary<string, object> _lockLookup = new();
 
-        public static async Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
+        public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
             this IMemoryCache memoryCache,
             string keyPrefix,
             IList<string> ids,
@@ -21,39 +22,85 @@ namespace VirtoCommerce.Platform.Core.Caching
             Action<MemoryCacheEntryOptions, string, TItem> configureCache)
             where TItem : IEntity
         {
-            ids = ids
-                ?.Where(id => !string.IsNullOrEmpty(id))
-                .Distinct(_ignoreCase)
-                .ToArray()
-                ?? Array.Empty<string>();
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, x => x.Id, loadItems, configureCache);
+        }
 
-            if (!TryGetByIds<TItem>(memoryCache, keyPrefix, ids, out var result))
+        public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
+            this IMemoryCache memoryCache,
+            string keyPrefix,
+            IList<string> ids,
+            Func<TItem, string> idSelector,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache)
+            where TItem : class
+        {
+            ArgumentNullException.ThrowIfNull(idSelector);
+
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadItems, configureCache);
+        }
+
+        private static async Task<IList<TItem>> GetOrLoadByIdsCoreAsync<TItem>(
+            this IMemoryCache memoryCache,
+            string keyPrefix,
+            IList<string> ids,
+            Func<TItem, string> idSelector,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache)
+        {
+            ids = DistinctNonEmpty(ids);
+
+            var normalizedPrefix = CacheKey.Normalize(keyPrefix);
+
+            var hits = new List<TItem>(ids.Count);
+            var allCached = true;
+
+            foreach (var id in ids)
             {
-                using (await AsyncLock.GetLockByKey(keyPrefix).LockAsync())
+                if (memoryCache.TryGetValue(CacheKey.With(normalizedPrefix, CacheKey.Normalize(id)), out var cached))
                 {
-                    if (!TryGetByIds(memoryCache, keyPrefix, ids, out result))
+                    if (cached is not null)
                     {
-                        var missingIds = ids
-                            .Except(result.Keys)
-                            .ToList();
+                        hits.Add((TItem)cached);
+                    }
+                }
+                else
+                {
+                    allCached = false;
+                    break;
+                }
+            }
 
-                        var items = await loadItems(missingIds) ?? Array.Empty<TItem>();
+            if (allCached)
+            {
+                return hits;
+            }
 
-                        var itemsByIds = items
-                            .Where(x => x != null)
-                            .ToDictionary(x => x.Id, _ignoreCase);
+            IDictionary<string, TItem> result;
 
-                        foreach (var id in missingIds)
+            using (await AsyncLock.GetLockByKey(normalizedPrefix).LockAsync())
+            {
+                if (!TryGetByIds(memoryCache, keyPrefix, ids, out result))
+                {
+                    var missingIds = ids
+                        .Except(result.Keys)
+                        .ToList();
+
+                    var items = await loadItems(missingIds) ?? Array.Empty<TItem>();
+
+                    var itemsByIds = items
+                        .Where(x => x != null)
+                        .ToDictionary(idSelector, _ignoreCase);
+
+                    foreach (var id in missingIds)
+                    {
+                        var cacheKey = CacheKey.With(normalizedPrefix, CacheKey.Normalize(id));
+
+                        result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
                         {
-                            var cacheKey = CacheKey.With(keyPrefix, id);
-
-                            result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
-                            {
-                                var item = itemsByIds.GetValueSafe(id);
-                                configureCache(options, id, item);
-                                return item;
-                            });
-                        }
+                            var item = itemsByIds.GetValueSafe(id);
+                            configureCache(options, id, item);
+                            return item;
+                        });
                     }
                 }
             }
@@ -63,13 +110,37 @@ namespace VirtoCommerce.Platform.Core.Caching
                 .ToList();
         }
 
-        public static bool TryGetByIds<TItem>(this IMemoryCache memoryCache, string keyPrefix, IList<string> ids, out IDictionary<string, TItem> result)
+        [SuppressMessage("Major Code Smell", "S3267:Loops should be simplified using the \"Where\" LINQ method",
+            Justification = "Perf-critical cache path: the explicit loop avoids the Where iterator and delegate allocation this method exists to eliminate.")]
+        private static IList<string> DistinctNonEmpty(IList<string> ids)
         {
-            result = new Dictionary<string, TItem>(_ignoreCase);
+            if (ids is null || ids.Count == 0)
+            {
+                return Array.Empty<string>();
+            }
+
+            var distinct = new HashSet<string>(ids.Count, _ignoreCase);
 
             foreach (var id in ids)
             {
-                var key = CacheKey.With(keyPrefix, id);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    distinct.Add(id);
+                }
+            }
+
+            return distinct.ToList();
+        }
+
+        public static bool TryGetByIds<TItem>(this IMemoryCache memoryCache, string keyPrefix, IList<string> ids, out IDictionary<string, TItem> result)
+        {
+            result = new Dictionary<string, TItem>(ids.Count, _ignoreCase);
+
+            var normalizedPrefix = CacheKey.Normalize(keyPrefix);
+
+            foreach (var id in ids)
+            {
+                var key = CacheKey.With(normalizedPrefix, CacheKey.Normalize(id));
 
                 if (memoryCache.TryGetValue(key, out var itemFromCache))
                 {
@@ -121,7 +192,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             key = CacheKey.Normalize(key);
             if (!cache.TryGetValue(key, out var result))
             {
-                lock (_lockLookup.GetOrAdd(key, new object()))
+                lock (_lockLookup.GetOrAdd(key, static _ => new object()))
                 {
                     try
                     {
