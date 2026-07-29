@@ -23,8 +23,11 @@ namespace VirtoCommerce.Platform.Core.Caching;
 /// <br/><br/>
 /// Warning: resolve consumers from the request/DI scope (a scoped dependency, or the current request's
 /// service provider) - never constructor-inject this cache into a singleton, or it is captured against the
-/// root scope and silently shared across all requests.
+/// root scope and silently shared across all requests. A consumer whose own lifetime is not bounded by one
+/// request should depend on <see cref="IRequestScopedCacheAccessor"/> instead of reaching for the request
+/// itself.
 /// </remarks>
+/// <seealso cref="IRequestScopedCacheAccessor"/>
 public interface IRequestScopedCache
 {
     /// <summary>
