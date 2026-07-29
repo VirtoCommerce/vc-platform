@@ -166,9 +166,10 @@ namespace VirtoCommerce.Platform.Core.Settings
             try
             {
                 var objectSetting = await manager.GetObjectSettingAsync(name);
-                if (objectSetting?.Value != null)
+
+                if (objectSetting?.Value != null && SettingValueConverter.TryConvert<T>(objectSetting.Value, out var value))
                 {
-                    result = (T)objectSetting.Value;
+                    result = value;
                 }
             }
             catch (PlatformException)

@@ -37,7 +37,10 @@ namespace VirtoCommerce.Platform.Data.Model
             objSetting.Id = Id;
             objSetting.ObjectType = ObjectType;
             objSetting.ObjectId = ObjectId;
-            var values = SettingValues.Select(x => x.GetValue()).ToArray();
+
+            var values = SettingValues
+                .Select(x => GetValueOrDefault(x.GetValue(), objSetting))
+                .ToArray();
 
             if (objSetting.IsDictionary)
             {
@@ -49,6 +52,13 @@ namespace VirtoCommerce.Platform.Data.Model
             }
 
             return objSetting;
+        }
+
+        private static object GetValueOrDefault(object value, ObjectSettingEntry objSetting)
+        {
+            return SettingValueConverter.TryConvert(value, objSetting.ValueType, out var converted)
+                ? converted
+                : objSetting.DefaultValue;
         }
 
         public virtual SettingEntity FromModel(ObjectSettingEntry objectSettingEntry)
