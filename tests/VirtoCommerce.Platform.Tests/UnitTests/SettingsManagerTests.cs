@@ -142,7 +142,50 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             Assert.Equal(0, WarningCount());
         }
 
-        private SettingsManager CreateManager(Func<string, SettingValueEntity> valueFactory = null)
+        [Theory]
+        [InlineData("True", true)]
+        [InlineData("1", true)]
+        [InlineData("0", false)]
+        public async Task GetObjectSettingAsync_FixedSettingConfiguredAsText_ConvertsToDeclaredType(string configured, bool expected)
+        {
+            // Fixed settings come from appsettings.json, so a boolean arrives as text — including "1"/"0",
+            // which Convert.ToBoolean rejects.
+            var sut = CreateManager(fixedSettings: [FixedSetting("A", SettingValueType.Boolean, configured, defaultValue: false)]);
+
+            var setting = await sut.GetObjectSettingAsync("A");
+
+            Assert.IsType<bool>(setting.Value);
+            Assert.Equal(expected, setting.Value);
+        }
+
+        [Fact]
+        public async Task GetObjectSettingAsync_FixedSettingValueUnconvertible_FallsBackToConvertedDefault()
+        {
+            // The default is configured as text too, so it must be converted before it can serve as the fallback —
+            // otherwise Value ends up holding the raw string.
+            var sut = CreateManager(fixedSettings: [FixedSetting("A", SettingValueType.Boolean, "yes", defaultValue: "true")]);
+
+            var setting = await sut.GetObjectSettingAsync("A");
+
+            Assert.IsType<bool>(setting.Value);
+            Assert.Equal(true, setting.Value);
+            Assert.Equal(true, setting.DefaultValue);
+            Assert.Equal(1, WarningCount());
+        }
+
+        [Fact]
+        public async Task GetObjectSettingAsync_FixedSettingWithoutValue_KeepsEmptyValueSemantics()
+        {
+            // Long-standing behaviour: a missing fixed value materializes as the declared type's empty value.
+            var sut = CreateManager(fixedSettings: [FixedSetting("A", SettingValueType.Boolean, value: null, defaultValue: null)]);
+
+            var setting = await sut.GetObjectSettingAsync("A");
+
+            Assert.Equal(false, setting.Value);
+            Assert.Equal(0, WarningCount());
+        }
+
+        private SettingsManager CreateManager(Func<string, SettingValueEntity> valueFactory = null, ObjectSettingEntry[] fixedSettings = null)
         {
             valueFactory ??= name => new SettingValueEntity().SetValue(SettingValueType.ShortText, $"val-{name}");
 
@@ -169,7 +212,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
                 () => repositoryMock.Object,
                 MemoryCacheMockHelper.GetPlatformMemoryCache(),
                 new Mock<IEventPublisher>().Object,
-                Options.Create(new FixedSettings { Settings = [] }),
+                Options.Create(new FixedSettings { Settings = fixedSettings ?? [] }),
                 overrideProvider.Object,
                 _loggerMock.Object);
         }
@@ -182,6 +225,11 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         private static SettingDescriptor BooleanDescriptor(string name)
         {
             return new SettingDescriptor { Name = name, ValueType = SettingValueType.Boolean, DefaultValue = true };
+        }
+
+        private static ObjectSettingEntry FixedSetting(string name, SettingValueType valueType, object value, object defaultValue)
+        {
+            return new ObjectSettingEntry { Name = name, ValueType = valueType, Value = value, DefaultValue = defaultValue };
         }
 
         private int WarningCount()

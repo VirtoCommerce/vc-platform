@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -433,40 +432,45 @@ namespace VirtoCommerce.Platform.Data.Settings
             var entry = _fixedSettingsDict[name];
             entry.IsReadOnly = true;
 
-            entry.Value = ConvertValueTypeSafe(entry.Value, entry.ValueType, entry.DefaultValue, name);
-            entry.DefaultValue = ConvertValueTypeSafe(entry.DefaultValue, entry.ValueType, null, name);
+            // Convert the default first, so that a value which cannot be converted falls back to an already-typed
+            // default rather than to the raw configured object.
+            entry.DefaultValue = ConvertFixedValue(entry.DefaultValue, entry.ValueType, fallback: null, name);
+            entry.Value = ConvertFixedValue(entry.Value, entry.ValueType, entry.DefaultValue, name);
 
             return entry;
         }
 
-        private object ConvertValueTypeSafe(object value, SettingValueType valueType, object fallback, string name)
+        private object ConvertFixedValue(object value, SettingValueType valueType, object fallback, string name)
         {
-            try
+            if (value == null)
             {
-                return ConvertValueType(value, valueType);
+                // Fixed settings have always materialized a missing value as the declared type's empty value
+                // rather than null. Preserve that; only the failure path below is new.
+                return GetEmptyValue(valueType);
             }
-            catch (Exception ex) when (ex is InvalidCastException or FormatException or OverflowException or ArgumentException)
-            {
-                _logger.LogWarning(ex,
-                    "Fixed setting '{SettingName}' has a configured value that cannot be converted to its declared type '{DeclaredValueType}'. Falling back to the default value.",
-                    name, valueType);
 
-                return fallback;
+            if (SettingValueConverter.TryConvert(value, valueType, out var converted))
+            {
+                return converted;
             }
+
+            _logger.LogWarning(
+                "Fixed setting '{SettingName}' has a configured value that cannot be converted to its declared type '{DeclaredValueType}'. Falling back to the default value.",
+                name, valueType);
+
+            return fallback;
         }
 
-        private static object ConvertValueType(object value, SettingValueType valueType)
+        private static object GetEmptyValue(SettingValueType valueType)
         {
-            value = valueType switch
+            return valueType switch
             {
-                SettingValueType.Boolean => Convert.ToBoolean(value),
-                SettingValueType.DateTime => Convert.ToDateTime(value),
-                SettingValueType.Decimal => Convert.ToDecimal(value, CultureInfo.InvariantCulture),
-                SettingValueType.Integer or SettingValueType.PositiveInteger => Convert.ToInt32(value, CultureInfo.InvariantCulture),
-                _ => Convert.ToString(value)
+                SettingValueType.Boolean => false,
+                SettingValueType.DateTime => DateTime.MinValue,
+                SettingValueType.Decimal => 0m,
+                SettingValueType.Integer or SettingValueType.PositiveInteger => 0,
+                _ => string.Empty,
             };
-
-            return value;
         }
     }
 }
