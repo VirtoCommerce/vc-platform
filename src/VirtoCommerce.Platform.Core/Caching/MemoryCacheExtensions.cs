@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Caching
@@ -14,6 +15,12 @@ namespace VirtoCommerce.Platform.Core.Caching
         private static readonly StringComparer _ignoreCase = StringComparer.OrdinalIgnoreCase;
         private static readonly ConcurrentDictionary<string, object> _lockLookup = new();
 
+        // The four overloads below are deliberately explicit rather than one method with an optional
+        // `createExpirationToken`. C# bakes optional arguments in at the CALL SITE, so turning a published
+        // signature into an optional-parameter one removes the arity every already-compiled caller emitted
+        // a reference to. Platform assemblies ship as NuGet and modules load as plugins without being
+        // rebuilt in lockstep, so that would surface as a runtime MissingMethodException in modules that
+        // still build and test clean.
         public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
             this IMemoryCache memoryCache,
             string keyPrefix,
@@ -22,7 +29,19 @@ namespace VirtoCommerce.Platform.Core.Caching
             Action<MemoryCacheEntryOptions, string, TItem> configureCache)
             where TItem : IEntity
         {
-            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, x => x.Id, loadItems, configureCache);
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, x => x.Id, loadItems, configureCache, createExpirationToken: null);
+        }
+
+        public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
+            this IMemoryCache memoryCache,
+            string keyPrefix,
+            IList<string> ids,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache,
+            Func<string, IChangeToken> createExpirationToken)
+            where TItem : IEntity
+        {
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, x => x.Id, loadItems, configureCache, createExpirationToken);
         }
 
         public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
@@ -36,7 +55,22 @@ namespace VirtoCommerce.Platform.Core.Caching
         {
             ArgumentNullException.ThrowIfNull(idSelector);
 
-            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadItems, configureCache);
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadItems, configureCache, createExpirationToken: null);
+        }
+
+        public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
+            this IMemoryCache memoryCache,
+            string keyPrefix,
+            IList<string> ids,
+            Func<TItem, string> idSelector,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache,
+            Func<string, IChangeToken> createExpirationToken)
+            where TItem : class
+        {
+            ArgumentNullException.ThrowIfNull(idSelector);
+
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadItems, configureCache, createExpirationToken);
         }
 
         private static async Task<IList<TItem>> GetOrLoadByIdsCoreAsync<TItem>(
@@ -45,7 +79,8 @@ namespace VirtoCommerce.Platform.Core.Caching
             IList<string> ids,
             Func<TItem, string> idSelector,
             Func<IList<string>, Task<IList<TItem>>> loadItems,
-            Action<MemoryCacheEntryOptions, string, TItem> configureCache)
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache,
+            Func<string, IChangeToken> createExpirationToken)
         {
             ids = DistinctNonEmpty(ids);
 
@@ -85,6 +120,17 @@ namespace VirtoCommerce.Platform.Core.Caching
                         .Except(result.Keys)
                         .ToList();
 
+                    // Capture the invalidation token BEFORE the load runs, not after. A writer's
+                    // commit+invalidation can land while `loadItems` is in flight; if the token were
+                    // minted afterwards (in `configureCache`, as before this fix), the invalidation that
+                    // made the just-loaded value stale would already be gone from
+                    // CancellableCacheRegion<T>'s key-token dictionary (InnerExpireTokenForKey removes it
+                    // on cancel), so the freshly minted token would come back live/uncancelled and the
+                    // stale value would be cached and served until the sliding TTL expires.
+                    var preCapturedTokens = createExpirationToken is null
+                        ? null
+                        : missingIds.ToDictionary(x => x, createExpirationToken, _ignoreCase);
+
                     var items = await loadItems(missingIds) ?? Array.Empty<TItem>();
 
                     var itemsByIds = items
@@ -98,7 +144,14 @@ namespace VirtoCommerce.Platform.Core.Caching
                         result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
                         {
                             var item = itemsByIds.GetValueSafe(id);
+
+                            if (preCapturedTokens is not null)
+                            {
+                                options.AddExpirationToken(preCapturedTokens[id]);
+                            }
+
                             configureCache(options, id, item);
+
                             return item;
                         });
                     }

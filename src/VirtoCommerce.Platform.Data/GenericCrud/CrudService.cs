@@ -65,7 +65,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             var models = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
                 missingIds => GetByIdsNoCache(missingIds, responseGroup),
-                ConfigureCache);
+                ConfigureCache,
+                CreateCacheToken);
 
             if (!clone)
             {
