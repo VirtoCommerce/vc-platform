@@ -29,11 +29,6 @@ namespace VirtoCommerce.Platform.Caching
             }
 
             services.AddScoped<IRequestScopedCache, RequestScopedCache>();
-
-            //Lets consumers whose lifetime is not bounded by one request reach the request's cache without
-            //taking IHttpContextAccessor themselves. Singleton: it captures only the accessor, which reads
-            //the ambient context from an AsyncLocal. AddHttpContextAccessor is TryAdd-based, so calling it
-            //here makes the registration self-sufficient without overriding a host that already added it.
             services.AddHttpContextAccessor();
             services.AddSingleton<IRequestScopedCacheAccessor, HttpRequestScopedCacheAccessor>();
 
