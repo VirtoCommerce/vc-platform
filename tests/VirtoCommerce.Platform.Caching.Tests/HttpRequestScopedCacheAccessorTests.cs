@@ -20,7 +20,7 @@ public class HttpRequestScopedCacheAccessorTests
     }
 
     [Fact]
-    public void Current_LiveRequestWithCacheRegistered_ReturnsThatRequestsCache()
+    public void Cache_LiveRequestWithCacheRegistered_ReturnsThatRequestsCache()
     {
         using var provider = BuildProviderWithCache();
         using var scope = provider.CreateScope();
@@ -31,13 +31,13 @@ public class HttpRequestScopedCacheAccessorTests
 
         var sut = new HttpRequestScopedCacheAccessor(accessor);
 
-        Assert.Same(scope.ServiceProvider.GetRequiredService<IRequestScopedCache>(), sut.Current);
+        Assert.Same(scope.ServiceProvider.GetRequiredService<IRequestScopedCache>(), sut.Cache);
     }
 
     [Fact]
-    public void Current_TwoRequests_ReturnsEachRequestsOwnCache()
+    public void Cache_TwoRequests_ReturnsEachRequestsOwnCache()
     {
-        // Pins that Current memoizes nothing: it re-reads the ambient context on every access, so the result
+        // Pins that Cache memoizes nothing: it re-reads the ambient context on every access, so the result
         // follows the request rather than the first one seen. An implementation that cached the context or the
         // resolved cache in a field would hand out the first scope's cache forever.
         using var provider = BuildProviderWithCache();
@@ -47,10 +47,10 @@ public class HttpRequestScopedCacheAccessorTests
         var sut = new HttpRequestScopedCacheAccessor(accessor);
 
         accessor.HttpContext = new DefaultHttpContext { RequestServices = firstScope.ServiceProvider };
-        var first = sut.Current;
+        var first = sut.Cache;
 
         accessor.HttpContext = new DefaultHttpContext { RequestServices = secondScope.ServiceProvider };
-        var second = sut.Current;
+        var second = sut.Cache;
 
         Assert.NotNull(first);
         Assert.NotNull(second);
@@ -58,17 +58,17 @@ public class HttpRequestScopedCacheAccessorTests
     }
 
     [Fact]
-    public void Current_NoHttpContext_ReturnsNull()
+    public void Cache_NoHttpContext_ReturnsNull()
     {
         // A background job: there is no ambient request to scope a per-request cache to, so an uncached path
         // is the correct outcome rather than a degraded one.
         var sut = new HttpRequestScopedCacheAccessor(new HttpContextAccessor());
 
-        Assert.Null(sut.Current);
+        Assert.Null(sut.Cache);
     }
 
     [Fact]
-    public void Current_RequestServicesNotSet_ReturnsNull()
+    public void Cache_RequestServicesNotSet_ReturnsNull()
     {
         // A fabricated DefaultHttpContext leaves RequestServices null, which is why the second null-conditional
         // in the implementation is load-bearing rather than defensive.
@@ -76,11 +76,11 @@ public class HttpRequestScopedCacheAccessorTests
 
         var sut = new HttpRequestScopedCacheAccessor(accessor);
 
-        Assert.Null(sut.Current);
+        Assert.Null(sut.Cache);
     }
 
     [Fact]
-    public void Current_CacheNotRegistered_ReturnsNull()
+    public void Cache_CacheServiceNotRegistered_ReturnsNull()
     {
         using var provider = new ServiceCollection().BuildServiceProvider();
         var accessor = new HttpContextAccessor
@@ -90,7 +90,7 @@ public class HttpRequestScopedCacheAccessorTests
 
         var sut = new HttpRequestScopedCacheAccessor(accessor);
 
-        Assert.Null(sut.Current);
+        Assert.Null(sut.Cache);
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public class HttpRequestScopedCacheAccessorTests
 
         Assert.NotNull(sut);
         // No ambient request on the root provider, so there is nothing to hand out - and no throw either.
-        Assert.Null(sut.Current);
+        Assert.Null(sut.Cache);
     }
 
     [Fact]

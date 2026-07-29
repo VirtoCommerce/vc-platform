@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Core.Caching;
 public interface IRequestScopedCacheAccessor
 {
     /// <summary>
-    /// The current request's cache, or <c>null</c> when there is no ambient request scope.
+    /// The ambient request's cache, re-read on every access, or <c>null</c> when there is no ambient request scope.
     /// </summary>
     /// <remarks>
     /// <c>null</c> is an expected value rather than an error: it means a background job, application startup,
@@ -32,5 +32,5 @@ public interface IRequestScopedCacheAccessor
     /// read then throws <see cref="System.ObjectDisposedException"/> rather than returning <c>null</c>.
     /// That exception is a correct signal about the caller's lifetime and must not be swallowed.
     /// </remarks>
-    IRequestScopedCache Current { get; }
+    IRequestScopedCache Cache { get; }
 }
