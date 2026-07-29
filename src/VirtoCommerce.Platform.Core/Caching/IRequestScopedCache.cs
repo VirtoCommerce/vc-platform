@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Core.Caching;
 /// service provider) - never constructor-inject this cache into a singleton, or it is captured against the
 /// root scope and silently shared across all requests.
 /// </remarks>
+/// <seealso cref="IRequestScopedCacheAccessor"/>
 public interface IRequestScopedCache
 {
     /// <summary>
