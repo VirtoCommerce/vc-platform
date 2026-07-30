@@ -60,5 +60,41 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             //Assert
             Assert.False(actual);
         }
+
+        [Theory]
+        [InlineData("*")]
+        [InlineData("**")]
+        [InlineData("?")]
+        [InlineData("catalog:*")]
+        public void IsMatch_WithMissingValue_NeverMatches_NotEvenMatchAllMask(string pattern)
+        {
+            //Arrange
+            // A missing permission or account type must never satisfy a mask, otherwise an
+            // unnamed value would slip through AllowedPermissions.
+            //Act
+            var matchesNull = WildcardMatcher.IsMatch(pattern, null);
+            var matchesEmpty = WildcardMatcher.IsMatch(pattern, string.Empty);
+
+            //Assert
+            Assert.False(matchesNull);
+            Assert.False(matchesEmpty);
+        }
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData(null, "")]
+        [InlineData("", null)]
+        public void IsMatch_WhenBothMaskAndValueAreMissing_ReturnsTrue(string pattern, string value)
+        {
+            //Arrange
+            // An empty mask is treated as matching an empty value, so "nothing" equals "nothing".
+            // Neither side occurs with real permission names or account types.
+            //Act
+            var actual = WildcardMatcher.IsMatch(pattern, value);
+
+            //Assert
+            Assert.True(actual);
+        }
     }
 }
