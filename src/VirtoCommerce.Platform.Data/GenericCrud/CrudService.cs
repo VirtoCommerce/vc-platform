@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly Func<IRepository> _repositoryFactory;
         private readonly bool _isToModelOverridden;
-        private readonly bool _ownsCacheTokenPairing;
+        private readonly bool _isConfigureCacheOverridden;
 
         /// <summary>
         /// Construct new CrudService
@@ -50,9 +50,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             _isToModelOverridden = IsOverridden(nameof(ToModel), [typeof(TEntity)]);
 
-            _ownsCacheTokenPairing =
-                !IsOverridden(nameof(ConfigureCache), [typeof(MemoryCacheEntryOptions), typeof(string), typeof(TModel)]) &&
-                !IsOverridden(nameof(ClearCache), [typeof(IList<TModel>)]);
+            _isConfigureCacheOverridden = IsOverridden(nameof(ConfigureCache), [typeof(MemoryCacheEntryOptions), typeof(string), typeof(TModel)]);
         }
 
         private bool IsOverridden(string methodName, Type[] parameterTypes)
@@ -66,14 +64,17 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// Whether <see cref="GetAsync"/> hands <see cref="CreateCacheToken"/> to the cache helper, which then
         /// captures the invalidation token BEFORE the data is loaded, so an invalidation landing mid-load is
         /// still observed instead of being lost.
-        /// True only while this service still owns BOTH halves of the token pairing: the mint side
-        /// (<see cref="CreateCacheToken"/>, reached through the default <see cref="ConfigureCache"/>) and the
-        /// expire side (<see cref="ClearCache"/>). A subclass overriding either half without calling base
-        /// invalidates through a region of its own, so it gains nothing from the early capture while paying
-        /// one permanently-live token source per id in a region nothing ever expires.
-        /// Override and return true to opt back in when the override does call base.
+        /// True while this service still mints through the default <see cref="ConfigureCache"/>: the early
+        /// capture then reuses the very token source that <see cref="ConfigureCache"/> would create anyway,
+        /// so it adds no state. A subclass that overrides <see cref="ConfigureCache"/> may redirect the mint to
+        /// a region of its own — for such a subclass the early capture would create one permanently-live token
+        /// source per id in <see cref="GenericCachingRegion{TModel}"/>, which it never expires.
+        /// Deliberately NOT conditioned on <see cref="ClearCache"/>: overriding it does not move the mint, so
+        /// gating on it would drop this fix for services that expire extra keys in the very same region
+        /// (vc-module-order CustomerOrderService) while saving nothing.
+        /// Override and return true to opt back in when the <see cref="ConfigureCache"/> override calls base.
         /// </summary>
-        protected virtual bool CaptureCacheTokenBeforeLoad => _ownsCacheTokenPairing;
+        protected virtual bool CaptureCacheTokenBeforeLoad => !_isConfigureCacheOverridden;
 
         /// <summary>
         /// Returns a list of model instances for specified IDs.

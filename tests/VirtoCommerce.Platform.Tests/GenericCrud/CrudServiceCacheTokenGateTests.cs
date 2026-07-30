@@ -18,32 +18,39 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.GenericCrud
 {
-    // Pins the pairing gate in CrudService.GetAsync. Capturing the invalidation token before the load
-    // (VCST-5303) is only meaningful for a service that still owns BOTH halves of the token pairing: the
-    // mint side (CreateCacheToken, reached through the default ConfigureCache) and the expire side
-    // (ClearCache). CreateCacheToken memoizes into CancellableCacheRegion<T>'s process-static key-token
-    // dictionary, whose only removal path is an explicit expire — so handing it to the cache helper on
-    // behalf of a subclass that invalidates through a region of its own leaks one permanently-live
-    // CancellationTokenSource per id into a region nothing ever sweeps (vc-module-inventory
-    // InventoryServiceImpl is the real-world shape).
+    // Pins the ConfigureCache gate in CrudService.GetAsync. Capturing the invalidation token before the load
+    // (VCST-5303) hands CreateCacheToken to the cache helper — and that is a WRITE, not a lookup:
+    // GenericCachingRegion<TModel>.CreateChangeTokenForKey does _keyTokensDict.GetOrAdd(...) into
+    // process-static state whose only removal path is an explicit expire.
     //
-    // Every probe type is generic over a marker so each test gets its own GenericCachingRegion<TModel>
-    // static state. Sharing a model type across tests — or with CrudServiceTests, which populates
+    // For a service that still mints through the default ConfigureCache the early capture is free: the same
+    // key set is minted either way, so GetOrAdd returns the source ConfigureCache would have created. For a
+    // service that overrides ConfigureCache and redirects the mint to its own region (vc-module-inventory
+    // InventoryServiceImpl), the early capture instead accumulates one permanently-live
+    // CancellationTokenSource per id in a region that service never expires.
+    //
+    // Overriding ClearCache does NOT move the mint, so it must not close the gate — vc-module-order
+    // CustomerOrderService overrides ClearCache to expire an extra key in the very same region, and it is the
+    // service whose stale cached reads VCST-5303 was measured on.
+    //
+    // Every probe type is generic over a marker so each test gets its own GenericCachingRegion<TModel> static
+    // state. Sharing a model type across tests — or with CrudServiceTests, which populates
     // GenericCachingRegion<TestModel> — would let one test's tokens satisfy or break another's assertion.
     public class CrudServiceCacheTokenGateTests
     {
         private const string ProbeId = "probe-1";
 
-        private sealed class OwnsPairing;
-        private sealed class OverridesPairing;
-        private sealed class OverridesPairingAndOptsBackIn;
+        private sealed class MintsThroughDefaultRegion;
+        private sealed class ExpiresExtraKeysInTheSameRegion;
+        private sealed class MintsThroughItsOwnRegion;
+        private sealed class MintsThroughItsOwnRegionAndOptsBackIn;
 
         [Fact]
-        public async Task GetAsync_ServiceOwnsThePairing_InvalidationDuringLoad_IsNotCached()
+        public async Task GetAsync_ServiceMintsThroughDefaultRegion_InvalidationDuringLoad_IsNotCached()
         {
-            // The default shape: the gate is open, so the token is captured before the load and the
-            // mid-load invalidation cancels it. The stale value must not survive in the cache.
-            var service = new ProbeCrudService<OwnsPairing> { ExpireDuringLoad = true };
+            // The default shape: the gate is open, the token is captured before the load, and the mid-load
+            // invalidation cancels it — so the stale value must not survive in the cache.
+            var service = new ProbeCrudService<MintsThroughDefaultRegion> { ExpireDuringLoad = true };
 
             var first = await service.GetAsync([ProbeId]);
             var second = await service.GetAsync([ProbeId]);
@@ -54,36 +61,50 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         }
 
         [Fact]
-        public async Task GetAsync_ServiceOverridesThePairing_DoesNotCreateTokensInTheDefaultRegion()
+        public async Task GetAsync_ServiceOverridesOnlyClearCache_InvalidationDuringLoad_IsNotCached()
         {
-            // ConfigureCache and ClearCache are both replaced, so this service invalidates through
-            // ProbeCacheRegion and gains nothing from the early capture. It must not pay for it either:
-            // GenericCachingRegion<TModel> stays untouched.
-            var service = new OverriddenPairingProbeCrudService<OverridesPairing>();
+            // Regression guard for the CustomerOrderService shape: ClearCache is overridden (without calling
+            // base) but expires the same region the default ConfigureCache mints into. Conditioning the gate
+            // on ClearCache too would silently drop the fix here — the one place it was measured.
+            var service = new ClearCacheOnlyProbeCrudService<ExpiresExtraKeysInTheSameRegion> { ExpireDuringLoad = true };
+
+            await service.GetAsync([ProbeId]);
+            var second = await service.GetAsync([ProbeId]);
+
+            Assert.Equal(2, service.LoadCalls);
+            Assert.Equal(2, second.Single().Version);
+        }
+
+        [Fact]
+        public async Task GetAsync_ServiceOverridesConfigureCache_DoesNotCreateTokensInTheDefaultRegion()
+        {
+            // The mint is redirected to ProbeCacheRegion, so this service gains nothing from the early
+            // capture. It must not pay for it either: GenericCachingRegion<TModel> stays untouched.
+            var service = new OwnRegionProbeCrudService<MintsThroughItsOwnRegion>();
 
             await service.GetAsync([ProbeId]);
 
-            Assert.Empty(GetDefaultRegionTokenKeys<ProbeModel<OverridesPairing>>());
+            Assert.Empty(GetDefaultRegionTokenKeys<ProbeModel<MintsThroughItsOwnRegion>>());
 
             // Proves the assertion above is not vacuous — the overridden ConfigureCache did run and did
             // register the id in the region this service actually expires.
             Assert.Contains(
-                ProbeCacheRegion<OverridesPairing>.GenerateRegionTokenKey(ProbeId),
-                GetRegionTokenKeys<ProbeCacheRegion<OverridesPairing>>());
+                ProbeCacheRegion<MintsThroughItsOwnRegion>.GenerateRegionTokenKey(ProbeId),
+                GetRegionTokenKeys<ProbeCacheRegion<MintsThroughItsOwnRegion>>());
         }
 
         [Fact]
-        public async Task GetAsync_ServiceOverridesThePairingButOptsBackIn_CreatesTokensInTheDefaultRegion()
+        public async Task GetAsync_ServiceOverridesConfigureCacheButOptsBackIn_CreatesTokensInTheDefaultRegion()
         {
-            // The escape hatch: a subclass that overrides the pairing but still calls base can restore the
-            // early capture with a one-line CaptureCacheTokenBeforeLoad override.
-            var service = new OptedInProbeCrudService<OverridesPairingAndOptsBackIn>();
+            // The escape hatch: a subclass whose ConfigureCache override does call base restores the early
+            // capture with a one-line CaptureCacheTokenBeforeLoad override.
+            var service = new OptedInProbeCrudService<MintsThroughItsOwnRegionAndOptsBackIn>();
 
             await service.GetAsync([ProbeId]);
 
             Assert.Contains(
-                GenericCachingRegion<ProbeModel<OverridesPairingAndOptsBackIn>>.GenerateRegionTokenKey(ProbeId),
-                GetDefaultRegionTokenKeys<ProbeModel<OverridesPairingAndOptsBackIn>>());
+                GenericCachingRegion<ProbeModel<MintsThroughItsOwnRegionAndOptsBackIn>>.GenerateRegionTokenKey(ProbeId),
+                GetDefaultRegionTokenKeys<ProbeModel<MintsThroughItsOwnRegionAndOptsBackIn>>());
         }
 
         private static IReadOnlyCollection<string> GetDefaultRegionTokenKeys<TModel>()
@@ -138,7 +159,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
 
         private sealed class ProbeCacheRegion<TMarker> : CancellableCacheRegion<ProbeCacheRegion<TMarker>>;
 
-        // Owns both halves of the pairing: neither ConfigureCache nor ClearCache is overridden.
+        // Overrides nothing: mints and expires through GenericCachingRegion<TModel>.
         private class ProbeCrudService<TMarker> : CrudService<ProbeModel<TMarker>, ProbeEntity<TMarker>, ProbeChangingEvent<TMarker>, ProbeChangedEvent<TMarker>>
         {
             public ProbeCrudService()
@@ -177,9 +198,26 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
             }
         }
 
-        // Mirrors vc-module-inventory InventoryServiceImpl: replaces both halves of the pairing with its own
+        // Mirrors vc-module-order CustomerOrderService: overrides ClearCache without calling base, but expires
+        // the same region the default ConfigureCache mints into — it only adds a second key.
+        // The body is documentary — the gate reacts to the override EXISTING, and no test invokes ClearCache.
+        // Keep it anyway: emptying it would leave the probe no longer mirroring the shape it stands for.
+        private sealed class ClearCacheOnlyProbeCrudService<TMarker> : ProbeCrudService<TMarker>
+        {
+            protected override void ClearCache(IList<ProbeModel<TMarker>> models)
+            {
+                GenericSearchCachingRegion<ProbeModel<TMarker>>.ExpireRegion();
+
+                foreach (var model in models)
+                {
+                    GenericCachingRegion<ProbeModel<TMarker>>.ExpireTokenForKey(model.Id);
+                }
+            }
+        }
+
+        // Mirrors vc-module-inventory InventoryServiceImpl: redirects both the mint and the expire to its own
         // region and never calls base.
-        private class OverriddenPairingProbeCrudService<TMarker> : ProbeCrudService<TMarker>
+        private class OwnRegionProbeCrudService<TMarker> : ProbeCrudService<TMarker>
         {
             protected override void ConfigureCache(MemoryCacheEntryOptions cacheOptions, string id, ProbeModel<TMarker> model)
             {
@@ -192,7 +230,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
             }
         }
 
-        private sealed class OptedInProbeCrudService<TMarker> : OverriddenPairingProbeCrudService<TMarker>
+        private sealed class OptedInProbeCrudService<TMarker> : OwnRegionProbeCrudService<TMarker>
         {
             protected override bool CaptureCacheTokenBeforeLoad => true;
         }
