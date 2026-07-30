@@ -556,22 +556,40 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 .sch-via-rest    { color: var(--info);       border-color: currentColor; }
 .sch-via-trend   { color: var(--warn);       border-color: currentColor; border-style: dashed; }
 
-.sch-arrow { text-align: center; color: var(--muted); font-size: 11px; line-height: 1; }
+/* Connector between two rows: a centred pill sitting on a vertical line, so the flow
+   direction reads at a glance. The line is drawn behind the pill, not around it. */
+.sch-conn {
+  position: relative;
+  display: flex; justify-content: center;
+  min-height: 18px;
+}
+.sch-conn::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 1px; background: var(--border-strong);
+}
+.sch-conn-pill {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 1px 8px;
+  font: 9.5px var(--mono); text-transform: uppercase; letter-spacing: .6px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 999px;
+}
+.sch-conn-dir { font-size: 11px; line-height: 1; color: var(--text); }
 
 .sch-target {
   display: flex; flex-direction: column; gap: 2px; align-items: center; text-align: center;
-  padding: 9px 11px;
+  padding: 10px 11px;
   background: var(--surface);
   border: 2px solid var(--accent); border-radius: 6px;
 }
-.sch-target-name { font-size: 12.5px; font-weight: 700; }
+.sch-target-name { font-size: 13px; font-weight: 700; }
 .sch-target-sub { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
 
-/* Expanded panel: lay the groups out side by side once there is room. */
-.drawer.is-full .schema { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
-.drawer.is-full .sch-group { flex: 1 1 300px; }
-.drawer.is-full .sch-arrow { display: none; }
-.drawer.is-full .sch-target { flex: 1 1 100%; }
+/* The schema stays vertical at every width — the stack IS the diagram. Extra room in the
+   expanded panel goes into wider nodes within each row, not into re-flowing the rows. */
+.drawer.is-full .sch-nodes { grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); }
 
 .d-meta { margin-top: 20px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 11px; color: var(--muted); }
 

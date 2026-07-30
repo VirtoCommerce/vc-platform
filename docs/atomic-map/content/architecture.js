@@ -11,11 +11,14 @@ window.VC_MAP_ARCHITECTURE = [
     sub: 'Every surface that talks to the platform, and the protocol each one speaks. Presentation is fully separated from business logic, so every channel — including the back office — is just an API client.',
     tags: ['vc-frontend', 'GraphQL', 'Admin UI', 'Vendor Portal', 'AI agents'],
     schemaTitle: 'Channels → platform',
+    /* Vertical by design: sales channels on top calling down into the platform, back office
+       and integrations below calling up into it. The arrow on each connector shows who calls
+       whom — everything points at the platform, because nothing else holds business logic. */
     schema: {
-      groups: [
+      rows: [
         {
           title: 'Sales channels',
-          hint: 'customer-facing · read-heavy · GraphQL',
+          hint: 'customer-facing · read-heavy',
           nodes: [
             { name: 'Virto Commerce Frontend', sub: '`vc-frontend` — Vue 3 · Vite · TS · Tailwind. Storefront-less, no middleware.', via: 'GraphQL', viaKind: 'graphql' },
             { name: 'Custom storefront', sub: 'Your own SPA or native app against the same schema', via: 'GraphQL', viaKind: 'graphql' },
@@ -25,8 +28,16 @@ window.VC_MAP_ARCHITECTURE = [
           ]
         },
         {
-          title: 'Back office & operations',
-          hint: 'internal · full CRUD · REST',
+          connector: 'XAPI GraphQL · REST',
+          connectorDir: 'down',
+          target: 'Virto Commerce Platform',
+          sub: 'XAPI (GraphQL) for experience reads · REST `/api` for full CRUD · modules behind both'
+        },
+        {
+          connector: 'REST /api',
+          connectorDir: 'up',
+          title: 'Admin UI & back office',
+          hint: 'internal · full CRUD',
           nodes: [
             { name: 'Admin UI', sub: 'Commerce Manager — AngularJS 1.8 blades, ships inside the platform', via: 'REST', viaKind: 'rest' },
             { name: 'Vendor Portal', sub: 'VC-Shell — Vue 3 + Module Federation, used by Marketplace and vertical apps', via: 'REST', viaKind: 'rest' },
@@ -34,18 +45,16 @@ window.VC_MAP_ARCHITECTURE = [
           ]
         },
         {
-          title: 'System to system',
+          connector: 'REST in · webhooks out',
+          connectorDir: 'both',
+          title: 'Integrations',
           hint: 'no human in the loop',
           nodes: [
             { name: 'Integration middleware', sub: 'ERP · WMS · CRM · PIM. Translates between models so neither side compromises.', via: 'REST', viaKind: 'rest' },
-            { name: 'Outbound webhooks', sub: 'The platform calling you, instead of you polling it', via: 'HTTP', viaKind: 'plain' }
+            { name: 'EventBus & outbound webhooks', sub: 'The platform calling you, instead of you polling it', via: 'HTTP', viaKind: 'plain' }
           ]
         }
-      ],
-      target: {
-        name: 'Virto Commerce Platform',
-        sub: 'XAPI (GraphQL) for experience reads · REST `/api` for full CRUD · modules behind both'
-      }
+      ]
     },
     bullets: [
       '`vc-frontend` — Vue 3 · TypeScript · Vite · TailwindCSS · Yarn 4. Storefront-less: it talks straight to XAPI over GraphQL, with no ASP.NET middleware in between. Follows Atomic Design, which is where the atom/molecule vocabulary on this poster comes from.',

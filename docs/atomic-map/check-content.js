@@ -59,17 +59,25 @@ for (const a of ATOMS) {
 }
 
 const VIA_KINDS = new Set(['graphql', 'rest', 'trend', 'plain']);
+const CONNECTOR_DIRS = new Set(['down', 'up', 'both']);
 for (const l of LAYERS) {
   for (const d of l.docs || []) checkDocHref('layer', l.id, d.href);
   if (!l.hue) add('layer', l.id, 'missing hue');
   if (!l.sub) add('layer', l.id, 'missing sub');
   if (l.schema) {
-    if (!l.schema.groups?.length) add('layer', l.id, 'schema has no groups');
-    for (const g of l.schema.groups || []) {
-      if (!g.title) add('layer', l.id, 'schema group without a title');
-      if (!g.nodes?.length) add('layer', l.id, `schema group "${g.title}" has no nodes`);
-      for (const n of g.nodes || []) {
-        if (!n.name) add('layer', l.id, `schema node without a name in "${g.title}"`);
+    const rows = l.schema.rows;
+    if (!rows?.length) add('layer', l.id, 'schema has no rows');
+    let targets = 0;
+    for (const r of rows || []) {
+      if (r.connectorDir && !CONNECTOR_DIRS.has(r.connectorDir)) {
+        add('layer', l.id, `schema row has unknown connectorDir "${r.connectorDir}"`);
+      }
+      if (r.connectorDir && !r.connector) add('layer', l.id, 'schema row sets connectorDir but no connector label');
+      if (r.target) { targets++; continue; }
+      if (!r.title) add('layer', l.id, 'schema row is neither a target nor a titled group');
+      if (!r.nodes?.length) add('layer', l.id, `schema row "${r.title}" has no nodes`);
+      for (const n of r.nodes || []) {
+        if (!n.name) add('layer', l.id, `schema node without a name in "${r.title}"`);
         if (n.viaKind && !VIA_KINDS.has(n.viaKind)) {
           add('layer', l.id, `schema node "${n.name}" has unknown viaKind "${n.viaKind}"`);
         }
@@ -77,7 +85,7 @@ for (const l of LAYERS) {
         if (n.viaKind && !n.via) add('layer', l.id, `schema node "${n.name}" sets viaKind but no via label`);
       }
     }
-    if (!l.schema.target?.name) add('layer', l.id, 'schema has no target');
+    if (targets !== 1) add('layer', l.id, `schema must have exactly one target row, found ${targets}`);
   }
 }
 for (const m of MOLECULES) {

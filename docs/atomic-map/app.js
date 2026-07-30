@@ -587,31 +587,44 @@
     ]);
   }
 
-  /* A layered schema: stacked groups of consumers, each node labelled with the protocol
-     it uses, converging on one target. Declared in content as `schema`, so a layer gains a
-     diagram without any change here. */
+  /* A vertical layered schema: an ordered stack of rows joined by connector pills.
+     A row is either a group of consumer nodes or the target itself, so the target can sit
+     anywhere in the stack — Channels puts the platform in the middle, with sales channels
+     calling down into it and back office / integrations calling up. Declared in content as
+     `schema`, so a layer gains a diagram without any change here. */
+  var CONNECTOR_DIRS = { down: '↓', up: '↑', both: '↕' };
+
+  function schemaNode(node) {
+    return el('div', { class: 'sch-node' + (node.trend ? ' is-trend' : '') },
+      el('span', { class: 'sch-node-name' }, rich(node.name)),
+      node.sub ? el('span', { class: 'sch-node-sub' }, rich(node.sub)) : null,
+      node.via ? el('span', { class: 'sch-via sch-via-' + (node.viaKind || 'plain'), text: node.via }) : null);
+  }
+
   function schemaBlock(schema) {
-    if (!schema || !schema.groups || !schema.groups.length) return null;
+    if (!schema || !schema.rows || !schema.rows.length) return null;
 
-    var parts = schema.groups.map(function (group) {
-      return el('div', { class: 'sch-group' },
+    var parts = [];
+    schema.rows.forEach(function (row) {
+      if (row.connector) {
+        parts.push(el('div', { class: 'sch-conn' },
+          el('span', { class: 'sch-conn-pill' },
+            el('span', { class: 'sch-conn-dir', 'aria-hidden': 'true',
+                         text: CONNECTOR_DIRS[row.connectorDir] || CONNECTOR_DIRS.down }),
+            row.connector)));
+      }
+      if (row.target) {
+        parts.push(el('div', { class: 'sch-row sch-target' },
+          el('span', { class: 'sch-target-name', text: row.target }),
+          row.sub ? el('span', { class: 'sch-target-sub' }, rich(row.sub)) : null));
+        return;
+      }
+      parts.push(el('div', { class: 'sch-row sch-group' },
         el('div', { class: 'sch-group-head' },
-          el('span', { class: 'sch-group-title', text: group.title }),
-          group.hint ? el('span', { class: 'sch-group-hint', text: group.hint }) : null),
-        el('div', { class: 'sch-nodes' }, (group.nodes || []).map(function (node) {
-          return el('div', { class: 'sch-node' + (node.trend ? ' is-trend' : '') },
-            el('span', { class: 'sch-node-name' }, rich(node.name)),
-            node.sub ? el('span', { class: 'sch-node-sub' }, rich(node.sub)) : null,
-            node.via ? el('span', { class: 'sch-via sch-via-' + (node.viaKind || 'plain'), text: node.via }) : null);
-        })));
+          el('span', { class: 'sch-group-title', text: row.title }),
+          row.hint ? el('span', { class: 'sch-group-hint', text: row.hint }) : null),
+        el('div', { class: 'sch-nodes' }, (row.nodes || []).map(schemaNode))));
     });
-
-    if (schema.target) {
-      parts.push(el('div', { class: 'sch-arrow', 'aria-hidden': 'true', text: '▼' }));
-      parts.push(el('div', { class: 'sch-target' },
-        el('span', { class: 'sch-target-name', text: schema.target.name }),
-        schema.target.sub ? el('span', { class: 'sch-target-sub' }, rich(schema.target.sub)) : null));
-    }
     return el('div', { class: 'schema' }, parts);
   }
 
