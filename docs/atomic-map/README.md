@@ -76,7 +76,9 @@ node docs/atomic-map/check-content.js
 | `keystone` | | `true` draws a heavier border (currently only `AbstractTypeFactory`) |
 | `tags` | | extra search terms that are not in the prose |
 
-Backticks inside any text field render as inline `<code>`.
+In any text field, backticks render as inline `<code>` and `**double stars**` as `<strong>`. Bold is
+the outer split, so ``**`Something`**`` works. Pair your markers — an odd number of `**` in one
+string bolds the tail.
 
 `app.js` validates the required fields at render time and paints a red `⚠` on any incomplete tile,
 with the specific problems listed in its drawer. Broken content fails loudly rather than rendering

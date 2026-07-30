@@ -28,15 +28,17 @@ window.VC_MAP_MOLECULES = [
     sub: 'The in-flight extraction of the job engine behind one port.',
     planned: [
       'Why Hangfire was removed as a hard platform dependency',
-      'The `IJobEngine` port and its adapters (Hangfire as reference engine, RabbitMQ as the push/scale-to-zero proof)',
+      'The engine port and its adapters, selected by `VirtoCommerce:BackgroundJobs:Provider` — Hangfire (default), RabbitMQ, in-memory for development',
+      '`Mode` as a deployment lever: Producer, Worker, or Both, and what a producer-only cluster looks like',
       'What happens when no engine is installed, and why the platform still boots',
-      'The migration path for modules calling Hangfire directly',
+      'The two-step migration for modules calling Hangfire directly, and the `EnableLegacyHangfire` escape hatch',
       'Idempotency, dedup keys, claim-check for large payloads, and one OpenTelemetry model across engines'
     ],
     docs: [
+      { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
       { label: 'Design spec (2026-06-06)', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
-    atoms: ['background-jobs', 'recurring-jobs', 'map-reduce-jobs', 'job-progress', 'fire-and-forget', 'distributed-lock']
+    atoms: ['background-jobs', 'recurring-jobs', 'map-reduce-jobs', 'job-progress', 'fire-and-forget', 'hangfire', 'distributed-lock']
   },
   {
     id: 'search-and-indexing',

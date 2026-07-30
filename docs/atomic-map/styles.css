@@ -511,7 +511,9 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
   border: 1px solid var(--border); border-left: 3px solid var(--warn);
   border-radius: 6px; font-size: 12.5px; line-height: 1.5;
 }
-.d-note strong { color: var(--warn); }
+.d-note .d-note-label { color: var(--warn); }
+/* Emphasis inside body text must not borrow the note label's colour. */
+.d-note strong:not(.d-note-label), .d-lead strong, .d-list strong { font-weight: 650; color: inherit; }
 
 .d-meta { margin-top: 20px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 11px; color: var(--muted); }
 

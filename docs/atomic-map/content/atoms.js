@@ -82,18 +82,20 @@ window.VC_MAP_ATOMS = [
 '        MaxRetryAttempts = 3\n' +
 '    });'
     },
-    note: 'Hangfire is no longer a platform dependency. `VirtoCommerce.Platform.Hangfire` has been removed from `VirtoCommerce.Platform.sln`, and the platform now depends only on the contracts in `Platform.Core/Jobs`. The engine ships as an installable module. Older code and docs that call `Hangfire.BackgroundJob.Enqueue` or inject the old `VirtoCommerce.Platform.Hangfire.IRecurringJobService` show the pattern being migrated away from.',
+    note: 'Hangfire is no longer a platform dependency. `VirtoCommerce.Platform.Hangfire` has been removed from `VirtoCommerce.Platform.sln`, and the platform now depends only on the contracts in `Platform.Core/Jobs`. Execution comes from the installable **`VirtoCommerce.BackgroundJobs`** module, which picks one engine — Hangfire (default), RabbitMQ, or in-memory for development — from `VirtoCommerce:BackgroundJobs:Provider`. Your code never names the engine.',
     gotchas: [
       'With no engine module installed, `IBackgroundJob` throws `BackgroundJobEngineNotInstalledException` — with installation instructions in the message. The platform still boots.',
       'The payload is validated against the handler at enqueue time: if `THandler` does not implement `IBackgroundJobHandler<>` for the payload\'s runtime type, `Enqueue` throws immediately rather than failing later on a worker.',
+      'There is a shorter registration overload, `AddBackgroundJob<THandler>()`, which infers the payload type from the handler\'s interface. It requires the handler to implement exactly one `IBackgroundJobHandler<>`; name both types when it implements several.',
       '`UniqueKey` is how you stop a user double-clicking their way into two concurrent imports.',
       'Handlers get a fresh DI scope per job — not the enqueuing request\'s scope.'
     ],
     docs: [
+      { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
       { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' },
       { label: 'Scalability', href: '../fundamentals/scalability.md' }
     ],
-    seeAlso: ['recurring-jobs', 'map-reduce-jobs', 'job-progress', 'fire-and-forget', 'push-notifications', 'distributed-lock'],
+    seeAlso: ['recurring-jobs', 'map-reduce-jobs', 'job-progress', 'fire-and-forget', 'hangfire', 'push-notifications', 'distributed-lock'],
     molecule: 'background-processing-hub',
     verifiedAgainst: '3.1053.0'
   },
@@ -144,7 +146,7 @@ window.VC_MAP_ATOMS = [
 '        .WithTimeZone(TimeZoneInfo.Utc)\n' +
 '        .WithEnabled(_options.PruneEnabled));'
     },
-    note: 'Same in-flight extraction as background jobs: `Platform.Core/Jobs/IRecurringJobService` is the new engine-free contract. The older `VirtoCommerce.Platform.Hangfire.IRecurringJobService` is a distinct type kept for binary compatibility with existing modules — check which one you are injecting.',
+    note: 'Same extraction as background jobs: `Platform.Core/Jobs/IRecurringJobService` is the new engine-free contract, and scheduling is executed by the `VirtoCommerce.BackgroundJobs` module. The older `VirtoCommerce.Platform.Hangfire.IRecurringJobService` is a *distinct type* kept for binary compatibility — check which one you are injecting, because both compile.',
     gotchas: [
       'With no engine installed, recurring registration is a logged no-op rather than an exception: the platform boots and the job simply never runs. Silence here is the failure mode to watch for.',
       '`WithCron` and `FromSettings` are mutually exclusive — supply exactly one.',
@@ -152,9 +154,10 @@ window.VC_MAP_ATOMS = [
       'Cron is evaluated in UTC unless you pass `WithTimeZone` — a nightly job can fire at the wrong local hour after a DST change.'
     ],
     docs: [
+      { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
       { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
-    seeAlso: ['background-jobs', 'settings', 'distributed-lock', 'hosted-service'],
+    seeAlso: ['background-jobs', 'hangfire', 'settings', 'distributed-lock', 'hosted-service'],
     molecule: 'background-processing-hub',
     verifiedAgainst: '3.1053.0'
   },
@@ -204,7 +207,7 @@ window.VC_MAP_ATOMS = [
     docs: [
       { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
-    seeAlso: ['background-jobs', 'job-progress', 'export-import'],
+    seeAlso: ['background-jobs', 'hangfire', 'job-progress', 'export-import'],
     molecule: 'background-processing-hub',
     verifiedAgainst: '3.1053.0'
   },
@@ -266,7 +269,7 @@ window.VC_MAP_ATOMS = [
     docs: [
       { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
-    seeAlso: ['background-jobs', 'push-notifications', 'export-import'],
+    seeAlso: ['background-jobs', 'hangfire', 'push-notifications', 'export-import'],
     molecule: 'background-processing-hub',
     verifiedAgainst: '3.1053.0'
   },
@@ -276,49 +279,123 @@ window.VC_MAP_ATOMS = [
     symbol: 'FF',
     name: 'Fire & forget',
     family: 'execution',
-    adoption: 'legacy',
+    adoption: 'platform',
     layer: 'platform',
-    tags: ['task.run', 'static', 'backgroundjob.enqueue', 'ambient'],
-    oneLiner: 'Kicking off work without waiting for it — and the two ways to do that which you should stop using.',
-    pattern: 'Ambient static facade. `Core/Jobs/BackgroundJob.Enqueue` is a static entry point that resolves `IBackgroundJob` from the root service provider through a short-lived scope. It exists purely so code migrating off `Hangfire.BackgroundJob.Enqueue` does not have to thread a dependency through its constructors first.',
+    tags: ['task.run', 'async', 'unawaited', 'non-blocking', 'enqueue'],
+    oneLiner: 'Start work and move on without waiting for the result — durably, so it survives the request that started it.',
+    pattern: 'Enqueue-and-continue. You await the *enqueue*, not the work: `IBackgroundJob.Enqueue` hands the payload to the engine and returns a job id immediately, so the caller is not blocked by however long the work takes. The durability is what separates this from simply not awaiting a `Task`.',
     whenToUse: [
-      'Only as a migration step, when threading `IBackgroundJob` through an existing call chain would be a large mechanical change',
-      'Legacy code you are actively moving to injected `IBackgroundJob`'
+      'Work the caller genuinely should not wait for: sending a confirmation email, warming a cache, notifying a downstream system',
+      'Keeping a request fast when the slow part does not affect the response',
+      'Reacting to an event where the handler must not extend the publisher\'s transaction'
     ],
     avoid: [
-      'New code — inject `IBackgroundJob` instead: explicit dependency, trivially testable, no ambient state',
-      '`Task.Run` or an un-awaited `Task` for real work. The request ends, the scope is disposed, and unobserved exceptions vanish',
-      'Any fire-and-forget that must not be lost. If it matters, it belongs in a durable queue'
+      '`Task.Run` or an un-awaited `Task` for real work — the request ends, the DI scope is disposed, and unobserved exceptions vanish silently',
+      'Anything whose result the caller needs. Fire-and-forget means you have given up the answer, not just the wait',
+      'Assuming ordering between two things you fired. There is none',
+      'Firing something and never surfacing its failure — give it a notification, a log, or a status the operator can see'
     ],
     api: [
-      { name: 'BackgroundJob (static)', file: 'src/VirtoCommerce.Platform.Core/Jobs/BackgroundJob.cs' },
-      { name: 'BackgroundJob.Initialize', file: 'src/VirtoCommerce.Platform.Core/Jobs/BackgroundJob.cs' }
+      { name: 'IBackgroundJob.Enqueue', file: 'src/VirtoCommerce.Platform.Core/Jobs/IBackgroundJob.cs' },
+      { name: 'BackgroundJob (static facade)', file: 'src/VirtoCommerce.Platform.Core/Jobs/BackgroundJob.cs' },
+      { name: 'EnqueueOptions', file: 'src/VirtoCommerce.Platform.Core/Jobs/EnqueueOptions.cs' }
     ],
     snippet: {
       lang: 'csharp',
       code:
-'// ✕ Un-awaited Task: the scope dies with the request and exceptions are swallowed.\n' +
-'_ = Task.Run(() => _service.DoExpensiveWork(id));\n' +
-'\n' +
-'// ✕ Static facade — migration aid only. Ambient, and untestable without global state.\n' +
-'await BackgroundJob.Enqueue<DoWorkHandler>(new DoWorkPayload { Id = id });\n' +
-'\n' +
-'// ✓ Inject the port. Explicit, mockable, and durable.\n' +
-'public class MyService(IBackgroundJob backgroundJob)\n' +
+'// ✓ Durable fire-and-forget: await the enqueue, not the work.\n' +
+'public class OrderService(IBackgroundJob backgroundJob)\n' +
 '{\n' +
-'    public Task Queue(string id) =>\n' +
-'        backgroundJob.Enqueue<DoWorkHandler>(new DoWorkPayload { Id = id });\n' +
-'}'
+'    public async Task Place(CustomerOrder order)\n' +
+'    {\n' +
+'        await Save(order);\n' +
+'\n' +
+'        // Returns as soon as the job is queued. The email send happens on a worker,\n' +
+'        // survives a restart, and retries on failure.\n' +
+'        await backgroundJob.Enqueue<SendOrderEmailJob>(\n' +
+'            new SendOrderEmailPayload { OrderId = order.Id });\n' +
+'    }\n' +
+'}\n' +
+'\n' +
+'// ✕ Not fire-and-forget so much as fire-and-lose: the scope dies with the request,\n' +
+'//   nothing retries, and an exception here is never observed by anyone.\n' +
+'_ = Task.Run(() => _service.SendEmail(order.Id));\n' +
+'\n' +
+'// ~ Static facade — works, but ambient and awkward to test. It is a migration aid\n' +
+'//   for code moving off Hangfire\'s static API; prefer injecting IBackgroundJob.\n' +
+'await BackgroundJob.Enqueue<SendOrderEmailJob>(payload);'
     },
-    useInstead: 'Inject `IBackgroundJob` and enqueue a payload — see the Background jobs atom.',
-    note: 'The static facade is documented in its own source as a migration aid, not an API to build on. It only works once an engine module has called `BackgroundJob.Initialize` during startup; otherwise it throws with instructions.',
     gotchas: [
-      'The static facade opens its own DI scope per call, so scoped services are fresh — it does not inherit the caller\'s scope even though it looks ambient.',
-      'The enqueuing user still flows in via `IHttpContextAccessor`, so audit fields survive — that is the one thing the static path does not lose.',
-      '`Task.Run` inside a request also competes with the thread pool serving requests; under load it makes latency worse in exactly the moments you care about.'
+      '`Task.Run` inside a request competes for the same thread pool that serves requests, so it degrades latency precisely when you are busiest.',
+      'The static `BackgroundJob` facade is not deprecated, but it is documented in its own source as a migration aid rather than an API to build on. It only works once an engine module has called `BackgroundJob.Initialize`, and it opens a fresh DI scope per call rather than inheriting the caller\'s.',
+      'The enqueuing user flows into the job\'s scope via `IHttpContextAccessor`, so audit fields survive the hand-off — one of the few pieces of ambient context that does.',
+      'Fire-and-forget hides failures by construction. Pair it with a push notification or a visible job status, or nobody learns the email never went.'
     ],
     docs: [],
-    seeAlso: ['background-jobs', 'hosted-service', 'cancellation'],
+    seeAlso: ['background-jobs', 'hangfire', 'hosted-service', 'push-notifications'],
+    molecule: 'background-processing-hub',
+    verifiedAgainst: '3.1053.0'
+  },
+
+  {
+    id: 'hangfire',
+    symbol: 'Hf',
+    name: 'Hangfire',
+    family: 'execution',
+    adoption: 'legacy',
+    layer: 'platform',
+    tags: ['hangfire', 'dashboard', 'recurringjob', 'engine', 'provider', 'rabbitmq'],
+    oneLiner: 'Referencing Hangfire directly is the legacy path. It is now one selectable engine behind the background-jobs port, not the platform\'s job system.',
+    pattern: 'Provider behind a port, chosen by configuration — the same shape as search providers. `VirtoCommerce.BackgroundJobs` owns the engine contract; Hangfire is its default reference engine, with RabbitMQ and an in-memory engine as alternatives. Application code talks to `IBackgroundJob` and never names the engine.',
+    whenToUse: [
+      'Reading or maintaining existing code that calls `Hangfire.BackgroundJob.Enqueue` or the old `VirtoCommerce.Platform.Hangfire.IRecurringJobService`',
+      'Choosing Hangfire deliberately as your engine — it is still the default and a perfectly good one',
+      'Reaching the Hangfire dashboard to inspect jobs in a running environment'
+    ],
+    avoid: [
+      'Referencing `Hangfire.*` types from new module code — that is the coupling the extraction removed',
+      'Assuming the platform provides job execution on its own. Without an engine module installed, `IBackgroundJob` throws',
+      'Depending on the dead `VirtoCommerce.Platform.Hangfire` package rather than `VirtoCommerce.BackgroundJobs.Hangfire`',
+      'Treating `InMemory` as a production engine — it is documented for development and testing only'
+    ],
+    api: [
+      { name: 'VirtoCommerce.BackgroundJobs (module)', file: '(separate repository — vc-module-background-jobs)' },
+      { name: 'VirtoCommerce.BackgroundJobs.Hangfire (engine)', file: '(engine package, replaces VirtoCommerce.Platform.Hangfire)' },
+      { name: 'IBackgroundJob (the port to use instead)', file: 'src/VirtoCommerce.Platform.Core/Jobs/IBackgroundJob.cs' },
+      { name: 'IRecurringJobService (engine-free contract)', file: 'src/VirtoCommerce.Platform.Core/Jobs/IRecurringJobService.cs' },
+      { name: 'BackgroundJobEngineNotInstalledException', file: 'src/VirtoCommerce.Platform.Core/Jobs/BackgroundJobEngineNotInstalledException.cs' }
+    ],
+    snippet: {
+      lang: 'json',
+      code:
+'// appsettings.json — the engine is a configuration choice, not a code dependency.\n' +
+'{\n' +
+'  "VirtoCommerce": {\n' +
+'    "BackgroundJobs": {\n' +
+'      "Provider": "Hangfire",        // Hangfire (default) | RabbitMQ | InMemory\n' +
+'      "Mode": "Both",                // Producer | Worker | Both\n' +
+'      "EnableLegacyHangfire": true,  // keeps Hangfire running alongside another engine\n' +
+'      "DefaultQueue": "default",\n' +
+'      "MaxRetryAttempts": 3\n' +
+'    },\n' +
+'    "Hangfire": { "WorkerCount": 10, "JobStorageType": "SqlServer" },\n' +
+'    "RabbitMQ": { "HostName": "localhost", "Port": 5672, "PrefetchCount": 10 }\n' +
+'  }\n' +
+'}'
+    },
+    useInstead: 'Install `VirtoCommerce.BackgroundJobs`, then define a payload plus an `IBackgroundJobHandler<TPayload>` and enqueue through `IBackgroundJob` — see the Background jobs atom. Migration is two steps: swap the dead `VirtoCommerce.Platform.Hangfire` package reference for `VirtoCommerce.BackgroundJobs.Hangfire`, then move off `Hangfire.BackgroundJob.Enqueue()` to `IBackgroundJob.Enqueue<THandler>()`.',
+    note: 'The badge is about **direct Hangfire coupling**, not about Hangfire itself — Hangfire remains the default engine and is fine to run. What is legacy is code that names `Hangfire.*` types, and the `VirtoCommerce.Platform.Hangfire` package, which is now a type-forwarding shim kept only so existing assemblies still load.',
+    gotchas: [
+      '`EnableLegacyHangfire` defaults to **true**, so Hangfire may still be running even when you have selected another provider. That is deliberate backward compatibility, and it surprises people debugging which engine actually ran a job.',
+      '`VirtoCommerce.Platform.Hangfire.dll` still exists as a type-forwarding shim. A reference to it compiles and appears to work, which is exactly why stale references survive unnoticed.',
+      '`Mode` splits producer from worker: an instance set to `Producer` enqueues but never executes. A queue that fills up while nothing drains it is usually this.',
+      'Engine choice changes delivery semantics — RabbitMQ is push-based and scale-to-zero friendly, Hangfire polls its storage. Handlers must be idempotent either way.'
+    ],
+    docs: [
+      { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
+      { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+    ],
+    seeAlso: ['background-jobs', 'recurring-jobs', 'fire-and-forget', 'map-reduce-jobs'],
     molecule: 'background-processing-hub',
     verifiedAgainst: '3.1053.0'
   },

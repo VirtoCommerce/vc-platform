@@ -54,12 +54,24 @@
     node.appendChild(child.nodeType ? child : document.createTextNode(String(child)));
   }
 
-  /** Renders `backticked` spans as <code>. No HTML is ever parsed. */
+  /** Renders `backticked` spans as <code> and **double-starred** spans as <strong>.
+   *  No HTML is ever parsed — every case builds elements and sets text via textContent.
+   *
+   *  Bold is the OUTER split so that **`Something`** works. Splitting backticks first
+   *  separates the two ** markers into different segments, which breaks the pairing and
+   *  silently bolds everything up to the next marker instead of the intended phrase.
+   *  Caveat: an odd number of ** in one string bolds the tail — pair your markers. */
   function rich(text) {
     var frag = document.createDocumentFragment();
-    String(text).split('`').forEach(function (part, i) {
+    String(text).split('**').forEach(function (part, i) {
       if (part === '') return;
-      frag.appendChild(i % 2 ? el('code', { text: part }) : document.createTextNode(part));
+      var bold = i % 2 === 1;
+      var host = bold ? el('strong', {}) : frag;
+      part.split('`').forEach(function (chunk, j) {
+        if (chunk === '') return;
+        host.appendChild(j % 2 ? el('code', { text: chunk }) : document.createTextNode(chunk));
+      });
+      if (bold) frag.appendChild(host);
     });
     return frag;
   }
@@ -525,7 +537,7 @@
 
     if (atom._problems.length) {
       append(body, el('div', { class: 'd-note' },
-        el('strong', { text: '⚠ Content schema' }),
+        el('strong', { class: 'd-note-label', text: '⚠ Content schema' }),
         ' — this atom is incomplete: ' + atom._problems.join('; ') + '.'));
     }
 
@@ -533,12 +545,12 @@
 
     if (atom.note) {
       append(body, el('div', { class: 'd-note' },
-        el('strong', { text: atom.adoption === 'in-flight' ? 'Migration note' : 'Read this first' }),
+        el('strong', { class: 'd-note-label', text: atom.adoption === 'in-flight' ? 'Migration note' : 'Read this first' }),
         ' — ', rich(atom.note)));
     }
     if (atom.useInstead) {
       append(body, el('div', { class: 'd-note' },
-        el('strong', { text: 'Use instead' }), ' — ', rich(atom.useInstead)));
+        el('strong', { class: 'd-note-label', text: 'Use instead' }), ' — ', rich(atom.useInstead)));
     }
 
     append(body, [
@@ -616,7 +628,7 @@
 
     append(body, el('p', { class: 'd-lead' }, rich(molecule.sub || '')));
     append(body, el('div', { class: 'd-note' },
-      el('strong', { text: 'Reserved' }),
+      el('strong', { class: 'd-note-label', text: 'Reserved' }),
       ' — this molecule is a placeholder. The tile exists so the shape of the whole picture is visible; the content is not written yet.'));
 
     append(body, [
