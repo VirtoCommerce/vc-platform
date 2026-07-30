@@ -371,13 +371,23 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 /* Expanded: flow the sections into columns instead of one tall ribbon.
    Lead text, notes and snippets stay full width — prose and code both suffer
    from being narrow, for opposite reasons. */
+/* A fixed 4-column track rather than auto-fit, so a block can claim a known share:
+   Gotchas 2/4, Docs 1/4, and the stacked pill column 1/4. minmax(0,1fr) lets a long
+   snippet scroll inside its own box instead of stretching its track. */
 .drawer.is-full .drawer-body {
   padding: 4px 18px 40px;
   max-width: 1360px; width: 100%; margin: 0 auto;
   display: grid; align-items: start;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 32px;
 }
+@media (min-width: 1120px) {
+  .drawer.is-full .drawer-body { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .drawer.is-full .d-block.is-half { grid-column: span 2; }
+}
+
+/* Two short blocks sharing one column instead of a column each. */
+.d-col { min-width: 0; display: flex; flex-direction: column; }
 .drawer.is-full .drawer-body > .d-lead,
 .drawer.is-full .drawer-body > .d-note,
 .drawer.is-full .drawer-body > .d-meta,

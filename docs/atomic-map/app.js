@@ -416,11 +416,15 @@
   var drawer = document.getElementById('drawer');
   var scrim = document.getElementById('scrim');
 
-  /* `wide` marks a block that should span every column in expanded mode — code and
-     long prose both read badly in a narrow column, for opposite reasons. */
-  function block(title, body, wide) {
+  /* `span` controls how much of the expanded-mode grid a block claims:
+       true / 'is-wide' — every column (code and long prose both read badly narrow)
+       'is-half'        — two of four columns, for prose-heavy blocks like Gotchas
+       omitted          — one column
+     In docked mode the body is a plain block flow and these are inert. */
+  function block(title, body, span) {
     if (!body) return null;
-    return el('div', { class: 'd-block' + (wide ? ' is-wide' : '') }, el('h3', { text: title }), body);
+    var cls = 'd-block' + (span === true ? ' is-wide' : span ? ' ' + span : '');
+    return el('div', { class: cls }, el('h3', { text: title }), body);
   }
 
   function list(items, variant) {
@@ -563,6 +567,19 @@
     var body = document.getElementById('drawer-body');
     body.textContent = '';
 
+    var seeAlsoBlock = pills('See also', (atom.seeAlso || []).map(function (ref) {
+      var other = byId(ATOMS, ref);
+      if (!other) return null;
+      return el('button', { type: 'button', class: 'pill', text: other.name,
+        onclick: function () { openHash('atom', other.id, nodes.atoms[other.id]); } });
+    }).filter(Boolean));
+
+    var partOfBlock = atom.molecule ? pills('Part of', [(function () {
+      var mol = byId(MOLECULES, atom.molecule);
+      return mol ? el('button', { type: 'button', class: 'pill', text: mol.name + ' →',
+        onclick: function () { openHash('molecule', mol.id, nodes.molecules[mol.id]); } }) : null;
+    })()].filter(Boolean)) : null;
+
     if (atom._problems.length) {
       append(body, el('div', { class: 'd-note' },
         el('strong', { class: 'd-note-label', text: '⚠ Content schema' }),
@@ -593,19 +610,13 @@
           }))
         : null),
       block('Snippet', snippetBlock(atom.snippet), true),
-      block('Gotchas', list(atom.gotchas, 'warn')),
+      /* Bottom row of the expanded grid: Gotchas 50% (prose, needs the width),
+         Docs 25%, and the two short pill blocks stacked together in the last 25%
+         rather than each claiming a column of mostly white space. */
+      block('Gotchas', list(atom.gotchas, 'warn'), 'is-half'),
       block('Docs', docLinks(atom.docs)),
-      pills('See also', (atom.seeAlso || []).map(function (ref) {
-        var other = byId(ATOMS, ref);
-        if (!other) return null;
-        return el('button', { type: 'button', class: 'pill', text: other.name,
-          onclick: function () { openHash('atom', other.id, nodes.atoms[other.id]); } });
-      }).filter(Boolean)),
-      atom.molecule ? pills('Part of', [(function () {
-        var mol = byId(MOLECULES, atom.molecule);
-        return mol ? el('button', { type: 'button', class: 'pill', text: mol.name + ' →',
-          onclick: function () { openHash('molecule', mol.id, nodes.molecules[mol.id]); } }) : null;
-      })()].filter(Boolean)) : null,
+      // Only claim a column when there is actually something to put in it.
+      (seeAlsoBlock || partOfBlock) ? el('div', { class: 'd-col' }, seeAlsoBlock, partOfBlock) : null,
       el('div', { class: 'd-meta' }, 'Verified against platform ' + (atom.verifiedAgainst || '?') +
         '  ·  id: ' + atom.id)
     ]);
@@ -670,7 +681,7 @@
             el('span', { class: 'api-name', text: row.name }),
             el('span', { class: 'api-file' }, rich(row.desc)));
         })), true) : null,
-      block('Gotchas', list(layer.gotchas, 'warn')),
+      block('Gotchas', list(layer.gotchas, 'warn'), 'is-half'),
       block('Docs', docLinks(layer.docs)),
       pills('Atoms in this layer', ATOMS.filter(function (a) { return a.layer === layer.id; })
         .map(function (atom) {
