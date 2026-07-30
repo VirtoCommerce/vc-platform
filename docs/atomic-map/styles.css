@@ -332,7 +332,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 
 .drawer {
   position: fixed; top: 0; right: 0; bottom: 0; z-index: 50;
-  width: min(496px, 94vw);
+  width: min(540px, 94vw);
   display: flex; flex-direction: column;
   background: var(--surface);
   border-left: 1px solid var(--border);
@@ -340,10 +340,18 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 }
 .drawer[hidden] { display: none; }
 
+/* Expanded mode — the whole viewport, so long snippets and side-by-side
+   when-to-use / avoid lists get room. Toggled by the ⤢ button or "f". */
+.drawer.is-full {
+  left: 0; width: 100%;
+  border-left: 0;
+}
+
 .drawer-head {
   position: relative;
-  padding: 14px 46px 12px 18px;
+  padding: 14px 84px 12px 18px;
   border-bottom: 1px solid var(--border);
+  flex: none;
 }
 .drawer-eyebrow {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -352,11 +360,32 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 }
 .drawer-eyebrow .adopt { font-weight: 700; letter-spacing: .4px; }
 .drawer-title { font-size: 19px; line-height: 1.2; }
-.drawer-close { position: absolute; top: 12px; right: 14px; }
 
-.drawer-body { padding: 4px 18px 26px; overflow-y: auto; flex: 1; }
+.drawer-actions { position: absolute; top: 12px; right: 14px; display: flex; gap: 6px; }
+.drawer-actions .icon-btn { padding: 4px 9px; font-size: 13px; line-height: 1.1; }
 
-.d-block { margin-top: 16px; }
+.drawer.is-full .drawer-head { padding-left: max(18px, calc((100vw - 1360px) / 2)); }
+
+.drawer-body { padding: 4px 18px 30px; overflow-y: auto; flex: 1; }
+
+/* Expanded: flow the sections into columns instead of one tall ribbon.
+   Lead text, notes and snippets stay full width — prose and code both suffer
+   from being narrow, for opposite reasons. */
+.drawer.is-full .drawer-body {
+  padding: 4px 18px 40px;
+  max-width: 1360px; width: 100%; margin: 0 auto;
+  display: grid; align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  column-gap: 32px;
+}
+.drawer.is-full .drawer-body > .d-lead,
+.drawer.is-full .drawer-body > .d-note,
+.drawer.is-full .drawer-body > .d-meta,
+.drawer.is-full .drawer-body > .empty { grid-column: 1 / -1; }
+.drawer.is-full .drawer-body > .d-block.is-wide { grid-column: 1 / -1; }
+.drawer.is-full .d-lead { max-width: 78ch; }
+
+.d-block { margin-top: 16px; min-width: 0; }
 .d-block > h3 {
   margin: 0 0 5px;
   font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
@@ -364,38 +393,52 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 }
 .d-lead { margin: 12px 0 0; font-size: 14.5px; line-height: 1.5; }
 
-.d-list { margin: 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
-.d-list li { display: flex; gap: 7px; line-height: 1.45; }
-.d-list li::before { content: "—"; flex: none; color: var(--muted); }
+/* A block li, NOT a flex container: as flex items, inline <code> children were
+   treated as separately shrinkable boxes and broke mid-identifier
+   ("IBackgr / oundJob"). The marker is positioned instead. */
+.d-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.d-list li { position: relative; padding-left: 17px; line-height: 1.5; }
+.d-list li::before {
+  content: "—"; position: absolute; left: 0; top: 0;
+  color: var(--muted); font-weight: 400;
+}
 .d-list.good li::before { content: "✓"; color: var(--ok); font-weight: 700; }
 .d-list.bad  li::before { content: "✗"; color: var(--bad); font-weight: 700; }
-.d-list.warn li::before { content: "!"; color: var(--warn); font-weight: 700; }
+.d-list.warn li::before { content: "!"; color: var(--warn); font-weight: 700; left: 5px; }
 
 code, .code {
-  font: 12px/1.4 var(--mono);
+  font: 12px/1.35 var(--mono);
   background: var(--surface-2);
   border: 1px solid var(--border); border-radius: 4px;
   padding: 0 4px;
-  overflow-wrap: anywhere;
+  /* break-word, not anywhere: only split an identifier when it genuinely
+     cannot fit, rather than at the first convenient character. */
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
-.api-list { display: flex; flex-direction: column; gap: 5px; }
-.api-row { display: flex; flex-direction: column; gap: 1px; }
-.api-row .api-name { font: 12.5px var(--mono); font-weight: 600; }
+.api-list { display: flex; flex-direction: column; gap: 7px; }
+.api-row { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.api-row .api-name { font: 12.5px var(--mono); font-weight: 600; overflow-wrap: break-word; }
 .api-row .api-file { font: 11px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
 
 .snippet { position: relative; }
 .snippet pre {
-  margin: 0; padding: 10px 12px;
+  margin: 0; padding: 12px 14px;
   background: var(--surface-2);
   border: 1px solid var(--border); border-radius: 6px;
   overflow-x: auto;
-  font: 11.5px/1.55 var(--mono);
+  font: 11.5px/1.6 var(--mono);
   tab-size: 4;
 }
-.snippet-copy { position: absolute; top: 6px; right: 6px; font-size: 11px; padding: 3px 7px; min-height: 0; }
+.snippet-copy {
+  position: absolute; top: 7px; right: 7px;
+  font-size: 11px; padding: 3px 8px; min-height: 0;
+  opacity: .55;
+}
+.snippet:hover .snippet-copy, .snippet-copy:focus-visible { opacity: 1; }
 
-.d-links { display: flex; flex-direction: column; gap: 4px; }
+.d-links { display: flex; flex-direction: column; gap: 5px; }
 .d-links a { color: var(--focus); }
 
 .pill-row { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -407,10 +450,10 @@ code, .code {
 .pill:hover { border-color: var(--border-strong); }
 
 .d-note {
-  margin-top: 16px; padding: 9px 11px;
+  margin-top: 16px; padding: 10px 12px;
   background: var(--surface-2);
   border: 1px solid var(--border); border-left: 3px solid var(--warn);
-  border-radius: 6px; font-size: 12.5px; line-height: 1.45;
+  border-radius: 6px; font-size: 12.5px; line-height: 1.5;
 }
 .d-note strong { color: var(--warn); }
 
@@ -452,6 +495,9 @@ code, .code {
   #search { width: 100%; max-width: none; }
   .search-wrap { flex: 1 1 100%; }
   .drawer { width: 100%; }
+  /* The drawer already fills the screen here, so expanding is a no-op. */
+  #drawer-expand { display: none; }
+  .drawer-head { padding-right: 52px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

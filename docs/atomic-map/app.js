@@ -218,6 +218,7 @@
       el('span', {}, el('kbd', { text: '←→↑↓' }), ' move between tiles'),
       el('span', {}, el('kbd', { text: 'Enter' }), ' open'),
       el('span', {}, el('kbd', { text: 'Esc' }), ' close / clear'),
+      el('span', {}, el('kbd', { text: 'f' }), ' full-screen panel'),
       el('span', {}, el('kbd', { text: '?' }), ' this legend'),
       el('span', {}, 'Deep-link any tile: the address bar tracks what you opened.')));
   }
@@ -375,9 +376,11 @@
   var drawer = document.getElementById('drawer');
   var scrim = document.getElementById('scrim');
 
-  function block(title, body) {
+  /* `wide` marks a block that should span every column in expanded mode — code and
+     long prose both read badly in a narrow column, for opposite reasons. */
+  function block(title, body, wide) {
     if (!body) return null;
-    return el('div', { class: 'd-block' }, el('h3', { text: title }), body);
+    return el('div', { class: 'd-block' + (wide ? ' is-wide' : '') }, el('h3', { text: title }), body);
   }
 
   function list(items, variant) {
@@ -471,7 +474,7 @@
               api.file ? el('span', { class: 'api-file', text: api.file }) : null);
           }))
         : null),
-      block('Snippet', snippetBlock(atom.snippet)),
+      block('Snippet', snippetBlock(atom.snippet), true),
       block('Gotchas', list(atom.gotchas, 'warn')),
       block('Docs', atom.docs && atom.docs.length
         ? el('div', { class: 'd-links' }, atom.docs.map(function (doc) {
@@ -510,7 +513,7 @@
           return el('div', { class: 'api-row' },
             el('span', { class: 'api-name', text: row.name }),
             el('span', { class: 'api-file' }, rich(row.desc)));
-        }))) : null,
+        })), true) : null,
       block('Gotchas', list(layer.gotchas, 'warn')),
       block('Docs', layer.docs && layer.docs.length
         ? el('div', { class: 'd-links' }, layer.docs.map(function (doc) {
@@ -612,6 +615,28 @@
     title.focus({ preventScroll: true });
   }
 
+  /* Expanded mode is sticky: someone who wants the room usually wants it for the
+     next atom too, so it survives closing the drawer and reloading the page. */
+  function setExpanded(expanded) {
+    drawer.classList.toggle('is-full', expanded);
+    // Full-screen covers the poster entirely, so it genuinely is modal there.
+    drawer.setAttribute('aria-modal', expanded ? 'true' : 'false');
+
+    var button = document.getElementById('drawer-expand');
+    button.textContent = expanded ? '⤡' : '⤢';
+    button.setAttribute('aria-pressed', expanded ? 'true' : 'false');
+    button.title = (expanded ? 'Collapse to side panel' : 'Expand to full screen') + ' ( f )';
+    button.setAttribute('aria-label', expanded
+      ? 'Collapse details panel back to the side'
+      : 'Expand details panel to full screen');
+
+    try { localStorage.setItem('vc-atomic-map-drawer-full', expanded ? '1' : '0'); } catch (e) { /* ignore */ }
+  }
+
+  function toggleExpanded() {
+    setExpanded(!drawer.classList.contains('is-full'));
+  }
+
   function closeDrawer(silent) {
     drawer.hidden = true;
     scrim.hidden = true;
@@ -655,6 +680,9 @@
 
     if (event.key === '/') { document.getElementById('search').focus(); event.preventDefault(); return; }
     if (event.key === '?') { toggleLegend(); event.preventDefault(); return; }
+    if ((event.key === 'f' || event.key === 'F') && !drawer.hidden) {
+      toggleExpanded(); event.preventDefault(); return;
+    }
 
     if (target && target.classList && target.classList.contains('tile')) {
       if (event.key === 'ArrowRight' || event.key === 'ArrowDown') { moveTileFocus(1); event.preventDefault(); }
@@ -711,7 +739,12 @@
     });
     document.getElementById('legend-toggle').addEventListener('click', toggleLegend);
     document.getElementById('drawer-close').addEventListener('click', function () { closeDrawer(); });
+    document.getElementById('drawer-expand').addEventListener('click', toggleExpanded);
     scrim.addEventListener('click', function () { closeDrawer(); });
+
+    var wasFull = '0';
+    try { wasFull = localStorage.getItem('vc-atomic-map-drawer-full') || '0'; } catch (e) { /* ignore */ }
+    setExpanded(wasFull === '1');
 
     var stored = 'auto';
     try { stored = localStorage.getItem('vc-atomic-map-theme') || 'auto'; } catch (e) { /* ignore */ }

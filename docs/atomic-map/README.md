@@ -138,9 +138,18 @@ atoms it composes are already listed in its `atoms` array.
 - **Colour comes from one `hue` number per family.** Adding a family means adding a hue in
   `content/atoms.js` — no CSS change.
 
+## The details panel
+
+Clicking a tile opens a side panel. The `⤢` button in its header (or `f`) expands it to full
+screen, which reflows the sections into columns — useful for atoms with long snippets or several
+lists. Snippets, lead text and notes always span the full width; only the short lists column up.
+The choice sticks across atoms and reloads, and the button is hidden on narrow screens where the
+panel already fills the viewport.
+
 ## Keyboard
 
-`/` search · `←→↑↓` move between tiles · `Enter` open · `Esc` close or clear · `?` legend
+`/` search · `←→↑↓` move between tiles · `Enter` open · `Esc` close or clear · `f` full-screen
+panel · `?` legend
 
 `Ctrl`/`Cmd`+`P` prints the poster in landscape with the legend and without the drawer — the paper
 version to pin above a desk. It fits **one page on A3**; on A4 it runs to two, breaking between
