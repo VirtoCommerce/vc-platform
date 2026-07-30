@@ -10,12 +10,81 @@ window.VC_MAP_ARCHITECTURE = [
     hue: 90,
     sub: 'What a custom Virto project actually consists of: a little code you own, a lot of vendor artifacts you consume, and one file that pins the two together. You never fork the platform — that is the whole upgrade story.',
     tags: ['custom modules', 'vc-package.json', 'environments'],
-    schemaTitle: 'Anatomy of a typical solution',
-    /* Deliberately the delivery view rather than a class diagram: what you own, what you
-       consume, where the two are composed, and what ships. The composition file is the
-       focal point because a solution IS its pinned set of versions. */
-    schema: {
-      rows: [
+    /* Three ordered views of the same solution: what it is made of, how it is built and
+       shipped, and where it runs. Generalised from a real customer solution — structure
+       only, no customer-specific modules or naming. */
+    diagrams: [
+
+      {
+        kind: 'flow',
+        title: 'Solution architecture',
+        legend: [
+          { kind: 'oob', label: 'Out-of-the-box module' },
+          { kind: 'custom', label: 'Your module or extension' },
+          { kind: 'virto', label: 'Platform / API' },
+          { kind: 'data', label: 'Data & jobs' }
+        ],
+        tiers: [
+          {
+            label: 'Presentation',
+            nodes: [
+              { name: 'Storefront SPA', kind: 'custom', role: 'Vue 3 · Vite · storefront-less', meta: 'CDN / blob' },
+              { name: 'Back office', kind: 'virto', role: 'Admin UI · VC-Shell app', meta: 'REST' }
+            ]
+          },
+          { arrow: true },
+          {
+            label: 'API gateway',
+            nodes: [
+              { name: 'GraphQL XAPI', kind: 'virto', role: '`xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`', meta: 'experience reads' },
+              { name: 'REST /api', kind: 'virto', role: 'Full CRUD, per-endpoint permissions', meta: 'per module' }
+            ]
+          },
+          { arrow: true },
+          {
+            label: 'Modules · atomic architecture',
+            clusters: [
+              {
+                title: 'Out of the box',
+                chip: '≈80% standard base',
+                nodes: [
+                  { name: 'Commerce core', kind: 'oob', role: 'Catalog · Pricing · Inventory' },
+                  { name: 'Selling', kind: 'oob', role: 'Cart · Order · Payment · Tax · Shipping' },
+                  { name: 'Customer', kind: 'oob', role: 'Profiles · Marketing · Notifications' },
+                  { name: 'Platform services', kind: 'oob', role: 'Assets · Search · Export/Import · Security' }
+                ]
+              },
+              {
+                title: 'Tailored to the solution',
+                chip: '≈20% tailored',
+                nodes: [
+                  { name: 'New modules', kind: 'custom', role: 'Capabilities the box does not have — loyalty, helpdesk, trading calendar' },
+                  { name: 'Extensions', kind: 'custom', role: 'Standard modules extended via `AbstractTypeFactory`, dynamic properties or event handlers' },
+                  { name: 'Integrations', kind: 'custom', role: 'ERP · WMS · PIM adapters, initial-load utilities' }
+                ]
+              }
+            ]
+          },
+          { arrow: true },
+          {
+            label: 'Data & jobs',
+            nodes: [
+              { name: 'EF Core → SQL', kind: 'data', role: 'SQL Server · PostgreSQL · MySQL', meta: '.NET 10' },
+              { name: 'Search index', kind: 'data', role: 'Elasticsearch · OpenSearch · Azure AI Search' },
+              { name: 'Distributed cache bus', kind: 'data', role: 'Redis — invalidation, locks, SignalR backplane' },
+              { name: 'Background jobs', kind: 'data', role: 'Engine module behind `IBackgroundJob`' }
+            ]
+          }
+        ]
+      },
+
+      {
+        kind: 'stack',
+        title: 'DevOps',
+        /* Deliberately the delivery view rather than a class diagram: what you own, what you
+           consume, where the two are composed, and what ships. The composition file is the
+           focal point because a solution IS its pinned set of versions. */
+        rows: [
         {
           title: 'What you own',
           hint: 'your repositories — usually the smallest part',
@@ -55,8 +124,62 @@ window.VC_MAP_ARCHITECTURE = [
             { name: 'Prod', sub: 'Scaled out — Redis, blob storage, real search engine', via: 'config', viaKind: 'plain' }
           ]
         }
-      ]
-    },
+        ]
+      },
+
+      {
+        kind: 'flow',
+        title: 'Deployment schema',
+        legend: [
+          { kind: 'infra', label: 'Managed infrastructure' },
+          { kind: 'virto', label: 'Virto Commerce workload' },
+          { kind: 'data', label: 'Stateful service' }
+        ],
+        tiers: [
+          {
+            label: 'Edge & security',
+            nodes: [
+              { name: 'CDN + WAF', kind: 'infra', role: 'TLS termination, caching, request filtering', meta: 'e.g. Front Door' },
+              { name: 'Secrets & identity', kind: 'infra', role: 'Key vault, managed identity — never in config files' }
+            ]
+          },
+          { arrow: true },
+          {
+            label: 'Compute',
+            clusters: [
+              {
+                title: 'One image, several roles',
+                chip: 'same artifact',
+                nodes: [
+                  { name: 'Ingress', kind: 'infra', role: 'Routes by host and path', meta: 'nginx / cloud LB' },
+                  { name: 'Storefront API', kind: 'virto', role: 'XAPI reads — scales with shopper traffic' },
+                  { name: 'Admin API', kind: 'virto', role: 'Back office, isolated from shopper load' },
+                  { name: 'Job worker', kind: 'virto', role: 'Worker mode — drains queues, runs no requests' }
+                ]
+              }
+            ]
+          },
+          { arrow: true },
+          {
+            label: 'Data & search',
+            nodes: [
+              { name: 'Relational database', kind: 'data', role: 'Single writer; read replicas where the provider allows' },
+              { name: 'Redis', kind: 'data', role: 'Mandatory above one instance' },
+              { name: 'Search engine', kind: 'data', role: 'The catalogue read path' },
+              { name: 'Blob storage', kind: 'data', role: 'Assets, imports, exports' }
+            ]
+          },
+          { arrow: true },
+          {
+            label: 'Observability',
+            nodes: [
+              { name: 'Metrics & traces', kind: 'infra', role: 'Application monitoring, `/health` as the probe' },
+              { name: 'Log sink', kind: 'infra', role: 'Structured logs — Seq, Application Insights' }
+            ]
+          }
+        ]
+      },
+    ],
     bullets: [
       'The ratio surprises people: a mature solution is mostly configuration plus a handful of custom modules, sitting on dozens of vendor modules. If you are writing a lot of code, check whether a lower extensibility level would do.',
       'Your custom module has the same three-project shape as a vendor one — `Core` / `Data` / `Web` — and loads through the same manifest and dependency graph. There is no "application project" that is special.',
@@ -86,11 +209,12 @@ window.VC_MAP_ARCHITECTURE = [
     hue: 275,
     sub: 'Every surface that talks to the platform, and the protocol each one speaks. Presentation is fully separated from business logic, so every channel — including the back office — is just an API client.',
     tags: ['vc-frontend', 'GraphQL', 'Admin UI', 'AI agents'],
-    schemaTitle: 'Channels → platform',
     /* Vertical by design: sales channels on top calling down into the platform, back office
        and integrations below calling up into it. The arrow on each connector shows who calls
        whom — everything points at the platform, because nothing else holds business logic. */
-    schema: {
+    diagrams: [{
+      kind: 'stack',
+      title: 'Channels → platform',
       rows: [
         {
           title: 'Sales channels',
@@ -131,7 +255,7 @@ window.VC_MAP_ARCHITECTURE = [
           ]
         }
       ]
-    },
+    }],
     bullets: [
       '`vc-frontend` — Vue 3 · TypeScript · Vite · TailwindCSS · Yarn 4. Storefront-less: it talks straight to XAPI over GraphQL, with no ASP.NET middleware in between. Follows Atomic Design, which is where the atom/molecule vocabulary on this poster comes from.',
       'Admin UI ("Commerce Manager") — AngularJS 1.8.3 + Webpack 5 + SASS, using the blades navigation pattern. Ships inside `Platform.Web/wwwroot`; each module contributes its own scripts, templates and localizations.',

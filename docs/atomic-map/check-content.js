@@ -102,28 +102,61 @@ for (const l of LAYERS) {
   for (const d of l.docs || []) checkDoc('layer', l.id, d);
   if (!l.hue) add('layer', l.id, 'missing hue');
   if (!l.sub) add('layer', l.id, 'missing sub');
-  if (l.schema) {
-    const rows = l.schema.rows;
-    if (!rows?.length) add('layer', l.id, 'schema has no rows');
+  if (l.schema) add('layer', l.id, 'uses the old `schema` field — migrate to `diagrams: [{ kind: "stack", … }]`');
+
+  const KINDS = new Set(['stack', 'flow']);
+  const NODE_KINDS = new Set(['virto', 'oob', 'custom', 'data', 'infra']);
+  for (const d of l.diagrams || []) {
+    if (!d.title) add('layer', l.id, 'diagram without a title');
+    if (!KINDS.has(d.kind)) { add('layer', l.id, `diagram "${d.title}" has unknown kind "${d.kind}"`); continue; }
+
+    if (d.kind === 'flow') {
+      const tiers = (d.tiers || []).filter(t => !t.arrow);
+      if (!tiers.length) add('layer', l.id, `flow "${d.title}" has no tiers`);
+      for (const t of tiers) {
+        if (!t.label) add('layer', l.id, `flow "${d.title}" has a tier without a label`);
+        const nodes = [...(t.nodes || []), ...(t.clusters || []).flatMap(c => c.nodes || [])];
+        if (!nodes.length) add('layer', l.id, `flow tier "${t.label}" has no nodes`);
+        for (const c of t.clusters || []) {
+          if (!c.title) add('layer', l.id, `flow "${d.title}" has a cluster without a title`);
+        }
+        for (const n of nodes) {
+          if (!n.name) add('layer', l.id, `flow tier "${t.label}" has a node without a name`);
+          if (n.kind && !NODE_KINDS.has(n.kind)) {
+            add('layer', l.id, `flow node "${n.name}" has unknown kind "${n.kind}"`);
+          }
+        }
+      }
+      // A legend that names a kind nothing uses is stale.
+      const used = new Set((d.tiers || []).flatMap(t =>
+        [...(t.nodes || []), ...(t.clusters || []).flatMap(c => c.nodes || [])].map(n => n.kind)));
+      for (const item of d.legend || []) {
+        if (!used.has(item.kind)) add('layer', l.id, `flow "${d.title}" legend lists unused kind "${item.kind}"`);
+      }
+      continue;
+    }
+
+    const rows = d.rows;
+    if (!rows?.length) add('layer', l.id, `stack "${d.title}" has no rows`);
     let targets = 0;
     for (const r of rows || []) {
       if (r.connectorDir && !CONNECTOR_DIRS.has(r.connectorDir)) {
-        add('layer', l.id, `schema row has unknown connectorDir "${r.connectorDir}"`);
+        add('layer', l.id, `stack row has unknown connectorDir "${r.connectorDir}"`);
       }
-      if (r.connectorDir && !r.connector) add('layer', l.id, 'schema row sets connectorDir but no connector label');
+      if (r.connectorDir && !r.connector) add('layer', l.id, 'stack row sets connectorDir but no connector label');
       if (r.target) { targets++; continue; }
-      if (!r.title) add('layer', l.id, 'schema row is neither a target nor a titled group');
-      if (!r.nodes?.length) add('layer', l.id, `schema row "${r.title}" has no nodes`);
+      if (!r.title) add('layer', l.id, `stack "${d.title}" has a row that is neither a target nor a titled group`);
+      if (!r.nodes?.length) add('layer', l.id, `stack row "${r.title}" has no nodes`);
       for (const n of r.nodes || []) {
-        if (!n.name) add('layer', l.id, `schema node without a name in "${r.title}"`);
+        if (!n.name) add('layer', l.id, `stack node without a name in "${r.title}"`);
         if (n.viaKind && !VIA_KINDS.has(n.viaKind)) {
-          add('layer', l.id, `schema node "${n.name}" has unknown viaKind "${n.viaKind}"`);
+          add('layer', l.id, `stack node "${n.name}" has unknown viaKind "${n.viaKind}"`);
         }
         // A coloured chip with no protocol, or a protocol with no chip, is half-authored.
-        if (n.viaKind && !n.via) add('layer', l.id, `schema node "${n.name}" sets viaKind but no via label`);
+        if (n.viaKind && !n.via) add('layer', l.id, `stack node "${n.name}" sets viaKind but no via label`);
       }
     }
-    if (targets !== 1) add('layer', l.id, `schema must have exactly one target row, found ${targets}`);
+    if (targets !== 1) add('layer', l.id, `stack "${d.title}" must have exactly one target row, found ${targets}`);
   }
 }
 for (const m of MOLECULES) {

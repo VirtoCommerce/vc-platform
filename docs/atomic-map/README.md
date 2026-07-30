@@ -92,35 +92,53 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
 `gotchas`, `docs`, plus two optional structures:
 
 - **`matrix`** (with `matrixTitle`) — a name/description table, e.g. the module-type list.
-- **`schema`** (with `schemaTitle`) — a vertical diagram: an ordered stack of rows joined by
-  connector pills. A row is either a group of nodes or the `target`, so the target can sit anywhere
-  in the stack. Channels puts the platform in the middle, with sales channels calling down into it
-  and back office / integrations calling up.
+- **`diagrams`** — an ordered array of diagrams; `kind` picks the renderer. `Your solution`
+  carries three: Solution architecture (flow), DevOps (stack), Deployment schema (flow).
+
+**`kind: 'stack'`** — a vertical stack of rows joined by connector pills. A row is either a
+group of nodes or the `target`, so the target can sit anywhere: Channels puts the platform in
+the middle, with sales channels calling down into it and back office calling up.
 
 ```js
-schema: {
-  rows: [
-    { title: 'Sales channels', hint: 'customer-facing · read-heavy', nodes: [
-        { name: 'Virto Commerce Frontend', sub: 'Vue 3 · Vite', via: 'GraphQL', viaKind: 'graphql' },
-        { name: 'AI agents', sub: 'Emerging', via: 'MCP → UCP', viaKind: 'trend', trend: true }
-    ]},
-    { connector: 'XAPI GraphQL · REST', connectorDir: 'down',
-      target: 'Virto Commerce Platform', sub: 'XAPI · REST /api' },
-    { connector: 'REST /api', connectorDir: 'up', title: 'Admin UI & back office', nodes: [ /* … */ ] }
-  ]
-}
+{ kind: 'stack', title: 'Channels → platform', rows: [
+    { title: 'Sales channels', hint: 'read-heavy', nodes: [
+        { name: 'Storefront', sub: 'Vue 3', via: 'GraphQL', viaKind: 'graphql' },
+        { name: 'AI agents', sub: 'Emerging', via: 'MCP → UCP', viaKind: 'trend', trend: true } ]},
+    { connector: 'XAPI GraphQL', connectorDir: 'down', target: 'Platform', sub: '…' } ]}
 ```
 
 - `viaKind` is `graphql` · `rest` · `trend` · `plain` and colours the protocol chip.
-- `connectorDir` is `down` · `up` · `both`, rendered as ↓ ↑ ↕. Point it at whoever is *called*, so
-  the diagram shows the direction of dependency rather than just adjacency.
-- `trend: true` draws the node dashed — the same "not shipped yet" language as the reserved
-  molecule tiles. The chip itself stays solid so the two signals do not compete.
-- Protocol chips are pinned to the bottom of their card (`margin-top: auto`) so they land on one
-  baseline per row instead of floating at whatever height each description ends.
+- `connectorDir` is `down` · `up` · `both` (↓ ↑ ↕). Point it at whoever is *called*, so the
+  diagram shows dependency direction rather than adjacency.
+- `trend: true` draws the node dashed — the "not shipped yet" language of the molecule tiles.
+- Protocol chips pin to the bottom of their card so they align on one baseline per row.
 
-The checker rejects unknown `viaKind`/`connectorDir` values, a row that is neither a target nor a
-titled group, and any schema without exactly one target. The stack stays vertical at every width.
+**`kind: 'flow'`** — left-to-right tiers of cards, optionally grouped into dashed clusters with
+a badge, arrows between tiers, and an optional legend. Structure follows
+[vc-module-solution-architecture-map](https://github.com/VirtoCommerce/vc-module-solution-architecture-map)'s
+tier/node/cluster vocabulary.
+
+```js
+{ kind: 'flow', title: 'Solution architecture',
+  legend: [{ kind: 'oob', label: 'Out-of-the-box module' }],
+  tiers: [
+    { label: 'Presentation', nodes: [{ name: 'Storefront SPA', kind: 'custom', role: '…', meta: 'CDN' }] },
+    { arrow: true },
+    { label: 'Modules', clusters: [
+        { title: 'Out of the box', chip: '≈80% standard base', nodes: [ /* … */ ] } ]}
+  ]}
+```
+
+- Node `kind` is `virto` · `oob` · `custom` · `data` · `infra` and colours the left border —
+  that border *is* the legend, so keep the legend in step (the checker rejects a legend entry
+  no node uses).
+- A flow scrolls horizontally inside its own box rather than wrapping; a wrapped tier flow
+  stops reading as a flow.
+- **No status dots.** They mean live health in the module this borrows from; an all-green
+  static poster would imply monitoring this page does not do.
+
+The checker rejects unknown `kind`, `viaKind` or `connectorDir` values, tiers or rows without
+nodes, a stack without exactly one target, a stale legend entry, and the old `schema` field.
 
 ## Documentation links
 

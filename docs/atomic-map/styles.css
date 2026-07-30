@@ -420,6 +420,83 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .drawer.is-full .d-block.is-wide .d-list { columns: 330px 3; column-gap: 32px; }
 .drawer.is-full .d-block.is-wide .d-list li { break-inside: avoid; }
 
+/* ---------- horizontal tier flow ----------
+   Structure and proportions follow vc-module-solution-architecture-map (.tier-flow /
+   .tier / .node / .cluster); colours come from this map's tokens so it works in both
+   themes. Scrolls horizontally rather than wrapping — a tier flow that wraps stops
+   reading as a flow. */
+
+.flow-wrap { overflow-x: auto; padding-bottom: 4px; }
+
+.fl-flow { display: flex; align-items: stretch; gap: 0; flex-wrap: nowrap; min-width: max-content; }
+
+.fl-tier {
+  position: relative;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 0 11px;
+}
+/* Soft vertical rule between tiers, fading at both ends. */
+.fl-tier:not(:last-child)::after {
+  content: ""; position: absolute; right: -1px; top: 14%; bottom: 14%; width: 2px;
+  background: linear-gradient(180deg, transparent, var(--border-strong), transparent);
+}
+.fl-tier-label {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--muted); text-align: center;
+}
+.fl-tier-body { display: flex; flex-direction: column; gap: 8px; justify-content: center; flex: 1; }
+
+.fl-arrow { display: flex; align-items: center; padding: 0 2px; color: var(--muted); font-size: 17px; }
+
+.fl-node {
+  display: flex; flex-direction: column; gap: 2px;
+  min-width: 148px; padding: 9px 11px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
+  border-radius: 7px;
+}
+.fl-node-name { font-size: 12px; font-weight: 700; line-height: 1.2; }
+.fl-node-role { font-size: 10px; color: var(--muted); line-height: 1.35; }
+.fl-node-meta { font: 9.5px var(--mono); color: var(--muted); opacity: .85; letter-spacing: .2px; }
+
+/* Kind = who owns it. The left border is the whole legend. */
+.fl-node.is-virto  { border-left-color: var(--info); }
+.fl-node.is-oob    { border-left-color: var(--ok); }
+.fl-node.is-custom { border-left-color: var(--warn); }
+.fl-node.is-data   { border-left-color: var(--syn-keyword); }
+.fl-node.is-infra  { border-left-color: var(--neutral); }
+
+.fl-cluster {
+  display: flex; flex-direction: column; gap: 7px;
+  padding: 9px 10px;
+  border: 1.5px dashed var(--border-strong); border-radius: 9px;
+  background: var(--surface-2);
+}
+.fl-cluster-head { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.fl-cluster-title { font-size: 10.5px; font-weight: 700; }
+.fl-chip {
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  padding: 2px 6px; border-radius: 999px;
+  color: var(--info); border: 1px solid currentColor;
+}
+.fl-cluster-nodes { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 6px; }
+
+.fl-legend {
+  display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  margin-top: 9px; font-size: 10.5px; color: var(--muted);
+}
+.fl-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.fl-legend-swatch { width: 12px; height: 3px; border-radius: 2px; background: var(--border-strong); }
+.fl-legend-swatch.is-virto  { background: var(--info); }
+.fl-legend-swatch.is-oob    { background: var(--ok); }
+.fl-legend-swatch.is-custom { background: var(--warn); }
+.fl-legend-swatch.is-data   { background: var(--syn-keyword); }
+.fl-legend-swatch.is-infra  { background: var(--neutral); }
+
+/* Wider cards once the panel is full screen — the flow has room to breathe. */
+.drawer.is-full .fl-node { min-width: 172px; }
+.drawer.is-full .fl-cluster-nodes { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+
 /* ---------- name/description matrix ---------- */
 
 .d-matrix { display: grid; gap: 9px; }

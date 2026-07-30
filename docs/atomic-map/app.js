@@ -675,6 +675,54 @@
     }));
   }
 
+  /* ---------- horizontal tier flow ----------
+   * Left-to-right tiers of cards, optionally grouped into dashed clusters, with arrows
+   * between tiers. Adapted from vc-module-solution-architecture-map's tier/node/cluster
+   * vocabulary, with two deliberate departures: colours map onto this map's own tokens so
+   * light mode still works, and there are no status dots — those mean live health in that
+   * module, and an all-green static poster would imply monitoring this page does not do.
+   */
+  function flowNode(node) {
+    return el('div', { class: 'fl-node' + (node.kind ? ' is-' + node.kind : '') },
+      el('span', { class: 'fl-node-name' }, rich(node.name)),
+      node.role ? el('span', { class: 'fl-node-role' }, rich(node.role)) : null,
+      node.meta ? el('span', { class: 'fl-node-meta', text: node.meta }) : null);
+  }
+
+  function flowTier(tier) {
+    if (tier.arrow) return el('div', { class: 'fl-arrow', 'aria-hidden': 'true', text: '→' });
+    return el('div', { class: 'fl-tier' },
+      el('div', { class: 'fl-tier-label', text: tier.label }),
+      el('div', { class: 'fl-tier-body' },
+        (tier.clusters || []).map(function (cluster) {
+          return el('div', { class: 'fl-cluster' },
+            el('div', { class: 'fl-cluster-head' },
+              el('span', { class: 'fl-cluster-title', text: cluster.title }),
+              cluster.chip ? el('span', { class: 'fl-chip', text: cluster.chip }) : null),
+            el('div', { class: 'fl-cluster-nodes' }, (cluster.nodes || []).map(flowNode)));
+        }),
+        (tier.nodes || []).map(flowNode)));
+  }
+
+  function flowBlock(flow) {
+    if (!flow || !flow.tiers || !flow.tiers.length) return null;
+    return el('div', { class: 'flow-wrap' },
+      el('div', { class: 'fl-flow' }, flow.tiers.map(flowTier)),
+      flow.legend ? el('div', { class: 'fl-legend' }, flow.legend.map(function (item) {
+        return el('span', { class: 'fl-legend-item' },
+          el('span', { class: 'fl-legend-swatch is-' + item.kind }),
+          item.label);
+      })) : null);
+  }
+
+  /* A layer can carry several ordered diagrams; `kind` picks the renderer. */
+  function diagramBlocks(layer) {
+    return (layer.diagrams || []).map(function (diagram) {
+      var body = diagram.kind === 'flow' ? flowBlock(diagram) : schemaBlock(diagram);
+      return block(diagram.title, body, true);
+    });
+  }
+
   function schemaBlock(schema) {
     if (!schema || !schema.rows || !schema.rows.length) return null;
 
@@ -720,7 +768,7 @@
       }));
 
     append(body, [
-      block(layer.schemaTitle || 'Schema', schemaBlock(layer.schema), true),
+      diagramBlocks(layer),
       /* Full width: these are long bullets, and one narrow track left three empty
          beside it. The list flows into columns so lines keep a readable measure. */
       block('What lives here', list(layer.bullets), true),
