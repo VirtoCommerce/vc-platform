@@ -195,12 +195,12 @@ h2 { margin: 0; }
 
 /* ---------- layout ---------- */
 
-main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
+main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 
 .section-heading {
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
   font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-  color: var(--muted); margin-bottom: 6px;
+  color: var(--muted); margin-bottom: 4px;
 }
 .section-heading .hint { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 11.5px; opacity: .85; }
 
@@ -211,7 +211,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 .layer {
   display: flex; flex-direction: column; gap: 5px; align-items: flex-start;
   text-align: left; font: inherit; cursor: pointer;
-  padding: 7px 9px;
+  padding: 6px 9px;
   background: var(--surface); color: var(--text);
   border: 1px solid var(--border); border-left: 3px solid hsl(var(--h) 55% 55%);
   border-radius: var(--radius);
@@ -294,7 +294,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 .molecule {
   display: flex; flex-direction: column; gap: 3px; align-items: flex-start; text-align: left;
   font: inherit; cursor: pointer;
-  padding: 6px 9px; min-height: 44px;
+  padding: 5px 9px; min-height: 34px;
   background: transparent; color: var(--text);
   border: 1px dashed var(--border-strong); border-radius: var(--radius);
 }
@@ -302,7 +302,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 .molecule .mol-name { font-size: 11.5px; font-weight: 600; line-height: 1.25; }
 .molecule .mol-sub {
   font-size: 10px; color: var(--muted); line-height: 1.25;
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden;
 }
 .molecule.is-active { border-style: solid; border-color: var(--accent); box-shadow: 0 0 0 2px hsl(350 70% 55% / .25); }
 .molecule.is-dim { opacity: .3; }
@@ -310,7 +310,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 /* ---------- footer ---------- */
 
 .footer {
-  margin: 10px 16px 12px; padding-top: 8px;
+  margin: 8px 16px 10px; padding-top: 6px;
   border-top: 1px solid var(--border);
   display: flex; gap: 16px; flex-wrap: wrap;
   font-size: 11.5px; color: var(--muted);

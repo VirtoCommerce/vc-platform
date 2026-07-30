@@ -1915,6 +1915,75 @@ window.VC_MAP_ATOMS = [
     verifiedAgainst: '3.1053.0'
   },
 
+  {
+    id: 'search',
+    symbol: 'Se',
+    name: 'Indexed search',
+    family: 'data',
+    adoption: 'module',
+    layer: 'infrastructure',
+    tags: ['elasticsearch', 'lucene', 'index', 'catalog', 'facet', 'aggregation', 'opensearch'],
+    oneLiner: 'The read path the catalogue actually depends on — and one more engine to keep consistent with the database.',
+    pattern: 'Port and adapter over an index, with documents built by contributors. `VirtoCommerce.Search` owns `ISearchProvider` and `IIndexingManager`; an engine module implements the port — Elasticsearch 8/9, OpenSearch, Lucene, Azure Search, Elastic App Search or Algolia. Modules contribute `IIndexDocumentBuilder`s, so one document is assembled from several sources rather than owned by one.',
+    whenToUse: [
+      'Catalogue browse, search and faceting — at any real catalogue size this is the only viable read path',
+      'Filtering or aggregating over fields that would be expensive in SQL',
+      'Adding your own field to an existing document, by contributing a builder instead of forking the owning module'
+    ],
+    avoid: [
+      'Treating the index as the source of truth. It is a projection, and it can be rebuilt',
+      'Reading from the index immediately after a write and expecting your change — indexing is asynchronous',
+      'Lucene in a scaled-out deployment; it is a local index, so every instance would hold its own copy',
+      'Reindexing everything on every change when `IndexChangesAsync` exists'
+    ],
+    api: [
+      { name: 'ISearchProvider — SearchAsync / IndexAsync / RemoveAsync / DeleteIndexAsync', file: '(vc-module-search — VirtoCommerce.SearchModule.Core.Services)' },
+      { name: 'IIndexingManager — IndexAllDocumentsAsync / IndexChangesAsync / GetIndexStateAsync', file: '(vc-module-search — orchestrates full and incremental indexing)' },
+      { name: 'IIndexDocumentBuilder', file: '(vc-module-search — how a module contributes fields to a document)' },
+      { name: 'IIndexingJobService', file: '(vc-module-search — scheduled and on-demand indexing)' },
+      { name: 'VirtoCommerce.Search + ElasticSearch8 | ElasticSearch9 | LuceneSearch | AzureSearch | OpenSearch', file: '(module ids from the vc-modules registry)' }
+    ],
+    snippet: {
+      lang: 'csharp',
+      code:
+'// Contribute fields to a document type instead of forking the module that owns it.\n' +
+'public class MyProductFieldsBuilder(IMyService service) : IIndexDocumentBuilder\n' +
+'{\n' +
+'    public async Task<IList<IndexDocument>> GetDocumentsAsync(IList<string> documentIds)\n' +
+'    {\n' +
+'        var extras = await service.GetAsync(documentIds);\n' +
+'\n' +
+'        return extras.Select(x =>\n' +
+'        {\n' +
+'            var doc = new IndexDocument(x.ProductId);\n' +
+'            doc.AddFilterableString("abcVendorCode", x.VendorCode);\n' +
+'            return doc;\n' +
+'        }).ToList();\n' +
+'    }\n' +
+'}\n' +
+'\n' +
+'// Incremental beats full: index what changed, not the whole catalogue.\n' +
+'await _indexingManager.IndexChangesAsync(options, progress => { }, cancellationToken);'
+    },
+    note: 'Search is a module, not platform core, and the engine behind it is a further module chosen per deployment — the same port-and-adapter shape as background-job engines: one active provider, selected in configuration.',
+    gotchas: [
+      'There is a consistency window between a write and the index reflecting it. Every "the change is saved but the list still shows the old value" report starts here.',
+      'A document is assembled from every registered builder for its type, so one slow builder slows indexing for everyone contributing to that document.',
+      'Engine versions are separate modules (`ElasticSearch8` vs `ElasticSearch9`) — check which matches your server before installing.',
+      '`IIndexingManager.IndexDocumentsAsync` has `[Obsolete]` overloads without a `CancellationToken` (VC0014); use the cancellation-aware ones.'
+    ],
+    docs: [
+      { label: 'Indexed search overview', page: 'Fundamentals/Indexed-Search/overview' },
+      { label: 'Indexing overview', page: 'Fundamentals/Indexed-Search/indexing/overview' },
+      { label: 'Blue-green indexing', page: 'Fundamentals/Indexed-Search/indexing/blue-green-indexing' },
+      { label: 'Configuring Elasticsearch', page: 'Fundamentals/Indexed-Search/integration/configuring-elasticsearch' },
+      { label: 'vc-module-search (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-search' }
+    ],
+    seeAlso: ['assets', 'ef-core', 'background-jobs', 'domain-events'],
+    molecule: 'search-and-indexing',
+    verifiedAgainst: '3.1053.0'
+  },
+
   // ================================================================ MODULARITY
 
   {
@@ -2244,6 +2313,74 @@ window.VC_MAP_ATOMS = [
     ],
     docs: [],
     seeAlso: ['cancellation', 'job-progress', 'json-serialization', 'background-jobs'],
+    verifiedAgainst: '3.1053.0'
+  },
+
+  {
+    id: 'vc-build',
+    symbol: 'Cb',
+    name: 'vc-build CLI',
+    family: 'modularity',
+    adoption: 'module',
+    layer: 'modules',
+    tags: ['cli', 'globaltool', 'nuke', 'vc-package.json', 'ci', 'release', 'devops'],
+    oneLiner: 'The official CLI for building, packaging, installing and releasing a Virto solution — and for making installs reproducible.',
+    pattern: 'Target-based build automation over nuke.build, plus a lockfile. `vc-package.json` records the platform and module versions a solution needs, so the same command produces the same environment on a laptop and on a build server. `Install` and `Update` maintain that file for you.',
+    whenToUse: [
+      'Standing up or updating an environment: `Install`, `Update`, `InstallPlatform`, `InstallModules`',
+      'Packaging for deployment: `Compress`, `Pack`, `Publish`',
+      'Release and hotfix flow: `StartRelease` / `CompleteRelease`, `StartHotfix` / `CompleteHotfix`',
+      'CI pipelines — the same targets you run locally, so the build is not a second implementation'
+    ],
+    avoid: [
+      'Hand-copying module folders between environments; that is what `vc-package.json` and `Install` exist to replace',
+      'Editing `vc-package.json` by hand when a command maintains it',
+      'Letting local and CI use different build steps — both should call the same targets'
+    ],
+    api: [
+      { name: 'dotnet tool install VirtoCommerce.GlobalTool -g', file: '(NuGet package id — installs the vc-build global tool)' },
+      { name: 'Install · Update · Uninstall · InstallPlatform · InstallModules', file: '(package-management targets)' },
+      { name: 'Clean · Restore · Compile · Test · Publish · Compress · Pack · WebPackBuild', file: '(build targets)' },
+      { name: 'StartRelease · CompleteRelease · QuickRelease · StartHotfix · CompleteHotfix', file: '(release targets)' },
+      { name: 'vc-package.json', file: '(records platform + module versions for reproducible installs)' }
+    ],
+    snippet: {
+      lang: 'bash',
+      code:
+'# Install once, globally.\n' +
+'dotnet tool install VirtoCommerce.GlobalTool -g\n' +
+'\n' +
+'# Stand up an environment from the lockfile — same result on a laptop and in CI.\n' +
+'vc-build Install\n' +
+'\n' +
+'# Or pin pieces explicitly; both commands update vc-package.json for you.\n' +
+'vc-build Install -platform\n' +
+'vc-build Update\n' +
+'\n' +
+'# Package a module for deployment.\n' +
+'vc-build Compress\n' +
+'\n' +
+'# Release flow, rather than hand-tagging.\n' +
+'vc-build StartRelease\n' +
+'vc-build CompleteRelease'
+    },
+    note: 'Not a platform module but a .NET global tool (`VirtoCommerce.GlobalTool`), powered by nuke.build. It carries the install-separately badge for the same reason a module does: it is not in the platform, and nothing happens until you add it.',
+    gotchas: [
+      '`vc-package.json` is the reproducibility contract. Commit it, or "works on my machine" turns into a version-drift hunt.',
+      'Module versions resolve through caret SemVer ranges, so an unpinned range can move under you between two runs of the same command.',
+      'The tool is versioned independently of the platform; an old global tool against a new platform is a common source of confusing install failures.',
+      'Targets compose, so a CI job can call `Compile` then `Test` then `Compress` rather than scripting each step itself.'
+    ],
+    docs: [
+      { label: 'CLI overview', page: 'CLI-tools/overview' },
+      { label: 'Getting started', page: 'CLI-tools/getting-started' },
+      { label: 'Package management', page: 'CLI-tools/package-management' },
+      { label: 'Install & update platform and modules', page: 'CLI-tools/install-and-update-platform-and-modules' },
+      { label: 'Build automation', page: 'CLI-tools/build-automation' },
+      { label: 'vc-build (GitHub)', href: 'https://github.com/VirtoCommerce/vc-build' }
+    ],
+    seeAlso: ['module-catalog', 'module-lifecycle', 'ef-core'],
+    molecule: 'dev-process',
     verifiedAgainst: '3.1053.0'
   },
 
@@ -2965,6 +3102,112 @@ window.VC_MAP_ATOMS = [
       { label: 'Swagger endpoints', page: 'Tutorials-and-How-tos/How-tos/swagger-api' }
     ],
     seeAlso: ['swagger', 'json-serialization', 'permissions'],
+    verifiedAgainst: '3.1053.0'
+  },
+
+  {
+    id: 'assets',
+    symbol: 'As',
+    name: 'Assets & blob storage',
+    family: 'ops',
+    adoption: 'module',
+    layer: 'infrastructure',
+    tags: ['blob', 'images', 'files', 'azure', 'cdn', 'iblobstorageprovider'],
+    oneLiner: 'Binary storage for images, imports and exports — behind a provider the platform core does not ship.',
+    pattern: 'Port and adapter selected by configuration. `VirtoCommerce.Assets` owns the contract and the asset UI; a provider module supplies the backing store — `VirtoCommerce.AzureBlobAssets` for Azure Blob, `VirtoCommerce.FileSystemAssets` for local disk.',
+    whenToUse: [
+      'Anything binary: product images, attachments, generated documents, import and export files',
+      'Handing a caller a public URL for a stored blob, via `IBlobUrlResolver`',
+      'Claim-check for background jobs — store the file, pass its URL in the payload'
+    ],
+    avoid: [
+      'The filesystem provider on more than one instance. Instances do not share a disk, so an upload lands on whichever node served the request',
+      'Storing binaries in the relational database',
+      'Serving large assets through the API instead of putting a CDN in front of blob storage',
+      'Assuming the abstraction exists in a bare platform — without the module there is no blob API at all'
+    ],
+    api: [
+      { name: 'IBlobStorageProvider — OpenRead / OpenWrite / SearchAsync / RemoveAsync', file: '(vc-module-assets — VirtoCommerce.AssetsModule.Core.Assets)' },
+      { name: 'IBlobUrlResolver.GetAbsoluteUrl', file: '(vc-module-assets — turns a blob key into a public URL)' },
+      { name: 'IAssetEntryService / IAssetEntrySearchService', file: '(vc-module-assets — the managed asset catalogue)' },
+      { name: 'VirtoCommerce.Assets + AzureBlobAssets | FileSystemAssets', file: '(module ids from the vc-modules registry)' }
+    ],
+    snippet: {
+      lang: 'csharp',
+      code:
+'// The provider is injected; which store backs it is a deployment choice.\n' +
+'public class ReportService(IBlobStorageProvider blobs, IBlobUrlResolver urls)\n' +
+'{\n' +
+'    public async Task<string> Save(string name, Stream content)\n' +
+'    {\n' +
+'        var blobUrl = $"reports/{name}";\n' +
+'\n' +
+'        await using (var target = await blobs.OpenWriteAsync(blobUrl))\n' +
+'        {\n' +
+'            await content.CopyToAsync(target);\n' +
+'        }\n' +
+'\n' +
+'        // Hand back an absolute URL — never a local path, which means nothing\n' +
+'        // to another instance or to the browser.\n' +
+'        return urls.GetAbsoluteUrl(blobUrl);\n' +
+'    }\n' +
+'}'
+    },
+    note: 'There is no blob abstraction in `vc-platform` itself — verified by grep. `IBlobStorageProvider` lives in the Assets module, so a platform without it installed has no way to store a file beyond raw `System.IO`.',
+    gotchas: [
+      'Blob URLs are keys, not paths. Resolve to an absolute URL with `IBlobUrlResolver` before handing one to a client.',
+      '`IBlobStorageProvider` exposes sync and async pairs (`OpenRead` / `OpenReadAsync`). Prefer the async ones in request and job paths.',
+      'The filesystem provider is a development convenience. Scaling out without switching to blob storage produces missing-image bugs that affect only some requests.',
+      'Assets live outside the database, so they are outside its transactions and outside its backup.'
+    ],
+    docs: [
+      { label: 'Configuring asset blob storage', page: 'Getting-Started/Post-Installation-Steps/03-configuring-asset-blob-storage' },
+      { label: 'vc-module-assets (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-assets' }
+    ],
+    seeAlso: ['file-operations', 'search', 'export-import', 'background-jobs'],
+    molecule: 'deployment',
+    verifiedAgainst: '3.1053.0'
+  },
+
+  {
+    id: 'seq-logging',
+    symbol: 'Sq',
+    name: 'Seq & log sinks',
+    family: 'ops',
+    adoption: 'module',
+    layer: 'infrastructure',
+    tags: ['seq', 'serilog', 'sink', 'structured', 'observability', 'application insights'],
+    oneLiner: 'Sending structured logs somewhere you can query them, instead of reading console output.',
+    pattern: 'Serilog sink added by configuration. The platform logs through `ILogger<T>` onto Serilog; a sink module such as `VirtoCommerce.SeqLog` forwards those events to a log server, where the structured properties become queryable fields.',
+    whenToUse: [
+      'Any environment where you cannot attach a debugger — which is every shared environment',
+      'Following one request or job across instances by correlating on a structured property',
+      'Turning "it failed yesterday for one customer" into a query rather than an archaeology exercise'
+    ],
+    avoid: [
+      'Shipping personal data or secrets to a log server — it is a searchable index of whatever you send it',
+      'Debug level in production without a retention and volume plan',
+      'Relying on the console sink in a container nobody is watching'
+    ],
+    api: [
+      { name: 'VirtoCommerce.SeqLog (module)', file: '(vc-module-seq-log — a configuration-only Serilog sink module)' },
+      { name: 'Serilog configuration', file: 'src/VirtoCommerce.Platform.Web/Program.cs' },
+      { name: 'ILogger<T> (what you write against)', file: 'src/VirtoCommerce.Platform.Core/Logger/' }
+    ],
+    note: 'The module ships no interfaces of its own — it is wiring. You keep logging through `ILogger<T>` and the sink decides where events land; Application Insights is the other documented option.',
+    gotchas: [
+      'A sink is only as useful as your message templates. `LogInformation("Reindexed {StoreId}", id)` is queryable; an interpolated string is one opaque line and no sink can recover the property.',
+      'Sinks are configured, not coded — "logs are not arriving" is almost always the `Serilog` section rather than your code.',
+      'Log volume is a cost. The same sink that makes an incident tractable makes a chatty debug statement expensive.'
+    ],
+    docs: [
+      { label: 'Seq module', page: 'Fundamentals/Logging/seq-module' },
+      { label: 'Logging overview', page: 'Fundamentals/Logging/overview' },
+      { label: 'Extended logging', page: 'Fundamentals/Logging/extended-logging' },
+      { label: 'vc-module-seq-log (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-seq-log' }
+    ],
+    seeAlso: ['logging', 'health-checks', 'developer-tools'],
+    molecule: 'observability',
     verifiedAgainst: '3.1053.0'
   }
 

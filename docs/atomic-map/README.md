@@ -161,7 +161,7 @@ The badge turns a catalog into guidance. Assign it from evidence, not impression
 | Badge | Meaning | How to justify it |
 |---|---|---|
 | ● `platform` | Platform-native. The Virto way. | at least one real call site in `src/` |
-| ◐ `module` | Ships in an installable module, not platform core. | name the module |
+| ◐ `module` | Ships outside platform core — install the module or tool. | name the module id or package, and check it in the [vc-modules registry](https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules_v3.json) |
 | ○ `available` | .NET offers it; this platform does not use it. | a grep that finds no call sites — say so in `note`, and set `useInstead` |
 | △ `in-flight` | Changing right now. | link the design spec in `docs`, explain in `note` |
 | ✕ `legacy` | Works, but do not build on it. | the `[Obsolete]` attribute or the source comment that says so |
