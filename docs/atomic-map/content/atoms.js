@@ -2044,6 +2044,9 @@ window.VC_MAP_ATOMS = [
     },
     gotchas: [
       'A module without a valid `module.manifest` never loads, and the failure is easy to miss among startup logs.',
+      'How the platform finds this class: it scans the assembly named by `assemblyFile` for non-abstract `IModule` implementations. One match is used directly and the manifest\'s `moduleType` is ignored; several require `moduleType` to disambiguate; none throws `ModuleInitializeException`.',
+      'The class is instantiated with `Activator.CreateInstance`, so it needs a public parameterless constructor. Constructor injection does not work here — take `IConfiguration`, `ILogger` and `IHostEnvironment` through the marker interfaces instead, and resolve everything else in `PostInitialize`.',
+      'A module with no `assemblyFile` has no `IModule` at all and skips this lifecycle entirely — see the `module.manifest` atom.',
       'Load order comes from the manifest dependency graph, topologically sorted. If your module needs another\'s registration, declare the dependency — do not rely on luck.',
       '`AbstractTypeFactory` overrides belong in `Initialize` precisely because `PostInitialize` can be too late.',
       'Optional dependencies exist (`IOptionalDependency`), so a module can adapt to another being absent rather than failing.'
@@ -2059,6 +2062,99 @@ window.VC_MAP_ATOMS = [
   },
 
   {
+    id: 'module-manifest',
+    symbol: 'Mf',
+    name: 'module.manifest',
+    family: 'modularity',
+    adoption: 'platform',
+    layer: 'modules',
+    tags: ['manifest', 'moduletype', 'startuptype', 'assemblyfile', 'apps', 'web-only', 'frontend-only'],
+    oneLiner: 'The file without which a module does not exist — and the file that decides whether it needs a .NET assembly at all.',
+    pattern: 'Declarative descriptor read before any code runs. `ManifestReader` deserializes `module.manifest` into `ModuleManifest`, the catalog turns that into `ManifestModuleInfo` and resolves the dependency graph from it, and only then is an assembly loaded — if the manifest names one.',
+    whenToUse: [
+      'Every module. There is no convention-based fallback: no manifest, no module',
+      'Declaring what you need — `platformVersion` gates compatibility and `dependencies` drives load order',
+      'Shipping a **frontend-only module**: omit `assemblyFile` and you need no C# at all',
+      'Contributing a standalone app to the admin shell through `<apps>`',
+      'Declaring settings without an assembly, via `<settings>`'
+    ],
+    avoid: [
+      'Assuming `moduleType` is how the platform finds your `IModule` — it is only a tie-breaker',
+      'A floating `platformVersion`; it is a compatibility gate, not documentation',
+      'Declaring the same setting both in the manifest and in code — pick one per setting',
+      '`startupType` in a module with no `assemblyFile`; it is resolved from the assembly, so it is silently meaningless'
+    ],
+    api: [
+      { name: 'ModuleManifest — the module.manifest schema', file: 'src/VirtoCommerce.Platform.Core/Modularity/ModuleManifest.cs' },
+      { name: 'ManifestReader.Read', file: 'src/VirtoCommerce.Platform.Core/Modularity/ManifestReader.cs' },
+      { name: 'ManifestModuleInfo.LoadFromManifest', file: 'src/VirtoCommerce.Platform.Core/Modularity/ManifestModuleInfo.cs' },
+      { name: 'ManifestApp / AppPlacement', file: 'src/VirtoCommerce.Platform.Core/Modularity/ManifestApp.cs' },
+      { name: 'ManifestSetting', file: 'src/VirtoCommerce.Platform.Core/Modularity/ManifestSetting.cs' }
+    ],
+    snippet: {
+      lang: 'xml',
+      code:
+'<!-- A .NET module. assemblyFile is what makes it code. -->\n' +
+'<module>\n' +
+'  <id>MyCompany.MyModule</id>\n' +
+'  <version>1.0.0</version>\n' +
+'  <platformVersion>3.1053.0</platformVersion>\n' +
+'  <dependencies>\n' +
+'    <dependency id="VirtoCommerce.Core" version="3.800.0" />\n' +
+'  </dependencies>\n' +
+'\n' +
+'  <assemblyFile>MyCompany.MyModule.Web.dll</assemblyFile>\n' +
+'  <!-- Only consulted when that assembly contains MORE THAN ONE IModule.\n' +
+'       With exactly one, this element is ignored entirely. -->\n' +
+'  <moduleType>MyCompany.MyModule.Web.Module</moduleType>\n' +
+'  <!-- Optional IPlatformStartup contributor, resolved from the same assembly. -->\n' +
+'  <startupType>MyCompany.MyModule.Web.Startup</startupType>\n' +
+'</module>\n' +
+'\n' +
+'<!-- A frontend-only module: no assemblyFile, therefore no C# and no IModule.\n' +
+'     The catalog marks it Initialized straight away and never loads an assembly. -->\n' +
+'<module>\n' +
+'  <id>MyCompany.MyPortal</id>\n' +
+'  <version>1.0.0</version>\n' +
+'  <platformVersion>3.1053.0</platformVersion>\n' +
+'\n' +
+'  <apps>\n' +
+'    <app id="my-portal">\n' +
+'      <title>My portal</title>\n' +
+'      <permission>myPortal:access</permission>\n' +
+'      <contentPath>dist</contentPath>\n' +
+'      <placement>MainMenu</placement>\n' +
+'    </app>\n' +
+'  </apps>\n' +
+'\n' +
+'  <!-- Settings with no assembly: registered through ISettingsRegistrar at startup,\n' +
+'       exactly as if IModule.Initialize had registered them. -->\n' +
+'  <settings>\n' +
+'    <setting>\n' +
+'      <name>MyPortal.PageSize</name>\n' +
+'      <valueType>Integer</valueType>\n' +
+'      <defaultValue>20</defaultValue>\n' +
+'    </setting>\n' +
+'  </settings>\n' +
+'</module>'
+    },
+    gotchas: [
+      'The platform does **not** read `moduleType` to find your module class. It scans the assembly for non-abstract `IModule` implementations: with exactly one it uses that and ignores `moduleType` completely — which is why a stale value can sit in a manifest for years and never break. Only when an assembly holds several does `moduleType` matter, matched by assembly-qualified-name prefix; no match throws `ModuleInitializeException`.',
+      'Naming an `assemblyFile` whose assembly has *no* `IModule` implementation fails initialization with "No IModule implementation found in assembly …". A module with code must have a module class.',
+      'The module class is created with `Activator.CreateInstance`, so it needs a public parameterless constructor. There is no constructor injection — that is precisely why the marker interfaces (`IHasConfiguration`, `IHasLogger`, `IHasHostEnvironment`) exist.',
+      'Omitting `assemblyFile` is a supported shape, not an oversight: the catalog comments say "modules without assembly file don\'t need initialization" and set state to `Initialized` without loading anything.',
+      '`<app>` takes `id` as an XML *attribute* while everything inside it is an element — an easy thing to get wrong by symmetry.'
+    ],
+    docs: [
+      { label: 'module.manifest file', page: 'Fundamentals/Modularity/06-module-manifest-file' },
+      { label: 'Loading modules into the app process', page: 'Fundamentals/Modularity/04-loading-modules-into-app-process' },
+      { label: 'Modularity overview', page: 'Fundamentals/Modularity/01-overview' }
+    ],
+    seeAlso: ['module-lifecycle', 'module-catalog', 'platform-startup', 'settings', 'vc-build'],
+    verifiedAgainst: '3.1053.0'
+  },
+
+  {
     id: 'module-catalog',
     symbol: 'Mc',
     name: 'Module catalog & install',
@@ -2067,10 +2163,11 @@ window.VC_MAP_ATOMS = [
     layer: 'modules',
     tags: ['discovery', 'probing', 'install', 'uninstall', 'version', 'semver'],
     oneLiner: 'How modules are found, chosen, copied and loaded — including at runtime, from a gallery.',
-    pattern: 'Discovery then probing then load. The local catalog scans the modules folder, the external catalog reads a remote manifest feed, the highest matching version wins, files are copied to a probing folder under a distributed lock, then assemblies load in dependency order.',
+    pattern: 'Discovery then probing then load. The local catalog scans the modules folder, the external catalog reads a remote manifest feed, the highest matching version wins, files are copied to a probing folder under a distributed lock, then assemblies load in dependency order — for the modules that have one.',
     whenToUse: [
       'Diagnosing why a module did not load, or why an old version is still running',
       'Understanding what module install does on a multi-instance deployment',
+      'Reasoning about the two kinds of module the catalog handles: **.NET modules** with an `assemblyFile` and a C# `IModule`, and **frontend-only modules** that carry only static content, apps and manifest settings',
       'Building tooling or deployment automation around modules'
     ],
     avoid: [
@@ -2101,6 +2198,8 @@ window.VC_MAP_ATOMS = [
     },
     gotchas: [
       'Two versions of a module present means the highest version wins — which is how a stale copy left in the modules folder can quietly shadow your build.',
+      'A module with no `assemblyFile` is not broken: the catalog marks it `Initialized` on the spot and never loads an assembly for it. That is how a frontend-only module — admin app, static content, manifest-declared settings — ships with no C# at all.',
+      'Which means "my module loaded but none of my code ran" has a boring likely cause: no `assemblyFile` in the manifest, so there was no code to run.',
       'Multi-instance installs coordinate through a Redis distributed lock. Without Redis, concurrent installs can race over the probing folder.',
       'The platform\'s own module management has historically run as a background job, which is why job engine availability and module install are entangled.',
       '`platformVersion` is a compatibility gate, not documentation: get it wrong and the module is skipped.'

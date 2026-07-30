@@ -477,10 +477,21 @@
     bash: {
       re: /(#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,
       classify: function (m) { return m[1] ? 'comment' : m[2] ? 'string' : null; }
+    },
+    xml: {
+      // Comments first, then attribute values, then tag names — so a quote inside a
+      // comment stays part of the comment and text content stays plain.
+      re: /(<!--[\s\S]*?-->)|("(?:[^"\\]|\\.)*")|(<\/?[A-Za-z_][\w.:-]*)|(\/?>)/g,
+      classify: function (m) {
+        if (m[1]) return 'comment';
+        if (m[2]) return 'string';
+        if (m[3] || m[4]) return 'keyword';
+        return null;
+      }
     }
   };
 
-  var LANG_LABELS = { csharp: 'C#', json: 'JSON', bash: 'Shell' };
+  var LANG_LABELS = { csharp: 'C#', json: 'JSON', bash: 'Shell', xml: 'XML' };
 
   function highlight(code, lang) {
     var frag = document.createDocumentFragment();

@@ -67,7 +67,7 @@ node docs/atomic-map/check-content.js
 | `verifiedAgainst` | ✔ | platform version you checked against; must equal `meta.js` |
 | `avoid` | | array; where this is the wrong tool |
 | `gotchas` | | array; the things that cost someone a day |
-| `snippet` | | `{ lang, code }`; taken from or written against the cited file. `lang` is `csharp`, `json` or `bash` — it selects the highlighter and the label, and an unknown value renders as plain text rather than failing |
+| `snippet` | | `{ lang, code }`; taken from or written against the cited file. `lang` is `csharp`, `json`, `bash` or `xml` — it selects the highlighter and the label, and an unknown value renders as plain text rather than failing |
 | `note` | | shown prominently — use for migration notes on `in-flight` atoms |
 | `useInstead` | | the alternative; expected on `available` and `legacy` atoms |
 | `docs` | | `[{ label, page }]` — see **Documentation links** below |
