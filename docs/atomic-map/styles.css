@@ -224,9 +224,11 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 }
 .layer .layer-tags { display: flex; gap: 4px; flex-wrap: wrap; }
 .layer .layer-tag {
-  font: 10.5px var(--mono);
+  /* Small enough that 4-6 tags stay within two rows at seven band columns — the band
+     height is set by the worst layer, and every tag is also listed in the drawer. */
+  font: 9.5px var(--mono);
   background: hsl(var(--h) 55% 94%); color: hsl(var(--h) 55% 26%);
-  border: 1px solid hsl(var(--h) 40% 84%); border-radius: 4px; padding: 0 4px;
+  border: 1px solid hsl(var(--h) 40% 84%); border-radius: 4px; padding: 0 3px;
 }
 @media (prefers-color-scheme: dark) {
   .layer .layer-tag { background: hsl(var(--h) 32% 20%); color: hsl(var(--h) 55% 82%); border-color: hsl(var(--h) 28% 32%); }
@@ -355,11 +357,20 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 }
 .drawer-eyebrow {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted);
-  margin-bottom: 4px;
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .9px; color: var(--muted);
+  margin-bottom: 3px;
 }
-.drawer-eyebrow .adopt { font-weight: 700; letter-spacing: .4px; }
-.drawer-title { font-size: 19px; line-height: 1.2; }
+.drawer-eyebrow .adopt { font-weight: 700; letter-spacing: .5px; }
+.drawer-title { font-size: 20px; line-height: 1.15; letter-spacing: -.2px; font-weight: 700; }
+
+/* Expanded: the title aligns with the centred content column and gets a little more
+   presence, since it is heading a full-width page rather than a side panel. */
+.drawer.is-full .drawer-head {
+  padding-top: 16px; padding-bottom: 14px;
+  border-bottom: 2px solid var(--border);
+}
+.drawer.is-full .drawer-title { font-size: 25px; }
+.drawer.is-full .drawer-eyebrow { font-size: 11px; margin-bottom: 5px; }
 
 .drawer-actions { position: absolute; top: 12px; right: 14px; display: flex; gap: 6px; }
 .drawer-actions .icon-btn { padding: 4px 9px; font-size: 13px; line-height: 1.1; }
@@ -384,16 +395,48 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 @media (min-width: 1120px) {
   .drawer.is-full .drawer-body { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .drawer.is-full .d-block.is-half { grid-column: span 2; }
+  /* Lead paragraph shares its row when a chip block sits beside it, instead of
+     leaving half the width empty. */
+  .drawer.is-full .drawer-body > .d-lead.is-half { grid-column: span 2; max-width: none; }
 }
 
-/* Two short blocks sharing one column instead of a column each. */
-.d-col { min-width: 0; display: flex; flex-direction: column; }
+/* ---------- static tag chips ---------- */
+
+.tag-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag-chip {
+  font: 11px var(--mono);
+  padding: 2px 7px; border-radius: 4px;
+  background: var(--surface-2); color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+/* Two short blocks sharing one column instead of a column each. The margin moves to the
+   wrapper so its box lines up with sibling blocks rather than starting 16px above them. */
+.d-col { min-width: 0; display: flex; flex-direction: column; margin-top: 16px; }
+.d-col > .d-block:first-child { margin-top: 0; }
+
+/* A full-width list would otherwise run a 1360px line. Flow it into columns of a
+   readable measure instead, breaking between items rather than through them. */
+.drawer.is-full .d-block.is-wide .d-list { columns: 330px 3; column-gap: 32px; }
+.drawer.is-full .d-block.is-wide .d-list li { break-inside: avoid; }
+
+/* ---------- name/description matrix ---------- */
+
+.d-matrix { display: grid; gap: 9px; }
+.d-matrix-row { display: flex; flex-direction: column; gap: 1px; min-width: 0; break-inside: avoid; }
+.d-matrix-name { font-size: 12.5px; font-weight: 650; }
+.d-matrix-desc { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+/* Side by side once there is room — six variants stacked full-width wastes the space. */
+.drawer.is-full .d-matrix {
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  column-gap: 32px; row-gap: 11px;
+}
 .drawer.is-full .drawer-body > .d-lead,
 .drawer.is-full .drawer-body > .d-note,
 .drawer.is-full .drawer-body > .d-meta,
 .drawer.is-full .drawer-body > .empty { grid-column: 1 / -1; }
 .drawer.is-full .drawer-body > .d-block.is-wide { grid-column: 1 / -1; }
-.drawer.is-full .d-lead { max-width: 78ch; }
+.drawer.is-full .d-lead { max-width: 78ch; margin-top: 16px; }
 
 .d-block { margin-top: 16px; min-width: 0; }
 .d-block > h3 {
@@ -406,8 +449,11 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 /* A block li, NOT a flex container: as flex items, inline <code> children were
    treated as separately shrinkable boxes and broke mid-identifier
    ("IBackgr / oundJob"). The marker is positioned instead. */
-.d-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
-.d-list li { position: relative; padding-left: 17px; line-height: 1.5; }
+/* Block flow rather than a flex column: multi-column layout has no effect on a flex
+   container, and a full-width list needs to flow into columns to stay readable. */
+.d-list { margin: 0; padding: 0; list-style: none; }
+.d-list li { position: relative; padding-left: 17px; line-height: 1.5; margin-bottom: 5px; }
+.d-list li:last-child { margin-bottom: 0; }
 .d-list li::before {
   content: "—"; position: absolute; left: 0; top: 0;
   color: var(--muted); font-weight: 400;

@@ -5,11 +5,87 @@
  */
 window.VC_MAP_ARCHITECTURE = [
   {
+    id: 'solution',
+    name: 'Your solution',
+    hue: 90,
+    sub: 'What a custom Virto project actually consists of: a little code you own, a lot of vendor artifacts you consume, and one file that pins the two together. You never fork the platform — that is the whole upgrade story.',
+    tags: ['custom modules', 'vc-package.json', 'environments'],
+    schemaTitle: 'Anatomy of a typical solution',
+    /* Deliberately the delivery view rather than a class diagram: what you own, what you
+       consume, where the two are composed, and what ships. The composition file is the
+       focal point because a solution IS its pinned set of versions. */
+    schema: {
+      rows: [
+        {
+          title: 'What you own',
+          hint: 'your repositories — usually the smallest part',
+          nodes: [
+            { name: 'Custom modules', sub: '`YourCo.Feature` — Core / Data / Web, same shape as a vendor module', via: 'C#', viaKind: 'plain' },
+            { name: 'Storefront app', sub: '`vc-frontend` customised, or your own SPA against XAPI', via: 'GraphQL', viaKind: 'graphql' },
+            { name: 'Back-office app', sub: 'VC-Shell app, or Admin UI extensions from your module', via: 'REST', viaKind: 'rest' },
+            { name: 'Integration middleware', sub: 'Separate service translating to ERP · WMS · CRM', via: 'REST', viaKind: 'rest' }
+          ]
+        },
+        {
+          connector: 'plus vendor artifacts',
+          connectorDir: 'down',
+          title: 'What you consume',
+          hint: 'released artifacts — never forked source',
+          nodes: [
+            { name: 'Virto Commerce platform', sub: 'Released as artifacts; your code depends on it, not the reverse', via: 'release', viaKind: 'plain' },
+            { name: 'Commerce modules', sub: 'Catalog · Pricing · Cart · Order · Customer · Marketing …', via: 'module zip', viaKind: 'plain' },
+            { name: 'Provider modules', sub: 'Search engine, Assets store, job engine, payment / shipping / tax', via: 'module zip', viaKind: 'plain' },
+            { name: 'XAPI modules', sub: '`xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`', via: 'GraphQL', viaKind: 'graphql' }
+          ]
+        },
+        {
+          connector: 'pinned + assembled by vc-build',
+          connectorDir: 'down',
+          target: 'vc-package.json → container image',
+          sub: 'One file records the exact platform and module versions; `vc-build Install` assembles them with your modules into one immutable image'
+        },
+        {
+          connector: 'same image · different configuration',
+          connectorDir: 'down',
+          title: 'Environments',
+          hint: 'promote the artifact, not the source',
+          nodes: [
+            { name: 'Dev', sub: 'Often Lucene + filesystem assets + in-memory jobs', via: 'config', viaKind: 'plain' },
+            { name: 'Stage', sub: 'Production topology, production-shaped data', via: 'config', viaKind: 'plain' },
+            { name: 'Prod', sub: 'Scaled out — Redis, blob storage, real search engine', via: 'config', viaKind: 'plain' }
+          ]
+        }
+      ]
+    },
+    bullets: [
+      'The ratio surprises people: a mature solution is mostly configuration plus a handful of custom modules, sitting on dozens of vendor modules. If you are writing a lot of code, check whether a lower extensibility level would do.',
+      'Your custom module has the same three-project shape as a vendor one — `Core` / `Data` / `Web` — and loads through the same manifest and dependency graph. There is no "application project" that is special.',
+      'Extend in this order: no-code (dynamic properties, settings, permissions) → API (REST/GraphQL, webhooks, event handlers) → native (`AbstractTypeFactory` override). Each step up costs more at upgrade time.',
+      '`vc-package.json` is the boundary between what you own and what you consume. It is the file that makes an environment reproducible, and the first thing to read when two environments behave differently.',
+      'The storefront is a separate deliverable with its own build and deploy — a platform release does not update it, and it does not ship inside the container image.'
+    ],
+    gotchas: [
+      'Never edit vendor module source, even locally to "just test something". The moment you do, you own that module forever and upgrades become merges.',
+      'Manifest dependencies are caret SemVer ranges, so an unpinned range can resolve differently on two machines. `vc-package.json` is what makes the result repeatable — commit it.',
+      'Prefix anything you add to a vendor type with your own abbreviation (`AbcStatus`). A future vendor property with the same name is a collision you cannot rename your way out of.',
+      'A custom module owning schema needs a migration per database provider it must support — not just the one you develop against.',
+      'Dev and prod differ by provider modules as much as by configuration: Lucene and filesystem assets work on one instance and quietly break on several.'
+    ],
+    docs: [
+      { label: 'Package management (vc-package.json)', page: 'CLI-tools/package-management' },
+      { label: 'Create a module from scratch', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
+      { label: 'Extensibility overview', page: 'Extensibility/overview' },
+      { label: 'Release strategy', page: 'Updating-Virto-Commerce-Based-Project/release-strategy-overview' },
+      { label: 'Key extensibility points', page: 'Extensibility/key-extensibility-points' }
+    ]
+  },
+
+  {
     id: 'channels',
     name: 'Channels',
     hue: 275,
     sub: 'Every surface that talks to the platform, and the protocol each one speaks. Presentation is fully separated from business logic, so every channel — including the back office — is just an API client.',
-    tags: ['vc-frontend', 'GraphQL', 'Admin UI', 'Vendor Portal', 'AI agents'],
+    tags: ['vc-frontend', 'GraphQL', 'Admin UI', 'AI agents'],
     schemaTitle: 'Channels → platform',
     /* Vertical by design: sales channels on top calling down into the platform, back office
        and integrations below calling up into it. The arrow on each connector shows who calls

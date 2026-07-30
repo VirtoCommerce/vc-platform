@@ -546,9 +546,24 @@
     } catch (e) { return false; }
   }
 
-  function pills(label, items) {
+  function pills(label, items, span) {
     if (!items || !items.length) return null;
-    return block(label, el('div', { class: 'pill-row' }, items));
+    return block(label, el('div', { class: 'pill-row' }, items), span);
+  }
+
+  /* Static, non-interactive chips. `tags` were previously only visible on the poster
+     tile; in the drawer they fill the column beside the lead paragraph, which would
+     otherwise be empty on a wide screen. */
+  function tagsBlock(label, tags) {
+    if (!tags || !tags.length) return null;
+    return block(label, el('div', { class: 'tag-row' }, tags.map(function (tag) {
+      return el('span', { class: 'tag-chip', text: tag });
+    })), 'is-half');
+  }
+
+  /* The lead only claims half the width when something sits beside it. */
+  function leadPara(text, hasNeighbour) {
+    return el('p', { class: 'd-lead' + (hasNeighbour ? ' is-half' : '') }, rich(text));
   }
 
   function renderAtomDrawer(atom) {
@@ -586,7 +601,8 @@
         ' — this atom is incomplete: ' + atom._problems.join('; ') + '.'));
     }
 
-    append(body, el('p', { class: 'd-lead' }, rich(atom.oneLiner)));
+    var alsoKnownAs = tagsBlock('Also known as', atom.tags);
+    append(body, [leadPara(atom.oneLiner, !!alsoKnownAs), alsoKnownAs]);
 
     if (atom.note) {
       append(body, el('div', { class: 'd-note' },
@@ -636,6 +652,18 @@
       node.via ? el('span', { class: 'sch-via sch-via-' + (node.viaKind || 'plain'), text: node.via }) : null);
   }
 
+  /* A name/description table — the module-type matrix, the API-shape comparison.
+     Deliberately NOT the .api-list styling it used to borrow: that is monospace,
+     which made prose descriptions read like file paths. */
+  function matrixBlock(rows) {
+    if (!rows || !rows.length) return null;
+    return el('div', { class: 'd-matrix' }, rows.map(function (row) {
+      return el('div', { class: 'd-matrix-row' },
+        el('span', { class: 'd-matrix-name', text: row.name }),
+        el('span', { class: 'd-matrix-desc' }, rich(row.desc)));
+    }));
+  }
+
   function schemaBlock(schema) {
     if (!schema || !schema.rows || !schema.rows.length) return null;
 
@@ -670,25 +698,27 @@
     var body = document.getElementById('drawer-body');
     body.textContent = '';
 
-    append(body, el('p', { class: 'd-lead' }, rich(layer.sub)));
+    var keyPieces = tagsBlock('Key pieces', layer.tags);
+    append(body, [leadPara(layer.sub, !!keyPieces), keyPieces]);
+
+    var atomPills = pills('Atoms in this layer', ATOMS.filter(function (a) { return a.layer === layer.id; })
+      .map(function (atom) {
+        return el('button', { type: 'button', class: 'pill',
+          text: adoptionOf(atom.adoption).glyph + ' ' + atom.name,
+          onclick: function () { openHash('atom', atom.id, nodes.atoms[atom.id]); } });
+      }));
 
     append(body, [
       block(layer.schemaTitle || 'Schema', schemaBlock(layer.schema), true),
-      block('What lives here', list(layer.bullets)),
-      layer.matrix ? block(layer.matrixTitle || 'Variants',
-        el('div', { class: 'api-list' }, layer.matrix.map(function (row) {
-          return el('div', { class: 'api-row' },
-            el('span', { class: 'api-name', text: row.name }),
-            el('span', { class: 'api-file' }, rich(row.desc)));
-        })), true) : null,
+      /* Full width: these are long bullets, and one narrow track left three empty
+         beside it. The list flows into columns so lines keep a readable measure. */
+      block('What lives here', list(layer.bullets), true),
+      layer.matrix ? block(layer.matrixTitle || 'Variants', matrixBlock(layer.matrix), true) : null,
       block('Gotchas', list(layer.gotchas, 'warn'), 'is-half'),
-      block('Docs', docLinks(layer.docs)),
-      pills('Atoms in this layer', ATOMS.filter(function (a) { return a.layer === layer.id; })
-        .map(function (atom) {
-          return el('button', { type: 'button', class: 'pill',
-            text: adoptionOf(atom.adoption).glyph + ' ' + atom.name,
-            onclick: function () { openHash('atom', atom.id, nodes.atoms[atom.id]); } });
-        }))
+      /* Some layers own no atoms — Channels is all consumers, not primitives. Without
+         that third block the bottom row would stop at 69%, so Docs takes the slack. */
+      block('Docs', docLinks(layer.docs), atomPills ? null : 'is-half'),
+      atomPills
     ]);
   }
 
