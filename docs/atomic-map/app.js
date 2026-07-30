@@ -389,11 +389,84 @@
       items.map(function (item) { return el('li', {}, rich(item)); }));
   }
 
+  /* ---------- syntax highlighting ----------
+   * A deliberately small tokenizer. Every token becomes a span whose text is set
+   * via textContent, so it cannot corrupt the code or inject markup — the worst a
+   * mis-tokenization can do is colour something oddly.
+   *
+   * Ordering inside each regex matters: comments and strings come first, so a `//`
+   * inside a string literal is consumed as part of the string, and a quote inside a
+   * comment is consumed as part of the comment.
+   */
+
+  var CS_KEYWORDS = {};
+  ('abstract as async await base bool break byte case catch char checked class const continue decimal default ' +
+   'delegate do double else enum event explicit extern false finally fixed float for foreach get global goto if ' +
+   'implicit in init int interface internal is lock long nameof namespace new null object operator out override ' +
+   'params private protected public readonly record ref return sbyte sealed set short sizeof stackalloc static ' +
+   'string struct switch this throw true try typeof uint ulong unchecked unsafe ushort using var virtual void ' +
+   'volatile when where while yield'
+  ).split(' ').forEach(function (word) { CS_KEYWORDS[word] = true; });
+
+  var SYNTAX = {
+    csharp: {
+      re: /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(@?\$?"(?:[^"\\]|\\.|"")*"|'(?:[^'\\]|\\.)*')|(\b\d[\d_]*(?:\.\d+)?[a-zA-Z]?\b)|([A-Za-z_]\w*)/g,
+      classify: function (m) {
+        if (m[1]) return 'comment';
+        if (m[2]) return 'string';
+        if (m[3]) return 'number';
+        if (m[4]) return CS_KEYWORDS[m[4]] ? 'keyword' : (/^[A-Z]/.test(m[4]) ? 'type' : null);
+        return null;
+      }
+    },
+    json: {
+      re: /(\/\/[^\n]*)|("(?:[^"\\]|\\.)*")|(\b(?:true|false|null)\b)|(-?\b\d[\d.]*\b)/g,
+      classify: function (m, code) {
+        if (m[1]) return 'comment';
+        // A string followed by a colon is a property name, not a value.
+        if (m[2]) return /^\s*:/.test(code.slice(m.index + m[0].length)) ? 'type' : 'string';
+        if (m[3]) return 'keyword';
+        if (m[4]) return 'number';
+        return null;
+      }
+    },
+    bash: {
+      re: /(#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,
+      classify: function (m) { return m[1] ? 'comment' : m[2] ? 'string' : null; }
+    }
+  };
+
+  var LANG_LABELS = { csharp: 'C#', json: 'JSON', bash: 'Shell' };
+
+  function highlight(code, lang) {
+    var frag = document.createDocumentFragment();
+    var spec = SYNTAX[lang];
+    if (!spec) { frag.appendChild(document.createTextNode(code)); return frag; }
+
+    var re = spec.re;
+    re.lastIndex = 0;
+    var last = 0;
+    var match;
+
+    while ((match = re.exec(code)) !== null) {
+      if (!match[0].length) { re.lastIndex++; continue; }   // never loop on a zero-length match
+      if (match.index > last) frag.appendChild(document.createTextNode(code.slice(last, match.index)));
+
+      var cls = spec.classify(match, code);
+      frag.appendChild(cls ? el('span', { class: 'syn-' + cls, text: match[0] })
+                           : document.createTextNode(match[0]));
+      last = match.index + match[0].length;
+    }
+    if (last < code.length) frag.appendChild(document.createTextNode(code.slice(last)));
+    return frag;
+  }
+
   function snippetBlock(snippet) {
     if (!snippet || !snippet.code) return null;
-    var pre = el('pre', {}, el('code', { text: snippet.code }));
+
     var copy = el('button', {
       type: 'button', class: 'icon-btn snippet-copy',
+      'aria-label': 'Copy snippet to clipboard',
       onclick: function () {
         copyText(snippet.code).then(function (ok) {
           copy.textContent = ok ? 'copied' : 'select & copy';
@@ -401,7 +474,12 @@
         });
       }
     }, 'copy');
-    return el('div', { class: 'snippet' }, pre, copy);
+
+    return el('div', { class: 'snippet' },
+      el('div', { class: 'snippet-bar' },
+        el('span', { class: 'snippet-lang', text: LANG_LABELS[snippet.lang] || snippet.lang || 'code' }),
+        copy),
+      el('pre', {}, el('code', {}, highlight(snippet.code, snippet.lang))));
   }
 
   function copyText(text) {

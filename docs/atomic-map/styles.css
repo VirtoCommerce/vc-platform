@@ -406,7 +406,10 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 .d-list.bad  li::before { content: "✗"; color: var(--bad); font-weight: 700; }
 .d-list.warn li::before { content: "!"; color: var(--warn); font-weight: 700; left: 5px; }
 
-code, .code {
+/* Inline code chips only. Scoped with :not(pre) > because these rules —
+   white-space in particular — would otherwise override <pre>'s line
+   preservation and collapse a whole snippet onto one line. */
+:not(pre) > code, .code {
   font: 12px/1.35 var(--mono);
   background: var(--surface-2);
   border: 1px solid var(--border); border-radius: 4px;
@@ -422,21 +425,74 @@ code, .code {
 .api-row .api-name { font: 12.5px var(--mono); font-weight: 600; overflow-wrap: break-word; }
 .api-row .api-file { font: 11px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
 
-.snippet { position: relative; }
-.snippet pre {
-  margin: 0; padding: 12px 14px;
+/* A framed block with its own thin header, so the language label and copy
+   button sit beside the code instead of floating over its first line. */
+.snippet {
   background: var(--surface-2);
   border: 1px solid var(--border); border-radius: 6px;
+  overflow: hidden;
+}
+.snippet-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 3px 5px 3px 11px;
+  border-bottom: 1px solid var(--border);
+}
+.snippet-lang {
+  font: 10px var(--mono); text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted);
+}
+.snippet pre {
+  margin: 0; padding: 11px 13px;
+  background: none; border: 0;
+  /* white-space: pre — long lines scroll rather than wrap. Wrapping would
+     destroy the indentation that makes C# readable; use the panel's
+     full-screen mode (f) when a snippet is wide. */
+  white-space: pre;
   overflow-x: auto;
   font: 11.5px/1.6 var(--mono);
   tab-size: 4;
 }
-.snippet-copy {
-  position: absolute; top: 7px; right: 7px;
-  font-size: 11px; padding: 3px 8px; min-height: 0;
-  opacity: .55;
+.snippet pre code {
+  font: inherit; white-space: inherit;
+  background: none; border: 0; padding: 0; border-radius: 0;
 }
+.snippet-copy { font-size: 11px; padding: 3px 8px; min-height: 0; opacity: .6; }
 .snippet:hover .snippet-copy, .snippet-copy:focus-visible { opacity: 1; }
+
+/* ---------- syntax highlighting ----------
+   Deliberately few colours: comment, keyword, type, string, number. Enough to
+   read structure at a glance without turning a memo into a rainbow. */
+
+:root {
+  --syn-comment: #5f6b7a;
+  --syn-keyword: #0550ae;
+  --syn-type:    #0f6e5e;
+  --syn-string:  #a13a17;
+  --syn-number:  #7a4c00;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --syn-comment: #8b96a6;
+    --syn-keyword: #79b8ff;
+    --syn-type:    #6fd8c0;
+    --syn-string:  #ffab8f;
+    --syn-number:  #e3bb7a;
+  }
+}
+:root[data-theme="light"] {
+  --syn-comment: #5f6b7a; --syn-keyword: #0550ae; --syn-type: #0f6e5e;
+  --syn-string: #a13a17;  --syn-number: #7a4c00;
+}
+:root[data-theme="dark"] {
+  --syn-comment: #8b96a6; --syn-keyword: #79b8ff; --syn-type: #6fd8c0;
+  --syn-string: #ffab8f;  --syn-number: #e3bb7a;
+}
+
+.syn-comment { color: var(--syn-comment); font-style: italic; }
+.syn-keyword { color: var(--syn-keyword); }
+.syn-type    { color: var(--syn-type); }
+.syn-string  { color: var(--syn-string); }
+.syn-number  { color: var(--syn-number); }
 
 .d-links { display: flex; flex-direction: column; gap: 5px; }
 .d-links a { color: var(--focus); }
@@ -484,6 +540,9 @@ code, .code {
   .tile.is-dim, .layer.is-dim, .molecule.is-dim { opacity: 1; }
   .footer { margin: 8pt 0 0; }
   .layer .layer-sub, .molecule .mol-sub { -webkit-line-clamp: unset; overflow: visible; }
+  /* Syntax colours do not survive greyscale printing; fall back to weight and italics. */
+  :root { --syn-comment: #555; --syn-keyword: #000; --syn-type: #000; --syn-string: #333; --syn-number: #333; }
+  .syn-keyword { font-weight: 700; }
   a { color: #000; text-decoration: none; }
 }
 

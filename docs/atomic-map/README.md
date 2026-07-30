@@ -67,7 +67,7 @@ node docs/atomic-map/check-content.js
 | `verifiedAgainst` | ✔ | platform version you checked against; must equal `meta.js` |
 | `avoid` | | array; where this is the wrong tool |
 | `gotchas` | | array; the things that cost someone a day |
-| `snippet` | | `{ lang, code }`; taken from or written against the cited file |
+| `snippet` | | `{ lang, code }`; taken from or written against the cited file. `lang` is `csharp`, `json` or `bash` — it selects the highlighter and the label, and an unknown value renders as plain text rather than failing |
 | `note` | | shown prominently — use for migration notes on `in-flight` atoms |
 | `useInstead` | | the alternative; expected on `available` and `legacy` atoms |
 | `docs` | | `[{ label, href }]`; `href` is relative to this folder |
@@ -135,6 +135,13 @@ atoms it composes are already listed in its `atoms` array.
   page work from a filesystem, an air-gapped machine and the docs site alike.
 - **DOM is built with an `el()` helper, not `innerHTML`.** C# snippets are full of generics like
   `IBackgroundJobHandler<TPayload>`; string interpolation into `innerHTML` would mangle them.
+- **Syntax highlighting is a ~40-line tokenizer in `app.js`**, not a library. Every token becomes a
+  span whose text is set via `textContent`, so it cannot corrupt code or inject markup — a
+  mis-tokenization can only colour something oddly. It must stay **lossless**: the rendered text of
+  every snippet is byte-identical to its source. Worth re-checking if you touch it.
+- **Don't put `white-space` on the bare `code` selector.** Inline chips need `normal` and `<pre>`
+  code needs `pre`; an unscoped rule collapses every snippet onto one line. The inline rules are
+  scoped `:not(pre) > code` for exactly this reason.
 - **Colour comes from one `hue` number per family.** Adding a family means adding a hue in
   `content/atoms.js` — no CSS change.
 
