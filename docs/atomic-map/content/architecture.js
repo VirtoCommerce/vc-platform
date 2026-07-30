@@ -8,22 +8,64 @@ window.VC_MAP_ARCHITECTURE = [
     id: 'channels',
     name: 'Channels',
     hue: 275,
-    sub: 'Everything a human or a partner system touches. The presentation layer is fully separated from business logic — no server-rendered storefront in the modern stack.',
-    tags: ['vc-frontend', 'Admin SPA', 'mobile', 'partners'],
+    sub: 'Every surface that talks to the platform, and the protocol each one speaks. Presentation is fully separated from business logic, so every channel — including the back office — is just an API client.',
+    tags: ['vc-frontend', 'GraphQL', 'Admin UI', 'Vendor Portal', 'AI agents'],
+    schemaTitle: 'Channels → platform',
+    schema: {
+      groups: [
+        {
+          title: 'Sales channels',
+          hint: 'customer-facing · read-heavy · GraphQL',
+          nodes: [
+            { name: 'Virto Commerce Frontend', sub: '`vc-frontend` — Vue 3 · Vite · TS · Tailwind. Storefront-less, no middleware.', via: 'GraphQL', viaKind: 'graphql' },
+            { name: 'Custom storefront', sub: 'Your own SPA or native app against the same schema', via: 'GraphQL', viaKind: 'graphql' },
+            { name: 'Mobile app · kiosk · chatbot', sub: 'First-class API clients, not special cases', via: 'GraphQL', viaKind: 'graphql' },
+            { name: 'Marketplaces & partner feeds', sub: 'Catalogue and inventory pushed outward', via: 'REST', viaKind: 'rest' },
+            { name: 'AI agents', sub: 'Emerging. `MCP` exposes capabilities as tools; `UCP` (Google/Shopify, 2026) is the commerce conversation on top — UCP capabilities map 1:1 to MCP tools.', via: 'MCP → UCP', viaKind: 'trend', trend: true }
+          ]
+        },
+        {
+          title: 'Back office & operations',
+          hint: 'internal · full CRUD · REST',
+          nodes: [
+            { name: 'Admin UI', sub: 'Commerce Manager — AngularJS 1.8 blades, ships inside the platform', via: 'REST', viaKind: 'rest' },
+            { name: 'Vendor Portal', sub: 'VC-Shell — Vue 3 + Module Federation, used by Marketplace and vertical apps', via: 'REST', viaKind: 'rest' },
+            { name: 'Custom UI', sub: 'Standalone SPA served through the platform `<apps>` mechanism', via: 'REST', viaKind: 'rest' }
+          ]
+        },
+        {
+          title: 'System to system',
+          hint: 'no human in the loop',
+          nodes: [
+            { name: 'Integration middleware', sub: 'ERP · WMS · CRM · PIM. Translates between models so neither side compromises.', via: 'REST', viaKind: 'rest' },
+            { name: 'Outbound webhooks', sub: 'The platform calling you, instead of you polling it', via: 'HTTP', viaKind: 'plain' }
+          ]
+        }
+      ],
+      target: {
+        name: 'Virto Commerce Platform',
+        sub: 'XAPI (GraphQL) for experience reads · REST `/api` for full CRUD · modules behind both'
+      }
+    },
     bullets: [
       '`vc-frontend` — Vue 3 · TypeScript · Vite · TailwindCSS · Yarn 4. Storefront-less: it talks straight to XAPI over GraphQL, with no ASP.NET middleware in between. Follows Atomic Design, which is where the atom/molecule vocabulary on this poster comes from.',
-      'Admin SPA (back office) — AngularJS 1.8.3 + Webpack 5 + SASS, using the blades navigation pattern. Ships inside `Platform.Web/wwwroot` and each module contributes its own scripts, templates and localizations.',
-      'Legacy `vc-storefront` — ASP.NET middleware storefront. Superseded by `vc-frontend`; do not start new work on it.',
-      'Third-party channels — mobile apps, chatbots, marketplaces and partner systems, all first-class API clients rather than special cases.'
+      'Admin UI ("Commerce Manager") — AngularJS 1.8.3 + Webpack 5 + SASS, using the blades navigation pattern. Ships inside `Platform.Web/wwwroot`; each module contributes its own scripts, templates and localizations.',
+      'VC-Shell — Vue 3 + Module Federation, the host behind the Vendor Portal and other vertical apps. Loads plugin remotes from the canonical `GET /api/apps/{appId}/manifest`.',
+      'Custom standalone SPAs — served via the platform `<apps>` mechanism, and now extensible through the same manifest contract as the other two hosts.',
+      'AI agents are a trend worth designing for, not a shipped feature: expose capability through MCP tools, and expect UCP to define the commerce conversation above it.'
     ],
     gotchas: [
-      'The Admin SPA is back-office only. It is never the customer-facing surface, and its AngularJS age is not a constraint on the storefront stack.',
-      'Admin SPA assets are built into the source `wwwroot/dist`, but a running platform serves them from its publish folder — a webpack build alone does not update a running instance.'
+      'The Admin UI is back-office only. It is never the customer-facing surface, and its AngularJS age says nothing about the storefront stack.',
+      'Admin UI assets are built into the source `wwwroot/dist`, but a running platform serves them from its publish folder — a webpack build alone does not update a running instance.',
+      'All three back-office hosts converge on one contract: `GET /api/apps/{appId}/manifest`, driven by the same `module.manifest` dependency graph as .NET install order. `POST /api/frontend-modules` survives only as a deprecated alias.',
+      'Nothing in the platform implements MCP or UCP today — the AI-agent node is dashed for that reason. Treat any agent as an untrusted client and put authorization in front of every capability you expose.'
     ],
     docs: [
       { label: 'Architecture reference', href: '../fundamentals/architecture-reference.md' },
       { label: 'Back-office modularity', href: '../developer-guide/backoffice-modularity.md' },
-      { label: 'Blades and navigation', href: '../fundamentals/extensibility/blades-and-navigation.md' }
+      { label: 'VC-Shell implementation spec', href: '../developer-guide/vc-shell-implementation.md' },
+      { label: 'Blades and navigation', href: '../fundamentals/extensibility/blades-and-navigation.md' },
+      { label: 'Universal Commerce Protocol (ucp.dev)', href: 'https://ucp.dev/' }
     ]
   },
 

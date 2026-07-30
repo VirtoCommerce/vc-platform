@@ -58,10 +58,27 @@ for (const a of ATOMS) {
   if (a.seeAlso?.includes(a.id)) add('atom', a.id, 'seeAlso references itself');
 }
 
+const VIA_KINDS = new Set(['graphql', 'rest', 'trend', 'plain']);
 for (const l of LAYERS) {
   for (const d of l.docs || []) checkDocHref('layer', l.id, d.href);
   if (!l.hue) add('layer', l.id, 'missing hue');
   if (!l.sub) add('layer', l.id, 'missing sub');
+  if (l.schema) {
+    if (!l.schema.groups?.length) add('layer', l.id, 'schema has no groups');
+    for (const g of l.schema.groups || []) {
+      if (!g.title) add('layer', l.id, 'schema group without a title');
+      if (!g.nodes?.length) add('layer', l.id, `schema group "${g.title}" has no nodes`);
+      for (const n of g.nodes || []) {
+        if (!n.name) add('layer', l.id, `schema node without a name in "${g.title}"`);
+        if (n.viaKind && !VIA_KINDS.has(n.viaKind)) {
+          add('layer', l.id, `schema node "${n.name}" has unknown viaKind "${n.viaKind}"`);
+        }
+        // A coloured chip with no protocol, or a protocol with no chip, is half-authored.
+        if (n.viaKind && !n.via) add('layer', l.id, `schema node "${n.name}" sets viaKind but no via label`);
+      }
+    }
+    if (!l.schema.target?.name) add('layer', l.id, 'schema has no target');
+  }
 }
 for (const m of MOLECULES) {
   for (const d of m.docs || []) checkDocHref('molecule', m.id, d.href);

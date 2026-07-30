@@ -587,6 +587,34 @@
     ]);
   }
 
+  /* A layered schema: stacked groups of consumers, each node labelled with the protocol
+     it uses, converging on one target. Declared in content as `schema`, so a layer gains a
+     diagram without any change here. */
+  function schemaBlock(schema) {
+    if (!schema || !schema.groups || !schema.groups.length) return null;
+
+    var parts = schema.groups.map(function (group) {
+      return el('div', { class: 'sch-group' },
+        el('div', { class: 'sch-group-head' },
+          el('span', { class: 'sch-group-title', text: group.title }),
+          group.hint ? el('span', { class: 'sch-group-hint', text: group.hint }) : null),
+        el('div', { class: 'sch-nodes' }, (group.nodes || []).map(function (node) {
+          return el('div', { class: 'sch-node' + (node.trend ? ' is-trend' : '') },
+            el('span', { class: 'sch-node-name' }, rich(node.name)),
+            node.sub ? el('span', { class: 'sch-node-sub' }, rich(node.sub)) : null,
+            node.via ? el('span', { class: 'sch-via sch-via-' + (node.viaKind || 'plain'), text: node.via }) : null);
+        })));
+    });
+
+    if (schema.target) {
+      parts.push(el('div', { class: 'sch-arrow', 'aria-hidden': 'true', text: '▼' }));
+      parts.push(el('div', { class: 'sch-target' },
+        el('span', { class: 'sch-target-name', text: schema.target.name }),
+        schema.target.sub ? el('span', { class: 'sch-target-sub' }, rich(schema.target.sub)) : null));
+    }
+    return el('div', { class: 'schema' }, parts);
+  }
+
   function renderLayerDrawer(layer) {
     document.getElementById('drawer-eyebrow').textContent = 'Solution architecture';
     document.getElementById('drawer-title').textContent = layer.name;
@@ -597,6 +625,7 @@
     append(body, el('p', { class: 'd-lead' }, rich(layer.sub)));
 
     append(body, [
+      block(layer.schemaTitle || 'Schema', schemaBlock(layer.schema), true),
       block('What lives here', list(layer.bullets)),
       layer.matrix ? block(layer.matrixTitle || 'Variants',
         el('div', { class: 'api-list' }, layer.matrix.map(function (row) {

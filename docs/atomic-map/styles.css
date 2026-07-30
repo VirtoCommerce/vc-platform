@@ -515,6 +515,64 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 /* Emphasis inside body text must not borrow the note label's colour. */
 .d-note strong:not(.d-note-label), .d-lead strong, .d-list strong { font-weight: 650; color: inherit; }
 
+/* ---------- layered schema (architecture-band drawers) ---------- */
+
+.schema { display: flex; flex-direction: column; gap: 5px; }
+
+.sch-group {
+  padding: 7px 9px 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 6px;
+}
+.sch-group-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.sch-group-title {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted);
+}
+.sch-group-hint { font-size: 10.5px; color: var(--muted); opacity: .8; }
+
+.sch-nodes { display: grid; grid-template-columns: repeat(auto-fit, minmax(136px, 1fr)); gap: 6px; }
+
+.sch-node {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 6px 8px 7px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 5px;
+}
+/* Dashed = not shipped today. Same visual language as the reserved molecule tiles. */
+.sch-node.is-trend { border-style: dashed; border-color: var(--border-strong); background: none; }
+.sch-node-name { font-size: 11.5px; font-weight: 600; line-height: 1.25; }
+.sch-node-name code { font-size: 10.5px; }
+.sch-node-sub { font-size: 10px; color: var(--muted); line-height: 1.3; }
+
+.sch-via {
+  margin-top: 4px; align-self: flex-start;
+  font: 9.5px var(--mono); text-transform: uppercase; letter-spacing: .5px;
+  padding: 1px 5px; border-radius: 3px;
+  border: 1px solid var(--border); color: var(--muted);
+}
+/* Colour the transport, so "which protocol does this channel speak" reads at a glance. */
+.sch-via-graphql { color: var(--syn-keyword); border-color: currentColor; }
+.sch-via-rest    { color: var(--info);       border-color: currentColor; }
+.sch-via-trend   { color: var(--warn);       border-color: currentColor; border-style: dashed; }
+
+.sch-arrow { text-align: center; color: var(--muted); font-size: 11px; line-height: 1; }
+
+.sch-target {
+  display: flex; flex-direction: column; gap: 2px; align-items: center; text-align: center;
+  padding: 9px 11px;
+  background: var(--surface);
+  border: 2px solid var(--accent); border-radius: 6px;
+}
+.sch-target-name { font-size: 12.5px; font-weight: 700; }
+.sch-target-sub { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
+
+/* Expanded panel: lay the groups out side by side once there is room. */
+.drawer.is-full .schema { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+.drawer.is-full .sch-group { flex: 1 1 300px; }
+.drawer.is-full .sch-arrow { display: none; }
+.drawer.is-full .sch-target { flex: 1 1 100%; }
+
 .d-meta { margin-top: 20px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 11px; color: var(--muted); }
 
 .empty { padding: 22px 4px; color: var(--muted); font-size: 13px; }

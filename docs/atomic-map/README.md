@@ -86,6 +86,34 @@ blank.
 
 ---
 
+## Architecture-band layers
+
+Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `bullets`,
+`gotchas`, `docs`, plus two optional structures:
+
+- **`matrix`** (with `matrixTitle`) — a name/description table, e.g. the module-type list.
+- **`schema`** (with `schemaTitle`) — a layered diagram: stacked groups of nodes, each labelled
+  with the protocol it speaks, converging on one `target`. Channels uses it to show sales channels,
+  back office and system-to-system callers reaching the platform.
+
+```js
+schema: {
+  groups: [{
+    title: 'Sales channels',
+    hint: 'customer-facing · read-heavy',
+    nodes: [
+      { name: 'Virto Commerce Frontend', sub: 'Vue 3 · Vite', via: 'GraphQL', viaKind: 'graphql' },
+      { name: 'AI agents', sub: 'Emerging', via: 'MCP → UCP', viaKind: 'trend', trend: true }
+    ]
+  }],
+  target: { name: 'Virto Commerce Platform', sub: 'XAPI · REST /api' }
+}
+```
+
+`viaKind` is `graphql` · `rest` · `trend` · `plain` and colours the protocol chip — the checker
+rejects anything else. `trend: true` draws the node dashed, the same "not shipped yet" visual
+language as the reserved molecule tiles. In the expanded panel the groups lay out side by side.
+
 ## Adoption badges — the part that carries the value
 
 The badge turns a catalog into guidance. Assign it from evidence, not impression.
