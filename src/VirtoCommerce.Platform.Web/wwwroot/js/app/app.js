@@ -497,7 +497,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                                 }
                             }
                         });
-                    } else if (!authContext.isAdministrator && !authContext.permissions?.length) {
+                    } else if (!authContext.canAccessAdminUI) {
                         $state.go('contact-admin');
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
                         var returnUrl = urlHelper.getSafeReturnUrl();
