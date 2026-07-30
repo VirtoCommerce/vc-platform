@@ -34,6 +34,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly Func<IRepository> _repositoryFactory;
         private readonly bool _isToModelOverridden;
+        private readonly bool _ownsCacheTokenPairing;
 
         /// <summary>
         /// Construct new CrudService
@@ -47,10 +48,32 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             _platformMemoryCache = platformMemoryCache;
             _eventPublisher = eventPublisher;
 
-            _isToModelOverridden = GetType()
-                .GetMethod(nameof(ToModel), BindingFlags.Instance | BindingFlags.NonPublic, [typeof(TEntity)])
+            _isToModelOverridden = IsOverridden(nameof(ToModel), [typeof(TEntity)]);
+
+            _ownsCacheTokenPairing =
+                !IsOverridden(nameof(ConfigureCache), [typeof(MemoryCacheEntryOptions), typeof(string), typeof(TModel)]) &&
+                !IsOverridden(nameof(ClearCache), [typeof(IList<TModel>)]);
+        }
+
+        private bool IsOverridden(string methodName, Type[] parameterTypes)
+        {
+            return GetType()
+                .GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic, parameterTypes)
                 ?.DeclaringType != typeof(CrudService<TModel, TEntity, TChangingEvent, TChangedEvent>);
         }
+
+        /// <summary>
+        /// Whether <see cref="GetAsync"/> hands <see cref="CreateCacheToken"/> to the cache helper, which then
+        /// captures the invalidation token BEFORE the data is loaded, so an invalidation landing mid-load is
+        /// still observed instead of being lost.
+        /// True only while this service still owns BOTH halves of the token pairing: the mint side
+        /// (<see cref="CreateCacheToken"/>, reached through the default <see cref="ConfigureCache"/>) and the
+        /// expire side (<see cref="ClearCache"/>). A subclass overriding either half without calling base
+        /// invalidates through a region of its own, so it gains nothing from the early capture while paying
+        /// one permanently-live token source per id in a region nothing ever expires.
+        /// Override and return true to opt back in when the override does call base.
+        /// </summary>
+        protected virtual bool CaptureCacheTokenBeforeLoad => _ownsCacheTokenPairing;
 
         /// <summary>
         /// Returns a list of model instances for specified IDs.
@@ -63,10 +86,15 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
+            // The opt-out has to sit here, where the factory is passed, and not inside the factory:
+            // GetOrLoadByIdsAsync never invokes a null factory, so no token source is created at all.
+            // CreateCacheToken memoizes into a process-static dictionary, so calling it is a write.
+            Func<string, IChangeToken> createCacheToken = CaptureCacheTokenBeforeLoad ? CreateCacheToken : null;
+
             var models = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
                 missingIds => GetByIdsNoCache(missingIds, responseGroup),
                 ConfigureCache,
-                CreateCacheToken);
+                createCacheToken);
 
             if (!clone)
             {
