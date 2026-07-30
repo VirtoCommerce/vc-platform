@@ -17,8 +17,8 @@ window.VC_MAP_MOLECULES = [
       'Where each one keeps its data, and which ones depend on the search index to be usable'
     ],
     docs: [
-      { label: 'Architecture reference', href: '../fundamentals/architecture-reference.md' },
-      { label: 'Modularity', href: '../modularity.md' }
+      { label: 'Architecture reference', page: 'Back-End-Architecture/02-conceptual-overview' },
+      { label: 'Modularity', page: 'Fundamentals/Modularity/01-overview' }
     ],
     atoms: ['module-lifecycle', 'generic-crud', 'domain-events']
   },
@@ -36,7 +36,7 @@ window.VC_MAP_MOLECULES = [
     ],
     docs: [
       { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
-      { label: 'Design spec (2026-06-06)', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Design spec (2026-06-06)', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     atoms: ['background-jobs', 'recurring-jobs', 'map-reduce-jobs', 'job-progress', 'fire-and-forget', 'hangfire', 'distributed-lock']
   },
@@ -51,7 +51,7 @@ window.VC_MAP_MOLECULES = [
       'Why catalog reads go to the index rather than the database, and the consistency window that creates'
     ],
     docs: [
-      { label: 'Search', href: '../fundamentals/search.md' }
+      { label: 'Search', page: 'Fundamentals/Indexed-Search/overview' }
     ],
     atoms: ['background-jobs', 'domain-events']
   },
@@ -79,9 +79,9 @@ window.VC_MAP_MOLECULES = [
       'Testing a provider without a live gateway'
     ],
     docs: [
-      { label: 'New payment method', href: '../fundamentals/extensibility/new-payment-method-registration.md' },
-      { label: 'New shipping method', href: '../fundamentals/extensibility/new-shipping-method-registration.md' },
-      { label: 'New tax provider', href: '../fundamentals/extensibility/new-tax-provider-registration.md' }
+      { label: 'New payment method', page: 'Fundamentals/Payments/new-payment-method-registration' },
+      { label: 'New shipping method', page: 'Fundamentals/Shipments/new-shipping-method-registration' },
+      { label: 'New tax provider', page: 'Fundamentals/Taxes/new-tax-provider-registration' }
     ],
     atoms: ['settings', 'abstract-type-factory', 'dependency-injection']
   },
@@ -109,8 +109,8 @@ window.VC_MAP_MOLECULES = [
       'The cost of each level at upgrade time — the real reason the order matters'
     ],
     docs: [
-      { label: 'Extensibility overview', href: '../fundamentals/extensibility/overview.md' },
-      { label: 'Extending domain models', href: '../fundamentals/extensibility/extending-domain-models.md' }
+      { label: 'Extensibility overview', page: 'Extensibility/overview' },
+      { label: 'Extending domain models', page: 'Tutorials-and-How-tos/Tutorials/extending-domain-models' }
     ],
     atoms: ['abstract-type-factory', 'dynamic-properties', 'domain-events', 'dependency-injection']
   },
@@ -126,8 +126,8 @@ window.VC_MAP_MOLECULES = [
       'Definition of done for a module change, including migrations and permissions'
     ],
     docs: [
-      { label: 'Create a new module', href: '../developer-guide/create-new-module.md' },
-      { label: 'Global tools', href: '../developer-guide/global-tools.md' }
+      { label: 'Create a new module', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
+      { label: 'Global tools', page: 'CLI-tools/getting-started' }
     ],
     atoms: ['module-lifecycle', 'ef-core']
   },
@@ -143,9 +143,9 @@ window.VC_MAP_MOLECULES = [
       'Docker Compose for development vs cloud topology for production'
     ],
     docs: [
-      { label: 'Scale out on Azure', href: '../techniques/how-scale-out-platform-on-azure.md' },
-      { label: 'Sharing bearer tokens across instances', href: '../techniques/sharing-bearer-tokens-across-platform-instances.md' },
-      { label: 'Deploy from source code', href: '../developer-guide/deploy-from-source-code.md' }
+      { label: 'Scale out on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' },
+      { label: 'Sharing bearer tokens across instances', page: 'Tutorials-and-How-tos/How-tos/sharing-bearer-tokens' },
+      { label: 'Deploy from source code', page: 'CLI-tools/install-and-update-platform-and-modules' }
     ],
     atoms: ['distributed-lock', 'redis-cache-bus', 'module-catalog', 'health-checks']
   },
@@ -159,9 +159,7 @@ window.VC_MAP_MOLECULES = [
       'Multi-region catalogs, pricing and inventory',
       'Where tenancy is real in the platform and where it is convention'
     ],
-    docs: [
-      { label: 'B2B multi-regional', href: '../architecture-center/B2B-multiregional.md' }
-    ],
+    docs: [],
     atoms: ['settings', 'current-user', 'localizations']
   },
   {
@@ -175,9 +173,9 @@ window.VC_MAP_MOLECULES = [
       'The developer tools registry as an in-product diagnostics surface'
     ],
     docs: [
-      { label: 'Logging', href: '../developer-guide/logging.md' },
-      { label: 'Health checks', href: '../techniques/healthchecks.md' },
-      { label: 'Debugging without source code', href: '../techniques/debugging-without-source-code.md' }
+      { label: 'Logging', page: 'Fundamentals/Logging/overview' },
+      { label: 'Health checks', page: 'Tutorials-and-How-tos/How-tos/health-checks' },
+      { label: 'Debugging without source code', page: 'Tutorials-and-How-tos/How-tos/debugging' }
     ],
     atoms: ['logging', 'health-checks', 'developer-tools', 'job-progress']
   },
@@ -193,9 +191,9 @@ window.VC_MAP_MOLECULES = [
       'Secrets, certificates and token sharing across instances'
     ],
     docs: [
-      { label: 'Secure Web API', href: '../fundamentals/make-secure-webapi.md' },
-      { label: 'Extending authorization policies', href: '../fundamentals/extensibility/extending-authorization-policies.md' },
-      { label: 'Add an SSO provider', href: '../techniques/add-new-sso-provider.md' }
+      { label: 'Secure Web API', page: 'Fundamentals/Security/authorization/overview' },
+      { label: 'Extending authorization policies', page: 'Fundamentals/Security/authorization/overview' },
+      { label: 'Add an SSO provider', page: 'Fundamentals/Security/extensions/adding-azure-as-sso-provider' }
     ],
     atoms: ['permissions', 'authentication', 'authorization', 'current-user']
   },
@@ -224,8 +222,8 @@ window.VC_MAP_MOLECULES = [
       'Where to measure first, and which numbers actually predict user-visible latency'
     ],
     docs: [
-      { label: 'Scalability', href: '../fundamentals/scalability.md' },
-      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' }
+      { label: 'Scalability', page: 'Fundamentals/Scalability/scalability-options' },
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ],
     atoms: ['platform-memory-cache', 'cache-regions', 'request-scoped-cache', 'ef-core']
   }

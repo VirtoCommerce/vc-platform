@@ -543,18 +543,24 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 .sch-node.is-trend { border-style: dashed; border-color: var(--border-strong); background: none; }
 .sch-node-name { font-size: 11.5px; font-weight: 600; line-height: 1.25; }
 .sch-node-name code { font-size: 10.5px; }
-.sch-node-sub { font-size: 10px; color: var(--muted); line-height: 1.3; }
+.sch-node-sub { font-size: 10px; color: var(--muted); line-height: 1.3; margin-bottom: 3px; }
 
+/* margin-top:auto pins every chip to the bottom of its card. Grid rows stretch cards to
+   equal height, so the chips land on one baseline instead of floating at whatever height
+   each description happens to end. */
 .sch-via {
-  margin-top: 4px; align-self: flex-start;
+  margin-top: auto; align-self: flex-start;
   font: 9.5px var(--mono); text-transform: uppercase; letter-spacing: .5px;
-  padding: 1px 5px; border-radius: 3px;
+  padding: 2px 6px; border-radius: 4px;
+  background: var(--surface-2);
   border: 1px solid var(--border); color: var(--muted);
+  white-space: nowrap;
 }
-/* Colour the transport, so "which protocol does this channel speak" reads at a glance. */
+/* Colour the transport, so "which protocol does this channel speak" reads at a glance.
+   The card's dashed border already marks a trend, so the chip itself stays solid. */
 .sch-via-graphql { color: var(--syn-keyword); border-color: currentColor; }
 .sch-via-rest    { color: var(--info);       border-color: currentColor; }
-.sch-via-trend   { color: var(--warn);       border-color: currentColor; border-style: dashed; }
+.sch-via-trend   { color: var(--warn);       border-color: currentColor; }
 
 /* Connector between two rows: a centred pill sitting on a vertical line, so the flow
    direction reads at a glance. The line is drawn behind the pill, not around it. */

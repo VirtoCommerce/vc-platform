@@ -70,7 +70,7 @@ node docs/atomic-map/check-content.js
 | `snippet` | | `{ lang, code }`; taken from or written against the cited file. `lang` is `csharp`, `json` or `bash` — it selects the highlighter and the label, and an unknown value renders as plain text rather than failing |
 | `note` | | shown prominently — use for migration notes on `in-flight` atoms |
 | `useInstead` | | the alternative; expected on `available` and `legacy` atoms |
-| `docs` | | `[{ label, href }]`; `href` is relative to this folder |
+| `docs` | | `[{ label, page }]` — see **Documentation links** below |
 | `seeAlso` | | array of atom ids |
 | `molecule` | | a molecule id this atom belongs to |
 | `keystone` | | `true` draws a heavier border (currently only `AbstractTypeFactory`) |
@@ -92,27 +92,67 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
 `gotchas`, `docs`, plus two optional structures:
 
 - **`matrix`** (with `matrixTitle`) — a name/description table, e.g. the module-type list.
-- **`schema`** (with `schemaTitle`) — a layered diagram: stacked groups of nodes, each labelled
-  with the protocol it speaks, converging on one `target`. Channels uses it to show sales channels,
-  back office and system-to-system callers reaching the platform.
+- **`schema`** (with `schemaTitle`) — a vertical diagram: an ordered stack of rows joined by
+  connector pills. A row is either a group of nodes or the `target`, so the target can sit anywhere
+  in the stack. Channels puts the platform in the middle, with sales channels calling down into it
+  and back office / integrations calling up.
 
 ```js
 schema: {
-  groups: [{
-    title: 'Sales channels',
-    hint: 'customer-facing · read-heavy',
-    nodes: [
-      { name: 'Virto Commerce Frontend', sub: 'Vue 3 · Vite', via: 'GraphQL', viaKind: 'graphql' },
-      { name: 'AI agents', sub: 'Emerging', via: 'MCP → UCP', viaKind: 'trend', trend: true }
-    ]
-  }],
-  target: { name: 'Virto Commerce Platform', sub: 'XAPI · REST /api' }
+  rows: [
+    { title: 'Sales channels', hint: 'customer-facing · read-heavy', nodes: [
+        { name: 'Virto Commerce Frontend', sub: 'Vue 3 · Vite', via: 'GraphQL', viaKind: 'graphql' },
+        { name: 'AI agents', sub: 'Emerging', via: 'MCP → UCP', viaKind: 'trend', trend: true }
+    ]},
+    { connector: 'XAPI GraphQL · REST', connectorDir: 'down',
+      target: 'Virto Commerce Platform', sub: 'XAPI · REST /api' },
+    { connector: 'REST /api', connectorDir: 'up', title: 'Admin UI & back office', nodes: [ /* … */ ] }
+  ]
 }
 ```
 
-`viaKind` is `graphql` · `rest` · `trend` · `plain` and colours the protocol chip — the checker
-rejects anything else. `trend: true` draws the node dashed, the same "not shipped yet" visual
-language as the reserved molecule tiles. In the expanded panel the groups lay out side by side.
+- `viaKind` is `graphql` · `rest` · `trend` · `plain` and colours the protocol chip.
+- `connectorDir` is `down` · `up` · `both`, rendered as ↓ ↑ ↕. Point it at whoever is *called*, so
+  the diagram shows the direction of dependency rather than just adjacency.
+- `trend: true` draws the node dashed — the same "not shipped yet" language as the reserved
+  molecule tiles. The chip itself stays solid so the two signals do not compete.
+- Protocol chips are pinned to the bottom of their card (`margin-top: auto`) so they land on one
+  baseline per row instead of floating at whatever height each description ends.
+
+The checker rejects unknown `viaKind`/`connectorDir` values, a row that is neither a target nor a
+titled group, and any schema without exactly one target. The stack stays vertical at every width.
+
+## Documentation links
+
+Documentation lives on **https://docs.virtocommerce.org**, which is built from the
+[vc-docs](https://github.com/VirtoCommerce/vc-docs) repo — *not* from this repo's `docs/` folder.
+So a doc link stores the vc-docs page path and the renderer derives the URL:
+
+```js
+docs: [
+  { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' },   // → docs site
+  { label: 'vc-module-background-jobs', href: 'https://github.com/...' },     // → external
+  { label: 'Design spec', path: 'superpowers/specs/2026-06-06-....md' }       // → in-repo file
+]
+```
+
+- **`page`** — path under `platform/developer-guide/docs/` in vc-docs, without `.md`. The base URL
+  and the `latest` version segment live in one constant (`DOCS_BASE` in `app.js`).
+- **`href`** — a fully external URL.
+- **`path`** — a file in this repo, relative to `docs/`. Only for in-repo material such as a design
+  spec; user documentation belongs on the docs site.
+
+Exactly one of the three per entry. Do not hand-write `docs.virtocommerce.org` URLs in content —
+use `page`, so a site restructure is a one-line change.
+
+**Verify the pages exist:**
+
+```bash
+node docs/atomic-map/check-content.js --online
+```
+
+`--online` pulls the vc-docs file list via the `gh` CLI and fails on any `page` that is not a real
+file. Without it the checker validates only the shape. Run it after adding links.
 
 ## Adoption badges — the part that carries the value
 

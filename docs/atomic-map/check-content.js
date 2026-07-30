@@ -26,12 +26,50 @@ function checkRepoPath(kind, id, p) {
   if (!fs.existsSync(abs)) add(kind, id, `api file does not exist → ${p}`);
 }
 
-// ---- docs[].href resolves relative to docs/atomic-map/
-function checkDocHref(kind, id, href) {
-  if (!href) return;
-  if (/^https?:/.test(href)) return;
-  const abs = path.join(MAP, href.split('#')[0]);
-  if (!fs.existsSync(abs)) add(kind, id, `doc href does not resolve → ${href}`);
+/* Doc links come in three forms:
+     page  — a vc-docs developer-guide page, rendered as an absolute docs.virtocommerce.org URL
+     href  — a fully external URL
+     path  — an in-repo file, relative to docs/
+   `page` values cannot be verified offline; run with --online to check them against the
+   vc-docs repo (requires the gh CLI). */
+const ONLINE = process.argv.includes('--online');
+let VC_DOCS_PAGES = null;
+
+if (ONLINE) {
+  try {
+    const out = require('child_process').execSync(
+      'gh api repos/VirtoCommerce/vc-docs/git/trees/main?recursive=1 --jq ".tree[].path"',
+      { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] });
+    VC_DOCS_PAGES = new Set(out.split('\n')
+      .filter(p => p.startsWith('platform/developer-guide/docs/') && p.endsWith('.md'))
+      .map(p => p.replace('platform/developer-guide/docs/', '').replace(/\.md$/, '')));
+    console.log(`online: loaded ${VC_DOCS_PAGES.size} vc-docs developer-guide pages`);
+  } catch (e) {
+    console.log('online: could not reach vc-docs via gh — skipping page existence checks');
+  }
+}
+
+const docsSeen = new Set();
+
+function checkDoc(kind, id, doc) {
+  const forms = ['page', 'href', 'path'].filter(f => doc[f]);
+  if (forms.length === 0) { add(kind, id, `doc "${doc.label}" has no page/href/path`); return; }
+  if (forms.length > 1) add(kind, id, `doc "${doc.label}" sets more than one of page/href/path`);
+  if (!doc.label) add(kind, id, 'doc entry without a label');
+
+  if (doc.page) {
+    docsSeen.add(doc.page);
+    if (/\.md$/.test(doc.page)) add(kind, id, `doc page must not end in .md → ${doc.page}`);
+    if (/^\/|\/$/.test(doc.page)) add(kind, id, `doc page must not start or end with "/" → ${doc.page}`);
+    if (/^https?:/.test(doc.page)) add(kind, id, `doc page must be a path, not a URL → ${doc.page}`);
+    if (VC_DOCS_PAGES && !VC_DOCS_PAGES.has(doc.page)) {
+      add(kind, id, `doc page not found in vc-docs → ${doc.page}`);
+    }
+  }
+  if (doc.path) {
+    const abs = path.join(REPO, 'docs', doc.path.split('#')[0]);
+    if (!fs.existsSync(abs)) add(kind, id, `doc path does not resolve → docs/${doc.path}`);
+  }
 }
 
 const REQUIRED = ['id','symbol','name','family','adoption','layer','oneLiner','pattern','whenToUse','api'];
@@ -53,7 +91,7 @@ for (const a of ATOMS) {
   for (const ref of a.seeAlso || []) if (!atomIds.has(ref)) add('atom', a.id, `seeAlso → "${ref}" missing`);
   if (a.molecule && !moleculeIds.has(a.molecule)) add('atom', a.id, `molecule → "${a.molecule}" missing`);
   for (const api of a.api || []) checkRepoPath('atom', a.id, api.file);
-  for (const d of a.docs || []) checkDocHref('atom', a.id, d.href);
+  for (const d of a.docs || []) checkDoc('atom', a.id, d);
   if (a.snippet && !a.snippet.code) add('atom', a.id, 'snippet without code');
   if (a.seeAlso?.includes(a.id)) add('atom', a.id, 'seeAlso references itself');
 }
@@ -61,7 +99,7 @@ for (const a of ATOMS) {
 const VIA_KINDS = new Set(['graphql', 'rest', 'trend', 'plain']);
 const CONNECTOR_DIRS = new Set(['down', 'up', 'both']);
 for (const l of LAYERS) {
-  for (const d of l.docs || []) checkDocHref('layer', l.id, d.href);
+  for (const d of l.docs || []) checkDoc('layer', l.id, d);
   if (!l.hue) add('layer', l.id, 'missing hue');
   if (!l.sub) add('layer', l.id, 'missing sub');
   if (l.schema) {
@@ -89,7 +127,7 @@ for (const l of LAYERS) {
   }
 }
 for (const m of MOLECULES) {
-  for (const d of m.docs || []) checkDocHref('molecule', m.id, d.href);
+  for (const d of m.docs || []) checkDoc('molecule', m.id, d);
   for (const ref of m.atoms || []) if (!atomIds.has(ref)) add('molecule', m.id, `atoms → "${ref}" missing`);
   if (!m.planned?.length) add('molecule', m.id, 'no planned contents');
 }
@@ -121,7 +159,8 @@ const noSnippet = ATOMS.filter(a => !a.snippet).map(a => a.id);
 console.log(`atoms: ${ATOMS.length}   layers: ${LAYERS.length}   molecules: ${MOLECULES.length}`);
 console.log(`families → ${byFamily}`);
 console.log(`adoption → ${byAdoption}`);
-console.log(`repo paths checked: ${checkedPaths.size}`);
+console.log(`repo paths checked: ${checkedPaths.size}   distinct vc-docs pages linked: ${docsSeen.size}` +
+            (VC_DOCS_PAGES ? '  (verified online)' : '  (run --online to verify)'));
 console.log(`atoms without a snippet (${noSnippet.length}): ${noSnippet.join(', ') || 'none'}`);
 console.log('');
 if (problems.length) {

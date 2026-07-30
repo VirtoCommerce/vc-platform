@@ -29,6 +29,34 @@
 
   var REQUIRED = ['id', 'symbol', 'name', 'family', 'adoption', 'layer', 'oneLiner', 'pattern', 'whenToUse', 'api'];
 
+  /* Documentation lives on the public docs site, which is built from the vc-docs repo
+     (github.com/VirtoCommerce/vc-docs). Content stores the page path only —
+     `Fundamentals/Caching/01-overview` — and the URL is derived here, so the base and the
+     version segment are defined in exactly one place. */
+  var DOCS_BASE = 'https://docs.virtocommerce.org/platform/developer-guide/latest/';
+
+  function docHref(doc) {
+    if (doc.href) return doc.href;                       // fully external (GitHub, ucp.dev)
+    if (doc.page) return DOCS_BASE + doc.page + '/';     // vc-docs page
+    if (doc.path) return '../' + doc.path;               // in-repo file, e.g. a design spec
+    return null;
+  }
+
+  function docLinks(docs) {
+    var usable = (docs || []).filter(function (doc) { return docHref(doc); });
+    if (!usable.length) return null;
+    return el('div', { class: 'd-links' }, usable.map(function (doc) {
+      var href = docHref(doc);
+      return el('a', {
+        href: href,
+        text: doc.label,
+        // Off-site links open in a new tab so the map is not navigated away from.
+        target: /^https?:/.test(href) ? '_blank' : null,
+        rel: /^https?:/.test(href) ? 'noopener' : null
+      });
+    }));
+  }
+
   // ---------------------------------------------------------------- helpers
 
   function el(tag, props) {
@@ -566,11 +594,7 @@
         : null),
       block('Snippet', snippetBlock(atom.snippet), true),
       block('Gotchas', list(atom.gotchas, 'warn')),
-      block('Docs', atom.docs && atom.docs.length
-        ? el('div', { class: 'd-links' }, atom.docs.map(function (doc) {
-            return el('a', { href: doc.href, text: doc.label });
-          }))
-        : null),
+      block('Docs', docLinks(atom.docs)),
       pills('See also', (atom.seeAlso || []).map(function (ref) {
         var other = byId(ATOMS, ref);
         if (!other) return null;
@@ -647,11 +671,7 @@
             el('span', { class: 'api-file' }, rich(row.desc)));
         })), true) : null,
       block('Gotchas', list(layer.gotchas, 'warn')),
-      block('Docs', layer.docs && layer.docs.length
-        ? el('div', { class: 'd-links' }, layer.docs.map(function (doc) {
-            return el('a', { href: doc.href, text: doc.label });
-          }))
-        : null),
+      block('Docs', docLinks(layer.docs)),
       pills('Atoms in this layer', ATOMS.filter(function (a) { return a.layer === layer.id; })
         .map(function (atom) {
           return el('button', { type: 'button', class: 'pill',
@@ -675,11 +695,7 @@
 
     append(body, [
       block('Planned contents', list(molecule.planned)),
-      block('Material that already exists', molecule.docs && molecule.docs.length
-        ? el('div', { class: 'd-links' }, molecule.docs.map(function (doc) {
-            return el('a', { href: doc.href, text: doc.label });
-          }))
-        : null),
+      block('Material that already exists', docLinks(molecule.docs)),
       pills('Atoms it will compose', (molecule.atoms || []).map(function (ref) {
         var atom = byId(ATOMS, ref);
         return atom ? el('button', { type: 'button', class: 'pill', text: atom.name,

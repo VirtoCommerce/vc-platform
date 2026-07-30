@@ -24,7 +24,7 @@ window.VC_MAP_ARCHITECTURE = [
             { name: 'Custom storefront', sub: 'Your own SPA or native app against the same schema', via: 'GraphQL', viaKind: 'graphql' },
             { name: 'Mobile app · kiosk · chatbot', sub: 'First-class API clients, not special cases', via: 'GraphQL', viaKind: 'graphql' },
             { name: 'Marketplaces & partner feeds', sub: 'Catalogue and inventory pushed outward', via: 'REST', viaKind: 'rest' },
-            { name: 'AI agents', sub: 'Emerging. `MCP` exposes capabilities as tools; `UCP` (Google/Shopify, 2026) is the commerce conversation on top — UCP capabilities map 1:1 to MCP tools.', via: 'MCP → UCP', viaKind: 'trend', trend: true }
+            { name: 'AI agents', sub: 'Emerging — capabilities as `MCP` tools, `UCP` as the commerce layer above', via: 'MCP → UCP', viaKind: 'trend', trend: true }
           ]
         },
         {
@@ -61,7 +61,7 @@ window.VC_MAP_ARCHITECTURE = [
       'Admin UI ("Commerce Manager") — AngularJS 1.8.3 + Webpack 5 + SASS, using the blades navigation pattern. Ships inside `Platform.Web/wwwroot`; each module contributes its own scripts, templates and localizations.',
       'VC-Shell — Vue 3 + Module Federation, the host behind the Vendor Portal and other vertical apps. Loads plugin remotes from the canonical `GET /api/apps/{appId}/manifest`.',
       'Custom standalone SPAs — served via the platform `<apps>` mechanism, and now extensible through the same manifest contract as the other two hosts.',
-      'AI agents are a trend worth designing for, not a shipped feature: expose capability through MCP tools, and expect UCP to define the commerce conversation above it.'
+      'AI agents are a trend worth designing for, not a shipped feature. `MCP` exposes capabilities as tools an agent can call; `UCP` (Universal Commerce Protocol — Google with Shopify, announced January 2026) defines the commerce conversation above it, and UCP capabilities map 1:1 to MCP tools. So an MCP server wrapping your commerce capabilities is the practical first step.'
     ],
     gotchas: [
       'The Admin UI is back-office only. It is never the customer-facing surface, and its AngularJS age says nothing about the storefront stack.',
@@ -70,10 +70,10 @@ window.VC_MAP_ARCHITECTURE = [
       'Nothing in the platform implements MCP or UCP today — the AI-agent node is dashed for that reason. Treat any agent as an untrusted client and put authorization in front of every capability you expose.'
     ],
     docs: [
-      { label: 'Architecture reference', href: '../fundamentals/architecture-reference.md' },
-      { label: 'Back-office modularity', href: '../developer-guide/backoffice-modularity.md' },
-      { label: 'VC-Shell implementation spec', href: '../developer-guide/vc-shell-implementation.md' },
-      { label: 'Blades and navigation', href: '../fundamentals/extensibility/blades-and-navigation.md' },
+      { label: 'Architecture reference', page: 'Back-End-Architecture/02-conceptual-overview' },
+      { label: 'Back-office modularity', page: 'Fundamentals/Modularity/07-backoffice-app-modularity' },
+      { label: 'VC-Shell implementation spec', page: 'Fundamentals/Modularity/07-backoffice-app-modularity' },
+      { label: 'Blades and navigation', page: 'Platform-Manager/Extensibility-Points/blades-and-navigation' },
       { label: 'Universal Commerce Protocol (ucp.dev)', href: 'https://ucp.dev/' }
     ]
   },
@@ -104,9 +104,9 @@ window.VC_MAP_ARCHITECTURE = [
       'XAPI lives in a separate repository (`vc-module-experience-api`) — it is a module set, not part of the platform core.'
     ],
     docs: [
-      { label: 'Swagger endpoints', href: '../developer-guide/swagger-endpoints.md' },
-      { label: 'Secure Web API', href: '../fundamentals/make-secure-webapi.md' },
-      { label: 'Polymorphic types in Swagger', href: '../techniques/exposing-polymorphic-types-swagger.md' }
+      { label: 'Swagger endpoints', page: 'Tutorials-and-How-tos/How-tos/swagger-api' },
+      { label: 'Secure Web API', page: 'Fundamentals/Security/authorization/overview' },
+      { label: 'Polymorphic types in Swagger', page: 'Tutorials-and-How-tos/How-tos/type-inheritance-support-in-swagger' }
     ]
   },
 
@@ -139,10 +139,10 @@ window.VC_MAP_ARCHITECTURE = [
       'Manifest dependencies use caret SemVer ranges (`^1.2.3` means `>=1.2.3 <2.0.0`), and `platformVersion` must be pinned.'
     ],
     docs: [
-      { label: 'Modularity', href: '../modularity.md' },
-      { label: 'Essential modularity', href: '../fundamentals/essential-modularity.md' },
-      { label: 'Create a new module', href: '../developer-guide/create-new-module.md' },
-      { label: 'Extensibility overview', href: '../fundamentals/extensibility/overview.md' }
+      { label: 'Modularity', page: 'Fundamentals/Modularity/01-overview' },
+      { label: 'Essential modularity', page: 'Fundamentals/Modularity/01-overview' },
+      { label: 'Create a new module', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
+      { label: 'Extensibility overview', page: 'Extensibility/overview' }
     ]
   },
 
@@ -166,9 +166,9 @@ window.VC_MAP_ARCHITECTURE = [
       'A DI registration made later wins. That is the extension mechanism for services, and also the way you accidentally replace something you did not mean to.'
     ],
     docs: [
-      { label: 'Architecture reference', href: '../fundamentals/architecture-reference.md' },
-      { label: 'Database agnostic', href: '../fundamentals/db-agnostic.md' },
-      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' }
+      { label: 'Architecture reference', page: 'Back-End-Architecture/02-conceptual-overview' },
+      { label: 'Database agnostic', page: 'Fundamentals/Persistence/DB-Agnostic/overview' },
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ]
   },
 
@@ -190,9 +190,9 @@ window.VC_MAP_ARCHITECTURE = [
       'Point-to-point integration between the platform and each external system is the trap middleware exists to prevent.'
     ],
     docs: [
-      { label: 'Architecture reference', href: '../fundamentals/architecture-reference.md' },
-      { label: 'Extending using events', href: '../fundamentals/extensibility/extending-using-events.md' },
-      { label: 'B2B multi-regional', href: '../architecture-center/B2B-multiregional.md' }
+      { label: 'Architecture reference', page: 'Back-End-Architecture/02-conceptual-overview' },
+      { label: 'Extending using events', page: 'Fundamentals/Event-Driven-Development/using-domain-events' }
+      
     ]
   },
 
@@ -214,10 +214,10 @@ window.VC_MAP_ARCHITECTURE = [
       'Redis holding cache *invalidation messages* rather than cache *values* surprises almost everyone. Losing Redis costs coherence, not the cache itself.'
     ],
     docs: [
-      { label: 'Scalability', href: '../fundamentals/scalability.md' },
-      { label: 'Scale out on Azure', href: '../techniques/how-scale-out-platform-on-azure.md' },
-      { label: 'Health checks', href: '../techniques/healthchecks.md' },
-      { label: 'Search', href: '../fundamentals/search.md' }
+      { label: 'Scalability', page: 'Fundamentals/Scalability/scalability-options' },
+      { label: 'Scale out on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' },
+      { label: 'Health checks', page: 'Tutorials-and-How-tos/How-tos/health-checks' },
+      { label: 'Search', page: 'Fundamentals/Indexed-Search/overview' }
     ]
   }
 ];

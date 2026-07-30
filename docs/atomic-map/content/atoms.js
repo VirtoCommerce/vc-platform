@@ -92,8 +92,8 @@ window.VC_MAP_ATOMS = [
     ],
     docs: [
       { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
-      { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' },
-      { label: 'Scalability', href: '../fundamentals/scalability.md' }
+      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' },
+      { label: 'Scalability', page: 'Fundamentals/Scalability/scalability-options' }
     ],
     seeAlso: ['recurring-jobs', 'map-reduce-jobs', 'job-progress', 'fire-and-forget', 'hangfire', 'push-notifications', 'distributed-lock'],
     molecule: 'background-processing-hub',
@@ -155,7 +155,7 @@ window.VC_MAP_ATOMS = [
     ],
     docs: [
       { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
-      { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     seeAlso: ['background-jobs', 'hangfire', 'settings', 'distributed-lock', 'hosted-service'],
     molecule: 'background-processing-hub',
@@ -205,7 +205,7 @@ window.VC_MAP_ATOMS = [
       'Requires an installed job engine, exactly like plain background jobs.'
     ],
     docs: [
-      { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     seeAlso: ['background-jobs', 'hangfire', 'job-progress', 'export-import'],
     molecule: 'background-processing-hub',
@@ -267,7 +267,7 @@ window.VC_MAP_ATOMS = [
       'Progress reaches the browser over SignalR push notifications, so scaled-out deployments need the backplane configured or updates land on the wrong instance.'
     ],
     docs: [
-      { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     seeAlso: ['background-jobs', 'hangfire', 'push-notifications', 'export-import'],
     molecule: 'background-processing-hub',
@@ -393,7 +393,7 @@ window.VC_MAP_ATOMS = [
     ],
     docs: [
       { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
-      { label: 'Background Processing Hub — design spec', href: '../superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     seeAlso: ['background-jobs', 'recurring-jobs', 'fire-and-forget', 'map-reduce-jobs'],
     molecule: 'background-processing-hub',
@@ -645,7 +645,7 @@ window.VC_MAP_ATOMS = [
       'For batches of entities by id, `GetOrLoadByIdsAsync` loads only the misses instead of all-or-nothing.'
     ],
     docs: [
-      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' }
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ],
     seeAlso: ['cache-regions', 'redis-cache-bus', 'request-scoped-cache', 'cache-disabler', 'hybrid-cache'],
     molecule: 'performance',
@@ -699,7 +699,7 @@ window.VC_MAP_ATOMS = [
       'Expiring a region is cheap; recomputing everything it held may not be. Watch for expire-per-item loops during bulk saves — expire once at the end.'
     ],
     docs: [
-      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' }
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ],
     seeAlso: ['platform-memory-cache', 'redis-cache-bus', 'domain-events'],
     molecule: 'performance',
@@ -752,8 +752,8 @@ window.VC_MAP_ATOMS = [
       'Cache memory is per instance, so cluster memory scales with instance count rather than being pooled.'
     ],
     docs: [
-      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' },
-      { label: 'Scale out on Azure', href: '../techniques/how-scale-out-platform-on-azure.md' }
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' },
+      { label: 'Scale out on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' }
     ],
     seeAlso: ['cache-regions', 'platform-memory-cache', 'distributed-lock', 'push-notifications'],
     molecule: 'deployment',
@@ -807,7 +807,7 @@ window.VC_MAP_ATOMS = [
       'Per-user data belongs here precisely because it cannot leak; putting it in the shared cache is a data-disclosure bug, not just a design smell.'
     ],
     docs: [
-      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' }
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ],
     seeAlso: ['platform-memory-cache', 'current-user'],
     molecule: 'performance',
@@ -856,8 +856,8 @@ window.VC_MAP_ATOMS = [
       'Global `CacheEnabled: false` is a legitimate debugging setting and a terrible production one.'
     ],
     docs: [
-      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' },
-      { label: 'Debugging without source code', href: '../techniques/debugging-without-source-code.md' }
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' },
+      { label: 'Debugging without source code', page: 'Tutorials-and-How-tos/How-tos/debugging' }
     ],
     seeAlso: ['platform-memory-cache', 'cache-regions', 'developer-tools'],
     verifiedAgainst: '3.1053.0'
@@ -892,7 +892,7 @@ window.VC_MAP_ATOMS = [
       'Two caching systems in one process is a correctness problem, not a redundancy: only one of them hears a region expire.'
     ],
     docs: [
-      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' }
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ],
     seeAlso: ['platform-memory-cache', 'redis-cache-bus', 'cache-regions'],
     verifiedAgainst: '3.1053.0'
@@ -964,8 +964,8 @@ window.VC_MAP_ATOMS = [
       '`IsPublic = true` exposes the value to the storefront — check this before putting anything sensitive in a setting.'
     ],
     docs: [
-      { label: 'Settings V2', href: '../developer-guide/settingsV2.md' },
-      { label: 'Manifest settings', href: '../developer-guide/manifest-settings.md' }
+      { label: 'Settings V2', page: 'Fundamentals/Modularity/06-module-manifest-file' },
+      { label: 'Manifest settings', page: 'Fundamentals/Modularity/06-module-manifest-file' }
     ],
     seeAlso: ['dynamic-properties', 'options-pattern', 'recurring-jobs', 'localizations'],
     verifiedAgainst: '3.1053.0'
@@ -1039,8 +1039,8 @@ window.VC_MAP_ATOMS = [
       'This is level 1 of the extensibility model. If you need behaviour rather than data, go to `AbstractTypeFactory` instead.'
     ],
     docs: [
-      { label: 'Using dynamic properties', href: '../fundamentals/extensibility/using-dynamic-properties.md' },
-      { label: 'Extending domain models', href: '../fundamentals/extensibility/extending-domain-models.md' }
+      { label: 'Using dynamic properties', page: 'Fundamentals/Dynamic-Properties/using-DynamicPropertyAccessor' },
+      { label: 'Extending domain models', page: 'Tutorials-and-How-tos/Tutorials/extending-domain-models' }
     ],
     seeAlso: ['abstract-type-factory', 'settings', 'ef-core'],
     molecule: 'extensibility-decision-tree',
@@ -1144,7 +1144,7 @@ window.VC_MAP_ATOMS = [
       'Argument arrays avoid one class of quoting bug but not injection. Validate anything user-supplied.'
     ],
     docs: [
-      { label: 'Generate a PDF file', href: '../techniques/generate-pdf-file.md' }
+      { label: 'Generate a PDF file', page: 'Tutorials-and-How-tos/How-tos/generating-pdfs' }
     ],
     seeAlso: ['options-pattern', 'file-operations', 'background-jobs'],
     verifiedAgainst: '3.1053.0'
@@ -1269,7 +1269,7 @@ window.VC_MAP_ATOMS = [
       'For cross-process reactions you need the EventBus module. Domain events never leave the process on their own.'
     ],
     docs: [
-      { label: 'Extending using events', href: '../fundamentals/extensibility/extending-using-events.md' }
+      { label: 'Extending using events', page: 'Fundamentals/Event-Driven-Development/using-domain-events' }
     ],
     seeAlso: ['inprocess-bus', 'cache-regions', 'eventbus-webhooks', 'generic-crud', 'change-log'],
     molecule: 'extensibility-decision-tree',
@@ -1321,7 +1321,7 @@ window.VC_MAP_ATOMS = [
       'This is platform internals. If you are here to fix a handler that does not fire, the answer is almost always a missing DI registration.'
     ],
     docs: [
-      { label: 'Extending using events', href: '../fundamentals/extensibility/extending-using-events.md' }
+      { label: 'Extending using events', page: 'Fundamentals/Event-Driven-Development/using-domain-events' }
     ],
     seeAlso: ['domain-events', 'commands', 'dependency-injection'],
     verifiedAgainst: '3.1053.0'
@@ -1419,7 +1419,7 @@ window.VC_MAP_ATOMS = [
       'The stored history is what the UI shows after a reload; a notification that was only pushed live effectively disappears.'
     ],
     docs: [
-      { label: 'Scale out on Azure', href: '../techniques/how-scale-out-platform-on-azure.md' }
+      { label: 'Scale out on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' }
     ],
     seeAlso: ['job-progress', 'redis-cache-bus', 'current-user', 'hosted-service'],
     molecule: 'observability',
@@ -1467,7 +1467,7 @@ window.VC_MAP_ATOMS = [
       'Forwarding a high-volume event (every price change, say) can generate far more traffic than anyone expected. Filter deliberately.'
     ],
     docs: [
-      { label: 'Extending using events', href: '../fundamentals/extensibility/extending-using-events.md' }
+      { label: 'Extending using events', page: 'Fundamentals/Event-Driven-Development/using-domain-events' }
     ],
     seeAlso: ['domain-events', 'module-catalog'],
     verifiedAgainst: '3.1053.0'
@@ -1527,9 +1527,9 @@ window.VC_MAP_ATOMS = [
       'Serialization sees the derived type, so a polymorphic payload can arrive as a base type unless the factory registration is present on both ends.'
     ],
     docs: [
-      { label: 'Extending domain models', href: '../fundamentals/extensibility/extending-domain-models.md' },
-      { label: 'Extensibility overview', href: '../fundamentals/extensibility/overview.md' },
-      { label: 'Extend the DB model', href: '../techniques/extend-DB-model.md' }
+      { label: 'Extending domain models', page: 'Tutorials-and-How-tos/Tutorials/extending-domain-models' },
+      { label: 'Extensibility overview', page: 'Extensibility/overview' },
+      { label: 'Extend the DB model', page: 'Tutorials-and-How-tos/Tutorials/extending-database-model' }
     ],
     seeAlso: ['dynamic-properties', 'ef-core', 'dependency-injection', 'module-lifecycle', 'json-serialization'],
     molecule: 'extensibility-decision-tree',
@@ -1584,7 +1584,7 @@ window.VC_MAP_ATOMS = [
       'Base implementations publish changing and changed events for you — publishing them again in your override doubles every handler.'
     ],
     docs: [
-      { label: 'Create a new module', href: '../developer-guide/create-new-module.md' }
+      { label: 'Create a new module', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' }
     ],
     seeAlso: ['repository-uow', 'domain-events', 'platform-memory-cache', 'abstract-type-factory'],
     verifiedAgainst: '3.1053.0'
@@ -1646,8 +1646,8 @@ window.VC_MAP_ATOMS = [
       'The domain model and the EF entity are deliberately different types, mapped by `ToModel` / `FromModel`. Merging them looks tempting and defeats extensibility.'
     ],
     docs: [
-      { label: 'Extend the DB model', href: '../techniques/extend-DB-model.md' },
-      { label: 'Database agnostic', href: '../fundamentals/db-agnostic.md' }
+      { label: 'Extend the DB model', page: 'Tutorials-and-How-tos/Tutorials/extending-database-model' },
+      { label: 'Database agnostic', page: 'Fundamentals/Persistence/DB-Agnostic/overview' }
     ],
     seeAlso: ['ef-core', 'generic-crud', 'abstract-type-factory', 'change-log'],
     verifiedAgainst: '3.1053.0'
@@ -1699,8 +1699,8 @@ window.VC_MAP_ATOMS = [
       '`EntityFrameworkCore.Triggers` is in use, so some behaviour happens at save time that is not visible in your service code.'
     ],
     docs: [
-      { label: 'Database agnostic', href: '../fundamentals/db-agnostic.md' },
-      { label: 'Extend the DB model', href: '../techniques/extend-DB-model.md' }
+      { label: 'Database agnostic', page: 'Fundamentals/Persistence/DB-Agnostic/overview' },
+      { label: 'Extend the DB model', page: 'Tutorials-and-How-tos/Tutorials/extending-database-model' }
     ],
     seeAlso: ['repository-uow', 'abstract-type-factory', 'dynamic-properties', 'change-log'],
     molecule: 'dev-process',
@@ -1909,7 +1909,7 @@ window.VC_MAP_ATOMS = [
       'Types created through `AbstractTypeFactory` need the override registered on both sides of a round trip, or your derived properties are dropped on deserialization.'
     ],
     docs: [
-      { label: 'Polymorphic types in Swagger', href: '../techniques/exposing-polymorphic-types-swagger.md' }
+      { label: 'Polymorphic types in Swagger', page: 'Tutorials-and-How-tos/How-tos/type-inheritance-support-in-swagger' }
     ],
     seeAlso: ['abstract-type-factory', 'swagger', 'export-import'],
     verifiedAgainst: '3.1053.0'
@@ -1980,9 +1980,9 @@ window.VC_MAP_ATOMS = [
       'Optional dependencies exist (`IOptionalDependency`), so a module can adapt to another being absent rather than failing.'
     ],
     docs: [
-      { label: 'Create a new module', href: '../developer-guide/create-new-module.md' },
-      { label: 'Create a new module (advanced)', href: '../developer-guide/create-new-module-advanced.md' },
-      { label: 'Essential modularity', href: '../fundamentals/essential-modularity.md' }
+      { label: 'Create a new module', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
+      { label: 'Create a new module (advanced)', page: 'Fundamentals/Modularity/02-folder-structure' },
+      { label: 'Essential modularity', page: 'Fundamentals/Modularity/01-overview' }
     ],
     seeAlso: ['module-catalog', 'platform-startup', 'dependency-injection', 'abstract-type-factory', 'settings'],
     molecule: 'ecommerce-modules',
@@ -2037,8 +2037,8 @@ window.VC_MAP_ATOMS = [
       '`platformVersion` is a compatibility gate, not documentation: get it wrong and the module is skipped.'
     ],
     docs: [
-      { label: 'Modularity', href: '../modularity.md' },
-      { label: 'Deploy a module from source', href: '../developer-guide/deploy-module-from-source-code.md' }
+      { label: 'Modularity', page: 'Fundamentals/Modularity/01-overview' },
+      { label: 'Deploy a module from source', page: 'Tutorials-and-How-tos/Tutorials/deploy-module-from-source-code' }
     ],
     seeAlso: ['module-lifecycle', 'distributed-lock', 'platform-startup', 'background-jobs'],
     molecule: 'deployment',
@@ -2097,7 +2097,7 @@ window.VC_MAP_ATOMS = [
       '`IPlatformRestarter` exists because some changes genuinely require a restart. Triggering one is an operational act, not a code path to take lightly.'
     ],
     docs: [
-      { label: 'Create a new module (advanced)', href: '../developer-guide/create-new-module-advanced.md' }
+      { label: 'Create a new module (advanced)', page: 'Fundamentals/Modularity/02-folder-structure' }
     ],
     seeAlso: ['module-lifecycle', 'options-pattern', 'logging', 'module-catalog'],
     verifiedAgainst: '3.1053.0'
@@ -2149,7 +2149,7 @@ window.VC_MAP_ATOMS = [
       'Captive dependencies (scoped inside singleton) are the most common lifetime bug and often surface as stale data rather than an exception.'
     ],
     docs: [
-      { label: 'Extensibility overview', href: '../fundamentals/extensibility/overview.md' }
+      { label: 'Extensibility overview', page: 'Extensibility/overview' }
     ],
     seeAlso: ['module-lifecycle', 'keyed-services', 'abstract-type-factory', 'options-pattern'],
     molecule: 'extensibility-decision-tree',
@@ -2308,8 +2308,8 @@ window.VC_MAP_ATOMS = [
       'Scopes are enforced only where a service actually consults them; adding a scope does not retroactively filter existing queries.'
     ],
     docs: [
-      { label: 'Secure Web API', href: '../fundamentals/make-secure-webapi.md' },
-      { label: 'User manager', href: '../developer-guide/user-manager.md' }
+      { label: 'Secure Web API', page: 'Fundamentals/Security/authorization/overview' },
+      { label: 'User manager', page: 'Fundamentals/Security/authorization/global-permissions' }
     ],
     seeAlso: ['authorization', 'authentication', 'current-user', 'module-lifecycle'],
     molecule: 'security-compliance',
@@ -2365,10 +2365,10 @@ window.VC_MAP_ATOMS = [
       'OpenIddict 7.x differs substantially from older majors; do not follow tutorials written for earlier versions.'
     ],
     docs: [
-      { label: 'Secure Web API', href: '../fundamentals/make-secure-webapi.md' },
-      { label: 'Add an SSO provider', href: '../techniques/add-new-sso-provider.md' },
-      { label: 'Authentication with Azure AD', href: '../techniques/authentication-with-azure-ad.md' },
-      { label: 'Sharing bearer tokens across instances', href: '../techniques/sharing-bearer-tokens-across-platform-instances.md' }
+      { label: 'Secure Web API', page: 'Fundamentals/Security/authorization/overview' },
+      { label: 'Add an SSO provider', page: 'Fundamentals/Security/extensions/adding-azure-as-sso-provider' },
+      { label: 'Authentication with Azure AD', page: 'Fundamentals/Security/extensions/adding-azure-as-sso-provider' },
+      { label: 'Sharing bearer tokens across instances', page: 'Tutorials-and-How-tos/How-tos/sharing-bearer-tokens' }
     ],
     seeAlso: ['authorization', 'permissions', 'current-user'],
     molecule: 'security-compliance',
@@ -2430,8 +2430,8 @@ window.VC_MAP_ATOMS = [
       'Gates that exist only in the SPA are bypassable by calling the API directly. Enforce server-side, then mirror it in the UI.'
     ],
     docs: [
-      { label: 'Extending authorization policies', href: '../fundamentals/extensibility/extending-authorization-policies.md' },
-      { label: 'Authorization with JWT', href: '../techniques/implementing-authorization-mechanism-using-jwt.md' }
+      { label: 'Extending authorization policies', page: 'Fundamentals/Security/authorization/overview' },
+      { label: 'Authorization with JWT', page: 'Tutorials-and-How-tos/How-tos/authorization-using-jwt' }
     ],
     seeAlso: ['permissions', 'authentication', 'current-user'],
     molecule: 'security-compliance',
@@ -2488,7 +2488,7 @@ window.VC_MAP_ATOMS = [
       'The enqueuing user flows into a job\'s DI scope via `IHttpContextAccessor`, so audit fields often survive an enqueue — but do not rely on it without checking.'
     ],
     docs: [
-      { label: 'User manager', href: '../developer-guide/user-manager.md' }
+      { label: 'User manager', page: 'Fundamentals/Security/authorization/global-permissions' }
     ],
     seeAlso: ['authentication', 'permissions', 'change-log', 'push-notifications'],
     molecule: 'security-compliance',
@@ -2545,8 +2545,8 @@ window.VC_MAP_ATOMS = [
       '`AsyncLock` and this are different tools: in-process versus cluster-wide. Choosing the wrong one produces a bug that only appears when you scale out.'
     ],
     docs: [
-      { label: 'Scale out on Azure', href: '../techniques/how-scale-out-platform-on-azure.md' },
-      { label: 'Scalability', href: '../fundamentals/scalability.md' }
+      { label: 'Scale out on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' },
+      { label: 'Scalability', page: 'Fundamentals/Scalability/scalability-options' }
     ],
     seeAlso: ['async-lock', 'redis-cache-bus', 'module-catalog', 'recurring-jobs'],
     molecule: 'deployment',
@@ -2596,7 +2596,7 @@ window.VC_MAP_ATOMS = [
       'Log level is a production cost. Debug logging left on in a hot path can outweigh the work being logged.'
     ],
     docs: [
-      { label: 'Logging', href: '../developer-guide/logging.md' }
+      { label: 'Logging', page: 'Fundamentals/Logging/overview' }
     ],
     seeAlso: ['health-checks', 'developer-tools', 'platform-startup'],
     molecule: 'observability',
@@ -2647,9 +2647,9 @@ window.VC_MAP_ATOMS = [
       'Per-module documents keep the UI usable; the combined document on a large install is enormous and slow to render.'
     ],
     docs: [
-      { label: 'Swagger endpoints', href: '../developer-guide/swagger-endpoints.md' },
-      { label: 'Polymorphic types in Swagger', href: '../techniques/exposing-polymorphic-types-swagger.md' },
-      { label: 'AutoRest with v3', href: '../developer-guide/using-autorest-with-v3.md' }
+      { label: 'Swagger endpoints', page: 'Tutorials-and-How-tos/How-tos/swagger-api' },
+      { label: 'Polymorphic types in Swagger', page: 'Tutorials-and-How-tos/How-tos/type-inheritance-support-in-swagger' }
+      
     ],
     seeAlso: ['json-serialization', 'abstract-type-factory', 'developer-tools'],
     verifiedAgainst: '3.1053.0'
@@ -2787,7 +2787,7 @@ window.VC_MAP_ATOMS = [
       'Tool pages tend to accumulate privileged capability over time. Review what yours exposes as it grows.'
     ],
     docs: [
-      { label: 'Debugging without source code', href: '../techniques/debugging-without-source-code.md' }
+      { label: 'Debugging without source code', page: 'Tutorials-and-How-tos/How-tos/debugging' }
     ],
     seeAlso: ['health-checks', 'logging', 'permissions', 'cache-disabler'],
     molecule: 'observability',
@@ -2893,7 +2893,7 @@ window.VC_MAP_ATOMS = [
       'A probe that touches the database on every call becomes a load source of its own at orchestration frequency.'
     ],
     docs: [
-      { label: 'Health checks', href: '../techniques/healthchecks.md' }
+      { label: 'Health checks', page: 'Tutorials-and-How-tos/How-tos/health-checks' }
     ],
     seeAlso: ['logging', 'developer-tools', 'redis-cache-bus', 'ef-core'],
     molecule: 'observability',
@@ -2962,7 +2962,7 @@ window.VC_MAP_ATOMS = [
       'Permission enforcement, Newtonsoft serialization and polymorphic type support all come from the MVC pipeline. Step outside it and you inherit none of them.'
     ],
     docs: [
-      { label: 'Swagger endpoints', href: '../developer-guide/swagger-endpoints.md' }
+      { label: 'Swagger endpoints', page: 'Tutorials-and-How-tos/How-tos/swagger-api' }
     ],
     seeAlso: ['swagger', 'json-serialization', 'permissions'],
     verifiedAgainst: '3.1053.0'
