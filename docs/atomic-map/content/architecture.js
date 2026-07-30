@@ -1,0 +1,172 @@
+/* Solution architecture band — the top strip of the poster.
+ *
+ * `id` values are referenced by every atom's `layer` field, which drives the
+ * hover-spotlight and the "atoms in this layer" list. Keep them stable.
+ */
+window.VC_MAP_ARCHITECTURE = [
+  {
+    id: 'channels',
+    name: 'Channels',
+    hue: 275,
+    sub: 'Everything a human or a partner system touches. The presentation layer is fully separated from business logic — no server-rendered storefront in the modern stack.',
+    tags: ['vc-frontend', 'Admin SPA', 'mobile', 'partners'],
+    bullets: [
+      '`vc-frontend` — Vue 3 · TypeScript · Vite · TailwindCSS · Yarn 4. Storefront-less: it talks straight to XAPI over GraphQL, with no ASP.NET middleware in between. Follows Atomic Design, which is where the atom/molecule vocabulary on this poster comes from.',
+      'Admin SPA (back office) — AngularJS 1.8.3 + Webpack 5 + SASS, using the blades navigation pattern. Ships inside `Platform.Web/wwwroot` and each module contributes its own scripts, templates and localizations.',
+      'Legacy `vc-storefront` — ASP.NET middleware storefront. Superseded by `vc-frontend`; do not start new work on it.',
+      'Third-party channels — mobile apps, chatbots, marketplaces and partner systems, all first-class API clients rather than special cases.'
+    ],
+    gotchas: [
+      'The Admin SPA is back-office only. It is never the customer-facing surface, and its AngularJS age is not a constraint on the storefront stack.',
+      'Admin SPA assets are built into the source `wwwroot/dist`, but a running platform serves them from its publish folder — a webpack build alone does not update a running instance.'
+    ],
+    docs: [
+      { label: 'Architecture reference', href: '../fundamentals/architecture-reference.md' },
+      { label: 'Back-office modularity', href: '../developer-guide/backoffice-modularity.md' },
+      { label: 'Blades and navigation', href: '../fundamentals/extensibility/blades-and-navigation.md' }
+    ]
+  },
+
+  {
+    id: 'api-edge',
+    name: 'API edge',
+    hue: 205,
+    sub: 'Where the outside world meets the platform. Two shapes with two jobs: GraphQL for read-heavy channel experience, REST for full CRUD and back office.',
+    tags: ['XAPI /graphql', 'REST /api', 'Swagger', 'SignalR'],
+    bullets: [
+      'XAPI (Experience API) — a BFF built on GraphQL, shipped as modules: `xCatalog`, `xCart`, `xOrder`, `xCMS`, `xProfile` over the shared `VirtoCommerce.xApi` core. One round trip returns exactly the shape a screen needs.',
+      'REST — the complete surface. Every module exposes controllers under `/api/…`; this is what the Admin SPA and integration middleware use.',
+      'Swagger / OpenAPI — generated per module plus a combined document, so a module\'s API is browsable and client-generatable the moment it loads.',
+      'SignalR — server-to-client push for long-running work (`/pushNotificationHub`), with a Redis or Azure SignalR backplane when scaled out.',
+      'Outbound WebHooks — the platform calling you, rather than you polling it.'
+    ],
+    matrixTitle: 'Choosing between them',
+    matrix: [
+      { name: 'Storefront read path', desc: 'XAPI / GraphQL. Purpose-shaped, batched, cacheable, one request per screen.' },
+      { name: 'Back office & admin', desc: 'REST. Full CRUD, per-endpoint permissions, Swagger-documented.' },
+      { name: 'Integration & ETL', desc: 'REST + WebHooks, usually through integration middleware rather than point-to-point.' },
+      { name: 'Progress & live updates', desc: 'SignalR push notifications — never poll a job endpoint in a loop.' }
+    ],
+    gotchas: [
+      'MVC is configured with `AddNewtonsoftJson`, so REST serialization is Newtonsoft — not `System.Text.Json`. Custom converters must be written against Newtonsoft.',
+      'The platform uses MVC controllers throughout; there are no Minimal API endpoints to copy as a pattern.',
+      'XAPI lives in a separate repository (`vc-module-experience-api`) — it is a module set, not part of the platform core.'
+    ],
+    docs: [
+      { label: 'Swagger endpoints', href: '../developer-guide/swagger-endpoints.md' },
+      { label: 'Secure Web API', href: '../fundamentals/make-secure-webapi.md' },
+      { label: 'Polymorphic types in Swagger', href: '../techniques/exposing-polymorphic-types-swagger.md' }
+    ]
+  },
+
+  {
+    id: 'modules',
+    name: 'Modules',
+    hue: 155,
+    sub: 'The unit of everything. A modular monolith of vertical slices: one bounded context per module, split into three projects, discovered and loaded at runtime.',
+    tags: ['Core', 'Data', 'Web', 'module.manifest'],
+    bullets: [
+      '`Module.Core` — domain models, service interfaces, events, `ModuleConstants` (permissions, settings, literals). Distributable as a NuGet package, so other modules can depend on your contracts without your implementation.',
+      '`Module.Data` — EF Core entities, migrations, repositories, service implementations, event handlers, cache regions. Also NuGet-distributable.',
+      '`Module.Web` — REST controllers, Admin SPA assets, localizations, `Module.cs`, `module.manifest`. Application layer only, never a package.',
+      'Relationships between modules: **Uses** (calls another module\'s API), **Extends** (overrides a type via `AbstractTypeFactory`), **Reacts to** (handles integration events). Prefer *reacts to* — it is the only one that does not create a compile-time dependency.',
+      'Namespacing is mechanical: `VirtoCommerce.{Module}.{Core|Data|Web}`.'
+    ],
+    matrixTitle: 'Types of module you will actually build',
+    matrix: [
+      { name: 'All-in-one', desc: 'XAPI + services + CRUD + Admin UI in one bounded context. The default for a real feature — Catalog, Order and Pricing are all this shape.' },
+      { name: 'CRUD module', desc: 'Domain + EF Core + REST + Admin UI, no GraphQL. Back-office-only concerns: reference data, internal registries.' },
+      { name: 'XAPI module', desc: 'GraphQL schema, queries, mutations and types over services that already exist. Adds a storefront experience without touching the domain.' },
+      { name: 'Provider module', desc: 'Implements a registration contract — payment, shipping or tax provider. Small, focused, swappable per store.' },
+      { name: 'Engine module', desc: 'Adapts one port to one technology, selected in configuration: search provider (Elasticsearch / Lucene / Azure Search), or background-job engine.' },
+      { name: 'Integration module', desc: 'Talks to an external system (ERP, WMS, CRM), usually driven by event handlers and background jobs rather than by requests.' }
+    ],
+    gotchas: [
+      'A module without a valid `module.manifest` will not load — there is no convention-based fallback.',
+      'Never edit vendor module source. Derive a type and register the override, handle an event, or use a dynamic property; anything else you cannot upgrade.',
+      'When you add a property to a vendor type, prefix it with your solution abbreviation so a future vendor property cannot collide with it.',
+      'Manifest dependencies use caret SemVer ranges (`^1.2.3` means `>=1.2.3 <2.0.0`), and `platformVersion` must be pinned.'
+    ],
+    docs: [
+      { label: 'Modularity', href: '../modularity.md' },
+      { label: 'Essential modularity', href: '../fundamentals/essential-modularity.md' },
+      { label: 'Create a new module', href: '../developer-guide/create-new-module.md' },
+      { label: 'Extensibility overview', href: '../fundamentals/extensibility/overview.md' }
+    ]
+  },
+
+  {
+    id: 'platform',
+    name: 'Platform',
+    hue: 20,
+    sub: 'The shared substrate every module builds on. Most atoms on this poster live here — this is the layer worth knowing by heart.',
+    tags: ['Core', 'Data', 'Caching', 'Security', 'Modules', 'Web'],
+    bullets: [
+      '`Platform.Core` — contracts and primitives only: caching, settings, dynamic properties, events, jobs, CRUD abstractions, `AbstractTypeFactory`, security contracts. Almost every atom in this map is declared here.',
+      '`Platform.Data` — EF Core infrastructure, the platform `DbContext` and repositories, plus one project per database provider (`.SqlServer`, `.PostgreSql`, `.MySql`).',
+      '`Platform.Caching` — `PlatformMemoryCache`, cache regions, and the Redis-backed variant that keeps per-instance memory caches coherent.',
+      '`Platform.Security` — ASP.NET Core Identity, OpenIddict, permissions, API keys, external sign-in, admin-UI access policy.',
+      '`Platform.Modules` — discovery, probing folder, dependency resolution, install/uninstall.',
+      '`Platform.DistributedLock` — Redis (RedLock) or a no-op fallback, so single-instance development needs no Redis.',
+      '`Platform.Web` — the host: startup wiring, platform REST controllers, the Admin SPA, health checks at `/health`.'
+    ],
+    gotchas: [
+      'Do not modify platform source in a solution. Customisation belongs in modules — that is the whole seamless-upgrade story.',
+      'A DI registration made later wins. That is the extension mechanism for services, and also the way you accidentally replace something you did not mean to.'
+    ],
+    docs: [
+      { label: 'Architecture reference', href: '../fundamentals/architecture-reference.md' },
+      { label: 'Database agnostic', href: '../fundamentals/db-agnostic.md' },
+      { label: 'Essential caching', href: '../fundamentals/essential-caching.md' }
+    ]
+  },
+
+  {
+    id: 'integration',
+    name: 'Integration',
+    hue: 320,
+    sub: 'How the platform joins an existing business ecosystem. API-first plus events, with middleware doing the translating rather than either side compromising its model.',
+    tags: ['EventBus', 'WebHooks', 'middleware', 'ERP/WMS/CRM'],
+    bullets: [
+      'Integration middleware — a translation layer between the platform and ERP / WMS / CRM / PIM. Keeps foreign models out of your domain and lets each side change independently.',
+      'EventBus module — bridges in-process domain events onto external transports (Azure Service Bus, RabbitMQ, Kafka), so other systems can subscribe without calling you.',
+      'WebHooks module — configurable outbound HTTP callbacks per event type.',
+      'Master vs reference data — decide per entity which system owns the truth. This single decision determines the direction of every sync you will build.'
+    ],
+    gotchas: [
+      'Integration events are at-least-once in practice. Handlers must be idempotent; assume every message can arrive twice.',
+      'EventBus and WebHooks are installable modules, not platform core — the tiles on this poster reflect that.',
+      'Point-to-point integration between the platform and each external system is the trap middleware exists to prevent.'
+    ],
+    docs: [
+      { label: 'Architecture reference', href: '../fundamentals/architecture-reference.md' },
+      { label: 'Extending using events', href: '../fundamentals/extensibility/extending-using-events.md' },
+      { label: 'B2B multi-regional', href: '../architecture-center/B2B-multiregional.md' }
+    ]
+  },
+
+  {
+    id: 'infrastructure',
+    name: 'Infrastructure',
+    hue: 230,
+    sub: 'What must exist for the platform to run, and what each piece is actually for. Cloud-agnostic: Azure, AWS, GCP or on-premise.',
+    tags: ['SQL', 'Redis', 'Elasticsearch', 'Blob', 'SignalR'],
+    bullets: [
+      'Relational database — SQL Server, PostgreSQL or MySQL. One provider per deployment, chosen by connection string and provider package; migrations exist per provider.',
+      'Redis — three distinct jobs, worth separating in your head: cache-invalidation bus, distributed lock (RedLock), and SignalR backplane. It is not used as a shared cache store.',
+      'Search engine — Elasticsearch (or Lucene / Azure Search via the matching provider module). The catalog read path depends on it; it is not optional at scale.',
+      'Blob storage — product images, imports, exports and other assets, behind a file-system or cloud provider.',
+      'CDN — static assets and product images, in front of blob storage.'
+    ],
+    gotchas: [
+      'Scaling out to more than one instance makes Redis mandatory: without it, per-instance memory caches drift and module installation has no distributed lock.',
+      'Redis holding cache *invalidation messages* rather than cache *values* surprises almost everyone. Losing Redis costs coherence, not the cache itself.'
+    ],
+    docs: [
+      { label: 'Scalability', href: '../fundamentals/scalability.md' },
+      { label: 'Scale out on Azure', href: '../techniques/how-scale-out-platform-on-azure.md' },
+      { label: 'Health checks', href: '../techniques/healthchecks.md' },
+      { label: 'Search', href: '../fundamentals/search.md' }
+    ]
+  }
+];
