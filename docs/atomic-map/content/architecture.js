@@ -107,51 +107,48 @@ window.VC_MAP_ARCHITECTURE = [
       },
 
       {
-        kind: 'stack',
+        kind: 'pipeline',
         title: 'DevOps',
-        /* Deliberately the delivery view rather than a class diagram: what you own, what you
-           consume, where the two are composed, and what ships. The composition file is the
-           focal point because a solution IS its pinned set of versions. */
+        /* The compact CI/CD view: two artifact sources built and published in parallel,
+           converging on vc-package.json, which is the control point — it decides which
+           artifacts go into the image that is then promoted across environments. */
+        lanes: [
+          {
+            label: 'Yours',
+            steps: [
+              { name: 'Your Git', kind: 'src', sub: 'custom source' },
+              { connector: 'CI build' },
+              { name: 'Custom modules', kind: 'custom', sub: 'Artifact storage' }
+            ]
+          },
+          {
+            label: 'Vendor',
+            steps: [
+              { name: 'Virto releases', kind: 'src', sub: 'platform + modules' },
+              { connector: 'publish' },
+              { name: 'Virto Commerce', kind: 'virto', sub: 'Artifact storage' }
+            ]
+          }
+        ],
         rows: [
-        {
-          title: 'What you own',
-          hint: 'your repositories — usually the smallest part',
-          nodes: [
-            { name: 'Custom modules', sub: '`YourCo.Feature` — Core / Data / Web, same shape as a vendor module', via: 'C#', viaKind: 'plain' },
-            { name: 'Storefront app', sub: '`vc-frontend` customised, or your own SPA against XAPI', via: 'GraphQL', viaKind: 'graphql' },
-            { name: 'Back-office app', sub: 'VC-Shell app, or Admin UI extensions from your module', via: 'REST', viaKind: 'rest' },
-            { name: 'Integration middleware', sub: 'Separate service translating to ERP · WMS · CRM', via: 'REST', viaKind: 'rest' }
-          ]
-        },
-        {
-          connector: 'plus vendor artifacts',
-          connectorDir: 'down',
-          title: 'What you consume',
-          hint: 'released artifacts — never forked source',
-          nodes: [
-            { name: 'Virto Commerce platform', sub: 'Released as artifacts; your code depends on it, not the reverse', via: 'release', viaKind: 'plain' },
-            { name: 'Commerce modules', sub: 'Catalog · Pricing · Cart · Order · Customer · Marketing …', via: 'module zip', viaKind: 'plain' },
-            { name: 'Provider modules', sub: 'Search engine, Assets store, job engine, payment / shipping / tax', via: 'module zip', viaKind: 'plain' },
-            { name: 'XAPI modules', sub: '`xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`', via: 'GraphQL', viaKind: 'graphql' }
-          ]
-        },
-        {
-          connector: 'pinned + assembled by vc-build',
-          connectorDir: 'down',
-          target: 'vc-package.json → container image',
-          sub: 'One file records the exact platform and module versions; `vc-build Install` assembles them with your modules into one immutable image'
-        },
-        {
-          connector: 'same image · different configuration',
-          connectorDir: 'down',
-          title: 'Environments',
-          hint: 'promote the artifact, not the source',
-          nodes: [
-            { name: 'Dev', sub: 'Often Lucene + filesystem assets + in-memory jobs', via: 'config', viaKind: 'plain' },
-            { name: 'Stage', sub: 'Production topology, production-shaped data', via: 'config', viaKind: 'plain' },
-            { name: 'Prod', sub: 'Scaled out — Redis, blob storage, real search engine', via: 'config', viaKind: 'plain' }
-          ]
-        }
+          {
+            connector: 'both storages feed →',
+            name: '`vc-package.json` — selects modules + versions',
+            kind: 'select',
+            sub: 'the control point'
+          },
+          {
+            connector: 'CD · restore & assemble',
+            name: 'Container image',
+            kind: 'image',
+            sub: 'one immutable artifact'
+          },
+          {
+            connector: 'deploy',
+            name: 'Environment — Dev · Stage · Prod',
+            kind: 'env',
+            sub: 'same image, different configuration'
+          }
         ]
       },
 

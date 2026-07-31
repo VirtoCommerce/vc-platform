@@ -104,11 +104,35 @@ for (const l of LAYERS) {
   if (!l.sub) add('layer', l.id, 'missing sub');
   if (l.schema) add('layer', l.id, 'uses the old `schema` field — migrate to `diagrams: [{ kind: "stack", … }]`');
 
-  const KINDS = new Set(['stack', 'flow', 'lanes']);
+  const KINDS = new Set(['stack', 'flow', 'lanes', 'pipeline']);
   const NODE_KINDS = new Set(['virto', 'oob', 'custom', 'data', 'infra']);
   for (const d of l.diagrams || []) {
     if (!d.title) add('layer', l.id, 'diagram without a title');
     if (!KINDS.has(d.kind)) { add('layer', l.id, `diagram "${d.title}" has unknown kind "${d.kind}"`); continue; }
+
+    if (d.kind === 'pipeline') {
+      const PP_KINDS = new Set(['src', 'custom', 'virto', 'select', 'image', 'env']);
+      if (!(d.lanes || []).length && !(d.rows || []).length) {
+        add('layer', l.id, `pipeline "${d.title}" has neither lanes nor rows`);
+      }
+      const widths = new Set((d.lanes || []).map(ln => (ln.steps || []).length));
+      if (widths.size > 1) {
+        // Uneven lanes leave the converging pill misaligned against one of them.
+        add('layer', l.id, `pipeline "${d.title}" lanes have differing step counts (${[...widths].join(', ')})`);
+      }
+      for (const ln of d.lanes || []) {
+        for (const st of ln.steps || []) {
+          if (st.connector) continue;
+          if (!st.name) add('layer', l.id, `pipeline "${d.title}" has a step without a name`);
+          if (st.kind && !PP_KINDS.has(st.kind)) add('layer', l.id, `pipeline step "${st.name}" has unknown kind "${st.kind}"`);
+        }
+      }
+      for (const r of d.rows || []) {
+        if (!r.name) add('layer', l.id, `pipeline "${d.title}" has a row without a name`);
+        if (r.kind && !PP_KINDS.has(r.kind)) add('layer', l.id, `pipeline row "${r.name}" has unknown kind "${r.kind}"`);
+      }
+      continue;
+    }
 
     if (d.kind === 'lanes') {
       const cols = d.columns || [];

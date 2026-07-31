@@ -140,6 +140,28 @@ tier/node/cluster vocabulary.
 The checker rejects unknown `kind`, `viaKind` or `connectorDir` values, tiers or rows without
 nodes, a stack without exactly one target, a stale legend entry, and the old `schema` field.
 
+**`kind: 'pipeline'`** — the compact CI/CD view: parallel source lanes converging into
+full-width steps, joined by small uppercase pills. Follows the release-strategy deck's
+`fl-lane` / `fl-conn` / `fl-lbl` shape.
+
+```js
+{ kind: 'pipeline', title: 'DevOps',
+  lanes: [
+    { label: 'Yours', steps: [
+        { name: 'Your Git', kind: 'src', sub: 'custom source' },
+        { connector: 'CI build' },
+        { name: 'Custom modules', kind: 'custom', sub: 'Artifact storage' } ]}
+  ],
+  rows: [
+    { connector: 'both storages feed →', name: '`vc-package.json`', kind: 'select' },
+    { connector: 'deploy', name: 'Environment', kind: 'env' }
+  ]}
+```
+
+Node `kind` is `src` · `custom` · `virto` · `select` · `image` · `env`. Lanes must have equal
+step counts — uneven ones leave the converging pill misaligned against one lane, so the checker
+rejects them.
+
 ## Documentation links
 
 Documentation lives on **https://docs.virtocommerce.org**, which is built from the

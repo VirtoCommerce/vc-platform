@@ -787,8 +787,46 @@
       })) : null);
   }
 
+  /* ---------- compact pipeline ----------
+   * Parallel source→storage lanes on top, then converged full-width steps, joined by small
+   * uppercase pills. Follows the release-strategy deck's fl-lane / fl-conn / fl-lbl shape:
+   * each lane runs node → mini pill → node, and the rows below span the whole width.
+   */
+  function pipelineNode(node) {
+    return el('div', { class: 'pp-node' + (node.kind ? ' is-' + node.kind : '') },
+      el('span', { class: 'pp-node-name' }, rich(node.name)),
+      node.sub ? el('span', { class: 'pp-node-sub', text: node.sub }) : null);
+  }
+
+  function pipelineConn(label, mini) {
+    return el('div', { class: 'pp-conn' + (mini ? ' is-mini' : '') },
+      el('span', { class: 'pp-lbl', text: label }));
+  }
+
+  function pipelineBlock(diagram) {
+    var parts = [];
+
+    if ((diagram.lanes || []).length) {
+      parts.push(el('div', { class: 'pp-lanes', style: '--pp-lanes:' + diagram.lanes.length },
+        diagram.lanes.map(function (lane) {
+          return el('div', { class: 'pp-lane' },
+            lane.label ? el('div', { class: 'pp-lane-label', text: lane.label }) : null,
+            (lane.steps || []).map(function (step) {
+              return step.connector ? pipelineConn(step.connector, true) : pipelineNode(step);
+            }));
+        })));
+    }
+
+    (diagram.rows || []).forEach(function (row) {
+      if (row.connector) parts.push(pipelineConn(row.connector));
+      parts.push(pipelineNode(row));
+    });
+
+    return el('div', { class: 'pipeline' }, parts);
+  }
+
   /* A layer can carry several ordered diagrams; `kind` picks the renderer. */
-  var DIAGRAM_RENDERERS = { flow: flowBlock, lanes: lanesBlock, stack: schemaBlock };
+  var DIAGRAM_RENDERERS = { flow: flowBlock, lanes: lanesBlock, stack: schemaBlock, pipeline: pipelineBlock };
 
   function diagramBlocks(layer) {
     return (layer.diagrams || []).map(function (diagram) {
