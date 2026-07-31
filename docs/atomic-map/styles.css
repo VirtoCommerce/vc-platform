@@ -460,7 +460,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
    themes. Scrolls horizontally rather than wrapping — a tier flow that wraps stops
    reading as a flow. */
 
-.flow-wrap { overflow-x: auto; padding-bottom: 4px; }
+.flow-wrap { overflow-x: auto; padding-top: 6px; padding-bottom: 4px; }
 
 .fl-flow { display: flex; align-items: stretch; gap: 0; flex-wrap: nowrap; min-width: max-content; }
 
@@ -614,7 +614,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
      every card exactly the same width. */
   grid-template-columns: max-content repeat(var(--ln-cols), 212px);
   /* row 1 headings, row 2 a band for group labels, then one row per lane. */
-  grid-template-rows: auto 15px;
+  grid-template-rows: auto 19px;
   gap: 8px;
   align-items: stretch;
 }
@@ -630,8 +630,14 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
      arrow a variable distance from its own (centred) label — next to a short label like API
      it read as belonging to the following column. */
   content: " →";
-  margin-left: 5px;
-  font-size: 12px; color: var(--muted);
+  /* nowrap on the pseudo keeps the arrow welded to the last word: with a long heading the
+     space inside this content was the break opportunity, and the arrow wrapped alone onto a
+     second line. No invisible non-breaking space needed. */
+  white-space: nowrap;
+  margin-left: 3px;
+  /* line-height 1 so the larger glyph does not inflate the heading's line box — with it
+     inflated, headings that had an arrow were 19px tall and the one without was 16px. */
+  font-size: 11px; line-height: 1; color: var(--muted);
 }
 
 /* The lane label doubles as the rail head. */
@@ -650,23 +656,32 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 }
 
 /* Top-aligned, not centred: centring floated each column to its own vertical middle, so
-   nothing lined up across the diagram. Everything now starts on one line with Services. */
+   nothing lined up across the diagram. Everything now starts on one line with Services.
+
+   Deliberately untinted. A grid row is as tall as its tallest column, so a per-cell tint drew
+   a filled box down the full row height even where a column held one card — 870px of visible
+   emptiness. With no box there is nothing to look empty; the lane is carried by its label rail
+   and the band below instead. Padding stays: it is what makes every card the same width. */
 .ln-cell {
   position: relative; z-index: 1;
   display: flex; flex-direction: column; gap: 8px; justify-content: flex-start;
   padding: 8px;
-  border-radius: 7px;
-  background: var(--surface-2);
 }
-/* Converged stages sit outside the lane tint so the join is legible. Padding stays so their
-   cards end up exactly the same width as the ones inside a lane. */
-.ln-cell.is-shared { background: none; }
 
-/* Each lane gets its own accent, carried on the label rail and the cell edges. */
-.ln-label.is-shopper, .ln-cell.is-shopper { box-shadow: inset 0 0 0 1px hsl(212 60% 55% / .22); }
-.ln-label.is-shopper { border-left-color: var(--info); }
-.ln-label.is-employee, .ln-cell.is-employee { box-shadow: inset 0 0 0 1px hsl(35 60% 50% / .22); }
-.ln-label.is-employee { border-left-color: var(--warn); }
+/* One faint band per lane, spanning every column — the lane read as a whole, at a tint low
+   enough that the unused stretch of a row is not something the eye stops on. */
+.ln-band {
+  position: relative; z-index: 0;
+  margin: 0 -6px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+/* Each lane gets its own accent, carried on the label rail and its band. */
+.ln-label.is-shopper { border-left-color: var(--info); box-shadow: inset 0 0 0 1px hsl(212 60% 55% / .22); }
+.ln-band.is-shopper { background: hsl(212 60% 55% / .055); }
+.ln-label.is-employee { border-left-color: var(--warn); box-shadow: inset 0 0 0 1px hsl(35 60% 50% / .22); }
+.ln-band.is-employee { background: hsl(35 60% 50% / .06); }
 
 /* ---------- grouped stages ----------
    One bounded region behind a contiguous run of columns, saying "all of this is the
@@ -678,13 +693,13 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   background: hsl(212 55% 55% / .05);
   pointer-events: none;
 }
+/* Plain text, not a pill. As a bordered chip straddling the region's top edge it read as a
+   badge belonging to the stage heading above it; sitting inside the spacer band, below the
+   border, it reads as the name of the region. */
 .ln-group-label {
-  position: absolute; top: -1px; left: 12px;
-  padding: 1px 8px;
+  position: absolute; top: 3px; left: 12px;
   font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
   color: var(--info);
-  background: var(--surface);
-  border: 1px solid hsl(212 55% 55% / .45); border-radius: 999px;
 }
 
 /* Uniform cards: the grid column fixes the width, a min-height and a clamped role fix the

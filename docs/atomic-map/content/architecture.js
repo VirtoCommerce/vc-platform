@@ -36,7 +36,7 @@ window.VC_MAP_ARCHITECTURE = [
           { label: 'Edge & routing' },
           { label: 'API', group: 'platform' },
           {
-            label: 'Modules · atomic architecture',
+            label: 'Modules',
             group: 'platform',
             shared: true,
             scopes: [

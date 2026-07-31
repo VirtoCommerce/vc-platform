@@ -772,6 +772,16 @@
       }));
     });
 
+    /* One faint band per lane, spanning every column. With the per-cell tint removed, this is
+       what keeps a lane readable — without boxing each cell, which is what made empty cells
+       look like empty boxes. Appended first so it sits under both the group and the cards. */
+    lanes.forEach(function (lane, li) {
+      grid.appendChild(el('div', {
+        class: 'ln-band' + (lane.accent ? ' is-' + lane.accent : ''),
+        style: 'grid-column:1 / -1;grid-row:' + (li + 3)
+      }));
+    });
+
     /* A group draws one bounded region behind a contiguous run of columns — used to say
        "these stages are all the platform". Appended before the cells so it paints underneath. */
     Object.keys(diagram.groups || {}).forEach(function (id) {
