@@ -682,8 +682,19 @@
    * light mode still works, and there are no status dots — those mean live health in that
    * module, and an all-green static poster would imply monitoring this page does not do.
    */
+  /* A legend entry is either a colour (a node `kind`) or a line style — `dashed` describes
+     the border, not an ownership colour, so it must not render as a coloured swatch. */
+  function legendItem(item) {
+    return el('span', { class: 'fl-legend-item' },
+      el('span', { class: 'fl-legend-swatch' + (item.dashed ? ' is-dashed' : ' is-' + item.kind) }),
+      item.label);
+  }
+
   function flowNode(node) {
-    return el('div', { class: 'fl-node' + (node.kind ? ' is-' + node.kind : '') },
+    return el('div', { class: 'fl-node' + (node.kind ? ' is-' + node.kind : '') + (node.bypass ? ' is-bypass' : '') },
+      /* `badge` names a path that does not follow the column order — used for the static
+         route, which the edge serves directly without passing through API or modules. */
+      node.badge ? el('span', { class: 'fl-node-badge', text: node.badge }) : null,
       el('span', { class: 'fl-node-name' }, rich(node.name)),
       node.role ? el('span', { class: 'fl-node-role' }, rich(node.role)) : null,
       node.meta ? el('span', { class: 'fl-node-meta', text: node.meta }) : null);
@@ -708,11 +719,7 @@
     if (!flow || !flow.tiers || !flow.tiers.length) return null;
     return el('div', { class: 'flow-wrap' },
       el('div', { class: 'fl-flow' }, flow.tiers.map(flowTier)),
-      flow.legend ? el('div', { class: 'fl-legend' }, flow.legend.map(function (item) {
-        return el('span', { class: 'fl-legend-item' },
-          el('span', { class: 'fl-legend-swatch is-' + item.kind }),
-          item.label);
-      })) : null);
+      flow.legend ? el('div', { class: 'fl-legend' }, flow.legend.map(legendItem)) : null);
   }
 
   /* ---------- swimlanes ----------
@@ -754,9 +761,14 @@
     var laned = columns.filter(function (c) { return !c.shared; });
     var grid = el('div', { class: 'lanes', style: '--ln-cols:' + columns.length });
 
-    // Row 1: the stage headings, offset by the lane-label gutter.
+    // Row 1: the stage headings, offset by the lane-label gutter. Every heading but the last
+    // carries a flow arrow into the next stage.
     columns.forEach(function (col, i) {
-      grid.appendChild(el('div', { class: 'ln-colhead', style: 'grid-column:' + (i + 2) + ';grid-row:1', text: col.label }));
+      grid.appendChild(el('div', {
+        class: 'ln-colhead' + (i === columns.length - 1 ? ' is-last' : ''),
+        style: 'grid-column:' + (i + 2) + ';grid-row:1',
+        text: col.label
+      }));
     });
 
     lanes.forEach(function (lane, li) {
@@ -781,10 +793,7 @@
     });
 
     return el('div', { class: 'flow-wrap' }, grid,
-      diagram.legend ? el('div', { class: 'fl-legend' }, diagram.legend.map(function (item) {
-        return el('span', { class: 'fl-legend-item' },
-          el('span', { class: 'fl-legend-swatch is-' + item.kind }), item.label);
-      })) : null);
+      diagram.legend ? el('div', { class: 'fl-legend' }, diagram.legend.map(legendItem)) : null);
   }
 
   /* ---------- compact pipeline ----------

@@ -22,7 +22,8 @@ window.VC_MAP_ARCHITECTURE = [
           { kind: 'custom', label: 'Your code' },
           { kind: 'virto', label: 'Virto Commerce' },
           { kind: 'infra', label: 'Edge & routing' },
-          { kind: 'data', label: '3rd party service' }
+          { kind: 'data', label: 'Service' },
+          { dashed: true, label: 'Reached directly — outside the API path' }
         ],
         /* Two isolated paths run as parallel rails and only converge at the modules. The
            shopper reaches XAPI only; the employee reaches REST only, from behind a firewall.
@@ -56,9 +57,14 @@ window.VC_MAP_ARCHITECTURE = [
             ]
           },
           {
-            label: '3rd party services',
+            label: 'Services',
             shared: true,
             nodes: [
+              /* Reached straight from the load balancer's static route, in parallel with the
+                 platform — it is not behind the API or the modules, which is exactly why the
+                 storefront stays fast and deploys independently. */
+              { name: 'Content storage', kind: 'infra', bypass: true, badge: '← direct from edge',
+                role: 'Theme, site configuration, pages. Served in **parallel** with the platform, never through it.' },
               { name: 'Database', kind: 'data', role: 'SQL Server · PostgreSQL · MySQL', meta: 'EF Core' },
               { name: 'Search', kind: 'data', role: 'Elasticsearch · OpenSearch · Azure AI Search' },
               { name: 'Distributed cache', kind: 'data', role: 'Redis — invalidation, locks, SignalR backplane' },
@@ -79,11 +85,10 @@ window.VC_MAP_ARCHITECTURE = [
               { nodes: [
                 { name: 'CDN', kind: 'infra', role: 'TLS, caching, static assets' },
                 { name: 'SSR / prerender', kind: 'infra', role: 'Optional — crawlers and first paint' },
-                { name: 'Load balancer', kind: 'infra', role: 'Splits the two routes by path: **static content** vs **API**' }
+                { name: 'Load balancer', kind: 'infra', role: 'Splits by path — **static content** straight to Content storage, **API** to the platform. Both in parallel.' }
               ]},
               { nodes: [
-                { name: 'Content storage', kind: 'infra', role: 'Theme, site configuration, pages — served by the static route, never through the platform' },
-                { name: 'XAPI', kind: 'virto', role: 'Business API of GraphQL queries **and mutations** — `xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`' }
+                { name: 'Business Logic (XAPI)', kind: 'virto', role: 'GraphQL queries **and mutations** — `xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`' }
               ]}
             ]
           },

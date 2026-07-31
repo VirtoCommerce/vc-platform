@@ -171,6 +171,8 @@ for (const l of LAYERS) {
       }
       for (const c of cols) for (const n of c.nodes || []) kindsUsed.add(n.kind);
       for (const item of d.legend || []) {
+        if (!item.label) add('layer', l.id, `lanes "${d.title}" legend entry without a label`);
+        if (item.dashed) continue;   // describes a line style, not a node kind
         if (!kindsUsed.has(item.kind)) add('layer', l.id, `lanes "${d.title}" legend lists unused kind "${item.kind}"`);
       }
       continue;
