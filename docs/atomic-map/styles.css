@@ -21,6 +21,9 @@
   --neutral: #6b7280;
   --warn: #9a6100;
   --bad: #b4232d;
+  /* A fourth swimlane accent. Not in the semantic set above because it means nothing on its
+     own — it exists so the integration lane is not the third reading of an existing colour. */
+  --lane-int: #6b3fb8;
 
   --grid-line: rgba(21, 26, 34, .05);   /* blueprint backdrop, see body::before */
 
@@ -49,6 +52,7 @@
     --neutral: #9aa4b2;
     --warn: #e3a13a;
     --bad: #ff6b6b;
+    --lane-int: #b490f0;
     --grid-line: rgba(255, 255, 255, .04);
   }
 }
@@ -59,14 +63,14 @@
   --muted: #5c6675; --border: #dbe0e8; --border-strong: #c3cad6; --accent: #d21f3c;
   --focus: #1668dc; --shadow: 0 1px 2px rgba(18,24,33,.06), 0 8px 24px rgba(18,24,33,.08);
   --ok: #17794a; --info: #1668dc; --neutral: #6b7280; --warn: #9a6100; --bad: #b4232d;
-  --grid-line: rgba(21, 26, 34, .05);
+  --lane-int: #6b3fb8; --grid-line: rgba(21, 26, 34, .05);
 }
 :root[data-theme="dark"] {
   --bg: #0e1117; --surface: #161b24; --surface-2: #1d2430; --text: #e7eaf0;
   --muted: #98a2b3; --border: #262d3a; --border-strong: #37404f; --accent: #ff5c72;
   --focus: #5aa2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
   --ok: #3fbf82; --info: #63a4ff; --neutral: #9aa4b2; --warn: #e3a13a; --bad: #ff6b6b;
-  --grid-line: rgba(255, 255, 255, .04);
+  --lane-int: #b490f0; --grid-line: rgba(255, 255, 255, .04);
 }
 
 * { box-sizing: border-box; }
@@ -690,6 +694,9 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 /* A lane nothing calls — the background-job environment in the production topology. */
 .ln-label.is-jobs { border-left-color: var(--ok); box-shadow: inset 0 0 0 1px hsl(152 55% 50% / .22); }
 .ln-band.is-jobs { background: hsl(152 55% 50% / .055); }
+/* Machine-to-machine traffic: no browser at the head of this lane. */
+.ln-label.is-integration { border-left-color: var(--lane-int); box-shadow: inset 0 0 0 1px hsl(266 50% 55% / .22); }
+.ln-band.is-integration { background: hsl(266 50% 55% / .055); }
 
 /* Diagram caption: which documented configuration this is, and the numbers behind it. */
 .dg-cap {

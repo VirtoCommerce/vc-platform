@@ -168,7 +168,8 @@ like a Cell in the Atomic Architecture diagram — a bounded box whose members a
   column — the checker enforces both, since either mistake silently misplaces grid cells.
 - `count` overrides the chip tally when the chips are only a sample of a larger set.
 - Cards are a fixed size (196×84) so the diagram reads as a grid rather than a collage.
-- `accent` is `shopper` · `employee` · `jobs` and tints the lane's label rail and its band.
+- `accent` is `shopper` · `employee` · `integration` · `jobs` and tints the lane's label rail
+  and its band. One accent per path; do not reuse one for two lanes in the same diagram.
 - **An empty cell (`{}`) is a statement, not a gap.** It is how the diagram says this path does
   not use this stage — the employee never goes through a frontend instance, and nothing calls
   the background-job environment. Lane cells are deliberately untinted so an empty one shows

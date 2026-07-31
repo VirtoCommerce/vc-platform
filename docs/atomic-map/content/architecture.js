@@ -240,8 +240,8 @@ window.VC_MAP_ARCHITECTURE = [
 
       {
         kind: 'lanes',
-        title: 'Deployment — production (XL)',
-        note: 'The **Extra Large** configuration: the backend is split into three environments by workload, so background jobs and content managers cannot degrade shopper traffic. Each scales `1…n` behind its own load balancer, all three run the **same image** and share one resource pool. The published table stops at L (300 requests/sec, 15 000 orders/day); XL is beyond it.',
+        title: 'Deployment — production',
+        note: 'The **Extra Large** configuration: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment scales `1…n` behind its own load balancer, all of them run the **same image** and share one resource pool. The published table stops at L (300 requests/sec, 15 000 orders/day); XL is beyond it. The documented topology names three environments — the **integration** lane is the common fourth split, worth making once a system pushes bulk traffic through the API.',
         groups: { platform: 'Same image · three roles' },
         legend: [
           { kind: 'infra', label: 'Client & edge' },
@@ -313,6 +313,26 @@ window.VC_MAP_ARCHITECTURE = [
               { nodes: [
                 { name: 'Authoring', kind: 'virto', meta: '1…n',
                   role: 'Commerce Manager and integrations. `Mode: Producer`, `ScalabilityMode: RedisBackplane`.' }
+              ]}
+            ]
+          },
+          {
+            label: 'Integration',
+            chip: 'system',
+            accent: 'integration',
+            cells: [
+              { nodes: [
+                { name: 'Integration middleware', kind: 'custom', meta: 'REST',
+                  role: 'ERP, WMS and CRM traffic — machine-to-machine, no browser and no session' }
+              ]},
+              { nodes: [
+                { name: 'Load balancer', kind: 'infra',
+                  role: 'ARR affinity **off** — stateless calls, and no push notifications to keep pinned' }
+              ]},
+              {},   /* system traffic never touches the storefront */
+              { nodes: [
+                { name: 'Integration instance', kind: 'virto', meta: '1…n',
+                  role: 'Bulk imports, webhook delivery and polling, kept off the shopper path. `Mode: Producer`.' }
               ]}
             ]
           },
