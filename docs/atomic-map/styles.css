@@ -809,7 +809,14 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
    white-space in particular — would otherwise override <pre>'s line
    preservation and collapse a whole snippet onto one line. */
 :not(pre) > code, .code {
-  font: 12px/1.35 var(--mono);
+  /* No mono face and no font-size of its own: inherit both, so an inline chip sits on the
+     same baseline and at the same size as the words around it. A 12px mono chip inside 10px
+     card text was taller than its own line and read as a different typeface mid-sentence.
+     `font-family: inherit` is required, not implied — the UA stylesheet puts `monospace` on
+     <code>, so dropping our own declaration would leave the UA's in force. Snippets are
+     unaffected: `.snippet pre` sets the mono face itself. */
+  font-family: inherit;
+  line-height: 1.35;
   background: var(--surface-2);
   border: 1px solid var(--border); border-radius: 4px;
   padding: 0 4px;

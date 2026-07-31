@@ -241,8 +241,8 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'lanes',
         title: 'Deployment — production',
-        note: 'The **Extra Large** configuration: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment scales `1…n` behind its own load balancer, all of them run the **same image** and share one resource pool. The published table stops at L (300 requests/sec, 15 000 orders/day); XL is beyond it. The documented topology names three environments — the **integration** lane is the common fourth split, worth making once a system pushes bulk traffic through the API.',
-        groups: { platform: 'Same image · three roles' },
+        note: 'The **Extra Large** configuration: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment runs **at least two instances** behind its own load balancer, all of them run the **same image** and share one resource pool. The published table stops at L (300 requests/sec, 15 000 orders/day); XL is beyond it. The documented topology names three environments — the **integration** lane is the common fourth split, worth making once a system pushes bulk traffic through the API.',
+        groups: { platform: 'Same image · 4 roles' },
         legend: [
           { kind: 'infra', label: 'Client & edge' },
           { kind: 'custom', label: 'Your code' },
@@ -253,14 +253,14 @@ window.VC_MAP_ARCHITECTURE = [
         columns: [
           { label: 'Client' },
           { label: 'Edge & routing' },
-          { label: 'Frontend · 1…n' },
-          { label: 'Backend · 1…n', group: 'platform' },
+          { label: 'Frontend' },
+          { label: 'Backend · 2…n', group: 'platform' },
           {
             label: 'Shared resources',
             shared: true,
             nodes: [
               { name: 'SQL DB elastic pool', kind: 'data',
-                role: 'Modules segmented across databases — Cart, Order, Catalog, Customer — sharing one pool' },
+                role: 'Modules segmented across databases — Main, Cart, Order, Catalog, Customer' },
               { name: 'Redis', kind: 'data', meta: 'mandatory',
                 role: '`RedisConnectionString` — cache invalidation backplane, SignalR backplane, distributed locks' },
               { name: 'Elasticsearch', kind: 'data',
@@ -288,11 +288,11 @@ window.VC_MAP_ARCHITECTURE = [
                   role: 'ARR affinity **on** for the frontend app' }
               ]},
               { nodes: [
-                { name: 'Frontend app', kind: 'custom', meta: '1…n',
-                  role: 'Static content folder plus `vc-frontend`, scaled out' }
+                { name: 'Frontend app', kind: 'custom',
+                  role: 'Static content folder plus `vc-frontend` — content, not a scaling lever' }
               ]},
               { nodes: [
-                { name: 'Commerce services', kind: 'virto', meta: '1…n',
+                { name: 'Backend 4 Frontend', kind: 'virto', meta: '2…n',
                   role: 'Backend for frontend. `Mode: Producer` — enqueues jobs, runs none. ARR affinity **off**, `ScalabilityMode: None`.' }
               ]}
             ]
@@ -311,7 +311,7 @@ window.VC_MAP_ARCHITECTURE = [
               ]},
               {},   /* the back office is served by the platform, not by a frontend instance */
               { nodes: [
-                { name: 'Authoring', kind: 'virto', meta: '1…n',
+                { name: 'Backend 4 Employee', kind: 'virto', meta: '2…n',
                   role: 'Commerce Manager and integrations. `Mode: Producer`, `ScalabilityMode: RedisBackplane`.' }
               ]}
             ]
@@ -331,7 +331,7 @@ window.VC_MAP_ARCHITECTURE = [
               ]},
               {},   /* system traffic never touches the storefront */
               { nodes: [
-                { name: 'Integration instance', kind: 'virto', meta: '1…n',
+                { name: 'Integration instance', kind: 'virto', meta: '2…n',
                   role: 'Bulk imports, webhook delivery and polling, kept off the shopper path. `Mode: Producer`.' }
               ]}
             ]
@@ -345,7 +345,7 @@ window.VC_MAP_ARCHITECTURE = [
               {},
               {},
               { nodes: [
-                { name: 'Job workers', kind: 'virto', meta: '1…n',
+                { name: 'Job workers', kind: 'virto', meta: '2…n',
                   role: 'The only environment running the engine: `Mode: Worker`. Sized for CPU and scaled on queue depth.' }
               ]}
             ]
