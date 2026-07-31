@@ -93,7 +93,8 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
 
 - **`matrix`** (with `matrixTitle`) — a name/description table, e.g. the module-type list.
 - **`diagrams`** — an ordered array of diagrams; `kind` picks the renderer. `Your solution`
-  carries three: Solution architecture (flow), DevOps (stack), Deployment schema (flow).
+  carries three: Solution architecture (`lanes`), DevOps (`pipeline`), Deployment schema
+  (`flow`). Channels carries one (`stack`).
 
 **`kind: 'stack'`** — a vertical stack of rows joined by connector pills. A row is either a
 group of nodes or the `target`, so the target can sit anywhere: Channels puts the platform in
@@ -139,6 +140,29 @@ tier/node/cluster vocabulary.
 
 The checker rejects unknown `kind`, `viaKind` or `connectorDir` values, tiers or rows without
 nodes, a stack without exactly one target, a stale legend entry, and the old `schema` field.
+
+**`kind: 'lanes'`** — swimlanes for isolated paths: columns are stages, rows are paths. A
+column marked `shared` spans every lane, which is where the paths converge. A `scope` renders
+like a Cell in the Atomic Architecture diagram — a bounded box whose members are named modules.
+
+```js
+{ kind: 'lanes', title: 'Solution architecture',
+  columns: [
+    { label: 'Presentation' },
+    { label: 'Modules', shared: true, scopes: [
+        { title: 'Virto Commerce Modules', chip: '≈80%', accent: 'virto',
+          count: '100+ modules', modules: ['Catalog', 'Pricing'] } ]}
+  ],
+  lanes: [
+    { label: 'Customer', chip: 'public', accent: 'shopper',
+      cells: [ { nodes: [ /* one entry per laned column */ ] } ] }
+  ]}
+```
+
+- Laned columns must come **before** shared ones, and each lane needs one cell per laned
+  column — the checker enforces both, since either mistake silently misplaces grid cells.
+- `count` overrides the chip tally when the chips are only a sample of a larger set.
+- Cards are a fixed size (196×84) so the diagram reads as a grid rather than a collage.
 
 **`kind: 'pipeline'`** — the compact CI/CD view: parallel source lanes converging into
 full-width steps, joined by small uppercase pills. Follows the release-strategy deck's
