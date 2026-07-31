@@ -104,7 +104,7 @@ for (const l of LAYERS) {
   if (!l.sub) add('layer', l.id, 'missing sub');
   if (l.schema) add('layer', l.id, 'uses the old `schema` field — migrate to `diagrams: [{ kind: "stack", … }]`');
 
-  const KINDS = new Set(['stack', 'flow', 'lanes', 'pipeline', 'topology']);
+  const KINDS = new Set(['stack', 'flow', 'lanes', 'pipeline', 'topology', 'tree']);
   const NODE_KINDS = new Set(['virto', 'oob', 'custom', 'data', 'infra']);
   for (const d of l.diagrams || []) {
     if (!d.title) add('layer', l.id, 'diagram without a title');
@@ -130,6 +130,26 @@ for (const l of LAYERS) {
       for (const r of d.rows || []) {
         if (!r.name) add('layer', l.id, `pipeline "${d.title}" has a row without a name`);
         if (r.kind && !PP_KINDS.has(r.kind)) add('layer', l.id, `pipeline row "${r.name}" has unknown kind "${r.kind}"`);
+      }
+      continue;
+    }
+
+    if (d.kind === 'tree') {
+      const TREE_KINDS = new Set(['project', 'file']);
+      if (!(d.items || []).length) add('layer', l.id, `tree "${d.title}" has no items`);
+      let previous = -1;
+      for (const item of d.items || []) {
+        if (!item.name) add('layer', l.id, `tree "${d.title}" has an item without a name`);
+        if (!item.desc) add('layer', l.id, `tree item "${item.name}" has no description — the point of the tree is that every line is answered`);
+        const depth = item.depth || 0;
+        // A jump of more than one level means a parent is missing from the listing.
+        if (depth > previous + 1) {
+          add('layer', l.id, `tree item "${item.name}" jumps from depth ${previous} to ${depth}`);
+        }
+        previous = depth;
+        if (item.kind && !TREE_KINDS.has(item.kind)) {
+          add('layer', l.id, `tree item "${item.name}" has unknown kind "${item.kind}"`);
+        }
       }
       continue;
     }

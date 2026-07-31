@@ -412,6 +412,56 @@ window.VC_MAP_ARCHITECTURE = [
     hue: 155,
     sub: 'The unit of everything. A modular monolith of vertical slices: one bounded context per module, split into three projects, discovered and loaded at runtime.',
     tags: ['Core', 'Data', 'Web', 'module.manifest'],
+    /* The folder layout a developer actually gets, from the official scaffold:
+       vc-cli-module-template/templates/vc-module-dba-template. Every line is answered, because
+       "which folder does this go in" is the question a new module raises first. */
+    diagrams: [
+      {
+        kind: 'tree',
+        title: 'Solution module structure',
+        note: 'What `dotnet new vc-module` gives you, from the **vc-cli-module-template** scaffold. `{Namespace}` becomes `VirtoCommerce.MyModule` or `Abc.MyModule`; the folder names are conventions the platform and the build both rely on, so keep them. A custom solution module has exactly this shape — there is no different, lesser layout for "just our code".',
+        root: 'vc-module-{kebab-name}/',
+        items: [
+          { name: '{Namespace}.sln', depth: 0, kind: 'file', desc: 'The solution. Its only members are the projects below — no application project, because the platform is the host.' },
+          { name: 'Directory.Build.props', depth: 0, kind: 'file', desc: 'Build settings shared by every project: target framework, `TreatWarningsAsErrors`, version. Change it once, not per project.' },
+          { name: 'module.ignore', depth: 0, kind: 'file', desc: 'Paths `vc-build` leaves out of the module package.' },
+          { name: 'docs/', depth: 0, desc: 'Module documentation, including the database model diagram the template ships a `.drawio` source for.' },
+
+          { name: 'src/', depth: 0, desc: 'The three-project vertical slice, plus one project per database provider.' },
+
+          { name: '{Namespace}.Core/', depth: 1, kind: 'project', desc: 'Contracts only — no EF Core, no ASP.NET. This is what other modules may depend on, so anything you put here you have to keep.' },
+          { name: 'Models/', depth: 2, desc: 'Domain models: the types your services and API speak in.' },
+          { name: 'Services/', depth: 2, desc: 'Service **interfaces**. The implementations live in `.Data`, which is what lets a solution swap one out.' },
+          { name: 'Events/', depth: 2, desc: 'Domain and integration event classes — the contract other modules react to instead of calling you.' },
+          { name: 'Notifications/', depth: 2, desc: 'Notification types this module raises, registered so their templates can be overridden.' },
+          { name: 'ModuleConstants.cs', depth: 2, kind: 'file', desc: 'Permissions, settings and literals as constants — `{kebab}:read`, `SettingDescriptor`s, security scopes. The template ships the CRUD five.' },
+
+          { name: '{Namespace}.Data/', depth: 1, kind: 'project', desc: 'Persistence and implementation. Provider-neutral: no SQL Server specifics here, which is what makes the module database-agnostic.' },
+          { name: 'Models/', depth: 2, desc: 'EF Core entities. Deliberately **not** the domain models above — the mapping between them is where you control what the database sees.' },
+          { name: 'Repositories/', depth: 2, desc: 'The module `DbContext` and its repositories. One context per module; the platform does not own your tables.' },
+          { name: 'Services/', depth: 2, desc: 'Implementations of the `.Core` interfaces.' },
+          { name: 'Handlers/', depth: 2, desc: 'Event handlers — your own events and other modules\' integration events.' },
+          { name: 'Caching/', depth: 2, desc: 'Cache regions for this module, so an eviction can be scoped to it rather than global.' },
+          { name: 'ExportImport/', depth: 2, desc: 'Backup and restore support, so this module\'s data travels with an environment.' },
+
+          { name: '{Namespace}.Data.SqlServer/', depth: 1, kind: 'project', desc: 'Migrations for one provider, plus a `DesignTimeDbContextFactory` and an assembly marker. Nothing but migrations belongs here.' },
+          { name: '{Namespace}.Data.PostgreSql/', depth: 1, kind: 'project', desc: 'The same for PostgreSQL. A module that skips a provider simply does not run on it — migrations are not generated at runtime.' },
+          { name: '{Namespace}.Data.MySql/', depth: 1, kind: 'project', desc: 'The same for MySQL.' },
+
+          { name: '{Namespace}.Web/', depth: 1, kind: 'project', desc: 'The application layer, and the only project that is never a NuGet package — this is the deployable module.' },
+          { name: 'Module.cs', depth: 2, kind: 'file', desc: '`IModule`: `Initialize` registers services, `PostInitialize` registers permissions, settings and event handlers, `Uninstall` cleans up.' },
+          { name: 'module.manifest', depth: 2, kind: 'file', desc: 'Identity, dependencies and `platformVersion`. No manifest, no module — there is no convention-based fallback.' },
+          { name: 'Controllers/Api/', depth: 2, desc: 'REST controllers, one per aggregate, each endpoint carrying its own permission.' },
+          { name: 'Scripts/', depth: 2, desc: 'The Admin UI: `module.js` registers the AngularJS module, `blades/` holds the screens, `resources/` the generated API client.' },
+          { name: 'Localizations/', depth: 2, desc: '`en.{Namespace}.json` and its siblings. Loaded at runtime, so a missing key shows as the key itself.' },
+          { name: 'Content/', depth: 2, desc: 'Static assets served by the module — the manifest icon lives here.' },
+          { name: 'package.json · webpack.config.js', depth: 2, kind: 'file', desc: 'The Admin UI build. Output goes to `wwwroot/dist`, which is what the platform serves.' },
+
+          { name: 'tests/', depth: 0, desc: 'One test project per module.' },
+          { name: '{Namespace}.Tests/', depth: 1, kind: 'project', desc: 'xUnit, with Moq and FluentAssertions. Fake the repository and `IPlatformMemoryCache`; exercise the service for real.' }
+        ]
+      }
+    ],
     bullets: [
       '`Module.Core` — domain models, service interfaces, events, `ModuleConstants` (permissions, settings, literals). Distributable as a NuGet package, so other modules can depend on your contracts without your implementation.',
       '`Module.Data` — EF Core entities, migrations, repositories, service implementations, event handlers, cache regions. Also NuGet-distributable.',
@@ -438,7 +488,8 @@ window.VC_MAP_ARCHITECTURE = [
       { label: 'Modularity', page: 'Fundamentals/Modularity/01-overview' },
       { label: 'Essential modularity', page: 'Fundamentals/Modularity/01-overview' },
       { label: 'Create a new module', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
-      { label: 'Extensibility overview', page: 'Extensibility/overview' }
+      { label: 'Extensibility overview', page: 'Extensibility/overview' },
+      { label: 'vc-cli-module-template (the scaffold)', href: 'https://github.com/VirtoCommerce/vc-cli-module-template/tree/main/templates/vc-module-dba-template' }
     ]
   },
 

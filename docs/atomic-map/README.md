@@ -175,6 +175,29 @@ like a Cell in the Atomic Architecture diagram — a bounded box whose members a
   the background-job environment. Lane cells are deliberately untinted so an empty one shows
   as space rather than as an empty box; do not add a tint back.
 
+**`kind: 'tree'`** — an annotated folder listing: the path on the left, what it is for on the
+right. Used by `Modules` for the scaffold layout, because "which folder does this go in" is the
+first question a new module raises.
+
+```js
+{ kind: 'tree', title: 'Solution module structure', root: 'vc-module-{kebab-name}/',
+  items: [
+    { name: 'src/', depth: 0, desc: 'The three-project vertical slice.' },
+    { name: '{Namespace}.Core/', depth: 1, kind: 'project', desc: 'Contracts only — no EF Core.' },
+    { name: 'ModuleConstants.cs', depth: 2, kind: 'file', desc: 'Permissions, settings, literals.' } ]}
+```
+
+- **Every item needs a `desc`** — the checker enforces it. A path with no answer beside it is
+  what the reader could already get from the repository.
+- `depth` is authored, and may only step up one level at a time; a bigger jump means a parent is
+  missing from the listing, which the checker rejects.
+- `kind` is `project` (a `.csproj` root, coloured and spaced as a heading) or `file`.
+- Stacked in the panel, two columns in full screen — scoped to the panel state, not a viewport
+  width, because the constraint is the panel.
+- Keep it against the real scaffold
+  ([vc-cli-module-template](https://github.com/VirtoCommerce/vc-cli-module-template/tree/main/templates/vc-module-dba-template)),
+  not against memory of it.
+
 **`kind: 'topology'`** — the classic cloud-architecture picture: boxes on a grid, bounded
 regions behind them, and labelled orthogonal connectors. The one kind where position is
 **authored**, not derived — an architecture diagram's layout carries meaning a renderer cannot

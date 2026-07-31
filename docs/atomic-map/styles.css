@@ -793,6 +793,50 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   color: var(--muted);
 }
 
+/* ---------- annotated tree ----------
+   Path on the left in mono, what it is for on the right. The path column is a fixed width so
+   the descriptions align into a readable column instead of stepping with the indentation. */
+
+.tree {
+  padding: 11px 13px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 9px;
+}
+.tr-root { margin-bottom: 5px; }
+.tr-root code { font-family: var(--mono); font-size: 11px; font-weight: 700; }
+.tr-list { margin: 0; padding: 0; list-style: none; }
+/* Stacked in the panel, two columns in full screen. Scoped to the panel state rather than a
+   viewport width because the constraint is the panel, not the window: at 488px a 258px path
+   column leaves the descriptions a 200px measure, which wraps every line three deep. */
+.tr-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px 14px;
+  align-items: baseline;
+  padding: 1.5px 0;
+}
+.tr-row + .tr-row { margin-top: 2px; }
+.drawer.is-full .tr-row {
+  grid-template-columns: 258px minmax(0, 1fr);
+  gap: 4px 14px;
+  margin-top: 0;
+}
+.tr-name {
+  font-family: var(--mono); font-size: 10.5px;
+  /* Indentation lives inside the path column, so the description column stays straight. */
+  margin-left: calc(var(--tr-depth) * 13px);
+  background: none; border: 0; padding: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tr-desc {
+  font-size: 10.5px; line-height: 1.45; color: var(--muted);
+  margin-left: calc(var(--tr-depth) * 13px + 13px);
+}
+.drawer.is-full .tr-desc { margin-left: 0; }
+/* A project root, not a folder inside one: the line you should read first. */
+.tr-row.is-project { margin-top: 5px; }
+.tr-row.is-project > .tr-name { font-weight: 700; color: var(--info); }
+.tr-row.is-file > .tr-name { color: var(--text); }
 /* Diagram caption: which documented configuration this is, and the numbers behind it. */
 .dg-cap {
   max-width: 96ch; margin: 0 0 12px;

@@ -1024,9 +1024,27 @@
       diagram.legend ? el('div', { class: 'fl-legend' }, diagram.legend.map(legendItem)) : null);
   }
 
+  /* ---------- annotated tree ----------
+   * A folder listing where every line is answered, not just shown: the path on the left, what
+   * it is for on the right. Depth is authored, so the shape of a real repository survives
+   * without the renderer having to parse paths.
+   */
+  function treeBlock(diagram) {
+    var items = diagram.items || [];
+    if (!items.length) return null;
+    return el('div', { class: 'tree' },
+      diagram.root ? el('div', { class: 'tr-root' }, el('code', { text: diagram.root })) : null,
+      el('ul', { class: 'tr-list' }, items.map(function (item) {
+        return el('li', { class: 'tr-row' + (item.kind ? ' is-' + item.kind : ''),
+                          style: '--tr-depth:' + (item.depth || 0) },
+          el('code', { class: 'tr-name', text: item.name }),
+          item.desc ? el('span', { class: 'tr-desc' }, rich(item.desc)) : null);
+      })));
+  }
+
   /* A layer can carry several ordered diagrams; `kind` picks the renderer. */
   var DIAGRAM_RENDERERS = { flow: flowBlock, lanes: lanesBlock, stack: schemaBlock,
-                            pipeline: pipelineBlock, topology: topologyBlock };
+                            pipeline: pipelineBlock, topology: topologyBlock, tree: treeBlock };
 
   function diagramBlocks(layer) {
     return (layer.diagrams || []).map(function (diagram) {
