@@ -625,7 +625,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 /* Flow arrow sitting in the gap between stage headings, so the reading direction is
    explicit rather than inferred from left-to-right order. */
 .ln-colhead:not(.is-last)::after {
-  content: "92";
+  content: "→";   /* literal glyph — a CSS escape here got mangled once already */
   position: absolute; right: -13px; bottom: 1px;
   /* --muted, not a border colour: at border strength this measured 1.65:1 and the arrow was
      effectively invisible, which defeats the point of drawing the flow at all. */
@@ -634,7 +634,8 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 
 /* The lane label doubles as the rail head. */
 .ln-label {
-  display: flex; flex-direction: column; gap: 3px; justify-content: center;
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 3px; justify-content: flex-start;
   padding: 10px 11px 10px 10px;
   border-left: 3px solid var(--border-strong);
   border-radius: 7px 0 0 7px;
@@ -646,21 +647,43 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   color: var(--muted); white-space: nowrap;
 }
 
+/* Top-aligned, not centred: centring floated each column to its own vertical middle, so
+   nothing lined up across the diagram. Everything now starts on one line with Services. */
 .ln-cell {
-  display: flex; flex-direction: column; gap: 8px; justify-content: center;
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 8px; justify-content: flex-start;
   padding: 8px;
   border-radius: 7px;
   background: var(--surface-2);
 }
 /* Converged stages sit outside the lane tint so the join is legible. Padding stays so their
    cards end up exactly the same width as the ones inside a lane. */
-.ln-cell.is-shared { background: none; justify-content: flex-start; }
+.ln-cell.is-shared { background: none; }
 
 /* Each lane gets its own accent, carried on the label rail and the cell edges. */
 .ln-label.is-shopper, .ln-cell.is-shopper { box-shadow: inset 0 0 0 1px hsl(212 60% 55% / .22); }
 .ln-label.is-shopper { border-left-color: var(--info); }
 .ln-label.is-employee, .ln-cell.is-employee { box-shadow: inset 0 0 0 1px hsl(35 60% 50% / .22); }
 .ln-label.is-employee { border-left-color: var(--warn); }
+
+/* ---------- grouped stages ----------
+   One bounded region behind a contiguous run of columns, saying "all of this is the
+   platform". Sits at z-index 0 with the cells at 1, so it reads as a backdrop. */
+.ln-group {
+  position: relative; z-index: 0;
+  margin: -5px -6px;
+  border: 1.5px solid hsl(212 55% 55% / .5); border-radius: 10px;
+  background: hsl(212 55% 55% / .05);
+  pointer-events: none;
+}
+.ln-group-label {
+  position: absolute; top: -8px; left: 12px;
+  padding: 1px 8px;
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  color: var(--info);
+  background: var(--surface);
+  border: 1px solid hsl(212 55% 55% / .45); border-radius: 999px;
+}
 
 /* Uniform cards: the grid column fixes the width, a min-height and a clamped role fix the
    height, so every node in the diagram is the same size. */

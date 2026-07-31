@@ -28,12 +28,16 @@ window.VC_MAP_ARCHITECTURE = [
         /* Two isolated paths run as parallel rails and only converge at the modules. The
            shopper reaches XAPI only; the employee reaches REST only, from behind a firewall.
            Columns marked `shared` span both lanes — that is the join. */
+        /* API + Modules are one thing from the outside: the platform. Grouping them stops
+           the diagram reading as five equally-independent stages. */
+        groups: { platform: 'Virto Commerce' },
         columns: [
           { label: 'Presentation' },
           { label: 'Edge & routing' },
-          { label: 'API' },
+          { label: 'API', group: 'platform' },
           {
             label: 'Modules · atomic architecture',
+            group: 'platform',
             shared: true,
             scopes: [
               {

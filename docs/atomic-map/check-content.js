@@ -144,7 +144,19 @@ for (const l of LAYERS) {
       if (firstShared !== -1 && cols.slice(firstShared).some(c => !c.shared)) {
         add('layer', l.id, `lanes "${d.title}" mixes shared and laned columns — laned ones must come first`);
       }
+      // A group must cover a contiguous run, or the single box it draws would swallow
+      // columns that are not part of it.
+      for (const id of Object.keys(d.groups || {})) {
+        const idx = cols.reduce((acc, c, i) => (c.group === id ? acc.concat(i) : acc), []);
+        if (!idx.length) { add('layer', l.id, `group "${id}" is declared but no column uses it`); continue; }
+        if (idx[idx.length - 1] - idx[0] + 1 !== idx.length) {
+          add('layer', l.id, `group "${id}" spans non-adjacent columns (${idx.join(', ')})`);
+        }
+      }
       for (const c of cols) {
+        if (c.group && !(d.groups || {})[c.group]) {
+          add('layer', l.id, `column "${c.label}" references undeclared group "${c.group}"`);
+        }
         if (!c.label) add('layer', l.id, `lanes "${d.title}" has a column without a label`);
         if (!c.shared) continue;
         if (!(c.nodes || []).length && !(c.scopes || []).length) {

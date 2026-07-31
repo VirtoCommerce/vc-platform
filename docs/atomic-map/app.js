@@ -771,6 +771,18 @@
       }));
     });
 
+    /* A group draws one bounded region behind a contiguous run of columns — used to say
+       "these stages are all the platform". Appended before the cells so it paints underneath. */
+    Object.keys(diagram.groups || {}).forEach(function (id) {
+      var idx = columns.reduce(function (acc, col, i) { return col.group === id ? acc.concat(i) : acc; }, []);
+      if (!idx.length) return;
+      grid.appendChild(el('div', {
+        class: 'ln-group',
+        style: 'grid-column:' + (idx[0] + 2) + ' / ' + (idx[idx.length - 1] + 3) +
+               ';grid-row:2 / span ' + lanes.length
+      }, el('span', { class: 'ln-group-label', text: diagram.groups[id] })));
+    });
+
     lanes.forEach(function (lane, li) {
       grid.appendChild(el('div', { class: 'ln-label' + (lane.accent ? ' is-' + lane.accent : ''),
                                    style: 'grid-column:1;grid-row:' + (li + 2) },
