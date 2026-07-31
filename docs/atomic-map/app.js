@@ -760,6 +760,7 @@
 
     var laned = columns.filter(function (c) { return !c.shared; });
     var grid = el('div', { class: 'lanes', style: '--ln-cols:' + columns.length });
+    var ROW = 3;   // 1 = stage headings, 2 = spacer band the group label sits in
 
     // Row 1: the stage headings, offset by the lane-label gutter. Every heading but the last
     // carries a flow arrow into the next stage.
@@ -779,19 +780,19 @@
       grid.appendChild(el('div', {
         class: 'ln-group',
         style: 'grid-column:' + (idx[0] + 2) + ' / ' + (idx[idx.length - 1] + 3) +
-               ';grid-row:2 / span ' + lanes.length
+               ';grid-row:2 / span ' + (lanes.length + 1)
       }, el('span', { class: 'ln-group-label', text: diagram.groups[id] })));
     });
 
     lanes.forEach(function (lane, li) {
       grid.appendChild(el('div', { class: 'ln-label' + (lane.accent ? ' is-' + lane.accent : ''),
-                                   style: 'grid-column:1;grid-row:' + (li + 2) },
+                                   style: 'grid-column:1;grid-row:' + (li + ROW) },
         el('span', { class: 'ln-label-name', text: lane.label }),
         lane.chip ? el('span', { class: 'ln-label-chip', text: lane.chip }) : null));
 
       laned.forEach(function (col, ci) {
         grid.appendChild(el('div', { class: 'ln-cell' + (lane.accent ? ' is-' + lane.accent : ''),
-                                     style: 'grid-column:' + (ci + 2) + ';grid-row:' + (li + 2) },
+                                     style: 'grid-column:' + (ci + 2) + ';grid-row:' + (li + ROW) },
           laneCellBody((lane.cells || [])[ci])));
       });
     });
@@ -800,7 +801,7 @@
     columns.forEach(function (col, i) {
       if (!col.shared) return;
       grid.appendChild(el('div', { class: 'ln-cell is-shared',
-                                   style: 'grid-column:' + (i + 2) + ';grid-row:2 / span ' + lanes.length },
+                                   style: 'grid-column:' + (i + 2) + ';grid-row:' + ROW + ' / span ' + lanes.length },
         laneCellBody(col)));
     });
 

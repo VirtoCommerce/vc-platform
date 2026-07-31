@@ -613,23 +613,25 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
      unwrapped role text and cards ended up ~900px wide. Fixed columns are also what makes
      every card exactly the same width. */
   grid-template-columns: max-content repeat(var(--ln-cols), 212px);
+  /* row 1 headings, row 2 a band for group labels, then one row per lane. */
+  grid-template-rows: auto 15px;
   gap: 8px;
   align-items: stretch;
 }
 
 .ln-colhead {
-  position: relative;
   font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
   color: var(--muted); text-align: center; align-self: end; padding-bottom: 2px;
 }
 /* Flow arrow sitting in the gap between stage headings, so the reading direction is
    explicit rather than inferred from left-to-right order. */
 .ln-colhead:not(.is-last)::after {
-  content: "→";   /* literal glyph — a CSS escape here got mangled once already */
-  position: absolute; right: -13px; bottom: 1px;
-  /* --muted, not a border colour: at border strength this measured 1.65:1 and the arrow was
-     effectively invisible, which defeats the point of drawing the flow at all. */
-  font-size: 13px; line-height: 1; color: var(--muted);
+  /* Inline, right after the label. Absolutely positioning it at the column edge left the
+     arrow a variable distance from its own (centred) label — next to a short label like API
+     it read as belonging to the following column. */
+  content: " →";
+  margin-left: 5px;
+  font-size: 12px; color: var(--muted);
 }
 
 /* The lane label doubles as the rail head. */
@@ -671,13 +673,13 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
    platform". Sits at z-index 0 with the cells at 1, so it reads as a backdrop. */
 .ln-group {
   position: relative; z-index: 0;
-  margin: -5px -6px;
+  margin: 0 -6px -5px;
   border: 1.5px solid hsl(212 55% 55% / .5); border-radius: 10px;
   background: hsl(212 55% 55% / .05);
   pointer-events: none;
 }
 .ln-group-label {
-  position: absolute; top: -8px; left: 12px;
+  position: absolute; top: -1px; left: 12px;
   padding: 1px 8px;
   font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
   color: var(--info);
@@ -702,6 +704,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 /* ---------- scope box (a Cell in the Atomic Architecture sense) ---------- */
 
 .ln-scope {
+  flex: 1 1 auto;   /* share the column height instead of leaving a gap below */
   display: flex; flex-direction: column; gap: 6px;
   padding: 9px 10px 8px;
   border: 1.5px dashed var(--border-strong); border-radius: 9px;
