@@ -440,7 +440,11 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 
 /* ---------- static tag chips ---------- */
 
-.tag-row { display: flex; gap: 5px; flex-wrap: wrap; }
+/* Right-aligned: this block sits opposite the lead paragraph, and flushing its chips to the
+   right edge puts them on the same edge as the diagrams below instead of leaving a ragged gap
+   in the middle of the row. The heading follows the chips. */
+.tag-row { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+.d-block.is-half:has(.tag-row) > h3 { text-align: right; }
 .tag-chip {
   font: 11px var(--mono);
   padding: 2px 7px; border-radius: 4px;
@@ -784,8 +788,15 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .d-block { margin-top: 16px; min-width: 0; }
 .d-block > h3 {
   margin: 0 0 5px;
-  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
   color: var(--muted);
+}
+/* A diagram is a section of the panel, not a labelled field: full text colour and a size step
+   up, so "Solution architecture" reads as a heading over the picture rather than a caption. */
+.d-block.is-wide > h3 {
+  margin-bottom: 9px;
+  font-size: 14px; letter-spacing: .4px;
+  color: var(--text);
 }
 .d-lead { margin: 12px 0 0; font-size: 14.5px; line-height: 1.5; }
 

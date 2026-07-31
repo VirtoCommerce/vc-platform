@@ -118,6 +118,7 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'pipeline',
         title: 'DevOps',
+        note: '**The challenge** — for a solution architect, what is the real CI/CD path from source to a running environment? **In plain terms** — Git holds your custom source. CI builds your custom modules and publishes them to your Custom Modules artifact storage; the Virto modules already live in the Virto Commerce artifact storage. Your `vc-package.json` picks modules and versions from both. CD assembles them into one container image, which then deploys to each environment. **What this means for you** — `vc-package.json` is the control point: it chooses which artifacts, Virto and custom, go into the image, and one image then promotes across Dev → Stage → Prod.',
         /* The compact CI/CD view: two artifact sources built and published in parallel,
            converging on vc-package.json, which is the control point — it decides which
            artifacts go into the image that is then promoted across environments. */
@@ -172,12 +173,13 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'lanes',
         title: 'Deployment — non-production (S)',
-        note: 'The **Small** configuration: one frontend instance, one backend instance, background jobs in-process. The published sizing model puts it at ~10 frontend requests/sec, 1 cart change/sec, 200 orders/day — proof of concept, demo and developer environments. **No Redis**: with a single instance there is no other cache to invalidate, no SignalR backplane to share and no lock to take across processes.',
+        note: 'The **Small** configuration: one frontend instance, one backend instance, background jobs in-process. Proof of concept, demo and developer environments. **No Redis**: with a single instance there is no other cache to invalidate, no SignalR backplane to share and no lock to take across processes.',
+        groups: { platform: 'Same image · all roles' },
         legend: [
-          { kind: 'infra', label: 'Client & edge' },
           { kind: 'custom', label: 'Your code' },
-          { kind: 'virto', label: 'Virto Commerce workload' },
-          { kind: 'data', label: 'Stateful service' },
+          { kind: 'virto', label: 'Virto Commerce' },
+          { kind: 'infra', label: 'Edge & routing' },
+          { kind: 'data', label: 'Service' },
           { dashed: true, label: 'Reached directly — no instance in front of it' }
         ],
         columns: [
@@ -185,6 +187,7 @@ window.VC_MAP_ARCHITECTURE = [
           { label: 'Frontend env' },
           {
             label: 'Backend env',
+            group: 'platform',
             shared: true,
             nodes: [
               { name: 'Virto Commerce Platform App', kind: 'virto', meta: '×1',
@@ -244,10 +247,10 @@ window.VC_MAP_ARCHITECTURE = [
         note: 'The **Extra Large** configuration: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment runs **at least two instances** behind its own load balancer, all of them run the **same image** and share one resource pool. The published table stops at L (300 requests/sec, 15 000 orders/day); XL is beyond it. The documented topology names three environments — the **integration** lane is the common fourth split, worth making once a system pushes bulk traffic through the API.',
         groups: { platform: 'Same image · 4 roles' },
         legend: [
-          { kind: 'infra', label: 'Client & edge' },
           { kind: 'custom', label: 'Your code' },
-          { kind: 'virto', label: 'Virto Commerce workload' },
-          { kind: 'data', label: 'Stateful service' },
+          { kind: 'virto', label: 'Virto Commerce' },
+          { kind: 'infra', label: 'Edge & routing' },
+          { kind: 'data', label: 'Service' },
           { dashed: true, label: 'Reached directly — bypasses the platform' }
         ],
         columns: [
