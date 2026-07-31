@@ -30,8 +30,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         where TChangingEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
     {
+        // These MethodInfos take TEntity / TModel, so they genuinely differ per closed generic — unlike the
+        // Type-keyed cache they feed in ReflectionUtility, which belongs on a non-generic owner.
 #pragma warning disable S2743 // Static fields should not be used in generic types
-        // Intentional: these declarations take TEntity / TModel, so they genuinely differ per closed generic.
         private static readonly MethodInfo _toModelMethod = typeof(CrudService<TModel, TEntity, TChangingEvent, TChangedEvent>)
             .GetNonPublicInstanceMethod(nameof(ToModel), typeof(TEntity));
 

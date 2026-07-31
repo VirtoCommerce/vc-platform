@@ -15,12 +15,8 @@ namespace VirtoCommerce.Platform.Core.Caching
         private static readonly StringComparer _ignoreCase = StringComparer.OrdinalIgnoreCase;
         private static readonly ConcurrentDictionary<string, object> _lockLookup = new();
 
-        // The four overloads below are deliberately explicit rather than one method with an optional
-        // `createChangeToken`. C# bakes optional arguments in at the CALL SITE, so turning a published
-        // signature into an optional-parameter one removes the arity every already-compiled caller emitted
-        // a reference to. Platform assemblies ship as NuGet and modules load as plugins without being
-        // rebuilt in lockstep, so that would surface as a runtime MissingMethodException in modules that
-        // still build and test clean.
+        // Four explicit overloads, not one optional parameter: optional arguments bind at the call site,
+        // so collapsing them drops the arity already-compiled module callers reference.
         public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
             this IMemoryCache memoryCache,
             string keyPrefix,
@@ -150,7 +146,6 @@ namespace VirtoCommerce.Platform.Core.Caching
                     return false;
                 }
 
-                // A null entry is a cached "does not exist": a hit, but not a result.
                 if (cached is not null)
                 {
                     hits.Add((TItem)cached);
