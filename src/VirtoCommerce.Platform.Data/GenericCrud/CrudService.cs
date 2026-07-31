@@ -31,16 +31,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         where TChangedEvent : GenericChangedEntryEvent<TModel>
     {
 #pragma warning disable S2743 // Static fields should not be used in generic types
-        // Intentional: the probed declarations differ per closed generic, since their parameters are
-        // TEntity and TModel. Resolving them once per instantiation costs two references (measured 47 B)
-        // and hands ReflectionUtility a key it can cache on — the alternative, probing by reflection in
-        // the constructor, charges every DI resolve for an answer fixed at type-load time, and CRUD
-        // services are registered AddTransient (measured 170 ns / 208 B per construction).
+        // Intentional: these declarations take TEntity / TModel, so they genuinely differ per closed generic.
         private static readonly MethodInfo _toModelMethod = typeof(CrudService<TModel, TEntity, TChangingEvent, TChangedEvent>)
-            .GetMethod(nameof(ToModel), BindingFlags.Instance | BindingFlags.NonPublic, [typeof(TEntity)]);
+            .GetNonPublicInstanceMethod(nameof(ToModel), typeof(TEntity));
 
         private static readonly MethodInfo _configureCacheMethod = typeof(CrudService<TModel, TEntity, TChangingEvent, TChangedEvent>)
-            .GetMethod(nameof(ConfigureCache), BindingFlags.Instance | BindingFlags.NonPublic, [typeof(MemoryCacheEntryOptions), typeof(string), typeof(TModel)]);
+            .GetNonPublicInstanceMethod(nameof(ConfigureCache), typeof(MemoryCacheEntryOptions), typeof(string), typeof(TModel));
 #pragma warning restore S2743
 
         private readonly IEventPublisher _eventPublisher;
@@ -68,20 +64,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         }
 
         /// <summary>
-        /// Whether <see cref="GetAsync"/> hands <see cref="CreateCacheToken"/> to the cache helper, which then
-        /// captures the invalidation token BEFORE the data is loaded, so an invalidation landing mid-load is
-        /// still observed instead of being lost.
-        /// True while this service still mints through the default <see cref="ConfigureCache"/>: the early
-        /// capture then reuses the very token source that <see cref="ConfigureCache"/> would create anyway,
-        /// so it adds no state. A subclass that overrides <see cref="ConfigureCache"/> may redirect the mint to
-        /// a region of its own — for such a subclass the early capture would create one permanently-live token
-        /// source per id in <see cref="GenericCachingRegion{TModel}"/>, which it never expires.
-        /// Deliberately NOT conditioned on <see cref="ClearCache"/>: overriding it does not move the mint, so
-        /// gating on it would drop this fix for services that expire extra keys in the very same region
-        /// (vc-module-order CustomerOrderService) while saving nothing.
-        /// Override and return true to opt back in when the <see cref="ConfigureCache"/> override calls base.
+        /// Whether the cache entry is still expired by the token from <see cref="CreateCacheToken"/>, which lets
+        /// <see cref="GetAsync"/> have it created before the data is loaded rather than after.
+        /// False once <see cref="ConfigureCache"/> is overridden, because such a subclass may add a token of its
+        /// own instead, and tokens created in a region it never expires would accumulate. Override to return
+        /// true when the <see cref="ConfigureCache"/> override does call base.
+        /// Not conditioned on <see cref="ClearCache"/>: overriding that does not replace the token.
         /// </summary>
-        protected virtual bool CaptureCacheTokenBeforeLoad => !_isConfigureCacheOverridden;
+        protected virtual bool KeepsDefaultCacheToken => !_isConfigureCacheOverridden;
 
         /// <summary>
         /// Returns a list of model instances for specified IDs.
@@ -94,10 +84,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
-            // The opt-out has to sit here, where the factory is passed, and not inside the factory:
-            // GetOrLoadByIdsAsync never invokes a null factory, so no token source is created at all.
-            // CreateCacheToken memoizes into a process-static dictionary, so calling it is a write.
-            Func<string, IChangeToken> createCacheToken = CaptureCacheTokenBeforeLoad ? CreateCacheToken : null;
+            // Null rather than a factory that returns early: CreateCacheToken memoizes into process-static
+            // state, so the opt-out only holds if the helper never invokes it.
+            Func<string, IChangeToken> createCacheToken = KeepsDefaultCacheToken ? CreateCacheToken : null;
 
             var models = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
                 missingIds => GetByIdsNoCache(missingIds, responseGroup),

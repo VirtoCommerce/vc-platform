@@ -28,10 +28,10 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
     // The two declarations the fast-path gate probes for overrides. Passing the declaration itself rather
     // than a name keeps the probe unambiguous — GetProperties is overloaded here.
     private static readonly MethodInfo _getEqualityComponentsMethod = typeof(ValueObject)
-        .GetMethod(nameof(GetEqualityComponents), BindingFlags.Instance | BindingFlags.NonPublic, Type.EmptyTypes);
+        .GetNonPublicInstanceMethod(nameof(GetEqualityComponents));
 
     private static readonly MethodInfo _getPropertiesMethod = typeof(ValueObject)
-        .GetMethod(nameof(GetProperties), BindingFlags.Instance | BindingFlags.NonPublic, Type.EmptyTypes);
+        .GetNonPublicInstanceMethod(nameof(GetProperties));
 
     private delegate void ValueHasher(object instance, ref HashCode hash);
 

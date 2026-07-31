@@ -9,9 +9,9 @@ using Xunit;
 namespace VirtoCommerce.Platform.Caching.Tests
 {
     // Reproduces (and pins the fix for) a real defect in MemoryCacheExtensions.GetOrLoadByIdsCoreAsync:
-    // the cache-invalidation change token used to be minted in `configureCache` AFTER `loadItems` had
+    // the cache-invalidation change token used to be created in `configureCache` AFTER `loadItems` had
     // already run. If a writer commits and invalidates the key WHILE a reader's load is in flight, the
-    // reader's later cache-write mints a brand-new (uncancelled) token via
+    // reader's later cache-write creates a brand-new (uncancelled) token via
     // GenericCachingRegion<T>.CreateChangeTokenForKey — because
     // CancellableCacheRegion<T>.InnerExpireTokenForKey already TryRemove'd the prior token source from
     // _keyTokensDict before the reader gets around to writing. The stale value would then be cached under
@@ -85,7 +85,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         {
             // CHARACTERIZATION TEST — pins the opt-in boundary of the fix, not a bug report.
             // A caller that does not pass `createExpirationToken` keeps the original (pre-fix) behaviour:
-            // the invalidation-token is minted late, inside `configureCache`, so a mid-load invalidation
+            // the invalidation token is created late, inside `configureCache`, so a mid-load invalidation
             // is invisible to it and the stale value is cached under a live token. This is the documented,
             // knowingly-still-vulnerable contract for callers that don't opt in — see
             // GetOrLoadByIdsAsync_WithTokenFactory_InvalidationDuringLoad_ServesFreshValue for the fixed path.
@@ -113,7 +113,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             // No createExpirationToken argument here — the not-opted-in call shape.
             await sut.GetOrLoadByIdsAsync(keyPrefix, [id], LoadStale, ConfigureCache);
 
-            // Second read for the same id: without the opt-in, the token is (again) minted only inside
+            // Second read for the same id: without the opt-in, the token is (again) created only inside
             // configureCache, AFTER this load already ran below — so the entry from the first read is
             // never evicted and this loader must NOT run.
             Task<IList<StaleCacheProbeModel>> LoadFresh(IList<string> ids)

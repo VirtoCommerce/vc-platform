@@ -123,25 +123,25 @@ public static class ReflectionUtility
     }
 
     /// <summary>
-    /// Whether <paramref name="type"/> overrides the virtual <paramref name="baseMethod"/> declared by one of
-    /// its base types. Pass the base declaration itself — resolving it by name would be ambiguous between
-    /// overloads, while a <see cref="MethodInfo"/> identifies one virtual slot exactly.
+    /// Resolves a non-public instance method, for use as the <c>baseMethod</c> of <see cref="IsMethodOverridden"/>.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The answer depends only on the two arguments and cannot change once the types are loaded, so it is
-    /// cached. Callers may therefore ask on a hot path — notably the constructor of a service registered
-    /// AddTransient, where an uncached probe would charge every DI resolve for an answer fixed at load time.
-    /// </para>
-    /// <para>
-    /// A member hidden with <c>new</c> rather than overridden reports false: it occupies a fresh slot, so a
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields",
+        Justification = "Resolves a declaration to compare against; the returned MethodInfo is never invoked, and no accessibility is widened.")]
+    public static MethodInfo GetNonPublicInstanceMethod(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicMethods)] this Type declaringType,
+        string methodName,
+        params Type[] parameterTypes)
+    {
+        ArgumentNullException.ThrowIfNull(declaringType);
+
+        return declaringType.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic, parameterTypes);
+    }
+
+    /// <summary>
+    /// Whether <paramref name="type"/> overrides the virtual <paramref name="baseMethod"/>. Cached, so callers
+    /// may ask on a hot path. A member hidden with <c>new</c> reports false — it occupies a fresh slot, so a
     /// virtual call still reaches the base implementation.
-    /// </para>
-    /// <para>
-    /// A constructed generic method may be passed as-is: <see cref="MethodInfo.GetBaseDefinition"/> resolves
-    /// it to the open definition, so <c>Foo&lt;int&gt;</c> answers for the <c>Foo&lt;T&gt;</c> slot.
-    /// </para>
-    /// </remarks>
+    /// </summary>
     [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields",
         Justification = "Detects only WHETHER a subtype overrides a protected virtual member; it neither invokes the member nor widens its accessibility.")]
     public static bool IsMethodOverridden(
@@ -153,20 +153,15 @@ public static class ReflectionUtility
 
         return _overriddenMethods.GetOrAdd((type, baseMethod), static key =>
         {
-            // Two MethodInfos share a virtual slot exactly when their base definitions match, so this
-            // compares slots rather than re-resolving by name and parameter types — overloads, including
-            // ones that differ only in parameter types at the same arity, can never be confused.
+            // Compares virtual slots rather than re-resolving by name: overloads differing only in
+            // parameter types at the same arity would otherwise be indistinguishable.
             var baseDefinition = key.BaseMethod.GetBaseDefinition();
 
-            foreach (var method in key.Type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-            {
-                if (method.GetBaseDefinition() == baseDefinition)
-                {
-                    return method.DeclaringType != key.BaseMethod.DeclaringType;
-                }
-            }
+            var implementation = key.Type
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .FirstOrDefault(x => x.GetBaseDefinition() == baseDefinition);
 
-            return false;
+            return implementation is not null && implementation.DeclaringType != key.BaseMethod.DeclaringType;
         });
     }
 
