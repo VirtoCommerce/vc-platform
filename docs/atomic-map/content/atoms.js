@@ -207,7 +207,7 @@ window.VC_MAP_ATOMS = [
     docs: [
       { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
-    seeAlso: ['background-jobs', 'hangfire', 'job-progress', 'export-import'],
+    seeAlso: ['background-jobs', 'hangfire', 'job-progress', 'backup-restore'],
     molecule: 'background-processing-hub',
     verifiedAgainst: '3.1053.0'
   },
@@ -269,7 +269,7 @@ window.VC_MAP_ATOMS = [
     docs: [
       { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
-    seeAlso: ['background-jobs', 'hangfire', 'push-notifications', 'export-import'],
+    seeAlso: ['background-jobs', 'hangfire', 'push-notifications', 'backup-restore'],
     molecule: 'background-processing-hub',
     verifiedAgainst: '3.1053.0'
   },
@@ -504,7 +504,7 @@ window.VC_MAP_ATOMS = [
       'A token that is never checked is decoration. Cancellation only happens where you look for it.'
     ],
     docs: [],
-    seeAlso: ['background-jobs', 'hosted-service', 'export-import'],
+    seeAlso: ['background-jobs', 'hosted-service', 'backup-restore'],
     verifiedAgainst: '3.1053.0'
   },
 
@@ -1911,7 +1911,7 @@ window.VC_MAP_ATOMS = [
     docs: [
       { label: 'Polymorphic types in Swagger', page: 'Tutorials-and-How-tos/How-tos/type-inheritance-support-in-swagger' }
     ],
-    seeAlso: ['abstract-type-factory', 'swagger', 'export-import'],
+    seeAlso: ['abstract-type-factory', 'swagger', 'backup-restore'],
     verifiedAgainst: '3.1053.0'
   },
 
@@ -2359,14 +2359,14 @@ window.VC_MAP_ATOMS = [
   },
 
   {
-    id: 'export-import',
-    symbol: 'Ei',
-    name: 'Export & import',
+    id: 'backup-restore',
+    symbol: 'Br',
+    name: 'Backup & restore',
     family: 'modularity',
     adoption: 'platform',
     layer: 'platform',
-    tags: ['backup', 'migration', 'sample data', 'iexportsupport', 'iimportsupport'],
-    oneLiner: 'The platform-wide data transfer mechanism a module opts into, used for backup, seeding and environment moves.',
+    tags: ['backup', 'restore', 'export', 'import', 'migration', 'sample data', 'iexportsupport', 'iimportsupport'],
+    oneLiner: 'The platform-wide data transfer mechanism a module opts into — backup, restore, seeding and environment moves.',
     pattern: 'Per-module export and import contributors coordinated by a platform manager. A module implements `IExportSupport` and `IImportSupport`, writing to and reading from a stream while reporting progress and honouring cancellation. The manifest records what a package contains.',
     whenToUse: [
       'Making your module\'s data part of platform export and import',
@@ -2378,6 +2378,7 @@ window.VC_MAP_ATOMS = [
       'Ignoring the progress callback — an import with no feedback looks hung',
       'Implementing only the obsolete `ICancellationToken` overload in new code'
     ],
+    note: 'The platform owns the contracts; the platform-wide backup and restore experience ships as the **`VirtoCommerce.BackupRestore`** module (`vc-module-backup-restore`) today. Per-domain export/import is a different thing again — catalogue CSV, prices and customers each have their own module.',
     api: [
       { name: 'IExportSupport', file: 'src/VirtoCommerce.Platform.Core/ExportImport/IExportSupport.cs' },
       { name: 'IImportSupport', file: 'src/VirtoCommerce.Platform.Core/ExportImport/IImportSupport.cs' },
@@ -2410,7 +2411,9 @@ window.VC_MAP_ATOMS = [
       'Import order across modules matters when data references other modules\' data — the platform manager sequences it, so do not assume you can import standalone.',
       'Export runs against live data. On a large tenant it is a background job with real duration, not a request.'
     ],
-    docs: [],
+    docs: [
+      { label: 'vc-module-backup-restore (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-backup-restore' }
+    ],
     seeAlso: ['cancellation', 'job-progress', 'json-serialization', 'background-jobs'],
     verifiedAgainst: '3.1053.0'
   },
@@ -3077,7 +3080,7 @@ window.VC_MAP_ATOMS = [
       'Rollback only covers operations you performed through the manager. Mixing in direct `System.IO` calls leaves those unwound.'
     ],
     docs: [],
-    seeAlso: ['export-import', 'module-catalog', 'external-processes'],
+    seeAlso: ['backup-restore', 'module-catalog', 'external-processes'],
     verifiedAgainst: '3.1053.0'
   },
 
@@ -3263,7 +3266,7 @@ window.VC_MAP_ATOMS = [
       { label: 'Configuring asset blob storage', page: 'Getting-Started/Post-Installation-Steps/03-configuring-asset-blob-storage' },
       { label: 'vc-module-assets (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-assets' }
     ],
-    seeAlso: ['file-operations', 'search', 'export-import', 'background-jobs'],
+    seeAlso: ['file-operations', 'search', 'backup-restore', 'background-jobs'],
     molecule: 'deployment',
     verifiedAgainst: '3.1053.0'
   },

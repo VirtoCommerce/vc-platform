@@ -732,7 +732,10 @@
       count ? el('div', { class: 'ln-mods' }, scope.modules.map(function (m) {
         return el('span', { class: 'ln-mod', text: m });
       })) : null,
-      count ? el('span', { class: 'ln-scope-count', text: count + ' modules' }) : null);
+      /* `count` overrides the chip tally — the chips are a sample when the real set is
+         far larger than what fits in a box. */
+      (scope.count || count) ? el('span', { class: 'ln-scope-count',
+                                            text: scope.count || (count + ' modules') }) : null);
   }
 
   function laneCellBody(cell) {

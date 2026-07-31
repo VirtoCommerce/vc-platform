@@ -39,18 +39,19 @@ window.VC_MAP_ARCHITECTURE = [
                 title: 'Virto Commerce Modules',
                 chip: '≈80% standard base',
                 accent: 'virto',
-                role: 'Released artifacts you consume, never fork',
+                role: 'Released artifacts you consume, never fork — a sample below',
+                count: '100+ modules',
                 modules: ['Catalog', 'Pricing', 'Inventory', 'Cart', 'Order', 'Payment', 'Tax',
                           'Shipping', 'Customer', 'Marketing', 'Notifications', 'Assets',
-                          'Search', 'Export/Import', 'Security']
+                          'Search', 'Backup & restore', 'Security']
               },
               {
                 title: 'Your Solution Modules',
                 chip: '≈20% tailored',
                 accent: 'custom',
                 role: 'New modules, Virto Commerce modules extended via the Extensibility Framework, and integration adapters',
-                modules: ['Loyalty', 'Helpdesk', 'Trading calendar', 'ERP adapter', 'WMS adapter',
-                          'PIM adapter', 'Initial load']
+                modules: ['OrderExtension', 'Helpdesk', 'Trading calendar', 'ERP adapter',
+                          'WMS adapter', 'PIM adapter']
               }
             ]
           },
@@ -61,7 +62,8 @@ window.VC_MAP_ARCHITECTURE = [
               { name: 'Database', kind: 'data', role: 'SQL Server · PostgreSQL · MySQL', meta: 'EF Core' },
               { name: 'Search', kind: 'data', role: 'Elasticsearch · OpenSearch · Azure AI Search' },
               { name: 'Distributed cache', kind: 'data', role: 'Redis — invalidation, locks, SignalR backplane' },
-              { name: 'Background jobs', kind: 'data', role: 'Hangfire (default) or RabbitMQ, behind `IBackgroundJob`' }
+              { name: 'Background jobs', kind: 'data', role: 'Hangfire (default) or RabbitMQ, behind `IBackgroundJob`' },
+              { name: 'Custom', kind: 'data', role: 'Whatever this solution adds — payment gateway, tax service, ERP, email/SMS provider' }
             ]
           }
         ],
