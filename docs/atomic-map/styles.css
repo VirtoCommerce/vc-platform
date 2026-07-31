@@ -22,6 +22,8 @@
   --warn: #9a6100;
   --bad: #b4232d;
 
+  --grid-line: rgba(21, 26, 34, .05);   /* blueprint backdrop, see body::before */
+
   /* Sized so all eight families sit in one band at 1440px wide — the "one screen" promise.
      Below ~1360px the grid wraps, which is fine; the poster just gets taller. */
   --tile: 74px;
@@ -47,6 +49,7 @@
     --neutral: #9aa4b2;
     --warn: #e3a13a;
     --bad: #ff6b6b;
+    --grid-line: rgba(255, 255, 255, .04);
   }
 }
 
@@ -56,12 +59,14 @@
   --muted: #5c6675; --border: #dbe0e8; --border-strong: #c3cad6; --accent: #d21f3c;
   --focus: #1668dc; --shadow: 0 1px 2px rgba(18,24,33,.06), 0 8px 24px rgba(18,24,33,.08);
   --ok: #17794a; --info: #1668dc; --neutral: #6b7280; --warn: #9a6100; --bad: #b4232d;
+  --grid-line: rgba(21, 26, 34, .05);
 }
 :root[data-theme="dark"] {
   --bg: #0e1117; --surface: #161b24; --surface-2: #1d2430; --text: #e7eaf0;
   --muted: #98a2b3; --border: #262d3a; --border-strong: #37404f; --accent: #ff5c72;
   --focus: #5aa2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
   --ok: #3fbf82; --info: #63a4ff; --neutral: #9aa4b2; --warn: #e3a13a; --bad: #ff6b6b;
+  --grid-line: rgba(255, 255, 255, .04);
 }
 
 * { box-sizing: border-box; }
@@ -74,6 +79,23 @@ body {
   color: var(--text);
   font: 14px/1.45 var(--font);
   -webkit-text-size-adjust: 100%;
+}
+
+/* ---------- blueprint grid ----------
+   Mirrors the vc-release-notes hero backdrop: 60px squares of 1px lines, masked with a
+   radial gradient so it fades toward the edges. A fixed pseudo-element at z-index -1 paints
+   above the body background and below all content, so it needs no stacking-order changes and
+   cannot intercept clicks. Panels and tiles have solid backgrounds, so the grid reads only
+   through the gaps — which is the whole effect. */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(#000 40%, transparent 80%);
+          mask-image: radial-gradient(#000 40%, transparent 80%);
 }
 
 h2 { margin: 0; }
@@ -102,11 +124,14 @@ h2 { margin: 0; }
 
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 
+/* The org avatar is an opaque RGB image with a light background, so it sits on its own
+   white chip in both themes rather than fighting the dark surface. */
 .brand-mark {
-  display: grid; place-items: center;
   width: 30px; height: 30px; flex: none;
-  background: var(--accent); color: #fff;
-  border-radius: 6px; font-weight: 700; font-size: 12px; letter-spacing: .5px;
+  border-radius: 6px;
+  background: #fff;
+  object-fit: contain;
+  border: 1px solid var(--border);
 }
 
 .brand-text { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
@@ -222,7 +247,16 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   color: var(--muted); font-size: 11px; line-height: 1.32;
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
 }
-.layer .layer-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+/* One line, always. Wrapping tags made the band height depend on how long a layer's tag
+   strings happened to be, which silently pushed the poster past one screen twice. Overflow
+   is clipped with a soft fade; every tag is listed in full in the drawer under "Key pieces". */
+.layer .layer-tags {
+  display: flex; gap: 4px; flex-wrap: nowrap;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent 100%);
+          mask-image: linear-gradient(90deg, #000 82%, transparent 100%);
+}
+.layer .layer-tag { flex: none; }
 .layer .layer-tag {
   /* Small enough that 4-6 tags stay within two rows at seven band columns — the band
      height is set by the worst layer, and every tag is also listed in the drawer. */
@@ -756,6 +790,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   .tile { background: #fff !important; color: #000 !important; border-color: #666 !important; }
   .tile.is-dim, .layer.is-dim, .molecule.is-dim { opacity: 1; }
   .footer { margin: 8pt 0 0; }
+  body::before { display: none; }
   .layer .layer-sub, .molecule .mol-sub { -webkit-line-clamp: unset; overflow: visible; }
   /* Syntax colours do not survive greyscale printing; fall back to weight and italics. */
   :root { --syn-comment: #555; --syn-keyword: #000; --syn-type: #000; --syn-string: #333; --syn-number: #333; }
