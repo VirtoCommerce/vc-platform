@@ -577,6 +577,14 @@
     return el('p', { class: 'd-lead' + (hasNeighbour ? ' is-half' : '') }, rich(text));
   }
 
+  /* Emptying the panel also releases the topology observers — they watch elements that are
+     about to be discarded, and a stale observer would redraw into a detached SVG. */
+  function clearDrawerBody(body) {
+    TOPOLOGY_OBSERVERS.forEach(function (o) { o.disconnect(); });
+    TOPOLOGY_OBSERVERS.length = 0;
+    body.textContent = '';
+  }
+
   function renderAtomDrawer(atom) {
     var meta = adoptionOf(atom.adoption);
     var family = byId(FAMILIES, atom.family);
@@ -591,7 +599,7 @@
     document.getElementById('drawer-title').textContent = atom.name;
 
     var body = document.getElementById('drawer-body');
-    body.textContent = '';
+    clearDrawerBody(body);
 
     var seeAlsoBlock = pills('See also', (atom.seeAlso || []).map(function (ref) {
       var other = byId(ATOMS, ref);
@@ -859,8 +867,162 @@
     return el('div', { class: 'pipeline' }, parts);
   }
 
+  /* ---------- classic topology ----------
+   * The cloud-architecture idiom: boxes placed on a grid, bounded regions behind them, and
+   * labelled orthogonal connectors drawn between them. Unlike the other kinds, position is
+   * authored (`col` / `row`) rather than derived — an architecture diagram's layout carries
+   * meaning, and a renderer cannot guess which node belongs beside which.
+   *
+   * Edges are drawn into an SVG overlay after layout, from measured element boxes, because
+   * the grid's own track sizes are what decide where a card ends up. Every route is
+   * orthogonal: straight when two nodes share a centre line, otherwise a Z with the turn at
+   * the midpoint of the gap between the columns.
+   */
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  var TOPOLOGY_OBSERVERS = [];
+
+  function svgEl(tag, props) {
+    var node = document.createElementNS(SVG_NS, tag);
+    Object.keys(props || {}).forEach(function (key) { node.setAttribute(key, props[key]); });
+    return node;
+  }
+
+  /* Anchors are edge midpoints, so a connector meets a card square-on rather than at a
+     corner. `side` is chosen from the relative position of the two boxes. */
+  function anchor(box, side) {
+    if (side === 'right') return { x: box.right, y: box.top + box.height / 2 };
+    if (side === 'left') return { x: box.left, y: box.top + box.height / 2 };
+    if (side === 'bottom') return { x: box.left + box.width / 2, y: box.bottom };
+    return { x: box.left + box.width / 2, y: box.top };
+  }
+
+  /* Half the grid's column gap. The turn happens in the gutter immediately before the target
+     rather than half way along the whole run: for neighbouring columns the two are the same
+     point, and for distant ones it keeps the vertical segment out of the cards in between. */
+  var TP_GUTTER = 37;
+
+  function edgePath(s, t, offset) {
+    // Horizontal run when the boxes are side by side, vertical when stacked.
+    var horizontal = t.left >= s.right - 1 || s.left >= t.right - 1;
+    var a, b, d, labelAt;
+    var nudge = offset || 0;
+    if (horizontal) {
+      var forward = t.left >= s.right - 1;
+      a = anchor(s, forward ? 'right' : 'left');
+      b = anchor(t, forward ? 'left' : 'right');
+      var midX = forward ? b.x - TP_GUTTER + nudge : b.x + TP_GUTTER - nudge;
+      if (Math.abs(a.y - b.y) < 2) {
+        d = 'M' + a.x + ' ' + a.y + 'H' + b.x;
+        labelAt = { x: (a.x + b.x) / 2, y: a.y };
+      } else {
+        d = 'M' + a.x + ' ' + a.y + 'H' + midX + 'V' + b.y + 'H' + b.x;
+        labelAt = { x: midX, y: (a.y + b.y) / 2 };
+      }
+    } else {
+      var down = t.top >= s.bottom - 1;
+      a = anchor(s, down ? 'bottom' : 'top');
+      b = anchor(t, down ? 'top' : 'bottom');
+      var midY = (a.y + b.y) / 2;
+      if (Math.abs(a.x - b.x) < 2) {
+        d = 'M' + a.x + ' ' + a.y + 'V' + b.y;
+        labelAt = { x: a.x, y: midY };
+      } else {
+        d = 'M' + a.x + ' ' + a.y + 'V' + midY + 'H' + b.x + 'V' + b.y;
+        labelAt = { x: (a.x + b.x) / 2, y: midY };
+      }
+    }
+    return { d: d, labelAt: labelAt };
+  }
+
+  function drawEdges(svg, grid, byId, edges) {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var origin = grid.getBoundingClientRect();
+    var w = Math.ceil(origin.width), h = Math.ceil(origin.height);
+    if (!w || !h) return;
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+
+    var defs = svgEl('defs', {});
+    ['solid', 'bypass'].forEach(function (variant) {
+      var marker = svgEl('marker', { id: 'tp-arrow-' + variant, viewBox: '0 0 8 8',
+        refX: '7', refY: '4', markerWidth: '5.5', markerHeight: '5.5', orient: 'auto' });
+      marker.appendChild(svgEl('path', { d: 'M0 0.6 L8 4 L0 7.4 Z', class: 'tp-head is-' + variant }));
+      defs.appendChild(marker);
+    });
+    svg.appendChild(defs);
+
+    function local(node) {
+      var r = node.getBoundingClientRect();
+      return { left: r.left - origin.left, right: r.right - origin.left,
+               top: r.top - origin.top, bottom: r.bottom - origin.top,
+               width: r.width, height: r.height };
+    }
+
+    edges.forEach(function (edge) {
+      var from = byId[edge.from], to = byId[edge.to];
+      if (!from || !to) return;
+      var route = edgePath(local(from), local(to), edge.turnOffset);
+      var variant = edge.bypass ? 'bypass' : 'solid';
+      svg.appendChild(svgEl('path', { d: route.d, class: 'tp-edge is-' + variant,
+        'marker-end': 'url(#tp-arrow-' + variant + ')' }));
+      if (!edge.label) return;
+      /* The label is knocked out of the line with a stroke halo in the panel colour —
+         cheaper and more robust than measuring the text to place a rectangle behind it. */
+      var text = svgEl('text', { x: route.labelAt.x, y: route.labelAt.y,
+        class: 'tp-edge-label' + (edge.bypass ? ' is-bypass' : '') });
+      text.textContent = edge.label;
+      svg.appendChild(text);
+    });
+  }
+
+  function topologyBlock(diagram) {
+    var nodes = diagram.nodes || [];
+    if (!nodes.length) return null;
+
+    var grid = el('div', { class: 'tp-grid', style: '--tp-cols:' + (diagram.cols || 4) });
+    var byNodeId = {};
+
+    // Regions first: they are the backdrop the boxes sit on, so they must paint underneath.
+    (diagram.regions || []).forEach(function (region) {
+      grid.appendChild(el('div', {
+        class: 'tp-region' + (region.accent ? ' is-' + region.accent : '') + (region.outer ? ' is-outer' : ''),
+        style: 'grid-column:' + region.col[0] + ' / ' + (region.col[1] + 1) +
+               ';grid-row:' + region.row[0] + ' / ' + (region.row[1] + 1)
+      }, el('span', { class: 'tp-region-label', text: region.label })));
+    });
+
+    nodes.forEach(function (node) {
+      var card = el('div', { class: 'tp-node' + (node.kind ? ' is-' + node.kind : ''),
+        style: 'grid-column:' + node.col + ';grid-row:' + node.row },
+        el('span', { class: 'tp-node-name' }, rich(node.name)),
+        node.sub ? el('span', { class: 'tp-node-sub' }, rich(node.sub)) : null,
+        node.meta ? el('span', { class: 'tp-node-meta', text: node.meta }) : null);
+      byNodeId[node.id] = card;
+      grid.appendChild(card);
+    });
+
+    var svg = svgEl('svg', { class: 'tp-edges', 'aria-hidden': 'true' });
+    var stage = el('div', { class: 'tp-stage' }, svg, grid);
+
+    function redraw() { drawEdges(svg, grid, byNodeId, diagram.edges || []); }
+    /* Re-measured rather than computed once: the same diagram is laid out at two widths
+       (panel and full screen) and the turn points move with the tracks. */
+    if (window.ResizeObserver) {
+      var observer = new ResizeObserver(redraw);
+      observer.observe(grid);
+      TOPOLOGY_OBSERVERS.push(observer);
+    } else {
+      requestAnimationFrame(redraw);
+    }
+
+    return el('div', { class: 'flow-wrap' }, stage,
+      diagram.legend ? el('div', { class: 'fl-legend' }, diagram.legend.map(legendItem)) : null);
+  }
+
   /* A layer can carry several ordered diagrams; `kind` picks the renderer. */
-  var DIAGRAM_RENDERERS = { flow: flowBlock, lanes: lanesBlock, stack: schemaBlock, pipeline: pipelineBlock };
+  var DIAGRAM_RENDERERS = { flow: flowBlock, lanes: lanesBlock, stack: schemaBlock,
+                            pipeline: pipelineBlock, topology: topologyBlock };
 
   function diagramBlocks(layer) {
     return (layer.diagrams || []).map(function (diagram) {
@@ -906,7 +1068,7 @@
     document.getElementById('drawer-title').textContent = layer.name;
 
     var body = document.getElementById('drawer-body');
-    body.textContent = '';
+    clearDrawerBody(body);
 
     var keyPieces = tagsBlock('Key pieces', layer.tags);
     append(body, [leadPara(layer.sub, !!keyPieces), keyPieces]);
@@ -937,7 +1099,7 @@
     document.getElementById('drawer-title').textContent = molecule.name;
 
     var body = document.getElementById('drawer-body');
-    body.textContent = '';
+    clearDrawerBody(body);
 
     append(body, el('p', { class: 'd-lead' }, rich(molecule.sub || '')));
     append(body, el('div', { class: 'd-note' },
@@ -982,7 +1144,7 @@
       document.getElementById('drawer-eyebrow').textContent = 'Not found';
       document.getElementById('drawer-title').textContent = id;
       var body = document.getElementById('drawer-body');
-      body.textContent = '';
+      clearDrawerBody(body);
       append(body, el('p', { class: 'empty' }, 'No ' + kind + ' with id "' + id + '" exists in the content files.'));
       showDrawer();
       return;

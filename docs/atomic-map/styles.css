@@ -702,6 +702,91 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .ln-label.is-integration { border-left-color: var(--lane-int); box-shadow: inset 0 0 0 1px hsl(266 50% 55% / .22); }
 .ln-band.is-integration { background: hsl(266 50% 55% / .055); }
 
+/* ---------- classic topology ----------
+   The cloud-architecture idiom: boxes on an authored grid, bounded regions behind them, and
+   labelled orthogonal connectors drawn into an SVG overlay. Column gaps are wide on purpose —
+   that gap is where a connector turns and where its label sits. */
+
+.tp-stage { position: relative; }
+
+.tp-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--tp-cols), minmax(150px, 1fr));
+  column-gap: 74px;
+  row-gap: 12px;
+  align-items: stretch;
+  padding: 26px 8px 8px;
+}
+
+/* Above the regions, below nothing: the SVG overlay is drawn on top of the cards but takes no
+   pointer events, so the diagram still behaves like text. */
+.tp-edges {
+  position: absolute; left: 0; top: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 3;
+}
+.tp-edge { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.tp-edge.is-bypass { stroke-dasharray: 5 4; }
+.tp-head.is-solid, .tp-head.is-bypass { fill: var(--muted); }
+.tp-edge-label {
+  font-size: 8.5px; font-weight: 650; letter-spacing: .2px;
+  fill: var(--muted);
+  text-anchor: middle; dominant-baseline: middle;
+  /* Knocked out of the line it sits on: a halo in the panel colour, painted under the glyphs.
+     Cheaper and more robust than measuring the text to place a rectangle behind it. */
+  stroke: var(--surface); stroke-width: 3.5px; paint-order: stroke;
+}
+
+/* A bounded region — the "this is all one environment" box. */
+.tp-region {
+  position: relative; z-index: 1;
+  margin: -18px -10px -8px;
+  border: 1.5px solid hsl(212 55% 55% / .5);
+  border-radius: 10px;
+  background: hsl(212 55% 55% / .05);
+  pointer-events: none;
+}
+.tp-region.is-outer {
+  z-index: 0;
+  margin: -22px -16px -12px;
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+.tp-region.is-shared { border-color: hsl(152 45% 45% / .5); background: hsl(152 45% 45% / .05); }
+.tp-region-label {
+  position: absolute; top: 4px; left: 12px;
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  color: var(--info);
+}
+.tp-region.is-outer > .tp-region-label { color: var(--muted); }
+.tp-region.is-shared > .tp-region-label { color: var(--ok); }
+
+/* Cards: same left-border-as-legend vocabulary as every other diagram here. */
+.tp-node {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; gap: 1px; justify-content: center;
+  min-height: 52px;
+  padding: 7px 9px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
+  border-radius: 6px;
+}
+.tp-node.is-virto  { border-left-color: var(--info); }
+.tp-node.is-oob    { border-left-color: var(--ok); }
+.tp-node.is-custom { border-left-color: var(--warn); }
+.tp-node.is-data   { border-left-color: var(--syn-keyword); }
+.tp-node.is-infra  { border-left-color: var(--neutral); }
+.tp-node-name { font-size: 11.5px; font-weight: 700; line-height: 1.25; }
+.tp-node-sub { font-size: 9.5px; color: var(--muted); line-height: 1.35; }
+.tp-node-meta {
+  margin-top: 2px;
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted);
+}
+
 /* Diagram caption: which documented configuration this is, and the numbers behind it. */
 .dg-cap {
   max-width: 96ch; margin: 0 0 12px;

@@ -480,7 +480,7 @@ window.VC_MAP_ARCHITECTURE = [
     gotchas: [
       'MVC is configured with `AddNewtonsoftJson`, so REST serialization is Newtonsoft — not `System.Text.Json`. Custom converters must be written against Newtonsoft.',
       'The platform uses MVC controllers throughout; there are no Minimal API endpoints to copy as a pattern.',
-      'XAPI lives in a separate repository (`vc-module-experience-api`) — it is a module set, not part of the platform core.'
+      'XAPI lives in a separate repository (`vc-module-x-api`) — it is a module set, not part of the platform core. `vc-module-experience-api` is the archived predecessor; do not start from it.'
     ],
     docs: [
       { label: 'Swagger endpoints', page: 'Tutorials-and-How-tos/How-tos/swagger-api' },
