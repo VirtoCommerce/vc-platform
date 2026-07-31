@@ -514,6 +514,9 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   color: var(--info); border: 1px solid currentColor;
 }
 .fl-cluster-nodes { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 6px; }
+/* Inside a cluster the grid decides the width. Without this the node's own min-width
+   (wider than a track) makes every card overflow its column and overlap its neighbour. */
+.fl-cluster-nodes > .fl-node { min-width: 0; }
 
 .fl-legend {
   display: flex; gap: 14px; flex-wrap: wrap; align-items: center;

@@ -19,25 +19,76 @@ window.VC_MAP_ARCHITECTURE = [
         kind: 'flow',
         title: 'Solution architecture',
         legend: [
+          { kind: 'custom', label: 'Your code' },
+          { kind: 'virto', label: 'Virto Commerce' },
           { kind: 'oob', label: 'Out-of-the-box module' },
-          { kind: 'custom', label: 'Your module or extension' },
-          { kind: 'virto', label: 'Platform / API' },
-          { kind: 'data', label: 'Data & jobs' }
+          { kind: 'infra', label: 'Edge & routing' },
+          { kind: 'data', label: '3rd party service' }
         ],
+        /* The two front ends are deliberately shown as separate lanes all the way to the
+           API: the storefront reaches XAPI only, the back office reaches REST only, and
+           each has its own edge in front of it. */
         tiers: [
           {
             label: 'Presentation',
-            nodes: [
-              { name: 'Storefront SPA', kind: 'custom', role: 'Vue 3 · Vite · storefront-less', meta: 'CDN / blob' },
-              { name: 'Back office', kind: 'virto', role: 'Admin UI · VC-Shell app', meta: 'REST' }
+            clusters: [
+              {
+                title: 'Shopper',
+                chip: 'public',
+                nodes: [
+                  { name: 'Storefront SPA', kind: 'custom', role: 'Vue 3 · Vite. Talks to **XAPI only** — no REST, no server-side middleware.', meta: 'GraphQL' }
+                ]
+              },
+              {
+                title: 'Employee',
+                chip: 'internal',
+                nodes: [
+                  { name: 'Admin UI SPA', kind: 'virto', role: 'Commerce Manager · VC-Shell app. Talks to **REST API only**.', meta: 'REST' }
+                ]
+              }
             ]
           },
           { arrow: true },
           {
-            label: 'API gateway',
-            nodes: [
-              { name: 'GraphQL XAPI', kind: 'virto', role: '`xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`', meta: 'experience reads' },
-              { name: 'REST /api', kind: 'virto', role: 'Full CRUD, per-endpoint permissions', meta: 'per module' }
+            label: 'Edge & routing',
+            clusters: [
+              {
+                title: 'Shopper path',
+                chip: 'CDN → load balancer',
+                nodes: [
+                  { name: 'CDN', kind: 'infra', role: 'TLS, caching, static assets' },
+                  { name: 'SSR / prerender', kind: 'infra', role: 'Optional — crawlers and first paint' },
+                  { name: 'Load balancer', kind: 'infra', role: 'Splits the two routes by path: **static content** vs **API**' }
+                ]
+              },
+              {
+                title: 'Employee path',
+                chip: 'firewall',
+                nodes: [
+                  { name: 'Firewall', kind: 'infra', role: 'The back office is not published to the internet — REST reaches the platform from inside only' }
+                ]
+              }
+            ]
+          },
+          { arrow: true },
+          {
+            label: 'API',
+            clusters: [
+              {
+                title: 'Storefront — XAPI only',
+                chip: 'GraphQL',
+                nodes: [
+                  { name: 'Content storage', kind: 'infra', role: 'Theme, site configuration, pages — served by the static route, never through the platform' },
+                  { name: 'XAPI', kind: 'virto', role: 'Business API of GraphQL queries **and mutations** — `xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`' }
+                ]
+              },
+              {
+                title: 'Back office — REST only',
+                chip: 'REST /api',
+                nodes: [
+                  { name: 'REST /api', kind: 'virto', role: 'Full CRUD, per-endpoint permissions, Swagger-documented' }
+                ]
+              }
             ]
           },
           { arrow: true },
@@ -45,7 +96,7 @@ window.VC_MAP_ARCHITECTURE = [
             label: 'Modules · atomic architecture',
             clusters: [
               {
-                title: 'Out of the box',
+                title: 'Virto Commerce Modules',
                 chip: '≈80% standard base',
                 nodes: [
                   { name: 'Commerce core', kind: 'oob', role: 'Catalog · Pricing · Inventory' },
@@ -55,24 +106,24 @@ window.VC_MAP_ARCHITECTURE = [
                 ]
               },
               {
-                title: 'Tailored to the solution',
+                title: 'Your Solution Modules',
                 chip: '≈20% tailored',
                 nodes: [
-                  { name: 'New modules', kind: 'custom', role: 'Capabilities the box does not have — loyalty, helpdesk, trading calendar' },
-                  { name: 'Extensions', kind: 'custom', role: 'Standard modules extended via `AbstractTypeFactory`, dynamic properties or event handlers' },
-                  { name: 'Integrations', kind: 'custom', role: 'ERP · WMS · PIM adapters, initial-load utilities' }
+                  { name: 'New modules', kind: 'custom', role: 'Capabilities the box does not have' },
+                  { name: 'Extensions', kind: 'custom', role: 'Standard modules extended via `AbstractTypeFactory`, dynamic properties or events' },
+                  { name: 'Integrations', kind: 'custom', role: 'ERP · WMS · PIM adapters' }
                 ]
               }
             ]
           },
           { arrow: true },
           {
-            label: 'Data & jobs',
+            label: '3rd party services',
             nodes: [
-              { name: 'EF Core → SQL', kind: 'data', role: 'SQL Server · PostgreSQL · MySQL', meta: '.NET 10' },
-              { name: 'Search index', kind: 'data', role: 'Elasticsearch · OpenSearch · Azure AI Search' },
-              { name: 'Distributed cache bus', kind: 'data', role: 'Redis — invalidation, locks, SignalR backplane' },
-              { name: 'Background jobs', kind: 'data', role: 'Engine module behind `IBackgroundJob`' }
+              { name: 'Database', kind: 'data', role: 'SQL Server · PostgreSQL · MySQL', meta: 'EF Core' },
+              { name: 'Search', kind: 'data', role: 'Elasticsearch · OpenSearch · Azure AI Search' },
+              { name: 'Distributed cache', kind: 'data', role: 'Redis — invalidation, locks, SignalR backplane' },
+              { name: 'Background jobs', kind: 'data', role: 'Hangfire (default) or RabbitMQ, behind `IBackgroundJob`', meta: 'engine module' }
             ]
           }
         ]
@@ -199,7 +250,8 @@ window.VC_MAP_ARCHITECTURE = [
       { label: 'Create a module from scratch', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
       { label: 'Extensibility overview', page: 'Extensibility/overview' },
       { label: 'Release strategy', page: 'Updating-Virto-Commerce-Based-Project/release-strategy-overview' },
-      { label: 'Key extensibility points', page: 'Extensibility/key-extensibility-points' }
+      { label: 'Key extensibility points', page: 'Extensibility/key-extensibility-points' },
+      { label: 'Storefront architecture (docs site)', href: 'https://docs.virtocommerce.org/storefront/developer-guide/latest/architecture/' }
     ]
   },
 
@@ -218,7 +270,7 @@ window.VC_MAP_ARCHITECTURE = [
       rows: [
         {
           title: 'Sales channels',
-          hint: 'customer-facing · read-heavy',
+          hint: 'customer-facing',
           nodes: [
             { name: 'Virto Commerce Frontend', sub: '`vc-frontend` — Vue 3 · Vite · TS · Tailwind. Storefront-less, no middleware.', via: 'GraphQL', viaKind: 'graphql' },
             { name: 'Custom storefront', sub: 'Your own SPA or native app against the same schema', via: 'GraphQL', viaKind: 'graphql' },
@@ -231,7 +283,7 @@ window.VC_MAP_ARCHITECTURE = [
           connector: 'XAPI GraphQL · REST',
           connectorDir: 'down',
           target: 'Virto Commerce Platform',
-          sub: 'XAPI (GraphQL) for experience reads · REST `/api` for full CRUD · modules behind both'
+          sub: 'XAPI — a business API of GraphQL queries and mutations · REST `/api` for full CRUD · modules behind both'
         },
         {
           connector: 'REST /api',
@@ -282,10 +334,10 @@ window.VC_MAP_ARCHITECTURE = [
     id: 'api-edge',
     name: 'API edge',
     hue: 205,
-    sub: 'Where the outside world meets the platform. Two shapes with two jobs: GraphQL for read-heavy channel experience, REST for full CRUD and back office.',
+    sub: 'Where the outside world meets the platform. Two shapes with two jobs: GraphQL as the business API a channel talks to — queries and mutations both — and REST for full CRUD and the back office.',
     tags: ['XAPI /graphql', 'REST /api', 'Swagger', 'SignalR'],
     bullets: [
-      'XAPI (Experience API) — a BFF built on GraphQL, shipped as modules: `xCatalog`, `xCart`, `xOrder`, `xCMS`, `xProfile` over the shared `VirtoCommerce.xApi` core. One round trip returns exactly the shape a screen needs.',
+      'XAPI (Experience API) — a BFF built on GraphQL, shipped as modules: `xCatalog`, `xCart`, `xOrder`, `xCMS`, `xProfile` over the shared `VirtoCommerce.xApi` core. It is a full business API — queries *and* mutations, so a storefront never needs REST — and one round trip returns exactly the shape a screen needs.',
       'REST — the complete surface. Every module exposes controllers under `/api/…`; this is what the Admin SPA and integration middleware use.',
       'Swagger / OpenAPI — generated per module plus a combined document, so a module\'s API is browsable and client-generatable the moment it loads.',
       'SignalR — server-to-client push for long-running work (`/pushNotificationHub`), with a Redis or Azure SignalR backplane when scaled out.',
@@ -293,7 +345,7 @@ window.VC_MAP_ARCHITECTURE = [
     ],
     matrixTitle: 'Choosing between them',
     matrix: [
-      { name: 'Storefront read path', desc: 'XAPI / GraphQL. Purpose-shaped, batched, cacheable, one request per screen.' },
+      { name: 'Storefront', desc: 'XAPI / GraphQL. A business API: purpose-shaped queries and mutations, batched, one round trip per screen.' },
       { name: 'Back office & admin', desc: 'REST. Full CRUD, per-endpoint permissions, Swagger-documented.' },
       { name: 'Integration & ETL', desc: 'REST + WebHooks, usually through integration middleware rather than point-to-point.' },
       { name: 'Progress & live updates', desc: 'SignalR push notifications — never poll a job endpoint in a loop.' }
