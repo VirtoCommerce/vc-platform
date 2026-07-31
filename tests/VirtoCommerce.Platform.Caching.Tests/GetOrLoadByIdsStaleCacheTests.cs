@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
     // a token that can never observe the invalidation that made it stale, and would be served on every
     // subsequent read until the sliding TTL expires.
     //
-    // The fix adds an explicit, opt-in `createExpirationToken` parameter to `GetOrLoadByIdsAsync`: when
+    // The fix adds an explicit, opt-in `createChangeToken` parameter to `GetOrLoadByIdsAsync`: when
     // supplied, the token is captured BEFORE `loadItems` runs, so an invalidation landing mid-load is
     // still visible. Test A proves the fixed (opted-in) path. Test B is a deliberate characterization
     // test: callers that do NOT pass a token factory keep the pre-fix behaviour by design — the raw
@@ -43,7 +43,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             const string id = "probe-1";
             var secondLoadCalls = 0;
 
-            // Mirrors CrudService.ConfigureCache (src/VirtoCommerce.Platform.Data/GenericCrud/CrudService.cs:92-95) exactly.
+            // Mirrors CrudService.ConfigureCache exactly (cited by member, not by line: line numbers rot).
             static void ConfigureCache(MemoryCacheEntryOptions options, string entityId, StaleCacheProbeModel item)
             {
                 options.AddExpirationToken(GenericCachingRegion<StaleCacheProbeModel>.CreateChangeTokenForKey(entityId));
@@ -84,7 +84,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         public async Task GetOrLoadByIdsAsync_WithoutTokenFactory_InvalidationDuringLoad_StillServesStaleValue()
         {
             // CHARACTERIZATION TEST — pins the opt-in boundary of the fix, not a bug report.
-            // A caller that does not pass `createExpirationToken` keeps the original (pre-fix) behaviour:
+            // A caller that does not pass `createChangeToken` keeps the original (pre-fix) behaviour:
             // the invalidation token is created late, inside `configureCache`, so a mid-load invalidation
             // is invisible to it and the stale value is cached under a live token. This is the documented,
             // knowingly-still-vulnerable contract for callers that don't opt in — see
@@ -94,7 +94,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             const string id = "probe-2"; // different id from test A — GenericCachingRegion<T> state is shared across the class
             var secondLoadCalls = 0;
 
-            // Mirrors CrudService.ConfigureCache (src/VirtoCommerce.Platform.Data/GenericCrud/CrudService.cs:92-95) exactly.
+            // Mirrors CrudService.ConfigureCache exactly (cited by member, not by line: line numbers rot).
             static void ConfigureCache(MemoryCacheEntryOptions options, string entityId, StaleCacheProbeModel item)
             {
                 options.AddExpirationToken(GenericCachingRegion<StaleCacheProbeModel>.CreateChangeTokenForKey(entityId));
@@ -110,7 +110,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
                 return Task.FromResult(items);
             }
 
-            // No createExpirationToken argument here — the not-opted-in call shape.
+            // No createChangeToken argument here — the not-opted-in call shape.
             await sut.GetOrLoadByIdsAsync(keyPrefix, [id], LoadStale, ConfigureCache);
 
             // Second read for the same id: without the opt-in, the token is (again) created only inside
