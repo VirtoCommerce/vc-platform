@@ -104,11 +104,53 @@ for (const l of LAYERS) {
   if (!l.sub) add('layer', l.id, 'missing sub');
   if (l.schema) add('layer', l.id, 'uses the old `schema` field — migrate to `diagrams: [{ kind: "stack", … }]`');
 
-  const KINDS = new Set(['stack', 'flow']);
+  const KINDS = new Set(['stack', 'flow', 'lanes']);
   const NODE_KINDS = new Set(['virto', 'oob', 'custom', 'data', 'infra']);
   for (const d of l.diagrams || []) {
     if (!d.title) add('layer', l.id, 'diagram without a title');
     if (!KINDS.has(d.kind)) { add('layer', l.id, `diagram "${d.title}" has unknown kind "${d.kind}"`); continue; }
+
+    if (d.kind === 'lanes') {
+      const cols = d.columns || [];
+      const laned = cols.filter(c => !c.shared);
+      if (!cols.length) add('layer', l.id, `lanes "${d.title}" has no columns`);
+      if (!(d.lanes || []).length) add('layer', l.id, `lanes "${d.title}" has no lanes`);
+      // Laned columns must come first, or the grid indices the renderer computes are wrong.
+      const firstShared = cols.findIndex(c => c.shared);
+      if (firstShared !== -1 && cols.slice(firstShared).some(c => !c.shared)) {
+        add('layer', l.id, `lanes "${d.title}" mixes shared and laned columns — laned ones must come first`);
+      }
+      for (const c of cols) {
+        if (!c.label) add('layer', l.id, `lanes "${d.title}" has a column without a label`);
+        if (!c.shared) continue;
+        if (!(c.nodes || []).length && !(c.scopes || []).length) {
+          add('layer', l.id, `shared column "${c.label}" has neither nodes nor scopes`);
+        }
+        for (const sc of c.scopes || []) {
+          if (!sc.title) add('layer', l.id, `scope in "${c.label}" has no title`);
+          if (!(sc.modules || []).length) add('layer', l.id, `scope "${sc.title}" lists no modules`);
+        }
+      }
+      const kindsUsed = new Set();
+      for (const lane of d.lanes || []) {
+        if (!lane.label) add('layer', l.id, `lanes "${d.title}" has a lane without a label`);
+        if ((lane.cells || []).length !== laned.length) {
+          add('layer', l.id, `lane "${lane.label}" has ${(lane.cells || []).length} cells but there are ${laned.length} laned columns`);
+        }
+        for (const cell of lane.cells || []) {
+          for (const n of (cell || {}).nodes || []) {
+            if (!n.name) add('layer', l.id, `lane "${lane.label}" has a node without a name`);
+            if (n.kind && !NODE_KINDS.has(n.kind)) add('layer', l.id, `lane node "${n.name}" has unknown kind "${n.kind}"`);
+            kindsUsed.add(n.kind);
+          }
+        }
+      }
+      for (const c of cols) for (const n of c.nodes || []) kindsUsed.add(n.kind);
+      for (const item of d.legend || []) {
+        if (!kindsUsed.has(item.kind)) add('layer', l.id, `lanes "${d.title}" legend lists unused kind "${item.kind}"`);
+      }
+      continue;
+    }
 
     if (d.kind === 'flow') {
       const tiers = (d.tiers || []).filter(t => !t.arrow);

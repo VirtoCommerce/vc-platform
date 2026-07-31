@@ -16,114 +16,89 @@ window.VC_MAP_ARCHITECTURE = [
     diagrams: [
 
       {
-        kind: 'flow',
+        kind: 'lanes',
         title: 'Solution architecture',
         legend: [
           { kind: 'custom', label: 'Your code' },
           { kind: 'virto', label: 'Virto Commerce' },
-          { kind: 'oob', label: 'Out-of-the-box module' },
           { kind: 'infra', label: 'Edge & routing' },
           { kind: 'data', label: '3rd party service' }
         ],
-        /* The two front ends are deliberately shown as separate lanes all the way to the
-           API: the storefront reaches XAPI only, the back office reaches REST only, and
-           each has its own edge in front of it. */
-        tiers: [
-          {
-            label: 'Presentation',
-            clusters: [
-              {
-                title: 'Shopper',
-                chip: 'public',
-                nodes: [
-                  { name: 'Storefront SPA', kind: 'custom', role: 'Vue 3 · Vite. Talks to **XAPI only** — no REST, no server-side middleware.', meta: 'GraphQL' }
-                ]
-              },
-              {
-                title: 'Employee',
-                chip: 'internal',
-                nodes: [
-                  { name: 'Admin UI SPA', kind: 'virto', role: 'Commerce Manager · VC-Shell app. Talks to **REST API only**.', meta: 'REST' }
-                ]
-              }
-            ]
-          },
-          { arrow: true },
-          {
-            label: 'Edge & routing',
-            clusters: [
-              {
-                title: 'Shopper path',
-                chip: 'CDN → load balancer',
-                nodes: [
-                  { name: 'CDN', kind: 'infra', role: 'TLS, caching, static assets' },
-                  { name: 'SSR / prerender', kind: 'infra', role: 'Optional — crawlers and first paint' },
-                  { name: 'Load balancer', kind: 'infra', role: 'Splits the two routes by path: **static content** vs **API**' }
-                ]
-              },
-              {
-                title: 'Employee path',
-                chip: 'firewall',
-                nodes: [
-                  { name: 'Firewall', kind: 'infra', role: 'The back office is not published to the internet — REST reaches the platform from inside only' }
-                ]
-              }
-            ]
-          },
-          { arrow: true },
-          {
-            label: 'API',
-            clusters: [
-              {
-                title: 'Storefront — XAPI only',
-                chip: 'GraphQL',
-                nodes: [
-                  { name: 'Content storage', kind: 'infra', role: 'Theme, site configuration, pages — served by the static route, never through the platform' },
-                  { name: 'XAPI', kind: 'virto', role: 'Business API of GraphQL queries **and mutations** — `xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`' }
-                ]
-              },
-              {
-                title: 'Back office — REST only',
-                chip: 'REST /api',
-                nodes: [
-                  { name: 'REST /api', kind: 'virto', role: 'Full CRUD, per-endpoint permissions, Swagger-documented' }
-                ]
-              }
-            ]
-          },
-          { arrow: true },
+        /* Two isolated paths run as parallel rails and only converge at the modules. The
+           shopper reaches XAPI only; the employee reaches REST only, from behind a firewall.
+           Columns marked `shared` span both lanes — that is the join. */
+        columns: [
+          { label: 'Presentation' },
+          { label: 'Edge & routing' },
+          { label: 'API' },
           {
             label: 'Modules · atomic architecture',
-            clusters: [
+            shared: true,
+            scopes: [
               {
                 title: 'Virto Commerce Modules',
                 chip: '≈80% standard base',
-                nodes: [
-                  { name: 'Commerce core', kind: 'oob', role: 'Catalog · Pricing · Inventory' },
-                  { name: 'Selling', kind: 'oob', role: 'Cart · Order · Payment · Tax · Shipping' },
-                  { name: 'Customer', kind: 'oob', role: 'Profiles · Marketing · Notifications' },
-                  { name: 'Platform services', kind: 'oob', role: 'Assets · Search · Export/Import · Security' }
-                ]
+                accent: 'virto',
+                role: 'Released artifacts you consume, never fork',
+                modules: ['Catalog', 'Pricing', 'Inventory', 'Cart', 'Order', 'Payment', 'Tax',
+                          'Shipping', 'Customer', 'Marketing', 'Notifications', 'Assets',
+                          'Search', 'Export/Import', 'Security']
               },
               {
                 title: 'Your Solution Modules',
                 chip: '≈20% tailored',
-                nodes: [
-                  { name: 'New modules', kind: 'custom', role: 'Capabilities the box does not have' },
-                  { name: 'Extensions', kind: 'custom', role: 'Standard modules extended via `AbstractTypeFactory`, dynamic properties or events' },
-                  { name: 'Integrations', kind: 'custom', role: 'ERP · WMS · PIM adapters' }
-                ]
+                accent: 'custom',
+                role: 'New modules, Virto Commerce modules extended via the Extensibility Framework, and integration adapters',
+                modules: ['Loyalty', 'Helpdesk', 'Trading calendar', 'ERP adapter', 'WMS adapter',
+                          'PIM adapter', 'Initial load']
               }
             ]
           },
-          { arrow: true },
           {
             label: '3rd party services',
+            shared: true,
             nodes: [
               { name: 'Database', kind: 'data', role: 'SQL Server · PostgreSQL · MySQL', meta: 'EF Core' },
               { name: 'Search', kind: 'data', role: 'Elasticsearch · OpenSearch · Azure AI Search' },
               { name: 'Distributed cache', kind: 'data', role: 'Redis — invalidation, locks, SignalR backplane' },
-              { name: 'Background jobs', kind: 'data', role: 'Hangfire (default) or RabbitMQ, behind `IBackgroundJob`', meta: 'engine module' }
+              { name: 'Background jobs', kind: 'data', role: 'Hangfire (default) or RabbitMQ, behind `IBackgroundJob`' }
+            ]
+          }
+        ],
+        lanes: [
+          {
+            label: 'Customer',
+            chip: 'public',
+            accent: 'shopper',
+            cells: [
+              { nodes: [
+                { name: 'Storefront SPA', kind: 'custom', role: 'Vue 3 · Vite. Talks to **XAPI only** — no REST, no server-side middleware.', meta: 'GraphQL' }
+              ]},
+              { nodes: [
+                { name: 'CDN', kind: 'infra', role: 'TLS, caching, static assets' },
+                { name: 'SSR / prerender', kind: 'infra', role: 'Optional — crawlers and first paint' },
+                { name: 'Load balancer', kind: 'infra', role: 'Splits the two routes by path: **static content** vs **API**' }
+              ]},
+              { nodes: [
+                { name: 'Content storage', kind: 'infra', role: 'Theme, site configuration, pages — served by the static route, never through the platform' },
+                { name: 'XAPI', kind: 'virto', role: 'Business API of GraphQL queries **and mutations** — `xCatalog` · `xCart` · `xOrder` · `xCMS` · `xProfile`' }
+              ]}
+            ]
+          },
+          {
+            label: 'Employee',
+            chip: 'internal',
+            accent: 'employee',
+            cells: [
+              { nodes: [
+                { name: 'Admin UI SPA', kind: 'virto', role: 'Commerce Manager · VC-Shell app. Talks to **REST API only**.', meta: 'REST' }
+              ]},
+              { nodes: [
+                { name: 'Firewall', kind: 'infra', role: 'The back office is not published to the internet — REST reaches the platform from inside only' }
+              ]},
+              { nodes: [
+                { name: 'REST /api', kind: 'virto', role: 'Full CRUD, per-endpoint permissions, Swagger-documented' }
+              ]}
             ]
           }
         ]

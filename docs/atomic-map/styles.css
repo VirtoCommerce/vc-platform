@@ -534,6 +534,94 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .drawer.is-full .fl-node { min-width: 172px; }
 .drawer.is-full .fl-cluster-nodes { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 
+/* ---------- swimlanes ----------
+   Columns are stages, rows are isolated paths. Each lane is one continuous rail so the
+   separation is structural rather than repeated per stage. */
+
+.lanes {
+  display: grid;
+  /* Fixed tracks, not 1fr: with a max-content container the flexible tracks stretched to fit
+     unwrapped role text and cards ended up ~900px wide. Fixed columns are also what makes
+     every card exactly the same width. */
+  grid-template-columns: max-content repeat(var(--ln-cols), 212px);
+  gap: 8px;
+  align-items: stretch;
+}
+
+.ln-colhead {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--muted); text-align: center; align-self: end; padding-bottom: 2px;
+}
+
+/* The lane label doubles as the rail head. */
+.ln-label {
+  display: flex; flex-direction: column; gap: 3px; justify-content: center;
+  padding: 10px 11px 10px 10px;
+  border-left: 3px solid var(--border-strong);
+  border-radius: 7px 0 0 7px;
+  background: var(--surface-2);
+}
+.ln-label-name { font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.ln-label-chip {
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  color: var(--muted); white-space: nowrap;
+}
+
+.ln-cell {
+  display: flex; flex-direction: column; gap: 8px; justify-content: center;
+  padding: 8px;
+  border-radius: 7px;
+  background: var(--surface-2);
+}
+/* Converged stages sit outside the lane tint so the join is legible. Padding stays so their
+   cards end up exactly the same width as the ones inside a lane. */
+.ln-cell.is-shared { background: none; justify-content: flex-start; }
+
+/* Each lane gets its own accent, carried on the label rail and the cell edges. */
+.ln-label.is-shopper, .ln-cell.is-shopper { box-shadow: inset 0 0 0 1px hsl(212 60% 55% / .22); }
+.ln-label.is-shopper { border-left-color: var(--info); }
+.ln-label.is-employee, .ln-cell.is-employee { box-shadow: inset 0 0 0 1px hsl(35 60% 50% / .22); }
+.ln-label.is-employee { border-left-color: var(--warn); }
+
+/* Uniform cards: the grid column fixes the width, a min-height and a clamped role fix the
+   height, so every node in the diagram is the same size. */
+.ln-cell .fl-node, .ln-scope .fl-node {
+  width: 100%; min-width: 0; min-height: 84px;
+  justify-content: flex-start;
+}
+/* Two lines of role text keeps every card the same height; the full text is in the
+   surrounding prose, so nothing is lost by clamping here. */
+.ln-cell .fl-node-role {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.ln-cell .fl-node-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ln-cell .fl-node-meta { margin-top: auto; }
+
+/* ---------- scope box (a Cell in the Atomic Architecture sense) ---------- */
+
+.ln-scope {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 9px 10px 8px;
+  border: 1.5px dashed var(--border-strong); border-radius: 9px;
+  background: var(--surface-2);
+}
+.ln-scope.is-virto  { border-color: hsl(212 55% 55% / .55); }
+.ln-scope.is-custom { border-color: hsl(35 60% 50% / .6); }
+.ln-scope-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ln-scope-title { font-size: 11px; font-weight: 700; }
+.ln-scope-role { font-size: 10px; color: var(--muted); line-height: 1.35; }
+.ln-mods { display: flex; flex-wrap: wrap; gap: 4px; }
+.ln-mod {
+  font: 9.5px var(--mono);
+  padding: 2px 6px; border-radius: 4px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border);
+}
+.ln-scope-count {
+  font: 8.5px var(--mono); text-transform: uppercase; letter-spacing: .9px;
+  color: var(--muted); align-self: flex-start;
+}
+
 /* ---------- name/description matrix ---------- */
 
 .d-matrix { display: grid; gap: 9px; }

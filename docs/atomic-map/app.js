@@ -715,11 +715,82 @@
       })) : null);
   }
 
+  /* ---------- swimlanes ----------
+   * Columns are stages, rows are isolated paths. Each lane is a continuous rail across the
+   * stages where the paths are separate; a column marked `shared` spans every lane, which is
+   * where they converge. A `scope` renders like a Cell in the Atomic Architecture diagram:
+   * a bounded box whose contents are named modules, so "this is a set of modules" is visible
+   * rather than implied.
+   */
+  function scopeBox(scope) {
+    var count = (scope.modules || []).length;
+    return el('div', { class: 'ln-scope' + (scope.accent ? ' is-' + scope.accent : '') },
+      el('div', { class: 'ln-scope-head' },
+        el('span', { class: 'ln-scope-title', text: scope.title }),
+        scope.chip ? el('span', { class: 'fl-chip', text: scope.chip }) : null),
+      scope.role ? el('span', { class: 'ln-scope-role' }, rich(scope.role)) : null,
+      count ? el('div', { class: 'ln-mods' }, scope.modules.map(function (m) {
+        return el('span', { class: 'ln-mod', text: m });
+      })) : null,
+      count ? el('span', { class: 'ln-scope-count', text: count + ' modules' }) : null);
+  }
+
+  function laneCellBody(cell) {
+    if (!cell) return null;
+    return [].concat(
+      (cell.scopes || []).map(scopeBox),
+      (cell.nodes || []).map(flowNode)
+    );
+  }
+
+  function lanesBlock(diagram) {
+    var columns = diagram.columns || [];
+    var lanes = diagram.lanes || [];
+    if (!columns.length || !lanes.length) return null;
+
+    var laned = columns.filter(function (c) { return !c.shared; });
+    var grid = el('div', { class: 'lanes', style: '--ln-cols:' + columns.length });
+
+    // Row 1: the stage headings, offset by the lane-label gutter.
+    columns.forEach(function (col, i) {
+      grid.appendChild(el('div', { class: 'ln-colhead', style: 'grid-column:' + (i + 2) + ';grid-row:1', text: col.label }));
+    });
+
+    lanes.forEach(function (lane, li) {
+      grid.appendChild(el('div', { class: 'ln-label' + (lane.accent ? ' is-' + lane.accent : ''),
+                                   style: 'grid-column:1;grid-row:' + (li + 2) },
+        el('span', { class: 'ln-label-name', text: lane.label }),
+        lane.chip ? el('span', { class: 'ln-label-chip', text: lane.chip }) : null));
+
+      laned.forEach(function (col, ci) {
+        grid.appendChild(el('div', { class: 'ln-cell' + (lane.accent ? ' is-' + lane.accent : ''),
+                                     style: 'grid-column:' + (ci + 2) + ';grid-row:' + (li + 2) },
+          laneCellBody((lane.cells || [])[ci])));
+      });
+    });
+
+    // Shared columns span every lane row — the point where the paths converge.
+    columns.forEach(function (col, i) {
+      if (!col.shared) return;
+      grid.appendChild(el('div', { class: 'ln-cell is-shared',
+                                   style: 'grid-column:' + (i + 2) + ';grid-row:2 / span ' + lanes.length },
+        laneCellBody(col)));
+    });
+
+    return el('div', { class: 'flow-wrap' }, grid,
+      diagram.legend ? el('div', { class: 'fl-legend' }, diagram.legend.map(function (item) {
+        return el('span', { class: 'fl-legend-item' },
+          el('span', { class: 'fl-legend-swatch is-' + item.kind }), item.label);
+      })) : null);
+  }
+
   /* A layer can carry several ordered diagrams; `kind` picks the renderer. */
+  var DIAGRAM_RENDERERS = { flow: flowBlock, lanes: lanesBlock, stack: schemaBlock };
+
   function diagramBlocks(layer) {
     return (layer.diagrams || []).map(function (diagram) {
-      var body = diagram.kind === 'flow' ? flowBlock(diagram) : schemaBlock(diagram);
-      return block(diagram.title, body, true);
+      var render = DIAGRAM_RENDERERS[diagram.kind] || schemaBlock;
+      return block(diagram.title, render(diagram), true);
     });
   }
 
