@@ -104,7 +104,7 @@ for (const l of LAYERS) {
   if (!l.sub) add('layer', l.id, 'missing sub');
   if (l.schema) add('layer', l.id, 'uses the old `schema` field — migrate to `diagrams: [{ kind: "stack", … }]`');
 
-  const KINDS = new Set(['stack', 'flow', 'lanes', 'pipeline']);
+  const KINDS = new Set(['stack', 'flow', 'lanes', 'pipeline', 'topology']);
   const NODE_KINDS = new Set(['virto', 'oob', 'custom', 'data', 'infra']);
   for (const d of l.diagrams || []) {
     if (!d.title) add('layer', l.id, 'diagram without a title');
@@ -130,6 +130,52 @@ for (const l of LAYERS) {
       for (const r of d.rows || []) {
         if (!r.name) add('layer', l.id, `pipeline "${d.title}" has a row without a name`);
         if (r.kind && !PP_KINDS.has(r.kind)) add('layer', l.id, `pipeline row "${r.name}" has unknown kind "${r.kind}"`);
+      }
+      continue;
+    }
+
+    if (d.kind === 'topology') {
+      const cols = d.cols || 0;
+      if (!cols) add('layer', l.id, `topology "${d.title}" has no cols`);
+      const seen = new Map();
+      const ids = new Set();
+      for (const n of d.nodes || []) {
+        if (!n.id) { add('layer', l.id, `topology "${d.title}" has a node without an id`); continue; }
+        if (!n.name) add('layer', l.id, `topology node "${n.id}" has no name`);
+        if (ids.has(n.id)) add('layer', l.id, `topology "${d.title}" has duplicate node id "${n.id}"`);
+        ids.add(n.id);
+        if (n.kind && !NODE_KINDS.has(n.kind)) add('layer', l.id, `topology node "${n.id}" has unknown kind "${n.kind}"`);
+        if (!(n.col >= 1 && n.col <= cols)) {
+          add('layer', l.id, `topology node "${n.id}" sits at col ${n.col}, outside 1..${cols}`);
+        }
+        if (!(n.row >= 1)) add('layer', l.id, `topology node "${n.id}" has no valid row`);
+        // Two cards in one cell overlap: the grid stacks them and one becomes unreadable.
+        const cell = n.col + ':' + n.row;
+        if (seen.has(cell)) {
+          add('layer', l.id, `topology "${d.title}" places "${n.id}" and "${seen.get(cell)}" in the same cell (${cell})`);
+        }
+        seen.set(cell, n.id);
+      }
+      for (const e of d.edges || []) {
+        if (!ids.has(e.from)) add('layer', l.id, `topology edge from unknown node "${e.from}"`);
+        if (!ids.has(e.to)) add('layer', l.id, `topology edge to unknown node "${e.to}"`);
+        if (e.from === e.to) add('layer', l.id, `topology edge "${e.from}" points at itself`);
+      }
+      for (const r of d.regions || []) {
+        if (!r.label) add('layer', l.id, `topology "${d.title}" has a region without a label`);
+        const okCol = Array.isArray(r.col) && r.col.length === 2 && r.col[0] >= 1 && r.col[1] <= cols && r.col[0] <= r.col[1];
+        const okRow = Array.isArray(r.row) && r.row.length === 2 && r.row[0] >= 1 && r.row[0] <= r.row[1];
+        if (!okCol || !okRow) add('layer', l.id, `region "${r.label}" has an invalid col/row span`);
+      }
+      const usedKinds = new Set((d.nodes || []).map(n => n.kind));
+      for (const item of d.legend || []) {
+        if (!item.label) add('layer', l.id, `topology "${d.title}" legend entry without a label`);
+        if (item.dashed) continue;
+        if (!usedKinds.has(item.kind)) add('layer', l.id, `topology "${d.title}" legend lists unused kind "${item.kind}"`);
+      }
+      // A dashed legend entry promises at least one bypass edge to explain.
+      if ((d.legend || []).some(i => i.dashed) && !(d.edges || []).some(e => e.bypass)) {
+        add('layer', l.id, `topology "${d.title}" legends a dashed line but has no bypass edge`);
       }
       continue;
     }

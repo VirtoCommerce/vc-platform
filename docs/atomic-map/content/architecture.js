@@ -171,10 +171,10 @@ window.VC_MAP_ARCHITECTURE = [
          Fundamentals/Scalability/scaling-configuration-on-azure-cloud (the settings). */
 
       {
-        kind: 'lanes',
-        title: 'Deployment — non-production (S)',
+        kind: 'topology',
+        title: 'Deployment — non-production',
         note: 'The **Small** configuration: one frontend instance, one backend instance, background jobs in-process. Proof of concept, demo and developer environments. **No Redis**: with a single instance there is no other cache to invalidate, no SignalR backplane to share and no lock to take across processes.',
-        groups: { platform: 'Same image · all roles' },
+        cols: 4,
         legend: [
           { kind: 'custom', label: 'Your code' },
           { kind: 'virto', label: 'Virto Commerce' },
@@ -182,70 +182,39 @@ window.VC_MAP_ARCHITECTURE = [
           { kind: 'data', label: 'Service' },
           { dashed: true, label: 'Reached directly — no instance in front of it' }
         ],
-        columns: [
-          { label: 'Client' },
-          { label: 'Frontend env' },
-          {
-            label: 'Backend env',
-            group: 'platform',
-            shared: true,
-            nodes: [
-              { name: 'Virto Commerce Platform App', kind: 'virto', meta: '×1',
-                role: 'REST, XAPI and the Commerce Manager UI in **one instance**' },
-              { name: 'Background process', kind: 'virto',
-                role: 'In-process — `BackgroundJobs:Mode = Both`. No separate worker to deploy.' }
-            ]
-          },
-          {
-            label: 'Services',
-            shared: true,
-            nodes: [
-              { name: 'SQL database', kind: 'data', meta: 'single db',
-                role: 'One database, no elastic pool' },
-              { name: 'Elasticsearch', kind: 'data',
-                role: 'Or Lucene on a developer box — filesystem-bound, so single instance only' },
-              { name: 'Application Insights', kind: 'infra',
-                role: 'Telemetry from the first environment, not something added later' },
-              { name: '3rd-party providers', kind: 'data',
-                role: 'Payments, tax, logistics — called straight from the backend, sandbox credentials' }
-            ]
-          }
+        regions: [
+          { id: 'cloud', label: 'One environment', outer: true, col: [2, 4], row: [1, 4] },
+          { id: 'platformbox', label: 'Same image · all roles', col: [3, 3], row: [1, 2] }
         ],
-        lanes: [
-          {
-            label: 'Customer',
-            chip: 'public',
-            accent: 'shopper',
-            cells: [
-              { nodes: [
-                { name: 'Browser', kind: 'infra', role: 'Multifactor authentication at sign-in' }
-              ]},
-              { nodes: [
-                { name: 'Frontend app', kind: 'custom', meta: '×1',
-                  role: 'Static content folder plus `vc-frontend`' }
-              ]}
-            ]
-          },
-          {
-            label: 'Employee',
-            chip: 'internal',
-            accent: 'employee',
-            cells: [
-              { nodes: [
-                { name: 'Browser', kind: 'infra', bypass: true, badge: '→ straight to the backend',
-                  role: 'The Commerce Manager UI is served by the platform app itself — nothing sits in front of it' }
-              ]},
-              {}   /* deliberately empty: the employee path has no frontend instance */
-            ]
-          }
+        nodes: [
+          { id: 'customer', name: 'Browser', sub: 'Customer', meta: 'MFA', kind: 'infra', col: 1, row: 1 },
+          { id: 'employee', name: 'Browser', sub: 'Employee · Commerce Manager', kind: 'infra', col: 1, row: 3 },
+          { id: 'frontend', name: 'Frontend app', sub: 'Static content · `vc-frontend`', meta: '×1', kind: 'custom', col: 2, row: 1 },
+          { id: 'platform', name: 'Platform App', sub: 'REST · XAPI · Commerce Manager', meta: '×1', kind: 'virto', col: 3, row: 1 },
+          { id: 'jobs', name: 'Background process', sub: 'In-process — `Mode: Both`', kind: 'virto', col: 3, row: 2 },
+          { id: 'sql', name: 'SQL database', sub: 'One database, no pool', kind: 'data', col: 4, row: 1 },
+          { id: 'search', name: 'Elasticsearch', sub: 'Or Lucene on a developer box', kind: 'data', col: 4, row: 2 },
+          { id: 'insights', name: 'Application Insights', sub: 'Telemetry from the first environment', kind: 'data', col: 4, row: 3 },
+          { id: 'providers', name: '3rd-party providers', sub: 'Payments · tax · logistics', kind: 'data', col: 4, row: 4 }
+        ],
+        edges: [
+          { from: 'customer', to: 'frontend', label: 'HTTPS' },
+          { from: 'frontend', to: 'platform', label: 'GraphQL · XAPI' },
+          /* Straight into the backend: nothing is deployed in front of the back office. */
+          { from: 'employee', to: 'platform', label: 'REST', bypass: true },
+          { from: 'platform', to: 'sql', label: 'EF Core' },
+          { from: 'platform', to: 'search', label: 'catalog reads' },
+          /* Fanned turns, so the outbound lines do not stack into one stroke. */
+          { from: 'platform', to: 'insights', label: 'telemetry', turnOffset: -13 },
+          { from: 'platform', to: 'providers', label: 'callbacks', turnOffset: -26 }
         ]
       },
 
       {
-        kind: 'lanes',
+        kind: 'topology',
         title: 'Deployment — production',
-        note: 'The **Extra Large** configuration: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment runs **at least two instances** behind its own load balancer, all of them run the **same image** and share one resource pool. The published table stops at L (300 requests/sec, 15 000 orders/day); XL is beyond it. The documented topology names three environments — the **integration** lane is the common fourth split, worth making once a system pushes bulk traffic through the API.',
-        groups: { platform: 'Same image · 4 roles' },
+        note: 'The **Extra Large** configuration: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment runs **at least two instances** behind the load balancer, all of them run the **same image**, and all four use the whole shared pool — one line each is drawn to keep the picture readable. The documented topology names three environments; the **integration** instance is the common fourth split, worth making once a system pushes bulk traffic through the API.',
+        cols: 5,
         legend: [
           { kind: 'custom', label: 'Your code' },
           { kind: 'virto', label: 'Virto Commerce' },
@@ -253,106 +222,54 @@ window.VC_MAP_ARCHITECTURE = [
           { kind: 'data', label: 'Service' },
           { dashed: true, label: 'Reached directly — bypasses the platform' }
         ],
-        columns: [
-          { label: 'Client' },
-          { label: 'Edge & routing' },
-          { label: 'Frontend' },
-          { label: 'Backend · 2…n', group: 'platform' },
-          {
-            label: 'Shared resources',
-            shared: true,
-            nodes: [
-              { name: 'SQL DB elastic pool', kind: 'data',
-                role: 'Modules segmented across databases — Main, Cart, Order, Catalog, Customer' },
-              { name: 'Redis', kind: 'data', meta: 'mandatory',
-                role: '`RedisConnectionString` — cache invalidation backplane, SignalR backplane, distributed locks' },
-              { name: 'Elasticsearch', kind: 'data',
-                role: 'A cluster, not a single node — this is the catalogue read path' },
-              { name: 'Azure Blob Storage', kind: 'data',
-                role: 'Product images and assets. Filesystem assets do not survive more than one instance.' },
-              { name: 'Application Insights', kind: 'infra',
-                role: 'One telemetry target for all three environments' }
-            ]
-          }
+        regions: [
+          { id: 'cloud', label: 'Cloud environment', outer: true, col: [2, 5], row: [1, 5] },
+          { id: 'platformbox', label: 'Same image · 4 roles', col: [4, 4], row: [1, 5] },
+          { id: 'sharedbox', label: 'Shared by every role', accent: 'shared', col: [5, 5], row: [1, 5] }
         ],
-        lanes: [
-          {
-            label: 'Customer',
-            chip: 'public',
-            accent: 'shopper',
-            cells: [
-              { nodes: [
-                { name: 'Browser', kind: 'infra', role: 'Multifactor authentication at sign-in' }
-              ]},
-              { nodes: [
-                { name: 'Azure CDN', kind: 'infra', bypass: true, badge: '→ direct to blob',
-                  role: 'Product images and assets, served **from blob storage** rather than through the platform' },
-                { name: 'Load balancer', kind: 'infra',
-                  role: 'ARR affinity **on** for the frontend app' }
-              ]},
-              { nodes: [
-                { name: 'Frontend app', kind: 'custom',
-                  role: 'Static content folder plus `vc-frontend` — content, not a scaling lever' }
-              ]},
-              { nodes: [
-                { name: 'Backend 4 Frontend', kind: 'virto', meta: '2…n',
-                  role: 'Backend for frontend. `Mode: Producer` — enqueues jobs, runs none. ARR affinity **off**, `ScalabilityMode: None`.' }
-              ]}
-            ]
-          },
-          {
-            label: 'Employee',
-            chip: 'internal',
-            accent: 'employee',
-            cells: [
-              { nodes: [
-                { name: 'Browser', kind: 'infra', role: 'Commerce Manager UI' }
-              ]},
-              { nodes: [
-                { name: 'Load balancer', kind: 'infra',
-                  role: 'ARR affinity **on** — SignalR push notifications need sticky sessions' }
-              ]},
-              {},   /* the back office is served by the platform, not by a frontend instance */
-              { nodes: [
-                { name: 'Backend 4 Employee', kind: 'virto', meta: '2…n',
-                  role: 'Commerce Manager and integrations. `Mode: Producer`, `ScalabilityMode: RedisBackplane`.' }
-              ]}
-            ]
-          },
-          {
-            label: 'Integration',
-            chip: 'system',
-            accent: 'integration',
-            cells: [
-              { nodes: [
-                { name: 'Integration middleware', kind: 'custom', meta: 'REST',
-                  role: 'ERP, WMS and CRM traffic — machine-to-machine, no browser and no session' }
-              ]},
-              { nodes: [
-                { name: 'Load balancer', kind: 'infra',
-                  role: 'ARR affinity **off** — stateless calls, and no push notifications to keep pinned' }
-              ]},
-              {},   /* system traffic never touches the storefront */
-              { nodes: [
-                { name: 'Integration instance', kind: 'virto', meta: '2…n',
-                  role: 'Bulk imports, webhook delivery and polling, kept off the shopper path. `Mode: Producer`.' }
-              ]}
-            ]
-          },
-          {
-            label: 'Background jobs',
-            chip: 'no traffic',
-            accent: 'jobs',
-            cells: [
-              {},   /* nothing calls this environment — it drains the queue */
-              {},
-              {},
-              { nodes: [
-                { name: 'Job workers', kind: 'virto', meta: '2…n',
-                  role: 'The only environment running the engine: `Mode: Worker`. Sized for CPU and scaled on queue depth.' }
-              ]}
-            ]
-          }
+        nodes: [
+          { id: 'cdn', name: 'Azure CDN', sub: 'Static assets at the edge', kind: 'infra', col: 2, row: 1 },
+          { id: 'blob', name: 'Azure Blob Storage', sub: 'Product images · assets', kind: 'data', col: 5, row: 1 },
+
+          { id: 'customer', name: 'Browser', sub: 'Customer', meta: 'MFA', kind: 'infra', col: 1, row: 2 },
+          { id: 'frontend', name: 'Frontend app', sub: 'Static content · `vc-frontend`', kind: 'custom', col: 3, row: 2 },
+          { id: 'bff', name: 'Backend 4 Frontend', sub: '`Mode: Producer` · ARR off', meta: '2…n', kind: 'virto', col: 4, row: 2 },
+          { id: 'search', name: 'Elasticsearch', sub: 'A cluster, not one node', kind: 'data', col: 5, row: 2 },
+
+          { id: 'lb', name: 'Load balancer', sub: 'Routes by host and path', kind: 'infra', col: 2, row: 3 },
+          { id: 'bemp', name: 'Backend 4 Employee', sub: '`RedisBackplane` · ARR on', meta: '2…n', kind: 'virto', col: 4, row: 3 },
+          { id: 'redis', name: 'Redis', sub: 'Invalidation · backplane · locks', meta: 'mandatory', kind: 'data', col: 5, row: 3 },
+
+          { id: 'employee', name: 'Browser', sub: 'Employee · Commerce Manager', kind: 'infra', col: 1, row: 4 },
+          { id: 'bint', name: 'Integration instance', sub: 'Bulk imports · webhooks', meta: '2…n', kind: 'virto', col: 4, row: 4 },
+          { id: 'sql', name: 'SQL DB elastic pool', sub: 'Main · Cart · Order · Catalog · Customer', kind: 'data', col: 5, row: 4 },
+
+          { id: 'systems', name: 'Integration middleware', sub: 'ERP · WMS · CRM', meta: 'REST', kind: 'custom', col: 1, row: 5 },
+          { id: 'jobs', name: 'Job workers', sub: 'The only `Mode: Worker`', meta: '2…n', kind: 'virto', col: 4, row: 5 },
+          { id: 'insights', name: 'Application Insights', sub: 'One target for every environment', kind: 'data', col: 5, row: 5 }
+        ],
+        edges: [
+          /* The top row is a channel, not a stage: it is the one path that skips the platform,
+             so it is drawn clear of everything else. */
+          { from: 'customer', to: 'cdn', label: 'assets' },
+          { from: 'cdn', to: 'blob', label: 'images · assets', bypass: true },
+
+          { from: 'customer', to: 'lb', label: 'HTTPS' },
+          { from: 'employee', to: 'lb', label: 'HTTPS' },
+          { from: 'systems', to: 'lb', label: 'REST', turnOffset: -12 },
+
+          { from: 'lb', to: 'frontend', label: 'ARR on' },
+          { from: 'frontend', to: 'bff', label: 'GraphQL · XAPI' },
+          { from: 'lb', to: 'bemp', label: 'REST · ARR on' },
+          { from: 'lb', to: 'bint', label: 'REST · ARR off' },
+
+          { from: 'bff', to: 'search', label: 'catalog reads' },
+          { from: 'bemp', to: 'redis', label: 'SignalR backplane' },
+          { from: 'bint', to: 'sql', label: 'bulk writes' },
+          { from: 'jobs', to: 'insights', label: 'telemetry' },
+          /* The queue itself: producers enqueue into the job storage, the worker drains it. */
+          { from: 'bff', to: 'sql', label: 'enqueue', turnOffset: -15, labelDy: -22 },
+          { from: 'jobs', to: 'sql', label: 'drain queue', turnOffset: -30 }
         ]
       },
     ],

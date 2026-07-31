@@ -577,11 +577,10 @@
     return el('p', { class: 'd-lead' + (hasNeighbour ? ' is-half' : '') }, rich(text));
   }
 
-  /* Emptying the panel also releases the topology observers — they watch elements that are
-     about to be discarded, and a stale observer would redraw into a detached SVG. */
+  /* Emptying the panel drops the topology redraws with it — they close over elements that are
+     about to be discarded, and drawing into a detached SVG is wasted work. */
   function clearDrawerBody(body) {
-    TOPOLOGY_OBSERVERS.forEach(function (o) { o.disconnect(); });
-    TOPOLOGY_OBSERVERS.length = 0;
+    TOPOLOGY_REDRAWS.length = 0;
     body.textContent = '';
   }
 
@@ -879,7 +878,16 @@
    * the midpoint of the gap between the columns.
    */
   var SVG_NS = 'http://www.w3.org/2000/svg';
-  var TOPOLOGY_OBSERVERS = [];
+  /* Redraw callbacks for the topologies currently in the panel. Explicit rather than a
+     ResizeObserver: the panel is `hidden` while its content is built, so at that moment the
+     grid has no box to measure, and observer callbacks are delivered with the rendering steps
+     — which a hidden or non-compositing tab does not run. Drawing from the three places the
+     geometry can actually change is deterministic and needs no frame. */
+  var TOPOLOGY_REDRAWS = [];
+
+  function redrawTopologies() {
+    TOPOLOGY_REDRAWS.forEach(function (redraw) { redraw(); });
+  }
 
   function svgEl(tag, props) {
     var node = document.createElementNS(SVG_NS, tag);
@@ -969,7 +977,10 @@
       if (!edge.label) return;
       /* The label is knocked out of the line with a stroke halo in the panel colour —
          cheaper and more robust than measuring the text to place a rectangle behind it. */
-      var text = svgEl('text', { x: route.labelAt.x, y: route.labelAt.y,
+      /* labelDx / labelDy nudge a label off its own turn point — the escape hatch for the one
+         case the router cannot solve: two edges whose labels land on the same spot. */
+      var text = svgEl('text', { x: route.labelAt.x + (edge.labelDx || 0),
+        y: route.labelAt.y + (edge.labelDy || 0),
         class: 'tp-edge-label' + (edge.bypass ? ' is-bypass' : '') });
       text.textContent = edge.label;
       svg.appendChild(text);
@@ -1005,16 +1016,9 @@
     var svg = svgEl('svg', { class: 'tp-edges', 'aria-hidden': 'true' });
     var stage = el('div', { class: 'tp-stage' }, svg, grid);
 
-    function redraw() { drawEdges(svg, grid, byNodeId, diagram.edges || []); }
     /* Re-measured rather than computed once: the same diagram is laid out at two widths
        (panel and full screen) and the turn points move with the tracks. */
-    if (window.ResizeObserver) {
-      var observer = new ResizeObserver(redraw);
-      observer.observe(grid);
-      TOPOLOGY_OBSERVERS.push(observer);
-    } else {
-      requestAnimationFrame(redraw);
-    }
+    TOPOLOGY_REDRAWS.push(function () { drawEdges(svg, grid, byNodeId, diagram.edges || []); });
 
     return el('div', { class: 'flow-wrap' }, stage,
       diagram.legend ? el('div', { class: 'fl-legend' }, diagram.legend.map(legendItem)) : null);
@@ -1170,6 +1174,8 @@
   function showDrawer() {
     drawer.hidden = false;
     scrim.hidden = false;
+    // First point at which a topology has a box to measure: the panel was hidden until now.
+    redrawTopologies();
     drawer.querySelector('.drawer-body').scrollTop = 0;
     var title = document.getElementById('drawer-title');
     title.setAttribute('tabindex', '-1');
@@ -1180,6 +1186,8 @@
      next atom too, so it survives closing the drawer and reloading the page. */
   function setExpanded(expanded) {
     drawer.classList.toggle('is-full', expanded);
+    // The grid tracks change width with the panel, so every turn point moves.
+    redrawTopologies();
     // Full-screen covers the poster entirely, so it genuinely is modal there.
     drawer.setAttribute('aria-modal', expanded ? 'true' : 'false');
 

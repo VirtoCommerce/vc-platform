@@ -94,10 +94,10 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
 - **`matrix`** (with `matrixTitle`) — a name/description table, e.g. the module-type list.
 - **`diagrams`** — an ordered array of diagrams; `kind` picks the renderer. `Your solution`
   carries four: Solution architecture (`lanes`), DevOps (`pipeline`), and the two deployment
-  configurations — non-production (S) and production (XL), both `lanes` so they can be read
-  against each other. Channels carries one (`stack`). Any diagram may carry a `note`, rendered
-  as a caption above it — use it for what a diagram of boxes cannot say, such as which
-  documented configuration this is and the throughput numbers behind it.
+  configurations — non-production and production, both `topology` so they can be read against
+  each other. Channels carries one (`stack`). Any diagram may carry a `note`, rendered as a
+  caption above it — use it for what a diagram of boxes cannot say, such as which documented
+  configuration this is and what it is sized for.
 
 **`kind: 'stack'`** — a vertical stack of rows joined by connector pills. A row is either a
 group of nodes or the `target`, so the target can sit anywhere: Channels puts the platform in
@@ -174,6 +174,42 @@ like a Cell in the Atomic Architecture diagram — a bounded box whose members a
   not use this stage — the employee never goes through a frontend instance, and nothing calls
   the background-job environment. Lane cells are deliberately untinted so an empty one shows
   as space rather than as an empty box; do not add a tint back.
+
+**`kind: 'topology'`** — the classic cloud-architecture picture: boxes on a grid, bounded
+regions behind them, and labelled orthogonal connectors. The one kind where position is
+**authored**, not derived — an architecture diagram's layout carries meaning a renderer cannot
+guess.
+
+```js
+{ kind: 'topology', title: 'Deployment — production', cols: 5,
+  regions: [
+    { id: 'cloud', label: 'Cloud environment', outer: true, col: [2, 5], row: [1, 5] },
+    { id: 'sharedbox', label: 'Shared by every role', accent: 'shared', col: [5, 5], row: [1, 5] } ],
+  nodes: [
+    { id: 'lb', name: 'Load balancer', sub: 'Routes by host and path', kind: 'infra', col: 2, row: 3 } ],
+  edges: [
+    { from: 'lb', to: 'bemp', label: 'REST · ARR on' },
+    { from: 'cdn', to: 'blob', label: 'images · assets', bypass: true } ]}
+```
+
+- Edges are measured from the laid-out boxes and drawn into an SVG overlay, so they follow the
+  grid rather than being hand-placed. Routes are orthogonal: straight when two boxes share a
+  centre line, otherwise a Z whose turn sits in the gutter **immediately before the target** —
+  that is what keeps a long connector out of the cards it passes.
+- `bypass: true` dashes an edge: the path that goes round the platform rather than through it.
+- `turnOffset` shifts a turn sideways so parallel connectors in one gutter fan out instead of
+  stacking into a single stroke. `labelDx` / `labelDy` nudge a label off its turn point — the
+  escape hatch for two labels landing on the same spot.
+- Leave a row empty to use it as a channel. The production diagram reserves row 1 for the
+  CDN-to-blob path, which is why that line crosses the diagram without touching a box.
+- Regions may nest: `outer: true` is the dashed environment boundary, a plain region is the
+  platform, `accent: 'shared'` is the resource pool.
+- The checker rejects two nodes in one cell, an edge naming a node that does not exist, a
+  self-edge, a region span outside the grid, a legend entry no node uses, and a dashed legend
+  entry with no bypass edge to explain it.
+- Redraws are explicit — on open, on expand — not on a `ResizeObserver`: the panel is `hidden`
+  while its content is built, so there is no box to measure yet, and observer callbacks are
+  delivered with the rendering steps, which a hidden tab does not run.
 
 **`kind: 'pipeline'`** — the compact CI/CD view: parallel source lanes converging into
 full-width steps, joined by small uppercase pills. Follows the release-strategy deck's

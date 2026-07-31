@@ -711,8 +711,13 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 
 .tp-grid {
   position: relative;
+  /* max-content, and fixed tracks rather than 1fr: with flexible tracks the element's own box
+     stayed at the panel width while its tracks overflowed it, so the SVG overlay was sized to
+     a box narrower than the diagram it had to cover. Now the box is the diagram, and the
+     scrolling is the wrapper's job — the same arrangement the other diagrams use. */
+  width: max-content;
   display: grid;
-  grid-template-columns: repeat(var(--tp-cols), minmax(150px, 1fr));
+  grid-template-columns: repeat(var(--tp-cols), 170px);
   column-gap: 74px;
   row-gap: 12px;
   align-items: stretch;
@@ -768,7 +773,8 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .tp-node {
   position: relative; z-index: 2;
   display: flex; flex-direction: column; gap: 1px; justify-content: center;
-  min-height: 52px;
+  /* One height for every box, so a row of them reads as a row. */
+  min-height: 58px;
   padding: 7px 9px;
   background: var(--surface);
   border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
@@ -791,6 +797,13 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .dg-cap {
   max-width: 96ch; margin: 0 0 12px;
   font-size: 11.5px; line-height: 1.5; color: var(--muted);
+}
+/* Full screen is more than twice the measure this text wants, so capping the line length left
+   a block of empty panel beside every caption. Columns use the width instead of stretching the
+   lines — the same trick the bullet lists use one block down. */
+.drawer.is-full .dg-cap {
+  max-width: none;
+  columns: 430px 2; column-gap: 36px;
 }
 
 /* ---------- grouped stages ----------
