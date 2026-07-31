@@ -841,7 +841,9 @@
     if ((diagram.lanes || []).length) {
       parts.push(el('div', { class: 'pp-lanes', style: '--pp-lanes:' + diagram.lanes.length },
         diagram.lanes.map(function (lane) {
-          return el('div', { class: 'pp-lane' },
+          /* `accent` tints the whole lane — heading included — so ownership is one colour
+             read down the lane rather than something to work out card by card. */
+          return el('div', { class: 'pp-lane' + (lane.accent ? ' is-' + lane.accent : '') },
             lane.label ? el('div', { class: 'pp-lane-label', text: lane.label }) : null,
             (lane.steps || []).map(function (step) {
               return step.connector ? pipelineConn(step.connector, true) : pipelineNode(step);

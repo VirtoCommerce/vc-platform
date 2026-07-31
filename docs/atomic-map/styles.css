@@ -566,6 +566,10 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.1px;
   color: var(--muted); text-align: center; margin-bottom: 5px;
 }
+/* The lane accent runs through its heading and its card subtitles, so "yours" and "vendor"
+   are two colours read at a glance instead of two borders to compare. */
+.pp-lane.is-custom .pp-lane-label, .pp-lane.is-custom .pp-node-sub { color: var(--warn); }
+.pp-lane.is-virto  .pp-lane-label, .pp-lane.is-virto  .pp-node-sub { color: var(--info); }
 
 .pp-node {
   display: flex; flex-direction: column; gap: 1px;
@@ -577,10 +581,11 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .pp-node-name { font-size: 11.5px; font-weight: 700; line-height: 1.2; }
 .pp-node-sub { font-size: 9px; font-weight: 600; color: var(--info); }
 
-/* Ownership and stage, carried by the border rather than by a legend. */
-.pp-node.is-src    { border-color: var(--border-strong); }
-.pp-node.is-custom { border-color: var(--info);  box-shadow: inset 0 0 0 1px hsl(212 60% 55% / .18); }
-.pp-node.is-virto  { border-color: var(--warn);  box-shadow: inset 0 0 0 1px hsl(35 60% 50% / .18); }
+/* Ownership, carried by the border rather than by a legend — and using the same two colours
+   as everywhere else on the poster: amber is code you own, blue is Virto Commerce. These two
+   were the wrong way round, which made the build view contradict its own legend. */
+.pp-node.is-custom { border-color: var(--warn); box-shadow: inset 0 0 0 1px hsl(35 60% 50% / .18); }
+.pp-node.is-virto  { border-color: var(--info); box-shadow: inset 0 0 0 1px hsl(212 60% 55% / .18); }
 .pp-node.is-select { border-color: var(--warn); border-width: 2px; }
 .pp-node.is-select .pp-node-name { color: var(--warn); }
 .pp-node.is-image  { border-color: var(--ok); }

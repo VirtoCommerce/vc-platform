@@ -124,16 +124,18 @@ window.VC_MAP_ARCHITECTURE = [
         lanes: [
           {
             label: 'Yours',
+            accent: 'custom',
             steps: [
-              { name: 'Your Git', kind: 'src', sub: 'custom source' },
+              { name: 'Your Git', kind: 'custom', sub: 'custom source' },
               { connector: 'CI build' },
               { name: 'Custom modules', kind: 'custom', sub: 'Artifact storage' }
             ]
           },
           {
             label: 'Vendor',
+            accent: 'virto',
             steps: [
-              { name: 'Virto releases', kind: 'src', sub: 'platform + modules' },
+              { name: 'Virto Commerce GitHub', kind: 'virto', sub: 'platform + modules source' },
               { connector: 'publish' },
               { name: 'Virto Commerce', kind: 'virto', sub: 'Artifact storage' }
             ]
