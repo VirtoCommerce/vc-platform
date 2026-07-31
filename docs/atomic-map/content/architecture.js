@@ -163,54 +163,171 @@ window.VC_MAP_ARCHITECTURE = [
         ]
       },
 
+      /* The two ends of the documented sizing range — S and XL — rendered in the same
+         swimlane language so they can be read against each other. Everything the production
+         column adds over the non-production one is a line item in the upgrade conversation.
+         Source: Fundamentals/Scalability/scalability-options (S · M · L · XL) and
+         Fundamentals/Scalability/scaling-configuration-on-azure-cloud (the settings). */
+
       {
-        kind: 'flow',
-        title: 'Deployment schema',
+        kind: 'lanes',
+        title: 'Deployment — non-production (S)',
+        note: 'The **Small** configuration: one frontend instance, one backend instance, background jobs in-process. The published sizing model puts it at ~10 frontend requests/sec, 1 cart change/sec, 200 orders/day — proof of concept, demo and developer environments. **No Redis**: with a single instance there is no other cache to invalidate, no SignalR backplane to share and no lock to take across processes.',
         legend: [
-          { kind: 'infra', label: 'Managed infrastructure' },
+          { kind: 'infra', label: 'Client & edge' },
+          { kind: 'custom', label: 'Your code' },
           { kind: 'virto', label: 'Virto Commerce workload' },
-          { kind: 'data', label: 'Stateful service' }
+          { kind: 'data', label: 'Stateful service' },
+          { dashed: true, label: 'Reached directly — no instance in front of it' }
         ],
-        tiers: [
+        columns: [
+          { label: 'Client' },
+          { label: 'Frontend env' },
           {
-            label: 'Edge & security',
+            label: 'Backend env',
+            shared: true,
             nodes: [
-              { name: 'CDN + WAF', kind: 'infra', role: 'TLS termination, caching, request filtering', meta: 'e.g. Front Door' },
-              { name: 'Secrets & identity', kind: 'infra', role: 'Key vault, managed identity — never in config files' }
+              { name: 'Virto Commerce Platform App', kind: 'virto', meta: '×1',
+                role: 'REST, XAPI and the Commerce Manager UI in **one instance**' },
+              { name: 'Background process', kind: 'virto',
+                role: 'In-process — `BackgroundJobs:Mode = Both`. No separate worker to deploy.' }
             ]
           },
-          { arrow: true },
           {
-            label: 'Compute',
-            clusters: [
-              {
-                title: 'One image, several roles',
-                chip: 'same artifact',
-                nodes: [
-                  { name: 'Ingress', kind: 'infra', role: 'Routes by host and path', meta: 'nginx / cloud LB' },
-                  { name: 'Storefront API', kind: 'virto', role: 'XAPI reads — scales with shopper traffic' },
-                  { name: 'Admin API', kind: 'virto', role: 'Back office, isolated from shopper load' },
-                  { name: 'Job worker', kind: 'virto', role: 'Worker mode — drains queues, runs no requests' }
-                ]
-              }
+            label: 'Services',
+            shared: true,
+            nodes: [
+              { name: 'SQL database', kind: 'data', meta: 'single db',
+                role: 'One database, no elastic pool' },
+              { name: 'Elasticsearch', kind: 'data',
+                role: 'Or Lucene on a developer box — filesystem-bound, so single instance only' },
+              { name: 'Application Insights', kind: 'infra',
+                role: 'Telemetry from the first environment, not something added later' },
+              { name: '3rd-party providers', kind: 'data',
+                role: 'Payments, tax, logistics — called straight from the backend, sandbox credentials' }
+            ]
+          }
+        ],
+        lanes: [
+          {
+            label: 'Customer',
+            chip: 'public',
+            accent: 'shopper',
+            cells: [
+              { nodes: [
+                { name: 'Browser', kind: 'infra', role: 'Multifactor authentication at sign-in' }
+              ]},
+              { nodes: [
+                { name: 'Frontend app', kind: 'custom', meta: '×1',
+                  role: 'Static content folder plus `vc-frontend`' }
+              ]}
             ]
           },
-          { arrow: true },
           {
-            label: 'Data & search',
+            label: 'Employee',
+            chip: 'internal',
+            accent: 'employee',
+            cells: [
+              { nodes: [
+                { name: 'Browser', kind: 'infra', bypass: true, badge: '→ straight to the backend',
+                  role: 'The Commerce Manager UI is served by the platform app itself — nothing sits in front of it' }
+              ]},
+              {}   /* deliberately empty: the employee path has no frontend instance */
+            ]
+          }
+        ]
+      },
+
+      {
+        kind: 'lanes',
+        title: 'Deployment — production (XL)',
+        note: 'The **Extra Large** configuration: the backend is split into three environments by workload, so background jobs and content managers cannot degrade shopper traffic. Each scales `1…n` behind its own load balancer, all three run the **same image** and share one resource pool. The published table stops at L (300 requests/sec, 15 000 orders/day); XL is beyond it.',
+        groups: { platform: 'Same image · three roles' },
+        legend: [
+          { kind: 'infra', label: 'Client & edge' },
+          { kind: 'custom', label: 'Your code' },
+          { kind: 'virto', label: 'Virto Commerce workload' },
+          { kind: 'data', label: 'Stateful service' },
+          { dashed: true, label: 'Reached directly — bypasses the platform' }
+        ],
+        columns: [
+          { label: 'Client' },
+          { label: 'Edge & routing' },
+          { label: 'Frontend · 1…n' },
+          { label: 'Backend · 1…n', group: 'platform' },
+          {
+            label: 'Shared resources',
+            shared: true,
             nodes: [
-              { name: 'Relational database', kind: 'data', role: 'Single writer; read replicas where the provider allows' },
-              { name: 'Redis', kind: 'data', role: 'Mandatory above one instance' },
-              { name: 'Search engine', kind: 'data', role: 'The catalogue read path' },
-              { name: 'Blob storage', kind: 'data', role: 'Assets, imports, exports' }
+              { name: 'SQL DB elastic pool', kind: 'data',
+                role: 'Modules segmented across databases — Cart, Order, Catalog, Customer — sharing one pool' },
+              { name: 'Redis', kind: 'data', meta: 'mandatory',
+                role: '`RedisConnectionString` — cache invalidation backplane, SignalR backplane, distributed locks' },
+              { name: 'Elasticsearch', kind: 'data',
+                role: 'A cluster, not a single node — this is the catalogue read path' },
+              { name: 'Azure Blob Storage', kind: 'data',
+                role: 'Product images and assets. Filesystem assets do not survive more than one instance.' },
+              { name: 'Application Insights', kind: 'infra',
+                role: 'One telemetry target for all three environments' }
+            ]
+          }
+        ],
+        lanes: [
+          {
+            label: 'Customer',
+            chip: 'public',
+            accent: 'shopper',
+            cells: [
+              { nodes: [
+                { name: 'Browser', kind: 'infra', role: 'Multifactor authentication at sign-in' }
+              ]},
+              { nodes: [
+                { name: 'Azure CDN', kind: 'infra', bypass: true, badge: '→ direct to blob',
+                  role: 'Product images and assets, served **from blob storage** rather than through the platform' },
+                { name: 'Load balancer', kind: 'infra',
+                  role: 'ARR affinity **on** for the frontend app' }
+              ]},
+              { nodes: [
+                { name: 'Frontend app', kind: 'custom', meta: '1…n',
+                  role: 'Static content folder plus `vc-frontend`, scaled out' }
+              ]},
+              { nodes: [
+                { name: 'Commerce services', kind: 'virto', meta: '1…n',
+                  role: 'Backend for frontend. `Mode: Producer` — enqueues jobs, runs none. ARR affinity **off**, `ScalabilityMode: None`.' }
+              ]}
             ]
           },
-          { arrow: true },
           {
-            label: 'Observability',
-            nodes: [
-              { name: 'Metrics & traces', kind: 'infra', role: 'Application monitoring, `/health` as the probe' },
-              { name: 'Log sink', kind: 'infra', role: 'Structured logs — Seq, Application Insights' }
+            label: 'Employee',
+            chip: 'internal',
+            accent: 'employee',
+            cells: [
+              { nodes: [
+                { name: 'Browser', kind: 'infra', role: 'Commerce Manager UI' }
+              ]},
+              { nodes: [
+                { name: 'Load balancer', kind: 'infra',
+                  role: 'ARR affinity **on** — SignalR push notifications need sticky sessions' }
+              ]},
+              {},   /* the back office is served by the platform, not by a frontend instance */
+              { nodes: [
+                { name: 'Authoring', kind: 'virto', meta: '1…n',
+                  role: 'Commerce Manager and integrations. `Mode: Producer`, `ScalabilityMode: RedisBackplane`.' }
+              ]}
+            ]
+          },
+          {
+            label: 'Background jobs',
+            chip: 'no traffic',
+            accent: 'jobs',
+            cells: [
+              {},   /* nothing calls this environment — it drains the queue */
+              {},
+              {},
+              { nodes: [
+                { name: 'Job workers', kind: 'virto', meta: '1…n',
+                  role: 'The only environment running the engine: `Mode: Worker`. Sized for CPU and scaled on queue depth.' }
+              ]}
             ]
           }
         ]
@@ -235,6 +352,8 @@ window.VC_MAP_ARCHITECTURE = [
       { label: 'Create a module from scratch', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
       { label: 'Extensibility overview', page: 'Extensibility/overview' },
       { label: 'Release strategy', page: 'Updating-Virto-Commerce-Based-Project/release-strategy-overview' },
+      { label: 'Scalability options (S · M · L · XL)', page: 'Fundamentals/Scalability/scalability-options' },
+      { label: 'Scaling configuration on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' },
       { label: 'Key extensibility points', page: 'Extensibility/key-extensibility-points' },
       { label: 'Storefront architecture (docs site)', href: 'https://docs.virtocommerce.org/storefront/developer-guide/latest/architecture/' }
     ]

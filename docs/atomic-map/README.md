@@ -93,8 +93,11 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
 
 - **`matrix`** (with `matrixTitle`) — a name/description table, e.g. the module-type list.
 - **`diagrams`** — an ordered array of diagrams; `kind` picks the renderer. `Your solution`
-  carries three: Solution architecture (`lanes`), DevOps (`pipeline`), Deployment schema
-  (`flow`). Channels carries one (`stack`).
+  carries four: Solution architecture (`lanes`), DevOps (`pipeline`), and the two deployment
+  configurations — non-production (S) and production (XL), both `lanes` so they can be read
+  against each other. Channels carries one (`stack`). Any diagram may carry a `note`, rendered
+  as a caption above it — use it for what a diagram of boxes cannot say, such as which
+  documented configuration this is and the throughput numbers behind it.
 
 **`kind: 'stack'`** — a vertical stack of rows joined by connector pills. A row is either a
 group of nodes or the `target`, so the target can sit anywhere: Channels puts the platform in
@@ -115,7 +118,9 @@ the middle, with sales channels calling down into it and back office calling up.
 - Protocol chips pin to the bottom of their card so they align on one baseline per row.
 
 **`kind: 'flow'`** — left-to-right tiers of cards, optionally grouped into dashed clusters with
-a badge, arrows between tiers, and an optional legend. Structure follows
+a badge, arrows between tiers, and an optional legend. No layer uses it at the moment — the
+deployment schema it was written for moved to `lanes`, which can show who reaches what — but it
+is the right kind for a topology with no distinct paths to keep apart. Structure follows
 [vc-module-solution-architecture-map](https://github.com/VirtoCommerce/vc-module-solution-architecture-map)'s
 tier/node/cluster vocabulary.
 
@@ -163,6 +168,11 @@ like a Cell in the Atomic Architecture diagram — a bounded box whose members a
   column — the checker enforces both, since either mistake silently misplaces grid cells.
 - `count` overrides the chip tally when the chips are only a sample of a larger set.
 - Cards are a fixed size (196×84) so the diagram reads as a grid rather than a collage.
+- `accent` is `shopper` · `employee` · `jobs` and tints the lane's label rail and its band.
+- **An empty cell (`{}`) is a statement, not a gap.** It is how the diagram says this path does
+  not use this stage — the employee never goes through a frontend instance, and nothing calls
+  the background-job environment. Lane cells are deliberately untinted so an empty one shows
+  as space rather than as an empty box; do not add a tint back.
 
 **`kind: 'pipeline'`** — the compact CI/CD view: parallel source lanes converging into
 full-width steps, joined by small uppercase pills. Follows the release-strategy deck's

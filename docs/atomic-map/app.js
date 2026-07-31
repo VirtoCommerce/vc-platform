@@ -865,7 +865,12 @@
   function diagramBlocks(layer) {
     return (layer.diagrams || []).map(function (diagram) {
       var render = DIAGRAM_RENDERERS[diagram.kind] || schemaBlock;
-      return block(diagram.title, render(diagram), true);
+      /* `note` is the caption that says which documented configuration this is and what the
+         numbers behind it are — the part a diagram of boxes cannot carry on its own. */
+      return block(diagram.title, [
+        diagram.note ? el('p', { class: 'dg-cap' }, rich(diagram.note)) : null,
+        render(diagram)
+      ], true);
     });
   }
 
