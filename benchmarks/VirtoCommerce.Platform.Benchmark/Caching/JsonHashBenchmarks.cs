@@ -49,7 +49,10 @@ public class JsonHashBenchmarks
     [Benchmark(Baseline = true)]
     public string Materialized()
     {
-        var json = JsonConvert.SerializeObject(_payload, _settings);
+        //Omit the declared root type and this arm writes no root $type, so the two arms hash DIFFERENT
+        //payloads: the ratio charges Streamed for bytes the baseline never wrote, worst at the smallest
+        //NodeCount. Nothing catches that - it compiles, it runs, and no test asserts the arms agree.
+        var json = JsonConvert.SerializeObject(_payload, typeof(object), _settings);
 
         return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(json)));
     }

@@ -50,6 +50,35 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
         }
 
         [Fact]
+        public void GetJsonSha256Hex_RootsDifferingOnlyInRuntimeType_ProduceDifferentHashes()
+        {
+            // The test above hashes a Holder, so its polymorphic node is a MEMBER — and a member always has
+            // a declared type for TypeNameHandling.Auto to compare against. Here the polymorphic object is
+            // the root itself, which is the shape a cache key actually takes: hash the request, not a
+            // wrapper around it. Serializing without declaring the root as object emits no $type for it and
+            // these two collide, with no error and a plausible-looking digest.
+            var and = BuildTree(new AndNode(), "alpha", "beta").Root;
+            var or = BuildTree(new OrNode(), "alpha", "beta").Root;
+
+            and.GetJsonSha256Hex().Should().NotBe(or.GetJsonSha256Hex());
+        }
+
+        [Fact]
+        public void GetJsonSha256Hex_WithoutTypeNameHandling_CollidesOnPolymorphicRootRuntimeType()
+        {
+            // Fixture check for the test above, mirroring the nested one below: with the discriminator off,
+            // the two roots must be indistinguishable — otherwise that test could pass on some incidental
+            // difference between AndNode and OrNode rather than on the root $type.
+            var withoutDiscriminator = JsonHashExtensions.CreateCacheKeySettings();
+            withoutDiscriminator.TypeNameHandling = TypeNameHandling.None;
+
+            var and = BuildTree(new AndNode(), "alpha", "beta").Root;
+            var or = BuildTree(new OrNode(), "alpha", "beta").Root;
+
+            and.GetJsonSha256Hex(withoutDiscriminator).Should().Be(or.GetJsonSha256Hex(withoutDiscriminator));
+        }
+
+        [Fact]
         public void GetJsonSha256Hex_WithoutTypeNameHandling_CollidesOnPolymorphicRuntimeType()
         {
             // Validates the FIXTURE of the test above rather than the shipped settings: it proves AndNode
@@ -153,14 +182,24 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
         // Uses the shipped settings factory so the two sides cannot drift apart silently.
         private static string NonStreamingHash(object value)
         {
-            var json = JsonConvert.SerializeObject(value, JsonHashExtensions.CreateCacheKeySettings());
+            var json = ReferenceJson(value);
 
             return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(json)));
         }
 
+        // The seam the boundary test derives is measured on this JSON, so it must be byte-for-byte what the
+        // streaming path writes — the root $type included, or the seam lands short by its length.
         private static int SerializedLength(object value)
         {
-            return JsonConvert.SerializeObject(value, JsonHashExtensions.CreateCacheKeySettings()).Length;
+            return ReferenceJson(value).Length;
+        }
+
+        // typeof(object) mirrors the declared root type the implementation passes; dropping it here would
+        // make the reference omit the root discriminator and every parity assertion above would compare the
+        // streaming path against a DIFFERENT payload.
+        private static string ReferenceJson(object value)
+        {
+            return JsonConvert.SerializeObject(value, typeof(object), JsonHashExtensions.CreateCacheKeySettings());
         }
 
         private static Holder LeafOf(string value)

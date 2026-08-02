@@ -29,6 +29,13 @@ public static class JsonHashExtensions
     /// cache keyed on the digest serves one caller another's result. It is safe here only because this JSON
     /// is exclusively hashed and never deserialized - do NOT reuse these settings for reading a payload back.
     /// <br/><br/>
+    /// These settings are only HALF the protection, and the missing half is invisible: <c>Auto</c> emits the
+    /// discriminator where the runtime type differs from the DECLARED one, and the root of a serialization
+    /// has no declared type unless the caller supplies it. Taking these settings to
+    /// <c>JsonConvert.SerializeObject(value, settings)</c> therefore leaves the hashed object itself
+    /// undiscriminated - pass the root type too, as <see cref="GetJsonSha256Hex(object, JsonSerializerSettings)"/>
+    /// does: <c>JsonConvert.SerializeObject(value, typeof(object), settings)</c>.
+    /// <br/><br/>
     /// <see cref="ReferenceLoopHandling.Ignore"/> makes a cyclic graph yield a truncated but stable key
     /// rather than throwing, on a path whose only job is to produce a string.
     /// </remarks>
@@ -68,7 +75,11 @@ public static class JsonHashExtensions
     /// SHA-256 of the object's JSON form, lowercase hex. Streamed into the hash because the intermediate
     /// string is never read: materializing it would copy a multi-KB payload twice per call.
     /// </summary>
-    /// <param name="value">Graph to hash. <c>null</c> is legal and hashes as the JSON literal <c>null</c>.</param>
+    /// <param name="value">
+    /// Graph to hash. <c>null</c> is legal and hashes as the JSON literal <c>null</c>. A root that
+    /// serializes to a bare JSON scalar carries no type discriminator - two enums sharing a numeric value,
+    /// or an <c>int</c> and a <c>long</c> of equal value, hash alike. Hash a request or criteria OBJECT.
+    /// </param>
     /// <param name="settings">
     /// Must make the JSON DISCRIMINATING, not merely valid - see <see cref="CreateCacheKeySettings"/>, which
     /// is the intended starting point. Passing settings without a type discriminator over a polymorphic
@@ -93,7 +104,12 @@ public static class JsonHashExtensions
         {
             //CloseOutput=false: this writer owns its pooled buffers and returns them in its own Dispose.
             using var jsonWriter = new JsonTextWriter(textWriter) { CloseOutput = false };
-            JsonSerializer.Create(settings).Serialize(jsonWriter, value);
+            //typeof(object) is load-bearing, not a filler argument. TypeNameHandling.Auto emits $type only
+            //where the runtime type differs from the DECLARED one, and the overload without a type leaves
+            //the root with no declared type to differ from - so nothing is written for the hashed object
+            //itself, the very thing the key is taken over, and two sibling roots collide. Nested members
+            //are unaffected: a property always has a declared type.
+            JsonSerializer.Create(settings).Serialize(jsonWriter, value, typeof(object));
         }
 
         Span<byte> digest = stackalloc byte[SHA256.HashSizeInBytes];
