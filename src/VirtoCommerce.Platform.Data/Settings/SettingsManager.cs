@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
@@ -34,6 +35,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly IEventPublisher _eventPublisher;
         private readonly Dictionary<string, ObjectSettingEntry> _fixedSettingsDict;
         private readonly ISettingsOverrideProvider _overrideProvider;
+        private readonly ILogger<SettingsManager> _logger;
         private volatile IDictionary<string, string[]> _cachedTypeAssignments;
 
         public SettingsManager(Func<IPlatformRepository> repositoryFactory,
@@ -41,11 +43,22 @@ namespace VirtoCommerce.Platform.Data.Settings
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,
             ISettingsOverrideProvider overrideProvider)
+            : this(repositoryFactory, memoryCache, eventPublisher, fixedSettings, overrideProvider, NullLogger<SettingsManager>.Instance)
+        {
+        }
+
+        public SettingsManager(Func<IPlatformRepository> repositoryFactory,
+            IPlatformMemoryCache memoryCache,
+            IEventPublisher eventPublisher,
+            IOptions<FixedSettings> fixedSettings,
+            ISettingsOverrideProvider overrideProvider,
+            ILogger<SettingsManager> logger)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
             _eventPublisher = eventPublisher;
             _overrideProvider = overrideProvider;
+            _logger = logger ?? NullLogger<SettingsManager>.Instance;
 
             _fixedSettingsDict = fixedSettings.Value.Settings?.ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase)
                                  ?? new Dictionary<string, ObjectSettingEntry>(StringComparer.OrdinalIgnoreCase);
@@ -321,10 +334,29 @@ namespace VirtoCommerce.Platform.Data.Settings
             var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsIgnoreCase(name));
             if (dbSetting != null)
             {
+                WarnOnValueTypeDrift(dbSetting, settingDescriptor, objectType, objectId);
                 objectSetting = dbSetting.ToModel(objectSetting);
             }
 
             return objectSetting;
+        }
+
+        private void WarnOnValueTypeDrift(SettingEntity dbSetting, SettingDescriptor descriptor, string objectType, string objectId)
+        {
+            var declaredValueType = descriptor.ValueType.ToString();
+
+            var storedValueTypes = dbSetting.SettingValues
+                .Select(x => x.ValueType)
+                .Where(x => !x.EqualsIgnoreCase(declaredValueType))
+                .Distinct()
+                .ToArray();
+
+            if (storedValueTypes.Length != 0)
+            {
+                _logger.LogWarning(
+                    "Setting '{SettingName}' (ObjectType: {ObjectType}, ObjectId: {ObjectId}) has value(s) stored as '{StoredValueType}' but is registered as '{DeclaredValueType}'. The stored value is coerced to the registered type; correct or remove the persisted value to clear this warning.",
+                    descriptor.Name, objectType, objectId, string.Join(", ", storedValueTypes), declaredValueType);
+            }
         }
 
         protected virtual ObjectSettingEntry GetSettingWithOverrides(string name, List<SettingEntity> dbStoredSettings, string objectType, string objectId)
@@ -385,24 +417,45 @@ namespace VirtoCommerce.Platform.Data.Settings
             var entry = _fixedSettingsDict[name];
             entry.IsReadOnly = true;
 
-            entry.Value = ConvertValueType(entry.Value, entry.ValueType);
-            entry.DefaultValue = ConvertValueType(entry.DefaultValue, entry.ValueType);
+            // Convert the default first, so that a value which cannot be converted falls back to an already-typed
+            // default rather than to the raw configured object.
+            entry.DefaultValue = ConvertFixedValue(entry.DefaultValue, entry.ValueType, fallback: null, name);
+            entry.Value = ConvertFixedValue(entry.Value, entry.ValueType, entry.DefaultValue, name);
 
             return entry;
         }
 
-        private static object ConvertValueType(object value, SettingValueType valueType)
+        private object ConvertFixedValue(object value, SettingValueType valueType, object fallback, string name)
         {
-            value = valueType switch
+            if (value == null)
             {
-                SettingValueType.Boolean => Convert.ToBoolean(value),
-                SettingValueType.DateTime => Convert.ToDateTime(value),
-                SettingValueType.Decimal => Convert.ToDecimal(value, CultureInfo.InvariantCulture),
-                SettingValueType.Integer or SettingValueType.PositiveInteger => Convert.ToInt32(value, CultureInfo.InvariantCulture),
-                _ => Convert.ToString(value)
-            };
+                // Fixed settings have always materialized a missing value as the declared type's empty value
+                // rather than null. Preserve that; only the failure path below is new.
+                return GetEmptyValue(valueType);
+            }
 
-            return value;
+            if (SettingValueConverter.TryConvert(value, valueType, out var converted))
+            {
+                return converted;
+            }
+
+            _logger.LogWarning(
+                "Fixed setting '{SettingName}' has a configured value that cannot be converted to its declared type '{DeclaredValueType}'. Falling back to the default value.",
+                name, valueType);
+
+            return fallback;
+        }
+
+        private static object GetEmptyValue(SettingValueType valueType)
+        {
+            return valueType switch
+            {
+                SettingValueType.Boolean => false,
+                SettingValueType.DateTime => DateTime.MinValue,
+                SettingValueType.Decimal => 0m,
+                SettingValueType.Integer or SettingValueType.PositiveInteger => 0,
+                _ => string.Empty,
+            };
         }
     }
 }
