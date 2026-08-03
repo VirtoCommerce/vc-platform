@@ -13,16 +13,13 @@ namespace VirtoCommerce.Platform.Benchmark.Caching;
 // on every call, so on a request that never hits it is pure overhead — which is the number a caller needs
 // before deciding the cache is free.
 //
-// Streamed is the shipped path. Materialized is the same digest computed the obvious way, via an
-// intermediate JSON string; the gap between them is what the pooled streaming writer buys.
-//
 // The payload is a synthetic polymorphic tree rather than a real search request: Platform.Core cannot
 // reference a search module, and the property that matters here is shape and size, not domain meaning —
 // an interface-typed tree with string leaves, sized by NodeCount to bracket a few-KB request.
 [MemoryDiagnoser]
 public class JsonHashBenchmarks
 {
-    //The shipped settings, so the two arms serialize identically and the comparison stays honest.
+    // The shipped settings, so the two arms serialize identically and the comparison stays honest.
     private static readonly JsonSerializerSettings _settings = JsonHashExtensions.CreateCacheKeySettings();
 
     [Params(8, 64, 256)]
@@ -44,14 +41,14 @@ public class JsonHashBenchmarks
         };
     }
 
-    //Materialized is the baseline: it is the obvious implementation this one replaces, so the ratio column
-    //reads as "what the streaming writer bought".
+    // Materialized is the baseline: it is the obvious implementation the streaming writer replaces, so the
+    // ratio column reads as "what the streaming writer bought".
     [Benchmark(Baseline = true)]
     public string Materialized()
     {
-        //Omit the declared root type and this arm writes no root $type, so the two arms hash DIFFERENT
-        //payloads: the ratio charges Streamed for bytes the baseline never wrote, worst at the smallest
-        //NodeCount. Nothing catches that - it compiles, it runs, and no test asserts the arms agree.
+        // Omit the declared root type and this arm writes no root $type, so the two arms hash DIFFERENT
+        // payloads: the ratio charges Streamed for bytes the baseline never wrote, worst at the smallest
+        // NodeCount. Nothing catches that - it compiles, it runs, and no test asserts the arms agree.
         var json = JsonConvert.SerializeObject(_payload, typeof(object), _settings);
 
         return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(json)));

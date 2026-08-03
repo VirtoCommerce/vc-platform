@@ -20,11 +20,9 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
         [Fact]
         public void GetJsonSha256Hex_EqualGraphsBuiltSeparately_ProduceEqualHashes()
         {
-            // Arrange — two graphs with no shared instance
             var first = BuildTree(new AndNode(), "alpha", "beta");
             var second = BuildTree(new AndNode(), "alpha", "beta");
 
-            // Act & Assert
             first.GetJsonSha256Hex().Should().Be(second.GetJsonSha256Hex());
         }
 
@@ -66,9 +64,9 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
         [Fact]
         public void GetJsonSha256Hex_WithoutTypeNameHandling_CollidesOnPolymorphicRootRuntimeType()
         {
-            // Fixture check for the test above, mirroring the nested one below: with the discriminator off,
-            // the two roots must be indistinguishable — otherwise that test could pass on some incidental
-            // difference between AndNode and OrNode rather than on the root $type.
+            // Fixture check, not a check of the shipped settings: with the discriminator off the two roots
+            // must be indistinguishable, or the test above could be passing on some incidental difference
+            // between AndNode and OrNode rather than on the root $type.
             var withoutDiscriminator = JsonHashExtensions.CreateCacheKeySettings();
             withoutDiscriminator.TypeNameHandling = TypeNameHandling.None;
 
@@ -81,9 +79,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
         [Fact]
         public void GetJsonSha256Hex_WithoutTypeNameHandling_CollidesOnPolymorphicRuntimeType()
         {
-            // Validates the FIXTURE of the test above rather than the shipped settings: it proves AndNode
-            // and OrNode really are indistinguishable without a discriminator, so that test's pass is
-            // evidence about the discriminator and not about some incidental difference between the types.
+            // The same fixture check for the nested shape.
             var withoutDiscriminator = JsonHashExtensions.CreateCacheKeySettings();
             withoutDiscriminator.TypeNameHandling = TypeNameHandling.None;
 
