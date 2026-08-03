@@ -608,7 +608,7 @@ namespace VirtoCommerce.Platform.Web
             // Decides whether an authenticated user may enter the admin UI (VirtoCommerce:PlatformUI:Access).
             // TryAdd so a module can supply its own policy: module ConfigureServices runs before this,
             // and an unconditional AddSingleton here would always override it.
-            services.TryAddSingleton<IAdminUIAccessPolicy, ConfigurationAdminUIAccessPolicy>();
+            services.AddSingleton<IAdminUIAccessPolicy, ConfigurationAdminUIAccessPolicy>();
 
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
