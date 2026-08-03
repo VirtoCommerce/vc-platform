@@ -565,7 +565,6 @@ namespace VirtoCommerce.Platform.Web
             services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
             services.Configure<FixedSettings>(Configuration.GetSection("PlatformSettings"));
 
-            //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = platformOptions.ApplicationCookieName;
@@ -575,6 +574,14 @@ namespace VirtoCommerce.Platform.Web
                 options.ExpireTimeSpan = authorizationOptions?.CookieExpireTimeSpan ?? TimeSpan.FromMinutes(60);
                 options.SlidingExpiration = authorizationOptions?.CookieSlidingExpiration ?? true;
                 options.LoginPath = "/";
+
+                // Return 401/403 for API requests instead of redirecting them to the login page.
+                // The mixed authentication scheme forwards anonymous requests to the cookie handler, so without this
+                // an expired session makes the API answer with a 302 to the login page instead of a status code.
+                // Assign the delegates instead of replacing options.Events: the instance created by AddIdentity
+                // carries OnValidatePrincipal, which runs the security stamp validation.
+                options.Events.OnRedirectToLogin = context => ApiCookieRedirectHandler.HandleAsync(context, StatusCodes.Status401Unauthorized);
+                options.Events.OnRedirectToAccessDenied = context => ApiCookieRedirectHandler.HandleAsync(context, StatusCodes.Status403Forbidden);
             });
 
             services.AddAuthorization(options =>
@@ -705,6 +712,11 @@ namespace VirtoCommerce.Platform.Web
 
             // Platform UI options
             services.AddOptions<PlatformUIOptions>().Bind(Configuration.GetSection("VirtoCommerce:PlatformUI"));
+
+            // Decides whether an authenticated user may enter the admin UI (VirtoCommerce:PlatformUI:Access).
+            // TryAdd so a module can supply its own policy: module ConfigureServices runs before this,
+            // and an unconditional AddSingleton here would always override it.
+            services.TryAddSingleton<IAdminUIAccessPolicy, ConfigurationAdminUIAccessPolicy>();
 
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
