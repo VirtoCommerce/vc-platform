@@ -339,8 +339,17 @@ angular.module('platformWebApp')
 
 
             $transitions.onBefore({ to: 'workspace.**' }, function (transition) {
+                if (!authService.isAuthenticated) {
+                    return;
+                }
+
+                // Prevent transition to workspace if the server denied admin UI access.
+                if (!authService.canAccessAdminUI) {
+                    return transition.router.stateService.target('contact-admin');
+                }
+
                 // Prevent transition to workspace if password expired
-                if (authService.isAuthenticated && authService.passwordExpired) {
+                if (authService.passwordExpired) {
                     return transition.router.stateService.target('changePasswordDialog');
                 }
             });

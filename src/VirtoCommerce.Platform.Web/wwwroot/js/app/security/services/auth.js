@@ -9,7 +9,8 @@ angular.module('platformWebApp')
         fullName: null,
         permissions: null,
         isAuthenticated: false,
-        memberId: null
+        memberId: null,
+        canAccessAdminUI: false
     };
 
     authContext.fillAuthData = function () {
