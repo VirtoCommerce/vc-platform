@@ -183,7 +183,7 @@ window.VC_MAP_ARCHITECTURE = [
           { dashed: true, label: 'Reached directly — no instance in front of it' }
         ],
         regions: [
-          { id: 'cloud', label: 'One environment', outer: true, col: [2, 4], row: [1, 4] },
+          { id: 'cloud', label: 'One environment', outer: true, col: [2, 4], row: [1, 5] },
           /* One image, drawn the way the Composable view draws one: tight to the card, dashed,
              unlabelled. Here it contains every role at once, jobs included. */
           { id: 'platformbox', tight: true, col: [3, 3], row: [1, 1] }
@@ -196,7 +196,12 @@ window.VC_MAP_ARCHITECTURE = [
           { id: 'sql', name: 'SQL database', sub: 'One database, no pool', kind: 'data', col: 4, row: 1 },
           { id: 'search', name: 'Elasticsearch', sub: 'Or Lucene on a developer box', kind: 'data', col: 4, row: 2 },
           { id: 'insights', name: 'Application Insights', sub: 'Telemetry from the first environment', kind: 'data', col: 4, row: 3 },
-          { id: 'providers', name: '3rd-party providers', sub: 'Payments · tax · logistics', kind: 'data', col: 4, row: 4 }
+          { id: 'providers', name: '3rd-party providers', sub: 'Payments · tax · logistics', kind: 'data', col: 4, row: 4 },
+          /* The same dependency as production, with a different provider behind it:
+             `FileSystemAssets` on a developer box, blob storage once there is more than one
+             instance. Drawing it here is what makes that a provider swap rather than a new
+             service appearing at the production tier. */
+          { id: 'blob', name: 'Blob storage', sub: 'Local disk — `FileSystemAssets`', kind: 'data', col: 4, row: 5 }
         ],
         edges: [
           { from: 'customer', to: 'frontend', label: 'HTTPS' },
@@ -207,7 +212,8 @@ window.VC_MAP_ARCHITECTURE = [
           { from: 'platform', to: 'search', label: 'catalog reads' },
           /* Fanned turns, so the outbound lines do not stack into one stroke. */
           { from: 'platform', to: 'insights', label: 'telemetry', turnOffset: -13 },
-          { from: 'platform', to: 'providers', label: 'callbacks', turnOffset: -26 }
+          { from: 'platform', to: 'providers', label: 'callbacks', turnOffset: -26 },
+          { from: 'platform', to: 'blob', label: 'assets', turnOffset: -39 }
         ]
       },
 
@@ -230,7 +236,7 @@ window.VC_MAP_ARCHITECTURE = [
         ],
         nodes: [
           { id: 'cdn', name: 'Azure CDN', sub: 'Static assets at the edge', kind: 'infra', col: 2, row: 1 },
-          { id: 'blob', name: 'Azure Blob Storage', sub: 'Product images · assets', kind: 'data', col: 5, row: 1 },
+          { id: 'blob', name: 'Blob storage', sub: 'Product images · assets', kind: 'data', col: 5, row: 1 },
 
           { id: 'customer', name: 'Browser', sub: 'Customer', meta: 'MFA', kind: 'infra', col: 1, row: 2 },
           { id: 'frontend', name: 'Frontend app', sub: 'Static content · `vc-frontend`', kind: 'custom', col: 3, row: 2 },
@@ -281,7 +287,7 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'topology',
         title: 'Composable Architecture',
-        note: '**The frontend never learns about the split.** It keeps one endpoint and one GraphQL schema; the load balancer resolves each operation and forwards it to the PBC host that owns it, so `xCatalog` queries land on the catalog host and `xCart` mutations on the purchase host. Every host runs the **same image** with a different module set, and they meet again in the shared stores. The dashed box round each one is that boundary: **one deployable image**, scaled and restarted on its own, which is what isolation means here — a bad release of the catalog image cannot take checkout with it. Everything inside the outer boundary is the cloud environment; only the storefront sits outside it.\n\n**When to split by PBC** rather than run one instance, or the same modules split by role: when one capability\'s load curve is unlike the others — catalog reads spike with a campaign while checkout stays flat; when a bad reindex or a bulk import must not be able to reach checkout; when one capability needs its own release cadence, its own region, or a different machine shape; or when a team needs to deploy without coordinating with everyone else.\n\n**When not to.** Split by **role** first — it is the same image, same modules and same database, and it costs one configuration change. Reach for a PBC split only when the role split has stopped being enough, because this one is a second image to build, promote and keep in step. And check the graph closes: `XOrder` requires `XCart`, which requires `XCatalog`, so those three deploy together whatever the diagram wishes.',
+        note: '**The frontend never learns about the split.** It keeps one endpoint and one GraphQL schema; the load balancer resolves each operation and forwards it to the PBC host that owns it, so `xCatalog` queries land on the catalog host and `xCart` mutations on the purchase host. Every host runs the **same image** with a different module set, and they meet again in the shared stores. The dashed box round each one is that boundary: **one deployable image**, scaled and restarted on its own, which is what isolation means here — a bad release of the catalog image cannot take checkout with it. Everything inside the outer boundary is the cloud environment; only the storefront sits outside it. The pool on the right is **the same one the production topology shares** — every image uses all of it, and one line each is drawn to keep the picture readable.\n\n**When to split by PBC** rather than run one instance, or the same modules split by role: when one capability\'s load curve is unlike the others — catalog reads spike with a campaign while checkout stays flat; when a bad reindex or a bulk import must not be able to reach checkout; when one capability needs its own release cadence, its own region, or a different machine shape; or when a team needs to deploy without coordinating with everyone else.\n\n**When not to.** Split by **role** first — it is the same image, same modules and same database, and it costs one configuration change. Reach for a PBC split only when the role split has stopped being enough, because this one is a second image to build, promote and keep in step. And check the graph closes: `XOrder` requires `XCart`, which requires `XCatalog`, so those three deploy together whatever the diagram wishes.',
         cols: 4,
         legend: [
           { kind: 'custom', label: 'Your code' },
@@ -293,12 +299,12 @@ window.VC_MAP_ARCHITECTURE = [
           /* Three levels, because three things are true at once: everything but the storefront
              runs in the cloud environment, each PBC host is its own image, and the stores are
              the one thing all of them share. */
-          { id: 'cloud', label: 'Cloud environment', outer: true, col: [2, 4], row: [1, 4] },
+          { id: 'cloud', label: 'Cloud environment', outer: true, col: [2, 4], row: [1, 5] },
           { id: 'img-catalog', tight: true, col: [3, 3], row: [1, 1] },
           { id: 'img-purchase', tight: true, col: [3, 3], row: [2, 2] },
           { id: 'img-order', tight: true, col: [3, 3], row: [3, 3] },
           { id: 'img-profile', tight: true, col: [3, 3], row: [4, 4] },
-          { id: 'stores', label: 'Shared by every image', accent: 'shared', col: [4, 4], row: [1, 4] }
+          { id: 'stores', label: 'Shared by every image', accent: 'shared', col: [4, 4], row: [1, 5] }
         ],
         nodes: [
           { id: 'frontend', name: 'Storefront', sub: 'One endpoint, one schema', meta: 'GraphQL', kind: 'custom', col: 1, row: 2 },
@@ -309,10 +315,13 @@ window.VC_MAP_ARCHITECTURE = [
           { id: 'order', name: 'Order', sub: 'xOrder · Orders — needs xCart', meta: '2…n', kind: 'virto', col: 3, row: 3 },
           { id: 'profile', name: 'Customer & Company', sub: 'Profile API · Customer', meta: '2…n', kind: 'virto', col: 3, row: 4 },
 
-          { id: 'index', name: 'Search index', sub: 'The catalog read path', kind: 'data', col: 4, row: 1 },
-          { id: 'cartdb', name: 'Cart · Pricing data', sub: 'Live prices, live carts', kind: 'data', col: 4, row: 2 },
-          { id: 'orderdb', name: 'Order data', sub: 'Its own server, if it earns one', kind: 'data', col: 4, row: 3 },
-          { id: 'customerdb', name: 'Customer data', sub: 'Accounts and organisations', kind: 'data', col: 4, row: 4 }
+          /* The same pool the production topology shares — same services, same names. The row
+             order differs so every edge below can run straight; the set is what matters. */
+          { id: 'search', name: 'Elasticsearch', sub: 'A cluster, not one node', kind: 'data', col: 4, row: 1 },
+          { id: 'redis', name: 'Redis', sub: 'Invalidation · backplane · locks', meta: 'mandatory', kind: 'data', col: 4, row: 2 },
+          { id: 'sql', name: 'SQL DB elastic pool', sub: 'Main · Cart · Order · Catalog · Customer', kind: 'data', col: 4, row: 3 },
+          { id: 'blob', name: 'Blob storage', sub: 'Product images · assets · documents', kind: 'data', col: 4, row: 4 },
+          { id: 'insights', name: 'Application Insights', sub: 'One target for every image', kind: 'data', col: 4, row: 5 }
         ],
         edges: [
           { from: 'frontend', to: 'router', label: 'one schema' },
@@ -322,10 +331,10 @@ window.VC_MAP_ARCHITECTURE = [
           { from: 'router', to: 'profile', label: 'profile', turnOffset: -26 },
           /* One straight edge per row: each host owns the store on its own line, so the picture
              stays legible instead of turning into a mesh nobody reads. */
-          { from: 'catalog', to: 'index', label: 'reads' },
-          { from: 'purchase', to: 'cartdb', label: 'reads · writes' },
-          { from: 'order', to: 'orderdb', label: 'reads · writes' },
-          { from: 'profile', to: 'customerdb', label: 'reads · writes' }
+          { from: 'catalog', to: 'search', label: 'catalog reads' },
+          { from: 'purchase', to: 'redis', label: 'cache · locks' },
+          { from: 'order', to: 'sql', label: 'reads · writes' },
+          { from: 'profile', to: 'blob', label: 'documents' }
         ]
       },
     ],
