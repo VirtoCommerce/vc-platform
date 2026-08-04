@@ -1,11 +1,656 @@
-/* Molecules — composite topics built out of many atoms.
+/* Molecules — the modules, and the composite topics written across them.
  *
- * These are deliberately reserved placeholders. The tiles exist so the shape of the whole
- * picture is visible and the gaps are honest; the content is written later, one molecule at
- * a time. `atoms` lists the atom ids a molecule will compose — unresolved ids are simply
+ * The Architectural Guidelines put molecules between atoms and cells: "a group of two or more
+ * atoms built with a single responsibility principle to handle a specific job … Examples:
+ * Catalog, Pricing, Inventory, Search, Event Bus." A molecule is therefore a **module**, and the
+ * shelf carries two kinds of tile:
+ *
+ *   kind: 'module'  — a real Virto Commerce module. Id, release and dependencies come from the
+ *                     registry, https://github.com/VirtoCommerce/vc-modules/blob/master/modules_v3.json,
+ *                     filtered to a stable 3.800+ release. Never edit these by hand: re-read the
+ *                     registry, because a hand-maintained inventory is wrong within a month.
+ *   (no kind)       — a composite topic: a guide written across several modules. Reserved, and
+ *                     referenced by atoms through `atom.molecule`, which is why they stay.
+ *
+ * Excluded from the module tiles on purpose, because the atoms tier already covers them or they
+ * implement a provider contract rather than a business capability: Search and its engines, Assets
+ * and its stores, BackgroundJobs, BackupRestore, EventBus, WebHooks, SeqLog, ApplicationInsights,
+ * import/export tooling, and the payment · tax · shipping · SSO · CMS adapters.
+ *
+ * Both kinds are placeholders: the tiles exist so the shape of the whole picture is visible and
+ * the gaps are honest. For a module tile the identity and the dependency graph are verified; the
+ * write-up is not. `atoms` lists the atom ids a molecule will compose — unresolved ids are simply
  * skipped, so it is safe to list an atom before it is authored.
  */
 window.VC_MAP_MOLECULES = [
+
+  // ============================================================ MODULES (from the registry)
+
+  {
+    id: 'mod-cart',
+    kind: 'module',
+    name: 'Cart',
+    moduleId: 'VirtoCommerce.Cart',
+    version: '3.1007.0',
+    sub: 'Shopping Cart',
+    group: 'commerce',
+    dependsOn: ['Assets', 'Core', 'Customer', 'Notifications', 'Payment', 'Shipping', 'Store'],
+    optional: ['Search'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-cart',
+  },
+
+  {
+    id: 'mod-catalog',
+    kind: 'module',
+    name: 'Catalog',
+    moduleId: 'VirtoCommerce.Catalog',
+    version: '3.1040.0',
+    sub: 'Catalog',
+    group: 'commerce',
+    dependsOn: ['Assets', 'Core', 'Search', 'Seo', 'Store'],
+    optional: ['BulkActionsModule', 'Export'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-catalog',
+  },
+
+  {
+    id: 'mod-catalog-personalization',
+    kind: 'module',
+    name: 'CatalogPersonalization',
+    moduleId: 'VirtoCommerce.CatalogPersonalization',
+    version: '3.1003.0',
+    sub: 'Catalog Personalization',
+    group: 'commerce',
+    dependsOn: ['Catalog', 'Core', 'Search'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-catalog-personalization',
+  },
+
+  {
+    id: 'mod-catalog-publishing',
+    kind: 'module',
+    name: 'CatalogPublishing',
+    moduleId: 'VirtoCommerce.CatalogPublishing',
+    version: '3.1005.0',
+    sub: 'Catalog Publishing',
+    group: 'commerce',
+    dependsOn: ['Catalog', 'Pricing'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-catalog-publishing',
+  },
+
+  {
+    id: 'mod-content',
+    kind: 'module',
+    name: 'Content',
+    moduleId: 'VirtoCommerce.Content',
+    version: '3.1003.0',
+    sub: 'Content',
+    group: 'commerce',
+    dependsOn: ['Assets', 'AzureBlobAssets', 'FileSystemAssets', 'Search', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-content',
+  },
+
+  {
+    id: 'mod-core',
+    kind: 'module',
+    name: 'Core',
+    moduleId: 'VirtoCommerce.Core',
+    version: '3.1007.0',
+    sub: 'Commerce core module',
+    group: 'commerce',
+    dependsOn: [],
+    repo: 'https://github.com/VirtoCommerce/vc-module-core',
+  },
+
+  {
+    id: 'mod-customer',
+    kind: 'module',
+    name: 'Customer',
+    moduleId: 'VirtoCommerce.Customer',
+    version: '3.1021.0',
+    sub: 'Companies and Contacts',
+    group: 'commerce',
+    dependsOn: ['Core', 'Notifications', 'Search', 'Seo', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-customer',
+  },
+
+  {
+    id: 'mod-file-experience-api',
+    kind: 'module',
+    name: 'FileExperienceApi',
+    moduleId: 'VirtoCommerce.FileExperienceApi',
+    version: '3.1004.0',
+    sub: 'File Experience API',
+    group: 'commerce',
+    dependsOn: ['Assets', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-file-experience-api',
+  },
+
+  {
+    id: 'mod-inventory',
+    kind: 'module',
+    name: 'Inventory',
+    moduleId: 'VirtoCommerce.Inventory',
+    version: '3.1004.0',
+    sub: 'Inventory',
+    group: 'commerce',
+    dependsOn: ['Catalog', 'Core', 'Search'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-inventory',
+  },
+
+  {
+    id: 'mod-marketing',
+    kind: 'module',
+    name: 'Marketing',
+    moduleId: 'VirtoCommerce.Marketing',
+    version: '3.1006.0',
+    sub: 'Marketing',
+    group: 'commerce',
+    dependsOn: ['Assets', 'Catalog', 'Core', 'Payment', 'Shipping', 'Store'],
+    optional: ['Customer', 'Orders'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-marketing',
+  },
+
+  {
+    id: 'mod-notifications',
+    kind: 'module',
+    name: 'Notifications',
+    moduleId: 'VirtoCommerce.Notifications',
+    version: '3.1013.0',
+    sub: 'Notifications',
+    group: 'commerce',
+    dependsOn: ['Assets'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-notification',
+  },
+
+  {
+    id: 'mod-orders',
+    kind: 'module',
+    name: 'Orders',
+    moduleId: 'VirtoCommerce.Orders',
+    version: '3.1013.0',
+    sub: 'Order Management',
+    group: 'commerce',
+    dependsOn: ['Assets', 'Cart', 'Catalog', 'Core', 'Customer', 'Inventory', 'Notifications', 'Payment', 'Search', 'Shipping', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-order',
+  },
+
+  {
+    id: 'mod-page-builder-module',
+    kind: 'module',
+    name: 'PageBuilderModule',
+    moduleId: 'VirtoCommerce.PageBuilderModule',
+    version: '3.1020.0',
+    sub: 'CMS Page Builder',
+    group: 'commerce',
+    dependsOn: ['Assets', 'Content', 'Core', 'Customer', 'Search', 'Store'],
+    optional: ['Pages'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-pagebuilder',
+  },
+
+  {
+    id: 'mod-payment',
+    kind: 'module',
+    name: 'Payment',
+    moduleId: 'VirtoCommerce.Payment',
+    version: '3.1006.0',
+    sub: 'Payment module',
+    group: 'commerce',
+    dependsOn: ['Core', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-payment',
+  },
+
+  {
+    id: 'mod-pricing',
+    kind: 'module',
+    name: 'Pricing',
+    moduleId: 'VirtoCommerce.Pricing',
+    version: '3.1005.0',
+    sub: 'Pricing',
+    group: 'commerce',
+    dependsOn: ['Assets', 'Catalog', 'Core', 'Search'],
+    optional: ['Export'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-pricing',
+  },
+
+  {
+    id: 'mod-profile-experience-api-module',
+    kind: 'module',
+    name: 'ProfileExperienceApiModule',
+    moduleId: 'VirtoCommerce.ProfileExperienceApiModule',
+    version: '3.1014.0',
+    sub: 'Commerce Profile Experience API',
+    group: 'commerce',
+    dependsOn: ['Customer', 'Notifications', 'Xapi'],
+    optional: ['Marketing', 'Pricing', 'Tax', 'XOrder'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-profile-experience-api',
+  },
+
+  {
+    id: 'mod-seo',
+    kind: 'module',
+    name: 'Seo',
+    moduleId: 'VirtoCommerce.Seo',
+    version: '3.1004.0',
+    sub: 'SEO',
+    group: 'commerce',
+    dependsOn: [],
+    repo: 'https://github.com/VirtoCommerce/vc-module-seo',
+  },
+
+  {
+    id: 'mod-shipping',
+    kind: 'module',
+    name: 'Shipping',
+    moduleId: 'VirtoCommerce.Shipping',
+    version: '3.1007.0',
+    sub: 'Shipping',
+    group: 'commerce',
+    dependsOn: ['Core', 'Search', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-shipping',
+  },
+
+  {
+    id: 'mod-sitemaps',
+    kind: 'module',
+    name: 'Sitemaps',
+    moduleId: 'VirtoCommerce.Sitemaps',
+    version: '3.1003.0',
+    sub: 'Sitemap Generator',
+    group: 'commerce',
+    dependsOn: ['Assets', 'Catalog', 'Content', 'Core', 'Customer', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-sitemaps',
+  },
+
+  {
+    id: 'mod-store',
+    kind: 'module',
+    name: 'Store',
+    moduleId: 'VirtoCommerce.Store',
+    version: '3.1006.0',
+    sub: 'Store',
+    group: 'commerce',
+    dependsOn: ['Core', 'Notifications', 'Seo'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-store',
+  },
+
+  {
+    id: 'mod-subscription',
+    kind: 'module',
+    name: 'Subscription',
+    moduleId: 'VirtoCommerce.Subscription',
+    version: '3.1002.0',
+    sub: 'Subscriptions',
+    group: 'commerce',
+    dependsOn: ['Core', 'Customer', 'Notifications', 'Orders', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-subscription',
+  },
+
+  {
+    id: 'mod-tax',
+    kind: 'module',
+    name: 'Tax',
+    moduleId: 'VirtoCommerce.Tax',
+    version: '3.1005.0',
+    sub: 'Tax Core',
+    group: 'commerce',
+    dependsOn: ['Core', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-tax',
+  },
+
+  {
+    id: 'mod-u-c-p',
+    kind: 'module',
+    name: 'UCP',
+    moduleId: 'VirtoCommerce.UCP',
+    version: '3.1004.0',
+    sub: 'Universal Commerce Protocol',
+    group: 'commerce',
+    dependsOn: ['Marketing', 'Orders', 'Store', 'XCart', 'XCatalog', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-u-c-p',
+  },
+
+  {
+    id: 'mod-xapi',
+    kind: 'module',
+    name: 'Xapi',
+    moduleId: 'VirtoCommerce.Xapi',
+    version: '3.1016.0',
+    sub: 'Core Experience API',
+    group: 'commerce',
+    dependsOn: ['Customer', 'Search', 'Seo', 'Store'],
+    optional: ['ApplicationInsights', 'Tax'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-x-api',
+  },
+
+  {
+    id: 'mod-x-cart',
+    kind: 'module',
+    name: 'XCart',
+    moduleId: 'VirtoCommerce.XCart',
+    version: '3.1028.0',
+    sub: 'Cart Experience API',
+    group: 'commerce',
+    dependsOn: ['Cart', 'Catalog', 'FileExperienceApi', 'Inventory', 'Marketing', 'Payment', 'Pricing', 'Shipping', 'XCatalog', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-x-cart',
+  },
+
+  {
+    id: 'mod-x-catalog',
+    kind: 'module',
+    name: 'XCatalog',
+    moduleId: 'VirtoCommerce.XCatalog',
+    version: '3.1015.0',
+    sub: 'Catalog Experience API',
+    group: 'commerce',
+    dependsOn: ['Catalog', 'Xapi'],
+    optional: ['Inventory', 'Marketing', 'Pricing'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-x-catalog',
+  },
+
+  {
+    id: 'mod-x-c-m-s',
+    kind: 'module',
+    name: 'XCMS',
+    moduleId: 'VirtoCommerce.XCMS',
+    version: '3.1004.0',
+    sub: 'CMS Experience API',
+    group: 'commerce',
+    dependsOn: ['Content', 'Customer', 'Xapi'],
+    optional: ['PageBuilderModule', 'Pages'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-x-cms',
+  },
+
+  {
+    id: 'mod-x-frontend',
+    kind: 'module',
+    name: 'XFrontend',
+    moduleId: 'VirtoCommerce.XFrontend',
+    version: '3.1005.0',
+    sub: 'Frontend Experience API',
+    group: 'commerce',
+    dependsOn: ['ProfileExperienceApiModule', 'Xapi'],
+    optional: ['WhiteLabeling'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-x-frontend',
+  },
+
+  {
+    id: 'mod-x-order',
+    kind: 'module',
+    name: 'XOrder',
+    moduleId: 'VirtoCommerce.XOrder',
+    version: '3.1008.0',
+    sub: 'Order Experience API',
+    group: 'commerce',
+    dependsOn: ['FileExperienceApi', 'Orders', 'Payment', 'XCart', 'XCatalog', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-x-order',
+  },
+
+  {
+    id: 'mod-a-i',
+    kind: 'module',
+    name: 'AI',
+    moduleId: 'VirtoCommerce.AI',
+    version: '3.1001.0',
+    sub: 'VirtoCommerce AI',
+    group: 'extension',
+    dependsOn: [],
+    repo: 'https://github.com/VirtoCommerce/vc-module-ai',
+  },
+
+  {
+    id: 'mod-a-i-document-processing',
+    kind: 'module',
+    name: 'AIDocumentProcessing',
+    moduleId: 'VirtoCommerce.AIDocumentProcessing',
+    version: '3.901.0',
+    sub: 'VirtoCommerce AIDocumentProcessing module',
+    group: 'extension',
+    dependsOn: ['Core', 'FileExperienceApi', 'ProfileExperienceApiModule', 'Quote', 'XCart', 'Xapi'],
+    optional: ['ApplicationInsights'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-ai-document-processing',
+  },
+
+  {
+    id: 'mod-back-in-stock',
+    kind: 'module',
+    name: 'BackInStock',
+    moduleId: 'VirtoCommerce.BackInStock',
+    version: '3.1002.0',
+    sub: 'Back In Stock',
+    group: 'extension',
+    dependsOn: ['Catalog', 'Customer', 'Inventory', 'Notifications', 'Store', 'XCatalog', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-back-in-stock',
+  },
+
+  {
+    id: 'mod-contracts',
+    kind: 'module',
+    name: 'Contracts',
+    moduleId: 'VirtoCommerce.Contracts',
+    version: '3.1004.0',
+    sub: 'Contracts',
+    group: 'extension',
+    dependsOn: ['Customer', 'Pricing', 'Store', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-contract',
+  },
+
+  {
+    id: 'mod-customer-reviews',
+    kind: 'module',
+    name: 'CustomerReviews',
+    moduleId: 'VirtoCommerce.CustomerReviews',
+    version: '3.1005.0',
+    sub: 'Rating and Reviews',
+    group: 'extension',
+    dependsOn: ['Assets', 'Catalog', 'Customer', 'FileExperienceApi', 'Notifications', 'Orders', 'ProfileExperienceApiModule', 'Store', 'XCatalog', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-customer-review',
+  },
+
+  {
+    id: 'mod-dynamic-associations-module',
+    kind: 'module',
+    name: 'DynamicAssociationsModule',
+    moduleId: 'VirtoCommerce.DynamicAssociationsModule',
+    version: '3.1002.0',
+    sub: 'Dynamic Associations',
+    group: 'extension',
+    dependsOn: ['Catalog', 'Core', 'Marketing', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-dynamic-associations',
+  },
+
+  {
+    id: 'mod-g-d-p-r',
+    kind: 'module',
+    name: 'GDPR',
+    moduleId: 'VirtoCommerce.GDPR',
+    version: '3.1001.0',
+    sub: 'GDPR',
+    group: 'extension',
+    dependsOn: ['Customer', 'Orders'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-gdpr',
+  },
+
+  {
+    id: 'mod-loyalty',
+    kind: 'module',
+    name: 'Loyalty',
+    moduleId: 'VirtoCommerce.Loyalty',
+    version: '3.1004.0',
+    sub: 'Loyalty',
+    group: 'extension',
+    dependsOn: ['Catalog', 'Core', 'Orders', 'XCart', 'XCatalog'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-loyalty',
+  },
+
+  {
+    id: 'mod-marketing-experience-api',
+    kind: 'module',
+    name: 'MarketingExperienceApi',
+    moduleId: 'VirtoCommerce.MarketingExperienceApi',
+    version: '3.1004.0',
+    sub: 'Marketing Experience API',
+    group: 'extension',
+    dependsOn: ['Customer', 'Marketing', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-marketing-experience-api',
+  },
+
+  {
+    id: 'mod-news',
+    kind: 'module',
+    name: 'News',
+    moduleId: 'VirtoCommerce.News',
+    version: '3.1005.0',
+    sub: 'News',
+    group: 'extension',
+    dependsOn: ['Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-news',
+  },
+
+  {
+    id: 'mod-order-management',
+    kind: 'module',
+    name: 'OrderManagement',
+    moduleId: 'VirtoCommerce.OrderManagement',
+    version: '3.1002.0',
+    sub: 'Order Management (Business Rules)',
+    group: 'extension',
+    dependsOn: ['Catalog', 'Orders', 'Store'],
+    optional: ['XCatalog'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-order-management',
+  },
+
+  {
+    id: 'mod-pages',
+    kind: 'module',
+    name: 'Pages',
+    moduleId: 'VirtoCommerce.Pages',
+    version: '3.1008.0',
+    sub: 'Virto Pages',
+    group: 'extension',
+    dependsOn: ['Customer', 'Search', 'Seo', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-pages',
+  },
+
+  {
+    id: 'mod-product-snapshot',
+    kind: 'module',
+    name: 'ProductSnapshot',
+    moduleId: 'VirtoCommerce.ProductSnapshot',
+    version: '3.1003.0',
+    sub: 'Product Snapshot',
+    group: 'extension',
+    dependsOn: ['Catalog', 'Orders', 'XOrder'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-product-snapshot',
+  },
+
+  {
+    id: 'mod-push-messages',
+    kind: 'module',
+    name: 'PushMessages',
+    moduleId: 'VirtoCommerce.PushMessages',
+    version: '3.1005.0',
+    sub: 'Push Messages',
+    group: 'extension',
+    dependsOn: ['Customer', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-push-messages',
+  },
+
+  {
+    id: 'mod-quote',
+    kind: 'module',
+    name: 'Quote',
+    moduleId: 'VirtoCommerce.Quote',
+    version: '3.1002.0',
+    sub: 'Quotes',
+    group: 'extension',
+    dependsOn: ['Assets', 'Cart', 'Catalog', 'Core', 'Customer', 'FileExperienceApi', 'Orders', 'Shipping', 'Store', 'Tax', 'XCart', 'XCatalog', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-quote',
+  },
+
+  {
+    id: 'mod-return',
+    kind: 'module',
+    name: 'Return',
+    moduleId: 'VirtoCommerce.Return',
+    version: '3.1001.0',
+    sub: 'Returns',
+    group: 'extension',
+    dependsOn: ['Orders', 'Store'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-return',
+  },
+
+  {
+    id: 'mod-sales-rep',
+    kind: 'module',
+    name: 'SalesRep',
+    moduleId: 'VirtoCommerce.SalesRep',
+    version: '3.1000.0',
+    sub: 'Virto Commerce Sales Rep',
+    group: 'extension',
+    dependsOn: ['Cart', 'Catalog', 'Core', 'Customer', 'Notifications', 'Orders', 'PushMessages', 'Store', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-sales-rep',
+  },
+
+  {
+    id: 'mod-state-machine',
+    kind: 'module',
+    name: 'StateMachine',
+    moduleId: 'VirtoCommerce.StateMachine',
+    version: '3.1002.0',
+    sub: 'StateMachine module',
+    group: 'extension',
+    dependsOn: ['Core'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-state-machine',
+  },
+
+  {
+    id: 'mod-task-management',
+    kind: 'module',
+    name: 'TaskManagement',
+    moduleId: 'VirtoCommerce.TaskManagement',
+    version: '3.1005.0',
+    sub: 'Task Management',
+    group: 'extension',
+    dependsOn: ['Customer', 'Notifications', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-task-management',
+  },
+
+  {
+    id: 'mod-white-labeling',
+    kind: 'module',
+    name: 'WhiteLabeling',
+    moduleId: 'VirtoCommerce.WhiteLabeling',
+    version: '3.1003.0',
+    sub: 'White Labeling',
+    group: 'extension',
+    dependsOn: ['Customer', 'FileExperienceApi', 'ImageTools', 'XCMS', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-white-labeling',
+  },
+
+  {
+    id: 'mod-x-pickup',
+    kind: 'module',
+    name: 'XPickup',
+    moduleId: 'VirtoCommerce.XPickup',
+    version: '3.1003.0',
+    sub: 'Buy online pickup in store (BOPIS) Experience API',
+    group: 'extension',
+    dependsOn: ['Cart', 'Catalog', 'Inventory', 'Shipping', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-x-pickup',
+  },
+
+  {
+    id: 'mod-x-recommend',
+    kind: 'module',
+    name: 'XRecommend',
+    moduleId: 'VirtoCommerce.XRecommend',
+    version: '3.1002.0',
+    sub: 'Product Recommendations',
+    group: 'extension',
+    dependsOn: ['XCatalog', 'Xapi'],
+    repo: 'https://github.com/VirtoCommerce/vc-module-x-recommend',
+  },
+
+  // ============================================================ COMPOSITE TOPICS
   {
     id: 'ecommerce-modules',
     name: 'eCommerce modules',

@@ -1,8 +1,8 @@
 # Atomic Architecture Map
 
 An interactive one-screen map of the building blocks a Virto Commerce developer works with: a
-**periodic table of atoms** under a **solution architecture band**, then reserved shelves for
-composite topics (**molecules**) and business capabilities (**cells**).
+**periodic table of atoms** under a **solution architecture band**, then the module inventory and
+composite topics (**molecules**), then the business capabilities they compose (**cells**).
 
 It answers three questions without reading source:
 
@@ -29,7 +29,7 @@ content/
   meta.js             platform version + last sweep date
   architecture.js     the seven architecture layers
   atoms.js            families + every atom — this is where you will spend your time
-  molecules.js        reserved composite topics
+  molecules.js        the modules (from the registry) + reserved composite topics
   cells.js            reserved business capabilities, from the module registry
 ```
 
@@ -94,12 +94,12 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
 
 - **`matrix`** (with `matrixTitle`) — a name/description table, e.g. the module-type list.
 - **`diagrams`** — an ordered array of diagrams; `kind` picks the renderer. `Your solution`
-  carries six: Solution architecture (`lanes`), DevOps (`pipeline`), then four `topology` views —
-  catalog pricing vs order pricing, Split by Cell, and the two deployment configurations, which are
-  the same kind so they can be read against each other. Modules carries one (`tree`), Channels one
-  (`stack`). Any diagram may carry a `note`, rendered as a caption above it — use it for what a
-  diagram of boxes cannot say, such as which documented configuration this is, or the answer the
-  picture is evidence for.
+  carries five: Solution architecture (`lanes`), DevOps (`pipeline`), then three `topology` views —
+  the two deployment configurations, which share a kind so they can be read against each other, and
+  Composable Architecture last, because it only reads once those two have been. Modules carries one
+  (`tree`), Channels one (`stack`). Any diagram may carry a `note`, rendered as a caption above it —
+  use it for what a diagram of boxes cannot say, such as which documented configuration this is, or
+  the answer the picture is evidence for.
 
 **`kind: 'stack'`** — a vertical stack of rows joined by connector pills. A row is either a
 group of nodes or the `target`, so the target can sit anywhere: Channels puts the platform in
@@ -332,12 +332,34 @@ The Architectural Guidelines define four rungs, and this map uses the same words
 | Rung | In the guidelines | Here |
 |---|---|---|
 | **Atom** | a core capability or design pattern | a tile in the periodic table |
-| **Molecule** | a module — Catalog, Pricing, Inventory | named inside a cell's membership |
+| **Molecule** | a module — Catalog, Pricing, Inventory | the shelf above cells, `content/molecules.js` |
 | **Cell** | a set of molecules solving a business scenario | the shelf at the bottom, `content/cells.js` |
 | **Organism** | a whole custom solution | the `Your solution` layer |
 
 Using different words than the deck is how a composability conversation stops being checkable, so
 do not rename these.
+
+### Molecules
+
+Two kinds of tile on one shelf, told apart by `kind`:
+
+- **`kind: 'module'`** — a real Virto Commerce module. `moduleId`, `version`, `sub`, `group`,
+  `dependsOn` and `optional` all come from
+  [`vc-modules/modules_v3.json`](https://github.com/VirtoCommerce/vc-modules/blob/master/modules_v3.json),
+  filtered to a stable **3.800+** release. **Never edit these by hand** — re-read the registry. A
+  hand-maintained inventory of 51 modules is wrong within a month, and the checker rejects a module
+  tile that carries a `planned` list, because prose is not what this tier is for.
+- **no `kind`** — a composite topic: a guide written across several modules. Reserved, and required
+  to have `planned`. Around 60 atoms point at these through `atom.molecule`, which is why they stay.
+
+Excluded from the module tiles on purpose: Search and its engines, Assets and its stores,
+BackgroundJobs, BackupRestore, EventBus, WebHooks, SeqLog, ApplicationInsights, the import/export
+tooling, and the payment · tax · shipping · SSO · CMS adapters. The atoms tier already covers the
+first group, and the second implements a provider contract rather than a business capability.
+
+The shelf is **bounded and scrollable** (`max-height: 54px`) because the real inventory is longer
+than one screen can spend height on; the bound is stated in the section hint, and print removes it
+so the whole list appears on paper.
 
 ### Cells
 

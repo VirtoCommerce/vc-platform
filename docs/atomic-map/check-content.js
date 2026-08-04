@@ -342,9 +342,38 @@ for (const c of CELLS || []) {
   for (const d of c.diagrams || []) checkDiagram('cell', c.id, d);
 }
 
+/* Two kinds of molecule, two contracts. A module tile is verified identity plus a dependency
+   graph read from the registry, so it needs no prose; a composite topic is prose that has not been
+   written, so it must at least say what is coming. */
+const MODULE_GROUPS = new Set(['commerce', 'extension']);
 for (const m of MOLECULES) {
   for (const d of m.docs || []) checkDoc('molecule', m.id, d);
   for (const ref of m.atoms || []) if (!atomIds.has(ref)) add('molecule', m.id, `atoms → "${ref}" missing`);
+  if (!m.name) add('molecule', m.id, 'missing name');
+
+  if (m.kind === 'module') {
+    if (!/^VirtoCommerce\.[A-Za-z0-9.]+$/.test(m.moduleId || '')) {
+      add('molecule', m.id, `moduleId "${m.moduleId}" is not a module id from the registry`);
+    }
+    // The release the identity and the dependency list were read at. Without it a stale tile is
+    // invisible, and a hand-edited dependency list is exactly what this tier must not become.
+    if (!/^\d+\.\d+\.\d+$/.test(m.version || '')) {
+      add('molecule', m.id, `version "${m.version}" is not a module release`);
+    }
+    if (!MODULE_GROUPS.has(m.group)) add('molecule', m.id, `group "${m.group}" is not commerce or extension`);
+    if (!Array.isArray(m.dependsOn)) add('molecule', m.id, 'dependsOn must be an array, even when empty');
+    for (const dep of [...(m.dependsOn || []), ...(m.optional || [])]) {
+      if (typeof dep !== 'string' || !dep.trim()) add('molecule', m.id, 'has a blank dependency name');
+    }
+    // An optional dependency is also a dependency; listing it twice would render it twice.
+    for (const o of m.optional || []) {
+      if ((m.dependsOn || []).includes(o)) add('molecule', m.id, `"${o}" is in both dependsOn and optional`);
+    }
+    if (m.repo && !/^https:\/\/github\.com\//.test(m.repo)) add('molecule', m.id, `repo "${m.repo}" is not a GitHub URL`);
+    if (m.planned) add('molecule', m.id, 'a module tile carries its dependency graph, not a planned list');
+    continue;
+  }
+
   if (!m.planned?.length) add('molecule', m.id, 'no planned contents');
 }
 
@@ -372,7 +401,8 @@ const byFamily = FAMILIES.map(f => `${f.name}: ${ATOMS.filter(a => a.family === 
 const byAdoption = [...ADOPTIONS].map(k => `${k}: ${ATOMS.filter(a => a.adoption === k).length}`).join('  |  ');
 const noSnippet = ATOMS.filter(a => !a.snippet).map(a => a.id);
 
-console.log(`atoms: ${ATOMS.length}   layers: ${LAYERS.length}   cells: ${CELLS.length}   molecules: ${MOLECULES.length}`);
+const modMol = MOLECULES.filter(m => m.kind === 'module');
+console.log(`atoms: ${ATOMS.length}   layers: ${LAYERS.length}   cells: ${CELLS.length}   molecules: ${MOLECULES.length} (${modMol.length} modules from the registry, ${MOLECULES.length - modMol.length} topics)`);
 console.log('cells → ' + CELLS.map(c => `${c.name} (${c.splittable}, ${c.modules.length} modules)`).join('  |  '));
 console.log(`families → ${byFamily}`);
 console.log(`adoption → ${byAdoption}`);

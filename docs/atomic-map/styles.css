@@ -343,6 +343,24 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 }
 .molecule:hover { border-style: solid; background: var(--surface); }
 .molecule .mol-name { font-size: 11px; font-weight: 600; line-height: 1.45; white-space: nowrap; }
+/* A module chip is solid-edged: unlike a composite topic, its identity and dependency graph are
+   verified — only the write-up is missing. */
+.molecule.is-module { border-style: solid; border-color: var(--border); }
+.molecule.is-module .mol-name { font-family: var(--mono); font-size: 10px; font-weight: 700; }
+.mol-group {
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  padding: 1px 6px; border-radius: 999px; border: 1px solid currentColor;
+}
+.mol-group.is-commerce { color: var(--info); }
+.mol-group.is-extension { color: var(--muted); }
+/* The shelf now holds the real inventory, which is more than one screen can spend height on.
+   Bounded and scrollable, with the bound stated in the section hint. */
+.molecule-shelf {
+  max-height: 54px; overflow-y: auto;
+  scrollbar-width: thin;
+  padding-right: 2px;
+}
+.d-lead.is-quiet { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
 /* The one-liner is still in the DOM for search and for screen readers; it is simply not drawn
    on the poster. It is the first thing the panel shows when the tile is opened. */
 .molecule .mol-sub { display: none; }
@@ -1254,7 +1272,10 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   body::before { display: none; }
   .layer .layer-sub { -webkit-line-clamp: unset; overflow: visible; }
   /* On paper there is no one-screen budget, so the reserved tiles say what they are. */
-  .molecule-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(146px, 1fr)); }
+  .molecule-shelf {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(146px, 1fr));
+    max-height: none; overflow: visible;
+  }
   .molecule { display: flex; flex-direction: column; align-items: flex-start; border-radius: 6px; }
   .molecule .mol-sub { display: block; -webkit-line-clamp: unset; overflow: visible; }
   .cell-sub { display: block; white-space: normal; }

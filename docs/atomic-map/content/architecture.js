@@ -170,107 +170,6 @@ window.VC_MAP_ARCHITECTURE = [
          Source: Fundamentals/Scalability/scalability-options (S · M · L · XL) and
          Fundamentals/Scalability/scaling-configuration-on-azure-cloud (the settings). */
 
-      /* The question that decides whether anyone believes the composability claim: two prices
-         that look like the same number, and whether they are really separate. Every element
-         here is checked — the Order module has no backend reference to Pricing, the totals
-         calculator only sums stored values, and xCatalog declares Pricing optional. */
-      {
-        kind: 'topology',
-        title: 'Catalog pricing vs order pricing',
-        note: '**Two different things, in two different modules, with no dependency between them.** Catalog and cart prices are *evaluated* against pricelist assignments; an order price is a *copy* taken at checkout. `vc-module-order` has no backend reference to Pricing at all — the only mention in the whole repository is in the Admin UI JavaScript — and `DefaultCustomerOrderTotalsCalculator` only sums what is stored and converts currency. **Fully separated including the database:** each module owns its `DbContext` and its migrations, and `ConnectionStrings:VirtoCommerce.Pricing` moves it to its own server without touching code. That works because the order keeps `PriceId` as an id and the amount as a copy — never a foreign key.',
-        cols: 5,
-        legend: [
-          { kind: 'custom', label: 'Your code' },
-          { kind: 'virto', label: 'Virto Commerce' },
-          { kind: 'data', label: 'Store' },
-          { kind: 'infra', label: 'Evaluation' },
-          { dashed: true, label: 'A copy, not a lookup — nothing reads back' }
-        ],
-        regions: [
-          { id: 'pricingcell', label: 'Pricing · own module, own schema', col: [1, 2], row: [1, 3] },
-          { id: 'readpath', label: 'Digital Catalog · read path', col: [3, 4], row: [1, 2] },
-          { id: 'ordercell', label: 'Order · own module, own schema', accent: 'shared', col: [4, 5], row: [4, 5] }
-        ],
-        nodes: [
-          { id: 'pricelists', name: 'Pricelist · Price', sub: '`PricingDbContext` — its own tables and migrations', kind: 'data', col: 1, row: 2 },
-          { id: 'evaluate', name: 'Price evaluation', sub: '`IPricingEvaluatorService` — per store, catalog, customer, quantity', kind: 'infra', col: 2, row: 2 },
-
-          { id: 'index', name: 'Search index', sub: 'Prices projected in for filter and sort', kind: 'data', col: 3, row: 1 },
-          { id: 'xcatalog', name: 'xCatalog', sub: 'Pricing is `optional="true"` here', kind: 'virto', col: 4, row: 1 },
-          { id: 'xcart', name: 'xCart', sub: 'Pricing is **required** — the cart prices live', kind: 'virto', col: 4, row: 2 },
-
-          { id: 'storefront', name: 'Storefront', sub: 'Browse, then buy', kind: 'custom', col: 5, row: 1 },
-          { id: 'checkout', name: 'Checkout', sub: 'The moment the number stops moving', kind: 'virto', col: 5, row: 3 },
-
-          { id: 'lineitem', name: 'Order line item', sub: '`Price` copied · `PriceId` kept as an id', kind: 'data', col: 5, row: 4 },
-          { id: 'totals', name: 'Totals calculator', sub: 'Sums stored values, converts currency, never re-prices', kind: 'infra', col: 4, row: 4 },
-          { id: 'orderdb', name: '`OrderDbContext`', sub: 'Own tables, own migrations, own connection string', kind: 'data', col: 4, row: 5 }
-        ],
-        edges: [
-          { from: 'pricelists', to: 'evaluate', label: 'read' },
-          { from: 'evaluate', to: 'index', label: 'projected' },
-          { from: 'index', to: 'xcatalog', label: 'filter · sort' },
-          { from: 'evaluate', to: 'xcart', label: 'evaluate live' },
-          { from: 'xcatalog', to: 'storefront', label: 'GraphQL' },
-          { from: 'xcart', to: 'checkout', label: 'cart totals' },
-          /* The one-way step. Everything downstream of here is a value, not a reference. */
-          { from: 'checkout', to: 'lineitem', label: 'copy the price', bypass: true },
-          { from: 'lineitem', to: 'totals', label: 'stored values' },
-          { from: 'totals', to: 'orderdb', label: 'persist' }
-        ]
-      },
-
-      /* Composability, drawn rather than asserted. The question a solution architect actually
-         has is "where can I cut, and what does the cut cost" — so this shows the one cut the
-         module graph supports cleanly, with the shared pool underneath it. */
-      {
-        kind: 'topology',
-        title: 'Split by Cell — Digital Catalog',
-        note: 'The **module set is the unit of deployment**, not the module. Hosts from one image: the catalog-read host contains Catalog · Search · xCatalog · Xapi — with Pricing added when you want prices, since xCatalog declares it `optional="true"` — and the checkout host contains the cart and order path. They share the database by default; `ConnectionStrings:<ModuleId>` splits any module onto its own server when a table set earns it. **This is the deepest cut the graph allows today**: `VirtoCommerce.Orders` declares 11 required dependencies, so "orders as a service" is not a module set that exists.',
-        cols: 3,
-        legend: [
-          { kind: 'custom', label: 'Your code' },
-          { kind: 'virto', label: 'Virto Commerce host' },
-          { kind: 'data', label: 'Store' },
-          { dashed: true, label: 'Optional in the module set — the host runs without it' }
-        ],
-        regions: [
-          { id: 'catalogcell', label: 'Digital Catalog · own host', col: [2, 2], row: [1, 2] },
-          { id: 'checkoutcell', label: 'Purchase · with catalog', col: [2, 2], row: [3, 3] },
-          { id: 'rolecell', label: 'Same image · different role', col: [2, 2], row: [5, 5] },
-          { id: 'shared', label: 'Shared, or split per module', accent: 'shared', col: [3, 3], row: [1, 5] }
-        ],
-        nodes: [
-          { id: 'shopper', name: 'Storefront', sub: 'Browse — the read path', kind: 'custom', col: 1, row: 1 },
-          { id: 'buyer', name: 'Checkout', sub: 'Cart, payment, order', kind: 'custom', col: 1, row: 3 },
-          { id: 'admin', name: 'Commerce Manager', sub: 'Authoring, fulfilment', kind: 'virto', col: 1, row: 5 },
-
-          { id: 'readhost', name: 'Catalog read host', sub: 'Catalog · Search · xCatalog', meta: 'scales on shoppers', kind: 'virto', col: 2, row: 1 },
-          { id: 'pricing', name: 'Pricing', sub: '`optional="true"` in xCatalog', kind: 'virto', col: 2, row: 2 },
-          { id: 'checkouthost', name: 'Checkout host', sub: 'Cart · Order · Payment', meta: '11 deps on Orders', kind: 'virto', col: 2, row: 3 },
-          { id: 'adminhost', name: 'Authoring host', sub: 'Same modules, other role', kind: 'virto', col: 2, row: 5 },
-
-          { id: 'index', name: 'Search index', sub: 'The catalog read path', kind: 'data', col: 3, row: 1 },
-          { id: 'catalogdb', name: 'Catalog database', sub: '`…:VirtoCommerce.Catalog`', kind: 'data', col: 3, row: 2 },
-          { id: 'orderdb', name: 'Order database', sub: '`…:VirtoCommerce.Orders`', kind: 'data', col: 3, row: 3 },
-          { id: 'platformdb', name: 'Platform tables', sub: 'Settings · permissions', kind: 'data', col: 3, row: 5 }
-        ],
-        edges: [
-          { from: 'shopper', to: 'readhost', label: 'GraphQL' },
-          { from: 'buyer', to: 'checkouthost', label: 'GraphQL' },
-          { from: 'admin', to: 'adminhost', label: 'REST' },
-          /* Same column: the router draws this one vertically, which is what an enrichment
-             inside the same host should look like. */
-          { from: 'pricing', to: 'readhost', label: 'enriches', bypass: true },
-          { from: 'readhost', to: 'index', label: 'reads' },
-          { from: 'readhost', to: 'catalogdb', label: 'writes on author' },
-          { from: 'checkouthost', to: 'orderdb', label: 'reads · writes' },
-          /* Row 4 is left empty so this one has a clear lane to turn in. */
-          { from: 'adminhost', to: 'orderdb', label: 'reads · writes', turnOffset: -14 },
-          { from: 'adminhost', to: 'platformdb', label: 'shared config' }
-        ]
-      },
-
       {
         kind: 'topology',
         title: 'Deployment — non-production',
@@ -371,6 +270,58 @@ window.VC_MAP_ARCHITECTURE = [
           /* The queue itself: producers enqueue into the job storage, the worker drains it. */
           { from: 'bff', to: 'sql', label: 'enqueue', turnOffset: -15, labelDy: -22 },
           { from: 'jobs', to: 'sql', label: 'drain queue', turnOffset: -30 }
+        ]
+      },
+
+      /* Composability, drawn rather than asserted. The question a solution architect actually
+         has is "where can I cut, and what does the cut cost" — so this shows the one cut the
+         module graph supports cleanly, with the shared pool underneath it. Last of the five
+         views on purpose: it only reads once the deployment shapes above it have been read. */
+      {
+        kind: 'topology',
+        title: 'Composable Architecture',
+        note: 'The **module set is the unit of deployment**, not the module. Hosts from one image: the catalog-read host contains Catalog · Search · xCatalog · Xapi — with Pricing added when you want prices, since xCatalog declares it `optional="true"` — and the checkout host contains the cart and order path. They share the database by default; `ConnectionStrings:<ModuleId>` splits any module onto its own server when a table set earns it. **This is the deepest cut the graph allows today**: `VirtoCommerce.Orders` declares 11 required dependencies, so "orders as a service" is not a module set that exists.',
+        cols: 3,
+        legend: [
+          { kind: 'custom', label: 'Your code' },
+          { kind: 'virto', label: 'Virto Commerce host' },
+          { kind: 'data', label: 'Store' },
+          { dashed: true, label: 'Optional in the module set — the host runs without it' }
+        ],
+        regions: [
+          { id: 'catalogcell', label: 'Digital Catalog · own host', col: [2, 2], row: [1, 2] },
+          { id: 'checkoutcell', label: 'Purchase · with catalog', col: [2, 2], row: [3, 3] },
+          { id: 'rolecell', label: 'Same image · different role', col: [2, 2], row: [5, 5] },
+          { id: 'shared', label: 'Shared, or split per module', accent: 'shared', col: [3, 3], row: [1, 5] }
+        ],
+        nodes: [
+          { id: 'shopper', name: 'Storefront', sub: 'Browse — the read path', kind: 'custom', col: 1, row: 1 },
+          { id: 'buyer', name: 'Checkout', sub: 'Cart, payment, order', kind: 'custom', col: 1, row: 3 },
+          { id: 'admin', name: 'Commerce Manager', sub: 'Authoring, fulfilment', kind: 'virto', col: 1, row: 5 },
+
+          { id: 'readhost', name: 'Catalog read host', sub: 'Catalog · Search · xCatalog', meta: 'scales on shoppers', kind: 'virto', col: 2, row: 1 },
+          { id: 'pricing', name: 'Pricing', sub: '`optional="true"` in xCatalog', kind: 'virto', col: 2, row: 2 },
+          { id: 'checkouthost', name: 'Checkout host', sub: 'Cart · Order · Payment', meta: '11 deps on Orders', kind: 'virto', col: 2, row: 3 },
+          { id: 'adminhost', name: 'Authoring host', sub: 'Same modules, other role', kind: 'virto', col: 2, row: 5 },
+
+          { id: 'index', name: 'Search index', sub: 'The catalog read path', kind: 'data', col: 3, row: 1 },
+          { id: 'catalogdb', name: 'Catalog database', sub: '`…:VirtoCommerce.Catalog`', kind: 'data', col: 3, row: 2 },
+          { id: 'orderdb', name: 'Order database', sub: '`…:VirtoCommerce.Orders`', kind: 'data', col: 3, row: 3 },
+          { id: 'platformdb', name: 'Platform tables', sub: 'Settings · permissions', kind: 'data', col: 3, row: 5 }
+        ],
+        edges: [
+          { from: 'shopper', to: 'readhost', label: 'GraphQL' },
+          { from: 'buyer', to: 'checkouthost', label: 'GraphQL' },
+          { from: 'admin', to: 'adminhost', label: 'REST' },
+          /* Same column: the router draws this one vertically, which is what an enrichment
+             inside the same host should look like. */
+          { from: 'pricing', to: 'readhost', label: 'enriches', bypass: true },
+          { from: 'readhost', to: 'index', label: 'reads' },
+          { from: 'readhost', to: 'catalogdb', label: 'writes on author' },
+          { from: 'checkouthost', to: 'orderdb', label: 'reads · writes' },
+          /* Row 4 is left empty so this one has a clear lane to turn in. */
+          { from: 'adminhost', to: 'orderdb', label: 'reads · writes', turnOffset: -14 },
+          { from: 'adminhost', to: 'platformdb', label: 'shared config' }
         ]
       },
     ],

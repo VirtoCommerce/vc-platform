@@ -190,8 +190,10 @@
 
     var footer = document.getElementById('footer');
     footer.textContent = '';
+    var moduleMolecules = MOLECULES.filter(function (m) { return m.kind === 'module'; }).length;
     append(footer, el('span', {}, ATOMS.length + ' atoms · ' + FAMILIES.length + ' families · ' +
-      CELLS.length + ' cells · ' + MOLECULES.length + ' molecules reserved'));
+      moduleMolecules + ' modules · ' + (MOLECULES.length - moduleMolecules) + ' topics · ' +
+      CELLS.length + ' cells'));
     append(footer, el('span', {}, ADOPTION_ORDER.filter(function (k) { return counts[k]; }).map(function (k) {
       return el('span', {}, el('span', { class: adoptionOf(k).cls, text: adoptionOf(k).glyph + ' ' }),
         counts[k] + ' ' + adoptionOf(k).label.toLowerCase() + '  ');
@@ -381,9 +383,12 @@
     var host = document.getElementById('molecules');
     host.textContent = '';
     MOLECULES.forEach(function (molecule) {
+      var isModule = molecule.kind === 'module';
       var node = el('button', {
-        type: 'button', class: 'molecule',
-        'aria-label': molecule.name + ' — reserved molecule. ' + (molecule.sub || ''),
+        type: 'button', class: 'molecule' + (isModule ? ' is-module' : ''),
+        'aria-label': molecule.name + (isModule ? ' — module ' + molecule.moduleId + ' ' + molecule.version + '. '
+                                                : ' — reserved molecule. ') + (molecule.sub || ''),
+        title: isModule ? molecule.moduleId + ' ' + molecule.version + ' — ' + (molecule.sub || '') : (molecule.sub || ''),
         dataset: { id: molecule.id },
         onclick: function () { openHash('molecule', molecule.id, node); }
       },
@@ -454,8 +459,9 @@
 
   function moleculeHaystack(molecule) {
     if (!molecule._haystack) {
-      molecule._haystack = [molecule.name, molecule.sub, (molecule.planned || []).join(' ')]
-        .join(' ').toLowerCase();
+      molecule._haystack = [molecule.name, molecule.sub, molecule.moduleId, molecule.group,
+        (molecule.dependsOn || []).join(' '), (molecule.optional || []).join(' '),
+        (molecule.planned || []).join(' ')].join(' ').toLowerCase();
     }
     return molecule._haystack;
   }
@@ -1216,7 +1222,66 @@
     ]);
   }
 
+  /* A module molecule's dependency chips. Optional edges are drawn dashed and labelled, because
+     an optional dependency is the thing that decides whether a module set can be made smaller —
+     see the `optional-dependency` atom. */
+  function dependencyChips(molecule) {
+    var required = (molecule.dependsOn || []).map(function (name) {
+      return el('span', { class: 'tag-chip', title: 'Required', text: name });
+    });
+    var optional = (molecule.optional || []).map(function (name) {
+      return el('span', { class: 'tag-chip is-optional', title: 'Declared optional="true" — the module loads without it' },
+        name, el('span', { class: 'opt-mark', text: 'opt' }));
+    });
+    if (!required.length && !optional.length) {
+      return el('p', { class: 'd-lead is-quiet' }, rich('Nothing. It depends on no other module, which is what makes it the easiest kind of module to place.'));
+    }
+    return el('div', { class: 'tag-row is-left' }, required, optional);
+  }
+
+  function renderModuleMoleculeDrawer(molecule) {
+    document.getElementById('drawer-eyebrow').textContent = '';
+    append(document.getElementById('drawer-eyebrow'), [
+      el('span', { class: 'mol-group is-' + molecule.group, text: molecule.group }),
+      el('span', { text: '· ' + molecule.moduleId }),
+      el('span', { text: '· ' + molecule.version })
+    ]);
+    document.getElementById('drawer-title').textContent = molecule.name;
+
+    var body = document.getElementById('drawer-body');
+    clearDrawerBody(body);
+
+    /* The registry title is often just the module name again ("Catalog" / Catalog). A lead line
+       that repeats the heading is noise, so it is only drawn when it says something more. */
+    if (molecule.sub && molecule.sub.toLowerCase() !== molecule.name.toLowerCase()) {
+      append(body, el('p', { class: 'd-lead' }, rich(molecule.sub)));
+    }
+    append(body, el('div', { class: 'd-note' },
+      el('strong', { class: 'd-note-label', text: 'From the registry' }),
+      rich(' — identity, release and dependencies below are what `modules_v3.json` records for this' +
+           ' module. That part is verified; the write-up is not. Do not edit the list by hand — a' +
+           ' hand-maintained inventory is wrong within a month.')));
+
+    var count = (molecule.dependsOn || []).length;
+    append(body, [
+      block('Depends on', dependencyChips(molecule),
+            count + (molecule.optional || []).length > 6 ? true : 'is-half'),
+      block('Repository', docLinks([
+        molecule.repo ? { label: molecule.repo.replace('https://github.com/VirtoCommerce/', '') + ' (GitHub)', href: molecule.repo } : null,
+        { label: 'Module registry entry', href: 'https://github.com/VirtoCommerce/vc-modules/blob/master/modules_v3.json' }
+      ].filter(Boolean)), 'is-half'),
+      pills('Atoms it rests on', (molecule.atoms || []).map(function (ref) {
+        var atom = byId(ATOMS, ref);
+        return atom ? el('button', { type: 'button', class: 'pill',
+          text: adoptionOf(atom.adoption).glyph + ' ' + atom.name,
+          onclick: function () { openHash('atom', atom.id, nodes.atoms[atom.id]); } }) : null;
+      }).filter(Boolean))
+    ]);
+  }
+
   function renderMoleculeDrawer(molecule) {
+    if (molecule.kind === 'module') { renderModuleMoleculeDrawer(molecule); return; }
+
     document.getElementById('drawer-eyebrow').textContent = 'Molecule · reserved';
     document.getElementById('drawer-title').textContent = molecule.name;
 
