@@ -30,10 +30,21 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         where TChangingEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
     {
+        // These MethodInfos take TEntity / TModel, so they genuinely differ per closed generic — unlike the
+        // Type-keyed cache they feed in ReflectionUtility, which belongs on a non-generic owner.
+#pragma warning disable S2743 // Static fields should not be used in generic types
+        private static readonly MethodInfo _toModelMethod = typeof(CrudService<TModel, TEntity, TChangingEvent, TChangedEvent>)
+            .GetNonPublicInstanceMethod(nameof(ToModel), typeof(TEntity));
+
+        private static readonly MethodInfo _configureCacheMethod = typeof(CrudService<TModel, TEntity, TChangingEvent, TChangedEvent>)
+            .GetNonPublicInstanceMethod(nameof(ConfigureCache), typeof(MemoryCacheEntryOptions), typeof(string), typeof(TModel));
+#pragma warning restore S2743
+
         private readonly IEventPublisher _eventPublisher;
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly Func<IRepository> _repositoryFactory;
         private readonly bool _isToModelOverridden;
+        private readonly bool _isConfigureCacheOverridden;
 
         /// <summary>
         /// Construct new CrudService
@@ -47,10 +58,21 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             _platformMemoryCache = platformMemoryCache;
             _eventPublisher = eventPublisher;
 
-            _isToModelOverridden = GetType()
-                .GetMethod(nameof(ToModel), BindingFlags.Instance | BindingFlags.NonPublic, [typeof(TEntity)])
-                ?.DeclaringType != typeof(CrudService<TModel, TEntity, TChangingEvent, TChangedEvent>);
+            var serviceType = GetType();
+
+            _isToModelOverridden = serviceType.IsMethodOverridden(_toModelMethod);
+            _isConfigureCacheOverridden = serviceType.IsMethodOverridden(_configureCacheMethod);
         }
+
+        /// <summary>
+        /// Whether the cache entry is still expired by the token from <see cref="CreateCacheToken"/>, which lets
+        /// <see cref="GetAsync"/> have it created before the data is loaded rather than after.
+        /// False once <see cref="ConfigureCache"/> is overridden, because such a subclass may add a token of its
+        /// own instead, and tokens created in a region it never expires would accumulate. Override to return
+        /// true when the <see cref="ConfigureCache"/> override does call base.
+        /// Not conditioned on <see cref="ClearCache"/>: overriding that does not replace the token.
+        /// </summary>
+        protected virtual bool KeepsDefaultCacheToken => !_isConfigureCacheOverridden;
 
         /// <summary>
         /// Returns a list of model instances for specified IDs.
@@ -63,9 +85,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
+            // Null rather than a factory that returns early: CreateCacheToken memoizes into process-static
+            // state, so the opt-out only holds if the helper never invokes it.
+            Func<string, IChangeToken> createCacheToken = KeepsDefaultCacheToken ? CreateCacheToken : null;
+
             var models = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
                 missingIds => GetByIdsNoCache(missingIds, responseGroup),
-                ConfigureCache);
+                ConfigureCache,
+                createCacheToken);
 
             if (!clone)
             {

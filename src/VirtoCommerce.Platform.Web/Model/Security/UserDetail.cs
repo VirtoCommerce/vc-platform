@@ -13,5 +13,6 @@ namespace VirtoCommerce.Platform.Web.Model.Security
         public string AuthenticationMethod { get; set; }
         public bool IsSsoAuthenticationMethod { get; set; }
         public string MemberId { get; set; }
+        public bool CanAccessAdminUI { get; set; }
     }
 }
