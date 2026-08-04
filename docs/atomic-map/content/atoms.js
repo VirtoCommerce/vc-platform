@@ -1984,6 +1984,98 @@ window.VC_MAP_ATOMS = [
     verifiedAgainst: '3.1053.0'
   },
 
+  {
+    id: 'module-database',
+    symbol: 'Db',
+    name: 'Database per module',
+    family: 'data',
+    adoption: 'platform',
+    layer: 'modules',
+    tags: ['connectionstrings', 'dbcontext', 'migrations', 'composability', 'decomposition', 'sharding'],
+    oneLiner: 'Every module owns its schema, and can own its physical database on one line of configuration.',
+    pattern: 'Database per service, applied at the module boundary. Each module registers its own `DbContext` and resolves its connection string by **module id** first, falling back to the shared one — so moving a module to its own server is configuration, not code.',
+    whenToUse: [
+      'A hot table set that needs its own compute or its own backup schedule — orders, or the catalog',
+      'A compliance boundary: identity on a separate server is the platform\'s own precedent (`Auth:ConnectionString`)',
+      'Scaling one module\'s storage independently of the rest',
+      'Answering "is it really separated?" — the schema always is; the server is a config line'
+    ],
+    avoid: [
+      'Anything needing one transaction across two modules — there is no distributed transaction, and none is coming',
+      'Splitting before you have a measured reason. One database is simpler to run, back up and restore',
+      'Assuming a split module is now a service — it still loads in the same host process'
+    ],
+    api: [
+      { name: 'Auth:ConnectionString — the platform\'s own per-context override', file: 'src/VirtoCommerce.Platform.Web/Startup.cs' },
+      { name: 'ConnectionStrings:VirtoCommerce — the shared fallback', file: 'src/VirtoCommerce.Platform.Web/appsettings.json' },
+      { name: 'GetConnectionString(ModuleInfo.Id) ?? GetConnectionString("VirtoCommerce")', file: '(module-side pattern — Module.cs in every vc-module-* repo and in vc-cli-module-template)' }
+    ],
+    snippet: {
+      lang: 'json',
+      code: '// appsettings.json — the shipped file shows only the shared entry, but every module\n// looks for its own module id FIRST. Adding a key is the whole migration.\n{\n  "ConnectionStrings": {\n    "VirtoCommerce": "Data Source=sql-main;Initial Catalog=VirtoCommerce3;...",\n\n    // Pricing now lives on its own server. No code change, no redeploy of other modules.\n    "VirtoCommerce.Pricing": "Data Source=sql-pricing;Initial Catalog=Pricing;...",\n\n    // Orders too — its own instance, its own backup window.\n    "VirtoCommerce.Orders": "Data Source=sql-orders;Initial Catalog=Orders;..."\n  },\n\n  // Identity is the platform\'s own example of the same idea, under a different key.\n  "Auth": {\n    "ConnectionString": "Data Source=sql-identity;Initial Catalog=Security;..."\n  }\n}'
+    },
+    gotchas: [
+      'The key is the **module id** from `module.manifest` — `VirtoCommerce.Pricing`, not `Pricing` and not the assembly name.',
+      'It works only because modules never hold a foreign key across the boundary. Read [[cross-module-references]] before you split anything.',
+      'Each module migrates its own context at startup, inside the platform\'s startup distributed lock. Without Redis that lock degrades to a no-op, so two instances starting at once can both migrate.',
+      'A per-module database is invisible in the shipped `appsettings.json`, which is the main reason teams believe it does not exist.',
+      'Backup and restore become per-module: a point-in-time restore of one database leaves the others ahead of it.'
+    ],
+    docs: [
+      { label: 'Configuring environments', page: 'Tutorials-and-How-tos/How-tos/configuring-environments' },
+      { label: 'appsettings.json reference', page: 'Configuration-Reference/appsettingsjson' },
+      { label: 'DB-agnostic persistence', page: 'Fundamentals/Persistence/DB-Agnostic/overview' }
+    ],
+    seeAlso: ['cross-module-references', 'ef-core', 'module-manifest', 'host-composition', 'distributed-lock'],
+    molecule: 'deployment',
+    verifiedAgainst: '3.1053.0'
+  },
+
+  {
+    id: 'cross-module-references',
+    symbol: 'Xr',
+    name: 'Ids, not foreign keys',
+    family: 'data',
+    adoption: 'platform',
+    layer: 'modules',
+    tags: ['boundary', 'denormalization', 'snapshot', 'foreign key', 'composability', 'pricing'],
+    oneLiner: 'A module references another module\'s data by id and copies what it needs — which is what makes separate databases possible.',
+    pattern: 'Bounded context with denormalised boundary data. Across a module boundary you keep an **id** for traceability and a **copy** of the values you must not lose. No navigation property, no foreign key, no join.',
+    whenToUse: [
+      'Any time your entity needs data owned by another module',
+      'Recording *what was true at the time* — a price, a name, a tax rate on an order',
+      'Making a module independently deployable and independently storable',
+      'Reporting that must not change when the source record changes'
+    ],
+    avoid: [
+      'A foreign key to another module\'s table. It compiles, it even works in one database, and it makes the boundary a lie',
+      'Re-reading the source module to display a historical document — that is how an invoice silently changes',
+      'Copying data that is not part of the decision being recorded; a copy is a maintenance cost'
+    ],
+    api: [
+      { name: 'LineItemEntity — ProductId, CatalogId, PriceId, Price, Sku, Name as plain values', file: '(vc-module-order/src/VirtoCommerce.OrdersModule.Data/Model/LineItemEntity.cs)' },
+      { name: 'DefaultCustomerOrderTotalsCalculator — sums stored values, never re-prices', file: '(vc-module-order/src/VirtoCommerce.OrdersModule.Data/Services/DefaultCustomerOrderTotalsCalculator.cs)' },
+      { name: 'AuditableEntity — the base every module entity derives from', file: 'src/VirtoCommerce.Platform.Core/Domain/AuditableEntity.cs' }
+    ],
+    snippet: {
+      lang: 'csharp',
+      code: '// vc-module-order — the order line item, trimmed to the boundary fields.\n//\n// Note what is NOT here: no Product navigation property, no Price navigation\n// property, no [ForeignKey] to another module. Ids for traceability, values for\n// truth. This is the entire reason Orders can live in its own database.\npublic class LineItemEntity : AuditableEntity\n{\n    // Owned by the Catalog module — an id, nothing more.\n    public string ProductId { get; set; }\n    public string CatalogId { get; set; }\n\n    // Owned by the Pricing module — which price was used, recorded for audit.\n    public string PriceId { get; set; }\n\n    // Copied at checkout. The order keeps what was charged, not what the\n    // pricelist says today.\n    [Column(TypeName = "Money")]\n    public decimal Price { get; set; }\n    public string Sku { get; set; }\n    public string Name { get; set; }\n\n    // Every navigation property stays inside OrderDbContext.\n    public virtual CustomerOrderEntity CustomerOrder { get; set; }\n}'
+    },
+    gotchas: [
+      'The Order module has **no** backend dependency on Pricing — the only mention of pricing in the whole repository is in the Admin UI JavaScript. An order never re-prices itself.',
+      'A copied value can go stale by design. That is the point: a product renamed today must not rename itself on last year\'s invoice.',
+      'Without a foreign key nothing stops a dangling id. Deleting a product does not clean up orders that reference it, and should not.',
+      'You cannot join across modules in SQL. Cross-module reporting belongs in the search index or a warehouse, not in a query.'
+    ],
+    docs: [
+      { label: 'Architecture reference', page: 'Back-End-Architecture/02-conceptual-overview' },
+      { label: 'Modularity overview', page: 'Fundamentals/Modularity/01-overview' }
+    ],
+    seeAlso: ['module-database', 'ef-core', 'repository-uow', 'domain-events', 'search'],
+    molecule: 'ecommerce-modules',
+    verifiedAgainst: '3.1053.0'
+  },
+
   // ================================================================ MODULARITY
 
   {
@@ -3310,6 +3402,105 @@ window.VC_MAP_ATOMS = [
     ],
     seeAlso: ['logging', 'health-checks', 'developer-tools'],
     molecule: 'observability',
+    verifiedAgainst: '3.1053.0'
+  },
+
+  {
+    id: 'optional-dependency',
+    symbol: 'Od',
+    name: 'Optional dependency',
+    family: 'modularity',
+    adoption: 'platform',
+    layer: 'modules',
+    tags: ['manifest', 'optional', 'graceful degradation', 'composability', 'ioptionaldependency'],
+    oneLiner: 'Declare a dependency you can live without, and the module still loads when it is absent.',
+    pattern: 'Optional dependency, declared and resolved. `optional="true"` in the manifest takes the module out of the dependency solver and out of the installed-check; `IOptionalDependency<T>` is the runtime half, so code can ask whether the service is actually there.',
+    whenToUse: [
+      'A capability that enriches your module but is not required — the digital catalog runs without Pricing',
+      'Building a module set small enough to deploy on its own: an optional edge is an edge you can cut',
+      'Integrating with a module a customer may not have licensed or installed',
+      'Any `serviceCollection` consumer that must not throw when the provider module is missing'
+    ],
+    avoid: [
+      'Marking a real requirement optional to make an install succeed — it will fail later, at a worse moment',
+      'Resolving the service in `Initialize` and caching it; ask through `IOptionalDependency<T>` at the point of use',
+      'Optional dependencies as a substitute for events. If you only need to be told something happened, handle the event instead'
+    ],
+    api: [
+      { name: 'IOptionalDependency<T> — HasValue / Value', file: 'src/VirtoCommerce.Platform.Core/Modularity/IOptionalDependency.cs' },
+      { name: 'OptionalDependencyManager<T> — the registered implementation', file: 'src/VirtoCommerce.Platform.Modules/OptionalDependencyManager.cs' },
+      { name: 'ManifestDependency.Optional — the optional="true" attribute', file: 'src/VirtoCommerce.Platform.Core/Modularity/ManifestDependency.cs' },
+      { name: 'ModuleCatalog.SolveDependencies — optional edges are not added to the solver', file: 'src/VirtoCommerce.Platform.Core/Modularity/ModuleCatalog.cs' },
+      { name: 'ModuleBootstrapper — required-dependency errors and their cascade', file: 'src/VirtoCommerce.Platform.Modules/ModuleBootstrapper.cs' },
+      { name: 'IPricingEvaluatorService.EvaluateProductPricesAsync — the optional service in the snippet', file: '(vc-module-pricing/src/VirtoCommerce.PricingModule.Core/Services/IPricingEvaluatorService.cs)' }
+    ],
+    snippet: {
+      lang: 'csharp',
+      code: '// 1. Declare it in module.manifest:\n//\n//    <dependency id="VirtoCommerce.Pricing" version="3.1003.0" optional="true" />\n//\n//    xCatalog does exactly this for Pricing, Inventory and Marketing, which is why a\n//    catalog-only host is a viable module set.\n\n// 2. Ask for it at the point of use, not at registration:\npublic class ProductPriceEnricher\n{\n    private readonly IOptionalDependency<IPricingEvaluatorService> _pricing;\n\n    public ProductPriceEnricher(IOptionalDependency<IPricingEvaluatorService> pricing)\n    {\n        _pricing = pricing;\n    }\n\n    public async Task EnrichAsync(Product product, PriceEvaluationContext context)\n    {\n        // HasValue is false when the Pricing module is not installed in THIS host.\n        if (!_pricing.HasValue)\n        {\n            return;   // degrade, do not throw\n        }\n\n        // Evaluation takes a context, not an id: a pricelist assignment depends on\n        // store, catalog, customer and quantity, not on the product alone.\n        var prices = await _pricing.Value.EvaluateProductPricesAsync(context);\n        product.Prices = prices.Where(x => x.ProductId == product.Id).ToList();\n    }\n}'
+    },
+    gotchas: [
+      'A **required** dependency that is missing is a hard gate: the module records `Module dependency {id} {version} is not installed` and every module depending on it is skipped with `Module skipped because its dependency has errors`. Optional edges are excluded from that cascade.',
+      '`IOptionalDependency<T>` resolves through `IServiceProvider.GetService<T>()` on every access, so `HasValue` reflects the host it is running in — the same code is correct in a full host and in a subset host.',
+      'Optional in the manifest and optional in code are two separate decisions. Declaring the edge optional without guarding the resolve gives you a null reference instead of a clear install error.',
+      'The dependency solver ignores optional edges entirely, so an optional dependency does **not** guarantee load order. Do not rely on the other module having initialised first.'
+    ],
+    docs: [
+      { label: 'Modularity overview', page: 'Fundamentals/Modularity/01-overview' },
+      { label: 'Extensibility overview', page: 'Extensibility/overview' }
+    ],
+    seeAlso: ['module-manifest', 'module-catalog', 'dependency-injection', 'host-composition', 'module-lifecycle'],
+    molecule: 'ecommerce-modules',
+    verifiedAgainst: '3.1053.0'
+  },
+
+  {
+    id: 'host-composition',
+    symbol: 'Ho',
+    name: 'Host composition',
+    family: 'modularity',
+    adoption: 'platform',
+    layer: 'solution',
+    tags: ['composability', 'decomposition', 'vc-package.json', 'module subset', 'role', 'deployment'],
+    oneLiner: 'One image, several hosts: choose the module set per host, then choose the role per host in configuration.',
+    pattern: 'Composition at deployment time, on two axes. **Which modules** a host contains comes from its package manifest; **which role** it plays comes from configuration. Neither needs a code change, and the second needs no separate image.',
+    whenToUse: [
+      'Isolating a workload so it cannot degrade another — background jobs away from checkout',
+      'Scaling one business capability on its own: a catalog-read host, sized for shopper traffic',
+      'Giving the back office and the storefront API separate failure domains',
+      'Cutting the surface of a host on purpose — fewer modules, fewer endpoints, smaller blast radius'
+    ],
+    avoid: [
+      'Expecting a single module to become a service. The unit of deployment is a host with a module set, never one module',
+      'Splitting by role before Redis is in place — cache coherence, the SignalR backplane and the migration lock all depend on it',
+      'A module subset whose dependency graph does not close; the missing module takes its dependents down with it',
+      'More than one shape at once. Get all-in-one measured first, then split the axis your metrics point at'
+    ],
+    api: [
+      { name: 'BackgroundJobs:Mode — Producer | Worker | Both', file: 'src/VirtoCommerce.Platform.Web/appsettings.json' },
+      { name: 'PushNotifications:ScalabilityMode — RedisBackplane | AzureSignalRService | None', file: 'src/VirtoCommerce.Platform.Core/PushNotifications/PushNotificationOptions.cs' },
+      { name: 'ExecuteSynchronized — module migrations run one host at a time', file: 'src/VirtoCommerce.Platform.Web/Extensions/ApplicationBuilderExtensions.cs' },
+      { name: 'ModuleBootstrapper — discovery, probing and the resolved module set', file: 'src/VirtoCommerce.Platform.Modules/ModuleBootstrapper.cs' },
+      { name: 'vc-build install -PackageManifestPath — a different module set per image', file: '(vc-build CLI; manifest is vc-package.json)' }
+    ],
+    snippet: {
+      lang: 'bash',
+      code: '# Axis 1 — WHICH MODULES. Two manifests, two images, one source tree.\n# vc-package.json         full host: everything the solution has\n# vc-package.catalog.json catalog read path only\n\nvc-build install -PackageManifestPath vc-package.catalog.json \\\n                 -ProbingPath ./app_data/modules\n\n# Axis 2 — WHICH ROLE. Same image, same modules, configuration only.\n#\n#   storefront API   BackgroundJobs:Mode=Producer   ScalabilityMode=None            ARR off\n#   back office      BackgroundJobs:Mode=Producer   ScalabilityMode=RedisBackplane  ARR on\n#   job workers      BackgroundJobs:Mode=Worker     ScalabilityMode=None            ARR off\n#\n# As environment variables, so one image serves all three:\nexport BackgroundJobs__Mode=Worker\nexport PushNotifications__ScalabilityMode=None'
+    },
+    gotchas: [
+      'The dependency graph is the ceiling on a module subset. `VirtoCommerce.Orders` declares 11 dependencies — Cart, Catalog, Customer, Inventory, Notifications, Payment, Search, Shipping, Store, Assets, Core — so "orders on its own" is not a module set that exists.',
+      'Splitting by role changes nothing about the data: same modules, same database, same migrations. Splitting by module set is what changes the surface.',
+      'Every host that shares a database runs migrations at startup. That is safe only under the distributed lock, which needs Redis — see [[distributed-lock]].',
+      'A host without a module still shares the platform tables: settings, dynamic properties, permissions and module state are common ground.',
+      'Two images means two things to promote. The DevOps view has one image on purpose; a second one doubles the release surface.'
+    ],
+    docs: [
+      { label: 'Scalability options (S · M · L · XL)', page: 'Fundamentals/Scalability/scalability-options' },
+      { label: 'Scaling configuration on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' },
+      { label: 'Package management (vc-package.json)', page: 'CLI-tools/package-management' },
+      { label: 'Configuring environments', page: 'Tutorials-and-How-tos/How-tos/configuring-environments' }
+    ],
+    seeAlso: ['module-catalog', 'optional-dependency', 'module-database', 'background-jobs', 'distributed-lock', 'vc-build'],
+    molecule: 'deployment',
     verifiedAgainst: '3.1053.0'
   }
 

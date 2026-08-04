@@ -1,8 +1,8 @@
 # Atomic Architecture Map
 
 An interactive one-screen map of the building blocks a Virto Commerce developer works with: a
-**periodic table of atoms** under a **solution architecture band**, with a reserved shelf for
-composite topics (**molecules**).
+**periodic table of atoms** under a **solution architecture band**, then reserved shelves for
+composite topics (**molecules**) and business capabilities (**cells**).
 
 It answers three questions without reading source:
 
@@ -27,9 +27,10 @@ app.js                render · search · filter · drawer · hash routing · sc
 check-content.js      reference-integrity checker (node check-content.js)
 content/
   meta.js             platform version + last sweep date
-  architecture.js     the six architecture layers
+  architecture.js     the seven architecture layers
   atoms.js            families + every atom — this is where you will spend your time
   molecules.js        reserved composite topics
+  cells.js            reserved business capabilities, from the module registry
 ```
 
 **Renderer and content are decoupled on purpose.** Adding or correcting an atom means editing one
@@ -93,11 +94,12 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
 
 - **`matrix`** (with `matrixTitle`) — a name/description table, e.g. the module-type list.
 - **`diagrams`** — an ordered array of diagrams; `kind` picks the renderer. `Your solution`
-  carries four: Solution architecture (`lanes`), DevOps (`pipeline`), and the two deployment
-  configurations — non-production and production, both `topology` so they can be read against
-  each other. Channels carries one (`stack`). Any diagram may carry a `note`, rendered as a
-  caption above it — use it for what a diagram of boxes cannot say, such as which documented
-  configuration this is and what it is sized for.
+  carries six: Solution architecture (`lanes`), DevOps (`pipeline`), then four `topology` views —
+  catalog pricing vs order pricing, Split by Cell, and the two deployment configurations, which are
+  the same kind so they can be read against each other. Modules carries one (`tree`), Channels one
+  (`stack`). Any diagram may carry a `note`, rendered as a caption above it — use it for what a
+  diagram of boxes cannot say, such as which documented configuration this is, or the answer the
+  picture is evidence for.
 
 **`kind: 'stack'`** — a vertical stack of rows joined by connector pills. A row is either a
 group of nodes or the `target`, so the target can sit anywhere: Channels puts the platform in
@@ -320,6 +322,73 @@ than assumed:
 **Check the branch you are describing.** During authoring, several atoms initially cited
 `AdminUIAccess*` types that exist only on an unmerged feature branch — `check-content.js` caught it.
 Content should describe `dev` unless it is explicitly marked `in-flight`.
+
+---
+
+## The ladder: atoms → molecules → cells
+
+The Architectural Guidelines define four rungs, and this map uses the same words:
+
+| Rung | In the guidelines | Here |
+|---|---|---|
+| **Atom** | a core capability or design pattern | a tile in the periodic table |
+| **Molecule** | a module — Catalog, Pricing, Inventory | named inside a cell's membership |
+| **Cell** | a set of molecules solving a business scenario | the shelf at the bottom, `content/cells.js` |
+| **Organism** | a whole custom solution | the `Your solution` layer |
+
+Using different words than the deck is how a composability conversation stops being checkable, so
+do not rename these.
+
+### Cells
+
+Reserved tiles, below the molecules shelf. Each one is **anchored on an experience API module**,
+because that module's manifest is what decides the cell's membership — and therefore whether the
+cell can be deployed on its own.
+
+```js
+{ id: 'digital-catalog', name: 'Digital Catalog', sub: '…',
+  anchor: 'VirtoCommerce.XCatalog', version: '3.1015.0',
+  splittable: 'own host',
+  modules: ['Catalog', 'Xapi', 'Pricing', 'Inventory', 'Marketing'],
+  optional: ['Pricing', 'Inventory', 'Marketing'],
+  planned: ['…'], docs: [...], atoms: ['module-database', '…'] }
+```
+
+- **Membership comes from the registry, never from judgement:**
+  [`vc-modules/modules_v3.json`](https://github.com/VirtoCommerce/vc-modules/blob/master/modules_v3.json).
+  `modules` and `optional` are the dependencies recorded for `anchor` at `version`, and `version`
+  is what makes a stale tile visible instead of merely wrong. The checker requires it.
+- Only modules with a stable **3.800+** release are in scope — 104 of them at the time of writing.
+- **Infrastructure modules already on the atoms tier stay out**: Assets, Search and its providers,
+  BackgroundJobs, BackupRestore, EventBus, WebHooks, SeqLog, ApplicationInsights. A cell is a
+  business capability, not a service it runs on.
+- `splittable` is the verdict the dependency graph gives, not an opinion: `own host` (its required
+  closure is small), `with catalog` (its manifest requires XCatalog), `with cart` (it requires
+  XCart, and so XCatalog too), `no`. The checker rejects anything else.
+- The tiles are **reserved** — dashed, like the molecules shelf. The membership and the verdict are
+  verified; the walk-throughs are not written. The composability explanation they point at lives on
+  the `Your solution` layer.
+- The shelf holds one row at 1440px. Adding a seventh cell costs a second row, and the poster has
+  no spare height — see **One screen** below.
+
+### One screen
+
+The poster is **exactly 900px at 1440×900** and that is not negotiable: it is the whole promise of
+the artifact. Every tier is paid for out of another. When the Cells tier arrived, the molecules
+shelf became a chip row and the cell tile dropped its prose subtitle to the panel; that bought
+103px, which was the cost of the tier. Measure before and after any change that adds a row:
+
+```js
+document.documentElement.scrollHeight   // must be 900
+```
+
+### The citation rule
+
+A composability claim in this map must name a **configuration key, a manifest attribute or a
+source file**. `ConnectionStrings:<ModuleId>`, `optional="true"`, `BackgroundJobs:Mode` — those are
+claims a sceptical engineer can check in a minute. "Composable at every layer" is not, and is the
+reason the assessment this content answers scored badly in the first place. If a sentence cannot
+cite something, cut the sentence.
 
 ---
 

@@ -329,21 +329,23 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 
 /* ---------- molecules ---------- */
 
-.molecule-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(146px, 1fr)); gap: 7px; }
+/* A chip row, not a grid of cards. These are reserved placeholders: they exist so the shape of
+   the picture is honest, and that costs one line each. The room they gave up is what the Cells
+   tier — which is authored — now occupies, so the poster still fits one screen at 1440x900. */
+.molecule-shelf { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .molecule {
-  display: flex; flex-direction: column; gap: 3px; align-items: flex-start; text-align: left;
+  display: flex; align-items: baseline; gap: 6px; text-align: left;
   font: inherit; cursor: pointer;
-  padding: 5px 9px; min-height: 34px;
+  padding: 2px 9px; min-height: 0;
   background: transparent; color: var(--text);
-  border: 1px dashed var(--border-strong); border-radius: var(--radius);
+  border: 1px dashed var(--border-strong); border-radius: 999px;
 }
 .molecule:hover { border-style: solid; background: var(--surface); }
-.molecule .mol-name { font-size: 11.5px; font-weight: 600; line-height: 1.25; }
-.molecule .mol-sub {
-  font-size: 10px; color: var(--muted); line-height: 1.25;
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden;
-}
+.molecule .mol-name { font-size: 11px; font-weight: 600; line-height: 1.45; white-space: nowrap; }
+/* The one-liner is still in the DOM for search and for screen readers; it is simply not drawn
+   on the poster. It is the first thing the panel shows when the tile is opened. */
+.molecule .mol-sub { display: none; }
 .molecule.is-active { border-style: solid; border-color: var(--accent); box-shadow: 0 0 0 2px hsl(350 70% 55% / .25); }
 .molecule.is-dim { opacity: .3; }
 
@@ -702,6 +704,68 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .ln-label.is-integration { border-left-color: var(--lane-int); box-shadow: inset 0 0 0 1px hsl(266 50% 55% / .22); }
 .ln-band.is-integration { background: hsl(266 50% 55% / .055); }
 
+/* ---------- cells shelf ----------
+   The rung between an atom and a whole solution: a set of modules that solves a business
+   scenario. Filled, not outlined, because unlike the molecules shelf these are authored — and
+   the deployability verdict sits on the face of the tile, since "where can we cut?" is the
+   question the tier exists to answer. */
+
+.cell-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: 8px;
+}
+
+.cell {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 7px 10px;
+  text-align: left;
+  /* Dashed and unfilled, the same language the molecules shelf uses: the membership and the
+     verdict are verified, the walk-through is not written. The tile should not look finished. */
+  background: transparent;
+  border: 1px dashed var(--border-strong); border-left: 3px solid var(--info);
+  border-radius: 7px;
+  cursor: pointer;
+  font: inherit; color: var(--text);
+  transition: border-color .12s, box-shadow .12s, opacity .12s;
+}
+.cell:hover { border-style: solid; background: var(--surface); box-shadow: var(--shadow); }
+.cell:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.cell.is-active { border-color: var(--info); box-shadow: inset 0 0 0 1px var(--info); }
+.cell.is-dim { opacity: .32; }
+
+.cell-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.cell-name { font-size: 12px; font-weight: 700; }
+.cell-sub { display: none; }
+/* The module list is the evidence for the verdict, so it stays on the tile — one line, faded
+   out rather than wrapped, so tile height never depends on how many modules a cell has. */
+.cell-mods {
+  font: 9px var(--mono); color: var(--muted); opacity: .8;
+  white-space: nowrap; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
+          mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
+}
+
+.cell-split {
+  flex: 0 0 auto;
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  padding: 1px 6px; border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.cell-split.is-yes  { color: var(--ok); }
+.cell-split.is-part { color: var(--warn); }
+.cell-split.is-no   { color: var(--muted); }
+
+/* A module chip the cell can run without — dashed, and labelled, so the meaning survives
+   greyscale and colour blindness. */
+.tag-row.is-left { justify-content: flex-start; }
+.tag-chip.is-optional { border-style: dashed; color: var(--muted); }
+.tag-chip .opt-mark {
+  margin-left: 5px;
+  font: 8px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+  opacity: .85;
+}
+
 /* ---------- classic topology ----------
    The cloud-architecture idiom: boxes on an authored grid, bounded regions behind them, and
    labelled orthogonal connectors drawn into an SVG overlay. Column gaps are wide on purpose —
@@ -786,7 +850,12 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .tp-node.is-data   { border-left-color: var(--syn-keyword); }
 .tp-node.is-infra  { border-left-color: var(--neutral); }
 .tp-node-name { font-size: 11.5px; font-weight: 700; line-height: 1.25; }
-.tp-node-sub { font-size: 9.5px; color: var(--muted); line-height: 1.35; }
+.tp-node-sub {
+  font-size: 9.5px; color: var(--muted); line-height: 1.35;
+  /* One line: a topology is a diagram, and a diagram whose boxes are different heights because
+     of how their subtitles wrapped stops reading as a grid. Author the sub to fit. */
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .tp-node-meta {
   margin-top: 2px;
   font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
@@ -1183,7 +1252,12 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   .tile.is-dim, .layer.is-dim, .molecule.is-dim { opacity: 1; }
   .footer { margin: 8pt 0 0; }
   body::before { display: none; }
-  .layer .layer-sub, .molecule .mol-sub { -webkit-line-clamp: unset; overflow: visible; }
+  .layer .layer-sub { -webkit-line-clamp: unset; overflow: visible; }
+  /* On paper there is no one-screen budget, so the reserved tiles say what they are. */
+  .molecule-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(146px, 1fr)); }
+  .molecule { display: flex; flex-direction: column; align-items: flex-start; border-radius: 6px; }
+  .molecule .mol-sub { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .cell-sub { display: block; white-space: normal; }
   /* Syntax colours do not survive greyscale printing; fall back to weight and italics. */
   :root { --syn-comment: #555; --syn-keyword: #000; --syn-type: #000; --syn-string: #333; --syn-number: #333; }
   .syn-keyword { font-weight: 700; }

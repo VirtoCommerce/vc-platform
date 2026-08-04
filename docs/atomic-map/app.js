@@ -16,6 +16,7 @@
   var LAYERS = window.VC_MAP_ARCHITECTURE || [];
   var FAMILIES = window.VC_MAP_FAMILIES || [];
   var ATOMS = window.VC_MAP_ATOMS || [];
+  var CELLS = window.VC_MAP_CELLS || [];
   var MOLECULES = window.VC_MAP_MOLECULES || [];
 
   var ADOPTION = {
@@ -156,7 +157,7 @@
   // ---------------------------------------------------------------- state
 
   var state = { query: '', adoptions: {}, spotlight: null, open: null };
-  var nodes = { atoms: {}, layers: {}, molecules: {} };
+  var nodes = { atoms: {}, layers: {}, cells: {}, molecules: {} };
   var lastTrigger = null;
 
   function queryTokens() {
@@ -190,7 +191,7 @@
     var footer = document.getElementById('footer');
     footer.textContent = '';
     append(footer, el('span', {}, ATOMS.length + ' atoms · ' + FAMILIES.length + ' families · ' +
-      MOLECULES.length + ' molecules reserved'));
+      CELLS.length + ' cells · ' + MOLECULES.length + ' molecules reserved'));
     append(footer, el('span', {}, ADOPTION_ORDER.filter(function (k) { return counts[k]; }).map(function (k) {
       return el('span', {}, el('span', { class: adoptionOf(k).cls, text: adoptionOf(k).glyph + ' ' }),
         counts[k] + ' ' + adoptionOf(k).label.toLowerCase() + '  ');
@@ -334,6 +335,46 @@
     });
   }
 
+  // ---------------------------------------------------------------- cells
+  /* The third rung of the ladder the Architectural Guidelines define: a cell is a set of
+     modules that solves a business scenario. It matters here because it is the rung a solution
+     can actually be deployed along — a module is not a service, a module set is a host. The
+     `splittable` verdict is on the tile rather than inside it, so the answer to "where can we
+     cut?" is legible without opening anything. */
+  var SPLITTABLE = {
+    'own host':     { label: 'own host', cls: 'is-yes',       title: 'Its required closure is small — it can run as its own deployment' },
+    'with catalog': { label: 'with catalog', cls: 'is-part',  title: 'Its manifest requires XCatalog, so the catalog cell deploys with it' },
+    'with cart':    { label: 'with cart', cls: 'is-part',     title: 'It requires XCart, and so XCatalog too — the three deploy together' },
+    'no':           { label: 'not yet', cls: 'is-no',         title: 'Too entangled to separate today' }
+  };
+
+  function splitVerdict(id) {
+    return SPLITTABLE[id] || { label: id || 'unknown', cls: 'is-no', title: 'Unrecognised verdict' };
+  }
+
+  function renderCells() {
+    var host = document.getElementById('cells');
+    host.textContent = '';
+    CELLS.forEach(function (cell) {
+      var verdict = splitVerdict(cell.splittable);
+      var node = el('button', {
+        type: 'button', class: 'cell',
+        'aria-label': cell.name + ' — cell. ' + (cell.sub || '') + ' Deployable: ' + verdict.label + '.',
+        dataset: { id: cell.id },
+        onclick: function () { openHash('cell', cell.id, node); }
+      },
+        el('span', { class: 'cell-head' },
+          el('span', { class: 'cell-name', text: cell.name }),
+          el('span', { class: 'cell-split ' + verdict.cls, text: verdict.label, title: verdict.title })),
+        el('span', { class: 'cell-sub', text: cell.sub || '' }),
+        /* The anchor module is the evidence for the verdict: its manifest is what decides the
+           cell's membership, so it belongs on the face of the tile. */
+        el('span', { class: 'cell-mods', text: cell.anchor + '  ·  ' + (cell.modules || []).join(' · ') }));
+      nodes.cells[cell.id] = node;
+      host.appendChild(node);
+    });
+  }
+
   // ---------------------------------------------------------------- molecules
 
   function renderMolecules() {
@@ -373,6 +414,13 @@
       node.classList.toggle('is-dim', !!dim);
     });
 
+    CELLS.forEach(function (cell) {
+      var node = nodes.cells[cell.id];
+      var dimCell = tokens.length ? !tokens.every(function (t) { return cellHaystack(cell).indexOf(t) !== -1; })
+        : false;
+      node.classList.toggle('is-dim', !!dimCell);
+    });
+
     MOLECULES.forEach(function (molecule) {
       var node = nodes.molecules[molecule.id];
       var dim = tokens.length ? !tokens.every(function (t) { return moleculeHaystack(molecule).indexOf(t) !== -1; })
@@ -394,6 +442,14 @@
         (layer.bullets || []).join(' ')].join(' ').toLowerCase();
     }
     return layer._haystack;
+  }
+
+  function cellHaystack(cell) {
+    if (!cell._haystack) {
+      cell._haystack = [cell.name, cell.sub, cell.anchor, cell.splittable,
+        (cell.modules || []).join(' '), (cell.planned || []).join(' ')].join(' ').toLowerCase();
+    }
+    return cell._haystack;
   }
 
   function moleculeHaystack(molecule) {
@@ -1116,6 +1172,50 @@
     ]);
   }
 
+  function renderCellDrawer(cell) {
+    var verdict = splitVerdict(cell.splittable);
+    document.getElementById('drawer-eyebrow').textContent = '';
+    append(document.getElementById('drawer-eyebrow'), [
+      el('span', { class: 'cell-split ' + verdict.cls, text: 'Deployable: ' + verdict.label }),
+      el('span', { text: '· ' + cell.anchor + ' ' + cell.version }),
+      el('span', { text: '· ' + (cell.modules || []).length + ' modules' })
+    ]);
+    document.getElementById('drawer-title').textContent = cell.name;
+
+    var body = document.getElementById('drawer-body');
+    clearDrawerBody(body);
+
+    var modules = (cell.modules || []).map(function (name) {
+      var isOptional = (cell.optional || []).indexOf(name) !== -1;
+      /* The marker is a word, not a glyph: "?" next to a module name reads as uncertainty
+         about the name rather than about the dependency. Dashed border plus the word, so the
+         meaning does not rest on colour. */
+      return el('span', { class: 'tag-chip' + (isOptional ? ' is-optional' : ''),
+        title: isOptional ? 'Declared optional="true" — the cell runs without it' : 'Required in this cell' },
+        name, isOptional ? el('span', { class: 'opt-mark', text: 'opt' }) : null);
+    });
+
+    append(body, el('p', { class: 'd-lead' }, rich(cell.sub || '')));
+    append(body, el('div', { class: 'd-note' },
+      el('strong', { class: 'd-note-label', text: 'Reserved' }),
+      rich(' — the membership below is what the module registry records for `' + cell.anchor + '` ' +
+        cell.version + ', and the verdict follows from it. The walk-through is not written yet; the ' +
+        'composability explanation these tiles point at is on the **Your solution** layer.')));
+
+    append(body, [
+      block('Modules it composes', el('div', { class: 'tag-row is-left' }, modules), true),
+      diagramBlocks(cell),
+      block('Planned contents', list(cell.planned), true),
+      block('Material that already exists', docLinks(cell.docs), 'is-half'),
+      pills('Atoms it rests on', (cell.atoms || []).map(function (ref) {
+        var atom = byId(ATOMS, ref);
+        return atom ? el('button', { type: 'button', class: 'pill',
+          text: adoptionOf(atom.adoption).glyph + ' ' + atom.name,
+          onclick: function () { openHash('atom', atom.id, nodes.atoms[atom.id]); } }) : null;
+      }).filter(Boolean))
+    ]);
+  }
+
   function renderMoleculeDrawer(molecule) {
     document.getElementById('drawer-eyebrow').textContent = 'Molecule · reserved';
     document.getElementById('drawer-title').textContent = molecule.name;
@@ -1149,18 +1249,21 @@
   }
 
   function clearActive() {
-    [nodes.atoms, nodes.layers, nodes.molecules].forEach(function (group) {
+    [nodes.atoms, nodes.layers, nodes.cells, nodes.molecules].forEach(function (group) {
       Object.keys(group).forEach(function (key) { group[key].classList.remove('is-active'); });
     });
   }
 
   function openFromHash() {
-    var match = /^#\/(atom|layer|molecule)\/(.+)$/.exec(location.hash || '');
+    var match = /^#\/(atom|layer|cell|molecule)\/(.+)$/.exec(location.hash || '');
     if (!match) { closeDrawer(true); return; }
 
     var kind = match[1];
     var id = decodeURIComponent(match[2]);
-    var item = kind === 'atom' ? byId(ATOMS, id) : kind === 'layer' ? byId(LAYERS, id) : byId(MOLECULES, id);
+    var item = kind === 'atom' ? byId(ATOMS, id)
+      : kind === 'layer' ? byId(LAYERS, id)
+      : kind === 'cell' ? byId(CELLS, id)
+      : byId(MOLECULES, id);
 
     if (!item) {
       document.getElementById('drawer-eyebrow').textContent = 'Not found';
@@ -1173,7 +1276,10 @@
     }
 
     clearActive();
-    if (kind === 'atom') {
+    if (kind === 'cell') {
+      renderCellDrawer(item);
+      if (nodes.cells[id]) nodes.cells[id].classList.add('is-active');
+    } else if (kind === 'atom') {
       renderAtomDrawer(item);
       if (nodes.atoms[id]) nodes.atoms[id].classList.add('is-active');
       if (item.layer && nodes.layers[item.layer]) nodes.layers[item.layer].classList.add('is-active');
@@ -1316,6 +1422,7 @@
     renderArchitecture();
     renderAtoms();
     renderMolecules();
+    renderCells();
     renderBrandAndFooter();
     applyFilter();
 

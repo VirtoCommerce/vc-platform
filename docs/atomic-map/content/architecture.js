@@ -170,6 +170,107 @@ window.VC_MAP_ARCHITECTURE = [
          Source: Fundamentals/Scalability/scalability-options (S · M · L · XL) and
          Fundamentals/Scalability/scaling-configuration-on-azure-cloud (the settings). */
 
+      /* The question that decides whether anyone believes the composability claim: two prices
+         that look like the same number, and whether they are really separate. Every element
+         here is checked — the Order module has no backend reference to Pricing, the totals
+         calculator only sums stored values, and xCatalog declares Pricing optional. */
+      {
+        kind: 'topology',
+        title: 'Catalog pricing vs order pricing',
+        note: '**Two different things, in two different modules, with no dependency between them.** Catalog and cart prices are *evaluated* against pricelist assignments; an order price is a *copy* taken at checkout. `vc-module-order` has no backend reference to Pricing at all — the only mention in the whole repository is in the Admin UI JavaScript — and `DefaultCustomerOrderTotalsCalculator` only sums what is stored and converts currency. **Fully separated including the database:** each module owns its `DbContext` and its migrations, and `ConnectionStrings:VirtoCommerce.Pricing` moves it to its own server without touching code. That works because the order keeps `PriceId` as an id and the amount as a copy — never a foreign key.',
+        cols: 5,
+        legend: [
+          { kind: 'custom', label: 'Your code' },
+          { kind: 'virto', label: 'Virto Commerce' },
+          { kind: 'data', label: 'Store' },
+          { kind: 'infra', label: 'Evaluation' },
+          { dashed: true, label: 'A copy, not a lookup — nothing reads back' }
+        ],
+        regions: [
+          { id: 'pricingcell', label: 'Pricing · own module, own schema', col: [1, 2], row: [1, 3] },
+          { id: 'readpath', label: 'Digital Catalog · read path', col: [3, 4], row: [1, 2] },
+          { id: 'ordercell', label: 'Order · own module, own schema', accent: 'shared', col: [4, 5], row: [4, 5] }
+        ],
+        nodes: [
+          { id: 'pricelists', name: 'Pricelist · Price', sub: '`PricingDbContext` — its own tables and migrations', kind: 'data', col: 1, row: 2 },
+          { id: 'evaluate', name: 'Price evaluation', sub: '`IPricingEvaluatorService` — per store, catalog, customer, quantity', kind: 'infra', col: 2, row: 2 },
+
+          { id: 'index', name: 'Search index', sub: 'Prices projected in for filter and sort', kind: 'data', col: 3, row: 1 },
+          { id: 'xcatalog', name: 'xCatalog', sub: 'Pricing is `optional="true"` here', kind: 'virto', col: 4, row: 1 },
+          { id: 'xcart', name: 'xCart', sub: 'Pricing is **required** — the cart prices live', kind: 'virto', col: 4, row: 2 },
+
+          { id: 'storefront', name: 'Storefront', sub: 'Browse, then buy', kind: 'custom', col: 5, row: 1 },
+          { id: 'checkout', name: 'Checkout', sub: 'The moment the number stops moving', kind: 'virto', col: 5, row: 3 },
+
+          { id: 'lineitem', name: 'Order line item', sub: '`Price` copied · `PriceId` kept as an id', kind: 'data', col: 5, row: 4 },
+          { id: 'totals', name: 'Totals calculator', sub: 'Sums stored values, converts currency, never re-prices', kind: 'infra', col: 4, row: 4 },
+          { id: 'orderdb', name: '`OrderDbContext`', sub: 'Own tables, own migrations, own connection string', kind: 'data', col: 4, row: 5 }
+        ],
+        edges: [
+          { from: 'pricelists', to: 'evaluate', label: 'read' },
+          { from: 'evaluate', to: 'index', label: 'projected' },
+          { from: 'index', to: 'xcatalog', label: 'filter · sort' },
+          { from: 'evaluate', to: 'xcart', label: 'evaluate live' },
+          { from: 'xcatalog', to: 'storefront', label: 'GraphQL' },
+          { from: 'xcart', to: 'checkout', label: 'cart totals' },
+          /* The one-way step. Everything downstream of here is a value, not a reference. */
+          { from: 'checkout', to: 'lineitem', label: 'copy the price', bypass: true },
+          { from: 'lineitem', to: 'totals', label: 'stored values' },
+          { from: 'totals', to: 'orderdb', label: 'persist' }
+        ]
+      },
+
+      /* Composability, drawn rather than asserted. The question a solution architect actually
+         has is "where can I cut, and what does the cut cost" — so this shows the one cut the
+         module graph supports cleanly, with the shared pool underneath it. */
+      {
+        kind: 'topology',
+        title: 'Split by Cell — Digital Catalog',
+        note: 'The **module set is the unit of deployment**, not the module. Hosts from one image: the catalog-read host contains Catalog · Search · xCatalog · Xapi — with Pricing added when you want prices, since xCatalog declares it `optional="true"` — and the checkout host contains the cart and order path. They share the database by default; `ConnectionStrings:<ModuleId>` splits any module onto its own server when a table set earns it. **This is the deepest cut the graph allows today**: `VirtoCommerce.Orders` declares 11 required dependencies, so "orders as a service" is not a module set that exists.',
+        cols: 3,
+        legend: [
+          { kind: 'custom', label: 'Your code' },
+          { kind: 'virto', label: 'Virto Commerce host' },
+          { kind: 'data', label: 'Store' },
+          { dashed: true, label: 'Optional in the module set — the host runs without it' }
+        ],
+        regions: [
+          { id: 'catalogcell', label: 'Digital Catalog · own host', col: [2, 2], row: [1, 2] },
+          { id: 'checkoutcell', label: 'Purchase · with catalog', col: [2, 2], row: [3, 3] },
+          { id: 'rolecell', label: 'Same image · different role', col: [2, 2], row: [5, 5] },
+          { id: 'shared', label: 'Shared, or split per module', accent: 'shared', col: [3, 3], row: [1, 5] }
+        ],
+        nodes: [
+          { id: 'shopper', name: 'Storefront', sub: 'Browse — the read path', kind: 'custom', col: 1, row: 1 },
+          { id: 'buyer', name: 'Checkout', sub: 'Cart, payment, order', kind: 'custom', col: 1, row: 3 },
+          { id: 'admin', name: 'Commerce Manager', sub: 'Authoring, fulfilment', kind: 'virto', col: 1, row: 5 },
+
+          { id: 'readhost', name: 'Catalog read host', sub: 'Catalog · Search · xCatalog', meta: 'scales on shoppers', kind: 'virto', col: 2, row: 1 },
+          { id: 'pricing', name: 'Pricing', sub: '`optional="true"` in xCatalog', kind: 'virto', col: 2, row: 2 },
+          { id: 'checkouthost', name: 'Checkout host', sub: 'Cart · Order · Payment', meta: '11 deps on Orders', kind: 'virto', col: 2, row: 3 },
+          { id: 'adminhost', name: 'Authoring host', sub: 'Same modules, other role', kind: 'virto', col: 2, row: 5 },
+
+          { id: 'index', name: 'Search index', sub: 'The catalog read path', kind: 'data', col: 3, row: 1 },
+          { id: 'catalogdb', name: 'Catalog database', sub: '`…:VirtoCommerce.Catalog`', kind: 'data', col: 3, row: 2 },
+          { id: 'orderdb', name: 'Order database', sub: '`…:VirtoCommerce.Orders`', kind: 'data', col: 3, row: 3 },
+          { id: 'platformdb', name: 'Platform tables', sub: 'Settings · permissions', kind: 'data', col: 3, row: 5 }
+        ],
+        edges: [
+          { from: 'shopper', to: 'readhost', label: 'GraphQL' },
+          { from: 'buyer', to: 'checkouthost', label: 'GraphQL' },
+          { from: 'admin', to: 'adminhost', label: 'REST' },
+          /* Same column: the router draws this one vertically, which is what an enrichment
+             inside the same host should look like. */
+          { from: 'pricing', to: 'readhost', label: 'enriches', bypass: true },
+          { from: 'readhost', to: 'index', label: 'reads' },
+          { from: 'readhost', to: 'catalogdb', label: 'writes on author' },
+          { from: 'checkouthost', to: 'orderdb', label: 'reads · writes' },
+          /* Row 4 is left empty so this one has a clear lane to turn in. */
+          { from: 'adminhost', to: 'orderdb', label: 'reads · writes', turnOffset: -14 },
+          { from: 'adminhost', to: 'platformdb', label: 'shared config' }
+        ]
+      },
+
       {
         kind: 'topology',
         title: 'Deployment — non-production',
@@ -273,7 +374,23 @@ window.VC_MAP_ARCHITECTURE = [
         ]
       },
     ],
+    matrixTitle: 'Composition shapes — pick the shallowest cut that solves your problem',
+    matrix: [
+      { name: 'All-in-one · cut nothing',
+        desc: 'One host, every module, one database. **Use it until something measured says otherwise** — it is the only shape with no coordination cost, and most solutions never need to leave it. The cost: a bulk import or a reindex competes with checkout, and scaling means scaling all of it.' },
+      { name: 'Split by role · cut at configuration',
+        desc: 'Same image, same modules, same database — different settings per host: `BackgroundJobs:Mode`, `PushNotifications:ScalabilityMode`, ARR affinity. **The highest value per unit of effort**, and the shape the production topology below already draws. The cost: Redis becomes mandatory, and every host still carries every module.' },
+      { name: 'Split by Cell · cut at the module set',
+        desc: 'A second package manifest, a second image, a smaller module set — a catalog-read host is the clean example. **This is real decomposition**: independent scaling and a smaller blast radius per business capability. The cost: two images to promote, and the dependency graph has to close around the subset.' },
+      { name: 'Split the database · cut at the module',
+        desc: 'One configuration line — `ConnectionStrings:<ModuleId>` — moves a module to its own server, schema, backups and all. **Orthogonal to the other three**: you can do it in an all-in-one host. The cost: no transaction spans two module databases, and restore becomes per-module.' },
+      { name: 'Not available · a module as a service',
+        desc: 'A module is a unit of *code and schema*, not of process. Every module in a host loads into that host. **There is no supported way to run one module as its own service** — the seam is the module set, which is why the Cells tier exists.' }
+    ],
     bullets: [
+      'How far can you decompose? Rung by rung, on the ladder the Architectural Guidelines define. **Atom** — a primitive, in-process, not a boundary. **Molecule** (a module) — a schema boundary yes, a process boundary no. **Cell** (Digital Catalog, Order Management) — deployable: this is where you cut. **Organism** — the environment topology, drawn below.',
+      'The two decomposition levers worth knowing by name: `optional="true"` in a manifest, which is how a module set gets small enough to deploy on its own, and `ConnectionStrings:<ModuleId>`, which is how a module gets its own database. Both are configuration; neither appears in the shipped `appsettings.json`, which is why teams reasonably assume they do not exist.',
+      'Modules never hold a foreign key across the boundary — ids and copied values only. That single convention is what makes a per-module database work at all, and it is why an order keeps the price it charged instead of looking one up.',
       'The ratio surprises people: a mature solution is mostly configuration plus a handful of custom modules, sitting on dozens of vendor modules. If you are writing a lot of code, check whether a lower extensibility level would do.',
       'Your custom module has the same three-project shape as a vendor one — `Core` / `Data` / `Web` — and loads through the same manifest and dependency graph. There is no "application project" that is special.',
       'Extend in this order: no-code (dynamic properties, settings, permissions) → API (REST/GraphQL, webhooks, event handlers) → native (`AbstractTypeFactory` override). Each step up costs more at upgrade time.',
@@ -281,6 +398,10 @@ window.VC_MAP_ARCHITECTURE = [
       'The storefront is a separate deliverable with its own build and deploy — a platform release does not update it, and it does not ship inside the container image.'
     ],
     gotchas: [
+      'A module is not a service. Splitting by role gives you separate processes over the same modules and the same data; splitting by module set gives you a smaller host. Neither turns one module into an independently deployable unit.',
+      '`VirtoCommerce.Orders` declares 11 required dependencies — Cart, Catalog, Customer, Inventory, Notifications, Payment, Search, Shipping, Store, Assets, Core. A module subset has to close over the graph, and a missing required dependency takes its dependents down with it rather than degrading.',
+      'There is no distributed transaction. The moment two modules are on two databases, a write that spans them is two writes, and you own the reconciliation.',
+      'Every host sharing a database runs migrations at startup, serialised by the platform distributed lock — which falls back to a no-op when Redis is not configured. Split hosts without Redis and two of them can migrate at once.',
       'Never edit vendor module source, even locally to "just test something". The moment you do, you own that module forever and upgrades become merges.',
       'Manifest dependencies are caret SemVer ranges, so an unpinned range can resolve differently on two machines. `vc-package.json` is what makes the result repeatable — commit it.',
       'Prefix anything you add to a vendor type with your own abbreviation (`AbcStatus`). A future vendor property with the same name is a collision you cannot rename your way out of.',
