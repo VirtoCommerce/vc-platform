@@ -173,7 +173,7 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'topology',
         title: 'Deployment — non-production',
-        note: 'The **Small** configuration: one frontend instance, one backend instance, background jobs in-process. Proof of concept, demo and developer environments. **No Redis**: with a single instance there is no other cache to invalidate, no SignalR backplane to share and no lock to take across processes.',
+        note: 'The **Small** configuration: one frontend instance, one backend instance, and **background jobs inside that same process** — `BackgroundJobs:Mode = Both`, no worker to deploy. The dashed box is the image: REST, XAPI, the Commerce Manager UI and the job engine all restart together, which is exactly why this shape is for proof of concept, demo and developer environments rather than production. **No Redis**: with a single instance there is no other cache to invalidate, no SignalR backplane to share and no lock to take across processes.',
         cols: 4,
         legend: [
           { kind: 'custom', label: 'Your code' },
@@ -184,14 +184,15 @@ window.VC_MAP_ARCHITECTURE = [
         ],
         regions: [
           { id: 'cloud', label: 'One environment', outer: true, col: [2, 4], row: [1, 4] },
-          { id: 'platformbox', label: 'Same image · all roles', col: [3, 3], row: [1, 2] }
+          /* One image, drawn the way the Composable view draws one: tight to the card, dashed,
+             unlabelled. Here it contains every role at once, jobs included. */
+          { id: 'platformbox', tight: true, col: [3, 3], row: [1, 1] }
         ],
         nodes: [
           { id: 'customer', name: 'Browser', sub: 'Customer', meta: 'MFA', kind: 'infra', col: 1, row: 1 },
           { id: 'employee', name: 'Browser', sub: 'Employee · Commerce Manager', kind: 'infra', col: 1, row: 3 },
           { id: 'frontend', name: 'Frontend app', sub: 'Static content · `vc-frontend`', meta: '×1', kind: 'custom', col: 2, row: 1 },
-          { id: 'platform', name: 'Platform App', sub: 'REST · XAPI · Commerce Manager', meta: '×1', kind: 'virto', col: 3, row: 1 },
-          { id: 'jobs', name: 'Background process', sub: 'In-process — `Mode: Both`', kind: 'virto', col: 3, row: 2 },
+          { id: 'platform', name: 'Platform App', sub: 'REST · XAPI · Manager · jobs', meta: '×1 · all roles', kind: 'virto', col: 3, row: 1 },
           { id: 'sql', name: 'SQL database', sub: 'One database, no pool', kind: 'data', col: 4, row: 1 },
           { id: 'search', name: 'Elasticsearch', sub: 'Or Lucene on a developer box', kind: 'data', col: 4, row: 2 },
           { id: 'insights', name: 'Application Insights', sub: 'Telemetry from the first environment', kind: 'data', col: 4, row: 3 },
