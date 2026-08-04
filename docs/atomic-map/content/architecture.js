@@ -173,7 +173,7 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'topology',
         title: 'Deployment — non-production',
-        note: 'The **Small** configuration: one frontend instance, one backend instance, and **background jobs inside that same process** — `BackgroundJobs:Mode = Both`, no worker to deploy. The dashed box is the image: REST, XAPI, the Commerce Manager UI and the job engine all restart together, which is exactly why this shape is for proof of concept, demo and developer environments rather than production. **No Redis**: with a single instance there is no other cache to invalidate, no SignalR backplane to share and no lock to take across processes.',
+        note: 'The **non-production** configuration — Small in the sizing guide: one frontend instance, one backend instance, and **background jobs inside that same process** — `BackgroundJobs:Mode = Both`, no worker to deploy. The dashed box is the image: REST, XAPI, the Commerce Manager UI and the job engine all restart together, which is exactly why this shape is for proof of concept, demo and developer environments rather than production. **No Redis**: with a single instance there is no other cache to invalidate, no SignalR backplane to share and no lock to take across processes.',
         cols: 4,
         legend: [
           { kind: 'custom', label: 'Your code' },
@@ -220,7 +220,7 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'topology',
         title: 'Deployment — production',
-        note: 'The **Extra Large** configuration: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment runs **at least two instances** behind the load balancer, all of them run the **same image**, and all four use the whole shared pool — one line each is drawn to keep the picture readable. The documented topology names three environments; the **integration** instance is the common fourth split, worth making once a system pushes bulk traffic through the API.',
+        note: 'The **production** configuration — Extra Large in the sizing guide: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment runs **at least two instances** behind the load balancer, all of them run the **same image**, and all four use the whole shared pool — one line each is drawn to keep the picture readable. The documented topology names three environments; the **integration** instance is the common fourth split, worth making once a system pushes bulk traffic through the API.',
         cols: 5,
         legend: [
           { kind: 'custom', label: 'Your code' },
@@ -235,7 +235,7 @@ window.VC_MAP_ARCHITECTURE = [
           { id: 'sharedbox', label: 'Shared by every role', accent: 'shared', col: [5, 5], row: [1, 5] }
         ],
         nodes: [
-          { id: 'cdn', name: 'Azure CDN', sub: 'Static assets at the edge', kind: 'infra', col: 2, row: 1 },
+          { id: 'cdn', name: 'CDN', sub: 'Static assets at the edge', kind: 'infra', col: 2, row: 1 },
           { id: 'blob', name: 'Blob storage', sub: 'Product images · assets', kind: 'data', col: 5, row: 1 },
 
           { id: 'customer', name: 'Browser', sub: 'Customer', meta: 'MFA', kind: 'infra', col: 1, row: 2 },
