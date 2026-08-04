@@ -966,10 +966,11 @@
     return { x: box.left + box.width / 2, y: box.top };
   }
 
-  /* Half the grid's column gap. The turn happens in the gutter immediately before the target
-     rather than half way along the whole run: for neighbouring columns the two are the same
-     point, and for distant ones it keeps the vertical segment out of the cards in between. */
-  var TP_GUTTER = 37;
+  /* Half the grid's column gap — keep it in step with `column-gap` in .tp-grid. The turn happens
+     in the gutter immediately before the target rather than half way along the whole run: for
+     neighbouring columns the two are the same point, and for distant ones it keeps the vertical
+     segment out of the cards in between. */
+  var TP_GUTTER = 44;
 
   function edgePath(s, t, offset) {
     // Horizontal run when the boxes are side by side, vertical when stacked.

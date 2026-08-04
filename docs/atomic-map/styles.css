@@ -798,10 +798,14 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   width: max-content;
   display: grid;
   grid-template-columns: repeat(var(--tp-cols), 170px);
-  column-gap: 74px;
-  row-gap: 12px;
+  /* The column gap is where a connector turns and where its label sits, so it must be wider than
+     the widest label — "reads · writes" is ~62px, and at 74px the label was touching the card
+     beside it. The row gap must clear twice the boundary bleed below, or two image boundaries
+     meet. Both values are mirrored in TP_GUTTER in app.js; change them together. */
+  column-gap: 88px;
+  row-gap: 22px;
   align-items: stretch;
-  padding: 26px 8px 8px;
+  padding: 26px 10px 10px;
 }
 
 /* Above the regions, below nothing: the SVG overlay is drawn on top of the cards but takes no
@@ -835,7 +839,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 }
 .tp-region.is-outer {
   z-index: 0;
-  margin: -22px -16px -12px;
+  margin: -22px -22px -14px;
   border-style: dashed;
   border-color: var(--border-strong);
   background: var(--surface-2);
@@ -845,7 +849,7 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
    to its cell and unlabelled, because at one card tall there is nowhere to put a label that does
    not cover the card. The caption says what the boxes mean. */
 .tp-region.is-tight {
-  margin: -5px -6px;
+  margin: -7px -9px;
   border-style: dashed;
   border-color: var(--border-strong);
   background: none;
