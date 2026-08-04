@@ -27,9 +27,11 @@
 
   --grid-line: rgba(21, 26, 34, .05);   /* blueprint backdrop, see body::before */
 
-  /* Sized so all eight families sit in one band at 1440px wide — the "one screen" promise.
+  /* Sized so all eight families sit in one band at 1440px wide AND the whole poster still fits
+     900px — the "one screen" promise. The tallest family is six rows deep, so every pixel here
+     costs six on the page; this is the dial to turn when a tier below needs room.
      Below ~1360px the grid wraps, which is fine; the poster just gets taller. */
-  --tile: 74px;
+  --tile: 67px;
   --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono: "Cascadia Mono", "Consolas", "Ubuntu Mono", "SF Mono", Menlo, monospace;
 }
@@ -337,29 +339,25 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .molecule {
   display: flex; align-items: baseline; gap: 6px; text-align: left;
   font: inherit; cursor: pointer;
-  padding: 2px 9px; min-height: 0;
+  padding: 1px 7px; min-height: 0;
   background: transparent; color: var(--text);
   border: 1px dashed var(--border-strong); border-radius: 999px;
 }
 .molecule:hover { border-style: solid; background: var(--surface); }
-.molecule .mol-name { font-size: 11px; font-weight: 600; line-height: 1.45; white-space: nowrap; }
+.molecule .mol-name { font-size: 10.5px; font-weight: 600; line-height: 1.4; white-space: nowrap; }
 /* A module chip is solid-edged: unlike a composite topic, its identity and dependency graph are
    verified — only the write-up is missing. */
 .molecule.is-module { border-style: solid; border-color: var(--border); }
-.molecule.is-module .mol-name { font-family: var(--mono); font-size: 10px; font-weight: 700; }
+.molecule.is-module .mol-name { font-family: var(--mono); font-size: 9.5px; font-weight: 700; }
 .mol-group {
   font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
   padding: 1px 6px; border-radius: 999px; border: 1px solid currentColor;
 }
 .mol-group.is-commerce { color: var(--info); }
 .mol-group.is-extension { color: var(--muted); }
-/* The shelf now holds the real inventory, which is more than one screen can spend height on.
-   Bounded and scrollable, with the bound stated in the section hint. */
-.molecule-shelf {
-  max-height: 54px; overflow-y: auto;
-  scrollbar-width: thin;
-  padding-right: 2px;
-}
+/* No scroll: the whole inventory is on the poster, which is the point of a poster. It fits by
+   being set tighter than the other tiers rather than by hiding rows behind a scrollbar. */
+.molecule-shelf { gap: 4px; }
 .d-lead.is-quiet { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
 /* The one-liner is still in the DOM for search and for screen readers; it is simply not drawn
    on the poster. It is the first thing the panel shows when the tile is opened. */
@@ -843,6 +841,16 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   background: var(--surface-2);
 }
 .tp-region.is-shared { border-color: hsl(152 45% 45% / .5); background: hsl(152 45% 45% / .05); }
+/* One deployable image: the boundary that decides what scales and what restarts together. Tight
+   to its cell and unlabelled, because at one card tall there is nowhere to put a label that does
+   not cover the card. The caption says what the boxes mean. */
+.tp-region.is-tight {
+  margin: -5px -6px;
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: none;
+}
+
 .tp-region-label {
   position: absolute; top: 4px; left: 12px; right: 8px;
   font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
@@ -1001,8 +1009,11 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 
 .d-matrix { display: grid; gap: 9px; }
 .d-matrix-row { display: flex; flex-direction: column; gap: 1px; min-width: 0; break-inside: avoid; }
-.d-matrix-name { font-size: 12.5px; font-weight: 650; }
-.d-matrix-desc { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+/* Body size. This is a decision table — the thing a solution architect actually reads before
+   choosing a shape — so it is set like prose, not like a footnote. */
+.d-matrix-name { font-size: 14px; font-weight: 700; }
+.d-matrix-desc { font-size: 14px; color: var(--text); line-height: 1.5; }
+.d-matrix-desc code { font-size: inherit; }
 /* Side by side once there is room — six variants stacked full-width wastes the space. */
 .drawer.is-full .d-matrix {
   grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
@@ -1038,13 +1049,22 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .d-list { margin: 0; padding: 0; list-style: none; }
 .d-list li { position: relative; padding-left: 17px; line-height: 1.5; margin-bottom: 5px; }
 .d-list li:last-child { margin-bottom: 0; }
+/* A small dot on the text baseline, drawn rather than typeset: an em dash reads as punctuation
+   that belongs to the sentence, and at this size a bullet glyph sits too high. */
 .d-list li::before {
-  content: "—"; position: absolute; left: 0; top: 0;
-  color: var(--muted); font-weight: 400;
+  content: ""; position: absolute; left: 3px; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--border-strong);
 }
 .d-list.good li::before { content: "✓"; color: var(--ok); font-weight: 700; }
-.d-list.bad  li::before { content: "✗"; color: var(--bad); font-weight: 700; }
-.d-list.warn li::before { content: "!"; color: var(--warn); font-weight: 700; left: 5px; }
+.d-list.bad  li::before,
+.d-list.warn li::before {
+  /* Back to a glyph: these two carry meaning, and a coloured dot cannot say "avoid" or "careful". */
+  width: auto; height: auto; border-radius: 0; background: none; top: 0;
+  font-weight: 700;
+}
+.d-list.bad  li::before { content: "✗"; color: var(--bad); left: 3px; }
+.d-list.warn li::before { content: "!"; color: var(--warn); left: 6px; }
 
 /* Inline code chips only. Scoped with :not(pre) > because these rules —
    white-space in particular — would otherwise override <pre>'s line

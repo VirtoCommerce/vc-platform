@@ -1059,10 +1059,15 @@
     // Regions first: they are the backdrop the boxes sit on, so they must paint underneath.
     (diagram.regions || []).forEach(function (region) {
       grid.appendChild(el('div', {
-        class: 'tp-region' + (region.accent ? ' is-' + region.accent : '') + (region.outer ? ' is-outer' : ''),
+        /* `tight` hugs a single cell instead of bleeding into the gutters, which is what makes a
+           per-card boundary — one deployable image — legible inside a larger region. */
+        class: 'tp-region' + (region.accent ? ' is-' + region.accent : '') +
+               (region.outer ? ' is-outer' : '') + (region.tight ? ' is-tight' : ''),
         style: 'grid-column:' + region.col[0] + ' / ' + (region.col[1] + 1) +
                ';grid-row:' + region.row[0] + ' / ' + (region.row[1] + 1)
-      }, el('span', { class: 'tp-region-label', text: region.label })));
+        /* A per-card boundary is only a few pixels taller than the card it wraps, so there is
+           nowhere to put a label without covering it. Those regions carry none. */
+      }, region.label ? el('span', { class: 'tp-region-label', text: region.label }) : null));
     });
 
     nodes.forEach(function (node) {

@@ -280,7 +280,7 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'topology',
         title: 'Composable Architecture',
-        note: '**The frontend never learns about the split.** It keeps one endpoint and one GraphQL schema; the load balancer resolves each operation and forwards it to the PBC host that owns it, so `xCatalog` queries land on the catalog host and `xCart` mutations on the purchase host. Every host runs the **same image** with a different module set, and they meet again in the shared stores.\n\n**When to split by PBC** rather than run one instance, or the same modules split by role: when one capability\'s load curve is unlike the others — catalog reads spike with a campaign while checkout stays flat; when a bad reindex or a bulk import must not be able to reach checkout; when one capability needs its own release cadence, its own region, or a different machine shape; or when a team needs to deploy without coordinating with everyone else.\n\n**When not to.** Split by **role** first — it is the same image, same modules and same database, and it costs one configuration change. Reach for a PBC split only when the role split has stopped being enough, because this one is a second image to build, promote and keep in step. And check the graph closes: `XOrder` requires `XCart`, which requires `XCatalog`, so those three deploy together whatever the diagram wishes.',
+        note: '**The frontend never learns about the split.** It keeps one endpoint and one GraphQL schema; the load balancer resolves each operation and forwards it to the PBC host that owns it, so `xCatalog` queries land on the catalog host and `xCart` mutations on the purchase host. Every host runs the **same image** with a different module set, and they meet again in the shared stores. The dashed box round each one is that boundary: **one deployable image**, scaled and restarted on its own, which is what isolation means here — a bad release of the catalog image cannot take checkout with it. Everything inside the outer boundary is the cloud environment; only the storefront sits outside it.\n\n**When to split by PBC** rather than run one instance, or the same modules split by role: when one capability\'s load curve is unlike the others — catalog reads spike with a campaign while checkout stays flat; when a bad reindex or a bulk import must not be able to reach checkout; when one capability needs its own release cadence, its own region, or a different machine shape; or when a team needs to deploy without coordinating with everyone else.\n\n**When not to.** Split by **role** first — it is the same image, same modules and same database, and it costs one configuration change. Reach for a PBC split only when the role split has stopped being enough, because this one is a second image to build, promote and keep in step. And check the graph closes: `XOrder` requires `XCart`, which requires `XCatalog`, so those three deploy together whatever the diagram wishes.',
         cols: 4,
         legend: [
           { kind: 'custom', label: 'Your code' },
@@ -289,8 +289,15 @@ window.VC_MAP_ARCHITECTURE = [
           { kind: 'data', label: 'Shared store' }
         ],
         regions: [
-          { id: 'pbc', label: 'PBC hosts · 2…n each', col: [3, 3], row: [1, 4] },
-          { id: 'stores', label: 'Shared by every host', accent: 'shared', col: [4, 4], row: [1, 4] }
+          /* Three levels, because three things are true at once: everything but the storefront
+             runs in the cloud environment, each PBC host is its own image, and the stores are
+             the one thing all of them share. */
+          { id: 'cloud', label: 'Cloud environment', outer: true, col: [2, 4], row: [1, 4] },
+          { id: 'img-catalog', tight: true, col: [3, 3], row: [1, 1] },
+          { id: 'img-purchase', tight: true, col: [3, 3], row: [2, 2] },
+          { id: 'img-order', tight: true, col: [3, 3], row: [3, 3] },
+          { id: 'img-profile', tight: true, col: [3, 3], row: [4, 4] },
+          { id: 'stores', label: 'Shared by every image', accent: 'shared', col: [4, 4], row: [1, 4] }
         ],
         nodes: [
           { id: 'frontend', name: 'Storefront', sub: 'One endpoint, one schema', meta: 'GraphQL', kind: 'custom', col: 1, row: 2 },

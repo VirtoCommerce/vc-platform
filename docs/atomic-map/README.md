@@ -229,8 +229,10 @@ guess.
   escape hatch for two labels landing on the same spot.
 - Leave a row empty to use it as a channel. The production diagram reserves row 1 for the
   CDN-to-blob path, which is why that line crosses the diagram without touching a box.
-- Regions may nest: `outer: true` is the dashed environment boundary, a plain region is the
-  platform, `accent: 'shared'` is the resource pool.
+- Regions may nest three deep: `outer: true` is the dashed environment boundary, a plain region is
+  a group of stages, `accent: 'shared'` is the resource pool, and `tight: true` wraps a **single
+  card** — one deployable image. A tight region carries no label, because at one card tall there is
+  nowhere to put one that does not cover the card; say what it means in the `note`.
 - The checker rejects two nodes in one cell, an edge naming a node that does not exist, a
   self-edge, a region span outside the grid, a legend entry no node uses, and a dashed legend
   entry with no bypass edge to explain it.
@@ -400,7 +402,10 @@ cell can be deployed on its own.
 The poster is **exactly 900px at 1440×900** and that is not negotiable: it is the whole promise of
 the artifact. Every tier is paid for out of another. When the Cells tier arrived, the molecules
 shelf became a chip row and the cell tile dropped its prose subtitle to the panel; that bought
-103px, which was the cost of the tier. Measure before and after any change that adds a row:
+103px. When the shelf lost its scrollbar and all 65 tiles had to fit, `--tile` went from 74px to
+67px — the tallest atom family is six rows deep, so **every pixel of `--tile` costs six on the
+page**, which makes it the dial to turn when a tier below needs room. Measure before and after any
+change that adds a row:
 
 ```js
 document.documentElement.scrollHeight   // must be 900

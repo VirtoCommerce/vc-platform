@@ -184,7 +184,8 @@ function checkDiagram(kind, id, d) {
       if (e.from === e.to) add(kind, id, `topology edge "${e.from}" points at itself`);
     }
     for (const r of d.regions || []) {
-      if (!r.label) add(kind, id, `topology "${d.title}" has a region without a label`);
+      // A `tight` region wraps one card and has no room for a label; every other region needs one.
+      if (!r.label && !r.tight) add(kind, id, `topology "${d.title}" has a region without a label`);
       const okCol = Array.isArray(r.col) && r.col.length === 2 && r.col[0] >= 1 && r.col[1] <= cols && r.col[0] <= r.col[1];
       const okRow = Array.isArray(r.row) && r.row.length === 2 && r.row[0] >= 1 && r.row[0] <= r.row[1];
       if (!okCol || !okRow) add(kind, id, `region "${r.label}" has an invalid col/row span`);
