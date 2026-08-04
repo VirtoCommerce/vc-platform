@@ -273,55 +273,51 @@ window.VC_MAP_ARCHITECTURE = [
         ]
       },
 
-      /* Composability, drawn rather than asserted. The question a solution architect actually
-         has is "where can I cut, and what does the cut cost" — so this shows the one cut the
-         module graph supports cleanly, with the shared pool underneath it. Last of the five
-         views on purpose: it only reads once the deployment shapes above it have been read. */
+      /* Composability, drawn as the mechanism rather than as a pile of boxes. The thing that
+         makes a PBC split safe is that the frontend never learns about it: one GraphQL endpoint,
+         one schema, and a router that resolves each operation to the host that owns it. Last of
+         the five views on purpose — it only reads once the deployment shapes above it have. */
       {
         kind: 'topology',
         title: 'Composable Architecture',
-        note: 'The **module set is the unit of deployment**, not the module. Hosts from one image: the catalog-read host contains Catalog · Search · xCatalog · Xapi — with Pricing added when you want prices, since xCatalog declares it `optional="true"` — and the checkout host contains the cart and order path. They share the database by default; `ConnectionStrings:<ModuleId>` splits any module onto its own server when a table set earns it. **This is the deepest cut the graph allows today**: `VirtoCommerce.Orders` declares 11 required dependencies, so "orders as a service" is not a module set that exists.',
-        cols: 3,
+        note: '**The frontend never learns about the split.** It keeps one endpoint and one GraphQL schema; the load balancer resolves each operation and forwards it to the PBC host that owns it, so `xCatalog` queries land on the catalog host and `xCart` mutations on the purchase host. Every host runs the **same image** with a different module set, and they meet again in the shared stores.\n\n**When to split by PBC** rather than run one instance, or the same modules split by role: when one capability\'s load curve is unlike the others — catalog reads spike with a campaign while checkout stays flat; when a bad reindex or a bulk import must not be able to reach checkout; when one capability needs its own release cadence, its own region, or a different machine shape; or when a team needs to deploy without coordinating with everyone else.\n\n**When not to.** Split by **role** first — it is the same image, same modules and same database, and it costs one configuration change. Reach for a PBC split only when the role split has stopped being enough, because this one is a second image to build, promote and keep in step. And check the graph closes: `XOrder` requires `XCart`, which requires `XCatalog`, so those three deploy together whatever the diagram wishes.',
+        cols: 4,
         legend: [
           { kind: 'custom', label: 'Your code' },
-          { kind: 'virto', label: 'Virto Commerce host' },
-          { kind: 'data', label: 'Store' },
-          { dashed: true, label: 'Optional in the module set — the host runs without it' }
+          { kind: 'infra', label: 'Edge & routing' },
+          { kind: 'virto', label: 'PBC host · same image, own module set' },
+          { kind: 'data', label: 'Shared store' }
         ],
         regions: [
-          { id: 'catalogcell', label: 'Digital Catalog · own host', col: [2, 2], row: [1, 2] },
-          { id: 'checkoutcell', label: 'Purchase · with catalog', col: [2, 2], row: [3, 3] },
-          { id: 'rolecell', label: 'Same image · different role', col: [2, 2], row: [5, 5] },
-          { id: 'shared', label: 'Shared, or split per module', accent: 'shared', col: [3, 3], row: [1, 5] }
+          { id: 'pbc', label: 'PBC hosts · 2…n each', col: [3, 3], row: [1, 4] },
+          { id: 'stores', label: 'Shared by every host', accent: 'shared', col: [4, 4], row: [1, 4] }
         ],
         nodes: [
-          { id: 'shopper', name: 'Storefront', sub: 'Browse — the read path', kind: 'custom', col: 1, row: 1 },
-          { id: 'buyer', name: 'Checkout', sub: 'Cart, payment, order', kind: 'custom', col: 1, row: 3 },
-          { id: 'admin', name: 'Commerce Manager', sub: 'Authoring, fulfilment', kind: 'virto', col: 1, row: 5 },
+          { id: 'frontend', name: 'Storefront', sub: 'One endpoint, one schema', meta: 'GraphQL', kind: 'custom', col: 1, row: 2 },
+          { id: 'router', name: 'Load balancer', sub: 'Resolves the operation, forwards to its owner', meta: 'by path · by operation', kind: 'infra', col: 2, row: 2 },
 
-          { id: 'readhost', name: 'Catalog read host', sub: 'Catalog · Search · xCatalog', meta: 'scales on shoppers', kind: 'virto', col: 2, row: 1 },
-          { id: 'pricing', name: 'Pricing', sub: '`optional="true"` in xCatalog', kind: 'virto', col: 2, row: 2 },
-          { id: 'checkouthost', name: 'Checkout host', sub: 'Cart · Order · Payment', meta: '11 deps on Orders', kind: 'virto', col: 2, row: 3 },
-          { id: 'adminhost', name: 'Authoring host', sub: 'Same modules, other role', kind: 'virto', col: 2, row: 5 },
+          { id: 'catalog', name: 'Digital Catalog', sub: 'xCatalog · Catalog · Search', meta: '2…n', kind: 'virto', col: 3, row: 1 },
+          { id: 'purchase', name: 'Purchase', sub: 'xCart · Cart · Pricing · Payment', meta: '2…n', kind: 'virto', col: 3, row: 2 },
+          { id: 'order', name: 'Order', sub: 'xOrder · Orders — needs xCart', meta: '2…n', kind: 'virto', col: 3, row: 3 },
+          { id: 'profile', name: 'Customer & Company', sub: 'Profile API · Customer', meta: '2…n', kind: 'virto', col: 3, row: 4 },
 
-          { id: 'index', name: 'Search index', sub: 'The catalog read path', kind: 'data', col: 3, row: 1 },
-          { id: 'catalogdb', name: 'Catalog database', sub: '`…:VirtoCommerce.Catalog`', kind: 'data', col: 3, row: 2 },
-          { id: 'orderdb', name: 'Order database', sub: '`…:VirtoCommerce.Orders`', kind: 'data', col: 3, row: 3 },
-          { id: 'platformdb', name: 'Platform tables', sub: 'Settings · permissions', kind: 'data', col: 3, row: 5 }
+          { id: 'index', name: 'Search index', sub: 'The catalog read path', kind: 'data', col: 4, row: 1 },
+          { id: 'cartdb', name: 'Cart · Pricing data', sub: 'Live prices, live carts', kind: 'data', col: 4, row: 2 },
+          { id: 'orderdb', name: 'Order data', sub: 'Its own server, if it earns one', kind: 'data', col: 4, row: 3 },
+          { id: 'customerdb', name: 'Customer data', sub: 'Accounts and organisations', kind: 'data', col: 4, row: 4 }
         ],
         edges: [
-          { from: 'shopper', to: 'readhost', label: 'GraphQL' },
-          { from: 'buyer', to: 'checkouthost', label: 'GraphQL' },
-          { from: 'admin', to: 'adminhost', label: 'REST' },
-          /* Same column: the router draws this one vertically, which is what an enrichment
-             inside the same host should look like. */
-          { from: 'pricing', to: 'readhost', label: 'enriches', bypass: true },
-          { from: 'readhost', to: 'index', label: 'reads' },
-          { from: 'readhost', to: 'catalogdb', label: 'writes on author' },
-          { from: 'checkouthost', to: 'orderdb', label: 'reads · writes' },
-          /* Row 4 is left empty so this one has a clear lane to turn in. */
-          { from: 'adminhost', to: 'orderdb', label: 'reads · writes', turnOffset: -14 },
-          { from: 'adminhost', to: 'platformdb', label: 'shared config' }
+          { from: 'frontend', to: 'router', label: 'one schema' },
+          { from: 'router', to: 'catalog', label: 'catalog queries' },
+          { from: 'router', to: 'purchase', label: 'cart mutations' },
+          { from: 'router', to: 'order', label: 'order queries', turnOffset: -13 },
+          { from: 'router', to: 'profile', label: 'profile', turnOffset: -26 },
+          /* One straight edge per row: each host owns the store on its own line, so the picture
+             stays legible instead of turning into a mesh nobody reads. */
+          { from: 'catalog', to: 'index', label: 'reads' },
+          { from: 'purchase', to: 'cartdb', label: 'reads · writes' },
+          { from: 'order', to: 'orderdb', label: 'reads · writes' },
+          { from: 'profile', to: 'customerdb', label: 'reads · writes' }
         ]
       },
     ],

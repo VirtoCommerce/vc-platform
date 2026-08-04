@@ -99,7 +99,9 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
   Composable Architecture last, because it only reads once those two have been. Modules carries one
   (`tree`), Channels one (`stack`). Any diagram may carry a `note`, rendered as a caption above it —
   use it for what a diagram of boxes cannot say, such as which documented configuration this is, or
-  the answer the picture is evidence for.
+  the answer the picture is evidence for. A **blank line in a `note` starts a new paragraph**, and
+  the caption is set at body size (14px) in a single column with a measure cap — it is the text
+  that explains the diagram, so it should not be the smallest type on the page.
 
 **`kind: 'stack'`** — a vertical stack of rows joined by connector pills. A row is either a
 group of nodes or the `target`, so the target can sit anywhere: Channels puts the platform in

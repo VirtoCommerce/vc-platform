@@ -844,9 +844,12 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 }
 .tp-region.is-shared { border-color: hsl(152 45% 45% / .5); background: hsl(152 45% 45% / .05); }
 .tp-region-label {
-  position: absolute; top: 4px; left: 12px;
+  position: absolute; top: 4px; left: 12px; right: 8px;
   font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
   color: var(--info);
+  /* A label longer than its region used to spill over the boxes beside it. Bounded to the region
+     and clipped, so an over-long label is visibly short rather than invisibly wrong. */
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .tp-region.is-outer > .tp-region-label { color: var(--muted); }
 .tp-region.is-shared > .tp-region-label { color: var(--ok); }
@@ -925,17 +928,15 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .tr-row.is-project > .tr-name { font-weight: 700; color: var(--info); }
 .tr-row.is-file > .tr-name { color: var(--text); }
 /* Diagram caption: which documented configuration this is, and the numbers behind it. */
+/* Body size, one column. This is the text that explains the picture, so it reads as prose at the
+   same size as every bullet on the page — 14px, matching `.d-list li`. It was set two columns at
+   11.5px to fill the panel width; that filled the space and made the most important paragraph on
+   the layer the smallest text on it. A measure cap keeps the line length readable instead. */
 .dg-cap {
-  max-width: 96ch; margin: 0 0 12px;
-  font-size: 11.5px; line-height: 1.5; color: var(--muted);
+  max-width: 108ch; margin: 0 0 14px;
+  font-size: 14px; line-height: 1.55; color: var(--text);
 }
-/* Full screen is more than twice the measure this text wants, so capping the line length left
-   a block of empty panel beside every caption. Columns use the width instead of stretching the
-   lines — the same trick the bullet lists use one block down. */
-.drawer.is-full .dg-cap {
-  max-width: none;
-  columns: 430px 2; column-gap: 36px;
-}
+.dg-cap code { font-size: inherit; }
 
 /* ---------- grouped stages ----------
    One bounded region behind a contiguous run of columns, saying "all of this is the

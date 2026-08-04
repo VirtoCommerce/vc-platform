@@ -1112,11 +1112,12 @@
     return (layer.diagrams || []).map(function (diagram) {
       var render = DIAGRAM_RENDERERS[diagram.kind] || schemaBlock;
       /* `note` is the caption that says which documented configuration this is and what the
-         numbers behind it are — the part a diagram of boxes cannot carry on its own. */
-      return block(diagram.title, [
-        diagram.note ? el('p', { class: 'dg-cap' }, rich(diagram.note)) : null,
-        render(diagram)
-      ], true);
+         numbers behind it are — the part a diagram of boxes cannot carry on its own. A blank line
+         starts a new paragraph, because an explanation long enough to need one should get one. */
+      var caption = (diagram.note || '').split('\n\n').filter(Boolean).map(function (para) {
+        return el('p', { class: 'dg-cap' }, rich(para));
+      });
+      return block(diagram.title, [caption, render(diagram)], true);
     });
   }
 
