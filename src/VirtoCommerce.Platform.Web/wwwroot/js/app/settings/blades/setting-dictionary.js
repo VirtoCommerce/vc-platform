@@ -1,4 +1,8 @@
-angular.module('platformWebApp').controller('platformWebApp.settingDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settingsV2', function ($scope, dialogService, bladeNavigationService, settingsApi, settingsV2) {
+angular.module('platformWebApp')
+    .controller('platformWebApp.settingDictionaryController', [
+        '$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService',
+        'platformWebApp.settings', 'platformWebApp.settingsV2',
+        function ($scope, dialogService, bladeNavigationService, settingsApi, settingsV2) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:setting:update';
     var currentEntities;

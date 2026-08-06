@@ -96,44 +96,55 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             foreach (var setting in settings)
             {
-                if (setting.IsDictionary)
-                {
-                    var descriptorAllowedValues = descriptorsByName.TryGetValue(setting.Name, out var descriptor)
-                        ? descriptor.AllowedValues
-                        : null;
+                descriptorsByName.TryGetValue(setting.Name, out var descriptor);
 
-                    if (modifiedOnly)
-                    {
-                        if (!ArrayValuesEqual(setting.AllowedValues, descriptorAllowedValues))
-                        {
-                            result[setting.Name] = setting.AllowedValues ?? [];
-                        }
-                    }
-                    else
-                    {
-                        result[setting.Name] = setting.AllowedValues ?? [];
-                    }
-
-                    continue;
-                }
-
-                var value = setting.Value ?? setting.DefaultValue;
-
-                if (modifiedOnly)
-                {
-                    // Only include if value differs from default
-                    if (!ValuesEqual(value, setting.DefaultValue))
-                    {
-                        result[setting.Name] = setting.Value;
-                    }
-                }
-                else
+                if (TryResolveValue(setting, descriptor, modifiedOnly, out var value))
                 {
                     result[setting.Name] = value;
                 }
             }
 
             return result;
+        }
+
+        private static bool TryResolveValue(ObjectSettingEntry setting, SettingDescriptor descriptor, bool modifiedOnly, out object value)
+        {
+            return setting.IsDictionary
+                ? TryResolveDictionaryValue(setting, descriptor, modifiedOnly, out value)
+                : TryResolveScalarValue(setting, modifiedOnly, out value);
+        }
+
+        private static bool TryResolveDictionaryValue(ObjectSettingEntry setting, SettingDescriptor descriptor, bool modifiedOnly, out object value)
+        {
+            if (modifiedOnly && ArrayValuesEqual(setting.AllowedValues, descriptor?.AllowedValues))
+            {
+                value = null;
+                return false;
+            }
+
+            value = setting.AllowedValues ?? [];
+            return true;
+        }
+
+        private static bool TryResolveScalarValue(ObjectSettingEntry setting, bool modifiedOnly, out object value)
+        {
+            var effectiveValue = setting.Value ?? setting.DefaultValue;
+
+            if (modifiedOnly)
+            {
+                // Only include if value differs from default
+                if (ValuesEqual(effectiveValue, setting.DefaultValue))
+                {
+                    value = null;
+                    return false;
+                }
+
+                value = setting.Value;
+                return true;
+            }
+
+            value = effectiveValue;
+            return true;
         }
 
         public async Task SaveValuesAsync(
@@ -148,60 +159,14 @@ namespace VirtoCommerce.Platform.Data.Settings
                 .ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase);
 
             var typeAssignments = _settingsManager.GetSettingTypeAssignments();
-            var settingsToSave = new List<ObjectSettingEntry>();
+            var settingsToSave = values
+                .Select(kvp => BuildSettingEntry(kvp.Key, kvp.Value, allDescriptors, typeAssignments, tenantType, tenantId))
+                .ToList();
 
-            foreach (var kvp in values)
-            {
-                if (!allDescriptors.TryGetValue(kvp.Key, out var descriptor))
-                {
-                    throw new InvalidOperationException($"Unknown setting: '{kvp.Key}'");
-                }
-
-                // Validate scope: tenant-assigned settings should only be saved with a tenant scope,
-                // and global-only settings should not be saved with a tenant scope
-                var isAssignedToTenant = typeAssignments.ContainsKey(kvp.Key);
-                if (!string.IsNullOrEmpty(tenantType) && !isAssignedToTenant)
-                {
-                    throw new InvalidOperationException(
-                        $"Setting '{kvp.Key}' is not registered for tenant type '{tenantType}'");
-                }
-
-                var entry = new ObjectSettingEntry(descriptor)
-                {
-                    ObjectType = tenantType,
-                    ObjectId = tenantId
-                };
-
-                if (descriptor.IsDictionary)
-                {
-                    entry.AllowedValues = ConvertArrayValue(kvp.Value, descriptor.ValueType);
-                }
-                else
-                {
-                    entry.Value = ConvertValue(kvp.Value, descriptor.ValueType);
-                }
-
-                settingsToSave.Add(entry);
-            }
-
-            // replaceAll mode: the incoming dict is the complete set of desired modifications.
-            // Any currently-modified setting NOT in the dict should be reset to default (DB row deleted).
             if (replaceAll)
             {
-                var currentModified = await GetValuesAsync(tenantType, tenantId, modifiedOnly: true);
                 var incomingNames = new HashSet<string>(values.Keys, StringComparer.OrdinalIgnoreCase);
-
-                var settingsToReset = currentModified.Keys
-                    .Where(name => !incomingNames.Contains(name))
-                    .Select(name =>
-                    {
-                        allDescriptors.TryGetValue(name, out var desc);
-                        return desc != null
-                            ? new ObjectSettingEntry(desc) { ObjectType = tenantType, ObjectId = tenantId }
-                            : null;
-                    })
-                    .Where(x => x != null)
-                    .ToList();
+                var settingsToReset = await ResolveSettingsToResetAsync(tenantType, tenantId, allDescriptors, incomingNames);
 
                 if (settingsToReset.Count > 0)
                 {
@@ -213,6 +178,66 @@ namespace VirtoCommerce.Platform.Data.Settings
             {
                 await _settingsManager.SaveObjectSettingsAsync(settingsToSave);
             }
+        }
+
+        private static ObjectSettingEntry BuildSettingEntry(
+            string name,
+            object rawValue,
+            IReadOnlyDictionary<string, SettingDescriptor> allDescriptors,
+            IDictionary<string, string[]> typeAssignments,
+            string tenantType,
+            string tenantId)
+        {
+            if (!allDescriptors.TryGetValue(name, out var descriptor))
+            {
+                throw new InvalidOperationException($"Unknown setting: '{name}'");
+            }
+
+            // Validate scope: tenant-assigned settings should only be saved with a tenant scope,
+            // and global-only settings should not be saved with a tenant scope
+            if (!string.IsNullOrEmpty(tenantType) && !typeAssignments.ContainsKey(name))
+            {
+                throw new InvalidOperationException($"Setting '{name}' is not registered for tenant type '{tenantType}'");
+            }
+
+            var entry = new ObjectSettingEntry(descriptor)
+            {
+                ObjectType = tenantType,
+                ObjectId = tenantId
+            };
+
+            if (descriptor.IsDictionary)
+            {
+                entry.AllowedValues = ConvertArrayValue(rawValue, descriptor.ValueType);
+            }
+            else
+            {
+                entry.Value = ConvertValue(rawValue, descriptor.ValueType);
+            }
+
+            return entry;
+        }
+
+        private async Task<List<ObjectSettingEntry>> ResolveSettingsToResetAsync(
+            string tenantType,
+            string tenantId,
+            IReadOnlyDictionary<string, SettingDescriptor> allDescriptors,
+            HashSet<string> incomingNames)
+        {
+            var currentModified = await GetValuesAsync(tenantType, tenantId, modifiedOnly: true);
+            var settingsToReset = new List<ObjectSettingEntry>();
+
+            foreach (var name in currentModified.Keys)
+            {
+                if (incomingNames.Contains(name) || !allDescriptors.TryGetValue(name, out var descriptor))
+                {
+                    continue;
+                }
+
+                settingsToReset.Add(new ObjectSettingEntry(descriptor) { ObjectType = tenantType, ObjectId = tenantId });
+            }
+
+            return settingsToReset;
         }
 
         private IEnumerable<SettingDescriptor> GetDescriptors(string tenantType)
