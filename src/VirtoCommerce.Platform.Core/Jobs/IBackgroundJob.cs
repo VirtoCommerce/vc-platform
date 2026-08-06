@@ -52,4 +52,22 @@ public interface IBackgroundJob
         CancellationToken cancellationToken = default)
         => throw new NotSupportedException(
             $"This {nameof(IBackgroundJob)} implementation does not support the non-generic Enqueue(Type, ...) overload.");
+
+    /// <summary>
+    /// Request cancellation of a previously enqueued job by id. Best-effort and engine-dependent: a not-yet-started
+    /// job is prevented from running; a running job is asked to stop via its <see cref="CancellationToken"/>.
+    /// Returns <c>true</c> if the active engine accepted the request. Check <see cref="SupportsCancellation"/> first to
+    /// tell "not supported" apart from "nothing to cancel".
+    /// </summary>
+    /// <param name="jobId">The engine-specific job id returned by <see cref="Enqueue{THandler}"/>.</param>
+    /// <param name="cancellationToken">Cancels the cancellation request operation itself.</param>
+    /// <returns><c>true</c> if the active engine accepted the cancellation request.</returns>
+    /// <remarks>
+    /// A default no-op implementation is provided so this member can be added without breaking existing external
+    /// implementers of <see cref="IBackgroundJob"/>; the platform's facade overrides it with the real behavior.
+    /// </remarks>
+    Task<bool> Cancel(string jobId, CancellationToken cancellationToken = default) => Task.FromResult(false);
+
+    /// <summary>Whether the active engine supports on-demand cancellation (see <see cref="Cancel"/>).</summary>
+    bool SupportsCancellation => false;
 }
