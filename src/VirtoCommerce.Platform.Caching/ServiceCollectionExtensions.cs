@@ -29,6 +29,8 @@ namespace VirtoCommerce.Platform.Caching
             }
 
             services.AddScoped<IRequestScopedCache, RequestScopedCache>();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IRequestScopedCacheAccessor, HttpRequestScopedCacheAccessor>();
 
             return services;
         }

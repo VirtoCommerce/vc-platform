@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Caching
@@ -14,6 +15,8 @@ namespace VirtoCommerce.Platform.Core.Caching
         private static readonly StringComparer _ignoreCase = StringComparer.OrdinalIgnoreCase;
         private static readonly ConcurrentDictionary<string, object> _lockLookup = new();
 
+        // Four explicit overloads, not one optional parameter: optional arguments bind at the call site,
+        // so collapsing them drops the arity already-compiled module callers reference.
         public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
             this IMemoryCache memoryCache,
             string keyPrefix,
@@ -22,7 +25,19 @@ namespace VirtoCommerce.Platform.Core.Caching
             Action<MemoryCacheEntryOptions, string, TItem> configureCache)
             where TItem : IEntity
         {
-            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, x => x.Id, loadItems, configureCache);
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, x => x.Id, loadItems, configureCache, createChangeToken: null);
+        }
+
+        public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
+            this IMemoryCache memoryCache,
+            string keyPrefix,
+            IList<string> ids,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache,
+            Func<string, IChangeToken> createChangeToken)
+            where TItem : IEntity
+        {
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, x => x.Id, loadItems, configureCache, createChangeToken);
         }
 
         public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
@@ -36,7 +51,22 @@ namespace VirtoCommerce.Platform.Core.Caching
         {
             ArgumentNullException.ThrowIfNull(idSelector);
 
-            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadItems, configureCache);
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadItems, configureCache, createChangeToken: null);
+        }
+
+        public static Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
+            this IMemoryCache memoryCache,
+            string keyPrefix,
+            IList<string> ids,
+            Func<TItem, string> idSelector,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache,
+            Func<string, IChangeToken> createChangeToken)
+            where TItem : class
+        {
+            ArgumentNullException.ThrowIfNull(idSelector);
+
+            return memoryCache.GetOrLoadByIdsCoreAsync(keyPrefix, ids, idSelector, loadItems, configureCache, createChangeToken);
         }
 
         private static async Task<IList<TItem>> GetOrLoadByIdsCoreAsync<TItem>(
@@ -45,32 +75,14 @@ namespace VirtoCommerce.Platform.Core.Caching
             IList<string> ids,
             Func<TItem, string> idSelector,
             Func<IList<string>, Task<IList<TItem>>> loadItems,
-            Action<MemoryCacheEntryOptions, string, TItem> configureCache)
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache,
+            Func<string, IChangeToken> createChangeToken)
         {
             ids = DistinctNonEmpty(ids);
 
             var normalizedPrefix = CacheKey.Normalize(keyPrefix);
 
-            var hits = new List<TItem>(ids.Count);
-            var allCached = true;
-
-            foreach (var id in ids)
-            {
-                if (memoryCache.TryGetValue(CacheKey.With(normalizedPrefix, CacheKey.Normalize(id)), out var cached))
-                {
-                    if (cached is not null)
-                    {
-                        hits.Add((TItem)cached);
-                    }
-                }
-                else
-                {
-                    allCached = false;
-                    break;
-                }
-            }
-
-            if (allCached)
+            if (TryGetAllCached<TItem>(memoryCache, normalizedPrefix, ids, out var hits))
             {
                 return hits;
             }
@@ -85,6 +97,12 @@ namespace VirtoCommerce.Platform.Core.Caching
                         .Except(result.Keys)
                         .ToList();
 
+                    // Before the load, not after: InnerExpireTokenForKey removes the source as it cancels,
+                    // so a token created after an invalidation comes back live and caches the stale value.
+                    var changeTokens = createChangeToken is null
+                        ? null
+                        : missingIds.ToDictionary(x => x, createChangeToken, _ignoreCase);
+
                     var items = await loadItems(missingIds) ?? Array.Empty<TItem>();
 
                     var itemsByIds = items
@@ -98,7 +116,14 @@ namespace VirtoCommerce.Platform.Core.Caching
                         result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
                         {
                             var item = itemsByIds.GetValueSafe(id);
+
+                            if (changeTokens is not null)
+                            {
+                                options.AddExpirationToken(changeTokens[id]);
+                            }
+
                             configureCache(options, id, item);
+
                             return item;
                         });
                     }
@@ -108,6 +133,26 @@ namespace VirtoCommerce.Platform.Core.Caching
             return result.Values
                 .Where(x => x != null)
                 .ToList();
+        }
+
+        private static bool TryGetAllCached<TItem>(IMemoryCache memoryCache, string normalizedPrefix, IList<string> ids, out List<TItem> hits)
+        {
+            hits = new List<TItem>(ids.Count);
+
+            foreach (var id in ids)
+            {
+                if (!memoryCache.TryGetValue(CacheKey.With(normalizedPrefix, CacheKey.Normalize(id)), out var cached))
+                {
+                    return false;
+                }
+
+                if (cached is not null)
+                {
+                    hits.Add((TItem)cached);
+                }
+            }
+
+            return true;
         }
 
         [SuppressMessage("Major Code Smell", "S3267:Loops should be simplified using the \"Where\" LINQ method",
