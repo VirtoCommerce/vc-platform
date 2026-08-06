@@ -568,13 +568,24 @@ angular.module('platformWebApp')
                 var newBlade = {
                     id: 'settingDetailChild',
                     currentEntityId: node.name,
-                    // isApiSave tells the dictionary controller to load/save via the v1 API
-                    // (settingsApi.get/update). Without this flag, it watches
-                    // parentBlade.currentEntities which doesn't exist in the unified blade.
+                    // isApiSave tells the dictionary controller to load/save via the API
+                    // (v2 tenant/global values when tenantType/tenantId are set below, else
+                    // the legacy v1 settingsApi.get/update global-only endpoints).
+                    // Without this flag, it watches parentBlade.currentEntities which
+                    // doesn't exist in the unified blade.
                     isApiSave: true,
+                    valueType: node.valueType,
+                    isReadOnly: node.isReadOnly,
+                    parentRefresh: blade.refresh,
                     controller: 'platformWebApp.settingDictionaryController',
                     template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
                 };
+
+                if (!blade.isEntityMode) {
+                    newBlade.tenantType = blade.tenantType;
+                    newBlade.tenantId = blade.tenantId;
+                }
+
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 

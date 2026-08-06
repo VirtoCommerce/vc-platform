@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -86,13 +87,36 @@ namespace VirtoCommerce.Platform.Data.Settings
                 descriptors = descriptors.Where(x => x.ModuleId == moduleId);
             }
 
-            var names = descriptors.Select(x => x.Name).ToArray();
+            var descriptorList = descriptors.ToList();
+            var names = descriptorList.Select(x => x.Name).ToArray();
+            var descriptorsByName = descriptorList.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
 
             var settings = await _settingsManager.GetObjectSettingsAsync(names, tenantType, tenantId);
             var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var setting in settings)
             {
+                if (setting.IsDictionary)
+                {
+                    var descriptorAllowedValues = descriptorsByName.TryGetValue(setting.Name, out var descriptor)
+                        ? descriptor.AllowedValues
+                        : null;
+
+                    if (modifiedOnly)
+                    {
+                        if (!ArrayValuesEqual(setting.AllowedValues, descriptorAllowedValues))
+                        {
+                            result[setting.Name] = setting.AllowedValues ?? [];
+                        }
+                    }
+                    else
+                    {
+                        result[setting.Name] = setting.AllowedValues ?? [];
+                    }
+
+                    continue;
+                }
+
                 var value = setting.Value ?? setting.DefaultValue;
 
                 if (modifiedOnly)
@@ -144,10 +168,18 @@ namespace VirtoCommerce.Platform.Data.Settings
 
                 var entry = new ObjectSettingEntry(descriptor)
                 {
-                    Value = ConvertValue(kvp.Value, descriptor.ValueType),
                     ObjectType = tenantType,
                     ObjectId = tenantId
                 };
+
+                if (descriptor.IsDictionary)
+                {
+                    entry.AllowedValues = ConvertArrayValue(kvp.Value, descriptor.ValueType);
+                }
+                else
+                {
+                    entry.Value = ConvertValue(kvp.Value, descriptor.ValueType);
+                }
 
                 settingsToSave.Add(entry);
             }
@@ -293,6 +325,47 @@ namespace VirtoCommerce.Platform.Data.Settings
                 SettingValueType.Decimal => Convert.ToDecimal(value),
                 _ => value.ToString()
             };
+        }
+
+        private static object[] ConvertArrayValue(object value, SettingValueType valueType)
+        {
+            if (value == null)
+            {
+                return [];
+            }
+
+            if (value is JArray jArray)
+            {
+                return jArray.Select(x => ConvertValue(x, valueType)).ToArray();
+            }
+
+            if (value is JsonElement { ValueKind: JsonValueKind.Array } jsonElement)
+            {
+                return jsonElement.EnumerateArray().Select(x => ConvertValue(x, valueType)).ToArray();
+            }
+
+            if (value is IEnumerable enumerable && value is not string)
+            {
+                return enumerable.Cast<object>().Select(x => ConvertValue(x, valueType)).ToArray();
+            }
+
+            return [ConvertValue(value, valueType)];
+        }
+
+        private static bool ArrayValuesEqual(object[] current, object[] defaultValues)
+        {
+            current ??= [];
+            defaultValues ??= [];
+
+            if (current.Length != defaultValues.Length)
+            {
+                return false;
+            }
+
+            var currentSorted = current.Select(x => x?.ToString()).OrderBy(x => x, StringComparer.Ordinal);
+            var defaultSorted = defaultValues.Select(x => x?.ToString()).OrderBy(x => x, StringComparer.Ordinal);
+
+            return currentSorted.SequenceEqual(defaultSorted, StringComparer.Ordinal);
         }
     }
 }

@@ -1,9 +1,36 @@
-angular.module('platformWebApp').controller('platformWebApp.settingDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, settingsApi) {
+angular.module('platformWebApp').controller('platformWebApp.settingDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settingsV2', function ($scope, dialogService, bladeNavigationService, settingsApi, settingsV2) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:setting:update';
     var currentEntities;
 
+    function refreshViaTenantV2(parentRefresh) {
+        settingsV2.getTenantValues({ tenantType: blade.tenantType, tenantId: blade.tenantId }).$promise.then(function (values) {
+            var allowedValues = values[blade.currentEntityId] || [];
+
+            if (parentRefresh && blade.parentRefresh) {
+                blade.parentRefresh(allowedValues);
+            }
+
+            var settings = {
+                name: blade.currentEntityId,
+                valueType: blade.valueType,
+                isReadOnly: blade.isReadOnly,
+                allowedValues: _.map(allowedValues, function (x) { return { value: x }; })
+            };
+
+            initializeBlade(settings, { allowedValues: angular.copy(settings.allowedValues) });
+        }, function (error) {
+            blade.isLoading = false;
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        });
+    }
+
     blade.refresh = function (parentRefresh) {
+        if (blade.tenantType && blade.tenantId) {
+            refreshViaTenantV2(parentRefresh);
+            return;
+        }
+
         settingsApi.get({ id: blade.currentEntityId }, function (settings) {
             if (parentRefresh && blade.parentRefresh) {
                 blade.parentRefresh(settings.allowedValues);
@@ -119,6 +146,17 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             blade.selectedAll = false;
             blade.isLoading = true;
             blade.currentEntity.allowedValues = _.pluck(blade.currentEntity.allowedValues, 'value');
+
+            if (blade.tenantType && blade.tenantId) {
+                var values = {};
+                values[blade.currentEntityId] = blade.currentEntity.allowedValues;
+
+                settingsV2.saveTenantValues({ tenantType: blade.tenantType, tenantId: blade.tenantId }, values, blade.refresh, function (error) {
+                    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                });
+
+                return;
+            }
 
             settingsApi.update(null, [blade.currentEntity], blade.refresh, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
