@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -18,6 +19,7 @@ public static class ReflectionUtility
     private static readonly ConcurrentDictionary<Type, Type[]> _typeInheritanceChains = new();
     private static readonly ConcurrentDictionary<(Type Type, Type ToBaseType), Type[]> _typeInheritanceChainsTo = new();
     private static readonly ConcurrentDictionary<(Type Type, Type Attribute, bool Inherit), PropertyInfo[]> _propertiesWithAttribute = new();
+    private static readonly ConcurrentDictionary<(Type Type, MethodInfo BaseMethod), bool> _overriddenMethods = new();
 
     public static IEnumerable<string> GetPropertyNames<T>(params Expression<Func<T, object>>[] propertyExpressions)
     {
@@ -117,6 +119,49 @@ public static class ReflectionUtility
             }
 
             return retVal.ToArray();
+        });
+    }
+
+    /// <summary>
+    /// Resolves a non-public instance method, for use as the <c>baseMethod</c> of <see cref="IsMethodOverridden"/>.
+    /// </summary>
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields",
+        Justification = "Resolves a declaration to compare against; the returned MethodInfo is never invoked, and no accessibility is widened.")]
+    public static MethodInfo GetNonPublicInstanceMethod(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicMethods)] this Type declaringType,
+        string methodName,
+        params Type[] parameterTypes)
+    {
+        ArgumentNullException.ThrowIfNull(declaringType);
+
+        return declaringType.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic, parameterTypes);
+    }
+
+    /// <summary>
+    /// Whether <paramref name="type"/> overrides the virtual <paramref name="baseMethod"/>. Cached, so callers
+    /// may ask on a hot path. A member hidden with <c>new</c> reports false — it occupies a fresh slot, so a
+    /// virtual call still reaches the base implementation.
+    /// </summary>
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields",
+        Justification = "Detects only WHETHER a subtype overrides a protected virtual member; it neither invokes the member nor widens its accessibility.")]
+    public static bool IsMethodOverridden(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] this Type type,
+        MethodInfo baseMethod)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(baseMethod);
+
+        return _overriddenMethods.GetOrAdd((type, baseMethod), static key =>
+        {
+            // Compares virtual slots rather than re-resolving by name: overloads differing only in
+            // parameter types at the same arity would otherwise be indistinguishable.
+            var baseDefinition = key.BaseMethod.GetBaseDefinition();
+
+            var implementation = key.Type
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .FirstOrDefault(x => x.GetBaseDefinition() == baseDefinition);
+
+            return implementation is not null && implementation.DeclaringType != key.BaseMethod.DeclaringType;
         });
     }
 

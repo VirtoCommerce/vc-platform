@@ -25,6 +25,14 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
     // components) or GetProperties (custom property set/order) — those keep the legacy component path.
     private static readonly ConcurrentDictionary<Type, ComponentAccessor[]> _componentAccessors = new();
 
+    // The two declarations the fast-path gate probes for overrides. Passing the declaration itself rather
+    // than a name keeps the probe unambiguous — GetProperties is overloaded here.
+    private static readonly MethodInfo _getEqualityComponentsMethod = typeof(ValueObject)
+        .GetNonPublicInstanceMethod(nameof(GetEqualityComponents));
+
+    private static readonly MethodInfo _getPropertiesMethod = typeof(ValueObject)
+        .GetNonPublicInstanceMethod(nameof(GetProperties));
+
     private delegate void ValueHasher(object instance, ref HashCode hash);
 
     private delegate bool ValueEqualityCheck(object left, object right);
@@ -183,21 +191,12 @@ public abstract class ValueObject : IValueObject, ICacheKey, ICloneable
         // uses the default component model — i.e. overrides NEITHER GetEqualityComponents (custom
         // components) NOR GetProperties (custom property set/order). Either override means equality
         // must flow through the virtual component path, so fall back to the legacy implementation.
-        if (IsOverridden(type, nameof(GetEqualityComponents)) || IsOverridden(type, nameof(GetProperties)))
+        if (type.IsMethodOverridden(_getEqualityComponentsMethod) || type.IsMethodOverridden(_getPropertiesMethod))
         {
             return null;
         }
 
         return GetProperties(type).Select(ComponentAccessor.Create).ToArray();
-    }
-
-    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields",
-        Justification = "Reflection only detects whether a subtype overrides the protected virtual GetEqualityComponents/GetProperties (the fast-path gate); it neither invokes them nor widens their accessibility.")]
-    private static bool IsOverridden(Type type, string methodName)
-    {
-        var method = type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-
-        return method?.DeclaringType != typeof(ValueObject);
     }
 
     // Hashes one reference-typed (or list) component, mirroring the marked stream that ExpandComponent
