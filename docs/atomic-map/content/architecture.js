@@ -363,7 +363,7 @@ window.VC_MAP_ARCHITECTURE = [
     ],
     gotchas: [
       'A module is not a service. Splitting by role gives you separate processes over the same modules and the same data; splitting by module set gives you a smaller host. Neither turns one module into an independently deployable unit.',
-      '`VirtoCommerce.Orders` declares 11 required dependencies — Cart, Catalog, Customer, Inventory, Notifications, Payment, Search, Shipping, Store, Assets, Core. A module subset has to close over the graph, and a missing required dependency takes its dependents down with it rather than degrading.',
+      'Every dependency a module declares as **required** has to be installed in the package with it — there is no partial install, and a missing one does not degrade the module, it takes the module and everything depending on it out of the host. So when you write a module, **split its dependencies into required and optional**: mark `optional="true"` on everything it can start without, and it becomes installable in several PBCs instead of only in the one that happens to carry the whole list. `VirtoCommerce.Orders`, with 11 required and none optional, is the counter-example.',
       'There is no distributed transaction. The moment two modules are on two databases, a write that spans them is two writes, and you own the reconciliation.',
       'Every host sharing a database runs migrations at startup, serialised by the platform distributed lock — which falls back to a no-op when Redis is not configured. Split hosts without Redis and two of them can migrate at once.',
       'Never edit vendor module source, even locally to "just test something". The moment you do, you own that module forever and upgrades become merges.',
