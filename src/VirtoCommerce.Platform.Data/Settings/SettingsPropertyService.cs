@@ -183,7 +183,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private static ObjectSettingEntry BuildSettingEntry(
             string name,
             object rawValue,
-            IReadOnlyDictionary<string, SettingDescriptor> allDescriptors,
+            Dictionary<string, SettingDescriptor> allDescriptors,
             IDictionary<string, string[]> typeAssignments,
             string tenantType,
             string tenantId)
@@ -221,7 +221,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private async Task<List<ObjectSettingEntry>> ResolveSettingsToResetAsync(
             string tenantType,
             string tenantId,
-            IReadOnlyDictionary<string, SettingDescriptor> allDescriptors,
+            Dictionary<string, SettingDescriptor> allDescriptors,
             HashSet<string> incomingNames)
         {
             var currentModified = await GetValuesAsync(tenantType, tenantId, modifiedOnly: true);
