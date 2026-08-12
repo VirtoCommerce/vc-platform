@@ -708,7 +708,7 @@ window.VC_MAP_ARCHITECTURE = [
       'Blob storage — product images, imports, exports and other assets, behind a file-system or cloud provider.',
       'CDN — static assets and product images, in front of blob storage.',
       '**Kubernetes-native, and portable.** On Virto Cloud the runtime is a Kubernetes-native core following CNCF practice — AKS, SQL, Redis and Elasticsearch as managed services, in a dedicated isolated environment. Azure today; AWS and GCP on request. Portable, not simultaneous.',
-      '**Composable scaling is an infrastructure property, not just a code one.** Catalog, pricing and search scale independently, horizontally and automatically; vertical sizing stays manual and on demand. That is the same seam the Composable Architecture view draws — see [[host-composition]] and [[scaling]].',
+      '**Composable scaling is an infrastructure property, not just a code one.** Catalog, pricing and search scale independently, horizontally and automatically; vertical sizing stays manual and on demand. That is the same seam the Composable Architecture view draws — see [[host-composition]] and [[scalability]].',
       '**The environment is a Git artifact.** Declarative infrastructure reconciled by Argo means an environment is reviewable and reproducible, and a rollback is a revert rather than a rebuild. If you self-host, this is the practice worth copying first.'
     ],
     gotchas: [

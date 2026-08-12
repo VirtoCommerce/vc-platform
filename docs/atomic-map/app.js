@@ -90,6 +90,16 @@
    *  separates the two ** markers into different segments, which breaks the pairing and
    *  silently bolds everything up to the next marker instead of the intended phrase.
    *  Caveat: an odd number of ** in one string bolds the tail — pair your markers. */
+  /* `[[atom-id]]` in any prose becomes a link to that atom. Written as an anchor rather than a
+     button because rich() output lands inside <div>s and <li>s — never inside a <button>, where a
+     nested interactive element would be invalid. The hash router already handles the href. */
+  function crossRef(id) {
+    var atom = byId(ATOMS, id);
+    return el('a', { class: 'x-ref', href: '#/atom/' + id,
+      title: atom ? atom.oneLiner : 'Unknown atom: ' + id,
+      text: atom ? atom.name : id });
+  }
+
   function rich(text) {
     var frag = document.createDocumentFragment();
     String(text).split('**').forEach(function (part, i) {
@@ -98,7 +108,12 @@
       var host = bold ? el('strong', {}) : frag;
       part.split('`').forEach(function (chunk, j) {
         if (chunk === '') return;
-        host.appendChild(j % 2 ? el('code', { text: chunk }) : document.createTextNode(chunk));
+        if (j % 2) { host.appendChild(el('code', { text: chunk })); return; }
+        // Outside code spans, split the plain text on [[atom-id]] and link every other piece.
+        chunk.split(/\[\[([a-z0-9-]+)\]\]/).forEach(function (piece, k) {
+          if (piece === '') return;
+          host.appendChild(k % 2 ? crossRef(piece) : document.createTextNode(piece));
+        });
       });
       if (bold) frag.appendChild(host);
     });

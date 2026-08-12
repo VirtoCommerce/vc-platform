@@ -83,6 +83,21 @@ function verCompare(a, b) {
   return 0;
 }
 
+/* `[[atom-id]]` in prose renders as a link, so a reference to an atom that does not exist is a
+   dead link on the page. Every string in the content files is swept for them. */
+function checkCrossRefs(kind, id, value) {
+  if (typeof value === 'string') {
+    const refs = value.match(/\[\[([a-z0-9-]+)\]\]/g) || [];
+    for (const r of refs) {
+      const target = r.slice(2, -2);
+      if (!atomIds.has(target)) add(kind, id, `cross-reference [[${target}]] does not name an atom`);
+    }
+    return;
+  }
+  if (Array.isArray(value)) { for (const v of value) checkCrossRefs(kind, id, v); return; }
+  if (value && typeof value === 'object') { for (const v of Object.values(value)) checkCrossRefs(kind, id, v); }
+}
+
 const REQUIRED = ['id','symbol','name','family','adoption','layer','oneLiner','pattern','whenToUse','api'];
 const ADOPTIONS = new Set(['platform','module','available','in-flight','legacy']);
 const atomIds = new Set(ATOMS.map(a => a.id));
@@ -105,6 +120,7 @@ for (const a of ATOMS) {
   for (const d of a.docs || []) checkDoc('atom', a.id, d);
   if (a.snippet && !a.snippet.code) add('atom', a.id, 'snippet without code');
   if (a.seeAlso?.includes(a.id)) add('atom', a.id, 'seeAlso references itself');
+  checkCrossRefs('atom', a.id, a);
 }
 
 /* Cells are the third rung of the ladder: a set of modules that solves a business scenario.
@@ -329,6 +345,7 @@ function checkDiagram(kind, id, d) {
 }
 
 for (const l of LAYERS) {
+  checkCrossRefs('layer', l.id, l);
   for (const d of l.docs || []) checkDoc('layer', l.id, d);
   if (!l.hue) add('layer', l.id, 'missing hue');
   if (!l.sub) add('layer', l.id, 'missing sub');
@@ -338,6 +355,7 @@ for (const l of LAYERS) {
 }
 for (const c of CELLS || []) {
   if (!c.id) { add('cell', '(no id)', 'missing id'); continue; }
+  checkCrossRefs('cell', c.id, c);
   if (!c.name) add('cell', c.id, 'missing name');
   if (!c.sub) add('cell', c.id, 'missing sub');
   if (!SPLIT_VERDICTS.has(c.splittable)) {

@@ -648,7 +648,6 @@ window.VC_MAP_ATOMS = [
       { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ],
     seeAlso: ['cache-regions', 'redis-cache-bus', 'request-scoped-cache', 'cache-disabler', 'hybrid-cache'],
-    molecule: 'performance',
     verifiedAgainst: '3.1053.0'
   },
 
@@ -702,7 +701,6 @@ window.VC_MAP_ATOMS = [
       { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ],
     seeAlso: ['platform-memory-cache', 'redis-cache-bus', 'domain-events'],
-    molecule: 'performance',
     verifiedAgainst: '3.1053.0'
   },
 
@@ -810,7 +808,6 @@ window.VC_MAP_ATOMS = [
       { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
     ],
     seeAlso: ['platform-memory-cache', 'current-user'],
-    molecule: 'performance',
     verifiedAgainst: '3.1053.0'
   },
 
@@ -3508,26 +3505,28 @@ window.VC_MAP_ATOMS = [
   },
 
   {
-    id: 'scaling',
+    id: 'scalability',
     symbol: 'Sc',
-    name: 'Scaling',
+    name: 'Scalability',
     family: 'ops',
     adoption: 'platform',
     layer: 'infrastructure',
-    tags: ['horizontal', 'vertical', 'scale out', 'scale up', 'replicas', 'performance', 'gc', 'container'],
-    oneLiner: 'Out before up, level by level — and knowing which levels refuse to go out.',
-    pattern: 'Stateless request path with shared state behind it. Every instance keeps a local memory cache and holds nothing else worth protecting, so capacity is a replica count; the state that cannot be replicated — one database writer, one index, one lock — is what you scale up instead.',
+    tags: ['horizontal', 'vertical', 'scale out', 'scale up', 'readiness', 'replicas', 'performance', 'gc', 'container'],
+    oneLiner: 'What is ready to scale out today, what will only ever scale up, and what has to be true before the second instance.',
+    pattern: 'Stateless request path with shared state behind it. Every instance keeps a local memory cache and holds nothing else worth protecting, so capacity is a replica count; the state that cannot be replicated — one database writer, one index, one lock — is what you scale up instead. **Readiness is per level, not per platform**: some levels are ready out of the box, some are ready only vertically, and two are not ready at all.',
     whenToUse: [
-      'Before a launch, to decide the shape rather than discover it: which levels go out, which have to go up',
-      'When one workload is degrading another — the answer is usually another host, not a bigger one',
-      'On a cost review: the unit is a **small container**, so capacity is a count you can turn down again',
-      'When a level refuses to scale out, to find what is holding state it should not'
+      '**Ready to scale out, no work needed:** the request path (REST and XAPI) — it is stateless; the per-instance memory cache, once Redis carries invalidation; background jobs, via `Mode: Producer` and `Mode: Worker` hosts; a host per module subset; a database per module; search, as an external cluster; assets, behind a cloud blob provider',
+      '**Ready to scale up only:** the relational database — one writer, and read replicas where the provider allows; a single index rebuild; a single large import. More instances do not divide this work, a bigger machine does',
+      '**Not ready, and no configuration changes it:** a transaction spanning two module databases, and a single module as its own service. Both are design constraints rather than settings — see [[cross-module-references]] and [[host-composition]]',
+      'Before a launch, to decide the shape rather than discover it — the readiness list above is the checklist',
+      'When one workload is degrading another: the answer is usually another host, not a bigger one'
     ],
     avoid: [
       'Scaling up first. It buys headroom you pay for around the clock and hides the coupling that stopped you scaling out',
-      'Adding instances before Redis is configured — without it two instances serve two different caches',
+      'Adding the second instance before the four prerequisites are met: Redis configured, a cloud blob provider instead of `FileSystemAssets`, a real search provider instead of Lucene, and the bearer-token certificate shared. Each of these works on one instance and fails on two',
       'Scaling the database to fix catalog browse. The index is the read path; the database is not in it',
-      'Sizing every host the same. A 512 MB request host and a reindex worker want different machines'
+      'Sizing every host the same. A 512 MB request host and a reindex worker want different machines',
+      'Quoting a scalability number without saying which level it applies to — the platform layer and your custom modules scale on different curves'
     ],
     api: [
       { name: 'BackgroundJobs:Mode — Producer | Worker | Both, the horizontal split for jobs', file: 'src/VirtoCommerce.Platform.Web/appsettings.json' },
@@ -3557,7 +3556,7 @@ window.VC_MAP_ATOMS = [
       { label: 'Indexed search overview', page: 'Fundamentals/Indexed-Search/overview' }
     ],
     seeAlso: ['host-composition', 'module-database', 'redis-cache-bus', 'distributed-lock', 'background-jobs', 'search'],
-    molecule: 'performance',
+    molecule: 'deployment',
     verifiedAgainst: '3.1059.0'
   }
 

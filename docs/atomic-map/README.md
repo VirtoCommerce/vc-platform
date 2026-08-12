@@ -77,9 +77,11 @@ node docs/atomic-map/check-content.js
 | `keystone` | | `true` draws a heavier border (currently only `AbstractTypeFactory`) |
 | `tags` | | extra search terms that are not in the prose |
 
-In any text field, backticks render as inline `<code>` and `**double stars**` as `<strong>`. Bold is
-the outer split, so ``**`Something`**`` works. Pair your markers — an odd number of `**` in one
-string bolds the tail.
+In any text field, backticks render as inline `<code>`, `**double stars**` as `<strong>`, and
+`[[atom-id]]` as a **link to that atom** — the checker rejects a reference to an atom that does not
+exist, because a dead cross-reference is exactly what this map must not ship. Bold is the outer
+split, so ``**`Something`**`` works. Pair your markers — an odd number of `**` in one string bolds
+the tail.
 
 `app.js` validates the required fields at render time and paints a red `⚠` on any incomplete tile,
 with the specific problems listed in its drawer. Broken content fails loudly rather than rendering

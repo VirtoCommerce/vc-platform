@@ -856,20 +856,4 @@ window.VC_MAP_MOLECULES = [
     docs: [],
     atoms: ['generic-crud', 'domain-events', 'platform-memory-cache']
   },
-  {
-    id: 'performance',
-    name: 'Performance & scale-out',
-    sub: 'The playbook when it gets slow, in the order worth trying.',
-    planned: [
-      'The usual suspects: missing cache tokens, N+1 over EF Core, per-call index lookups, chatty XAPI resolvers',
-      'Reading the caching layer as a whole: region tokens, request-scoped cache, Redis coherence',
-      'Scaling out: what must be shared, what must be locked, what must not be cached',
-      'Where to measure first, and which numbers actually predict user-visible latency'
-    ],
-    docs: [
-      { label: 'Scalability', page: 'Fundamentals/Scalability/scalability-options' },
-      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' }
-    ],
-    atoms: ['platform-memory-cache', 'cache-regions', 'request-scoped-cache', 'ef-core']
-  }
 ];

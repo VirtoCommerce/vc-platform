@@ -371,6 +371,15 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .molecule.is-active { border-style: solid; border-color: var(--accent); box-shadow: 0 0 0 2px hsl(350 70% 55% / .25); }
 .molecule.is-dim { opacity: .3; }
 
+/* A prose cross-reference to another atom — underlined on hover only, so a paragraph with three
+   of them still reads as a paragraph rather than as a list of links. */
+.x-ref {
+  color: var(--focus); text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+}
+.x-ref:hover { text-decoration: none; border-bottom-style: solid; }
+.x-ref:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+
 /* ---------- footer ---------- */
 
 .footer {
