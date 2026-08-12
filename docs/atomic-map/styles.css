@@ -240,7 +240,11 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .band { display: grid; grid-template-columns: repeat(auto-fit, minmax(186px, 1fr)); gap: 8px; }
 
 .layer {
-  display: flex; flex-direction: column; gap: 5px; align-items: flex-start;
+  /* Children stretch to the card, not to their own content. With `align-items: flex-start` the
+     tag row took its max-content width — wider than the card — so `overflow: hidden` on it
+     clipped nothing and the chips painted over the neighbouring card. The .cell tiles worked all
+     along for exactly this reason: they never overrode the default. */
+  display: flex; flex-direction: column; gap: 5px;
   text-align: left; font: inherit; cursor: pointer;
   padding: 6px 9px;
   background: var(--surface); color: var(--text);
@@ -258,7 +262,9 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
    is clipped with a soft fade; every tag is listed in full in the drawer under "Key pieces". */
 .layer .layer-tags {
   display: flex; gap: 4px; flex-wrap: nowrap;
-  overflow: hidden;
+  /* min-width: 0 so the row may shrink below its content width; without it a flex item refuses
+     to go under min-content and the clip has nothing to clip against. */
+  min-width: 0; overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent 100%);
           mask-image: linear-gradient(90deg, #000 82%, transparent 100%);
 }
