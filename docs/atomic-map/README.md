@@ -65,7 +65,7 @@ node docs/atomic-map/check-content.js
 | `pattern` | ✔ | the architectural pattern, named |
 | `whenToUse` | ✔ | array; concrete situations, not restatements of the name |
 | `api` | ✔ | `[{ name, file }]`; `file` is repo-relative, or a `(parenthesised annotation)` when there deliberately is no file |
-| `verifiedAgainst` | ✔ | platform version you checked against; must equal `meta.js` |
+| `verifiedAgainst` | ✔ | platform version you actually checked against. May be **behind** `meta.js` — that is the staleness signal, and the checker lists how many atoms are behind. It may never be **ahead** of it |
 | `avoid` | | array; where this is the wrong tool |
 | `gotchas` | | array; the things that cost someone a day |
 | `snippet` | | `{ lang, code }`; taken from or written against the cited file. `lang` is `csharp`, `json`, `bash` or `xml` — it selects the highlighter and the label, and an unknown value renders as plain text rather than failing |
@@ -102,6 +102,19 @@ Layers live in `content/architecture.js` and use `name`, `hue`, `sub`, `tags`, `
   the answer the picture is evidence for. A **blank line in a `note` starts a new paragraph**, and
   the caption is set at body size (14px) in a single column with a measure cap — it is the text
   that explains the diagram, so it should not be the smallest type on the page.
+
+**`kind: 'section'`** — prose in the diagram sequence, not a picture. It exists so an explanation
+can sit *between* two diagrams, which is where an explanation usually belongs; `Your solution` puts
+Scaling between the two deployment views. Carries `note` (paragraphs, blank-line separated) and
+`items` (a bullet list), and needs at least one of them.
+
+```js
+{ kind: 'section', title: 'Scaling',
+  note: 'Two directions, and they are not equal…
+
+The order matters…',
+  items: ['**Frontend** — out, without limit…', '**Database** — up first, then out sideways…'] }
+```
 
 **`kind: 'stack'`** — a vertical stack of rows joined by connector pills. A row is either a
 group of nodes or the `target`, so the target can sit anywhere: Channels puts the platform in
@@ -405,7 +418,9 @@ shelf became a chip row and the cell tile dropped its prose subtitle to the pane
 103px. When the shelf lost its scrollbar and all 65 tiles had to fit, `--tile` went from 74px to
 67px — the tallest atom family is six rows deep, so **every pixel of `--tile` costs six on the
 page**, which makes it the dial to turn when a tier below needs room. Measure before and after any
-change that adds a row:
+change that adds a row — and note that the **tallest atom family** is what sets the height of the
+whole table, so one atom added to a 12-atom family costs a full grid row (72px) while one added to
+a 5-atom family costs nothing. Rebalancing a family is often cheaper than shrinking `--tile`:
 
 ```js
 document.documentElement.scrollHeight   // must be 900

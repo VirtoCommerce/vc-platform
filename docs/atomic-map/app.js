@@ -1116,6 +1116,16 @@
 
   function diagramBlocks(layer) {
     return (layer.diagrams || []).map(function (diagram) {
+      /* A section is prose, not a picture, but it lives in the same ordered list so an author can
+         put it between two diagrams — which is where an explanation usually belongs. */
+      if (diagram.kind === 'section') {
+        return block(diagram.title, [
+          (diagram.note || '').split('\n\n').filter(Boolean).map(function (para) {
+            return el('p', { class: 'dg-cap' }, rich(para));
+          }),
+          list(diagram.items)
+        ], true);
+      }
       var render = DIAGRAM_RENDERERS[diagram.kind] || schemaBlock;
       /* `note` is the caption that says which documented configuration this is and what the
          numbers behind it are — the part a diagram of boxes cannot carry on its own. A blank line

@@ -3235,7 +3235,10 @@ window.VC_MAP_ATOMS = [
     id: 'time-provider',
     symbol: 'Tp',
     name: 'TimeProvider',
-    family: 'ops',
+    /* Execution rather than ops: it is the clock async code schedules against, which puts it with
+       cancellation and AsyncLock. It also keeps Infra & ops at twelve atoms — six grid rows — and
+       the tallest family is what decides whether the poster still fits one screen. */
+    family: 'execution',
     adoption: 'available',
     layer: 'platform',
     tags: ['dotnet', 'clock', 'testable', 'datetime', 'utcnow'],
@@ -3502,6 +3505,60 @@ window.VC_MAP_ATOMS = [
     seeAlso: ['module-catalog', 'optional-dependency', 'module-database', 'background-jobs', 'distributed-lock', 'vc-build'],
     molecule: 'deployment',
     verifiedAgainst: '3.1053.0'
+  },
+
+  {
+    id: 'scaling',
+    symbol: 'Sc',
+    name: 'Scaling',
+    family: 'ops',
+    adoption: 'platform',
+    layer: 'infrastructure',
+    tags: ['horizontal', 'vertical', 'scale out', 'scale up', 'replicas', 'performance', 'gc', 'container'],
+    oneLiner: 'Out before up, level by level — and knowing which levels refuse to go out.',
+    pattern: 'Stateless request path with shared state behind it. Every instance keeps a local memory cache and holds nothing else worth protecting, so capacity is a replica count; the state that cannot be replicated — one database writer, one index, one lock — is what you scale up instead.',
+    whenToUse: [
+      'Before a launch, to decide the shape rather than discover it: which levels go out, which have to go up',
+      'When one workload is degrading another — the answer is usually another host, not a bigger one',
+      'On a cost review: the unit is a **small container**, so capacity is a count you can turn down again',
+      'When a level refuses to scale out, to find what is holding state it should not'
+    ],
+    avoid: [
+      'Scaling up first. It buys headroom you pay for around the clock and hides the coupling that stopped you scaling out',
+      'Adding instances before Redis is configured — without it two instances serve two different caches',
+      'Scaling the database to fix catalog browse. The index is the read path; the database is not in it',
+      'Sizing every host the same. A 512 MB request host and a reindex worker want different machines'
+    ],
+    api: [
+      { name: 'BackgroundJobs:Mode — Producer | Worker | Both, the horizontal split for jobs', file: 'src/VirtoCommerce.Platform.Web/appsettings.json' },
+      { name: 'ConnectionStrings:RedisConnectionString — the scale-out prerequisite', file: 'src/VirtoCommerce.Platform.Caching/ServiceCollectionExtensions.cs' },
+      { name: 'PushNotifications:ScalabilityMode — RedisBackplane | AzureSignalRService | None', file: 'src/VirtoCommerce.Platform.Core/PushNotifications/PushNotificationOptions.cs' },
+      { name: 'SqlServer:CompatibilityLevel / ParameterTranslationMode — EF Core 10 query translation', file: 'src/VirtoCommerce.Platform.Data.SqlServer/Extensions/DbContextOptionsBuilderExtensions.cs' },
+      { name: 'DbContextRepositoryBase — command timeout inherited from the connection string', file: 'src/VirtoCommerce.Platform.Data/Infrastructure/DbContextRepositoryBase.cs' },
+      { name: 'ExecuteSynchronized — migrations serialised across instances', file: 'src/VirtoCommerce.Platform.Web/Extensions/ApplicationBuilderExtensions.cs' },
+      { name: 'RedisPlatformMemoryCache — per-instance cache, shared invalidation', file: 'src/VirtoCommerce.Platform.Caching/Redis/RedisPlatformMemoryCache.cs' }
+    ],
+    snippet: {
+      lang: 'json',
+      code: '// The scale-out floor. Without the first line, a second instance is a second truth.\n{\n  "ConnectionStrings": {\n    "VirtoCommerce": "Data Source=sql;Initial Catalog=VirtoCommerce3;Connect Timeout=30;...",\n    "RedisConnectionString": "redis:6380,ssl=True,abortConnect=False"\n  },\n\n  // Horizontal split by role. Same image on every host, one key apart.\n  //   request hosts  Producer  — enqueue, never drain\n  //   worker hosts   Worker    — drain, serve nothing\n  "BackgroundJobs": { "Mode": "Producer" },\n\n  // Back office only: push notifications need the backplane and sticky sessions.\n  // Stateless request hosts set None and turn ARR affinity off.\n  "PushNotifications": { "ScalabilityMode": "RedisBackplane" },\n\n  // Cheaper than either kind of scaling: how EF Core 10 translates against SQL Server.\n  // Below level 120 it reaches for OPENJSON, which performs badly.\n  "SqlServer": {\n    "CompatibilityLevel": 120,\n    "ParameterTranslationMode": "Constant"\n  }\n}'
+    },
+    gotchas: [
+      '`Connect Timeout` in the connection string becomes the **command** timeout: `DbContextRepositoryBase` reads it off the connection and calls `SetCommandTimeout` with it. Raise it there and every query gets it, which is rarely what you want.',
+      'The migration lock is a scale-out dependency, not a nicety. Module migrations run inside `ExecuteSynchronized`, which degrades to a no-op without Redis — so two instances starting together can both migrate.',
+      '.NET reads its container limits and sizes the GC heap to them, so a small container behaves predictably. Work that needs memory in bursts does not: put a reindex or a bulk import on the jobs host and size that one for it.',
+      'A Redis **cluster** is not a drop-in replacement for a single instance — the platform uses operations whose semantics change across slots. Scale Redis up before you scale it out.',
+      'Sticky sessions belong on hosts serving the Commerce Manager UI and nowhere else. On stateless request hosts they defeat the load balancer for no benefit.',
+      'Two levels quietly refuse to scale out at all: `LuceneSearch` and `FileSystemAssets`. Both work on one instance and break on the second, which is why the provider swap is part of scaling rather than a later cleanup.'
+    ],
+    docs: [
+      { label: 'Scalability options (S · M · L · XL)', page: 'Fundamentals/Scalability/scalability-options' },
+      { label: 'Scaling configuration on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' },
+      { label: 'Essential caching', page: 'Fundamentals/Caching/01-overview' },
+      { label: 'Indexed search overview', page: 'Fundamentals/Indexed-Search/overview' }
+    ],
+    seeAlso: ['host-composition', 'module-database', 'redis-cache-bus', 'distributed-lock', 'background-jobs', 'search'],
+    molecule: 'performance',
+    verifiedAgainst: '3.1059.0'
   }
 
 ];

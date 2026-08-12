@@ -72,6 +72,17 @@ function checkDoc(kind, id, doc) {
   }
 }
 
+/* Compare two `1.2.3` platform versions. Lexicographic string compare gets 3.999 > 3.1053 wrong,
+   which is exactly the range these versions live in. */
+function verCompare(a, b) {
+  const pa = String(a).split('.').map(Number), pb = String(b).split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d) return d < 0 ? -1 : 1;
+  }
+  return 0;
+}
+
 const REQUIRED = ['id','symbol','name','family','adoption','layer','oneLiner','pattern','whenToUse','api'];
 const ADOPTIONS = new Set(['platform','module','available','in-flight','legacy']);
 const atomIds = new Set(ATOMS.map(a => a.id));
@@ -105,12 +116,21 @@ const VIA_KINDS = new Set(['graphql', 'rest', 'trend', 'plain']);
 const CONNECTOR_DIRS = new Set(['down', 'up', 'both']);
 /* Per-diagram rules, shared by layers and cells — the two things that carry diagrams. One copy
    on purpose: two copies of a validation rule is one rule and one stale rule. */
-const KINDS = new Set(['stack', 'flow', 'lanes', 'pipeline', 'topology', 'tree']);
+const KINDS = new Set(['stack', 'flow', 'lanes', 'pipeline', 'topology', 'tree', 'section']);
 const NODE_KINDS = new Set(['virto', 'oob', 'custom', 'data', 'infra']);
 
 function checkDiagram(kind, id, d) {
   if (!d.title) add(kind, id, 'diagram without a title');
   if (!KINDS.has(d.kind)) { add(kind, id, `diagram "${d.title}" has unknown kind "${d.kind}"`); return; }
+
+  if (d.kind === 'section') {
+    // A section is prose in the diagram sequence: it must say something, or it is a heading alone.
+    if (!(d.items || []).length && !d.note) add(kind, id, `section "${d.title}" has neither a note nor items`);
+    for (const item of d.items || []) {
+      if (typeof item !== 'string' || !item.trim()) add(kind, id, `section "${d.title}" has a blank item`);
+    }
+    return;
+  }
 
   if (d.kind === 'pipeline') {
     const PP_KINDS = new Set(['src', 'custom', 'virto', 'select', 'image', 'env']);
@@ -392,8 +412,10 @@ for (const a of ATOMS) {
 
 // version consistency
 for (const a of ATOMS) {
-  if (a.verifiedAgainst && a.verifiedAgainst !== META.platformVersion) {
-    add('atom', a.id, `verifiedAgainst ${a.verifiedAgainst} != meta ${META.platformVersion}`);
+  /* Behind the sweep is honest — it means nobody has re-read that source since. Ahead of it is
+     not: it would claim a check against a version this content set has never been swept at. */
+  if (a.verifiedAgainst && verCompare(a.verifiedAgainst, META.platformVersion) > 0) {
+    add('atom', a.id, `verifiedAgainst ${a.verifiedAgainst} is newer than the sweep in meta.js (${META.platformVersion})`);
   }
 }
 
@@ -401,6 +423,12 @@ for (const a of ATOMS) {
 const byFamily = FAMILIES.map(f => `${f.name}: ${ATOMS.filter(a => a.family === f.id).length}`).join('  |  ');
 const byAdoption = [...ADOPTIONS].map(k => `${k}: ${ATOMS.filter(a => a.adoption === k).length}`).join('  |  ');
 const noSnippet = ATOMS.filter(a => !a.snippet).map(a => a.id);
+
+const behind = ATOMS.filter(a => a.verifiedAgainst && verCompare(a.verifiedAgainst, META.platformVersion) < 0);
+if (behind.length) {
+  console.log(`due for a re-check (verified before ${META.platformVersion}): ${behind.length} of ${ATOMS.length} atoms` +
+    (behind.length <= 8 ? ' → ' + behind.map(a => a.id).join(', ') : ''));
+}
 
 const modMol = MOLECULES.filter(m => m.kind === 'module');
 console.log(`atoms: ${ATOMS.length}   layers: ${LAYERS.length}   cells: ${CELLS.length}   molecules: ${MOLECULES.length} (${modMol.length} modules from the registry, ${MOLECULES.length - modMol.length} topics)`);

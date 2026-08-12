@@ -220,7 +220,7 @@ window.VC_MAP_ARCHITECTURE = [
       {
         kind: 'topology',
         title: 'Deployment — production',
-        note: 'The **production** configuration — Extra Large in the sizing guide: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment runs **at least two instances** behind the load balancer, all of them run the **same image**, and all four use the whole shared pool — one line each is drawn to keep the picture readable. The documented topology names three environments; the **integration** instance is the common fourth split, worth making once a system pushes bulk traffic through the API.',
+        note: 'The **production** configuration — Extra Large in the sizing guide: the backend is split by workload, so background jobs, content managers and system traffic cannot degrade shoppers. Each environment runs **at least two instances** behind the load balancer, all of them run the **same image**, and all four use the whole shared pool — one line each is drawn to keep the picture readable. The documented topology names three environments; the **integration** instance is the common fourth split, worth making once a system pushes bulk traffic through the API.\n\n**Big is not the same as expensive.** Nothing here is a large machine: the unit is a **small container — roughly 1 vCPU and 512 MB** — and the topology gets its capacity from having several of them rather than from any one being big. .NET reads its container limits and sizes the GC heap to them, so an instance behaves predictably at that size, and the platform is designed so the request path holds no state worth protecting: cache coherence, the SignalR backplane and locks all live in Redis, so an instance can be added, removed or replaced without ceremony. What that buys is cost that tracks load — scale the four environments on their own curves, and the ones that are quiet stay small. What it costs is discipline: work that needs memory in bursts (a reindex, a bulk import) belongs on the jobs environment, sized for it, and not on a 512 MB request host.',
         cols: 5,
         legend: [
           { kind: 'custom', label: 'Your code' },
@@ -277,6 +277,23 @@ window.VC_MAP_ARCHITECTURE = [
           /* The queue itself: producers enqueue into the job storage, the worker drains it. */
           { from: 'bff', to: 'sql', label: 'enqueue', turnOffset: -15, labelDy: -22 },
           { from: 'jobs', to: 'sql', label: 'drain queue', turnOffset: -30 }
+        ]
+      },
+
+      /* Between the two: the deployment views show shapes, this says which dial to turn. Out
+         before up, level by level, with the one lever per level that actually moves the number. */
+      {
+        kind: 'section',
+        title: 'Scaling',
+        note: 'Two directions, and they are not equal. **Out** — more instances — is the one this platform is built for: the request path is stateless, so capacity is a replica count. **Up** — a bigger instance — is the fallback for the things that cannot be split: a single database writer, one reindex, one large import.\n\nThe order matters. Scale **out** until something refuses to, then scale **up** only that thing. Going up first buys headroom you pay for around the clock and hides the coupling that stopped you scaling out.',
+        items: [
+          '**Frontend** — out, without limit. Static content plus `vc-frontend` behind a CDN: replicas are interchangeable and the CDN absorbs most of the load before it arrives. Nothing to scale up.',
+          '**API and PBC hosts** — out, by replica count, and independently per environment. This is where the platform expects you to spend: `2…n` small containers per role, each on its own curve. Up only when a single request genuinely needs more memory than a small container has.',
+          '**Background jobs** — out by worker count, up by machine shape. The one environment where **up** is often the right answer first: a reindex or a bulk import is one large unit of work, and splitting it across workers needs a map/reduce job rather than another replica.',
+          '**Cache** — Redis, and it is a scale-out **prerequisite**, not an optimisation. The platform keeps a local memory cache per instance and uses Redis to invalidate the others; without it, two instances serve two different truths. Scale Redis up before out — a cluster changes the semantics of the operations the platform uses.',
+          '**Database** — up first, then out sideways. One writer, so vertical is the honest first move, then read replicas where the provider allows, then a **database per module** via `ConnectionStrings:<ModuleId>` for a table set that has earned its own server. On SQL Server, `SqlServer:CompatibilityLevel` and `SqlServer:ParameterTranslationMode` change how EF Core 10 translates queries — cheaper than either kind of scaling.',
+          '**Search** — out, as a cluster, and treat it as the read path it is. Catalog browse and filter do not touch the catalog database; if the index is slow, the storefront is slow no matter how large the database is.',
+          '**Blob storage** — out by definition, once you stop using local disk. `FileSystemAssets` does not survive a second instance; that swap is a scale-out prerequisite in the same way Redis is.'
         ]
       },
 
