@@ -136,6 +136,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult<SignInResult>> Login([FromBody] LoginRequest request)
         {
+            if (request?.UserName == null || request.Password == null)
+            {
+                return BadRequest();
+            }
+
             // Measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks
             var delayedResponse = DelayedResponse.Create(nameof(SecurityController), nameof(Login));
 
