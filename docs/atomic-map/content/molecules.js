@@ -681,7 +681,7 @@ window.VC_MAP_MOLECULES = [
     ],
     docs: [
       { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
-      { label: 'Design spec (2026-06-06)', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Design spec (2026-06-06)', href: 'https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     atoms: ['background-jobs', 'recurring-jobs', 'map-reduce-jobs', 'job-progress', 'fire-and-forget', 'hangfire', 'distributed-lock']
   },

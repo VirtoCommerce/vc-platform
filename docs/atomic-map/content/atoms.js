@@ -92,7 +92,7 @@ window.VC_MAP_ATOMS = [
     ],
     docs: [
       { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
-      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' },
+      { label: 'Background Processing Hub — design spec', href: 'https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/superpowers/specs/2026-06-06-background-processing-hub-design.md' },
       { label: 'Scalability', page: 'Fundamentals/Scalability/scalability-options' }
     ],
     seeAlso: ['recurring-jobs', 'map-reduce-jobs', 'job-progress', 'fire-and-forget', 'hangfire', 'push-notifications', 'distributed-lock'],
@@ -155,7 +155,7 @@ window.VC_MAP_ATOMS = [
     ],
     docs: [
       { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
-      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Background Processing Hub — design spec', href: 'https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     seeAlso: ['background-jobs', 'hangfire', 'settings', 'distributed-lock', 'hosted-service'],
     molecule: 'background-processing-hub',
@@ -205,7 +205,7 @@ window.VC_MAP_ATOMS = [
       'Requires an installed job engine, exactly like plain background jobs.'
     ],
     docs: [
-      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Background Processing Hub — design spec', href: 'https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     seeAlso: ['background-jobs', 'hangfire', 'job-progress', 'backup-restore'],
     molecule: 'background-processing-hub',
@@ -267,7 +267,7 @@ window.VC_MAP_ATOMS = [
       'Progress reaches the browser over SignalR push notifications, so scaled-out deployments need the backplane configured or updates land on the wrong instance.'
     ],
     docs: [
-      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Background Processing Hub — design spec', href: 'https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     seeAlso: ['background-jobs', 'hangfire', 'push-notifications', 'backup-restore'],
     molecule: 'background-processing-hub',
@@ -393,7 +393,7 @@ window.VC_MAP_ATOMS = [
     ],
     docs: [
       { label: 'vc-module-background-jobs (GitHub)', href: 'https://github.com/VirtoCommerce/vc-module-background-jobs' },
-      { label: 'Background Processing Hub — design spec', path: 'superpowers/specs/2026-06-06-background-processing-hub-design.md' }
+      { label: 'Background Processing Hub — design spec', href: 'https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/superpowers/specs/2026-06-06-background-processing-hub-design.md' }
     ],
     seeAlso: ['background-jobs', 'recurring-jobs', 'fire-and-forget', 'map-reduce-jobs'],
     molecule: 'background-processing-hub',
