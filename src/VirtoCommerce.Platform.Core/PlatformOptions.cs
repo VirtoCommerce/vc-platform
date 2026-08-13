@@ -79,5 +79,12 @@ namespace VirtoCommerce.Platform.Core
         public bool IncludeOutputNullValues { get; set; } = true;
 
         public string ApplicationCookieName { get; set; } = ".VirtoCommerce.Identity.Application";
+
+        /// <summary>
+        /// Request path prefixes (e.g. "assets/sales-rep-documents") excluded from anonymous static file serving.
+        /// Requests under these prefixes fall through to routing instead of being served from the web root.
+        /// Empty by default, which keeps all static files publicly served.
+        /// </summary>
+        public string[] ProtectedStaticPaths { get; set; } = new string[0];
     }
 }

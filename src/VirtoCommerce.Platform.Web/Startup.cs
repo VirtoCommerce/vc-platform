@@ -74,6 +74,7 @@ using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
+using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Infrastructure.ExportImport;
 using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
 using VirtoCommerce.Platform.Web.Json;
@@ -789,10 +790,17 @@ namespace VirtoCommerce.Platform.Web
                 app.UseResponseCompression();
             }
 
-            app.UseStaticFiles(new StaticFileOptions
+            var webRootStaticFileOptions = new StaticFileOptions
             {
                 ContentTypeProvider = fileExtensionContentTypeProvider
-            });
+            };
+
+            if (!platformOptions.ProtectedStaticPaths.IsNullOrEmpty())
+            {
+                webRootStaticFileOptions.FileProvider = new ProtectedPathsFileProvider(WebHostEnvironment.WebRootFileProvider, platformOptions.ProtectedStaticPaths);
+            }
+
+            app.UseStaticFiles(webRootStaticFileOptions);
 
             app.UseRouting();
             app.UseCookiePolicy();
