@@ -314,10 +314,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             }
             else
             {
-                var keyMap = new PrimaryKeyResolvingMap();
-                foreach (var model in models)
+                // Remove the entities loaded from the data source rather than stubs built by FromModel. A stub can
+                // only carry what the model exposes, so any column the model doesn't map stays at its default —
+                // most importantly a concurrency token ([Timestamp]/rowversion). EF puts the unset token into the
+                // DELETE predicate (WHERE Id = @p0 AND RowVersion IS NULL), no row matches it, and the commit throws
+                // DbUpdateConcurrencyException while the row stays in the database.
+                var entities = await LoadEntities(repository, ids);
+                foreach (var entity in entities)
                 {
-                    var entity = FromModel(model, keyMap);
                     repository.Remove(entity);
                 }
                 await repository.UnitOfWork.CommitAsync();
