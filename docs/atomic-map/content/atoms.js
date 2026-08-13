@@ -591,7 +591,7 @@ window.VC_MAP_ATOMS = [
   {
     id: 'platform-memory-cache',
     symbol: 'MC',
-    name: 'Platform memory cache',
+    name: 'Cache',
     family: 'caching',
     adoption: 'platform',
     layer: 'platform',
@@ -863,7 +863,7 @@ window.VC_MAP_ATOMS = [
   {
     id: 'hybrid-cache',
     symbol: 'HC',
-    name: 'HybridCache / IDistributedCache',
+    name: 'Hybrid Cache',
     family: 'caching',
     adoption: 'available',
     layer: 'platform',
@@ -882,7 +882,7 @@ window.VC_MAP_ATOMS = [
       { name: 'Microsoft.Extensions.Caching.Hybrid.HybridCache', file: '(.NET — not referenced by the platform)' },
       { name: 'IDistributedCache', file: '(.NET — no store registered by the platform)' }
     ],
-    useInstead: '`IPlatformMemoryCache` with `GetOrCreateExclusiveAsync` and a cache region token — see the Platform memory cache atom.',
+    useInstead: '`IPlatformMemoryCache` with `GetOrCreateExclusiveAsync` and a cache region token — see [[platform-memory-cache]].',
     note: 'Verified by grep across `src/`: there is no `HybridCache` package reference and no `IDistributedCache` store registration. The platform\'s answer to the same problems is per-instance memory plus the Redis invalidation bus.',
     gotchas: [
       '`HybridCache` solves cache stampede, which `GetOrCreateExclusiveAsync` already solves here — the reason to adopt it is usually already met.',
