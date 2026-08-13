@@ -214,7 +214,14 @@ function checkDiagram(kind, id, d) {
       }
       seen.set(cell, n.id);
     }
+    /* The gutter a label sits in is 88px wide, which is about 18 characters at the label's size.
+       A longer one overhangs onto the cards either side — measured, not guessed: a 22-character
+       label overhung by 2px on each side. A heuristic, so the message names the risk. */
+    const LABEL_MAX = 18;
     for (const e of d.edges || []) {
+      if (e.label && e.label.length > LABEL_MAX) {
+        add(kind, id, `edge label "${e.label}" is ${e.label.length} chars — over ~${LABEL_MAX} it overhangs the gutter onto the cards either side`);
+      }
       if (!ids.has(e.from)) add(kind, id, `topology edge from unknown node "${e.from}"`);
       if (!ids.has(e.to)) add(kind, id, `topology edge to unknown node "${e.to}"`);
       if (e.from === e.to) add(kind, id, `topology edge "${e.from}" points at itself`);

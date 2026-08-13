@@ -164,6 +164,24 @@ window.VC_MAP_ARCHITECTURE = [
         ]
       },
 
+      /* The lifecycle's second half. DevOps above says how a release is built; this says what
+         happens when Virto ships the next one — which is the question a customer asks first and
+         the deck exists to answer. Source: the release-strategy presentation. */
+      {
+        kind: 'section',
+        title: 'Update process',
+        note: 'Virto is **100+ independent modules plus the platform**, each shipping continuously — so there is no annual big-bang upgrade to schedule. **Stable** publishes roughly every three months with full regression, E2E and load testing, and is the CLI default; **Edge** publishes daily with automated testing only, carries the newest features, and may include breaking changes. Run Stable in production and reach for Edge selectively, when one feature genuinely cannot wait.\n\n**The default update is a manifest edit, not a code change.** Most of the time you bump a version — or add a module — in `vc-package.json`, run `vc-build update`, rebuild your own modules, run your tests and deploy. The Virto layers swap in; your work stays on your own modules. That only holds because you **extend rather than modify**: a module is open for extension and closed for modification, so an update flows around your code instead of through it.',
+        items: [
+          '**When custom code is affected, the size is known up front.** **S** — add a class or an extension point because your customization needs a new feature. **M** — resolve obsolete APIs and apply the documented breaking-change fixes. **L** — follow the published update path when the change comes from Microsoft and .NET.',
+          '**Three things make a step genuinely bigger**, and all three are flagged in advance: a **.NET LTS move** roughly every two years, which means a new target framework and refreshed dependencies across the solution; a **yearly refresh** of the third-party libraries Virto builds on; and a **security finding** that occasionally forces a breaking fix. Every breaking change ships with migration notes.',
+          '**Cadence is your choice, within limits.** Keep inside the latest two Stable releases — those are the two that receive hotfixes. Updating on every Stable release is the recommendation; every sprint, every month or once a year are all workable, but the longer the gap the more change arrives at once.',
+          '**A hotfix is a patch, not a version jump.** Virto issues hotfixes for the two most recent Stable releases: bump the patch version in the manifest and update. No new features, no migration.',
+          '**A feature you need before it is Stable can be adopted onto Stable now.** New features land on Edge, harden, then roll into the next Stable bundle — and when they do, your next update folds in the version you were already running, tested.',
+          '**Test your customizations, not the platform.** Virto already runs regression, E2E and load tests against the platform and the modules; re-testing them is spent effort. Automate the part only you can — `vc-testing-module` is the open example to copy.',
+          '**Even a long drift is recoverable.** The deck cites a 10-year-old VC 2.x solution brought to the latest Stable with a new frontend: 17 modules, one developer, two months, now live.'
+        ]
+      },
+
       /* The two ends of the documented sizing range — S and XL — rendered in the same
          swimlane language so they can be read against each other. Everything the production
          column adds over the non-production one is a line item in the upgrade conversation.
@@ -393,7 +411,9 @@ window.VC_MAP_ARCHITECTURE = [
       { label: 'Package management (vc-package.json)', page: 'CLI-tools/package-management' },
       { label: 'Create a module from scratch', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
       { label: 'Extensibility overview', page: 'Extensibility/overview' },
+      { label: 'Release strategy for business users (presentation)', href: 'https://virtocommerce.github.io/vc-release-notes/presentations/release-strategy-for-business-users.html' },
       { label: 'Release strategy', page: 'Updating-Virto-Commerce-Based-Project/release-strategy-overview' },
+      { label: 'vc-testing-module (GitHub)', href: 'https://github.com/VirtoCommerce/vc-testing-module' },
       { label: 'Scalability options (S · M · L · XL)', page: 'Fundamentals/Scalability/scalability-options' },
       { label: 'Scaling configuration on Azure', page: 'Fundamentals/Scalability/scaling-configuration-on-azure-cloud' },
       { label: 'Key extensibility points', page: 'Extensibility/key-extensibility-points' },
@@ -627,6 +647,116 @@ window.VC_MAP_ARCHITECTURE = [
     hue: 320,
     sub: 'How the platform joins an existing business ecosystem. Integration is not one problem — it is a different problem for buyers, for your own team and for your suppliers, and the platform opens a different door for each. Middleware does the translating rather than either side compromising its model.',
     tags: ['xAPI', 'REST', 'middleware', 'UCP/MCP', 'EventBus', 'WebHooks'],
+    /* One schema per audience, in the order the Integration Capabilities deck presents them.
+       Each is the same shape — caller, the door it knocks on, the platform behind it — because
+       the point being made is that the shape repeats and only the door changes. */
+    diagrams: [
+      {
+        kind: 'topology',
+        title: 'Buyers — doors on the demand side',
+        note: 'Three kinds of buyer, three doors, one set of rules behind them. Whichever door a request arrives through, the platform resolves **who the buyer is, which organization they belong to and what they have negotiated** before it answers — so the price is the same story everywhere.',
+        cols: 3,
+        legend: [
+          { kind: 'custom', label: 'Your code' },
+          { kind: 'infra', label: 'Someone else\'s system' },
+          { kind: 'virto', label: 'Virto Commerce' }
+        ],
+        regions: [
+          { id: 'doors', label: 'Doors for buyers', col: [2, 2], row: [1, 3] }
+        ],
+        nodes: [
+          { id: 'store', name: 'Storefront · app', sub: 'Your front end, any channel', kind: 'custom', col: 1, row: 1 },
+          { id: 'procure', name: 'Procurement system', sub: 'Coupa · Ariba · Jaggaer', kind: 'infra', col: 1, row: 2 },
+          { id: 'agent', name: 'AI agent', sub: 'Shopping on the buyer\'s behalf', kind: 'infra', col: 1, row: 3 },
+
+          { id: 'xapi', name: 'xAPI', sub: 'One request per screen', meta: 'GraphQL', kind: 'virto', col: 2, row: 1 },
+          { id: 'punch', name: 'Punchout', sub: 'Answers in their language', meta: 'cXML', kind: 'virto', col: 2, row: 2 },
+          { id: 'ucp', name: 'UCP', sub: 'Universal Commerce Protocol', meta: 'MCP', kind: 'virto', col: 2, row: 3 },
+
+          { id: 'platform', name: 'Virto Commerce', sub: 'Catalog · pricing · cart · orders', kind: 'virto', col: 3, row: 2 }
+        ],
+        edges: [
+          { from: 'store', to: 'xapi', label: 'GraphQL' },
+          { from: 'procure', to: 'punch', label: 'punch out' },
+          { from: 'agent', to: 'ucp', label: 'discover' },
+          { from: 'xapi', to: 'platform', label: 'priced server-side' },
+          { from: 'punch', to: 'platform', label: 'cart back' },
+          { from: 'ucp', to: 'platform', label: 'cart · checkout' }
+        ]
+      },
+
+      {
+        kind: 'topology',
+        title: 'eCommerce team — doors for the people who run it',
+        note: 'Three doors, cheapest first. **Configuration** covers a large share of what looks like integration work and is live immediately. **REST** is the same API the admin screens use, so nothing is trapped in a screen. **Middleware** is where the enterprise-specific work belongs — and for a multi-system landscape it is the normal architecture, not the fallback.',
+        cols: 4,
+        legend: [
+          { kind: 'custom', label: 'Yours to run' },
+          { kind: 'infra', label: 'People' },
+          { kind: 'virto', label: 'Virto Commerce' },
+          { kind: 'data', label: 'Enterprise system' }
+        ],
+        regions: [
+          { id: 'doors', label: 'Doors for your team', col: [2, 2], row: [1, 3] }
+        ],
+        nodes: [
+          { id: 'biz', name: 'Business team', sub: 'Merchandisers, pricing, support', kind: 'infra', col: 1, row: 1 },
+          { id: 'dev', name: 'Your developers', sub: 'Internal tools, custom logic', kind: 'infra', col: 1, row: 2 },
+          { id: 'intteam', name: 'Integration team', sub: 'Often not the commerce team', kind: 'infra', col: 1, row: 3 },
+
+          { id: 'admin', name: 'Admin UI', sub: 'Configuration, live immediately', kind: 'virto', col: 2, row: 1 },
+          { id: 'rest', name: 'REST /api', sub: 'The API the screens use', meta: 'OpenAPI', kind: 'virto', col: 2, row: 2 },
+          { id: 'mw', name: 'Integration middleware', sub: 'Functions · Logic Apps · Boomi', kind: 'custom', col: 2, row: 3 },
+
+          { id: 'platform', name: 'Virto Commerce', sub: 'One set of business rules', kind: 'virto', col: 3, row: 2 },
+          { id: 'systems', name: 'ERP · CRM · PIM · WMS', sub: 'Prices and stock in, orders out', kind: 'data', col: 4, row: 3 }
+        ],
+        edges: [
+          { from: 'biz', to: 'admin', label: 'no ticket' },
+          { from: 'dev', to: 'rest', label: 'generated client' },
+          { from: 'intteam', to: 'mw', label: 'owns the flows' },
+          { from: 'admin', to: 'platform', label: 'settings' },
+          { from: 'rest', to: 'platform', label: 'read · write' },
+          { from: 'mw', to: 'platform', label: 'imports the schema' },
+          { from: 'mw', to: 'systems', label: 'map · retry' }
+        ]
+      },
+
+      {
+        kind: 'topology',
+        title: 'Suppliers — doors for whoever is supplying you',
+        note: 'The same capability at three levels of supplier maturity. Everything a supplier submits stays **scoped to their own account and subject to your moderation** — nothing reaches the storefront that you did not allow. Make the portal the default and graduate suppliers upward as their volume justifies it.',
+        cols: 3,
+        legend: [
+          { kind: 'custom', label: 'Yours to run' },
+          { kind: 'infra', label: 'The supplier' },
+          { kind: 'virto', label: 'Virto Commerce' }
+        ],
+        regions: [
+          { id: 'doors', label: 'Doors for suppliers', col: [2, 2], row: [1, 3] }
+        ],
+        nodes: [
+          { id: 'bigsup', name: 'Supplier with IT', sub: 'Own systems, enough volume', kind: 'infra', col: 1, row: 1 },
+          { id: 'tail', name: 'The long tail', sub: 'A spreadsheet, an SFTP drop, an API', kind: 'infra', col: 1, row: 2 },
+          { id: 'nosup', name: 'Supplier with no IT', sub: 'Nothing to integrate at all', kind: 'infra', col: 1, row: 3 },
+
+          { id: 'vapi', name: 'Vendor APIs', sub: 'Products, offers, stock, orders', kind: 'virto', col: 2, row: 1 },
+          { id: 'vmw', name: 'Vendor middleware', sub: 'One flow, many formats', kind: 'custom', col: 2, row: 2 },
+          { id: 'portal', name: 'Vendor Portal', sub: 'A login instead of an integration', kind: 'virto', col: 2, row: 3 },
+
+          { id: 'platform', name: 'Virto Commerce', sub: 'Moderation · approval · publish', kind: 'virto', col: 3, row: 2 }
+        ],
+        edges: [
+          { from: 'bigsup', to: 'vapi', label: 'system to system' },
+          { from: 'tail', to: 'vmw', label: 'file · feed · API' },
+          { from: 'nosup', to: 'portal', label: 'sign in' },
+          /* The middleware does not have its own door: it calls the vendor APIs for the supplier. */
+          { from: 'vmw', to: 'vapi', label: 'on their behalf' },
+          { from: 'vapi', to: 'platform', label: 'account-scoped' },
+          { from: 'portal', to: 'platform', label: 'moderated' }
+        ]
+      }
+    ],
     matrixTitle: 'Which door — match it to whoever is knocking',
     matrix: [
       { name: 'Admin UI · configuration',
