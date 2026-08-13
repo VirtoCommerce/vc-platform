@@ -1540,53 +1540,90 @@ window.VC_MAP_ATOMS = [
     family: 'data',
     adoption: 'platform',
     layer: 'platform',
-    tags: ['icrudservice', 'isearchservice', 'service', 'boilerplate', 'responsegroup'],
-    oneLiner: 'The standard shape of a Virto service: get by ids, save, delete, search. Follow it and everything else fits.',
-    pattern: 'Two narrow interfaces over a repository. `ICrudService<T>` is `GetAsync` / `SaveChangesAsync` / `DeleteAsync`; `ISearchService<TCriteria, TResult, TModel>` is a single `SearchAsync`. Base implementations handle caching, change events and cloning, so a derived service supplies only the query.',
+    tags: ['crudservice', 'searchservice', 'icrudservice', 'isearchservice', 'responsegroup', 'template', 'vc-crud', 'scaffold'],
+    oneLiner: 'Two abstract base classes with one abstract method each — you supply the query, not the plumbing.',
+    pattern: 'Template Method over repository plus cache plus events. `CrudService` and `SearchService` implement the whole read/write path — batched get, save, delete, response groups, cloning, cache regions, changing and changed events — and leave exactly one hole each for the part only your module knows.',
     whenToUse: [
-      'Every entity service you write — this is the convention, not one option among several',
-      'When you want caching, event publishing and audit behaviour without writing them again',
-      'Whenever a consumer will expect Virto-shaped semantics from your service'
+      '**Every entity your module owns.** Inheriting is the default; writing a service from scratch is the thing to justify',
+      'When you want the standard behaviour for free: `IPlatformMemoryCache` regions wired up, `GenericChangedEntryEvent` published before and after a save, soft delete, response groups',
+      'When you want your service replaceable — the base implements the `ICrudService<TModel>` / `ISearchService<...>` interfaces that other modules and XAPI resolve',
+      '**Starting a new entity: let the CLI write it.** `dotnet new vc-crud` emits the whole set and you edit rather than assemble'
     ],
     avoid: [
-      'Hand-rolling a service with different method names; you lose the base behaviour and surprise every caller',
-      'Ignoring the `clone` parameter and handing out cached instances callers can mutate',
-      'Loading entities one id at a time. The contract is id-list-shaped for a reason'
+      'Writing `GetAsync` / `SaveChangesAsync` / `DeleteAsync` yourself. If you are, you have re-implemented the base class and you now own its caching and event bugs',
+      'Putting query logic in `LoadEntities` — that one loads by id. Criteria belong in `BuildQuery` on the search service',
+      'Skipping the events. Other modules and integrations subscribe to `*ChangedEvent`; a hand-rolled save that does not publish is invisible to them',
+      'Injecting `IRepository` directly instead of `Func<IRepository>` — the service is longer-lived than a request, which is exactly why the base takes a factory'
     ],
     api: [
-      { name: 'ICrudService<T>', file: 'src/VirtoCommerce.Platform.Core/GenericCrud/ICrudService.cs' },
+      { name: 'CrudService<TModel, TEntity, TChangingEvent, TChangedEvent> — one abstract member: LoadEntities', file: 'src/VirtoCommerce.Platform.Data/GenericCrud/CrudService.cs' },
+      { name: 'SearchService<TCriteria, TResult, TModel, TEntity> — one abstract member: BuildQuery', file: 'src/VirtoCommerce.Platform.Data/GenericCrud/SearchService.cs' },
+      { name: 'ICrudService<TModel>', file: 'src/VirtoCommerce.Platform.Core/GenericCrud/ICrudService.cs' },
       { name: 'ISearchService<TCriteria, TResult, TModel>', file: 'src/VirtoCommerce.Platform.Core/GenericCrud/ISearchService.cs' },
       { name: 'CrudOptions', file: 'src/VirtoCommerce.Platform.Core/GenericCrud/CrudOptions.cs' },
-      { name: 'SearchCriteriaBase', file: 'src/VirtoCommerce.Platform.Core/Common/SearchCriteriaBase.cs' },
-      { name: 'GenericSearchResult<T>', file: 'src/VirtoCommerce.Platform.Core/Common/GenericSearchResult.cs' }
+      { name: 'CrudServiceExtensions / SearchServiceExtensions — the single-item helpers', file: 'src/VirtoCommerce.Platform.Core/Extensions/CrudServiceExtensions.cs' },
+      { name: 'vc-crud — "Virto Commerce 3.x CRUD Template", shortName vc-crud', file: '(vc-cli-module-template/templates/vc-crud-template)' }
     ],
     snippet: {
       lang: 'csharp',
       code:
-'// The whole CRUD contract, from Core/GenericCrud/ICrudService.cs:\n' +
-'public interface ICrudService<T> where T : IEntity\n' +
+'// Two base classes, one abstract method each. Everything else is inherited:\n' +
+'// batched Get, Save, Delete, response groups, cloning, cache regions and the\n' +
+'// changing/changed events - none of which you write.\n' +
+'\n' +
+'public class AbcThingService(\n' +
+'        Func<IRepository> repositoryFactory,        // a factory: the service outlives a request\n' +
+'        IPlatformMemoryCache cache,\n' +
+'        IEventPublisher eventPublisher)\n' +
+'    : CrudService<AbcThing, AbcThingEntity, AbcThingChangingEvent, AbcThingChangedEvent>(\n' +
+'        repositoryFactory, cache, eventPublisher), IAbcThingService\n' +
 '{\n' +
-'    Task<IList<T>> GetAsync(IList<string> ids, string responseGroup = null, bool clone = true);\n' +
-'    Task SaveChangesAsync(IList<T> models);\n' +
-'    Task DeleteAsync(IList<string> ids, bool softDelete = false);\n' +
+'    // The one thing the base class cannot know: how to load your entities.\n' +
+'    protected override Task<IList<AbcThingEntity>> LoadEntities(\n' +
+'        IRepository repository, IList<string> ids, string responseGroup)\n' +
+'        => ((IAbcRepository)repository).GetThingsByIdsAsync(ids, responseGroup);\n' +
 '}\n' +
 '\n' +
-'// And search — one method, criteria in, paged result out:\n' +
-'Task<TResult> SearchAsync(TCriteria criteria, bool clone = true);'
+'public class AbcThingSearchService(/* ... same three, plus your options ... */)\n' +
+'    : SearchService<AbcThingSearchCriteria, AbcThingSearchResult, AbcThing, AbcThingEntity>(\n' +
+'        /* ... */), IAbcThingSearchService\n' +
+'{\n' +
+'    // And here: how to turn criteria into a query. Paging and sorting are inherited.\n' +
+'    protected override IQueryable<AbcThingEntity> BuildQuery(\n' +
+'        IRepository repository, AbcThingSearchCriteria criteria)\n' +
+'    {\n' +
+'        var query = ((IAbcRepository)repository).Things;\n' +
+'        if (!string.IsNullOrEmpty(criteria.Keyword))\n' +
+'            query = query.Where(x => x.Name.Contains(criteria.Keyword));\n' +
+'        return query;\n' +
+'    }\n' +
+'}\n' +
+'\n' +
+'// Or do not write any of it. The CLI template emits the whole set:\n' +
+'//\n' +
+'//   dotnet new vc-crud -n MyCompany.Catalog --EntityName Thing\n' +
+'//\n' +
+'// model, search criteria and result, changing/changed events, the EF entity,\n' +
+'// DbContext and repository, both services, an API controller and Module.cs.'
     },
     gotchas: [
-      '`clone: false` hands back the cached instance. It is faster and it means a caller mutating the result corrupts the cache for everyone.',
-      '`responseGroup` controls how much of the graph is loaded. Ignoring it means either over-fetching everywhere or surprising nulls.',
-      '`softDelete` is opt-in per call, so the same service can hard- or soft-delete depending on the caller. Be deliberate.',
-      'Base implementations publish changing and changed events for you — publishing them again in your override doubles every handler.'
+      '**`LoadEntities` is the only abstract member on `CrudService`** and `BuildQuery` the only one on `SearchService`. If a code review shows you overriding much more than that, the question is why — usually the answer is a `responseGroup` that should have been handled in the loader.',
+      'The base constructor takes `Func<IRepository>`, not `IRepository`. That is deliberate: the service is registered longer-lived than a request, so it opens a scope per call — see [[dependency-injection]].',
+      'Saves publish a **changing** event before and a **changed** event after. The changing one can be cancelled, which means a save can be refused by a handler in another module — read the event, not just the return value.',
+      '`clone: true` is the default on reads, and it is what stops a caller mutating the cached instance. Passing `false` is a performance choice with a correctness price; know which one you are making.',
+      'Cache invalidation is by region, so a save evicts more than the one entity. That is the trade the base class makes for you — see [[cache-regions]].',
+      'The `vc-crud` template takes an `EntityName` symbol and generates against it, so pick the entity name before you run it; renaming afterwards means touching every generated file.'
     ],
     docs: [
-      { label: 'Create a new module', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' }
+      { label: 'Creating a custom module (DB-agnostic)', page: 'Fundamentals/Persistence/DB-Agnostic/creating-custom-module' },
+      { label: 'Create a module from scratch', page: 'Tutorials-and-How-tos/Tutorials/create-new-module-from-scratch' },
+      { label: 'vc-cli-module-template (GitHub)', href: 'https://github.com/VirtoCommerce/vc-cli-module-template' },
+      { label: 'vc-crud template source', href: 'https://github.com/VirtoCommerce/vc-cli-module-template/tree/main/templates/vc-crud-template' }
     ],
-    seeAlso: ['repository-uow', 'domain-events', 'platform-memory-cache', 'abstract-type-factory'],
-    verifiedAgainst: '3.1053.0'
+    seeAlso: ['repository-uow', 'ef-core', 'domain-events', 'cache-regions', 'dependency-injection', 'specifications'],
+    molecule: 'ecommerce-modules',
+    verifiedAgainst: '3.1059.0'
   },
-
   {
     id: 'repository-uow',
     symbol: 'Rp',
@@ -2076,6 +2113,91 @@ window.VC_MAP_ATOMS = [
   // ================================================================ MODULARITY
 
   {
+    id: 'module-federation',
+    symbol: 'Fe',
+    name: 'Module federation',
+    family: 'modularity',
+    adoption: 'platform',
+    layer: 'modules',
+    tags: ['frontend', 'vc-shell', 'plugin', 'remoteentry', 'app manifest', 'micro-frontend', 'etag'],
+    oneLiner: 'The same modularity, on the front end: a module ships a built plugin and the shell discovers it at runtime.',
+    pattern: 'Micro-frontend host with runtime discovery. A module declares an `<app>` it hosts; any module can drop a `plugin.json` into its plugins folder, and the platform composes the list per app and per user into one manifest the shell fetches at startup. Webpack Module Federation loads the remotes.',
+    whenToUse: [
+      'Adding a screen to the Commerce Manager, the Vendor Portal or any VC-Shell app without forking the shell',
+      'Shipping back-office UI **with** the module that owns the domain, so one artifact carries both halves of the feature',
+      'Standing up your own vertical app — declare it in `module.manifest` and let other modules extend it',
+      'Gating UI by permission: a plugin declares one, and it simply does not reach a user who lacks it'
+    ],
+    avoid: [
+      'Editing the shell to add your screen. That is the same mistake as editing a vendor module, one layer up',
+      'Treating the manifest as static. It is per app and per user, and the ETag is what makes it cheap',
+      'Shipping a plugin whose `remoteEntry.js` is built against a different shared-dependency version than the host — federation resolves shared deps at runtime, and a mismatch fails there rather than at build'
+    ],
+    api: [
+      { name: 'GET api/apps/{appId}/manifest — the shell\'s entry point', file: 'src/VirtoCommerce.Platform.Web/Controllers/Api/AppManifestController.cs' },
+      { name: 'AppManifestService — probes every module for plugin.json', file: 'src/VirtoCommerce.Platform.Modules/AppManifestService.cs' },
+      { name: 'AppManifestDescriptor.Hash — the ETag, and what it covers', file: 'src/VirtoCommerce.Platform.Core/Modularity/AppManifestDescriptor.cs' },
+      { name: 'PluginDescriptor — Entry, ContentFiles, Remote, Permission', file: 'src/VirtoCommerce.Platform.Core/Modularity/PluginDescriptor.cs' },
+      { name: 'ManifestApp — the <app> element in module.manifest', file: 'src/VirtoCommerce.Platform.Core/Modularity/ManifestApp.cs' },
+      { name: 'AppManifestCacheRegion — explicit invalidation', file: 'src/VirtoCommerce.Platform.Modules/AppManifestCacheRegion.cs' }
+    ],
+    snippet: {
+      lang: 'xml',
+      code:
+'<!-- 1. A module declares an app it hosts. The platform serves it at /apps/{id}. -->\n' +
+'<module>\n' +
+'  <id>MyCompany.VendorPortal</id>\n' +
+'  <apps>\n' +
+'    <app id="vendor-portal">\n' +
+'      <title>Vendor Portal</title>\n' +
+'      <permission>vendor-portal:access</permission>\n' +
+'      <contentPath>Content/vendor-portal</contentPath>\n' +
+'    </app>\n' +
+'  </apps>\n' +
+'</module>\n' +
+'\n' +
+'<!-- 2. Any module can contribute a federated plugin INTO that app, by dropping a\n' +
+'     plugin.json in its plugins folder. No change to the host, no rebuild of it. -->\n' +
+'<!--\n' +
+'plugins/abc-dashboard/plugin.json\n' +
+'{\n' +
+'  "id": "abc-dashboard",\n' +
+'  "version": "1.2.0",\n' +
+'  "permission": "abc:dashboard:access",\n' +
+'  "entry":  { "path": "remoteEntry.js" },\n' +
+'  "remote": { "name": "abcDashboard", "module": "./Dashboard" }\n' +
+'}\n' +
+'-->\n' +
+'\n' +
+'<!-- 3. The shell asks the platform what it is made of, and caches on the ETag:\n' +
+'\n' +
+'     GET  api/apps/vendor-portal/manifest\n' +
+'     If-None-Match: "<hash>"     ->  304, or the plugin list this user may see\n' +
+'\n' +
+'     The hash covers the app version, every plugin entry and content file, the\n' +
+'     federation coordinates, and the permission-filtered subset - so a changed\n' +
+'     permission produces a changed manifest, not a stale one. -->'
+    },
+    gotchas: [
+      'The manifest is **cached per app id** in `IPlatformMemoryCache` — and the cache is **bypassed in Development**, so a `yarn build` that produces a new `remoteEntry.js` shows up on the next fetch without restarting the platform. In production it is stable until restart or `AppManifestCacheRegion.ExpireRegion()`.',
+      'Plugin order follows the **module dependency graph**, not the folder listing — the service walks the topologically sorted module list. If your plugin must load after another module\'s, declare the module dependency.',
+      '`platform` is a reserved app id: it belongs to the legacy AngularJS admin shell. Do not use it for your own app.',
+      'The descriptor `Version` is the running **platform** version for the `platform` app, and the version of the module that declares `<app>` for everything else. Two different meanings behind one field name.',
+      'The hash covers the permission-filtered plugin subset, so two users can legitimately receive two different manifests for the same app — do not cache it at a CDN or shared proxy keyed on the URL alone.',
+      'Two registry modules carry the same title, **Frontend Modules Registry** — `VirtoCommerce.ModuleFederation` and `VirtoCommerce.FrontendModules`, both from the `frontend-modules` repository, both described as replacing the static `apps.json`. Check which one your solution actually installs before pinning a version.'
+    ],
+    docs: [
+      { label: 'Back-office app modularity', page: 'Fundamentals/Modularity/07-backoffice-app-modularity' },
+      { label: 'Modularity overview', page: 'Fundamentals/Modularity/01-overview' },
+      { label: 'frontend-modules (GitHub)', href: 'https://github.com/VirtoCommerce/frontend-modules' },
+      { label: 'Module Federation (webpack)', href: 'https://webpack.js.org/concepts/module-federation/' }
+    ],
+    seeAlso: ['module-manifest', 'module-lifecycle', 'permissions', 'platform-memory-cache', 'cache-regions'],
+    molecule: 'ecommerce-modules',
+    verifiedAgainst: '3.1059.0'
+  },
+
+  {
     id: 'module-lifecycle',
     symbol: 'Mo',
     name: 'Module lifecycle',
@@ -2368,30 +2490,75 @@ window.VC_MAP_ATOMS = [
     adoption: 'platform',
     layer: 'platform',
     tags: ['ioc', 'container', 'override', 'lifetime', 'scoped', 'singleton'],
-    oneLiner: 'Standard .NET DI, plus the Virto convention that makes it an extension point: the last registration wins.',
+    oneLiner: 'Standard .NET DI — pick the lifetime first — plus the Virto convention that makes it an extension point: the last registration wins.',
     pattern: 'Constructor injection over `IServiceCollection`, with override-by-later-registration. Because modules initialize in dependency order, a module loaded later can replace a service registered earlier simply by registering its own implementation.',
     whenToUse: [
-      'Everywhere. Constructor injection is the default for all services',
+      '**`AddTransient` — a new instance per resolution. Start here.** Stateless services, domain services, handlers: cheap to construct, nothing shared, no thread-safety question to answer. Microsoft says the same — do not reach for singleton just because a service holds no state.',
+      '**`AddScoped` — one instance per request.** Anything that must see one consistent view of the data for the length of a request: `DbContext` (which `AddDbContext` registers as scoped for you), repositories and units of work built on it. A scoped service may only be used **inside** a scope — the implicit per-request one, or an explicit `IServiceScopeFactory.CreateScope()`.',
+      '**`AddSingleton` — one instance for the process.** State that is expensive to build or genuinely global, plus connections and clients: the memory cache, the in-process event bus, `IHttpClientFactory`. Two obligations come with it — it must be thread-safe, and it must hold nothing scoped.',
+      'Work with no request to borrow a scope from — a background job, a hosted service, a startup task — opens its own: `using var scope = provider.CreateScope();`. The platform does exactly this in `BackgroundJob.Enqueue`.',
       'Replacing a vendor service with your own implementation — register yours in a module that depends on theirs',
       'Making your own services replaceable by registering against an interface'
     ],
     avoid: [
-      'Injecting a scoped service into a singleton. It is captured for the process lifetime and the bug appears much later',
+      'Injecting a scoped service into a singleton — a **captive dependency**. The scoped service is promoted to the process lifetime, and the symptom is stale data on a later request rather than an exception',
+      'Resolving a scoped service straight from the root provider. Same outcome: only the root container disposes it, so it lives until shutdown',
+      'Singleton for a service with no state of its own. It buys nothing and costs thread-safety, coupling between requests, harder tests and no configuration reload',
       'Service locator patterns (`GetRequiredService` in business code) outside `PostInitialize`',
-      'Registering a `DbContext` or repository as a singleton — see the repository atom for why'
+      'Calling `BuildServiceProvider` while configuring services — take the factory overload that hands you an `IServiceProvider` instead',
+      'Registering a `DbContext` or repository as a singleton — see [[repository-uow]] for why'
     ],
     api: [
       { name: 'IServiceCollection (module Initialize)', file: 'src/VirtoCommerce.Platform.Core/Modularity/IModule.cs' },
-      { name: 'Platform service registrations', file: 'src/VirtoCommerce.Platform.Web/Startup.cs' }
+      { name: 'Platform service registrations', file: 'src/VirtoCommerce.Platform.Web/Startup.cs' },
+      { name: 'AddPlatformServices — transient repository, Func<> factory, singleton bus', file: 'src/VirtoCommerce.Platform.Data/Extensions/ServiceCollectionExtensions.cs' },
+      { name: 'IPlatformMemoryCache — registered as a singleton', file: 'src/VirtoCommerce.Platform.Caching/ServiceCollectionExtensions.cs' },
+      { name: 'BackgroundJob.Enqueue — CreateScope outside a request', file: 'src/VirtoCommerce.Platform.Core/Jobs/BackgroundJob.cs' }
     ],
     snippet: {
       lang: 'csharp',
       code:
-'// Vendor module registers:\n' +
+'// ------------------------------------------------------- 1. pick the lifetime\n' +
+'//\n' +
+'// Transient - a new one per resolution. The default: stateless, cheap, nothing shared.\n' +
 'services.AddTransient<IPriceService, PriceService>();\n' +
 '\n' +
-'// Your module — which declares a dependency on theirs, so it initializes later —\n' +
-'// replaces it simply by registering again. No vendor source is touched.\n' +
+'// Scoped - one per request, for anything needing one consistent view of the data.\n' +
+'// AddDbContext already does this, so the DbContext is scoped whether you say so or not.\n' +
+'services.AddDbContext<AbcDbContext>(options => { /* ... */ });\n' +
+'services.AddScoped<IAbcRepository, AbcRepository>();\n' +
+'\n' +
+'// Singleton - one per process. Expensive or genuinely global state, connections, clients.\n' +
+'// Must be thread-safe, and must hold nothing scoped.\n' +
+'services.AddSingleton<IAbcPriceIndex, AbcPriceIndex>();\n' +
+'\n' +
+'// One instance behind several interfaces - register the class once and alias the rest,\n' +
+'// or you get one object per interface. This is how the platform exposes InProcessBus.\n' +
+'services.AddSingleton<AbcBus>();\n' +
+'services.AddSingleton<IAbcPublisher>(sp => sp.GetRequiredService<AbcBus>());\n' +
+'\n' +
+'// --------------------------------------------- 2. reach a scope from outside one\n' +
+'//\n' +
+'// A job, hosted service or startup task has no request, so it opens its own scope.\n' +
+'// Injecting the scoped service here would capture it for the life of the process.\n' +
+'public class AbcNightlyJob(IServiceProvider provider)\n' +
+'{\n' +
+'    public async Task RunAsync()\n' +
+'    {\n' +
+'        using var scope = provider.CreateScope();\n' +
+'        var repository = scope.ServiceProvider.GetRequiredService<IAbcRepository>();\n' +
+'        // ... one unit of work, and the scope disposes the DbContext with it\n' +
+'    }\n' +
+'}\n' +
+'\n' +
+'// The platform\'s idiom for the same need: a factory registered beside the repository,\n' +
+'// so a longer-lived service asks for a fresh one instead of holding one.\n' +
+'//   services.AddTransient<Func<IPlatformRepository>>(provider =>\n' +
+'//       () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());\n' +
+'\n' +
+'// ------------------------------------------------ 3. override, do not edit\n' +
+'//\n' +
+'// Your module depends on theirs, so it initializes later and simply registers again.\n' +
 'services.AddTransient<IPriceService, AbcPriceService>();\n' +
 '\n' +
 '// Decorating instead of replacing: keep the original as a concrete registration.\n' +
@@ -2403,12 +2570,21 @@ window.VC_MAP_ATOMS = [
       'Override-by-last-registration is both the extension mechanism and the accident: two modules replacing the same service means load order silently decides, with no warning.',
       'Registration order across modules follows the manifest dependency graph. If you must load after someone, declare the dependency.',
       'Keyed services exist in .NET but are unused here — see the Keyed services atom before introducing them.',
-      'Captive dependencies (scoped inside singleton) are the most common lifetime bug and often surface as stale data rather than an exception.'
+      'Captive dependencies (scoped inside singleton) are the most common lifetime bug and often surface as stale data rather than an exception.',
+      '**Scope validation only runs in Development.** The host verifies that no scoped service is resolved from the root provider or injected into a singleton — and that check is off in production, which is exactly where the same mistake becomes stale data instead of a startup exception.',
+      'The container disposes what it creates, and **when** depends on the lifetime: transient and scoped at the end of their scope, singleton at shutdown. A disposable transient resolved from the root provider is therefore held until shutdown — a leak wearing a lifetime label.',
+      'This platform leans singleton: on `dev` the mix is roughly **76 singleton, 26 transient, 13 scoped**. Almost all of those singletons are caches, buses, registrars and factories — read the ratio as infrastructure, not as a licence for your own services.',
+      '`IPlatformMemoryCache` and `InProcessBus` are singletons, so anything handed to them lives as long as the process. Pass values, not scoped services.',
+      'The platform registers `IPlatformRepository` as **transient** and puts a `Func<IPlatformRepository>` next to it that opens its own scope. Injecting the repository into something longer-lived than a request is what that factory exists to prevent.'
     ],
     docs: [
-      { label: 'Extensibility overview', page: 'Extensibility/overview' }
+      { label: 'Extensibility overview', page: 'Extensibility/overview' },
+      { label: 'Service lifetimes (Microsoft)', href: 'https://learn.microsoft.com/dotnet/core/extensions/dependency-injection/service-lifetimes' },
+      { label: 'DI guidelines (Microsoft)', href: 'https://learn.microsoft.com/dotnet/core/extensions/dependency-injection/guidelines' },
+      { label: 'DI in ASP.NET Core (Microsoft)', href: 'https://learn.microsoft.com/aspnet/core/fundamentals/dependency-injection' },
+      { label: 'Scope validation (Microsoft)', href: 'https://learn.microsoft.com/dotnet/core/extensions/dependency-injection/overview#scope-validation' }
     ],
-    seeAlso: ['module-lifecycle', 'keyed-services', 'abstract-type-factory', 'options-pattern'],
+    seeAlso: ['module-lifecycle', 'keyed-services', 'abstract-type-factory', 'options-pattern', 'repository-uow', 'platform-memory-cache'],
     molecule: 'extensibility-decision-tree',
     verifiedAgainst: '3.1053.0'
   },
