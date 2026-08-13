@@ -19,6 +19,7 @@ public class ProtectedPathsFileProviderTests
     [InlineData("assets/sales-rep-documents", "/Assets/Sales-Rep-Documents/File.pdf")]
     [InlineData("/assets/sales-rep-documents/", "/assets/sales-rep-documents/file.pdf")]
     [InlineData("assets\\sales-rep-documents", "/assets/sales-rep-documents/file.pdf")]
+    [InlineData("https://localhost:5001/assets/sales-rep-documents/", "/assets/sales-rep-documents/file.pdf")]
     public void GetFileInfo_ProtectedPath_ReturnsNotFound(string protectedPath, string subpath)
     {
         var provider = CreateProvider(protectedPath);
@@ -98,6 +99,38 @@ public class ProtectedPathsFileProviderTests
     {
         Assert.Throws<ArgumentNullException>(() => new ProtectedPathsFileProvider(null, new[] { "assets" }));
         Assert.Throws<ArgumentNullException>(() => new ProtectedPathsFileProvider(_innerProviderMock.Object, null));
+    }
+
+    [Theory]
+    [InlineData("assets/sales-rep-documents", "assets/sales-rep-documents")]
+    [InlineData("/assets/sales-rep-documents/", "assets/sales-rep-documents")]
+    [InlineData("assets\\sales-rep-documents", "assets/sales-rep-documents")]
+    [InlineData("https://localhost:5001/assets/sales-rep-documents", "assets/sales-rep-documents")]
+    [InlineData("http://cdn.example.com/assets/sales-rep-documents/", "assets/sales-rep-documents")]
+    public void NormalizePaths_ValidPath_ReturnsPathPrefix(string path, string expected)
+    {
+        var result = ProtectedPathsFileProvider.NormalizePaths([path]);
+
+        Assert.Equal(expected, Assert.Single(result));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("/")]
+    [InlineData("https://localhost:5001")]
+    public void NormalizePaths_EmptyPath_IsDropped(string path)
+    {
+        var result = ProtectedPathsFileProvider.NormalizePaths([path]);
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void NormalizePaths_NullArgument_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => ProtectedPathsFileProvider.NormalizePaths(null));
     }
 
     private ProtectedPathsFileProvider CreateProvider(params string[] protectedPaths)

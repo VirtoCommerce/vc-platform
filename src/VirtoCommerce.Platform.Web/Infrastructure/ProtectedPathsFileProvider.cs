@@ -20,10 +20,20 @@ namespace VirtoCommerce.Platform.Web.Infrastructure
             ArgumentNullException.ThrowIfNull(protectedPaths);
 
             _innerProvider = innerProvider;
-            _protectedPaths = protectedPaths
+            _protectedPaths = NormalizePaths(protectedPaths).ToArray();
+        }
+
+        /// <summary>
+        /// Converts absolute URLs to their path component, unifies slashes, and drops null or empty entries.
+        /// </summary>
+        public static IList<string> NormalizePaths(IEnumerable<string> paths)
+        {
+            ArgumentNullException.ThrowIfNull(paths);
+
+            return paths
                 .Select(NormalizePath)
                 .Where(path => !string.IsNullOrEmpty(path))
-                .ToArray();
+                .ToList();
         }
 
         public IFileInfo GetFileInfo(string subpath)
@@ -56,7 +66,18 @@ namespace VirtoCommerce.Platform.Web.Infrastructure
 
         private static string NormalizePath(string path)
         {
-            return path?.Replace('\\', '/').Trim('/');
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return null;
+            }
+
+            if (Uri.TryCreate(path, UriKind.Absolute, out var uri) &&
+                (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+            {
+                path = uri.AbsolutePath;
+            }
+
+            return path.Replace('\\', '/').Trim('/');
         }
     }
 }

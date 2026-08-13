@@ -795,9 +795,10 @@ namespace VirtoCommerce.Platform.Web
                 ContentTypeProvider = fileExtensionContentTypeProvider
             };
 
-            if (!platformOptions.ProtectedStaticPaths.IsNullOrEmpty())
+            var protectedStaticPaths = GetProtectedStaticPaths(app, logger);
+            if (protectedStaticPaths.Count > 0)
             {
-                webRootStaticFileOptions.FileProvider = new ProtectedPathsFileProvider(WebHostEnvironment.WebRootFileProvider, platformOptions.ProtectedStaticPaths);
+                webRootStaticFileOptions.FileProvider = new ProtectedPathsFileProvider(WebHostEnvironment.WebRootFileProvider, protectedStaticPaths);
             }
 
             app.UseStaticFiles(webRootStaticFileOptions);
@@ -884,6 +885,25 @@ namespace VirtoCommerce.Platform.Web
             WriteFailedModulesToLog(logger);
 
             logger.LogInformation("Welcome to Virto Commerce {PlatformVersion}!", typeof(Startup).Assembly.GetName().Version);
+        }
+
+        private static IList<string> GetProtectedStaticPaths(IApplicationBuilder app, ILogger<Startup> logger)
+        {
+            var paths = new List<string>();
+
+            foreach (var pathsSource in app.ApplicationServices.GetServices<IProtectedStaticPathsSource>())
+            {
+                try
+                {
+                    paths.AddRange(pathsSource.GetPaths() ?? []);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Could not get protected static paths from {SourceType}", pathsSource.GetType().FullName);
+                }
+            }
+
+            return ProtectedPathsFileProvider.NormalizePaths(paths);
         }
 
         private static void WriteFailedModulesToLog(ILogger<Startup> logger)
