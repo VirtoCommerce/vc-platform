@@ -43,6 +43,43 @@
     return null;
   }
 
+  /* Default branch per repository — dev for the platform and its modules, but not for everything,
+     and a wrong branch is a 404 rather than a redirect. */
+  var GITHUB_ORG = 'https://github.com/VirtoCommerce/';
+  var DEFAULT_BRANCH = { 'vc-cli-module-template': 'main', 'vc-modules': 'master' };
+
+  function branchOf(repo) { return DEFAULT_BRANCH[repo] || 'dev'; }
+
+  /* GitHub serves a file under /blob and a directory under /tree, and swapping them 404s. The last
+     path segment having an extension is the available signal. */
+  function githubUrl(repo, filePath) {
+    var last = filePath.split('/').pop();
+    var kind = last.indexOf('.') > 0 ? 'blob' : 'tree';
+    return GITHUB_ORG + repo + '/' + kind + '/' + branchOf(repo) + '/' + filePath;
+  }
+
+  /* An api[].file is one of three things:
+       a repo-relative path in vc-platform          → link it
+       `(vc-some-repo/path/to/File.cs)`             → link it, in that repository
+       any other `(parenthesised annotation)`       → prose, and deliberately not a path */
+  function apiFile(file) {
+    if (!file) return null;
+    var text = String(file).trim();
+    if (text.charAt(0) !== '(') {
+      return el('a', { class: 'api-file is-link', href: githubUrl('vc-platform', text),
+        target: '_blank', rel: 'noopener',
+        title: 'Open on GitHub (vc-platform@' + branchOf('vc-platform') + ')', text: text });
+    }
+    var inner = text.slice(1, -1);
+    var m = /^(vc-[a-z0-9.-]+)\/(\S+)$/.exec(inner);
+    if (m) {
+      return el('a', { class: 'api-file is-link', href: githubUrl(m[1], m[2]),
+        target: '_blank', rel: 'noopener',
+        title: 'Open on GitHub (' + m[1] + '@' + branchOf(m[1]) + ')', text: inner });
+    }
+    return el('span', { class: 'api-file', text: text });
+  }
+
   function docLinks(docs) {
     var usable = (docs || []).filter(function (doc) { return docHref(doc); });
     if (!usable.length) return null;
@@ -717,7 +754,7 @@
         ? el('div', { class: 'api-list' }, atom.api.map(function (api) {
             return el('div', { class: 'api-row' },
               el('span', { class: 'api-name', text: api.name }),
-              api.file ? el('span', { class: 'api-file', text: api.file }) : null);
+              apiFile(api.file));
           }))
         : null),
       block('Snippet', snippetBlock(atom.snippet), true),

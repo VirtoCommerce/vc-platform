@@ -1110,6 +1110,10 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .api-row { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .api-row .api-name { font: 12.5px var(--mono); font-weight: 600; overflow-wrap: break-word; }
 .api-row .api-file { font: 11px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+/* A path that is a link says so on hover rather than shouting in a list of twenty. */
+.api-row .api-file.is-link { color: var(--focus); text-decoration: none; border-bottom: 1px dotted transparent; }
+.api-row:hover .api-file.is-link, .api-file.is-link:focus-visible { border-bottom-color: currentColor; }
+.api-file.is-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
 
 /* A framed block with its own thin header, so the language label and copy
    button sit beside the code instead of floating over its first line. */
@@ -1337,6 +1341,25 @@ main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
   #drawer-expand { display: none; }
   .drawer-head { padding-right: 52px; }
 }
+/* Phones. At 430px the band and the atoms table were both packing two columns of 195px — seven
+   layer cards two-up, and eight family columns two-up with two cramped tiles per row inside each.
+   One column each is wider than two of anything, and it lets a family's tiles flow. */
+@media (max-width: 560px) {
+  .band { grid-template-columns: 1fr; }
+  .atom-grid { grid-template-columns: 1fr; }
+  .cell-shelf { grid-template-columns: minmax(0, 1fr); }
+  /* Without min-width the cell refuses to go under the min-content width of its nowrap
+     module list, and the shelf grows past the screen instead of clipping. */
+  .cell { min-width: 0; }
+  /* The poster is a scroll on a phone regardless, so the tiles may as well be legible. */
+  :root { --tile: 84px; }
+  .layer .layer-sub { -webkit-line-clamp: 3; }
+  /* Nothing here is a poster any more, so let the tag row wrap instead of fading out. */
+  .layer .layer-tags { flex-wrap: wrap; -webkit-mask-image: none; mask-image: none; }
+  .molecule-shelf { max-height: none; }
+  .section-heading .hint { display: none; }
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
