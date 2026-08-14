@@ -94,6 +94,9 @@ namespace VirtoCommerce.Platform.Web
 {
     public class Startup
     {
+        // Re-executed by UseExceptionHandler, so it must resolve through the default controller route below.
+        public const string ExceptionHandlingPath = "/Home/Error";
+
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
@@ -749,7 +752,7 @@ namespace VirtoCommerce.Platform.Web
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler(ExceptionHandlingPath);
                 app.UseHsts();
             }
 
