@@ -314,11 +314,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             }
             else
             {
-                // Remove the entities loaded from the data source rather than stubs built by FromModel. A stub can
-                // only carry what the model exposes, so any column the model doesn't map stays at its default —
-                // most importantly a concurrency token ([Timestamp]/rowversion). EF puts the unset token into the
-                // DELETE predicate (WHERE Id = @p0 AND RowVersion IS NULL), no row matches it, and the commit throws
-                // DbUpdateConcurrencyException while the row stays in the database.
+                // An entity built by FromModel has no concurrency token, so the DELETE matches no row and throws DbUpdateConcurrencyException.
                 var entities = await LoadEntities(repository, ids);
                 foreach (var entity in entities)
                 {

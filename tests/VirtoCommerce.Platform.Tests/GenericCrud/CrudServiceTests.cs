@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MockQueryable.Moq;
 using Moq;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Events;
@@ -106,7 +104,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         }
 
         [Fact]
-        public async Task DeleteAsync_RemovesEntitiesLoadedFromDataSource()
+        public async Task DeleteAsync_RemovesEntityWithValidConcurrencyToken()
         {
             // Arrange
             var ids = new List<string> { "1" };
@@ -116,17 +114,14 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
                 .Setup(x => x.Remove(It.IsAny<TestEntity>()))
                 .Callback((TestEntity entity) => removedEntities.Add(entity));
 
-            var service = GetLoadTrackingCrudServiceMock();
+            var service = GetCrudServiceMock();
 
             // Act
             await service.DeleteAsync(ids);
 
             // Assert
-            // The removed instance must be the one loaded from the data source: a stub built from the model carries
-            // no concurrency token, which makes EF delete nothing and throw DbUpdateConcurrencyException instead.
             var removedEntity = Assert.Single(removedEntities);
-            Assert.True(service.LoadedEntities.Any(x => ReferenceEquals(x, removedEntity)),
-                "The deleted entity was not loaded from the data source.");
+            Assert.NotNull(removedEntity.RowVersion);
         }
 
         [Fact]
@@ -159,34 +154,6 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         {
             _repositoryMock.Setup(x => x.UnitOfWork).Returns(_mockUnitOfWork.Object);
             return new CrudServiceMock(() => _repositoryMock.Object, MemoryCacheMockHelper.GetPlatformMemoryCache(), _eventPublisherMock.Object);
-        }
-
-        private LoadTrackingCrudServiceMock GetLoadTrackingCrudServiceMock()
-        {
-            _repositoryMock.Setup(x => x.UnitOfWork).Returns(_mockUnitOfWork.Object);
-            return new LoadTrackingCrudServiceMock(() => _repositoryMock.Object, MemoryCacheMockHelper.GetPlatformMemoryCache(), _eventPublisherMock.Object);
-        }
-
-        /// <summary>
-        /// Keeps every entity instance handed out by <see cref="LoadEntities"/>, so a test can tell an entity
-        /// loaded from the data source from a stub built out of a model.
-        /// </summary>
-        private sealed class LoadTrackingCrudServiceMock : CrudServiceMock
-        {
-            public LoadTrackingCrudServiceMock(Func<IRepository> repositoryFactory, IPlatformMemoryCache platformMemoryCache, IEventPublisher eventPublisher)
-                : base(repositoryFactory, platformMemoryCache, eventPublisher)
-            {
-            }
-
-            public List<TestEntity> LoadedEntities { get; } = [];
-
-            protected override async Task<IList<TestEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup)
-            {
-                var entities = await base.LoadEntities(repository, ids, responseGroup);
-                LoadedEntities.AddRange(entities);
-
-                return entities;
-            }
         }
     }
 }
