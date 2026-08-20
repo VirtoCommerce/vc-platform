@@ -8,6 +8,7 @@ using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -19,6 +20,7 @@ using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Security;
 using Xunit;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 {
@@ -222,6 +224,45 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _eventPublisherMock.Verify(x => x.Publish(It.Is<UserLoginEvent>(e => e.User == user), default), Times.Once);
             result.Should().NotBeNull();
             result.IsNotAllowed.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// If the request or its required fields are null we should return 400 Bad Request instead of throwing
+        /// </summary>
+        [Fact]
+        public async Task Login_NullRequest_ReturnsBadRequest()
+        {
+            // Act
+            var actual = await _controller.Login(null);
+
+            // Assert
+            actual.Result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public async Task Login_NullUserName_ReturnsBadRequest()
+        {
+            // Arrange
+            var request = new LoginRequest { UserName = null, Password = "password" };
+
+            // Act
+            var actual = await _controller.Login(request);
+
+            // Assert
+            actual.Result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public async Task Login_NullPassword_ReturnsBadRequest()
+        {
+            // Arrange
+            var request = new LoginRequest { UserName = "user", Password = null };
+
+            // Act
+            var actual = await _controller.Login(request);
+
+            // Assert
+            actual.Result.Should().BeOfType<BadRequestResult>();
         }
 
         #endregion Login
