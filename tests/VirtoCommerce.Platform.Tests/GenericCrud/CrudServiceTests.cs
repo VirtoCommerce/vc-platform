@@ -104,6 +104,27 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         }
 
         [Fact]
+        public async Task DeleteAsync_RemovesEntityWithValidConcurrencyToken()
+        {
+            // Arrange
+            var ids = new List<string> { "1" };
+            var removedEntities = new List<TestEntity>();
+
+            _repositoryMock
+                .Setup(x => x.Remove(It.IsAny<TestEntity>()))
+                .Callback((TestEntity entity) => removedEntities.Add(entity));
+
+            var service = GetCrudServiceMock();
+
+            // Act
+            await service.DeleteAsync(ids);
+
+            // Assert
+            var removedEntity = Assert.Single(removedEntities);
+            Assert.NotNull(removedEntity.RowVersion);
+        }
+
+        [Fact]
         public async Task GetByOuterIdAsync_ReturnsCorrectEntity()
         {
             // Arrange
