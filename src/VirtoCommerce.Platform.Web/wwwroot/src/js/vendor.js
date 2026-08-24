@@ -16,6 +16,9 @@ window.CodeMirror = CodeMirror;
 import jsonlint from 'jsonlint-mod';
 window.jsonlint = jsonlint; // This line is essential
 
+import cronstrue from 'cronstrue';
+window.cronstrue = cronstrue; // exposes plain-English cron descriptions to the Cron setting editor
+
 import 'codemirror/mode/xml/xml.js';
 import 'codemirror/mode/gfm/gfm.js';
 import 'codemirror/mode/htmlmixed/htmlmixed.js';

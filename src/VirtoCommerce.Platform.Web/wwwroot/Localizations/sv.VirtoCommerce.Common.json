@@ -155,7 +155,23 @@
         "short-text-multivalue-multilang": "Lägg till värde",
         "short-text-dictionary-multilang": "Välj värde",
         "short-text-dictionary-multivalue-multilang": "Välj värde",
-        "long-text-dictionary-multivalue-multilang": "Välj värde"
+        "long-text-dictionary-multivalue-multilang": "Välj värde",
+        "cron": "Ange ett cron-uttryck, t.ex. 0 7 * * *"
+      },
+      "cron": {
+        "choose-preset": "Förinställningar",
+        "runs": "Körs",
+        "invalid": "Detta är inte ett giltigt cron-uttryck",
+        "presets": {
+          "every-minute": "Varje minut",
+          "every-5-minutes": "Var 5:e minut",
+          "every-15-minutes": "Var 15:e minut",
+          "every-hour": "Varje timme",
+          "daily-midnight": "Varje dag vid midnatt",
+          "daily-7am": "Varje dag kl. 07:00",
+          "weekly-monday-7am": "Varje måndag kl. 07:00",
+          "monthly-first-7am": "Den första dagen i månaden kl. 07:00"
+        }
       }
     },
     "short-text-input": {

@@ -35,40 +35,27 @@ public class RedisHealthCheck : IHealthCheck
 
         try
         {
-            foreach (var endPoint in _connection.GetEndPoints(configuredOnly: true))
+            // PING through the multiplexer rather than pinging each node directly: the multiplexer is a
+            // shared, self-healing singleton that routes to an available node and handles failover, so a
+            // single degraded node in a cluster (where replicas take over and slots stay covered) does not
+            // fail the check. PING is also not admin-gated, unlike the live CLUSTER commands that require
+            // AllowAdmin since StackExchange.Redis 3.0.0.
+            // WaitAsync honors the health-check timeout/cancellation (PingAsync itself takes no token).
+            var latency = await _connection.GetDatabase().PingAsync().WaitAsync(cancellationToken);
+
+            // IsConnected is surfaced for observability only; PING succeeding is the source of truth, since
+            // IsConnected can be transiently false while the multiplexer reconnects in the background.
+            var data = new Dictionary<string, object>
             {
-                var server = _connection.GetServer(endPoint);
+                ["isConnected"] = _connection.IsConnected,
+                ["latencyMs"] = latency.TotalMilliseconds,
+            };
 
-                if (server.ServerType != ServerType.Cluster)
-                {
-                    await _connection.GetDatabase().PingAsync().ConfigureAwait(false);
-                    await server.PingAsync().ConfigureAwait(false);
-                }
-                else
-                {
-                    var clusterInfo = await server.ExecuteAsync("CLUSTER", "INFO").ConfigureAwait(false);
-
-                    if (clusterInfo is object && !clusterInfo.IsNull)
-                    {
-                        if (!clusterInfo.ToString()!.Contains("cluster_state:ok"))
-                        {
-                            //cluster info is not ok!
-                            return new HealthCheckResult(context.Registration.FailureStatus, description: $"INFO CLUSTER is not on OK state for endpoint {endPoint}");
-                        }
-                    }
-                    else
-                    {
-                        //cluster info cannot be read for this cluster node
-                        return new HealthCheckResult(context.Registration.FailureStatus, description: $"INFO CLUSTER is null or can't be read for endpoint {endPoint}");
-                    }
-                }
-            }
-
-            return HealthCheckResult.Healthy();
+            return HealthCheckResult.Healthy(description: $"Redis responded to PING in {latency.TotalMilliseconds:F0} ms", data: data);
         }
         catch (Exception ex)
         {
-            return new HealthCheckResult(context.Registration.FailureStatus, exception: ex);
+            return new HealthCheckResult(context.Registration.FailureStatus, description: "Redis did not respond to PING", exception: ex);
         }
     }
 

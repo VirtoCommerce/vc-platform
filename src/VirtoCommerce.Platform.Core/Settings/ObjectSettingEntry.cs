@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Core.Settings
             IsHidden = descriptor.IsHidden;
             IsPublic = descriptor.IsPublic;
         }
-        public bool ItHasValues => Value != null || !AllowedValues.IsNullOrEmpty();
+        public bool ItHasValues => Value != null || (IsDictionary ? AllowedValues != null : !AllowedValues.IsNullOrEmpty());
         /// <summary>
         /// Setting may belong to any object in system
         /// </summary>

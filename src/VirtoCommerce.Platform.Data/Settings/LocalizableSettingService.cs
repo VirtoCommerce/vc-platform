@@ -238,12 +238,6 @@ public class LocalizableSettingService : ILocalizableSettingService
 
     private async Task SaveSetting(ObjectSettingEntry setting)
     {
-        // Workaround for saving an empty list of allowed values
-        if (setting.AllowedValues.IsNullOrEmpty() && setting.Value == null)
-        {
-            setting.Value = string.Empty;
-        }
-
         await _settingsManager.SaveObjectSettingsAsync([setting]);
     }
 

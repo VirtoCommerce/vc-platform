@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Data
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -349,8 +349,8 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Data
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjectType", "ObjectId")
-                        .HasDatabaseName("IX_ObjectType_ObjectId");
+                    b.HasIndex("ObjectType", "ObjectId", "Name")
+                        .HasDatabaseName("IX_ObjectType_ObjectId_Name");
 
                     b.ToTable("PlatformSetting", (string)null);
                 });

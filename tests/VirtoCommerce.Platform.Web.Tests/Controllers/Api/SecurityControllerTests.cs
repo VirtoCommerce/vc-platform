@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -18,6 +20,7 @@ using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Security;
 using Xunit;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 {
@@ -35,6 +38,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<ILogger<SecurityController>> _logger;
         private readonly Mock<IUserSessionsSearchService> _userSessionsSearchServiceMock;
         private readonly Mock<IUserSessionsService> _userSessionsServiceMock;
+        private readonly Mock<IAdminUIAccessPolicy> _adminUIAccessPolicyMock;
 
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
@@ -51,6 +55,11 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _userSessionsSearchServiceMock = new Mock<IUserSessionsSearchService>();
             _userSessionsServiceMock = new Mock<IUserSessionsService>();
             _logger = new Mock<ILogger<SecurityController>>();
+
+            _adminUIAccessPolicyMock = new Mock<IAdminUIAccessPolicy>();
+            _adminUIAccessPolicyMock
+                .Setup(x => x.EvaluateAsync(It.IsAny<AdminUIAccessContext>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(AdminUIAccessResult.Allowed());
 
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(
                 Mock.Of<IUserStore<ApplicationUser>>(),
@@ -102,7 +111,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 _userSearchServiceMock.Object,
                 _roleSearchServiceMock.Object,
                 securityOptions.Object,
-                Mock.Of<IOptions<UserOptionsExtended>>(),
+                Options.Create(new UserOptionsExtended()),
                 passwordOptions.Object,
                 passwordLoginOptions.Object,
                 identityOptions.Object,
@@ -111,7 +120,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 _logger.Object,
                 _externalSigninProviderConfigs,
                 _userSessionsSearchServiceMock.Object,
-                _userSessionsServiceMock.Object);
+                _userSessionsServiceMock.Object,
+                _adminUIAccessPolicyMock.Object);
 
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
             controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
@@ -214,6 +224,45 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _eventPublisherMock.Verify(x => x.Publish(It.Is<UserLoginEvent>(e => e.User == user), default), Times.Once);
             result.Should().NotBeNull();
             result.IsNotAllowed.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// If the request or its required fields are null we should return 400 Bad Request instead of throwing
+        /// </summary>
+        [Fact]
+        public async Task Login_NullRequest_ReturnsBadRequest()
+        {
+            // Act
+            var actual = await _controller.Login(null);
+
+            // Assert
+            actual.Result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public async Task Login_NullUserName_ReturnsBadRequest()
+        {
+            // Arrange
+            var request = new LoginRequest { UserName = null, Password = "password" };
+
+            // Act
+            var actual = await _controller.Login(request);
+
+            // Assert
+            actual.Result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public async Task Login_NullPassword_ReturnsBadRequest()
+        {
+            // Arrange
+            var request = new LoginRequest { UserName = "user", Password = null };
+
+            // Act
+            var actual = await _controller.Login(request);
+
+            // Assert
+            actual.Result.Should().BeOfType<BadRequestResult>();
         }
 
         #endregion Login
@@ -631,6 +680,84 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var result = actual.ExtractFromOkResult();
             result.Succeeded.Should().BeFalse();
         }
+
+        #endregion
+
+        #region GetCurrentUser
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task GetCurrentUser_ReturnsCanAccessAdminUI_FromThePolicy(bool isAllowed)
+        {
+            // Arrange
+            var user = CreateUserWithPermission("catalog:read");
+            SetCurrentUser(user);
+
+            _adminUIAccessPolicyMock
+                .Setup(x => x.EvaluateAsync(It.IsAny<AdminUIAccessContext>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(isAllowed ? AdminUIAccessResult.Allowed() : AdminUIAccessResult.Denied("nope"));
+
+            // Act
+            var actual = await _controller.GetCurrentUser();
+
+            // Assert
+            var result = actual.Result as Microsoft.AspNetCore.Mvc.OkObjectResult;
+            var userDetail = result.Value as UserDetail;
+            userDetail.CanAccessAdminUI.Should().Be(isAllowed);
+        }
+
+        [Fact]
+        public async Task GetCurrentUser_KeepsPermissions_WhenAdminUIAccessIsDenied()
+        {
+            // Arrange
+            var user = CreateUserWithPermission("mymodule:custom-endpoint:access");
+            SetCurrentUser(user);
+
+            _adminUIAccessPolicyMock
+                .Setup(x => x.EvaluateAsync(It.IsAny<AdminUIAccessContext>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(AdminUIAccessResult.Denied("account type not allowed"));
+
+            // Act
+            var actual = await _controller.GetCurrentUser();
+
+            // Assert
+            var result = actual.Result as Microsoft.AspNetCore.Mvc.OkObjectResult;
+            var userDetail = result.Value as UserDetail;
+            userDetail.CanAccessAdminUI.Should().BeFalse();
+            // Denying the admin UI must not strip the permissions the user needs for the API.
+            userDetail.Permissions.Should().Contain("mymodule:custom-endpoint:access");
+        }
+
+        [Fact]
+        public async Task GetCurrentUser_PassesTheUsersPermissionsToThePolicy()
+        {
+            // Arrange
+            var user = CreateUserWithPermission("catalog:read");
+            SetCurrentUser(user);
+
+            // Act
+            await _controller.GetCurrentUser();
+
+            // Assert
+            _adminUIAccessPolicyMock.Verify(x => x.EvaluateAsync(
+                It.Is<AdminUIAccessContext>(c =>
+                    c.User.UserName == user.UserName &&
+                    c.Permissions.Contains("catalog:read")),
+                It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        private ApplicationUser CreateUserWithPermission(string permission) =>
+            new()
+            {
+                Id = "user-id",
+                UserName = "test-user",
+                UserType = nameof(UserType.Customer),
+                Roles =
+                [
+                    new Role { Permissions = [new Permission { Name = permission }] }
+                ],
+            };
 
         #endregion
     }

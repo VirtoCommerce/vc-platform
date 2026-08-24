@@ -4,7 +4,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -16,12 +15,14 @@ using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.PushNotifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Helpers;
+using VirtoCommerce.Platform.Web.Jobs;
 using VirtoCommerce.Platform.Web.Model.Modularity;
 using VirtoCommerce.Platform.Web.Modularity;
 
@@ -42,6 +43,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ExternalModuleCatalogOptions _externalModuleCatalogOptions;
         private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly IPlatformRestarter _platformRestarter;
+        private readonly IBackgroundJob _backgroundJob;
+        private readonly IBackgroundJobHandler<ModuleBackgroundJobPayload> _moduleBackgroundJobHandler;
         private readonly ILogger<ModulesController> _logger;
         private static readonly Lock _lockObject = new();
         private static readonly FormOptions _defaultFormOptions = new();
@@ -56,7 +59,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
             IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions,
             IPlatformRestarter platformRestarter,
-            ILogger<ModulesController> logger)
+            IBackgroundJobHandler<ModuleBackgroundJobPayload> moduleBackgroundJobHandler,
+            ILogger<ModulesController> logger,
+            // Optional: provided by an installed background-job engine module. Null when none is installed — the
+            // module-install endpoints then surface an actionable "install an engine" message (see ScheduleJob).
+            IBackgroundJob backgroundJob = null)
         {
             _moduleService = moduleService;
             _moduleManagementService = moduleManagementService;
@@ -67,7 +74,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
+            _moduleBackgroundJobHandler = moduleBackgroundJobHandler;
             _logger = logger;
+            _backgroundJob = backgroundJob;
         }
 
         /// <summary>
@@ -199,10 +208,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("install")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
-        public ActionResult<ModulePushNotification> InstallModules([FromBody] ModuleDescriptor[] modules)
+        public async Task<ActionResult<ModulePushNotification>> InstallModules([FromBody] ModuleDescriptor[] modules)
         {
             var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = requests }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = requests }));
         }
 
         /// <summary>
@@ -213,9 +222,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("install/v2")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
-        public ActionResult<ModulePushNotification> InstallModuleRequests([FromBody] ModuleInstallRequest[] modules)
+        public async Task<ActionResult<ModulePushNotification>> InstallModuleRequests([FromBody] ModuleInstallRequest[] modules)
         {
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = modules }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = modules }));
         }
 
         /// <summary>
@@ -226,10 +235,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("update")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
-        public ActionResult<ModulePushNotification> UpdateModules([FromBody] ModuleDescriptor[] modules)
+        public async Task<ActionResult<ModulePushNotification>> UpdateModules([FromBody] ModuleDescriptor[] modules)
         {
             var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Update, Modules = requests }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Update, Modules = requests }));
         }
 
         /// <summary>
@@ -240,9 +249,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("update/v2")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
-        public ActionResult<ModulePushNotification> UpdateModuleRequests([FromBody] ModuleInstallRequest[] modules)
+        public async Task<ActionResult<ModulePushNotification>> UpdateModuleRequests([FromBody] ModuleInstallRequest[] modules)
         {
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Update, Modules = modules }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Update, Modules = modules }));
         }
 
         /// <summary>
@@ -253,10 +262,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("uninstall")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
-        public ActionResult<ModulePushNotification> UninstallModule([FromBody] ModuleDescriptor[] modules)
+        public async Task<ActionResult<ModulePushNotification>> UninstallModule([FromBody] ModuleDescriptor[] modules)
         {
             var requests = modules.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToArray();
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = requests }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = requests }));
         }
 
         /// <summary>
@@ -267,9 +276,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("uninstall/v2")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
-        public ActionResult<ModulePushNotification> UninstallModuleRequests([FromBody] ModuleInstallRequest[] modules)
+        public async Task<ActionResult<ModulePushNotification>> UninstallModuleRequests([FromBody] ModuleInstallRequest[] modules)
         {
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = modules }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = modules }));
         }
 
         /// <summary>
@@ -316,19 +325,35 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                                 var autoInstallModules = _moduleManagementService.GetNotInstalledModulesFromGroups(moduleBundles);
                                 if (autoInstallModules.Any())
                                 {
-                                    var options = new ModuleBackgroundJobOptions
-                                    {
-                                        Action = ModuleAction.Install,
-                                        Modules = autoInstallModules.Select(x => new ModuleInstallRequest(x.Id, x.Version.ToString())).ToArray()
-                                    };
+                                    var modules = autoInstallModules.Select(x => new ModuleInstallRequest(x.Id, x.Version.ToString())).ToArray();
                                     notification.Finished = null;
 
-                                    // can't use Hangfire.BackgroundJob.Enqueue(...), because Hangfire tables might be missing in new DB
-                                    new Thread(() =>
+                                    var payload = new ModuleBackgroundJobPayload
                                     {
-                                        Thread.CurrentThread.IsBackground = true;
-                                        ModuleBackgroundJob(options, notification);
-                                    }).Start();
+                                        Action = ModuleAction.Install,
+                                        Modules = modules,
+                                        NotificationId = notification.Id,
+                                        Creator = notification.Creator,
+                                        Title = notification.Title,
+                                        TotalCount = modules.Length,
+                                        AutoInstall = true,
+                                    };
+
+                                    // Bootstrap auto-install runs the handler INLINE: no background-job engine may be
+                                    // installed yet, since this is the very mechanism that installs modules (including
+                                    // the engine module itself) on a fresh platform. Fire-and-forget off the request
+                                    // thread so the response returns immediately; failures are logged, not fatal.
+                                    _ = Task.Run(async () =>
+                                    {
+                                        try
+                                        {
+                                            await _moduleBackgroundJobHandler.Execute(payload, new InlineJobExecutionContext(), CancellationToken.None);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            _logger.LogError(ex, "Bootstrap auto-install of modules failed.");
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -406,7 +431,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return NotFound();
             }
 
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = [new ModuleInstallRequest(moduleId, version)] }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = [new ModuleInstallRequest(moduleId, version)] }));
         }
 
         /// <summary>
@@ -417,9 +442,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("{moduleId}/install")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
-        public ActionResult<ModulePushNotification> InstallModule(string moduleId)
+        public async Task<ActionResult<ModulePushNotification>> InstallModule(string moduleId)
         {
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = [new ModuleInstallRequest(moduleId)] }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Install, Modules = [new ModuleInstallRequest(moduleId)] }));
         }
 
 
@@ -431,108 +456,57 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("{moduleId}/uninstall")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
         [ProducesResponseType(typeof(ModulePushNotification), StatusCodes.Status200OK)]
-        public ActionResult<ModulePushNotification> UninstallSingleModule(string moduleId)
+        public async Task<ActionResult<ModulePushNotification>> UninstallSingleModule(string moduleId)
         {
-            return Ok(ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = [new ModuleInstallRequest(moduleId)] }));
+            return Ok(await ScheduleJob(new ModuleBackgroundJobOptions { Action = ModuleAction.Uninstall, Modules = [new ModuleInstallRequest(moduleId)] }));
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public void ModuleBackgroundJob(ModuleBackgroundJobOptions options, ModulePushNotification notification)
-        {
-            try
-            {
-                notification.Started = DateTime.UtcNow;
-
-                if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
-                {
-                    var reportProgress = new Progress<ProgressMessage>(x =>
-                    {
-                        lock (_lockObject)
-                        {
-                            notification.Description = x.Message;
-                            notification.ProgressLog.Add(x);
-                            _pushNotifier.Send(notification);
-                        }
-                    });
-
-                    switch (options.Action)
-                    {
-                        case ModuleAction.Install:
-                        case ModuleAction.Update:
-                            _moduleManagementService.InstallModules(options.Modules, reportProgress);
-                            break;
-                        case ModuleAction.Uninstall:
-                            _moduleManagementService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
-                            break;
-                    }
-                }
-                else
-                {
-                    notification.Finished = DateTime.UtcNow;
-                    notification.Description = _managementIsDisabledMessage;
-                    notification.ProgressLog.Add(new ProgressMessage
-                    {
-                        Level = ProgressMessageLevel.Error,
-                        Message = notification.Description,
-                    });
-                    _pushNotifier.Send(notification);
-                }
-            }
-            catch (Exception ex)
-            {
-                notification.ProgressLog.Add(new ProgressMessage
-                {
-                    Level = ProgressMessageLevel.Error,
-                    Message = ex.ToString(),
-                });
-            }
-            finally
-            {
-                _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Completed);
-
-                notification.Finished = DateTime.UtcNow;
-                notification.Description = options.Action switch
-                {
-                    ModuleAction.Install => "Installation finished.",
-                    ModuleAction.Update => "Updating finished.",
-                    _ => "Uninstalling finished."
-                };
-
-                notification.ProgressLog.Add(new ProgressMessage
-                {
-                    Level = ProgressMessageLevel.Info,
-                    Message = notification.Description,
-                });
-
-                _pushNotifier.Send(notification);
-            }
-        }
-
-        private ModulePushNotification ScheduleJob(ModuleBackgroundJobOptions options)
+        private async Task<ModulePushNotification> ScheduleJob(ModuleBackgroundJobOptions options)
         {
             var notification = new ModulePushNotification(_userNameResolver.GetCurrentUserName());
 
-            switch (options.Action)
+            // Only the shell here (title + count). The handler owns the progress log under this notification id, so
+            // we don't seed a "Starting…" entry that the handler's first push would overwrite (push storage replaces
+            // by id).
+            notification.Title = options.Action switch
             {
-                case ModuleAction.Install:
-                    notification.Title = "Install Module";
-                    notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting installation..." });
-                    break;
-                case ModuleAction.Uninstall:
-                    notification.Title = "Uninstall Module";
-                    notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting uninstall..." });
-                    break;
-                case ModuleAction.Update:
-                    notification.Title = "Update Module";
-                    notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = "Starting update..." });
-                    break;
-            }
+                ModuleAction.Install => "Install Module",
+                ModuleAction.Uninstall => "Uninstall Module",
+                ModuleAction.Update => "Update Module",
+                _ => notification.Title,
+            };
 
             notification.TotalCount = options.Modules?.Length ?? 0;
 
             _pushNotifier.Send(notification);
 
-            BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
+            var payload = new ModuleBackgroundJobPayload
+            {
+                Action = options.Action,
+                Modules = options.Modules,
+                NotificationId = notification.Id,
+                Creator = notification.Creator,
+                Title = notification.Title,
+                TotalCount = notification.TotalCount,
+            };
+
+            if (_backgroundJob is null)
+            {
+                // No background-job engine module is installed (the optional dependency wasn't provided). Surface
+                // the actionable install instructions instead of failing with an opaque 500. The engine module
+                // itself can still be installed via the Virto Commerce CLI or the auto-install path, which do not
+                // enqueue jobs.
+                var message = BackgroundJobEngineNotInstalledException.DefaultMessage;
+                notification.Finished = DateTime.UtcNow;
+                notification.Description = message;
+                notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
+                _pushNotifier.Send(notification);
+            }
+            else
+            {
+                // Enqueue the message-based job; the active engine dispatches it to ModuleBackgroundJobHandler.
+                await _backgroundJob.Enqueue<ModuleBackgroundJobHandler>(payload);
+            }
 
             return notification;
         }

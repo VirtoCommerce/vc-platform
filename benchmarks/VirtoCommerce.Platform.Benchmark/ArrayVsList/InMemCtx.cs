@@ -1,0 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+
+namespace VirtoCommerce.Platform.Benchmark.ArrayVsList;
+
+public class InMemCtx : DbContext
+{
+
+    public InMemCtx(DbContextOptions options) : base(options)
+    {
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Something>(builder =>
+       {
+           builder.Property(x => x.Id);
+       });
+    }
+}
+
+public class Repo
+{
+    public InMemCtx Ctx { get; set; }
+
+    public Repo()
+    {
+        Ctx = new InMemCtx(new DbContextOptionsBuilder<InMemCtx>().UseInMemoryDatabase("UseInMemoryDatabase").Options);
+    }
+
+    public IQueryable<Something> Somethings => Ctx.Set<Something>();
+}

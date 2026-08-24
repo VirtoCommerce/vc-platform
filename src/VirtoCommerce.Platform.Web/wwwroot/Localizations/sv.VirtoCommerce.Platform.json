@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Din butik i överblick"
+    },
     "menu": {
       "home": "Hem",
       "browse": "Bläddra",
@@ -1058,6 +1061,10 @@
           "FullDateThresholdUnit": {
             "description": "Enhet för tröskel för fullt datum",
             "title": "Enhet för tröskel för fullt datum"
+          },
+          "WidgetColorMarkers": {
+            "title": "Färgmarkörer för widgetar",
+            "description": "Visar en färgad markering på varje widget i instrumentpanelen och blad för att enklare skilja dem åt."
           },
           "Customization": {
             "description": "JSON innehåller personaliseringsinställningar för hanterarens användargränssnitt",

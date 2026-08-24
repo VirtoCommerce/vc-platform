@@ -5,11 +5,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Controllers.Api;
+using VirtoCommerce.Platform.Web.Jobs;
 using VirtoCommerce.Platform.Web.Modularity;
 using Xunit;
 
@@ -23,6 +25,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IUserNameResolver> _userNameResolver = new();
         private readonly Mock<ISettingsManager> _settingsManager = new();
         private readonly Mock<IPlatformRestarter> _platformRestarter = new();
+        private readonly Mock<IBackgroundJob> _backgroundJob = new();
         private readonly Mock<ILogger<ModulesController>> _logger = new();
 
         private ModulesController CreateController() => new(
@@ -35,7 +38,9 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             Options.Create(new ExternalModuleCatalogOptions()),
             Options.Create(new LocalStorageModuleCatalogOptions()),
             _platformRestarter.Object,
-            _logger.Object);
+            Mock.Of<IBackgroundJobHandler<ModuleBackgroundJobPayload>>(),
+            _logger.Object,
+            _backgroundJob.Object);
 
         private static ManifestModuleInfo CreateModule(string id, string iconUrl)
         {

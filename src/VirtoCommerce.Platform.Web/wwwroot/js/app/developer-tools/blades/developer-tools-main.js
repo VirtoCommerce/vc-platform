@@ -23,7 +23,8 @@ angular.module('platformWebApp')
                         url: tool.url,
                         isExternal: tool.isExternal,
                         executeMethod: function (event) {
-                            if (!tool.external) {
+                            // Internal tools load in the iframe; external tools follow the anchor's href (target=_blank).
+                            if (!tool.isExternal) {
                                 event.preventDefault();
                                 event.stopPropagation();
                                 $scope.currentUrl = $sce.trustAsResourceUrl(this.url);

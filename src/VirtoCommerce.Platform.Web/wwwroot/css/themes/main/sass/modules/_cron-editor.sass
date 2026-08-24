@@ -1,0 +1,113 @@
+// Editor for the "Cron" setting value type (rendered by va-generic-value-input → dCron.html):
+// a single text field for the raw cron expression with an icon-only preset picker docked inside it,
+// plus a live plain-English description underneath.
+$cron-accent: #43b0e6
+$cron-muted: #8a94a0
+$cron-strong: #333333
+$cron-error: #de4437
+$cron-error-bg: #fdf3f2
+$cron-field-border: #eaedf3
+
+.cron-editor
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+// The expression input and its embedded preset button share one row.
+.cron-editor__field
+  position: relative
+
+// Raw expression reads as a technical token — monospace + a little tracking. `.cron-editor__field` +
+// `input` + the class (0,2,1) beats the theme's `.form-input input` (0,1,1); the extra right padding
+// keeps typed text from sliding under the docked preset button.
+.cron-editor__field input.cron-editor__expr
+  width: 100%
+  box-sizing: border-box
+  padding-right: 40px
+
+// Preset picker as an icon-only button docked at the field's right edge. The native <select> is stripped
+// of its chrome and its collapsed text is hidden, so only the overlaid icon shows; the dropdown list stays
+// readable via the explicit `option` colour. (0,2,1) beats the theme's `.form-input select` (0,1,1).
+.cron-editor__field select.cron-editor__preset
+  position: absolute
+  top: 1px
+  right: 1px
+  bottom: 1px
+  width: 34px
+  border: none
+  border-left: 1px solid $cron-field-border
+  border-radius: 0
+  background: transparent
+  color: transparent
+  -webkit-appearance: none
+  -moz-appearance: none
+  appearance: none
+  cursor: pointer
+
+  &:focus
+    outline: none
+    box-shadow: none
+
+  option
+    color: $cron-strong
+
+// The icon shown in place of the old "Presets" label; non-interactive so clicks reach the select beneath.
+.cron-editor__field .cron-editor__preset-icon
+  position: absolute
+  top: 50%
+  right: 11px
+  transform: translateY(-50%)
+  color: $cron-muted
+  font-size: 13px
+  pointer-events: none
+
+.cron-editor__field:hover .cron-editor__preset-icon
+  color: $cron-strong
+
+// Live feedback line under the input.
+.cron-editor__feedback
+  font-size: 13px
+  line-height: 1.45
+  min-height: 18px
+
+.cron-editor__desc,
+.cron-editor__error
+  display: inline-flex
+  align-items: baseline
+  gap: 6px
+
+  .fa
+    position: relative
+    top: 1px
+    font-size: 12px
+
+.cron-editor__desc
+  color: $cron-muted
+
+  .fa
+    color: $cron-accent
+
+  strong
+    color: $cron-strong
+    font-weight: 600
+
+.cron-editor__desc-label
+  color: $cron-muted
+
+.cron-editor__error
+  color: $cron-error
+
+  .fa
+    color: $cron-error
+
+// Invalid state — flag the expression field. The theme sets the input border via several stacked
+// declarations (`border`, `border-color`, `border-bottom`, per-side longhands) that outrank a plain
+// class override, so !important is used here — the deliberate, contained way to force an error state
+// to win over a themed default. Background matches without it, but the border is pinned for certainty.
+.cron-editor--invalid input.cron-editor__expr
+  border: 1px solid $cron-error !important
+  background-color: $cron-error-bg
+
+  &:focus
+    border: 1px solid $cron-error !important
+    box-shadow: 0 0 0 2px rgba(222, 68, 55, 0.15)

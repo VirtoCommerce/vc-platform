@@ -210,7 +210,7 @@ namespace VirtoCommerce.Platform.Core
                 {
                     Name = "VirtoCommerce.Platform.Security.CronPruneExpiredTokensJob",
                     GroupName = "Platform|Security",
-                    ValueType = SettingValueType.ShortText,
+                    ValueType = SettingValueType.Cron,
                     DefaultValue = "0 0 */1 * *"
                 };
                 public static SettingDescriptor FileExtensionsBlackList { get; } = new SettingDescriptor
@@ -462,9 +462,18 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.Json,
                     DefaultValue = "{\n" +
                                                "  \"title\": \"Virto Commerce\",\n" +
+                                               "  \"subtitle\": \"Your store at a glance\",\n" +
                                                "  \"logo\": \"/images/logo.png\",\n" +
                                                "  \"contrast_logo\": \"/images/logo-small.svg\"\n" +
                                                "}"
+                };
+
+                public static SettingDescriptor WidgetColorMarkers { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.UI.WidgetColorMarkers",
+                    GroupName = "Platform|User Interface",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
                 };
 
                 public static IEnumerable<SettingDescriptor> AllSettings
@@ -472,6 +481,7 @@ namespace VirtoCommerce.Platform.Core
                     get
                     {
                         yield return Customization;
+                        yield return WidgetColorMarkers;
                     }
                 }
             }

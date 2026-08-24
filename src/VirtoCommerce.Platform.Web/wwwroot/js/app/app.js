@@ -207,6 +207,11 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             })
         });
 
+        // Per-widget color markers on/off (default on; stays enabled if the setting is unavailable).
+        settings.get({ id: 'VirtoCommerce.Platform.UI.WidgetColorMarkers' }, function (setting) {
+            $rootScope.widgetColorMarkersEnabled = setting.value !== false;
+        });
+
         // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
         $scope.initExpiration = function (x) {
             if (x && x.expirationDate) {
@@ -480,6 +485,12 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     var currentState = $state.current;
                     if (!authContext.isAuthenticated) {
                         $state.go('loginDialog');
+                    } else if (!authContext.canAccessAdminUI) {
+                        // Evaluated server-side from VirtoCommerce:PlatformUI:Access. Checked before
+                        // passwordExpired because there is no point sending a user who cannot enter
+                        // the admin UI through a password change first. A user denied here can still
+                        // call the API endpoints their permissions grant.
+                        $state.go('contact-admin');
                     } else if (authContext.passwordExpired) {
                         $state.go('changePasswordDialog', {
                             onClose: function () {
@@ -492,8 +503,6 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                                 }
                             }
                         });
-                    } else if (!authContext.isAdministrator && !authContext.permissions?.length) {
-                        $state.go('contact-admin');
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
                         var returnUrl = urlHelper.getSafeReturnUrl();
                         if (returnUrl) {
@@ -525,7 +534,11 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             gridsterConfig.colWidth = 130;
             gridsterConfig.defaultSizeX = 1;
             gridsterConfig.resizable = { enabled: false, handles: [] };
-            gridsterConfig.maxRows = 8;
+            // Must comfortably exceed the number of cells widgets can occupy in the most
+            // populated container (itemDetail easily exceeds 32 cells = 8 rows x 4 columns
+            // with many modules installed). When the grid is full, gridster throws
+            // "Unable to place item!" and renders the leftover widgets on top of each other.
+            gridsterConfig.maxRows = 24;
             gridsterConfig.mobileModeEnabled = false;
             gridsterConfig.outerMargin = false;
 

@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "Tu tienda de un vistazo"
+    },
     "menu": {
       "home": "Inicio",
       "browse": "Explorar",
@@ -1057,6 +1060,10 @@
           "FullDateThresholdUnit": {
             "description": "Unidad del umbral de fecha completa",
             "title": "Unidad del umbral de fecha completa"
+          },
+          "WidgetColorMarkers": {
+            "title": "Marcadores de color de widgets",
+            "description": "Muestra una barra de color en cada widget del panel y de las hojas para distinguirlos de un vistazo."
           },
           "Customization": {
             "description": "JSON contiene configuraciones de personalización de la interfaz de usuario del gestor",

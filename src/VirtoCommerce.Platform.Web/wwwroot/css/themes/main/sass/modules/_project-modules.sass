@@ -21,9 +21,9 @@
   vertical-align: middle
 
 /* Dashboard */
-$dashboardHorizontalPadding: 90px
+$dashboardHorizontalPadding: 60px
 $dashboardVerticalPadding: 40px
-$dashboardHeadHeight: 80px
+$dashboardHeadHeight: 60px
 
 .dashboard
   background: $baseBg
@@ -33,6 +33,7 @@ $dashboardHeadHeight: 80px
   .dashboard-head
     height: $dashboardHeadHeight
     position: relative
+    border-bottom: 1px solid $baseBrd
   .dashboard-area
     box-sizing: border-box
     height: calc(100% - #{$dashboardHeadHeight})
@@ -49,18 +50,33 @@ $dashboardHeadHeight: 80px
     position: relative
     .gridster-loaded
       width: 770px
+      // left-align the widget grid with the dashboard title/logo (was auto-centered)
+      margin-left: 0
+      margin-right: auto
   .dashboard-title
     display: flex
     align-items: center
-    gap: 16px
-    padding: 30px $dashboardHorizontalPadding 0
+    gap: 12px
+    width: fit-content
+    padding: 8px $dashboardHorizontalPadding 0
 
+    .dashboard-title__text
+      display: flex
+      flex-direction: column
+      justify-content: center
     h1
       margin: 0
-      font-size: 41px
-      font-weight: 300
+      font-size: 22px
+      font-weight: 700
+      line-height: 1.1
+      letter-spacing: -.02em
+      color: $colorText
+    .dashboard-subtitle
+      margin-top: 1px
+      font-size: 12px
+      color: $listInfoListTColor
     .__logo
-      max-height: $h1FontSize
+      max-height: 36px
       vertical-align: top
 
 /* Log */

@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MockQueryable.Moq;
 using Moq;
-using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Tests.Common;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.GenericCrud
@@ -107,6 +104,27 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         }
 
         [Fact]
+        public async Task DeleteAsync_RemovesEntityWithValidConcurrencyToken()
+        {
+            // Arrange
+            var ids = new List<string> { "1" };
+            var removedEntities = new List<TestEntity>();
+
+            _repositoryMock
+                .Setup(x => x.Remove(It.IsAny<TestEntity>()))
+                .Callback((TestEntity entity) => removedEntities.Add(entity));
+
+            var service = GetCrudServiceMock();
+
+            // Act
+            await service.DeleteAsync(ids);
+
+            // Assert
+            var removedEntity = Assert.Single(removedEntities);
+            Assert.NotNull(removedEntity.RowVersion);
+        }
+
+        [Fact]
         public async Task GetByOuterIdAsync_ReturnsCorrectEntity()
         {
             // Arrange
@@ -123,7 +141,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
                 .Setup(x => x.Entities)
                 .Returns(entitiesDbSetMock.Object);
 
-            var service = new TestOuterEntityService(() => _repositoryMock.Object, GetPlatformMemoryCache(), _eventPublisherMock.Object);
+            var service = new TestOuterEntityService(() => _repositoryMock.Object, MemoryCacheMockHelper.GetPlatformMemoryCache(), _eventPublisherMock.Object);
 
             // Act
             var model = await service.GetByOuterIdNoCloneAsync("b");
@@ -135,13 +153,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         private CrudServiceMock GetCrudServiceMock()
         {
             _repositoryMock.Setup(x => x.UnitOfWork).Returns(_mockUnitOfWork.Object);
-            return new CrudServiceMock(() => _repositoryMock.Object, GetPlatformMemoryCache(), _eventPublisherMock.Object);
-        }
-
-        private static PlatformMemoryCache GetPlatformMemoryCache()
-        {
-            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
-            return new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
+            return new CrudServiceMock(() => _repositoryMock.Object, MemoryCacheMockHelper.GetPlatformMemoryCache(), _eventPublisherMock.Object);
         }
     }
 }

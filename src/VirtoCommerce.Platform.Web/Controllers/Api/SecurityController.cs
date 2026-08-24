@@ -49,6 +49,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
         private readonly IUserSessionsSearchService _userSessionsSearchService;
         private readonly IUserSessionsService _userSessionsService;
+        private readonly IAdminUIAccessPolicy _adminUIAccessPolicy;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -66,7 +67,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             ILogger<SecurityController> logger,
             IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs,
             IUserSessionsSearchService userSessionsSearchService,
-            IUserSessionsService userSessionsService)
+            IUserSessionsService userSessionsService,
+            IAdminUIAccessPolicy adminUIAccessPolicy)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -84,6 +86,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalSigninProviderConfigs = externalSigninProviderConfigs;
             _userSessionsSearchService = userSessionsSearchService;
             _userSessionsService = userSessionsService;
+            _adminUIAccessPolicy = adminUIAccessPolicy;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
@@ -133,6 +136,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult<SignInResult>> Login([FromBody] LoginRequest request)
         {
+            if (request?.UserName == null || request.Password == null)
+            {
+                return BadRequest();
+            }
+
             // Measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks
             var delayedResponse = DelayedResponse.Create(nameof(SecurityController), nameof(Login));
 
@@ -195,6 +203,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await GetCurrentUserAsync();
             if (user != null)
             {
+                // Rotate the security stamp so any previously issued (and potentially captured)
+                // authentication cookie is rejected at the next security-stamp validation.
+                // This enforces server-side session revocation on logout.
+                await UserManager.UpdateSecurityStampAsync(user);
                 await _signInManager.SignOutAsync();
                 await _eventPublisher.Publish(new UserLogoutEvent(user));
             }
@@ -217,6 +229,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Ok(new { });
             }
 
+            var permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray();
+            var adminUIAccess = await _adminUIAccessPolicy.EvaluateAsync(
+                new AdminUIAccessContext { User = user, Permissions = permissions },
+                HttpContext.RequestAborted);
+
+            if (!adminUIAccess.IsAllowed)
+            {
+                _logger.LogInformation("Admin UI access denied for user {user}: {reason}",
+                    UserManager.SanitizeUserName(user.UserName), adminUIAccess.DenyReason);
+            }
+
             var result = new UserDetail
             {
                 Id = user.Id,
@@ -224,10 +247,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
                 DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
-                Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray(),
+                Permissions = permissions,
                 AuthenticationMethod = HttpContext.User.GetAuthenticationMethod(),
                 IsSsoAuthenticationMethod = HttpContext.User.IsExternalSignIn(),
                 MemberId = user.MemberId,
+                CanAccessAdminUI = adminUIAccess.IsAllowed,
             };
 
             // Password never expired with SSO

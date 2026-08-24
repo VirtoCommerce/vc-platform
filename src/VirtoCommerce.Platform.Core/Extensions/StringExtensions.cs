@@ -101,12 +101,6 @@ namespace VirtoCommerce.Platform.Core.Common
             return string.Compare(str1 ?? "", str2 ?? "", comparisonType) == 0;
         }
 
-        [Obsolete("Use EqualsIgnoreCase()", DiagnosticId = "VC0010", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public static bool EqualsInvariant(this string str1, string str2)
-        {
-            return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
-        }
-
         public static bool EqualsIgnoreCase(this string str1, string str2)
         {
             return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);

@@ -1,5 +1,8 @@
 {
   "platform": {
+    "dashboard": {
+      "subtitle": "您的商店概览"
+    },
     "menu": {
       "home": "首页",
       "browse": "浏览",
@@ -1057,6 +1060,10 @@
           "FullDateThresholdUnit": {
             "description": "完整日期阈值的单位",
             "title": "完整日期阈值单位"
+          },
+          "WidgetColorMarkers": {
+            "title": "小部件颜色标记",
+            "description": "在每个仪表板和面板小部件上显示彩色标记条，便于快速区分。"
           },
           "Customization": {
             "description": "JSON 包含管理界面的个性化设置",

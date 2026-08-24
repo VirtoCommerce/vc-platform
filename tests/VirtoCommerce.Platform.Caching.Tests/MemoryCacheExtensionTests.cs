@@ -89,6 +89,127 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
+        public async Task GetOrLoadByIdsAsync_WithIdSelector_CachesPerIdKeyedByNonEntityField_AndLoadsOnlyMissing()
+        {
+            var sut = GetPlatformMemoryCache();
+            const string keyPrefix = "settings-like";
+            var loadCalls = new List<string[]>();
+
+            Task<IList<TestCacheItem>> LoadItems(IList<string> ids)
+            {
+                loadCalls.Add(ids.ToArray());
+                IList<TestCacheItem> items = ids.Select(id => new TestCacheItem(id)).ToList();
+                return Task.FromResult(items);
+            }
+
+            static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestCacheItem item)
+            {
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            }
+
+            // First (cold) call: both ids come from the batch loader, keyed by the non-IEntity Name field.
+            var first = await sut.GetOrLoadByIdsAsync(keyPrefix, ["Alpha", "Beta"], x => x.Name, LoadItems, ConfigureCache);
+
+            Assert.Equal(["Alpha", "Beta"], first.Select(x => x.Name).OrderBy(x => x));
+            Assert.Single(loadCalls);
+            Assert.Equal(["Alpha", "Beta"], loadCalls[0].OrderBy(x => x));
+
+            // Second call: "Alpha" is served warm from its own per-id entry; only "Gamma" hits the loader.
+            var second = await sut.GetOrLoadByIdsAsync(keyPrefix, ["Alpha", "Gamma"], x => x.Name, LoadItems, ConfigureCache);
+
+            Assert.Equal(["Alpha", "Gamma"], second.Select(x => x.Name).OrderBy(x => x));
+            Assert.Equal(2, loadCalls.Count);
+            Assert.Equal(["Gamma"], loadCalls[1]);
+        }
+
+        [Fact]
+        public async Task GetOrLoadByIds_TryGetByIds_RemoveByIds_RoundTrip_IsCaseInsensitive()
+        {
+            var sut = GetPlatformMemoryCache();
+            const string keyPrefix = "MixedCase-Prefix";
+
+            static Task<IList<TestCacheItem>> LoadItems(IList<string> ids)
+            {
+                IList<TestCacheItem> items = ids.Select(id => new TestCacheItem(id)).ToList();
+                return Task.FromResult(items);
+            }
+
+            static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestCacheItem item)
+            {
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            }
+
+            await sut.GetOrLoadByIdsAsync(keyPrefix, ["Alpha", "Beta"], x => x.Name, LoadItems, ConfigureCache);
+
+            // A differently-cased prefix and ids resolve to the same stored entries.
+            var hit = sut.TryGetByIds<TestCacheItem>("mixedcase-prefix", ["alpha", "beta"], out var found);
+
+            Assert.True(hit);
+            Assert.Equal(["Alpha", "Beta"], found.Values.Select(x => x.Name).OrderBy(x => x));
+
+            // RemoveByIds builds raw keys, but the cache normalizes them, so the normalized entries still evict.
+            sut.RemoveByIds(keyPrefix, ["Alpha", "Beta"]);
+
+            Assert.False(sut.TryGetByIds<TestCacheItem>(keyPrefix, ["Alpha", "Beta"], out _));
+        }
+
+        [Fact]
+        public async Task GetOrLoadByIds_DeduplicatesCaseInsensitively_AndFiltersEmpty()
+        {
+            var sut = GetPlatformMemoryCache();
+            var loadedBatches = new List<string[]>();
+
+            Task<IList<TestCacheItem>> LoadItems(IList<string> ids)
+            {
+                loadedBatches.Add(ids.ToArray());
+                IList<TestCacheItem> items = ids.Select(id => new TestCacheItem(id)).ToList();
+                return Task.FromResult(items);
+            }
+
+            static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestCacheItem item)
+            {
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            }
+
+            await sut.GetOrLoadByIdsAsync("dedup-prefix", ["Alpha", "alpha", "", "Beta", "Alpha"], x => x.Name, LoadItems, ConfigureCache);
+
+            // Empty ids dropped; "Alpha"/"alpha" collapse case-insensitively -> loader sees two distinct ids, once.
+            Assert.Single(loadedBatches);
+            Assert.Equal(["Alpha", "Beta"], loadedBatches[0].OrderBy(x => x));
+        }
+
+        [Fact]
+        public async Task GetOrLoadByIds_NegativeCachedNull_CountsAsHit_ExcludedFromResult()
+        {
+            var sut = GetPlatformMemoryCache();
+            const string keyPrefix = "neg-cache";
+            var loadCalls = 0;
+
+            Task<IList<TestCacheItem>> LoadItems(IList<string> ids)
+            {
+                loadCalls++;
+                IList<TestCacheItem> items = ids.Where(id => id != "Missing").Select(id => new TestCacheItem(id)).ToList();
+                return Task.FromResult(items);
+            }
+
+            static void ConfigureCache(MemoryCacheEntryOptions options, string id, TestCacheItem item)
+            {
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            }
+
+            var first = await sut.GetOrLoadByIdsAsync(keyPrefix, ["Present", "Missing"], x => x.Name, LoadItems, ConfigureCache);
+
+            Assert.Equal(["Present"], first.Select(x => x.Name));
+            Assert.Equal(1, loadCalls);
+
+            // "Missing" is cached as null; the re-read is all-hit (null counts as present), so the loader is not called again.
+            var second = await sut.GetOrLoadByIdsAsync(keyPrefix, ["Present", "Missing"], x => x.Name, LoadItems, ConfigureCache);
+
+            Assert.Equal(["Present"], second.Select(x => x.Name));
+            Assert.Equal(1, loadCalls);
+        }
+
+        [Fact]
         public void DefaultCachingOptions_Are_Applied()
         {
             var defaultOptions = Options.Create(new CachingOptions() { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });
@@ -107,5 +228,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             });
             Assert.Equal(2, result);
         }
+
+        private sealed record TestCacheItem(string Name);
     }
 }

@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Security.Services
             }
             var result = AbstractTypeFactory<RoleSearchResult>.TryCreateInstance();
             var query = _roleManager.Roles;
-            if (criteria.Keyword != null)
+            if (!criteria.Keyword.IsNullOrEmpty())
             {
                 query = query.Where(r => r.Name.Contains(criteria.Keyword));
             }

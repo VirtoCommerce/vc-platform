@@ -1,22 +1,38 @@
 @model Model.Home.ErrorModel
 @{
     ViewData["Title"] = "Error";
+    // The shared layout is bound to the admin UI model and pulls in the Angular application bundles.
+    // This page renders while the application is already failing, so it has to stay self-contained.
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virto Commerce @ViewData["Title"]</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 2rem; }
+        .text-danger { color: #d9534f; }
+    </style>
+</head>
+<body>
+    <h1 class="text-danger">Error.</h1>
+    <h2 class="text-danger">An error occurred while processing your request.</h2>
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+    @if (Model.ShowRequestId)
+    {
+        <p>
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
 
-@if (Model.ShowRequestId)
-{
+    <h3>Development Mode</h3>
     <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
     </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>Development environment should not be enabled in deployed applications</strong>, as it can result in sensitive information from exceptions being displayed to end users. For local debugging, development environment can be enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>, and restarting the application.
-</p>
+    <p>
+        <strong>Development environment should not be enabled in deployed applications</strong>, as it can result in sensitive information from exceptions being displayed to end users. For local debugging, development environment can be enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>, and restarting the application.
+    </p>
+</body>
+</html>

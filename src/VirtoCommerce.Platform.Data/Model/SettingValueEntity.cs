@@ -45,6 +45,7 @@ namespace VirtoCommerce.Platform.Data.Model
 
                 case SettingValueType.ShortText:
                 case SettingValueType.SecureString:
+                case SettingValueType.Cron:
                     return ShortTextValue;
 
                 default:
@@ -123,6 +124,7 @@ namespace VirtoCommerce.Platform.Data.Model
 
                 case SettingValueType.ShortText:
                 case SettingValueType.SecureString:
+                case SettingValueType.Cron:
                     return ShortTextValue;
 
                 default:

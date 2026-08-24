@@ -1,17 +1,7 @@
 Azure.Core.dll
 Azure.Identity.dll
-Dapper.dll
 EntityFrameworkCore.Triggers.dll
 FluentValidation.dll
-Hangfire.AspNetCore.dll
-Hangfire.Console.dll
-Hangfire.Core.dll
-Hangfire.Core.resources.dll
-Hangfire.MemoryStorage.dll
-Hangfire.MySql.dll
-Hangfire.NetCore.dll
-Hangfire.PostgreSql.dll
-Hangfire.SqlServer.dll
 Humanizer.dll
 MessagePack.Annotations.dll
 MessagePack.dll
@@ -93,7 +83,6 @@ OpenIddict.Validation.ServerIntegration.dll
 OpenIddict.Validation.SystemNetHttp.dll
 package.json
 package-lock.json
-Pipelines.Sockets.Unofficial.dll
 Polly.Core.dll
 Polly.dll
 Polly.Extensions.dll

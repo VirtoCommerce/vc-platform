@@ -1,13 +1,7 @@
-using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Internal;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
-using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.DynamicProperties;
+using VirtoCommerce.Platform.Tests.Common;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.DynamicProperties;
@@ -24,14 +18,7 @@ public class DynamicPropertyMetadataTests
     {
         var searchService = new MockDynamicPropertySearchService();
 
-        var memoryCache = new MemoryCache(new MemoryCacheOptions()
-        {
-            Clock = new SystemClock(),
-            ExpirationScanFrequency = TimeSpan.FromSeconds(1)
-        });
-        var cacheOptions = new OptionsWrapper<CachingOptions>(new CachingOptions { CacheEnabled = true });
-        var logMock = new Mock<ILogger<PlatformMemoryCache>>();
-        var platformMemoryCache = new PlatformMemoryCache(memoryCache, cacheOptions, logMock.Object);
+        var platformMemoryCache = MemoryCacheMockHelper.GetPlatformMemoryCache();
 
         var dynamicPropertyResolver = new DynamicPropertyMetaDataResolver(searchService, platformMemoryCache);
 
