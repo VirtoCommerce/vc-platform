@@ -577,14 +577,15 @@ angular.module('platformWebApp')
                     valueType: node.valueType,
                     isReadOnly: node.isReadOnly,
                     parentRefresh: blade.refresh,
+                    // Pass tenant scope through regardless of isEntityMode: entity mode (opened from
+                    // an entity's own "Settings" widget, e.g. a Store) still has blade.tenantType/tenantId
+                    // set by the widget, and the child blade needs them to save to the right scope instead
+                    // of silently falling back to the legacy global-only v1 API.
+                    tenantType: blade.tenantType,
+                    tenantId: blade.tenantId,
                     controller: 'platformWebApp.settingDictionaryController',
                     template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
                 };
-
-                if (!blade.isEntityMode) {
-                    newBlade.tenantType = blade.tenantType;
-                    newBlade.tenantId = blade.tenantId;
-                }
 
                 bladeNavigationService.showBlade(newBlade, blade);
             };
