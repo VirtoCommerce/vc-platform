@@ -314,10 +314,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             }
             else
             {
-                var keyMap = new PrimaryKeyResolvingMap();
-                foreach (var model in models)
+                // An entity built by FromModel has no concurrency token, so the DELETE matches no row and throws DbUpdateConcurrencyException.
+                var entities = await LoadEntities(repository, ids);
+                foreach (var entity in entities)
                 {
-                    var entity = FromModel(model, keyMap);
                     repository.Remove(entity);
                 }
                 await repository.UnitOfWork.CommitAsync();
