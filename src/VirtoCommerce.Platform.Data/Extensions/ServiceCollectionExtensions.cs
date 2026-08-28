@@ -39,7 +39,8 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddSingleton<IEventPublisher>(x => x.GetRequiredService<InProcessBus>());
             services.AddTransient<IChangeLogService, ChangeLogService>();
             services.AddTransient<ILastModifiedDateTime, ChangeLogService>();
-            services.AddTransient<ILastChangesService, LastChangesService>();
+            services.AddSingleton<ILastChangesService, LastChangesService>();
+            services.AddSingleton<ILastChangesNotifier, LastChangesNotifier>();
 
             services.AddTransient<IChangeLogSearchService, ChangeLogSearchService>();
 
