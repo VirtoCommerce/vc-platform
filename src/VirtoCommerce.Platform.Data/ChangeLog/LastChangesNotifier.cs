@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -38,34 +39,15 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
             var announced = _announcedTypeNames.GetValue(context, CreateAnnouncedTypeNames);
 
-            foreach (var entityTypeName in typeNames)
-            {
-                if (announced.Add(entityTypeName))
-                {
-                    _lastChangesService.Reset(entityTypeName);
-                }
-            }
+            Announce(typeNames.Where(announced.Add));
         }
 
         private bool IsIgnored(string[] typeNames)
         {
-            if (_ignoredEntityTypes.Count == 0)
-            {
-                return false;
-            }
-
-            foreach (var entityTypeName in typeNames)
-            {
-                if (_ignoredEntityTypes.Contains(entityTypeName))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _ignoredEntityTypes.Count > 0 && typeNames.Any(_ignoredEntityTypes.Contains);
         }
 
-        private void Announce(string[] typeNames)
+        private void Announce(IEnumerable<string> typeNames)
         {
             foreach (var entityTypeName in typeNames)
             {
