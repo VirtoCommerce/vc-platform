@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EntityFrameworkCore.Triggers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
@@ -51,6 +52,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         ];
 
         private readonly ILastChangesService _lastChangesService;
+        private readonly LastChangesOptions _options = new();
         private readonly List<string> _cancelledTokenKeys = [];
         private readonly Action<TokenCancelledEventArgs> _originalOnTokenCancelled;
         private readonly Action<IInsertingEntry<IEntity>> _trigger;
@@ -62,10 +64,11 @@ namespace VirtoCommerce.Platform.Caching.Tests
             _originalOnTokenCancelled = CancellableCacheRegion.OnTokenCancelled;
             CancellableCacheRegion.OnTokenCancelled = args => _cancelledTokenKeys.Add(args.TokenKey);
 
-            var notifier = new LastChangesNotifier(_lastChangesService);
+            var notifier = new Lazy<ILastChangesNotifier>(
+                () => new LastChangesNotifier(_lastChangesService, Options.Create(_options)));
 
             // Mirrors the global trigger registered by ApplicationBuilderExtensions.UseDbTriggers.
-            _trigger = entry => notifier.OnEntitySaving(entry.Context, entry.Entity);
+            _trigger = entry => notifier.Value.OnEntitySaving(entry.Context, entry.Entity);
             Triggers<IEntity>.Inserting += _trigger;
         }
 
@@ -164,6 +167,66 @@ namespace VirtoCommerce.Platform.Caching.Tests
 
             // Assert
             Assert.Equal(_expectedTypeNames.Length * 2, _cancelledTokenKeys.Count);
+        }
+
+        [Fact]
+        public void IgnoredEntityType_AnnouncesNothingAtAll()
+        {
+            // Arrange
+            _options.IgnoredEntityTypes.Add(typeof(TestDerivedEntity).FullName);
+            using var context = CreateContext();
+
+            // Act
+            context.DerivedEntities.Add(NewEntity("row"));
+            context.SaveChanges();
+
+            // Assert
+            Assert.Empty(_cancelledTokenKeys);
+        }
+
+        [Fact]
+        public void IgnoredEntityType_DoesNotSilenceOtherEntitiesSavedWithIt()
+        {
+            // Arrange
+            _options.IgnoredEntityTypes.Add(typeof(TestDerivedEntity).FullName);
+            using var context = CreateContext();
+
+            // Act
+            context.DerivedEntities.Add(NewEntity("ignored"));
+            context.SiblingEntities.Add(new TestSiblingEntity { Id = Guid.NewGuid().ToString("N") });
+            context.SaveChanges();
+
+            // Assert
+            Assert.Equal([TokenKeyOf<TestSiblingEntity>()], _cancelledTokenKeys);
+        }
+
+        [Fact]
+        public void IgnoredBaseType_AlsoExcludesEntitiesDerivedFromIt()
+        {
+            // Arrange
+            _options.IgnoredEntityTypes.Add(typeof(TestBaseEntity).FullName);
+            using var context = CreateContext();
+
+            // Act
+            context.DerivedEntities.Add(NewEntity("row"));
+            context.SaveChanges();
+
+            // Assert
+            Assert.Empty(_cancelledTokenKeys);
+        }
+
+        [Fact]
+        public void EmptyIgnoreList_TracksEverything()
+        {
+            // Arrange
+            using var context = CreateContext();
+
+            // Act
+            context.DerivedEntities.Add(NewEntity("row"));
+            context.SaveChanges();
+
+            // Assert
+            Assert.Equal(_expectedTypeNames.Length, _cancelledTokenKeys.Count);
         }
 
         private static string TokenKeyOf<T>()

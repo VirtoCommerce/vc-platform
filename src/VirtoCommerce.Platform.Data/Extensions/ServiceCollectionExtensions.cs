@@ -40,6 +40,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddTransient<IChangeLogService, ChangeLogService>();
             services.AddTransient<ILastModifiedDateTime, ChangeLogService>();
             services.AddSingleton<ILastChangesService, LastChangesService>();
+            services.AddOptions<LastChangesOptions>().Bind(configuration.GetSection("LastChanges"));
             services.AddSingleton<ILastChangesNotifier, LastChangesNotifier>();
 
             services.AddTransient<IChangeLogSearchService, ChangeLogSearchService>();

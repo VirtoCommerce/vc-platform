@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -18,15 +19,22 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         private readonly ConditionalWeakTable<DbContext, HashSet<string>> _announcedTypeNames = new();
 
         private readonly ILastChangesService _lastChangesService;
+        private readonly HashSet<string> _ignoredEntityTypes;
 
-        public LastChangesNotifier(ILastChangesService lastChangesService)
+        public LastChangesNotifier(ILastChangesService lastChangesService, IOptions<LastChangesOptions> options)
         {
             _lastChangesService = lastChangesService;
+            _ignoredEntityTypes = new HashSet<string>(options.Value.IgnoredEntityTypes ?? [], StringComparer.OrdinalIgnoreCase);
         }
 
         public void OnEntitySaving(DbContext context, IEntity entity)
         {
             var typeNames = EntityTypeNames.Get(entity.GetType());
+
+            if (IsIgnored(typeNames))
+            {
+                return;
+            }
 
             if (context is null)
             {
@@ -43,6 +51,28 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     _lastChangesService.Reset(entityTypeName);
                 }
             }
+        }
+
+        /// <summary>
+        /// Matching the whole chain keeps an entity excluded after it is overridden via AbstractTypeFactory, and
+        /// silences the base types an excluded entity would otherwise announce.
+        /// </summary>
+        private bool IsIgnored(string[] typeNames)
+        {
+            if (_ignoredEntityTypes.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (var entityTypeName in typeNames)
+            {
+                if (_ignoredEntityTypes.Contains(entityTypeName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void Announce(string[] typeNames)
