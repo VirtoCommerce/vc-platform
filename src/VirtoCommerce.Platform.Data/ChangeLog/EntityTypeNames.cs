@@ -5,10 +5,6 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.ChangeLog
 {
-    /// <summary>
-    /// Entity type names from the concrete type up to, but not including, <see cref="Entity"/>.
-    /// The chain is stable for a given type, so it is built once instead of on every saved row.
-    /// </summary>
     internal static class EntityTypeNames
     {
         private static readonly ConcurrentDictionary<Type, string[]> _namesByType = new();
