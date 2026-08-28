@@ -12,10 +12,6 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Caching.Tests
 {
-    /// <summary>
-    /// VCST-5566. Every token cancellation counted here becomes one Redis backplane message in a scale-out
-    /// deployment, so the count per SaveChanges is the thing under test, not just the resulting cache state.
-    /// </summary>
     [Trait("Category", "Unit")]
     [Collection(nameof(NotThreadSafeCollection))]
     public class LastChangesDeduplicationTests : MemoryCacheTestsBase, IDisposable
@@ -51,7 +47,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             typeof(TestBaseEntity).FullName,
         ];
 
-        private readonly ILastChangesService _lastChangesService;
+        private readonly LastChangesService _lastChangesService;
         private readonly LastChangesOptions _options = new();
         private readonly List<string> _cancelledTokenKeys = [];
         private readonly Action<TokenCancelledEventArgs> _originalOnTokenCancelled;
