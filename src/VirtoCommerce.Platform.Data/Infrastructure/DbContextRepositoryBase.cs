@@ -24,15 +24,12 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 
             UnitOfWork = unitOfWork ?? AbstractTypeFactory<DbContextUnitOfWork>.TryCreateInstance(new DbContextUnitOfWork(dbContext), (DbContext)dbContext);
 
-            var connectionDb = dbContext.Database.GetDbConnection();
-            var connectionTimeout = connectionDb.ConnectionTimeout;
-
             // Runs on every repository resolution, so an unguarded set would overwrite whatever
             // a module configured through the DbContext options.
             var commandTimeout = dbContext.Database.GetCommandTimeout();
             if (commandTimeout is null)
             {
-                dbContext.Database.SetCommandTimeout(connectionTimeout);
+                dbContext.Database.SetCommandTimeout(dbContext.Database.GetDbConnection().ConnectionTimeout);
             }
         }
 
