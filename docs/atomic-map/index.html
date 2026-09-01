@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virto Commerce — Atomic Architecture Map</title>
+<meta name="description" content="One-screen interactive map of Virto Commerce and .NET 10 building blocks: what exists, which one to reach for, and where it sits in the stack.">
+<link rel="icon" href="assets/virto-logo.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#atoms-section">Skip to atoms</a>
+
+<header class="topbar">
+  <div class="brand">
+    <img class="brand-mark" src="assets/virto-logo.png" width="30" height="30"
+         alt="Virto Commerce" decoding="async">
+    <span class="brand-text">
+      <strong>Atomic Architecture Map</strong>
+      <span class="brand-sub" id="brand-sub"></span>
+    </span>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <input id="search" type="search" placeholder="Search atoms, APIs, patterns…  ( / )"
+             autocomplete="off" spellcheck="false" aria-label="Search atoms, APIs and patterns">
+      <button id="search-clear" class="icon-btn" type="button" hidden aria-label="Clear search">✕</button>
+    </div>
+    <div id="filters" class="filters" role="group" aria-label="Filter by adoption state"></div>
+    <button id="legend-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="legend"
+            title="Legend ( ? )">Legend</button>
+    <button id="theme-toggle" class="icon-btn" type="button" title="Toggle light / dark theme"
+            aria-label="Toggle light or dark theme">◐</button>
+  </div>
+</header>
+
+<div id="legend" class="legend" hidden></div>
+
+<main>
+  <section class="band-section" aria-labelledby="arch-heading">
+    <h2 class="section-heading" id="arch-heading">Solution architecture<span class="hint">click a layer · hover to spotlight its atoms</span></h2>
+    <div id="arch" class="band"></div>
+  </section>
+
+  <section class="atoms-section" id="atoms-section" aria-labelledby="atoms-heading">
+    <h2 class="section-heading" id="atoms-heading">Atoms<span class="hint" id="atoms-count"></span></h2>
+    <div id="atoms" class="atom-grid"></div>
+  </section>
+
+  <section class="molecules-section" aria-labelledby="mol-heading">
+    <h2 class="section-heading" id="mol-heading">Molecules<span class="hint" id="mol-count">the modules, from the registry · and the topics written across them</span></h2>
+    <div id="molecules" class="molecule-shelf"></div>
+  </section>
+
+  <section class="cells-section" aria-labelledby="cells-heading">
+    <h2 class="section-heading" id="cells-heading">Cells<span class="hint">reserved — a set of modules that solves a business scenario, anchored on its experience API</span></h2>
+    <div id="cells" class="cell-shelf"></div>
+  </section>
+</main>
+
+<footer class="footer" id="footer"></footer>
+
+<div id="scrim" class="scrim" hidden></div>
+
+<aside id="drawer" class="drawer" role="dialog" aria-modal="false" aria-labelledby="drawer-title" hidden>
+  <div class="drawer-head">
+    <div class="drawer-eyebrow" id="drawer-eyebrow"></div>
+    <h2 class="drawer-title" id="drawer-title"></h2>
+    <div class="drawer-actions">
+      <button id="drawer-expand" class="icon-btn" type="button" aria-pressed="false"
+              title="Expand to full screen ( f )" aria-label="Expand details panel to full screen">⤢</button>
+      <button id="drawer-close" class="icon-btn" type="button" aria-label="Close details (Esc)">✕</button>
+    </div>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<!-- Content first, renderer last. Classic scripts on purpose: ES modules are CORS-blocked
+     on the file:// origin, which would break opening this file by double-click. -->
+<script src="content/meta.js"></script>
+<script src="content/architecture.js"></script>
+<script src="content/atoms.js"></script>
+<script src="content/cells.js"></script>
+<script src="content/molecules.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
