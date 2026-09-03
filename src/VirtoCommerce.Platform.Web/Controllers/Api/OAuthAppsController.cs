@@ -27,6 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             OpenIddictConstants.Permissions.Endpoints.Token,
             OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
             OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
+            OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
             OpenIddictConstants.Permissions.ResponseTypes.Code,
             OpenIddictConstants.Permissions.Scopes.Email,
             OpenIddictConstants.Permissions.Scopes.Profile,
