@@ -485,6 +485,11 @@ namespace VirtoCommerce.Platform.Web
 
                     serverBuilder.DisableScopeValidation();
 
+                    // Modules can expose protected resources under the Platform origin at runtime.
+                    // Their resource indicators are validated by the common authorization controller.
+                    serverBuilder.DisableResourceValidation();
+                    serverBuilder.IgnoreResourcePermissions();
+
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
                     serverBuilder.DisableAccessTokenEncryption();
