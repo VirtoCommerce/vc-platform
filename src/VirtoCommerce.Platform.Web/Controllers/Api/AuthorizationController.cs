@@ -790,7 +790,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private AuthenticationTicket CreateTicket(VirtoOpenIddictEntityFrameworkCoreApplication application, OpenIddictRequest request)
+        private static AuthenticationTicket CreateTicket(VirtoOpenIddictEntityFrameworkCoreApplication application, OpenIddictRequest request)
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
@@ -830,36 +830,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // will be used to create an id_token, a token or a code.
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-            if (context.Request.IsAuthorizationCodeGrantType() || context.Request.IsRefreshTokenGrantType())
-            {
-                principal.SetScopes(context.Principal?.GetScopes() ?? []);
-                var requestedResources = context.Request.GetResources();
-                principal.SetResources(requestedResources.Any()
-                    ? requestedResources
-                    : context.Principal?.GetResources() ?? []);
-                principal.SetAuthorizationId(context.Principal?.GetAuthorizationId());
-            }
-            else
-            {
-                // Set the list of scopes granted to the client application.
-                // Note: the offline_access scope must be granted
-                // to allow OpenIddict to return a refresh token.
-                principal.SetScopes(new[]
-                {
-                    Scopes.OpenId,
-                    Scopes.Email,
-                    Scopes.Profile,
-                    Scopes.OfflineAccess,
-                    Scopes.Roles
-                }.Intersect(context.Request.GetScopes()));
-
-                principal.SetResources(context.Request.GetResources());
-            }
-
-            if (!principal.GetResources().Any())
-            {
-                principal.SetResources("resource_server");
-            }
+            SetScopesAndResources(principal, context);
 
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
@@ -896,6 +867,40 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             // Create a new authentication ticket holding the user identity.
             return new AuthenticationTicket(principal, context.Properties, context.AuthenticationScheme);
+        }
+
+        private static void SetScopesAndResources(ClaimsPrincipal principal, TokenRequestContext context)
+        {
+            if (context.Request.IsAuthorizationCodeGrantType() || context.Request.IsRefreshTokenGrantType())
+            {
+                principal.SetScopes(context.Principal?.GetScopes() ?? []);
+                var requestedResources = context.Request.GetResources();
+                principal.SetResources(requestedResources.Any()
+                    ? requestedResources
+                    : context.Principal?.GetResources() ?? []);
+                principal.SetAuthorizationId(context.Principal?.GetAuthorizationId());
+            }
+            else
+            {
+                // Set the list of scopes granted to the client application.
+                // Note: the offline_access scope must be granted
+                // to allow OpenIddict to return a refresh token.
+                principal.SetScopes(new[]
+                {
+                    Scopes.OpenId,
+                    Scopes.Email,
+                    Scopes.Profile,
+                    Scopes.OfflineAccess,
+                    Scopes.Roles
+                }.Intersect(context.Request.GetScopes()));
+
+                principal.SetResources(context.Request.GetResources());
+            }
+
+            if (!principal.GetResources().Any())
+            {
+                principal.SetResources("resource_server");
+            }
         }
 
         private TokenResponse ValidateResourceIndicators(OpenIddictRequest request)

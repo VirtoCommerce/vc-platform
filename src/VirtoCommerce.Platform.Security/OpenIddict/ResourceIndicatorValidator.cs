@@ -10,10 +10,7 @@ public static class ResourceIndicatorValidator
     {
         ArgumentNullException.ThrowIfNull(platformOrigin);
 
-        return TryCreateWebResource(resource, out var resourceUri) &&
-            string.Equals(resourceUri.Scheme, platformOrigin.Scheme, StringComparison.OrdinalIgnoreCase) &&
-            string.Equals(resourceUri.IdnHost, platformOrigin.IdnHost, StringComparison.OrdinalIgnoreCase) &&
-            resourceUri.Port == platformOrigin.Port;
+        return TryCreateWebResource(resource, out var resourceUri) && HaveSameOrigin(resourceUri, platformOrigin);
     }
 
     public static bool IsSubset(IEnumerable<string> requestedResources, IEnumerable<string> grantedResources)
@@ -29,24 +26,29 @@ public static class ResourceIndicatorValidator
     {
         return TryCreateWebResource(left, out var leftUri) &&
             TryCreateWebResource(right, out var rightUri) &&
-            string.Equals(leftUri.Scheme, rightUri.Scheme, StringComparison.OrdinalIgnoreCase) &&
-            string.Equals(leftUri.IdnHost, rightUri.IdnHost, StringComparison.OrdinalIgnoreCase) &&
-            leftUri.Port == rightUri.Port &&
+            HaveSameOrigin(leftUri, rightUri) &&
             string.Equals(leftUri.PathAndQuery, rightUri.PathAndQuery, StringComparison.Ordinal);
     }
 
     private static bool TryCreateWebResource(string resource, out Uri resourceUri)
     {
-        var valid = Uri.TryCreate(resource, UriKind.Absolute, out resourceUri) &&
-            (resourceUri.Scheme == Uri.UriSchemeHttps || resourceUri.Scheme == Uri.UriSchemeHttp) &&
-            string.IsNullOrEmpty(resourceUri.UserInfo) &&
-            string.IsNullOrEmpty(resourceUri.Fragment);
-
-        if (!valid)
+        if (!Uri.TryCreate(resource, UriKind.Absolute, out resourceUri))
         {
             resourceUri = null;
+            return false;
         }
 
-        return valid;
+        var isWebResource = resourceUri.Scheme == Uri.UriSchemeHttps || resourceUri.Scheme == Uri.UriSchemeHttp;
+
+        return isWebResource &&
+            string.IsNullOrEmpty(resourceUri.UserInfo) &&
+            string.IsNullOrEmpty(resourceUri.Fragment);
+    }
+
+    private static bool HaveSameOrigin(Uri left, Uri right)
+    {
+        return string.Equals(left.Scheme, right.Scheme, StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(left.IdnHost, right.IdnHost, StringComparison.OrdinalIgnoreCase) &&
+            left.Port == right.Port;
     }
 }
