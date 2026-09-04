@@ -29,6 +29,18 @@ namespace VirtoCommerce.Platform.Caching.Tests
         {
         }
 
+        // Mirrors ApplicationUser's real shape (ApplicationUser : IdentityUser, IEntity, ...): a
+        // non-Entity base sits between the leaf and object, so the walk must stop at the first
+        // ancestor that stops implementing IEntity, not merely before System.Object.
+        private class PlainNonEntityBase
+        {
+        }
+
+        private class PlainIEntity : PlainNonEntityBase, IEntity
+        {
+            public string Id { get; set; }
+        }
+
         private class TestDbContext : DbContextWithTriggers
         {
             public TestDbContext(DbContextOptions options)
@@ -39,6 +51,8 @@ namespace VirtoCommerce.Platform.Caching.Tests
             public DbSet<TestDerivedEntity> DerivedEntities { get; set; }
 
             public DbSet<TestSiblingEntity> SiblingEntities { get; set; }
+
+            public DbSet<PlainIEntity> PlainEntities { get; set; }
         }
 
         private static readonly string[] _expectedTypeNames =
@@ -223,6 +237,20 @@ namespace VirtoCommerce.Platform.Caching.Tests
 
             // Assert
             Assert.Equal(_expectedTypeNames.Length, _cancelledTokenKeys.Count);
+        }
+
+        [Fact]
+        public void EntityImplementingIEntityDirectly_DoesNotAnnounceSystemObject()
+        {
+            // Arrange
+            using var context = CreateContext();
+            context.PlainEntities.Add(new PlainIEntity { Id = Guid.NewGuid().ToString("N") });
+
+            // Act
+            context.SaveChanges();
+
+            // Assert
+            Assert.Equal([TokenKeyOf<PlainIEntity>()], _cancelledTokenKeys);
         }
 
         [Fact]
