@@ -225,6 +225,37 @@ namespace VirtoCommerce.Platform.Caching.Tests
             Assert.Equal(_expectedTypeNames.Length, _cancelledTokenKeys.Count);
         }
 
+        [Fact]
+        public void SaveChangesFailed_ClearsDeduplicationSet_SoTheNextSuccessfulSaveAnnouncesAgain()
+        {
+            // Arrange
+            var databaseName = $"VCST-5566-{Guid.NewGuid():N}";
+            var duplicateId = Guid.NewGuid().ToString("N");
+
+            using (var seedContext = CreateContext(databaseName))
+            {
+                seedContext.DerivedEntities.Add(new TestDerivedEntity { Id = duplicateId, Name = "seed" });
+                seedContext.SaveChanges();
+            }
+
+            _cancelledTokenKeys.Clear();
+
+            using var context = CreateContext(databaseName);
+            context.DerivedEntities.Add(new TestDerivedEntity { Id = duplicateId, Name = "duplicate" });
+
+            // Act
+            Assert.NotNull(Record.Exception(() => context.SaveChanges()));
+            Assert.NotEmpty(_cancelledTokenKeys); // the failed attempt still ran the Inserting trigger
+
+            _cancelledTokenKeys.Clear();
+            context.ChangeTracker.Clear();
+            context.DerivedEntities.Add(NewEntity("after-failure"));
+            context.SaveChanges();
+
+            // Assert
+            Assert.Equal(_expectedTypeNames.Length, _cancelledTokenKeys.Count);
+        }
+
         private static string TokenKeyOf<T>()
         {
             return LastChangesCacheRegion.GenerateRegionTokenKey(typeof(T).FullName);
@@ -237,8 +268,13 @@ namespace VirtoCommerce.Platform.Caching.Tests
 
         private static TestDbContext CreateContext()
         {
+            return CreateContext($"VCST-5566-{Guid.NewGuid():N}");
+        }
+
+        private static TestDbContext CreateContext(string databaseName)
+        {
             var options = new DbContextOptionsBuilder()
-                .UseInMemoryDatabase($"VCST-5566-{Guid.NewGuid():N}")
+                .UseInMemoryDatabase(databaseName)
                 .Options;
 
             return new TestDbContext(options);
