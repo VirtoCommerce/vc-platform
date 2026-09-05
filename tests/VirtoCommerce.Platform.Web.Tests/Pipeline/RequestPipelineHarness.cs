@@ -34,12 +34,14 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
     public const string OpenPath = "/api/test/open";
     public const string ProtectedPath = "/api/test/protected";
 
-    // A deterministic body so AC40b can compare a whole response, not only its status code.
+    // A deterministic body so Configure_WithAStartupOverridingNeitherNewMember_ServesNormally can
+    // compare a whole response, not only its status code.
     public const string OpenPathBody = "harness-open";
 
     public const string TestScheme = "HarnessScheme";
     public const string CredentialHeader = "X-Harness-User";
     public const string PermissionClaimType = "harness-permission";
+    public const string PermissionHeader = "harness-permission";
     public const string RequiredPermission = "harness:allowed";
     public const string RequiredPolicy = "HarnessPolicy";
 
@@ -85,7 +87,9 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
             // CreateDefaultBuilder + ConfigureWebHostDefaults, because that is what Program.cs:88 does:
             // only the *Defaults* form registers ForwardedHeadersStartupFilter, which owns the effective
             // UseForwardedHeaders() call in production. Under a plain HostBuilder.ConfigureWebHost the
-            // segment's own call would become the effective one and AC17 would prove the wrong pipeline.
+            // segment's own call would become the effective one and
+            // ConfigureAfterRouting_OnAForwardedRequest_SeesTheResolvedClientAddress would prove the
+            // wrong pipeline.
             var host = await Host.CreateDefaultBuilder(Array.Empty<string>())
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
                 .UseTestServer()
@@ -257,7 +261,7 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
             }
 
             var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, userNames[0]) };
-            if (Request.Headers.ContainsKey(PermissionClaimType))
+            if (Request.Headers.ContainsKey(PermissionHeader))
             {
                 claims.Add(new Claim(PermissionClaimType, RequiredPermission));
             }
@@ -271,8 +275,9 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
 
 /// <summary>
 /// Every observation is nullable and starts null, so "the hook never ran" cannot be read as an
-/// observed false. AC15's first assertion is an observed false, which is exactly the case a
-/// non-nullable bool would let pass against a hook that is not in the pipeline at all.
+/// observed false. Configure_OnACredentialedRequest_TheTwoHooksStraddleAuthentication's first
+/// assertion is an observed false, which is exactly the case a non-nullable bool would let pass
+/// against a hook that is not in the pipeline at all.
 /// </summary>
 internal sealed class HookObservations
 {

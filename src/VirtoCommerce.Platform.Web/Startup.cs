@@ -897,7 +897,9 @@ namespace VirtoCommerce.Platform.Web
 
             // The principal is established and authorization has not run, so middleware here still sees
             // requests authorization is about to reject. Moving this call past UseAuthorization is a
-            // benign-looking edit that removes the whole reason for the hook; AC16 is what catches it.
+            // benign-looking edit that removes the whole reason for the hook;
+            // ConfigureAfterAuthentication_OnARequestAuthorizationRejects_IsStillInvokedAndTheResponseIs403
+            // is what catches it.
             ModuleBootstrapper.Instance.RunConfigureAfterAuthentication(app, configuration);
 
             app.UseAuthorization();

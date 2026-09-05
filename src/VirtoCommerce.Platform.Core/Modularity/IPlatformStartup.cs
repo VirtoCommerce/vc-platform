@@ -35,7 +35,8 @@ public interface IPlatformStartup
     void Configure(IApplicationBuilder app, IConfiguration config);
 
     /// <summary>
-    /// Called during Startup.Configure after the endpoint has been matched and before UseAuthentication.
+    /// Called during Startup.Configure after endpoint routing has run (the matched endpoint may be null)
+    /// and before UseAuthentication.
     /// Use for middleware that needs the matched endpoint but must run before the caller is authenticated.
     /// </summary>
     /// <remarks>
@@ -44,7 +45,8 @@ public interface IPlatformStartup
     void ConfigureAfterRouting(IApplicationBuilder app, IConfiguration config) { }
 
     /// <summary>
-    /// Called during Startup.Configure after the caller has been authenticated and before UseAuthorization.
+    /// Called during Startup.Configure after the authentication middleware has run (the caller may be
+    /// anonymous) and before UseAuthorization.
     /// Use for middleware that needs the authenticated principal and the matched endpoint, but must also
     /// observe requests that authorization is about to reject.
     /// </summary>

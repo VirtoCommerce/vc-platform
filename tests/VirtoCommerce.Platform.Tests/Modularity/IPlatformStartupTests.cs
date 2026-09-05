@@ -36,7 +36,8 @@ public class IPlatformStartupTests
         configureServices.IsAbstract.Should().BeTrue();
         configure.IsAbstract.Should().BeTrue();
 
-        // The runtime half of the default-implementation claim is AC40b, in Platform.Web.Tests: an
+        // The runtime half of the default-implementation claim is
+        // Configure_WithAStartupOverridingNeitherNewMember_ServesNormally, in Platform.Web.Tests: an
         // implementer overriding neither member serves a request unchanged.
         new LegacyPlatformStartup().Should().BeAssignableTo<IPlatformStartup>();
     }
