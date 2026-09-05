@@ -608,6 +608,22 @@ public class ModuleBootstrapper : IModuleService
         }
     }
 
+    public void RunConfigureAfterRouting(IApplicationBuilder applicationBuilder, IConfiguration configuration)
+    {
+        foreach (var startup in _startups)
+        {
+            startup.ConfigureAfterRouting(applicationBuilder, configuration);
+        }
+    }
+
+    public void RunConfigureAfterAuthentication(IApplicationBuilder applicationBuilder, IConfiguration configuration)
+    {
+        foreach (var startup in _startups)
+        {
+            startup.ConfigureAfterAuthentication(applicationBuilder, configuration);
+        }
+    }
+
     #endregion
 
     #region Private — Discovery

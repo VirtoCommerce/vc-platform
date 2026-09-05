@@ -33,4 +33,23 @@ public interface IPlatformStartup
     /// Called during Startup.Configure.
     /// </summary>
     void Configure(IApplicationBuilder app, IConfiguration config);
+
+    /// <summary>
+    /// Called during Startup.Configure after the endpoint has been matched and before UseAuthentication.
+    /// Use for middleware that needs the matched endpoint but must run before the caller is authenticated.
+    /// </summary>
+    /// <remarks>
+    /// Registered after the static-file and default-file middlewares, so requests those answer never reach it.
+    /// </remarks>
+    void ConfigureAfterRouting(IApplicationBuilder app, IConfiguration config) { }
+
+    /// <summary>
+    /// Called during Startup.Configure after the caller has been authenticated and before UseAuthorization.
+    /// Use for middleware that needs the authenticated principal and the matched endpoint, but must also
+    /// observe requests that authorization is about to reject.
+    /// </summary>
+    /// <remarks>
+    /// Registered after the static-file and default-file middlewares, so requests those answer never reach it.
+    /// </remarks>
+    void ConfigureAfterAuthentication(IApplicationBuilder app, IConfiguration config) { }
 }
