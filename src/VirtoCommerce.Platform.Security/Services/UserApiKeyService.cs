@@ -1,11 +1,14 @@
 using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Security.Caching;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -14,6 +17,11 @@ namespace VirtoCommerce.Platform.Security.Services
 {
     public class UserApiKeyService : IUserApiKeyService
     {
+        // Own key component rather than a prefix on the value: CacheKey.With joins positionally, so
+        // "0-<raw>" and "1-<digest>" cannot collide whatever the caller sends.
+        private const string RawKeyDiscriminator = "0";
+        private const string DigestedKeyDiscriminator = "1";
+
         private readonly Func<ISecurityRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
@@ -25,7 +33,7 @@ namespace VirtoCommerce.Platform.Security.Services
 
         public async Task<UserApiKey> GetApiKeyByKeyAsync(string apiKey)
         {
-            var cacheKey = CacheKey.With(GetType(), nameof(GetApiKeyByKeyAsync), apiKey);
+            var cacheKey = BuildApiKeyCacheKey(apiKey);
             return await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 //Add cache  expiration token
@@ -38,6 +46,27 @@ namespace VirtoCommerce.Platform.Security.Services
                     return result?.ToModel(AbstractTypeFactory<UserApiKey>.TryCreateInstance());
                 }
             });
+        }
+
+        private string BuildApiKeyCacheKey(string apiKey)
+        {
+            // The candidate goes into the cache key verbatim, so today its size is the caller's to
+            // choose and the entry is held for the whole expiration window. Above the stored column's
+            // length no key this platform issues can appear, so the digest branch is unreachable for a
+            // legitimate caller. It rejects nothing: the repository below is still queried with the
+            // candidate as presented, because SQL "=" ignores trailing spaces on some providers and a
+            // longer candidate can therefore match a stored row.
+            if (apiKey == null || apiKey.Length <= DbContextBase.Length128)
+            {
+                return CacheKey.With(GetType(), nameof(GetApiKeyByKeyAsync), RawKeyDiscriminator, apiKey);
+            }
+
+            // Lowercase hex, not Base64: CacheKey.Normalize lower-cases the whole key before it reaches
+            // the cache, and Base64 is case-sensitive, so case-folding it would merge digests that
+            // differ only in case. Hex survives normalization unchanged.
+            var digest = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(apiKey)));
+
+            return CacheKey.With(GetType(), nameof(GetApiKeyByKeyAsync), DigestedKeyDiscriminator, digest);
         }
 
         public async Task<UserApiKey[]> GetAllUserApiKeysAsync(string userId)
