@@ -11,6 +11,7 @@ using MockQueryable;
 using Moq;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -61,6 +62,50 @@ public class UserApiKeyServiceTests
         // At or below the threshold nothing changes: the key is the candidate, as it is today.
         cache.Keys.Should().HaveCount(1);
         cache.Keys[0].Should().Contain(CacheKey.Normalize(candidate));
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(16)]
+    [InlineData(36)]
+    [InlineData(44)]
+    [InlineData(127)]
+    [InlineData(128)]
+    public async Task GetApiKeyByKeyAsync_RawAndDigestedCandidates_CannotProduceTheSameCacheKey(int rawLength)
+    {
+        var raw = new string('k', rawLength);
+        var digested = new string('k', DbContextBase.Length128 + 1);
+
+        var rawCache = new RecordingPlatformMemoryCache();
+        await CreateService(rawCache).GetApiKeyByKeyAsync(raw);
+
+        var digestedCache = new RecordingPlatformMemoryCache();
+        await CreateService(digestedCache).GetApiKeyByKeyAsync(digested);
+
+        // The discriminator is its own key component, so the two namespaces cannot meet whatever the
+        // caller sends - a raw candidate cannot spell its way into the digested namespace.
+        rawCache.Keys[0].Should().NotBe(digestedCache.Keys[0]);
+        rawCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-0-"));
+        digestedCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-1-"));
+    }
+
+    [Fact]
+    public async Task GetApiKeyByKeyAsync_RawCandidateEqualsDigestOfALongerCandidate_CannotProduceTheSameCacheKey()
+    {
+        var longCandidate = new string('k', DbContextBase.Length128 + 1);
+        var rawCandidateThatLooksLikeADigest = Digest(longCandidate);
+
+        var rawCache = new RecordingPlatformMemoryCache();
+        await CreateService(rawCache).GetApiKeyByKeyAsync(rawCandidateThatLooksLikeADigest);
+
+        var digestedCache = new RecordingPlatformMemoryCache();
+        await CreateService(digestedCache).GetApiKeyByKeyAsync(longCandidate);
+
+        // The adversarial shape: a raw candidate that IS another candidate's digest string. The
+        // discriminator still keeps the two namespaces apart even here.
+        rawCache.Keys[0].Should().NotBe(digestedCache.Keys[0]);
+        rawCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-0-"));
+        digestedCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-1-"));
     }
 
     private static string Digest(string value)
