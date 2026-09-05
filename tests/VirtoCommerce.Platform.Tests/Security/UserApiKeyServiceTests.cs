@@ -108,10 +108,19 @@ public class UserApiKeyServiceTests
         digestedCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-1-"));
     }
 
-    [Fact]
-    public async Task GetApiKeyByKeyAsync_MissingKey_CachesTheNegativeResultWithA30SecondAbsoluteExpirationAndNoSliding()
+    [Theory]
+    [InlineData(null, 30)]
+    [InlineData(5, 5)]
+    [InlineData(60, 30)]
+    public async Task GetApiKeyByKeyAsync_MissingKey_ClampsTheNegativeEntryToTheShorterOfThirtySecondsAndTheConfiguredAbsolute(int? configuredAbsoluteSeconds, int expectedAbsoluteSeconds)
     {
-        var cache = new RecordingPlatformMemoryCache();
+        var options = new CachingOptions { CacheEnabled = true };
+        if (configuredAbsoluteSeconds.HasValue)
+        {
+            options.CacheAbsoluteExpiration = TimeSpan.FromSeconds(configuredAbsoluteSeconds.Value);
+        }
+
+        var cache = new RecordingPlatformMemoryCache(options);
         var service = CreateService(cache);
 
         var result = await service.GetApiKeyByKeyAsync("no-such-key");
@@ -119,9 +128,11 @@ public class UserApiKeyServiceTests
         result.Should().BeNull();
 
         // The miss is still cached - not caching it would turn every repeat of one guessed key into
-        // a query against a store shared with every other module.
+        // a query against a store shared with every other module. The clamp holds across no configured
+        // absolute, a shorter one, and a longer one: the change reduces residency and must never
+        // extend it.
         cache.Entries.Should().HaveCount(1);
-        cache.Entries[0].AbsoluteExpirationRelativeToNow.Should().Be(TimeSpan.FromSeconds(30));
+        cache.Entries[0].AbsoluteExpirationRelativeToNow.Should().Be(TimeSpan.FromSeconds(expectedAbsoluteSeconds));
 
         // Absolute, not sliding: sliding is what lets a repeated guess of one key live indefinitely.
         cache.Entries[0].SlidingExpiration.Should().BeNull();
@@ -147,25 +158,6 @@ public class UserApiKeyServiceTests
         cache.Entries.Should().HaveCount(1);
         cache.Entries[0].AbsoluteExpirationRelativeToNow.Should().BeNull();
         cache.Entries[0].SlidingExpiration.Should().Be(TimeSpan.FromMinutes(15));
-    }
-
-    [Fact]
-    public async Task GetApiKeyByKeyAsync_MissingKeyUnderAShorterConfiguredAbsoluteExpiration_KeepsTheShorterOne()
-    {
-        var cache = new RecordingPlatformMemoryCache(new CachingOptions
-        {
-            CacheEnabled = true,
-            CacheAbsoluteExpiration = TimeSpan.FromSeconds(5),
-        });
-        var service = CreateService(cache);
-
-        await service.GetApiKeyByKeyAsync("no-such-key");
-
-        // The change reduces residency; it must never extend it. Without the clamp this entry would
-        // be lengthened from five seconds to thirty by a change whose whole argument is a reduction.
-        cache.Entries.Should().HaveCount(1);
-        cache.Entries[0].AbsoluteExpirationRelativeToNow.Should().Be(TimeSpan.FromSeconds(5));
-        cache.Entries[0].SlidingExpiration.Should().BeNull();
     }
 
     private static string Digest(string value)

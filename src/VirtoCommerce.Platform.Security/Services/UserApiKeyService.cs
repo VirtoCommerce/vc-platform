@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Security.Services
                                                         .FirstOrDefaultAsync();
                     if (result == null)
                     {
-                        // A miss is keyed on a string the caller chooses, and it will never be read
+                        // A miss is keyed on a string the caller chooses, and it is unlikely to be read
                         // again - a guess has to be novel to be worth making - so the entry is pure
                         // residency. Absolute rather than sliding: sliding is what would let one
                         // repeated guess stay resident indefinitely. Clamped rather than assigned,
@@ -64,12 +64,10 @@ namespace VirtoCommerce.Platform.Security.Services
 
         private string BuildApiKeyCacheKey(string apiKey)
         {
-            // The candidate goes into the cache key verbatim, so today its size is the caller's to
-            // choose and the entry is held for the whole expiration window. Above the stored column's
-            // length no key this platform issues can appear, so the digest branch is unreachable for a
-            // legitimate caller. It rejects nothing: the repository below is still queried with the
-            // candidate as presented, because SQL "=" ignores trailing spaces on some providers and a
-            // longer candidate can therefore match a stored row.
+            // Above the stored column's length no key this platform issues can appear, so the digest
+            // branch is unreachable for a legitimate caller. It rejects nothing: the repository is
+            // still queried with the candidate as presented, because SQL "=" ignores trailing spaces
+            // on some providers and a longer candidate can therefore match a stored row.
             if (apiKey == null || apiKey.Length <= DbContextBase.Length128)
             {
                 return CacheKey.With(GetType(), nameof(GetApiKeyByKeyAsync), RawKeyDiscriminator, apiKey);
