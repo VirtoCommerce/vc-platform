@@ -22,6 +22,8 @@ namespace VirtoCommerce.Platform.Security.Services
         private const string RawKeyDiscriminator = "0";
         private const string DigestedKeyDiscriminator = "1";
 
+        private static readonly TimeSpan _missingApiKeyExpiration = TimeSpan.FromSeconds(30);
+
         private readonly Func<ISecurityRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
@@ -43,6 +45,18 @@ namespace VirtoCommerce.Platform.Security.Services
                     var result = await repository.UserApiKeys.Where(x => x.ApiKey == apiKey)
                                                         .AsNoTracking()
                                                         .FirstOrDefaultAsync();
+                    if (result == null)
+                    {
+                        // A miss is keyed on a string the caller chooses, and it will never be read
+                        // again - a guess has to be novel to be worth making - so the entry is pure
+                        // residency. Absolute rather than sliding: sliding is what would let one
+                        // repeated guess stay resident indefinitely. Clamped rather than assigned,
+                        // because a deployment configuring CacheAbsoluteExpiration below this would
+                        // otherwise have its negative entries lengthened by the change.
+                        cacheEntry.AbsoluteExpirationRelativeToNow = ShorterOf(cacheEntry.AbsoluteExpirationRelativeToNow, _missingApiKeyExpiration);
+                        cacheEntry.SlidingExpiration = null;
+                    }
+
                     return result?.ToModel(AbstractTypeFactory<UserApiKey>.TryCreateInstance());
                 }
             });
@@ -67,6 +81,11 @@ namespace VirtoCommerce.Platform.Security.Services
             var digest = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(apiKey)));
 
             return CacheKey.With(GetType(), nameof(GetApiKeyByKeyAsync), DigestedKeyDiscriminator, digest);
+        }
+
+        private static TimeSpan ShorterOf(TimeSpan? configured, TimeSpan bound)
+        {
+            return configured.HasValue && configured.Value < bound ? configured.Value : bound;
         }
 
         public async Task<UserApiKey[]> GetAllUserApiKeysAsync(string userId)
