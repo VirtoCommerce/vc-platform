@@ -7,10 +7,10 @@ using VirtoCommerce.Platform.Core.Modularity;
 namespace VirtoCommerce.Platform.Web.Tests.Pipeline;
 
 /// <summary>
-/// Every implementer that existed before the hooks is in exactly this state, which is
+/// Every implementer that overrides neither hook is in exactly this state, which is
 /// what the default-implementation form puts at risk platform-wide.
 /// </summary>
-internal sealed class LegacyPlatformStartup : IPlatformStartup
+internal sealed class NoHookPlatformStartup : IPlatformStartup
 {
     public void ConfigureAppConfiguration(IConfigurationBuilder builder, IHostEnvironment env) { }
 

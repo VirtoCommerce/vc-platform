@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity;
 public class IPlatformStartupTests
 {
     [Fact]
-    public void IPlatformStartup_TheTwoNewMembers_DeclareDefaultsAndNeedNoOverride()
+    public void IPlatformStartup_ConfigureAfterRoutingAndAfterAuthentication_DeclareDefaults()
     {
         var afterRouting = typeof(IPlatformStartup).GetMethod(nameof(IPlatformStartup.ConfigureAfterRouting));
         var afterAuthentication = typeof(IPlatformStartup).GetMethod(nameof(IPlatformStartup.ConfigureAfterAuthentication));
@@ -18,7 +18,7 @@ public class IPlatformStartupTests
         afterRouting.IsAbstract.Should().BeFalse();
         afterAuthentication.IsAbstract.Should().BeFalse();
 
-        // The four pre-existing members stay abstract: adding a default to one of those would let an
+        // The four members without a default stay abstract: adding a default to one of those would let an
         // implementer silently stop participating in a phase it used to participate in.
         var configureAppConfiguration = typeof(IPlatformStartup).GetMethod(nameof(IPlatformStartup.ConfigureAppConfiguration));
         var configureHostServices = typeof(IPlatformStartup).GetMethod(nameof(IPlatformStartup.ConfigureHostServices));
@@ -36,8 +36,8 @@ public class IPlatformStartupTests
         configure.IsAbstract.Should().BeTrue();
 
         // The runtime half of the default-implementation claim is
-        // Configure_WithAStartupOverridingNeitherNewMember_ServesNormally, in Platform.Web.Tests: an
+        // Configure_WithAStartupOverridingNeitherHook_ServesNormally, in Platform.Web.Tests: an
         // implementer overriding neither member serves a request unchanged.
-        new LegacyPlatformStartup().Should().BeAssignableTo<IPlatformStartup>();
+        new NoHookPlatformStartup().Should().BeAssignableTo<IPlatformStartup>();
     }
 }

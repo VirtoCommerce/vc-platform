@@ -18,7 +18,7 @@ public class ModuleBootstrapperTests
         var first = new CountingPlatformStartup();
         var second = new CountingPlatformStartup();
         bootstrapper.Startups.Add(first);
-        bootstrapper.Startups.Add(new LegacyPlatformStartup());
+        bootstrapper.Startups.Add(new NoHookPlatformStartup());
         bootstrapper.Startups.Add(second);
 
         var app = Mock.Of<IApplicationBuilder>();

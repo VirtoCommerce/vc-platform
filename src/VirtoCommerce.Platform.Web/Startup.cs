@@ -830,7 +830,7 @@ namespace VirtoCommerce.Platform.Web
 
         /// <summary>
         /// The stretch of the request pipeline from forwarded-header resolution through authorization,
-        /// including the two <see cref="IPlatformStartup"/> hook calls.
+        /// including the <see cref="IPlatformStartup"/> hook calls.
         /// </summary>
         public static void ConfigureRequestPipeline(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {

@@ -96,22 +96,22 @@ public class StartupRequestPipelineTests
     }
 
     [Fact]
-    public async Task Configure_WithAStartupOverridingNeitherNewMember_ServesNormally()
+    public async Task Configure_WithAStartupOverridingNeitherHook_ServesNormally()
     {
-        var withoutLegacy = await SendOpenRequestAsync(extraStartup: null);
-        var withLegacy = await SendOpenRequestAsync(extraStartup: new LegacyPlatformStartup());
+        var baseline = await SendOpenRequestAsync(extraStartup: null);
+        var withNoHook = await SendOpenRequestAsync(extraStartup: new NoHookPlatformStartup());
 
         // "Unchanged" is a comparison, not a status code: a default implementation that added a header
         // or altered the body would leave a status-only assertion green.
-        withLegacy.Status.Should().Be(withoutLegacy.Status);
-        withLegacy.Status.Should().Be(StatusCodes.Status200OK);
-        withLegacy.Body.Should().Be(withoutLegacy.Body);
-        withLegacy.Body.Should().Be(RequestPipelineHarness.OpenPathBody);
-        withLegacy.Headers.Should().BeEquivalentTo(withoutLegacy.Headers);
+        withNoHook.Status.Should().Be(baseline.Status);
+        withNoHook.Status.Should().Be(StatusCodes.Status200OK);
+        withNoHook.Body.Should().Be(baseline.Body);
+        withNoHook.Body.Should().Be(RequestPipelineHarness.OpenPathBody);
+        withNoHook.Headers.Should().BeEquivalentTo(baseline.Headers);
 
         // The legacy one did not short-circuit the loop.
-        withLegacy.AfterRoutingInvocations.Should().Be(1);
-        withLegacy.AfterAuthenticationInvocations.Should().Be(1);
+        withNoHook.AfterRoutingInvocations.Should().Be(1);
+        withNoHook.AfterAuthenticationInvocations.Should().Be(1);
     }
 
     private static async Task<(int Status, string Body, IDictionary<string, string> Headers, int AfterRoutingInvocations, int AfterAuthenticationInvocations)>

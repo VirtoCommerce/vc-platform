@@ -8,10 +8,10 @@ namespace VirtoCommerce.Platform.Tests.Modularity;
 
 /// <summary>
 /// Its existence is the compile-time half of
-/// <c>IPlatformStartup_TheTwoNewMembers_DeclareDefaultsAndNeedNoOverride</c>: if either new member
+/// <c>IPlatformStartup_ConfigureAfterRoutingAndAfterAuthentication_DeclareDefaults</c>: if either hook
 /// lacked a default implementation, this class would not compile.
 /// </summary>
-public class LegacyPlatformStartup : IPlatformStartup
+public class NoHookPlatformStartup : IPlatformStartup
 {
     public void ConfigureAppConfiguration(IConfigurationBuilder builder, IHostEnvironment env) { }
 
