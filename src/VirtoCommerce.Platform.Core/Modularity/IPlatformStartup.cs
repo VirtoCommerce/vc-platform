@@ -9,10 +9,6 @@ namespace VirtoCommerce.Platform.Core.Modularity;
 /// Allows modules to participate in platform startup phases before the standard IModule lifecycle.
 /// Implementations are discovered via the startupType element in module.manifest.
 /// </summary>
-/// <remarks>
-/// Both ConfigureAfterRouting and ConfigureAfterAuthentication are registered after the static-file and
-/// default-file middlewares, so requests those answer never reach them.
-/// </remarks>
 public interface IPlatformStartup
 {
     /// <summary>
@@ -39,17 +35,29 @@ public interface IPlatformStartup
     void Configure(IApplicationBuilder app, IConfiguration config);
 
     /// <summary>
-    /// Called during Startup.Configure after endpoint routing has run (the matched endpoint may be null)
-    /// and before UseAuthentication.
-    /// Use for middleware that needs the matched endpoint but must run before the caller is authenticated.
+    /// Called during Startup.Configure after UseRouting, UseStaticFiles and UseModulesAndAppsFiles, and before
+    /// UseAuthentication: the endpoint is matched (HttpContext.GetEndpoint() is still null when no route
+    /// matched) and the caller is not yet authenticated.
+    /// Use for middleware that needs the matched endpoint but must run before authentication.
     /// </summary>
+    /// <remarks>
+    /// Requests for platform and module static files never get here: UseStaticFiles and
+    /// UseModulesAndAppsFiles serve the file and end the request first. Middleware registered here sees
+    /// API and page requests, not scripts, styles or images.
+    /// </remarks>
     void ConfigureAfterRouting(IApplicationBuilder app, IConfiguration config) { }
 
     /// <summary>
-    /// Called during Startup.Configure after the authentication middleware has run (the caller may be
-    /// anonymous) and before UseAuthorization.
-    /// Use for middleware that needs the authenticated principal and the matched endpoint, but must also
-    /// observe requests that authorization is about to reject.
+    /// Called during Startup.Configure after UseAuthentication and UseAccountLockoutMiddleware, and before
+    /// UseAuthorization: HttpContext.User is set (it may be anonymous) and authorization has not run yet, so
+    /// the requests it is about to reject with 401 or 403 are still visible here.
+    /// Use for middleware that needs the principal and the matched endpoint and must also see the requests
+    /// authorization rejects.
     /// </summary>
+    /// <remarks>
+    /// Requests for platform and module static files never get here: UseStaticFiles and
+    /// UseModulesAndAppsFiles serve the file and end the request first. Middleware registered here sees
+    /// API and page requests, not scripts, styles or images.
+    /// </remarks>
     void ConfigureAfterAuthentication(IApplicationBuilder app, IConfiguration config) { }
 }
