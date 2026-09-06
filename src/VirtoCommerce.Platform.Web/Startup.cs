@@ -830,14 +830,11 @@ namespace VirtoCommerce.Platform.Web
 
         /// <summary>
         /// The stretch of the request pipeline from forwarded-header resolution through authorization,
-        /// including the two <see cref="IPlatformStartup"/> hook calls. Extracted so the shipped
-        /// composition — not a mirror of it — is what the test suite drives: a harness can call this on
-        /// an <see cref="IApplicationBuilder"/> of its own, whereas <see cref="Configure"/> itself
-        /// migrates two databases inside a distributed lock and needs a live server to run at all.
+        /// including the two <see cref="IPlatformStartup"/> hook calls.
         /// </summary>
         public static void ConfigureRequestPipeline(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
-            // Engages the forwarded header support in the pipeline  (see description above)
+            // Engages the forwarded header support in the pipeline
             app.UseForwardedHeaders();
 
             app.UseHttpsRedirection();
@@ -886,20 +883,16 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseDefaultFiles();
 
-            // The matched endpoint is available here and the caller is not yet authenticated. Placed after
-            // UseDefaultFiles rather than after UseRouting so nothing here runs on requests the static-file
-            // middlewares answer themselves.
+            // Placed after UseDefaultFiles rather than after UseRouting so nothing here runs on requests
+            // the static-file middlewares answer themselves.
             ModuleBootstrapper.Instance.RunConfigureAfterRouting(app, configuration);
 
             app.UseAuthentication();
 
             app.UseAccountLockoutMiddleware(platformOptions.ApplicationCookieName);
 
-            // The principal is established and authorization has not run, so middleware here still sees
-            // requests authorization is about to reject. Moving this call past UseAuthorization is a
-            // benign-looking edit that removes the whole reason for the hook;
-            // ConfigureAfterAuthentication_OnARequestAuthorizationRejects_IsStillInvokedAndTheResponseIs403
-            // is what catches it.
+            // Moving this call past UseAuthorization is caught by
+            // ConfigureAfterAuthentication_OnARequestAuthorizationRejects_IsStillInvokedAndTheResponseIs403.
             ModuleBootstrapper.Instance.RunConfigureAfterAuthentication(app, configuration);
 
             app.UseAuthorization();

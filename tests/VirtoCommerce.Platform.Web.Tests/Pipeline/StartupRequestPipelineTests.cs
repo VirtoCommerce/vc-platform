@@ -12,9 +12,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Pipeline;
 
 /// <summary>
 /// Observes what a middleware registered through each IPlatformStartup hook can see, by driving the
-/// extracted pipeline segment. Adjacency itself is not observable — a probe can show that a hook ran
-/// before authentication, never that nothing ran in between — so these assert the properties the
-/// positions exist for.
+/// extracted pipeline segment.
 /// </summary>
 [Collection(PlatformPipelineCollection.Name)]
 public class StartupRequestPipelineTests
@@ -91,8 +89,8 @@ public class StartupRequestPipelineTests
             context.Request.Headers["X-Forwarded-For"] = "203.0.113.7";
         });
 
-        // Relative position, not the identity of a trusted peer: with forwarding enabled the platform
-        // clears both trust lists, so there is no specially trusted peer to send a request from.
+        // With forwarding enabled the platform clears both trust lists, so there is no specially
+        // trusted peer to send a request from.
         harness.AfterRouting.RemoteIpAddress.Should().Be(IPAddress.Parse("203.0.113.7"));
         harness.AfterRouting.RemoteIpAddress.Should().NotBe(IPAddress.Parse("10.0.0.1"));
     }
@@ -111,8 +109,7 @@ public class StartupRequestPipelineTests
         withLegacy.Body.Should().Be(RequestPipelineHarness.OpenPathBody);
         withLegacy.Headers.Should().BeEquivalentTo(withoutLegacy.Headers);
 
-        // No exception escaped the bootstrapper's foreach, and the recording startup - which does
-        // override both - still ran, so the legacy one did not short-circuit the loop.
+        // The legacy one did not short-circuit the loop.
         withLegacy.AfterRoutingInvocations.Should().Be(1);
         withLegacy.AfterAuthenticationInvocations.Should().Be(1);
     }

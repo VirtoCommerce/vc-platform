@@ -26,16 +26,13 @@ namespace VirtoCommerce.Platform.Web.Tests.Pipeline;
 /// <summary>
 /// Drives <see cref="Startup.ConfigureRequestPipeline"/> — the shipped composition of the segment the
 /// two IPlatformStartup hooks live in — over a TestServer, and records what a middleware registered
-/// through each hook can observe. What this cannot see is the call site in Startup.Configure itself;
-/// that stays a requirement on the code, stated in the pull request description.
+/// through each hook can observe.
 /// </summary>
 internal sealed class RequestPipelineHarness : IAsyncDisposable
 {
     public const string OpenPath = "/api/test/open";
     public const string ProtectedPath = "/api/test/protected";
 
-    // A deterministic body so Configure_WithAStartupOverridingNeitherNewMember_ServesNormally can
-    // compare a whole response, not only its status code.
     public const string OpenPathBody = "harness-open";
 
     public const string TestScheme = "HarnessScheme";
@@ -48,12 +45,9 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
     private readonly string _contentRoot;
     private readonly ModuleBootstrapper _previousBootstrapper;
 
-    // Assigned once, after StartAsync has built the host. It cannot be readonly and it cannot be a
-    // constructor parameter: the probe startups must already hold a reference to THIS instance while the
-    // host is being built, because Configure runs during HostBuilder.StartAsync and registers the
-    // recording middlewares against it. Handing the host to a second instance instead - and copying the
-    // observations over - looks tidier and is wrong: the middlewares would keep writing to the first
-    // instance, and every assertion would read a copy taken before any request ran.
+    // Assigned once, after StartAsync has built the host: the probe startups must already hold a
+    // reference to THIS instance while the host is being built, because Configure runs during
+    // HostBuilder.StartAsync and registers the recording middlewares against it.
     private IHost _host;
 
     private RequestPipelineHarness(string contentRoot, ModuleBootstrapper previousBootstrapper)
@@ -155,10 +149,6 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
         return _host.GetTestServer().SendAsync(configure);
     }
 
-    /// <summary>
-    /// Reads the body TestServer captured. Rewinds first, because whether the stream is left at the end
-    /// is an implementation detail of the host rather than a contract.
-    /// </summary>
     public static async Task<string> ReadBodyAsync(HttpContext context)
     {
         var body = context.Response.Body;
@@ -275,9 +265,7 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
 
 /// <summary>
 /// Every observation is nullable and starts null, so "the hook never ran" cannot be read as an
-/// observed false. Configure_OnACredentialedRequest_TheTwoHooksStraddleAuthentication's first
-/// assertion is an observed false, which is exactly the case a non-nullable bool would let pass
-/// against a hook that is not in the pipeline at all.
+/// observed false.
 /// </summary>
 internal sealed class HookObservations
 {

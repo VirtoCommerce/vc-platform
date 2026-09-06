@@ -3,10 +3,6 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Web.Tests.Pipeline;
 
-/// <summary>
-/// Sets the variable AddForwardedHeaders reads at ConfigureServices time, for every class in the
-/// collection, and puts the previous value back when the collection finishes.
-/// </summary>
 public sealed class ForwardedHeadersEnvironmentFixture : IDisposable
 {
     public const string VariableName = "ASPNETCORE_FORWARDEDHEADERS_ENABLED";

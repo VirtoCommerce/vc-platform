@@ -47,12 +47,6 @@ namespace VirtoCommerce.Platform.Security.Services
                                                         .FirstOrDefaultAsync();
                     if (result == null)
                     {
-                        // A miss is keyed on a string the caller chooses, and it is unlikely to be read
-                        // again - a guess has to be novel to be worth making - so the entry is pure
-                        // residency. Absolute rather than sliding: sliding is what would let one
-                        // repeated guess stay resident indefinitely. Clamped rather than assigned,
-                        // because a deployment configuring CacheAbsoluteExpiration below this would
-                        // otherwise have its negative entries lengthened by the change.
                         cacheEntry.AbsoluteExpirationRelativeToNow = ShorterOf(cacheEntry.AbsoluteExpirationRelativeToNow, _missingApiKeyExpiration);
                         cacheEntry.SlidingExpiration = null;
                     }
@@ -64,18 +58,14 @@ namespace VirtoCommerce.Platform.Security.Services
 
         private string BuildApiKeyCacheKey(string apiKey)
         {
-            // Above the stored column's length no key this platform issues can appear, so the digest
-            // branch is unreachable for a legitimate caller. It rejects nothing: the repository is
-            // still queried with the candidate as presented, because SQL "=" ignores trailing spaces
-            // on some providers and a longer candidate can therefore match a stored row.
+            // The threshold is the ApiKey column's HasMaxLength; the repository is still queried with the
+            // candidate as presented.
             if (apiKey == null || apiKey.Length <= DbContextBase.Length128)
             {
                 return CacheKey.With(GetType(), nameof(GetApiKeyByKeyAsync), RawKeyDiscriminator, apiKey);
             }
 
-            // Lowercase hex, not Base64: CacheKey.Normalize lower-cases the whole key before it reaches
-            // the cache, and Base64 is case-sensitive, so case-folding it would merge digests that
-            // differ only in case. Hex survives normalization unchanged.
+            // Hex, not Base64: CacheKey.Normalize lower-cases the key downstream.
             var digest = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(apiKey)));
 
             return CacheKey.With(GetType(), nameof(GetApiKeyByKeyAsync), DigestedKeyDiscriminator, digest);

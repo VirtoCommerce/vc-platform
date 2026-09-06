@@ -7,8 +7,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 namespace VirtoCommerce.Platform.Tests.Modularity;
 
 /// <summary>
-/// Implements the four members the interface declared before the two hooks were added, and
-/// overrides neither new one. Its existence is the compile-time half of
+/// Its existence is the compile-time half of
 /// <c>IPlatformStartup_TheTwoNewMembers_DeclareDefaultsAndNeedNoOverride</c>: if either new member
 /// lacked a default implementation, this class would not compile.
 /// </summary>

@@ -15,7 +15,6 @@ public class IPlatformStartupTests
         afterRouting.Should().NotBeNull();
         afterAuthentication.Should().NotBeNull();
 
-        // A default implementation on an interface member compiles to a non-abstract method body.
         afterRouting.IsAbstract.Should().BeFalse();
         afterAuthentication.IsAbstract.Should().BeFalse();
 

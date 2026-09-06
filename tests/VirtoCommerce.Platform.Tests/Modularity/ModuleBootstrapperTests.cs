@@ -14,8 +14,6 @@ public class ModuleBootstrapperTests
     [Fact]
     public void ModuleBootstrapper_WithSeveralPlatformStartups_InvokesEachHookOncePerImplementation()
     {
-        // Startups is get-only but returns the live list, and the constructor and Instance are both
-        // public, so a test populates the bootstrapper without any new seam.
         var bootstrapper = new ModuleBootstrapper(NullLoggerFactory.Instance, new LocalStorageModuleCatalogOptions());
         var first = new CountingPlatformStartup();
         var second = new CountingPlatformStartup();

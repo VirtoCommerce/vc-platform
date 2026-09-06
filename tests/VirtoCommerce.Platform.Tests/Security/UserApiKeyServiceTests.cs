@@ -37,8 +37,6 @@ public class UserApiKeyServiceTests
 
         var result = await service.GetApiKeyByKeyAsync(candidate);
 
-        // The repository is queried with the candidate exactly as presented, so a stored row that
-        // equals it is still found. The digest changes the cache key, not the outcome.
         result.Should().NotBeNull();
         result.Id.Should().Be("the-row");
 
@@ -59,7 +57,6 @@ public class UserApiKeyServiceTests
 
         await service.GetApiKeyByKeyAsync(candidate);
 
-        // At or below the threshold nothing changes: the key is the candidate, as it is today.
         cache.Keys.Should().HaveCount(1);
         cache.Keys[0].Should().Contain(CacheKey.Normalize(candidate));
     }
@@ -82,8 +79,6 @@ public class UserApiKeyServiceTests
         var digestedCache = new RecordingPlatformMemoryCache();
         await CreateService(digestedCache).GetApiKeyByKeyAsync(digested);
 
-        // The discriminator is its own key component, so the two namespaces cannot meet whatever the
-        // caller sends - a raw candidate cannot spell its way into the digested namespace.
         rawCache.Keys[0].Should().NotBe(digestedCache.Keys[0]);
         rawCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-0-"));
         digestedCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-1-"));
@@ -101,8 +96,6 @@ public class UserApiKeyServiceTests
         var digestedCache = new RecordingPlatformMemoryCache();
         await CreateService(digestedCache).GetApiKeyByKeyAsync(longCandidate);
 
-        // The adversarial shape: a raw candidate that IS another candidate's digest string. The
-        // discriminator still keeps the two namespaces apart even here.
         rawCache.Keys[0].Should().NotBe(digestedCache.Keys[0]);
         rawCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-0-"));
         digestedCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-1-"));
@@ -127,10 +120,6 @@ public class UserApiKeyServiceTests
 
         result.Should().BeNull();
 
-        // The miss is still cached - not caching it would turn every repeat of one guessed key into
-        // a query against a store shared with every other module. The clamp holds across no configured
-        // absolute, a shorter one, and a longer one: the change reduces residency and must never
-        // extend it.
         cache.Entries.Should().HaveCount(1);
         cache.Entries[0].AbsoluteExpirationRelativeToNow.Should().Be(TimeSpan.FromSeconds(expectedAbsoluteSeconds));
 
@@ -154,7 +143,6 @@ public class UserApiKeyServiceTests
 
         result.Should().NotBeNull();
 
-        // The bound is on the negative entry only: a hit keeps whatever the deployment configures.
         cache.Entries.Should().HaveCount(1);
         cache.Entries[0].AbsoluteExpirationRelativeToNow.Should().BeNull();
         cache.Entries[0].SlidingExpiration.Should().Be(TimeSpan.FromMinutes(15));
@@ -173,10 +161,6 @@ public class UserApiKeyServiceTests
         return new UserApiKeyService(() => repository.Object, cache);
     }
 
-    /// <summary>
-    /// Records the key and the entry of every cache write. GetOrCreateExclusiveAsync writes through
-    /// IMemoryCache.Set, which goes through CreateEntry, so overriding that one member captures both.
-    /// </summary>
     private sealed class RecordingPlatformMemoryCache : PlatformMemoryCache
     {
         public RecordingPlatformMemoryCache()
@@ -196,6 +180,8 @@ public class UserApiKeyServiceTests
 
         public List<ICacheEntry> Entries { get; } = [];
 
+        // GetOrCreateExclusiveAsync writes through IMemoryCache.Set, which goes through CreateEntry, so
+        // overriding that one member captures both.
         public override ICacheEntry CreateEntry(object key)
         {
             Keys.Add(key.ToString());

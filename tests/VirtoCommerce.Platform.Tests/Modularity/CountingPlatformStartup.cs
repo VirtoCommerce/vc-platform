@@ -6,10 +6,6 @@ using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Tests.Modularity;
 
-/// <summary>
-/// Overrides both new hooks and counts the calls. The four pre-existing members are required, so
-/// they are implemented and left empty.
-/// </summary>
 public class CountingPlatformStartup : IPlatformStartup
 {
     public int AfterRoutingCalls { get; private set; }

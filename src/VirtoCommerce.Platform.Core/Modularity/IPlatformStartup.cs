@@ -9,6 +9,10 @@ namespace VirtoCommerce.Platform.Core.Modularity;
 /// Allows modules to participate in platform startup phases before the standard IModule lifecycle.
 /// Implementations are discovered via the startupType element in module.manifest.
 /// </summary>
+/// <remarks>
+/// Both ConfigureAfterRouting and ConfigureAfterAuthentication are registered after the static-file and
+/// default-file middlewares, so requests those answer never reach them.
+/// </remarks>
 public interface IPlatformStartup
 {
     /// <summary>
@@ -39,9 +43,6 @@ public interface IPlatformStartup
     /// and before UseAuthentication.
     /// Use for middleware that needs the matched endpoint but must run before the caller is authenticated.
     /// </summary>
-    /// <remarks>
-    /// Registered after the static-file and default-file middlewares, so requests those answer never reach it.
-    /// </remarks>
     void ConfigureAfterRouting(IApplicationBuilder app, IConfiguration config) { }
 
     /// <summary>
@@ -50,8 +51,5 @@ public interface IPlatformStartup
     /// Use for middleware that needs the authenticated principal and the matched endpoint, but must also
     /// observe requests that authorization is about to reject.
     /// </summary>
-    /// <remarks>
-    /// Registered after the static-file and default-file middlewares, so requests those answer never reach it.
-    /// </remarks>
     void ConfigureAfterAuthentication(IApplicationBuilder app, IConfiguration config) { }
 }

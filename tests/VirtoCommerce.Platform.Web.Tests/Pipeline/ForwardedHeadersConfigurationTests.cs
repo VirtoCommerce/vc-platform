@@ -14,12 +14,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Pipeline;
 
 /// <summary>
 /// The half of the client-address property that has nothing to do with where a hook sits: whether the
-/// resolved address is the nearest proxy's attestation or the caller's own claim. ForwardLimit truncates
-/// before the set is built and the set is filled from the end, so the last entry wins - as long as some
-/// layer appends one. The configuration under test is the platform's own AddForwardedHeaders, so the
-/// test reddens if it stops clearing the trust lists or starts setting ForwardLimit. This is the
-/// criterion to point a reviewer at when they ask why the trust lists being cleared is not the end of
-/// the analysis.
+/// resolved address is the nearest proxy's attestation or the caller's own claim.
 /// </summary>
 [Collection(PlatformPipelineCollection.Name)]
 public class ForwardedHeadersConfigurationTests
