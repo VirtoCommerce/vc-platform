@@ -891,8 +891,9 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseAccountLockoutMiddleware(platformOptions.ApplicationCookieName);
 
-            // Moving this call past UseAuthorization is caught by
-            // ConfigureAfterAuthentication_OnARequestAuthorizationRejects_IsStillInvokedAndTheResponseIs403.
+            // Before UseAuthorization, not after: authorization short-circuits the requests it rejects, so a hook
+            // placed later would see only the requests that passed. Moving this call past UseAuthorization is
+            // caught by ConfigureAfterAuthentication_OnARequestAuthorizationRejects_IsStillInvokedAndTheResponseIs403.
             ModuleBootstrapper.Instance.RunConfigureAfterAuthentication(app, configuration);
 
             app.UseAuthorization();

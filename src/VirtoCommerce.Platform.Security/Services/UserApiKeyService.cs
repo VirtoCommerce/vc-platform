@@ -47,6 +47,11 @@ namespace VirtoCommerce.Platform.Security.Services
                                                         .FirstOrDefaultAsync();
                     if (result == null)
                     {
+                        // A miss is keyed on a string the caller chooses, so its entry must not be renewable
+                        // from outside. Clamped, not assigned: a deployment configuring CacheAbsoluteExpiration
+                        // below this bound must not have its negative entries lengthened. Nulled, not left
+                        // alone: the entry arrives sliding-only, and a sliding window shorter than the bound
+                        // would drop the entry between probes and send every probe back to the repository.
                         cacheEntry.AbsoluteExpirationRelativeToNow = ShorterOf(cacheEntry.AbsoluteExpirationRelativeToNow, _missingApiKeyExpiration);
                         cacheEntry.SlidingExpiration = null;
                     }
