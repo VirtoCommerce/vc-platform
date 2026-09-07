@@ -217,7 +217,6 @@ angular.module('platformWebApp')
             .state('contact-admin', {
                 url: '/contact-admin',
                 templateUrl: '$(Platform)/Scripts/app/security/dialogs/contact-admin.tpl.html',
-                data: { allowAnonymous: true },
                 controller: ['$scope', 'platformWebApp.authService', function ($scope, authService) {
                     $scope.logout = authService.logout;
                 }]
