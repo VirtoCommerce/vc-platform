@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 
@@ -8,6 +9,12 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
     {
         public string OuterId { get; set; }
         public string Name { get; set; }
+
+        /// <summary>
+        /// A column the model doesn't carry, so only the data source can fill it.
+        /// </summary>
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
 
         public TestEntity FromModel(TestModel model, PrimaryKeyResolvingMap pkMap)
         {

@@ -26,6 +26,12 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
                 .Select(x => AbstractTypeFactory<TestEntity>.TryCreateInstance().FromModel(new TestModel { Id = x }, new PrimaryKeyResolvingMap()))
                 .ToList();
 
+            // Only the data source sets the concurrency token, FromModel leaves it null.
+            foreach (var entity in entities)
+            {
+                entity.RowVersion = [1, 2, 3];
+            }
+
             return Task.FromResult(entities);
         }
 
