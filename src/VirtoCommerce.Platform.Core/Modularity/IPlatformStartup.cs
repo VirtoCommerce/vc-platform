@@ -45,7 +45,9 @@ public interface IPlatformStartup
     /// UseModulesAndAppsFiles serve the file and end the request first. Middleware registered here sees
     /// API and page requests, not scripts, styles or images.
     /// </remarks>
-    void ConfigureAfterRouting(IApplicationBuilder app, IConfiguration config) { }
+    void ConfigureAfterRouting(IApplicationBuilder app, IConfiguration config)
+    {
+    }
 
     /// <summary>
     /// Called during Startup.Configure after UseAuthentication and UseAccountLockoutMiddleware, and before
@@ -59,5 +61,7 @@ public interface IPlatformStartup
     /// UseModulesAndAppsFiles serve the file and end the request first. Middleware registered here sees
     /// API and page requests, not scripts, styles or images.
     /// </remarks>
-    void ConfigureAfterAuthentication(IApplicationBuilder app, IConfiguration config) { }
+    void ConfigureAfterAuthentication(IApplicationBuilder app, IConfiguration config)
+    {
+    }
 }
