@@ -205,14 +205,6 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
             _harness = harness;
         }
 
-        public void ConfigureAppConfiguration(IConfigurationBuilder builder, IHostEnvironment env) { }
-
-        public void ConfigureHostServices(IServiceCollection services, IConfiguration config) { }
-
-        public void ConfigureServices(IServiceCollection services, IConfiguration config) { }
-
-        public void Configure(IApplicationBuilder app, IConfiguration config) { }
-
         public void ConfigureAfterRouting(IApplicationBuilder app, IConfiguration config)
         {
             app.Use(async (context, next) =>
