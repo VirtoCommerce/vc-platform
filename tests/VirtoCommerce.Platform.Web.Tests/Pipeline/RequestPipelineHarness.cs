@@ -103,9 +103,8 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
                     services.AddAuthentication(TestScheme)
                         .AddScheme<AuthenticationSchemeOptions, HarnessAuthenticationHandler>(TestScheme, _ => { });
 
-                    services.AddAuthorization(options => options.AddPolicy(
-                        RequiredPolicy,
-                        policy => policy.RequireClaim(PermissionClaimType, RequiredPermission)));
+                    services.AddAuthorizationBuilder()
+                        .AddPolicy(RequiredPolicy, policy => policy.RequireClaim(PermissionClaimType, RequiredPermission));
                 })
                 .Configure(app =>
                 {
