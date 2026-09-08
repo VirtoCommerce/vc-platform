@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(Permissions.SecurityOAuthApplicationsUpdate)]
         public async Task<ActionResult<OpenIddictApplicationDescriptor>> SaveAsync(OpenIddictApplicationDescriptor descriptor)
         {
-            descriptor.Permissions.Clear();
+            descriptor.Permissions.RemoveWhere(permission => !permission.StartsWith(OpenIddictConstants.Permissions.Prefixes.Resource, StringComparison.Ordinal));
             descriptor.Permissions.AddRange(_defaultPermissions);
 
             var app = await _manager.FindByClientIdAsync(descriptor.ClientId);
