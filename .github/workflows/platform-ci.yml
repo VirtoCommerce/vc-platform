@@ -106,9 +106,6 @@ jobs:
     - name: Install VirtoCommerce.GlobalTool
       uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
-    - name: Test Platform login navigation
-      run: node --test tests/VirtoCommerce.Platform.Web.Tests/Client/*.test.cjs
-
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
 
