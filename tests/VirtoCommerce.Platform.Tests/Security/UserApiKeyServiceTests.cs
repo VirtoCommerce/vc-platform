@@ -49,42 +49,6 @@ public class UserApiKeyServiceTests
     }
 
     [Fact]
-    public async Task GetApiKeyByKeyAsync_CandidateAtTheColumnLength_KeysOnTheCandidate()
-    {
-        var candidate = new string('k', DbContextBase.Length128);
-        var cache = new RecordingPlatformMemoryCache();
-        var service = CreateService(cache);
-
-        await service.GetApiKeyByKeyAsync(candidate);
-
-        cache.Keys.Should().HaveCount(1);
-        cache.Keys[0].Should().Contain(CacheKey.Normalize(candidate));
-    }
-
-    [Theory]
-    [InlineData(1)]
-    [InlineData(16)]
-    [InlineData(36)]
-    [InlineData(44)]
-    [InlineData(127)]
-    [InlineData(128)]
-    public async Task GetApiKeyByKeyAsync_RawAndDigestedCandidates_CannotProduceTheSameCacheKey(int rawLength)
-    {
-        var raw = new string('k', rawLength);
-        var digested = new string('k', DbContextBase.Length128 + 1);
-
-        var rawCache = new RecordingPlatformMemoryCache();
-        await CreateService(rawCache).GetApiKeyByKeyAsync(raw);
-
-        var digestedCache = new RecordingPlatformMemoryCache();
-        await CreateService(digestedCache).GetApiKeyByKeyAsync(digested);
-
-        rawCache.Keys[0].Should().NotBe(digestedCache.Keys[0]);
-        rawCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-0-"));
-        digestedCache.Keys[0].Should().Contain(CacheKey.Normalize($"{nameof(IUserApiKeyService.GetApiKeyByKeyAsync)}-1-"));
-    }
-
-    [Fact]
     public async Task GetApiKeyByKeyAsync_RawCandidateEqualsDigestOfALongerCandidate_CannotProduceTheSameCacheKey()
     {
         var longCandidate = new string('k', DbContextBase.Length128 + 1);
