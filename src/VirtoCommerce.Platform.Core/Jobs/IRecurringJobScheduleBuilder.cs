@@ -26,6 +26,13 @@ public interface IRecurringJobScheduleBuilder
     /// <summary>Target queue for the enqueued payload (falls back to the configured default queue when unset).</summary>
     IRecurringJobScheduleBuilder WithQueue(string queue);
 
+    /// <summary>
+    /// Maximum automatic retry attempts for each occurrence (falls back to the engine-wide default when unset).
+    /// Pass <c>0</c> for a job that must not be retried — a scheduled run that failed is superseded by the next
+    /// occurrence anyway, and retrying it only duplicates work.
+    /// </summary>
+    IRecurringJobScheduleBuilder WithMaxRetryAttempts(int maxRetryAttempts);
+
     /// <summary>Time zone the cron expression is evaluated in (defaults to UTC).</summary>
     IRecurringJobScheduleBuilder WithTimeZone(TimeZoneInfo timeZone);
 

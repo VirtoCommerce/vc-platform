@@ -616,6 +616,22 @@ public class ModuleBootstrapper : IModuleService
         }
     }
 
+    public void RunConfigureAfterRouting(IApplicationBuilder applicationBuilder, IConfiguration configuration)
+    {
+        foreach (var startup in _startups)
+        {
+            startup.ConfigureAfterRouting(applicationBuilder, configuration);
+        }
+    }
+
+    public void RunConfigureAfterAuthentication(IApplicationBuilder applicationBuilder, IConfiguration configuration)
+    {
+        foreach (var startup in _startups)
+        {
+            startup.ConfigureAfterAuthentication(applicationBuilder, configuration);
+        }
+    }
+
     #endregion
 
     #region Private — Discovery
@@ -1206,54 +1222,76 @@ public class ModuleBootstrapper : IModuleService
 
     #region Private — Startup Discovery
 
-    private void DiscoverStartupsInternal(IList<ManifestModuleInfo> modules)
+    internal void DiscoverStartupsInternal(IList<ManifestModuleInfo> modules)
     {
         var startups = new List<IPlatformStartup>();
         var logger = _loggerFactory.CreateLogger<ModuleBootstrapper>();
 
         foreach (var module in modules)
         {
-            if (string.IsNullOrEmpty(module.StartupType) || module.Assembly == null)
+            var startup = TryCreateStartup(module, logger);
+
+            if (startup != null)
             {
-                continue;
-            }
-
-            try
-            {
-                var startupType = module.Assembly.GetType(module.StartupType) ??
-                                  FindTypeByName(module.Assembly, module.StartupType);
-
-                if (startupType == null)
-                {
-                    logger.LogWarning("Startup type '{StartupType}' not found in {ModuleId}", module.StartupType, module.Id);
-                    continue;
-                }
-
-                if (!typeof(IPlatformStartup).IsAssignableFrom(startupType))
-                {
-                    logger.LogWarning("Type '{StartupType}' does not implement IPlatformStartup in {ModuleId}", module.StartupType, module.Id);
-                    continue;
-                }
-
-                if (Activator.CreateInstance(startupType) is IPlatformStartup instance)
-                {
-                    if (instance is IHasLogger hasLogger)
-                    {
-                        hasLogger.Logger = _loggerFactory.CreateLogger(startupType);
-                    }
-
-                    startups.Add(instance);
-                    logger.LogInformation("Discovered {StartupTypeName} from {ModuleId}", startupType.Name, module.Id);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error loading startup type from {ModuleId}", module.Id);
+                startups.Add(startup);
             }
         }
 
         _startups = startups;
         logger.LogDebug("Platform startup extensions: {StartupCount}", startups.Count);
+    }
+
+    private IPlatformStartup TryCreateStartup(ManifestModuleInfo module, ILogger logger)
+    {
+        // A module the platform will not initialize must not contribute middleware either. Its assembly is
+        // loaded whatever its errors, and InitializeModules skips it, so its services never reach the
+        // container while the hooks it registers still run and resolve them. Validation has already named
+        // the module and its errors in the log; a second record here would add only a line.
+        if (module.Errors.Count > 0)
+        {
+            return null;
+        }
+
+        if (string.IsNullOrEmpty(module.StartupType) || module.Assembly == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            var startupType = module.Assembly.GetType(module.StartupType) ??
+                              FindTypeByName(module.Assembly, module.StartupType);
+
+            if (startupType == null)
+            {
+                logger.LogWarning("Startup type '{StartupType}' not found in {ModuleId}", module.StartupType, module.Id);
+                return null;
+            }
+
+            if (!typeof(IPlatformStartup).IsAssignableFrom(startupType))
+            {
+                logger.LogWarning("Type '{StartupType}' does not implement IPlatformStartup in {ModuleId}", module.StartupType, module.Id);
+                return null;
+            }
+
+            if (Activator.CreateInstance(startupType) is not IPlatformStartup instance)
+            {
+                return null;
+            }
+
+            if (instance is IHasLogger hasLogger)
+            {
+                hasLogger.Logger = _loggerFactory.CreateLogger(startupType);
+            }
+
+            logger.LogInformation("Discovered {StartupTypeName} from {ModuleId}", startupType.Name, module.Id);
+            return instance;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error loading startup type from {ModuleId}", module.Id);
+            return null;
+        }
     }
 
     private static Type FindTypeByName(Assembly assembly, string typeName)

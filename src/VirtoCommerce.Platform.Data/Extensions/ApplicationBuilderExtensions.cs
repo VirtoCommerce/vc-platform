@@ -2,9 +2,9 @@ using System;
 using EntityFrameworkCore.Triggers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.ChangeLog;
 
 namespace VirtoCommerce.Platform.Data.Extensions
 {
@@ -36,16 +36,17 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 entry.Entity.ModifiedBy = userName;
             };
 
+            // Resolved once: the trigger fires for every saved row.
+            var lastChangesNotifier = appBuilder.ApplicationServices.GetRequiredService<ILastChangesNotifier>();
+
             Triggers<IEntity>.Inserting += entry =>
             {
-                var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastChangesService>();
-                lastChangesService.Reset(entry.Entity);
+                lastChangesNotifier.OnEntitySaving(entry.Context, entry.Entity);
             };
 
             Triggers<IEntity>.Updating += entry =>
             {
-                var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastChangesService>();
-                lastChangesService.Reset(entry.Entity);
+                lastChangesNotifier.OnEntitySaving(entry.Context, entry.Entity);
             };
 
             return appBuilder;

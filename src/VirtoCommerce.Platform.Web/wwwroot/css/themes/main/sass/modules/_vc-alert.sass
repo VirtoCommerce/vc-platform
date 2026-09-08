@@ -1,6 +1,7 @@
 .vc-alert
   $error: ''
   $warning: ''
+  $success: ''
 
   display: flex
   align-items: center
@@ -18,6 +19,11 @@
     background-color: #FFF6E9
     color: #706343
 
+  &--success
+    $success: &
+    background-color: #EDF9F0
+    color: #2F6B41
+
   &__icon
     width: 20px
     height: 20px
@@ -27,6 +33,9 @@
 
     #{$warning} &
       color: #FFBB0D
+
+    #{$success} &
+      color: #2FB35A
 
   &__text
     font-size: 11px

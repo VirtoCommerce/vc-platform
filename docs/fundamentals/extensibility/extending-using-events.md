@@ -4,7 +4,7 @@ An event is something that has happened in the past. A domain event is, logicall
 An important benefit of domain events is that side effects after something happened in a domain can be expressed explicitly instead of implicitly. Those side effects must be consistent so either all the operations related to the business task happen, or none of them. In addition, domain events enable a better separation of concerns among classes within the same domain.
 
 ## How to define domain events
-A domain event is just a simple POCO type that represents an interesting occurence in the domain.
+A domain event is just a simple POCO type that represents an interesting occurrence in the domain.
 
 ```C#
 public class CustomDomainEvent : DomainEvent
