@@ -623,6 +623,55 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
         #endregion
 
+        #region ValidatePasswordResetToken
+
+        /// <summary>
+        /// A stale or malformed reset link resolves to no user. That is an ordinary "bad link" case,
+        /// so it must answer false rather than pushing the null into VerifyUserTokenAsync, which
+        /// throws ArgumentNullException and surfaces as HTTP 500 on an anonymous endpoint.
+        /// </summary>
+        [Fact]
+        public async Task ValidatePasswordResetToken_NoUser_ReturnsFalse()
+        {
+            // Arrange
+            _userManagerMock
+                .Setup(x => x.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            // Act
+            var actual = await _controller.ValidatePasswordResetToken("unknown-user-id",
+                new ValidatePasswordResetTokenRequest { Token = "some-token" });
+
+            // Assert
+            actual.ExtractFromOkResult().Should().BeFalse();
+            _userManagerMock.Verify(x => x.VerifyUserTokenAsync(
+                It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ValidatePasswordResetToken_UserFound_ReturnsTokenVerificationResult(bool isValid)
+        {
+            // Arrange
+            var user = _fixture.Create<ApplicationUser>();
+            _userManagerMock
+                .Setup(x => x.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(user);
+            _userManagerMock
+                .Setup(x => x.VerifyUserTokenAsync(user, It.IsAny<string>(), "ResetPassword", "some-token"))
+                .ReturnsAsync(isValid);
+
+            // Act
+            var actual = await _controller.ValidatePasswordResetToken(user.Id,
+                new ValidatePasswordResetTokenRequest { Token = "some-token" });
+
+            // Assert
+            actual.ExtractFromOkResult().Should().Be(isValid);
+        }
+
+        #endregion
+
         #region ChangePassword
 
         [Fact]

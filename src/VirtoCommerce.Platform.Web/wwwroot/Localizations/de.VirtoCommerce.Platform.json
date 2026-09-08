@@ -546,7 +546,8 @@
           "back": "Zurück",
           "submit": "Absenden",
           "time-limit": "Sie können es in {{countdown}} erneut versuchen",
-          "time-limit-end": "Sie können es jetzt erneut versuchen"
+          "time-limit-end": "Sie können es jetzt erneut versuchen",
+          "back-to-sign-in": "Zurück zur Anmeldung"
         },
         "placeholders": {
           "login-or-email": "Bitte geben Sie Anmeldung oder E-Mail ein"
@@ -565,7 +566,10 @@
           "success": "Ihr Passwort wurde zurückgesetzt",
           "fail": "Entschuldigung, wir konnten das Passwort für diesen Benutzer nicht zurücksetzen",
           "submit": "Zurücksetzen",
-          "log-in": "Anmelden"
+          "log-in": "Anmelden",
+          "back": "Zurück zur Anmeldung",
+          "request-new-link": "Neuen Link anfordern",
+          "invalid-token-help": "Dieser Link zum Zurücksetzen des Passworts ist nicht mehr gültig. Fordern Sie einen neuen an, um fortzufahren."
         }
       },
       "license": {

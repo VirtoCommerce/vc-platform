@@ -390,11 +390,11 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
             $compileProvider.debugInfoEnabled(false);
         }])
-    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService',
+    .run(['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService',
         'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache',
         'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService',
         'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper',
-        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
+        function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
             dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest,
             $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper) {
 
@@ -403,13 +403,16 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
-            $rootScope.$on('$stateChangeStart', function (event, toState) {
-                if (toState.name === 'resetpasswordDialog') {
-                    $rootScope.preventLoginDialog = true;
-                } else if ($rootScope.preventLoginDialog && toState.name === 'loginDialog') {
-                    event.preventDefault(); // Prevent state change
-                }
-            });
+
+            // True while the visitor is on (or heading to) a state that anonymous users are allowed to
+            // stay on - password reset links, for example. Used to suppress the forced redirect to the
+            // login dialog below.
+            function isAnonymousAllowedState() {
+                // During a cold bootstrap the deep-link transition may still be in flight, so
+                // $state.current is not yet meaningful. Consult the pending target as well.
+                var target = ($state.transition && $state.transition.to()) || $state.current;
+                return !!(target && target.data && target.data.allowAnonymous);
+            }
 
             var homeMenuItem = {
                 path: 'home',
@@ -452,15 +455,17 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             mainMenuService.addMenuItem(moreMenuItem);
 
             $rootScope.$on('unauthorized', function (event, rejection) {
-                var url = $location.url();
-                if (url.indexOf("resetpassword") !== -1) {
-                    $state.go('resetPasswordDialog');
-                } else {
-                    if (authService.isAuthenticated) {
-                        authService.logout();
-                    }
-                    $state.go('loginDialog');
+                // A 401 from a background request must not eject an anonymous visitor from a state
+                // they are allowed to be on. Opening a password reset link, for example, 401s on
+                // api/platform/settings/VirtoCommerce.Platform.UI.WidgetColorMarkers.
+                if (isAnonymousAllowedState()) {
+                    return;
                 }
+
+                if (authService.isAuthenticated) {
+                    authService.logout();
+                }
+                $state.go('loginDialog');
             });
 
             $rootScope.$on('loginStatusChanged', function (event, authContext) {
@@ -484,6 +489,12 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 $timeout(function () {
                     var currentState = $state.current;
                     if (!authContext.isAuthenticated) {
+                        // currentuser is [AllowAnonymous] and answers 200 with an empty body, so an
+                        // anonymous visitor lands here on every bootstrap - including one who followed
+                        // a password reset link. Redirecting them would make that flow unusable.
+                        if (isAnonymousAllowedState()) {
+                            return;
+                        }
                         $state.go('loginDialog');
                     } else if (!authContext.canAccessAdminUI) {
                         // Evaluated server-side from VirtoCommerce:PlatformUI:Access. Checked before

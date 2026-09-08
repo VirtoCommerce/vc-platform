@@ -544,7 +544,8 @@
           "back": "Voltar",
           "submit": "Enviar",
           "time-limit": "Você pode tentar novamente em {{countdown}}",
-          "time-limit-end": "Você pode tentar novamente agora"
+          "time-limit-end": "Você pode tentar novamente agora",
+          "back-to-sign-in": "Voltar para o login"
         },
         "placeholders": {
           "login-or-email": "Digite o login ou e-mail"
@@ -563,7 +564,10 @@
           "success": "Sua senha foi redefinida",
           "fail": "Desculpe, não foi possível redefinir a senha para este usuário",
           "submit": "Redefinir",
-          "log-in": "Entrar"
+          "log-in": "Entrar",
+          "back": "Voltar para o login",
+          "request-new-link": "Solicitar um novo link",
+          "invalid-token-help": "Este link de redefinição de senha não é mais válido. Solicite um novo para continuar."
         }
       },
       "license": {

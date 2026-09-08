@@ -544,7 +544,8 @@
           "back": "返回",
           "submit": "提交",
           "time-limit": "您可以在 {{countdown}} 后再次尝试",
-          "time-limit-end": "您现在可以再次尝试"
+          "time-limit-end": "您现在可以再次尝试",
+          "back-to-sign-in": "返回登录"
         },
         "placeholders": {
           "login-or-email": "输入登录名或邮箱"
@@ -563,7 +564,10 @@
           "success": "您的密码已重置",
           "fail": "抱歉，我们无法为该用户重置密码",
           "submit": "重置",
-          "log-in": "登录"
+          "log-in": "登录",
+          "back": "返回登录",
+          "request-new-link": "申请新链接",
+          "invalid-token-help": "此密码重置链接已失效。请申请新链接以继续。"
         }
       },
       "license": {
