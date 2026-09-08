@@ -1214,13 +1214,21 @@ public class ModuleBootstrapper : IModuleService
 
     #region Private — Startup Discovery
 
-    private void DiscoverStartupsInternal(IList<ManifestModuleInfo> modules)
+    internal void DiscoverStartupsInternal(IList<ManifestModuleInfo> modules)
     {
         var startups = new List<IPlatformStartup>();
         var logger = _loggerFactory.CreateLogger<ModuleBootstrapper>();
 
         foreach (var module in modules)
         {
+            // A module the platform will not initialize must not contribute middleware either. Its
+            // assembly is loaded whatever its errors, and InitializeModules skips it, so its services
+            // never reach the container while the hooks it registers still run and resolve them.
+            if (module.Errors.Count > 0)
+            {
+                continue;
+            }
+
             if (string.IsNullOrEmpty(module.StartupType) || module.Assembly == null)
             {
                 continue;
