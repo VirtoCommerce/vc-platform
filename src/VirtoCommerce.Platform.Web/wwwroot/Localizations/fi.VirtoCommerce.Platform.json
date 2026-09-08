@@ -628,7 +628,8 @@
           "back": "Takaisin",
           "submit": "Lähetä",
           "time-limit": "Voit yrittää uudelleen {{countdown}}",
-          "time-limit-end": "Voit yrittää uudelleen nyt"
+          "time-limit-end": "Voit yrittää uudelleen nyt",
+          "back-to-sign-in": "Takaisin kirjautumiseen"
         },
         "placeholders": {
           "login-or-email": "Syötä kirjautumistiedot tai sähköposti"
@@ -647,7 +648,10 @@
           "success": "Salasanasi on nollattu",
           "fail": "Anteeksi, emme voineet nollata salasanaa tälle käyttäjälle",
           "submit": "Nollaa",
-          "log-in": "Kirjaudu sisään"
+          "log-in": "Kirjaudu sisään",
+          "back": "Takaisin kirjautumiseen",
+          "request-new-link": "Pyydä uusi linkki",
+          "invalid-token-help": "Tämä salasanan nollauslinkki ei ole enää voimassa. Pyydä uusi jatkaaksesi."
         }
       },
       "license": {

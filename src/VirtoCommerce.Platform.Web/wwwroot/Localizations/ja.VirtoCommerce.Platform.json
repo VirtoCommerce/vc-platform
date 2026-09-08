@@ -627,7 +627,8 @@
           "back": "戻る",
           "submit": "送信",
           "time-limit": "{{countdown}}後に再試行できます",
-          "time-limit-end": "今すぐ再試行できます"
+          "time-limit-end": "今すぐ再試行できます",
+          "back-to-sign-in": "サインインに戻る"
         },
         "placeholders": {
           "login-or-email": "ログインまたはメールアドレスを入力"
@@ -646,7 +647,10 @@
           "success": "パスワードがリセットされました",
           "fail": "申し訳ありませんが、このユーザーのパスワードをリセットできませんでした",
           "submit": "リセット",
-          "log-in": "サインイン"
+          "log-in": "サインイン",
+          "back": "サインインに戻る",
+          "request-new-link": "新しいリンクをリクエスト",
+          "invalid-token-help": "このパスワードリセットリンクは無効になりました。続行するには新しいリンクをリクエストしてください。"
         }
       },
       "license": {

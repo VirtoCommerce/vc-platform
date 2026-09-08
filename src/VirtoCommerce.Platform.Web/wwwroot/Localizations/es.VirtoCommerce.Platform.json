@@ -627,7 +627,8 @@
           "back": "Volver",
           "submit": "Enviar",
           "time-limit": "Puedes intentarlo de nuevo en {{countdown}}",
-          "time-limit-end": "Puedes intentarlo de nuevo ahora"
+          "time-limit-end": "Puedes intentarlo de nuevo ahora",
+          "back-to-sign-in": "Volver al inicio de sesión"
         },
         "placeholders": {
           "login-or-email": "Introduce usuario o correo electrónico"
@@ -646,7 +647,10 @@
           "success": "Tu contraseña ha sido restablecida",
           "fail": "Lo sentimos, no pudimos restablecer la contraseña para este usuario",
           "submit": "Restablecer",
-          "log-in": "Iniciar sesión"
+          "log-in": "Iniciar sesión",
+          "back": "Volver al inicio de sesión",
+          "request-new-link": "Solicitar un nuevo enlace",
+          "invalid-token-help": "Este enlace para restablecer la contraseña ya no es válido. Solicita uno nuevo para continuar."
         }
       },
       "license": {

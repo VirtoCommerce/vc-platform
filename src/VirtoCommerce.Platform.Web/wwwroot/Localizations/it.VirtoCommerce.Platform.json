@@ -627,7 +627,8 @@
           "back": "Indietro",
           "submit": "Invia",
           "time-limit": "Puoi riprovare tra {{countdown}}",
-          "time-limit-end": "Puoi riprovare ora"
+          "time-limit-end": "Puoi riprovare ora",
+          "back-to-sign-in": "Torna all'accesso"
         },
         "placeholders": {
           "login-or-email": "Inserisci login o email"
@@ -646,7 +647,10 @@
           "success": "La tua password è stata reimpostata",
           "fail": "Spiacenti, non è stato possibile reimpostare la password per questo utente",
           "submit": "Reimposta",
-          "log-in": "Accedi"
+          "log-in": "Accedi",
+          "back": "Torna all'accesso",
+          "request-new-link": "Richiedi un nuovo link",
+          "invalid-token-help": "Questo link per reimpostare la password non è più valido. Richiedine uno nuovo per continuare."
         }
       },
       "license": {

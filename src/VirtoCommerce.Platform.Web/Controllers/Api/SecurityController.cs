@@ -697,6 +697,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<bool>> ValidatePasswordResetToken(string userId, [FromBody] ValidatePasswordResetTokenRequest resetPasswordToken)
         {
             var applicationUser = await UserManager.FindByIdAsync(userId);
+            if (applicationUser == null)
+            {
+                return Ok(false);
+            }
+
             var tokenProvider = UserManager.Options.Tokens.PasswordResetTokenProvider;
             var result = await UserManager.VerifyUserTokenAsync(applicationUser, tokenProvider, "ResetPassword", resetPasswordToken.Token);
 
