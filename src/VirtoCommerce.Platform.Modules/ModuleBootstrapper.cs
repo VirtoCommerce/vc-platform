@@ -1221,14 +1221,6 @@ public class ModuleBootstrapper : IModuleService
 
         foreach (var module in modules)
         {
-            // A module the platform will not initialize must not contribute middleware either. Its
-            // assembly is loaded whatever its errors, and InitializeModules skips it, so its services
-            // never reach the container while the hooks it registers still run and resolve them.
-            if (module.Errors.Count > 0)
-            {
-                continue;
-            }
-
             var startup = TryCreateStartup(module, logger);
 
             if (startup != null)
@@ -1243,6 +1235,15 @@ public class ModuleBootstrapper : IModuleService
 
     private IPlatformStartup TryCreateStartup(ManifestModuleInfo module, ILogger logger)
     {
+        // A module the platform will not initialize must not contribute middleware either. Its assembly is
+        // loaded whatever its errors, and InitializeModules skips it, so its services never reach the
+        // container while the hooks it registers still run and resolve them. Validation has already named
+        // the module and its errors in the log; a second record here would add only a line.
+        if (module.Errors.Count > 0)
+        {
+            return null;
+        }
+
         if (string.IsNullOrEmpty(module.StartupType) || module.Assembly == null)
         {
             return null;
