@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         {
             var typeNames = new List<string>();
 
-            while (entityType != null && entityType != typeof(Entity))
+            while (entityType != null && entityType != typeof(Entity) && typeof(IEntity).IsAssignableFrom(entityType))
             {
                 typeNames.Add(entityType.FullName);
                 entityType = entityType.BaseType;
