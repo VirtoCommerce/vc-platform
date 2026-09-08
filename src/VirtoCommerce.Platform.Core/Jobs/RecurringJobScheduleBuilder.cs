@@ -14,6 +14,7 @@ internal sealed class RecurringJobScheduleBuilder : IRecurringJobScheduleBuilder
     private SettingDescriptor? _enablerSetting;
     private SettingDescriptor? _cronSetting;
     private string? _queue;
+    private int? _maxRetryAttempts;
     private TimeZoneInfo _timeZone = TimeZoneInfo.Utc;
     private bool _enabled = true;
 
@@ -39,6 +40,14 @@ internal sealed class RecurringJobScheduleBuilder : IRecurringJobScheduleBuilder
     public IRecurringJobScheduleBuilder WithQueue(string queue)
     {
         _queue = queue;
+        return this;
+    }
+
+    public IRecurringJobScheduleBuilder WithMaxRetryAttempts(int maxRetryAttempts)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(maxRetryAttempts);
+
+        _maxRetryAttempts = maxRetryAttempts;
         return this;
     }
 
@@ -78,7 +87,9 @@ internal sealed class RecurringJobScheduleBuilder : IRecurringJobScheduleBuilder
                 $"Recurring job '{_id}' must use either WithCron(...) or FromSettings(...), not both — they are mutually exclusive.");
         }
 
-        var options = _queue is null ? null : new EnqueueOptions { Queue = _queue };
+        var options = _queue is null && _maxRetryAttempts is null
+            ? null
+            : new EnqueueOptions { Queue = _queue, MaxRetryAttempts = _maxRetryAttempts };
 
         return new RecurringJobRegistration
         {

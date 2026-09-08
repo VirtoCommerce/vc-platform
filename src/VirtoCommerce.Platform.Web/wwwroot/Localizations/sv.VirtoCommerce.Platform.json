@@ -545,7 +545,8 @@
           "back": "Tillbaka",
           "submit": "Skicka",
           "time-limit": "Du kan försöka igen om {{countdown}}",
-          "time-limit-end": "Du kan försöka igen nu"
+          "time-limit-end": "Du kan försöka igen nu",
+          "back-to-sign-in": "Tillbaka till inloggningen"
         },
         "placeholders": {
           "login-or-email": "Ange inloggning eller e-post"
@@ -564,7 +565,10 @@
           "success": "Ditt lösenord har återställts",
           "fail": "Tyvärr, vi kunde inte återställa lösenordet för denna användare",
           "submit": "Återställ",
-          "log-in": "Logga in"
+          "log-in": "Logga in",
+          "back": "Tillbaka till inloggningen",
+          "request-new-link": "Begär en ny länk",
+          "invalid-token-help": "Den här länken för återställning av lösenord är inte längre giltig. Begär en ny för att fortsätta."
         }
       },
       "license": {

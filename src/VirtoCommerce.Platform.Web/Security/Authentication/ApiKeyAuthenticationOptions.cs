@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using VirtoCommerce.Platform.Core;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
 {
@@ -7,6 +8,6 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
         public const string DefaultScheme = "API Key";
 
         public string Scheme { get; set; } = DefaultScheme;
-        public string ApiKeyParamName { get; set; } = "api_key";
+        public string ApiKeyParamName { get; set; } = PlatformConstants.Security.ApiKeyAuthentication.ParamName;
     }
 }

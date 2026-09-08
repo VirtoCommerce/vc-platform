@@ -544,7 +544,8 @@
           "back": "Retour",
           "submit": "Envoyer",
           "time-limit": "Vous pouvez réessayer dans {{countdown}}",
-          "time-limit-end": "Vous pouvez réessayer maintenant"
+          "time-limit-end": "Vous pouvez réessayer maintenant",
+          "back-to-sign-in": "Retour à la connexion"
         },
         "placeholders": {
           "login-or-email": "Entrez l'identifiant ou l'email"
@@ -563,7 +564,10 @@
           "success": "Votre mot de passe a été réinitialisé",
           "fail": "Désolé, nous n'avons pas pu réinitialiser le mot de passe pour cet utilisateur",
           "submit": "Réinitialiser",
-          "log-in": "Se connecter"
+          "log-in": "Se connecter",
+          "back": "Retour à la connexion",
+          "request-new-link": "Demander un nouveau lien",
+          "invalid-token-help": "Ce lien de réinitialisation du mot de passe n'est plus valide. Demandez-en un nouveau pour continuer."
         }
       },
       "license": {

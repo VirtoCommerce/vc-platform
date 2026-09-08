@@ -545,7 +545,8 @@
           "back": "Tilbake",
           "submit": "Send",
           "time-limit": "Du kan prøve igjen om {{countdown}}",
-          "time-limit-end": "Du kan prøve igjen nå"
+          "time-limit-end": "Du kan prøve igjen nå",
+          "back-to-sign-in": "Tilbake til innlogging"
         },
         "placeholders": {
           "login-or-email": "Angi innlogging eller e-post"
@@ -564,7 +565,10 @@
           "success": "Passordet ditt er tilbakestilt",
           "fail": "Beklager, vi kunne ikke tilbakestille passordet for denne brukeren",
           "submit": "Tilbakestill",
-          "log-in": "Logg inn"
+          "log-in": "Logg inn",
+          "back": "Tilbake til innlogging",
+          "request-new-link": "Be om en ny lenke",
+          "invalid-token-help": "Denne lenken for tilbakestilling av passord er ikke lenger gyldig. Be om en ny for å fortsette."
         }
       },
       "license": {

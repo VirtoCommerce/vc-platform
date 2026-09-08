@@ -4,6 +4,7 @@ angular.module('platformWebApp')
             {
                 url: '/login',
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
+                data: { allowAnonymous: true },
                 controller: [
                     '$scope', '$window', '$translate', '$log', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
                     function ($scope, $window, $translate, $log, authService, externalSignInService, loginResources, externalSignInStorage) {
@@ -97,9 +98,9 @@ angular.module('platformWebApp')
             {
                 url: '/forgotpassword',
                 templateUrl: '$(Platform)/Scripts/app/security/dialogs/forgotPasswordDialog.tpl.html',
-                controller: ['$rootScope', '$scope', 'platformWebApp.authService', '$state', '$interval', function ($rootScope, $scope, authService, $state, $interval) {
+                data: { allowAnonymous: true },
+                controller: ['$scope', 'platformWebApp.authService', '$state', '$interval', function ($scope, authService, $state, $interval) {
                     $scope.viewModel = {};
-                    $rootScope.preventLoginDialog = false;
                     $scope.ok = function () {
                         $scope.isLoading = true;
                         $scope.errorMessage = null;
@@ -158,7 +159,8 @@ angular.module('platformWebApp')
         $stateProvider.state('resetpasswordDialog', {
             url: '/resetpassword/:userId/{code:.*}',
             templateUrl: '$(Platform)/Scripts/app/security/dialogs/resetPasswordDialog.tpl.html',
-            controller: ['$rootScope', '$scope', '$stateParams', 'platformWebApp.authService', function ($rootScope, $scope, $stateParams, authService) {
+            data: { allowAnonymous: true },
+            controller: ['$scope', '$stateParams', 'platformWebApp.authService', function ($scope, $stateParams, authService) {
                 $scope.viewModel = $stateParams;
                 $scope.isValidToken = true;
                 $scope.isLoading = true;
@@ -176,7 +178,6 @@ angular.module('platformWebApp')
                     $scope.isLoading = true;
                     authService.resetpassword($scope.viewModel).then(function (retVal) {
                         $scope.isLoading = false;
-                        $rootScope.preventLoginDialog = false;
                         angular.extend($scope, retVal);
                     }, function (response) {
                         $scope.viewModel.newPassword = $scope.viewModel.newPassword2 = undefined;
