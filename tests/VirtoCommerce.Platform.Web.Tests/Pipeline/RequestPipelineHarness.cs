@@ -60,7 +60,7 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
 
     public HookObservations AfterAuthentication { get; } = new();
 
-    public static async Task<RequestPipelineHarness> StartAsync(IPlatformStartup extraStartup = null)
+    public static async Task<RequestPipelineHarness> StartAsync()
     {
         var contentRoot = Path.Combine(Path.GetTempPath(), "vc-pipeline-harness-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(Path.Combine(contentRoot, "js"));
@@ -71,10 +71,6 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
 
         var harness = new RequestPipelineHarness(contentRoot, previousBootstrapper);
         bootstrapper.Startups.Add(new RecordingPlatformStartup(harness));
-        if (extraStartup != null)
-        {
-            bootstrapper.Startups.Add(extraStartup);
-        }
 
         try
         {
@@ -146,19 +142,6 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
     public Task<HttpContext> SendAsync(Action<HttpContext> configure)
     {
         return _host.GetTestServer().SendAsync(configure);
-    }
-
-    public static async Task<string> ReadBodyAsync(HttpContext context)
-    {
-        var body = context.Response.Body;
-        if (body.CanSeek)
-        {
-            body.Position = 0;
-        }
-
-        using var reader = new StreamReader(body, leaveOpen: true);
-
-        return await reader.ReadToEndAsync();
     }
 
     public async ValueTask DisposeAsync()
