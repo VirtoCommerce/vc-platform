@@ -546,7 +546,8 @@
           "back": "Back",
           "submit": "Submit",
           "time-limit": "You can try again in {{countdown}}",
-          "time-limit-end": "You can try again now"
+          "time-limit-end": "You can try again now",
+          "back-to-sign-in": "Back to sign in"
         },
         "placeholders": {
           "login-or-email": "Enter login or email"
@@ -565,7 +566,10 @@
           "success": "Your password has been reset",
           "fail": "Sorry, we couldn't reset password for this user",
           "submit": "Reset",
-          "log-in": "Sign in"
+          "log-in": "Sign in",
+          "back": "Back to sign in",
+          "request-new-link": "Request a new link",
+          "invalid-token-help": "This password reset link is no longer valid. Request a new one to continue."
         }
       },
       "license": {

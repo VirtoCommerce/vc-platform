@@ -544,7 +544,8 @@
           "back": "Powrót",
           "submit": "Wyślij",
           "time-limit": "Możesz spróbować ponownie za {{countdown}}",
-          "time-limit-end": "Możesz spróbować ponownie teraz"
+          "time-limit-end": "Możesz spróbować ponownie teraz",
+          "back-to-sign-in": "Powrót do logowania"
         },
         "placeholders": {
           "login-or-email": "Wprowadź login lub email"
@@ -563,7 +564,10 @@
           "success": "Twoje hasło zostało zresetowane",
           "fail": "Przepraszamy, nie mogliśmy zresetować hasła dla tego użytkownika",
           "submit": "Resetuj",
-          "log-in": "Zaloguj się"
+          "log-in": "Zaloguj się",
+          "back": "Powrót do logowania",
+          "request-new-link": "Poproś o nowy link",
+          "invalid-token-help": "Ten link do resetowania hasła nie jest już prawidłowy. Poproś o nowy, aby kontynuować."
         }
       },
       "license": {

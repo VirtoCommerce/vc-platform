@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
@@ -31,17 +30,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
         public void Reset(IEntity entity)
         {
-            var typeNames = new List<string>();
-
-            var entityType = entity.GetType();
-
-            while (entityType != null && entityType != typeof(Entity))
-            {
-                typeNames.Add(entityType.FullName);
-                entityType = entityType.BaseType;
-            }
-
-            foreach (var entityTypeName in typeNames)
+            foreach (var entityTypeName in EntityTypeNames.Get(entity.GetType()))
             {
                 Reset(entityTypeName);
             }
