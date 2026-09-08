@@ -763,60 +763,7 @@ namespace VirtoCommerce.Platform.Web
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
-            // Engages the forwarded header support in the pipeline  (see description above)
-            app.UseForwardedHeaders();
-
-            app.UseHttpsRedirection();
-
-            // Add default MimeTypes with additional bindings
-            var fileExtensionsBindings = new Dictionary<string, string>
-            {
-                { ".liquid", "text/html"}, // Allow liquid templates
-                { ".page", "text/html"}, // Allow page builder pages
-                { ".md", "text/html"} // Allow Markdown documents
-            };
-
-            // Create default provider (with default Mime types)
-            var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
-
-            // Add custom bindings
-            foreach (var binding in fileExtensionsBindings)
-            {
-                fileExtensionContentTypeProvider.Mappings[binding.Key] = binding.Value;
-            }
-
-            var platformOptions = app.ApplicationServices.GetService<IOptions<PlatformOptions>>().Value;
-
-            if (platformOptions.UseResponseCompression)
-            {
-                app.UseResponseCompression();
-            }
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ContentTypeProvider = fileExtensionContentTypeProvider
-            });
-
-            app.UseRouting();
-            app.UseCookiePolicy();
-
-            //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(WebHostEnvironment.MapPath("~/js")),
-                RequestPath = new PathString("/$(Platform)/Scripts")
-            });
-
-            // Enables static file serving with the module and apps options
-            app.UseModulesAndAppsFiles();
-
-            app.UseDefaultFiles();
-
-            app.UseAuthentication();
-
-            app.UseAccountLockoutMiddleware(platformOptions.ApplicationCookieName);
-
-            app.UseAuthorization();
+            ConfigureRequestPipeline(app, Configuration, WebHostEnvironment);
 
             app.ExecuteSynchronized(() =>
             {
@@ -879,6 +826,77 @@ namespace VirtoCommerce.Platform.Web
             WriteFailedModulesToLog(logger);
 
             logger.LogInformation("Welcome to Virto Commerce {PlatformVersion}!", typeof(Startup).Assembly.GetName().Version);
+        }
+
+        /// <summary>
+        /// The stretch of the request pipeline from forwarded-header resolution through authorization,
+        /// including the <see cref="IPlatformStartup"/> hook calls.
+        /// </summary>
+        public static void ConfigureRequestPipeline(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+        {
+            // Engages the forwarded header support in the pipeline
+            app.UseForwardedHeaders();
+
+            app.UseHttpsRedirection();
+
+            // Add default MimeTypes with additional bindings
+            var fileExtensionsBindings = new Dictionary<string, string>
+            {
+                { ".liquid", "text/html"}, // Allow liquid templates
+                { ".page", "text/html"}, // Allow page builder pages
+                { ".md", "text/html"} // Allow Markdown documents
+            };
+
+            // Create default provider (with default Mime types)
+            var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+
+            // Add custom bindings
+            foreach (var binding in fileExtensionsBindings)
+            {
+                fileExtensionContentTypeProvider.Mappings[binding.Key] = binding.Value;
+            }
+
+            var platformOptions = app.ApplicationServices.GetService<IOptions<PlatformOptions>>().Value;
+
+            if (platformOptions.UseResponseCompression)
+            {
+                app.UseResponseCompression();
+            }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = fileExtensionContentTypeProvider
+            });
+
+            app.UseRouting();
+            app.UseCookiePolicy();
+
+            //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(webHostEnvironment.MapPath("~/js")),
+                RequestPath = new PathString("/$(Platform)/Scripts")
+            });
+
+            // Enables static file serving with the module and apps options
+            app.UseModulesAndAppsFiles();
+
+            app.UseDefaultFiles();
+
+            // Placed after UseDefaultFiles rather than after UseRouting so nothing here runs on requests
+            // the static-file middlewares answer themselves.
+            ModuleBootstrapper.Instance.RunConfigureAfterRouting(app, configuration);
+
+            app.UseAuthentication();
+
+            app.UseAccountLockoutMiddleware(platformOptions.ApplicationCookieName);
+
+            // Before UseAuthorization, not after: authorization short-circuits the requests it rejects, so a hook
+            // placed later would see only the requests that passed. Moving this call past UseAuthorization is
+            // caught by ConfigureAfterAuthentication_OnARequestAuthorizationRejects_IsStillInvokedAndTheResponseIs403.
+            ModuleBootstrapper.Instance.RunConfigureAfterAuthentication(app, configuration);
+
+            app.UseAuthorization();
         }
 
         private static void WriteFailedModulesToLog(ILogger<Startup> logger)
