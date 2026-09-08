@@ -48,4 +48,37 @@ public static class BackgroundJob
         var backgroundJob = scope.ServiceProvider.GetRequiredService<IBackgroundJob>();
         return await backgroundJob.Enqueue<THandler>(payload, options, cancellationToken);
     }
+
+    /// <summary>
+    /// Static counterpart of <see cref="IBackgroundJob.Cancel"/>: request cancellation of a job by id. Resolves the
+    /// scoped facade through a short-lived scope and delegates. Prefer checking <see cref="SupportsCancellation"/>
+    /// first so a caller can tell "not supported" apart from "nothing to cancel".
+    /// </summary>
+    public static async Task<bool> Cancel(string jobId, CancellationToken cancellationToken = default)
+    {
+        var provider = _rootServiceProvider
+            ?? throw new InvalidOperationException(
+                "BackgroundJob static facade is not initialized. Install the VirtoCommerce.BackgroundJobs module " +
+                "(it calls BackgroundJob.Initialize during startup), or inject IBackgroundJob instead.");
+
+        using var scope = provider.CreateScope();
+        var backgroundJob = scope.ServiceProvider.GetRequiredService<IBackgroundJob>();
+        return await backgroundJob.Cancel(jobId, cancellationToken);
+    }
+
+    /// <summary>Whether the active engine supports on-demand cancellation; <c>false</c> when uninitialized.</summary>
+    public static bool SupportsCancellation
+    {
+        get
+        {
+            var provider = _rootServiceProvider;
+            if (provider is null)
+            {
+                return false;
+            }
+
+            using var scope = provider.CreateScope();
+            return scope.ServiceProvider.GetRequiredService<IBackgroundJob>().SupportsCancellation;
+        }
+    }
 }
