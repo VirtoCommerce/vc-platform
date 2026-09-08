@@ -485,6 +485,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     var currentState = $state.current;
                     if (!authContext.isAuthenticated) {
                         $state.go('loginDialog');
+                    } else if (!authContext.passwordExpired && urlHelper.getSafeAuthorizationReturnUrl()) {
+                        window.location.href = urlHelper.getSafeAuthorizationReturnUrl();
                     } else if (!authContext.canAccessAdminUI) {
                         // Evaluated server-side from VirtoCommerce:PlatformUI:Access. Checked before
                         // passwordExpired because there is no point sending a user who cannot enter

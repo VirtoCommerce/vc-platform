@@ -8,6 +8,18 @@ angular.module('platformWebApp').factory('platformWebApp.urlHelper', [function (
         return undefined;
     }
 
+    function getSafeAuthorizationReturnUrl() {
+        const returnUrl = getSafeReturnUrl();
+        if (returnUrl) {
+            const url = new URL(returnUrl, window.location.origin);
+            if (url.pathname === '/connect/authorize' && !url.hash) {
+                return returnUrl;
+            }
+        }
+
+        return undefined;
+    }
+
     function getQueryValue(name) {
         const query = new URLSearchParams(window.location.search);
         return query.get(name);
@@ -41,6 +53,7 @@ angular.module('platformWebApp').factory('platformWebApp.urlHelper', [function (
 
     return {
         getSafeReturnUrl,
+        getSafeAuthorizationReturnUrl,
         getQueryValue,
         isLocalUrl,
         isEmbeddedMode
