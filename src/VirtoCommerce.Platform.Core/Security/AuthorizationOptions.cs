@@ -10,6 +10,16 @@ namespace VirtoCommerce.Platform.Core.Security
         public TimeSpan AccessTokenLifeTime { get; set; }
 
         /// <summary>
+        /// Absolute resource URIs accepted by OpenIddict. Clients also require permission for each resource.
+        /// </summary>
+        public string[] Resources { get; set; } = [];
+
+        /// <summary>
+        /// Local storefront path that establishes the browser session for OAuth consent. Disabled by default.
+        /// </summary>
+        public string OAuthLoginPath { get; set; }
+
+        /// <summary>
         /// Interval after which the authentication cookie's security stamp is re-validated
         /// against the store. Lower values reject stale or replayed cookies faster at the cost
         /// of more frequent database calls. By default, 5 minutes.
