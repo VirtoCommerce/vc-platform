@@ -30,6 +30,7 @@ namespace VirtoCommerce.Platform.Core
             {
                 public const string Impersonate = "impersonate";
                 public const string ExternalSignIn = "external_sign_in";
+                public const string NativeSignIn = "native_sign_in";
             }
 
             public static class Claims
