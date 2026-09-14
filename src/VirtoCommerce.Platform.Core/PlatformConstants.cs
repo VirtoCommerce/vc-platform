@@ -13,6 +13,14 @@ namespace VirtoCommerce.Platform.Core
 
         public static class Security
         {
+            public static class ApiKeyAuthentication
+            {
+                /// <summary>
+                /// The query-string and header parameter name the API key authentication scheme reads.
+                /// </summary>
+                public const string ParamName = "api_key";
+            }
+
             public static class AuthenticationSchemes
             {
                 public const string MixedScheme = "VirtoMixedAuthenticationScheme";

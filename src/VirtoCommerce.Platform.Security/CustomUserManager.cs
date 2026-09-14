@@ -201,17 +201,28 @@ namespace VirtoCommerce.Platform.Security
 
         public override async Task<IdentityResult> DeleteAsync(ApplicationUser user)
         {
+            // Find* methods return detached copies, but the store's context may already track the same user
+            // (loaded there by the cache-miss path). Deleting the copy would make EF reject the operation
+            // ("another instance with the same key value is already being tracked"), so resolve and delete
+            // the store's own instance instead. Resolve by id only: the user-name fallback in
+            // LoadExistingUser was added for UpdateUserAsync, and applied to a delete it removes whichever
+            // account owns that name whenever the id belongs to no row.
+            var existentUser = await LoadExistingUserById(user);
+
+            //We cant delete not existing user
+            if (existentUser is null)
+            {
+                //The cached lookups keep answering for a row that is already gone, so drop that entry too.
+                SecurityCacheRegion.ExpireUser(user);
+
+                return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
+            }
+
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
                 new(user, EntryState.Deleted),
             };
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
-
-            // Find* methods return detached copies, but the store's context may already track the same user
-            // (loaded there by the cache-miss path). Deleting the copy would make EF reject the operation
-            // ("another instance with the same key value is already being tracked"), so resolve and delete
-            // the store's own instance instead.
-            var existentUser = await LoadExistingUser(user) ?? user;
 
             var result = await base.DeleteAsync(existentUser);
             if (result.Succeeded)
@@ -426,17 +437,35 @@ namespace VirtoCommerce.Platform.Security
         /// <returns>Returns null, if no user found, otherwise user with details.</returns>
         protected virtual async Task<ApplicationUser> LoadExistingUser(ApplicationUser user)
         {
+            var result = await LoadExistingUserById(user);
+
+            if (result is null)
+            {
+                //It is important to call base.FindByNameAsync method to avoid of update a cached user.
+                result = await base.FindByNameAsync(user.UserName);
+
+                if (result is not null)
+                {
+                    await LoadUserDetailsAsync(result);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Finds existing user by its id alone and loads its details
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Returns null, if no user found, otherwise user with details.</returns>
+        protected virtual async Task<ApplicationUser> LoadExistingUserById(ApplicationUser user)
+        {
             ApplicationUser result = null;
 
             if (!string.IsNullOrEmpty(user.Id))
             {
                 //It is important to call base.FindByIdAsync method to avoid of update a cached user.
                 result = await base.FindByIdAsync(user.Id);
-            }
-            if (result is null)
-            {
-                //It is important to call base.FindByNameAsync method to avoid of update a cached user.
-                result = await base.FindByNameAsync(user.UserName);
             }
 
             if (result is not null)
