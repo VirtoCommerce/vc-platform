@@ -487,7 +487,11 @@ angular.module('platformWebApp')
             // left to save and nobody to prompt.
             clearBlades: function () {
                 angular.forEach(Object.keys(service.blades), function (stateName) {
-                    service.blades[stateName] = [];
+                    // Empty in place rather than rebinding to a new array: vaBladeContainer
+                    // captures this array by reference in its link function and ng-repeat renders
+                    // that reference. Replacing it would leave the mounted blades on screen with
+                    // live scopes, and send every later showBlade into an array no view is bound to.
+                    service.blades[stateName].length = 0;
                 });
                 service.currentBlade = undefined;
             },
