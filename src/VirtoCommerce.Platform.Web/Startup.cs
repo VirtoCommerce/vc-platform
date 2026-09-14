@@ -471,6 +471,7 @@ namespace VirtoCommerce.Platform.Web
                     serverBuilder.AllowAuthorizationCodeFlow();
                     serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate);
                     serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.ExternalSignIn);
+                    serverBuilder.AllowCustomFlow(PlatformConstants.Security.GrantTypes.NativeSignIn);
 
                     serverBuilder.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
                     serverBuilder.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
