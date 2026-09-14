@@ -263,7 +263,7 @@ angular.module('platformWebApp')
             }
         }
     }])
-    .factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$timeout', '$state', '$translate', 'platformWebApp.dialogService', function (authService, $timeout, $state, $translate, dialogService) {
+    .factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$rootScope', '$timeout', '$state', '$translate', 'platformWebApp.dialogService', function (authService, $rootScope, $timeout, $state, $translate, dialogService) {
         function showConfirmationIfNeeded(showConfirmation, canSave, blade, saveChangesCallback, closeCallback, saveTitle, saveMessage) {
             if (showConfirmation) {
                 var dialog = { id: "confirmCurrentBladeClose" };
@@ -482,6 +482,15 @@ angular.module('platformWebApp')
                 }
             },
             clearError: clearError,
+            // Drops every blade stack, for every state, without running onClose/confirmation
+            // handlers: the session those blades belonged to is already gone, so there is nothing
+            // left to save and nobody to prompt.
+            clearBlades: function () {
+                angular.forEach(Object.keys(service.blades), function (stateName) {
+                    service.blades[stateName] = [];
+                });
+                service.currentBlade = undefined;
+            },
             getStatusText: function (response) {
                 if (response.statusText === "") {
                     var errorKey = 'platform.errors.' + response.status.toString();
@@ -495,6 +504,19 @@ angular.module('platformWebApp')
                 return response.statusText;
             }
         };
+
+        // Blade stacks are keyed by state name and are meant to outlive state changes, so switching
+        // workspaces and coming back restores what you had open. Nothing tore them down on sign-out,
+        // though: signing out only opens loginDialog over the current state, so the blades - and
+        // their scopes, watches and $rootScope listeners - stayed live. Signing in again in the same
+        // tab then left two generations of the same blade mounted at once, including two ui-grids
+        // sharing one 'gridState:<template>' $localStorage key; ngStorage deep-watches that object on
+        // $rootScope, so each grid's saveState() woke the other and the digest never settled.
+        $rootScope.$on('loginStatusChanged', function (event, authContext) {
+            if (!authContext.isAuthenticated) {
+                service.clearBlades();
+            }
+        });
 
         return service;
     }]);
