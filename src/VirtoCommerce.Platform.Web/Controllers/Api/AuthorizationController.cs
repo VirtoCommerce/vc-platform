@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -48,6 +50,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IExternalSignInService _externalSignInService;
         private readonly IOpenIddictAuthorizationManager _authorizationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
+        private readonly Core.Security.AuthorizationOptions _authorizationOptions;
 
         public AuthorizationController(
             OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> applicationManager,
@@ -62,7 +65,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
             IOpenIddictAuthorizationManager authorizationManager,
-            IOpenIddictScopeManager scopeManager)
+            IOpenIddictScopeManager scopeManager,
+            IOptions<Core.Security.AuthorizationOptions> authorizationOptions)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -78,6 +82,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalSignInService = externalSignInService;
             _authorizationManager = authorizationManager;
             _scopeManager = scopeManager;
+            _authorizationOptions = authorizationOptions.Value;
         }
 
         [HttpPost("~/revoke/token")]
@@ -104,6 +109,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         await _tokenManager.TryRevokeAsync(authorizationToken);
                     }
                 }
+            }
+
+            if (!string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            {
+                await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             }
 
             return Ok();
@@ -207,10 +217,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            if (openIdConnectRequest.IsRefreshTokenGrantType())
+            if (openIdConnectRequest.IsRefreshTokenGrantType() || openIdConnectRequest.IsAuthorizationCodeGrantType())
             {
                 // Retrieve the claims principal stored in the authorization code/refresh token.
                 var info = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+                if (openIdConnectRequest.GetResources().Except(info.Principal.GetResources(), StringComparer.Ordinal).Any())
+                {
+                    return BadRequest(SecurityErrorDescriber.InvalidTarget());
+                }
 
                 // Retrieve the user profile corresponding to the authorization code/refresh token.
                 // Note: if you want to automatically invalidate the authorization code/refresh token
@@ -301,7 +316,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 // Create a new authentication ticket.
-                var ticket = CreateTicket(application);
+                var ticket = CreateTicket(application, openIdConnectRequest);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -377,54 +392,63 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            if (openIdConnectRequest.IsAuthorizationCodeGrantType())
-            {
-                // Retrieve the claims principal stored in the refresh token.
-                var info = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-
-                // Retrieve the user profile corresponding to the refresh token.
-                // Note: if you want to automatically invalidate the refresh token
-                // when the user password/roles change, use _signInManager.ValidateSecurityStampAsync(info.Principal) instead.
-                var user = await _userManager.GetUserAsync(info.Principal);
-                if (user == null)
-                {
-                    var properties = new AuthenticationProperties(new Dictionary<string, string>
-                    {
-                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
-                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The refresh token is no longer valid.",
-                    });
-
-                    return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-                }
-
-                // Ensure the user is still allowed to sign in.
-                if (!await _signInManager.CanSignInAsync(user))
-                {
-                    var properties = new AuthenticationProperties(new Dictionary<string, string>
-                    {
-                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
-                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is no longer allowed to sign in.",
-                    });
-
-                    return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-                }
-
-                // Create a new ClaimsPrincipal containing the claims that
-                // will be used to create an id_token, a token or a code.
-                var principal = await _signInManager.CreateUserPrincipalAsync(user);
-
-                foreach (var claim in principal.Claims)
-                {
-                    claim.SetDestinations(GetDestinations(claim, principal));
-                }
-
-                return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-            }
-
             return BadRequest(SecurityErrorDescriber.UnsupportedGrantType());
         }
 
         #endregion
+
+        [HttpGet("~/connect/session")]
+        [AllowAnonymous]
+        public IActionResult GetSessionToken([FromServices] IAntiforgery antiforgery)
+        {
+            if (string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            {
+                return NotFound();
+            }
+
+            return Ok(new { RequestToken = antiforgery.GetAndStoreTokens(HttpContext).RequestToken });
+        }
+
+        [HttpPost("~/connect/session")]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateSession([FromQuery] string returnUrl)
+        {
+            if (string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            {
+                return NotFound();
+            }
+
+            if (!IsLocalAuthorizationReturnUrl(returnUrl) ||
+                !string.Equals(Request.Headers.Origin, $"{Request.Scheme}://{Request.Host}", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest();
+            }
+
+            var result = await HttpContext.AuthenticateAsync(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+            if (!result.Succeeded)
+            {
+                return Unauthorized();
+            }
+
+            var user = await GetStorefrontSessionUserAsync(result.Principal);
+            var tokenExpiresUtc = result.Principal.GetExpirationDate();
+            if (user == null || !tokenExpiresUtc.HasValue || tokenExpiresUtc <= DateTimeOffset.UtcNow)
+            {
+                return Unauthorized();
+            }
+
+            var expiresUtc = DateTimeOffset.UtcNow.AddMinutes(5);
+            await _signInManager.SignInAsync(user, new AuthenticationProperties
+            {
+                AllowRefresh = false,
+                IsPersistent = false,
+                ExpiresUtc = tokenExpiresUtc.Value < expiresUtc ? tokenExpiresUtc.Value : expiresUtc,
+                RedirectUri = returnUrl,
+            });
+
+            return NoContent();
+        }
 
         [HttpGet("~/connect/authorize")]
         [HttpPost("~/connect/authorize")]
@@ -439,29 +463,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // If a max_age parameter was provided, ensure that the cookie is not too old.
             // If the user principal can't be extracted or the cookie is too old, redirect the user to the login page.
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+            var returnUrl = Request.PathBase + Request.Path + QueryString.Create(
+                Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList());
+            var useStorefrontLogin = !string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath);
 
-            if (!result.Succeeded || RequestHasExpired(request, result))
+            if (!result.Succeeded || RequestHasExpired(request, result) ||
+                (useStorefrontLogin && result.Properties?.RedirectUri != returnUrl))
             {
-                // If the client application requested promptless authentication,
-                // return an error indicating that the user is not logged in.
-                if (request.HasPromptValue(PromptValues.None))
-                {
-                    return Forbid(
-                        authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                        properties: new AuthenticationProperties(new Dictionary<string, string>
-                        {
-                            [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
-                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in.",
-                        }));
-                }
-
-                return Challenge(
-                    authenticationSchemes: IdentityConstants.ApplicationScheme,
-                    properties: new AuthenticationProperties
-                    {
-                        RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                            Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
-                    });
+                return ChallengeLogin(request, returnUrl);
             }
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
@@ -506,6 +515,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Deny")]
+        [ValidateAntiForgeryToken]
         [Authorize]
         [AllowAnonymous]
         // Notify OpenIddict that the authorization grant has been denied by the resource owner
@@ -517,13 +527,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Accept")]
+        [ValidateAntiForgeryToken]
         [Authorize]
         [AllowAnonymous]
         public async Task<IActionResult> Accept()
         {
             var request = GetOpenIddictServerRequest();
 
-            var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, User);
+            var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+            if (!result.Succeeded || RequestHasExpired(request, result))
+            {
+                return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
+
+            var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
 
             // Note: the same check is already made in the other action but is repeated
             // here to ensure a malicious user can't abuse this POST-only endpoint and
@@ -612,6 +629,50 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             target.SetClaimWithDestinations(claimType, value, destinations);
         }
 
+        private bool IsLocalAuthorizationReturnUrl(string returnUrl)
+        {
+            return Url.IsLocalUrl(returnUrl) &&
+                returnUrl.StartsWith(Request.PathBase + "/connect/authorize?", StringComparison.Ordinal) &&
+                !returnUrl.Contains('#');
+        }
+
+        private async Task<ApplicationUser> GetStorefrontSessionUserAsync(ClaimsPrincipal principal)
+        {
+            if (!principal.HasAudience("resource_server") || principal.HasClaim(claim => claim.Type == Claims.ClientId) || principal.IsImpersonated())
+            {
+                return null;
+            }
+
+            var user = await _userManager.GetUserAsync(principal);
+            if (user == null || user.PasswordExpired || !await _signInManager.CanSignInAsync(user) || await _userManager.IsLockedOutAsync(user))
+            {
+                return null;
+            }
+
+            return user;
+        }
+
+        private IActionResult ChallengeLogin(OpenIddictRequest request, string returnUrl)
+        {
+            if (request.HasPromptValue(PromptValues.None))
+            {
+                return Forbid(
+                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    {
+                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
+                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in.",
+                    }));
+            }
+
+            if (!string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            {
+                return LocalRedirect(_authorizationOptions.OAuthLoginPath + QueryString.Create("returnUrl", returnUrl));
+            }
+
+            return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, IdentityConstants.ApplicationScheme);
+        }
+
         private static bool RequestHasExpired(OpenIddictRequest request, AuthenticateResult result)
         {
             return request.MaxAge != null &&
@@ -671,7 +732,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // but you may want to allow the user to uncheck specific scopes.
             // For that, simply restrict the list of scopes before calling SetScopes.
             principal.SetScopes(request.GetScopes());
-            principal.SetResources(await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+            var requestedResources = request.GetResources();
+            principal.SetResources(requestedResources.Any()
+                ? requestedResources
+                : await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
 
             // Automatically create a permanent authorization to avoid requiring explicit consent
             // for future authorization or token requests containing the same scopes.
@@ -742,7 +806,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private AuthenticationTicket CreateTicket(VirtoOpenIddictEntityFrameworkCoreApplication application)
+        private static AuthenticationTicket CreateTicket(VirtoOpenIddictEntityFrameworkCoreApplication application, OpenIddictRequest request)
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
@@ -762,7 +826,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var principal = new ClaimsPrincipal(identity);
 
-            principal.SetResources("resource_server");
+            var requestedResources = request.GetResources();
+            principal.SetResources(requestedResources.Any() ? requestedResources : ["resource_server"]);
 
             identity.SetDestinations(static _ => [Destinations.AccessToken, Destinations.IdentityToken]);
 
@@ -781,7 +846,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // will be used to create an id_token, a token or a code.
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-            if (!context.Request.IsAuthorizationCodeGrantType() && !context.Request.IsRefreshTokenGrantType())
+            var reuseGrant = context.Request.IsAuthorizationCodeGrantType() || context.Request.IsRefreshTokenGrantType();
+            var resources = context.Request.GetResources();
+            if (reuseGrant)
+            {
+                principal.SetScopes(context.Principal?.GetScopes() ?? []);
+                principal.SetAuthorizationId(context.Principal?.GetAuthorizationId());
+            }
+            else
             {
                 // Set the list of scopes granted to the client application.
                 // Note: the offline_access scope must be granted
@@ -794,9 +866,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     Scopes.OfflineAccess,
                     Scopes.Roles
                 }.Intersect(context.Request.GetScopes()));
+
             }
 
-            principal.SetResources("resource_server");
+            if (!resources.Any() && reuseGrant)
+            {
+                resources = context.Principal?.GetResources() ?? [];
+            }
+
+            principal.SetResources(resources.DefaultIfEmpty("resource_server"));
 
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
