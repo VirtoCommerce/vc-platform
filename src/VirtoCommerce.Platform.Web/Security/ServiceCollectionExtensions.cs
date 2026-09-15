@@ -31,6 +31,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<ISecurityRepository>());
 
             services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
+            services.AddSingleton<IUserSignInLogService, UserSignInLogService>();
             services.AddSingleton<IUserApiKeySearchService, UserApiKeySearchService>();
 
             services.AddScoped<IUserNameResolver, HttpContextUserResolver>();
