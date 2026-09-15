@@ -7,12 +7,12 @@ angular.module('platformWebApp').controller('platformWebApp.securityMainControll
             { name: 'platform.blades.role-list.title', entityName: 'role', subtitle: 'platform.blades.role-list.subtitle' },
             { name: 'platform.blades.oauthapps-list.title', entityName: 'oauthapps', subtitle: 'platform.blades.oauthapps-list.subtitle' },
             {
-                name: 'platform.blades.sign-in-log.title',
+                name: 'platform.blades.sign-in-log-dashboard.title',
                 entityName: 'sign-in-log',
-                subtitle: 'platform.blades.sign-in-log.subtitle',
+                subtitle: 'platform.blades.sign-in-log-dashboard.subtitle',
                 // Naming does not follow the <entityName>ListController convention, so state it explicitly.
-                controller: 'platformWebApp.signInLogController',
-                template: '$(Platform)/Scripts/app/security/blades/sign-in-log.html',
+                controller: 'platformWebApp.signInLogDashboardController',
+                template: '$(Platform)/Scripts/app/security/blades/sign-in-log-dashboard.html',
                 permission: 'platform:security:sign_in_log:read'
             }
         ];

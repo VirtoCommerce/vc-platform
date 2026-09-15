@@ -39,11 +39,14 @@ angular.module('platformWebApp')
                     var newBlade = {
                         id: "signInLogBlade",
                         userId: userId,
+                        // The widget counts every attempt for this user, so the list must not
+                        // silently narrow to the last 24 hours.
+                        initialFilter: { period: '' },
                         refreshCountCallback: function (newCount) {
                             blade.signInLogCount = newCount;
                         },
-                        controller: 'platformWebApp.signInLogController',
-                        template: '$(Platform)/Scripts/app/security/blades/sign-in-log.html'
+                        controller: 'platformWebApp.signInLogListController',
+                        template: '$(Platform)/Scripts/app/security/blades/sign-in-log-list.html'
                     };
                     bladeNavigationService.showBlade(newBlade, $scope.blade);
                 };

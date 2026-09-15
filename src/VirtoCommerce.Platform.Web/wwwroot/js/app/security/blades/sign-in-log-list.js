@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.signInLogController',
+    .controller('platformWebApp.signInLogListController',
         ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
             function ($scope, accounts, bladeUtils, uiGridHelper) {
                 $scope.uiGridConstants = uiGridHelper.uiGridConstants;
@@ -21,27 +21,49 @@ angular.module('platformWebApp')
                     { label: 'platform.blades.sign-in-log.labels.failed', value: 'false' }
                 ];
 
-                blade.signInTypes = ['Password', 'External', 'Impersonation', 'ImpersonationRevert', 'Logout'];
+                // A comma-joined value expands into several signInTypes, so "On behalf" can cover
+                // both the grant and the revert without needing a multi-select.
+                blade.signInTypeOptions = [
+                    { label: 'platform.blades.sign-in-log.filter.all', value: '' },
+                    { label: 'platform.blades.sign-in-log.filter.type-password', value: 'Password' },
+                    { label: 'platform.blades.sign-in-log.filter.type-external', value: 'External' },
+                    { label: 'platform.blades.sign-in-log.filter.type-impersonation', value: 'Impersonation,ImpersonationRevert' },
+                    { label: 'platform.blades.sign-in-log.filter.type-logout', value: 'Logout' }
+                ];
 
-                var filter = $scope.filter = {
-                    keyword: null,
-                    period: '24h',
-                    succeeded: '',
-                    signInType: '',
-                    ipAddress: null,
+                // Seeded by the dashboard; falls back to the plain defaults when opened directly.
+                var seed = blade.initialFilter || {};
 
+                function defaults() {
+                    return {
+                        keyword: seed.keyword || null,
+                        period: seed.period !== undefined ? seed.period : '24h',
+                        succeeded: seed.succeeded !== undefined ? seed.succeeded : '',
+                        signInType: seed.signInType || '',
+                        failureReason: seed.failureReason || null,
+                        ipAddress: seed.ipAddress || null
+                    };
+                }
+
+                var filter = $scope.filter = angular.extend(defaults(), {
                     hasActiveFilters: function () {
                         return filter.period !== '24h' ||
                                filter.succeeded !== '' ||
                                filter.signInType !== '' ||
+                               !!filter.failureReason ||
                                !!filter.ipAddress;
                     },
 
+                    // Clear resets to the plain defaults, not to the dashboard preset: the point of
+                    // the button is to widen the view, not to bounce back to where you came from.
                     clearFilters: function () {
                         filter.period = '24h';
                         filter.succeeded = '';
                         filter.signInType = '';
+                        filter.failureReason = null;
                         filter.ipAddress = null;
+                        blade.searchText = '';
+                        filter.keyword = null;
                         filter.criteriaChanged();
                     },
 
@@ -52,9 +74,9 @@ angular.module('platformWebApp')
                             blade.refresh();
                         }
                     }
-                };
+                });
 
-                blade.searchText = '';
+                blade.searchText = filter.keyword || '';
                 $scope.$watch('blade.searchText', function (newVal, oldVal) {
                     if (newVal !== oldVal) {
                         filter.keyword = newVal;
@@ -76,7 +98,11 @@ angular.module('platformWebApp')
                     }
 
                     if (filter.signInType) {
-                        criteria.signInTypes = [filter.signInType];
+                        criteria.signInTypes = filter.signInType.split(',');
+                    }
+
+                    if (filter.failureReason) {
+                        criteria.failureReasons = [filter.failureReason];
                     }
 
                     var period = _.findWhere(blade.periods, { value: filter.period });
@@ -92,9 +118,7 @@ angular.module('platformWebApp')
                 blade.refresh = function () {
                     blade.isLoading = true;
 
-                    var criteria = buildCriteria();
-
-                    accounts.searchSignInLog({}, angular.extend({}, criteria, {
+                    accounts.searchSignInLog({}, angular.extend(buildCriteria(), {
                         skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                         take: $scope.pageSettings.itemsPerPageCount
                     }), function (data) {
@@ -108,25 +132,6 @@ angular.module('platformWebApp')
                     }, function () {
                         blade.isLoading = false;
                     });
-
-                    accounts.getSignInLogStats({}, angular.extend({}, criteria, { sort: null }), function (stats) {
-                        blade.stats = stats;
-                    });
-                };
-
-                // Every statistics row is a click-through into the filtered list.
-                $scope.filterByIp = function (entry) {
-                    filter.ipAddress = entry.key;
-                    filter.criteriaChanged();
-                };
-
-                $scope.filterByFailureReason = function () {
-                    filter.succeeded = 'false';
-                    filter.criteriaChanged();
-                };
-
-                $scope.filterByUserName = function (entry) {
-                    blade.searchText = entry.key;
                 };
 
                 $scope.isImpersonation = function (entity) {

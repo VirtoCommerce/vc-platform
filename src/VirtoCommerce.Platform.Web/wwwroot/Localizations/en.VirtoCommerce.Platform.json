@@ -738,7 +738,11 @@
           "period-all": "All time",
           "outcome": "Outcome",
           "sign-in-type": "Type",
-          "ip-address": "IP address"
+          "ip-address": "IP address",
+          "type-password": "Password",
+          "type-external": "External provider",
+          "type-impersonation": "On behalf",
+          "type-logout": "Sign out"
         },
         "labels": {
           "date": "Date",
@@ -765,6 +769,21 @@
         },
         "hints": {
           "known-accounts-only": "Covers attempts against existing accounts only."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Sign-in log",
+        "subtitle": "Sign-in activity and login on behalf",
+        "commands": {
+          "view-all": "View all records"
+        },
+        "presets": {
+          "all": "All records",
+          "failed": "Failed attempts",
+          "impersonation": "Login on behalf",
+          "by-ip": "Failed attempts from IP",
+          "by-user": "Failed attempts for account",
+          "by-reason": "Failed attempts by reason"
         }
       }
     },

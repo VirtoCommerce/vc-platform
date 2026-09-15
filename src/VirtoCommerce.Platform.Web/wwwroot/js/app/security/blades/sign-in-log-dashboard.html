@@ -1,0 +1,87 @@
+<div class="blade-content __medium-wide">
+  <div class="blade-inner">
+    <div class="inner-block">
+
+      <div class="sign-in-log-period">
+        <a href="javascript:void(0)"
+           ng-repeat="p in blade.periods"
+           ng-class="{'__active': blade.period === p.value}"
+           ng-click="setPeriod(p.value)">{{ p.label | translate }}</a>
+      </div>
+
+      <div class="sign-in-log-tiles" ng-if="blade.stats">
+        <div class="tile __clickable" ng-click="openAll()">
+          <div class="tile-value">{{ blade.stats.totalCount | number:0 }}</div>
+          <div class="tile-label">{{ 'platform.blades.sign-in-log.stats.total' | translate }}</div>
+        </div>
+        <div class="tile __alert __clickable" ng-click="openFailed()">
+          <div class="tile-value">{{ blade.stats.failedCount | number:0 }}</div>
+          <div class="tile-label">{{ 'platform.blades.sign-in-log.stats.failed' | translate }}</div>
+        </div>
+        <div class="tile">
+          <div class="tile-value">{{ blade.stats.distinctUserCount | number:0 }}</div>
+          <div class="tile-label">{{ 'platform.blades.sign-in-log.stats.users' | translate }}</div>
+        </div>
+        <div class="tile __impersonation __clickable" ng-click="openImpersonation()">
+          <div class="tile-value">{{ blade.stats.impersonationCount | number:0 }}</div>
+          <div class="tile-label">{{ 'platform.blades.sign-in-log.stats.impersonation' | translate }}</div>
+        </div>
+      </div>
+
+      <div class="sign-in-log-breakdowns" ng-if="blade.stats">
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.top-failed-ips' | translate }}</h4>
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.topFailedIpAddresses" ng-click="openByIp(entry)">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.topFailedIpAddresses.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.top-failed-users' | translate }}</h4>
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.topFailedUserNames" ng-click="openByUserName(entry)">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.topFailedUserNames.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.failure-reasons' | translate }}</h4>
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.failureReasonBreakdown" ng-click="openByFailureReason(entry)">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.failureReasonBreakdown.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.by-organization' | translate }}</h4>
+          <div class="breakdown-row" ng-repeat="entry in blade.stats.signInsByOrganization">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.signInsByOrganization.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
+          <div class="hint">{{ 'platform.blades.sign-in-log.hints.known-accounts-only' | translate }}</div>
+        </div>
+      </div>
+
+      <div class="sign-in-log-all">
+        <a href="javascript:void(0)" ng-click="openAll()">
+          <i class="fa fa-list"></i>
+          {{ 'platform.blades.sign-in-log-dashboard.commands.view-all' | translate }}
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>

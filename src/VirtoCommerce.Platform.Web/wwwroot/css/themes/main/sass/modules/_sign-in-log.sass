@@ -124,3 +124,47 @@
     margin-left: 6px
     font-size: 11px
     color: #999
+
+// Dashboard: period switcher and the explicit "all records" entry point.
+.sign-in-log-period
+    display: flex
+    flex-wrap: wrap
+    gap: 4px
+    margin-bottom: 12px
+
+    a
+        padding: 3px 10px
+        border: 1px solid #ddd
+        border-radius: 3px
+        font-size: 12px
+        color: #666
+        text-decoration: none
+
+        &:hover
+            border-color: #43b0e6
+            color: #43b0e6
+
+        &.__active
+            border-color: #43b0e6
+            background: #43b0e6
+            color: #fff
+
+.sign-in-log-tiles .tile.__clickable
+    cursor: pointer
+
+    &:hover
+        border-color: #43b0e6
+
+.sign-in-log-all
+    margin-top: 4px
+
+    a
+        font-size: 13px
+        color: #43b0e6
+        text-decoration: none
+
+        i
+            margin-right: 6px
+
+        &:hover
+            text-decoration: underline
