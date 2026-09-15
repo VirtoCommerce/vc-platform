@@ -1,14 +1,48 @@
+<div class="blade-static">
+  <div class="form-group" style="display: flex; align-items: center;">
+    <va-filter-panel
+        has-active-filters="filter.hasActiveFilters()"
+        on-clear-filters="filter.clearFilters()"
+        search-text="blade.searchText"
+        filter-title="{{ 'platform.blades.sign-in-log.filter.title' | translate }}">
+
+      <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.period' | translate }}</span>
+        <select class="va-filter-panel__select" ng-model="filter.period" ng-change="filter.criteriaChanged()">
+          <option ng-repeat="p in blade.periods" value="{{p.value}}">{{p.label | translate}}</option>
+        </select>
+      </div>
+
+      <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.outcome' | translate }}</span>
+        <select class="va-filter-panel__select" ng-model="filter.succeeded" ng-change="filter.criteriaChanged()">
+          <option ng-repeat="o in blade.outcomes" value="{{o.value}}">{{o.label | translate}}</option>
+        </select>
+      </div>
+
+      <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.sign-in-type' | translate }}</span>
+        <select class="va-filter-panel__select" ng-model="filter.signInType" ng-change="filter.criteriaChanged()">
+          <option value="">{{ 'platform.blades.sign-in-log.filter.all' | translate }}</option>
+          <option ng-repeat="t in blade.signInTypes" value="{{t}}">{{t}}</option>
+        </select>
+      </div>
+
+      <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.ip-address' | translate }}</span>
+        <input type="text" class="va-filter-panel__select" ng-model="filter.ipAddress" ng-change="filter.criteriaChanged()"
+               ng-model-options="{ debounce: 400 }">
+      </div>
+
+    </va-filter-panel>
+  </div>
+</div>
+
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+
 <div class="blade-content __wide">
   <div class="blade-inner">
     <div class="inner-block">
-
-      <div class="sign-in-log-period">
-        <a href="javascript:void(0)"
-           ng-repeat="period in periods"
-           ng-class="{'__active': filter.period.key === period.key}"
-           ng-click="setPeriod(period)">{{ 'platform.blades.sign-in-log.periods.' + period.key | translate }}</a>
-      </div>
 
       <div class="sign-in-log-tiles" ng-if="blade.stats">
         <div class="tile">
@@ -32,30 +66,45 @@
       <div class="sign-in-log-breakdowns" ng-if="blade.stats">
         <div class="breakdown">
           <h4>{{ 'platform.blades.sign-in-log.stats.top-failed-ips' | translate }}</h4>
-          <div class="breakdown-row" ng-repeat="entry in blade.stats.topFailedIpAddresses" ng-click="filterByIp(entry)">
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.topFailedIpAddresses" ng-click="filterByIp(entry)">
             <span class="breakdown-key">{{ entry.key }}</span>
             <span class="breakdown-count">{{ entry.count | number:0 }}</span>
           </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.topFailedIpAddresses.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
         </div>
+
         <div class="breakdown">
           <h4>{{ 'platform.blades.sign-in-log.stats.top-failed-users' | translate }}</h4>
-          <div class="breakdown-row" ng-repeat="entry in blade.stats.topFailedUserNames" ng-click="filterByUserName(entry)">
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.topFailedUserNames" ng-click="filterByUserName(entry)">
             <span class="breakdown-key">{{ entry.key }}</span>
             <span class="breakdown-count">{{ entry.count | number:0 }}</span>
           </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.topFailedUserNames.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
         </div>
+
         <div class="breakdown">
           <h4>{{ 'platform.blades.sign-in-log.stats.failure-reasons' | translate }}</h4>
-          <div class="breakdown-row" ng-repeat="entry in blade.stats.failureReasonBreakdown" ng-click="filterByFailureReason(entry)">
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.failureReasonBreakdown" ng-click="filterByFailureReason(entry)">
             <span class="breakdown-key">{{ entry.key }}</span>
             <span class="breakdown-count">{{ entry.count | number:0 }}</span>
           </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.failureReasonBreakdown.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
         </div>
+
         <div class="breakdown">
           <h4>{{ 'platform.blades.sign-in-log.stats.by-organization' | translate }}</h4>
           <div class="breakdown-row" ng-repeat="entry in blade.stats.signInsByOrganization">
             <span class="breakdown-key">{{ entry.key }}</span>
             <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.signInsByOrganization.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
           </div>
           <div class="hint">{{ 'platform.blades.sign-in-log.hints.known-accounts-only' | translate }}</div>
         </div>
@@ -63,11 +112,12 @@
 
       <div class="table-wrapper" ng-init="setGridOptions({
                 enableSorting: false,
-                rowHeight: 50,
+                rowHeight: 40,
                 columnDefs: [
                     {
                        displayName: 'platform.blades.sign-in-log.labels.date',
                        name: 'createdDate',
+                       width: 140,
                        cellTemplate: 'sign-in-log-date.cell.html'
                     },
                     {
@@ -78,20 +128,23 @@
                     {
                        displayName: 'platform.blades.sign-in-log.labels.outcome',
                        name: 'succeeded',
-                       width: 110,
+                       width: 100,
                        cellTemplate: 'sign-in-log-outcome.cell.html'
                     },
                     {
                        displayName: 'platform.blades.sign-in-log.labels.failure-reason',
-                       name: 'failureReason'
+                       name: 'failureReason',
+                       width: 140
                     },
                     {
                        displayName: 'platform.blades.sign-in-log.labels.sign-in-type',
-                       name: 'signInType'
+                       name: 'signInType',
+                       width: 150
                     },
                     {
                        displayName: 'platform.blades.sign-in-log.labels.ip-address',
-                       name: 'ipAddress'
+                       name: 'ipAddress',
+                       width: 130
                     },
                     {
                        displayName: 'platform.blades.sign-in-log.labels.organization',
@@ -111,7 +164,8 @@
 <script type="text/ng-template" id="sign-in-log-user.cell.html">
   <div class="ui-grid-cell-contents">
     {{ row.entity.userName }}
-    <span class="label __impersonation" ng-if="grid.appScope.isImpersonation(row.entity)"
+    <span class="sign-in-log-badge __impersonation"
+          ng-if="grid.appScope.isImpersonation(row.entity)"
           title="{{ row.entity.operatorUserName }}">
       {{ 'platform.blades.sign-in-log.labels.impersonation' | translate }}
     </span>
@@ -120,7 +174,8 @@
 
 <script type="text/ng-template" id="sign-in-log-outcome.cell.html">
   <div class="ui-grid-cell-contents">
-    <span ng-if="row.entity.succeeded" class="label __success">{{ 'platform.blades.sign-in-log.labels.succeeded' | translate }}</span>
-    <span ng-if="!row.entity.succeeded" class="label __failed">{{ 'platform.blades.sign-in-log.labels.failed' | translate }}</span>
+    <span class="sign-in-log-badge" ng-class="row.entity.succeeded ? '__success' : '__failed'">
+      {{ (row.entity.succeeded ? 'platform.blades.sign-in-log.labels.succeeded' : 'platform.blades.sign-in-log.labels.failed') | translate }}
+    </span>
   </div>
 </script>

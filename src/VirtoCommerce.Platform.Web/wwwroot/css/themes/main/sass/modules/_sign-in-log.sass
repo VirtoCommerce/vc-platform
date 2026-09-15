@@ -1,0 +1,120 @@
+// Sign-in log blade: statistics strip (tiles + top-10 breakdowns) above the grid.
+// Used by: platformWebApp.signInLogController
+
+.sign-in-log-tiles
+    display: flex
+    flex-wrap: wrap
+    gap: 10px
+    margin-bottom: 16px
+
+    .tile
+        flex: 1 1 120px
+        min-width: 110px
+        padding: 10px 12px
+        border: 1px solid #ddd
+        border-radius: 3px
+        background: #fff
+
+        &.__alert .tile-value
+            color: #f4614c
+
+        &.__impersonation .tile-value
+            color: #e08b00
+
+    .tile-value
+        font-size: 24px
+        line-height: 28px
+        font-weight: 600
+        color: #333
+
+    .tile-label
+        margin-top: 2px
+        font-size: 11px
+        line-height: 14px
+        color: #999
+        text-transform: uppercase
+        letter-spacing: .02em
+
+.sign-in-log-breakdowns
+    display: flex
+    flex-wrap: wrap
+    gap: 10px
+    margin-bottom: 16px
+
+    .breakdown
+        flex: 1 1 200px
+        min-width: 180px
+        padding: 10px 12px
+        border: 1px solid #ddd
+        border-radius: 3px
+        background: #fff
+
+        h4
+            margin: 0 0 6px
+            font-size: 11px
+            font-weight: 600
+            color: #999
+            text-transform: uppercase
+            letter-spacing: .02em
+
+        .breakdown-empty
+            font-size: 12px
+            color: #bbb
+            padding: 2px 0
+
+        .hint
+            margin-top: 6px
+            font-size: 11px
+            color: #bbb
+
+    .breakdown-row
+        display: flex
+        align-items: baseline
+        justify-content: space-between
+        gap: 8px
+        padding: 3px 0
+        font-size: 13px
+        border-bottom: 1px solid #f2f2f2
+
+        &:last-of-type
+            border-bottom: none
+
+        &.__clickable
+            cursor: pointer
+
+            &:hover .breakdown-key
+                color: #43b0e6
+                text-decoration: underline
+
+    .breakdown-key
+        color: #333
+        overflow: hidden
+        text-overflow: ellipsis
+        white-space: nowrap
+
+    .breakdown-count
+        flex-shrink: 0
+        font-weight: 600
+        color: #666
+
+// Row badges in the grid.
+.sign-in-log-badge
+    display: inline-block
+    padding: 1px 6px
+    border-radius: 2px
+    font-size: 11px
+    line-height: 16px
+    white-space: nowrap
+
+    &.__success
+        background: #e8f5e9
+        color: #2e7d32
+
+    &.__failed
+        background: #fdecea
+        color: #c62828
+
+    &.__impersonation
+        margin-left: 6px
+        background: #fff4e0
+        color: #b06d00

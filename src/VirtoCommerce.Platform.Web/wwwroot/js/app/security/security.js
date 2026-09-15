@@ -339,7 +339,8 @@ angular.module('platformWebApp')
             }, 'accountDetail');
             widgetService.registerWidget({
                 controller: 'platformWebApp.accountSignInLogWidgetController',
-                template: '$(Platform)/Scripts/app/security/widgets/accountSignInLogWidget.html'
+                template: '$(Platform)/Scripts/app/security/widgets/accountSignInLogWidget.html',
+                permission: 'platform:security:sign_in_log:read'
             }, 'accountDetail');
 
 

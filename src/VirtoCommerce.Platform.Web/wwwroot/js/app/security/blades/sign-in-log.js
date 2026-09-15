@@ -4,32 +4,87 @@ angular.module('platformWebApp')
             function ($scope, accounts, bladeUtils, uiGridHelper) {
                 $scope.uiGridConstants = uiGridHelper.uiGridConstants;
                 var blade = $scope.blade;
-                blade.title = "platform.blades.sign-in-log.title";
+
+                blade.title = blade.title || 'platform.blades.sign-in-log.title';
                 blade.headIcon = 'fas fa-clipboard-list';
 
-                // Period selector for both the grid and the statistics strip.
-                $scope.periods = [
-                    { key: '24h', hours: 24 },
-                    { key: '7d', hours: 24 * 7 },
-                    { key: '30d', hours: 24 * 30 }
+                blade.periods = [
+                    { label: 'platform.blades.sign-in-log.filter.period-24h', value: '24h', hours: 24 },
+                    { label: 'platform.blades.sign-in-log.filter.period-7d', value: '7d', hours: 24 * 7 },
+                    { label: 'platform.blades.sign-in-log.filter.period-30d', value: '30d', hours: 24 * 30 },
+                    { label: 'platform.blades.sign-in-log.filter.period-all', value: '', hours: 0 }
                 ];
 
-                var filter = $scope.filter = { period: $scope.periods[0] };
+                blade.outcomes = [
+                    { label: 'platform.blades.sign-in-log.filter.all', value: '' },
+                    { label: 'platform.blades.sign-in-log.labels.succeeded', value: 'true' },
+                    { label: 'platform.blades.sign-in-log.labels.failed', value: 'false' }
+                ];
+
+                blade.signInTypes = ['Password', 'External', 'Impersonation', 'ImpersonationRevert', 'Logout'];
+
+                var filter = $scope.filter = {
+                    keyword: null,
+                    period: '24h',
+                    succeeded: '',
+                    signInType: '',
+                    ipAddress: null,
+
+                    hasActiveFilters: function () {
+                        return filter.period !== '24h' ||
+                               filter.succeeded !== '' ||
+                               filter.signInType !== '' ||
+                               !!filter.ipAddress;
+                    },
+
+                    clearFilters: function () {
+                        filter.period = '24h';
+                        filter.succeeded = '';
+                        filter.signInType = '';
+                        filter.ipAddress = null;
+                        filter.criteriaChanged();
+                    },
+
+                    criteriaChanged: function () {
+                        if ($scope.pageSettings.currentPage > 1) {
+                            $scope.pageSettings.currentPage = 1;
+                        } else {
+                            blade.refresh();
+                        }
+                    }
+                };
+
+                blade.searchText = '';
+                $scope.$watch('blade.searchText', function (newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        filter.keyword = newVal;
+                        filter.criteriaChanged();
+                    }
+                });
 
                 function buildCriteria() {
-                    var startDate = new Date();
-                    startDate.setHours(startDate.getHours() - filter.period.hours);
-
-                    return {
+                    var criteria = {
                         userId: blade.userId,
                         keyword: filter.keyword,
-                        succeeded: filter.succeeded,
-                        signInTypes: filter.signInTypes,
-                        failureReasons: filter.failureReasons,
-                        ipAddress: filter.ipAddress,
-                        organizationId: filter.organizationId,
-                        startDate: startDate.toISOString()
+                        ipAddress: filter.ipAddress
                     };
+
+                    if (filter.succeeded !== '') {
+                        criteria.succeeded = filter.succeeded === 'true';
+                    }
+
+                    if (filter.signInType) {
+                        criteria.signInTypes = [filter.signInType];
+                    }
+
+                    var period = _.findWhere(blade.periods, { value: filter.period });
+                    if (period && period.hours) {
+                        var startDate = new Date();
+                        startDate.setHours(startDate.getHours() - period.hours);
+                        criteria.startDate = startDate.toISOString();
+                    }
+
+                    return criteria;
                 }
 
                 blade.refresh = function () {
@@ -48,6 +103,8 @@ angular.module('platformWebApp')
                         if (blade.refreshCountCallback && angular.isFunction(blade.refreshCountCallback)) {
                             blade.refreshCountCallback(data.totalCount);
                         }
+                    }, function () {
+                        blade.isLoading = false;
                     });
 
                     accounts.getSignInLogStats({}, criteria, function (stats) {
@@ -61,56 +118,27 @@ angular.module('platformWebApp')
                     filter.criteriaChanged();
                 };
 
-                $scope.filterByFailureReason = function (entry) {
-                    filter.failureReasons = [entry.key];
-                    filter.succeeded = false;
+                $scope.filterByFailureReason = function () {
+                    filter.succeeded = 'false';
                     filter.criteriaChanged();
                 };
 
                 $scope.filterByUserName = function (entry) {
-                    filter.keyword = entry.key;
-                    filter.criteriaChanged();
+                    blade.searchText = entry.key;
                 };
 
                 $scope.isImpersonation = function (entity) {
-                    return entity && (entity.signInType === 'Impersonation' || entity.signInType === 'ImpersonationRevert');
-                };
-
-                $scope.setPeriod = function (period) {
-                    filter.period = period;
-                    filter.criteriaChanged();
-                };
-
-                $scope.resetFilters = function () {
-                    filter.keyword = null;
-                    filter.succeeded = undefined;
-                    filter.signInTypes = null;
-                    filter.failureReasons = null;
-                    filter.ipAddress = null;
-                    filter.organizationId = null;
-                    filter.criteriaChanged();
+                    return !!entity &&
+                        (entity.signInType === 'Impersonation' || entity.signInType === 'ImpersonationRevert');
                 };
 
                 blade.toolbarCommands = [
                     {
-                        name: "platform.commands.refresh", icon: 'fa fa-refresh',
-                        executeMethod: blade.refresh,
-                        canExecuteMethod: function () { return true; }
-                    },
-                    {
-                        name: "platform.commands.reset-filters", icon: 'fa fa-eraser',
-                        executeMethod: $scope.resetFilters,
+                        name: 'platform.commands.refresh', icon: 'fa fa-refresh',
+                        executeMethod: function () { blade.refresh(); },
                         canExecuteMethod: function () { return true; }
                     }
                 ];
-
-                filter.criteriaChanged = function () {
-                    if ($scope.pageSettings.currentPage > 1) {
-                        $scope.pageSettings.currentPage = 1;
-                    } else {
-                        blade.refresh();
-                    }
-                };
 
                 $scope.setGridOptions = function (gridOptions) {
                     uiGridHelper.initialize($scope, gridOptions, function () {

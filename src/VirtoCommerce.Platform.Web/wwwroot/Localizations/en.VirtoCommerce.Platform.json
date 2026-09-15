@@ -727,10 +727,18 @@
       },
       "sign-in-log": {
         "title": "Sign-in log",
-        "periods": {
-          "24h": "Last 24 hours",
-          "7d": "Last 7 days",
-          "30d": "Last 30 days"
+        "subtitle": "Sign-in attempts and login on behalf",
+        "filter": {
+          "title": "Sign-in log filters",
+          "all": "All",
+          "period": "Period",
+          "period-24h": "Last 24 hours",
+          "period-7d": "Last 7 days",
+          "period-30d": "Last 30 days",
+          "period-all": "All time",
+          "outcome": "Outcome",
+          "sign-in-type": "Type",
+          "ip-address": "IP address"
         },
         "labels": {
           "date": "Date",
@@ -752,7 +760,8 @@
           "top-failed-ips": "Top IPs by failed attempts",
           "top-failed-users": "Top accounts by failed attempts",
           "failure-reasons": "Failure reasons",
-          "by-organization": "Sign-ins by organization"
+          "by-organization": "Sign-ins by organization",
+          "none": "No data"
         },
         "hints": {
           "known-accounts-only": "Covers attempts against existing accounts only."
@@ -978,8 +987,7 @@
       },
       "restart-application-title": "Restart application",
       "terminate": "Terminate",
-      "sessions-terminate-all": "Terminate all",
-      "reset-filters": "Reset filters"
+      "sessions-terminate-all": "Terminate all"
     }
   },
   "permissions": {
