@@ -144,6 +144,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                     catch (DuplicateEmailException)
                     {
+                        await PublishSignInAttempt(openIdConnectRequest.Username, user: null, succeeded: false,
+                            SignInFailureReason.DuplicateEmail, openIdConnectRequest.ClientId);
                         await delayedResponse.FailAsync();
                         return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
                     }
@@ -151,12 +153,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (user is null)
                 {
+                    await PublishSignInAttempt(openIdConnectRequest.Username, user: null, succeeded: false,
+                        SignInFailureReason.UserNotFound, openIdConnectRequest.ClientId);
                     await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
 
                 if (!_passwordLoginOptions.Enabled && !user.IsAdministrator)
                 {
+                    await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                        SignInFailureReason.PasswordLoginDisabled, openIdConnectRequest.ClientId);
                     await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.PasswordLoginDisabled());
                 }
@@ -168,6 +174,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
                 catch (DuplicateEmailException)
                 {
+                    await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                        SignInFailureReason.DuplicateEmail, openIdConnectRequest.ClientId);
                     await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
                 }
@@ -179,6 +187,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var errors = await requestValidator.ValidateAsync(context);
                     if (errors.Count > 0)
                     {
+                        await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                            ToFailureReason(context.SignInResult), openIdConnectRequest.ClientId);
                         await delayedResponse.FailAsync();
                         return BadRequest(errors.First());
                     }
@@ -201,6 +211,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 await _eventPublisher.Publish(new UserLoginEvent(user));
+                await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: true,
+                    failureReason: null, openIdConnectRequest.ClientId);
 
                 await delayedResponse.SucceedAsync();
 
@@ -250,6 +262,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 CopyClaim(info.Principal, ticket.Principal, ClaimTypes.AuthenticationMethod, destinations);
                 CopyClaim(info.Principal, ticket.Principal, PlatformConstants.Security.Claims.OperatorUserId, destinations);
                 CopyClaim(info.Principal, ticket.Principal, PlatformConstants.Security.Claims.OperatorUserName, destinations);
+
+                // Ordinary token rotation is deliberately not audited: high volume, low value. A refresh that
+                // carries operator claims is different - it is how an impersonation session extends itself.
+                var refreshedOperatorUserId = info.Principal.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)?.EmptyToNull();
+                if (refreshedOperatorUserId != null)
+                {
+                    await PublishImpersonationAttempt(
+                        userName: user.UserName,
+                        impersonatedUser: user,
+                        operatorUserId: refreshedOperatorUserId,
+                        operatorUserName: info.Principal.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)?.EmptyToNull(),
+                        succeeded: true,
+                        failureReason: null,
+                        signInType: SignInType.Impersonation,
+                        clientId: openIdConnectRequest.ClientId,
+                        sessionId: ticket.Principal.FindFirstValue(Claims.Private.AuthorizationId));
+                }
 
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
@@ -322,6 +351,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         new PermissionAuthorizationRequirement(PlatformConstants.Security.Permissions.SecurityLoginOnBehalf));
                     if (!loginOnBehalfAuthResult.Succeeded)
                     {
+                        await PublishImpersonationAttempt(
+                            userName: (string)openIdConnectRequest.GetParameter("user_id"),
+                            impersonatedUser: null,
+                            operatorUserId: user.Id,
+                            operatorUserName: user.UserName,
+                            succeeded: false,
+                            failureReason: SignInFailureReason.Forbidden,
+                            signInType: SignInType.Impersonation,
+                            clientId: openIdConnectRequest.ClientId);
+
                         return Forbid();
                     }
                 }
@@ -346,8 +385,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     operatorUserName = string.Empty;
                 }
 
+                // An empty operatorUserId at this point means the call reverted the operator back to themselves.
+                var isRevert = string.IsNullOrEmpty(operatorUserId);
+                var auditSignInType = isRevert ? SignInType.ImpersonationRevert : SignInType.Impersonation;
+
                 if (impersonatedUser == null)
                 {
+                    await PublishImpersonationAttempt(
+                        userName: userId,
+                        impersonatedUser: null,
+                        operatorUserId: user.Id,
+                        operatorUserName: user.UserName,
+                        succeeded: false,
+                        failureReason: SignInFailureReason.UserNotFound,
+                        signInType: auditSignInType,
+                        clientId: openIdConnectRequest.ClientId);
+
                     return BadRequest(SecurityErrorDescriber.TokenInvalid());
                 }
 
@@ -373,6 +426,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ticket.Principal
                     .SetClaimWithDestinations(PlatformConstants.Security.Claims.OperatorUserId, operatorUserId, destinations)
                     .SetClaimWithDestinations(PlatformConstants.Security.Claims.OperatorUserName, operatorUserName, destinations);
+
+                await PublishImpersonationAttempt(
+                    userName: impersonatedUser.UserName,
+                    impersonatedUser: impersonatedUser,
+                    operatorUserId: operatorUserId.EmptyToNull() ?? user.Id,
+                    operatorUserName: operatorUserName.EmptyToNull() ?? user.UserName,
+                    succeeded: true,
+                    failureReason: null,
+                    signInType: auditSignInType,
+                    clientId: openIdConnectRequest.ClientId,
+                    sessionId: ticket.Principal.FindFirstValue(Claims.Private.AuthorizationId));
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -617,6 +681,85 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return request.MaxAge != null &&
                    result.Properties?.IssuedUtc != null &&
                    DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value);
+        }
+
+        /// <summary>
+        /// Records a sign-in attempt for audit. Publishing is non-blocking (the handler hands the row to a
+        /// buffered writer), so both the user-found and user-not-found branches do the same amount of
+        /// synchronous work and the user-enumeration timing side channel that <see cref="DelayedResponse"/>
+        /// closes stays closed.
+        /// </summary>
+        private Task PublishSignInAttempt(
+            string userName,
+            ApplicationUser user,
+            bool succeeded,
+            string failureReason,
+            string clientId,
+            string signInType = SignInType.Password)
+        {
+            return _eventPublisher.Publish(new UserSignInAttemptEvent
+            {
+                UserName = userName,
+                UserId = user?.Id,
+                Succeeded = succeeded,
+                FailureReason = failureReason,
+                SignInType = signInType,
+                ClientId = clientId,
+                StoreId = user?.StoreId,
+                MemberId = user?.MemberId,
+            });
+        }
+
+        private Task PublishImpersonationAttempt(
+            string userName,
+            ApplicationUser impersonatedUser,
+            string operatorUserId,
+            string operatorUserName,
+            bool succeeded,
+            string failureReason,
+            string signInType,
+            string clientId,
+            string sessionId = null)
+        {
+            return _eventPublisher.Publish(new UserSignInAttemptEvent
+            {
+                UserName = userName ?? impersonatedUser?.UserName,
+                UserId = impersonatedUser?.Id,
+                Succeeded = succeeded,
+                FailureReason = failureReason,
+                SignInType = signInType,
+                OperatorUserId = operatorUserId,
+                OperatorUserName = operatorUserName,
+                ClientId = clientId,
+                SessionId = sessionId,
+                StoreId = impersonatedUser?.StoreId,
+                MemberId = impersonatedUser?.MemberId,
+            });
+        }
+
+        private static string ToFailureReason(Microsoft.AspNetCore.Identity.SignInResult result)
+        {
+            if (result == null)
+            {
+                return SignInFailureReason.InvalidPassword;
+            }
+
+            if (result.IsLockedOut)
+            {
+                return SignInFailureReason.LockedOut;
+            }
+
+            if (result.IsNotAllowed)
+            {
+                return SignInFailureReason.NotAllowed;
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                return SignInFailureReason.RequiresTwoFactor;
+            }
+
+            return SignInFailureReason.InvalidPassword;
         }
 
         private OpenIddictRequest GetOpenIddictServerRequest()
