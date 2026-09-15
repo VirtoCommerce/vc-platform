@@ -49,6 +49,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
         private readonly IUserSessionsSearchService _userSessionsSearchService;
         private readonly IUserSessionsService _userSessionsService;
+        private readonly IUserSignInLogSearchService _userSignInLogSearchService;
         private readonly IAdminUIAccessPolicy _adminUIAccessPolicy;
 
         public SecurityController(
@@ -68,7 +69,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs,
             IUserSessionsSearchService userSessionsSearchService,
             IUserSessionsService userSessionsService,
-            IAdminUIAccessPolicy adminUIAccessPolicy)
+            IAdminUIAccessPolicy adminUIAccessPolicy,
+            IUserSignInLogSearchService userSignInLogSearchService)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -87,6 +89,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userSessionsSearchService = userSessionsSearchService;
             _userSessionsService = userSessionsService;
             _adminUIAccessPolicy = adminUIAccessPolicy;
+            _userSignInLogSearchService = userSignInLogSearchService;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
@@ -122,6 +125,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             await _userSessionsService.TerminateAllUserSessions(userId);
             return NoContent();
+        }
+
+        /// <summary>
+        /// Search the sign-in audit log: every sign-in attempt, successful or failed, including login-on-behalf.
+        /// </summary>
+        [HttpPost]
+        [Route("sign-in-log/search")]
+        [Authorize(PlatformPermissions.SecuritySignInLogRead)]
+        public async Task<ActionResult<UserSignInLogSearchResult>> SearchSignInLog([FromBody] UserSignInLogSearchCriteria criteria)
+        {
+            var result = await _userSignInLogSearchService.SearchAsync(criteria);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Aggregates over the sign-in audit log for the given criteria.
+        /// </summary>
+        [HttpPost]
+        [Route("sign-in-log/stats")]
+        [Authorize(PlatformPermissions.SecuritySignInLogRead)]
+        public async Task<ActionResult<UserSignInLogStats>> GetSignInLogStats([FromBody] UserSignInLogSearchCriteria criteria)
+        {
+            var result = await _userSignInLogSearchService.GetStatsAsync(criteria);
+            return Ok(result);
         }
 
         /// <summary>

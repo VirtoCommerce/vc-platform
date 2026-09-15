@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -39,6 +40,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IUserSessionsSearchService> _userSessionsSearchServiceMock;
         private readonly Mock<IUserSessionsService> _userSessionsServiceMock;
         private readonly Mock<IAdminUIAccessPolicy> _adminUIAccessPolicyMock;
+        private readonly Mock<IUserSignInLogSearchService> _userSignInLogSearchServiceMock;
 
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
@@ -54,6 +56,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _userApiKeyServiceMock = new Mock<IUserApiKeyService>();
             _userSessionsSearchServiceMock = new Mock<IUserSessionsSearchService>();
             _userSessionsServiceMock = new Mock<IUserSessionsService>();
+            _userSignInLogSearchServiceMock = new Mock<IUserSignInLogSearchService>();
             _logger = new Mock<ILogger<SecurityController>>();
 
             _adminUIAccessPolicyMock = new Mock<IAdminUIAccessPolicy>();
@@ -91,14 +94,14 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
         private SecurityController CreateSecurityController(
             Mock<IOptions<PasswordOptionsExtended>> passwordOptions = null,
-            Mock<IOptions<AuthorizationOptions>> securityOptions = null,
+            Mock<IOptions<Core.Security.AuthorizationOptions>> securityOptions = null,
             Mock<IOptions<PasswordLoginOptions>> passwordLoginOptions = null,
             Mock<IOptions<IdentityOptions>> identityOptions = null
             )
         {
             passwordOptions ??= new Mock<IOptions<PasswordOptionsExtended>> { DefaultValue = DefaultValue.Mock };
 
-            securityOptions ??= new Mock<IOptions<AuthorizationOptions>> { DefaultValue = DefaultValue.Mock };
+            securityOptions ??= new Mock<IOptions<Core.Security.AuthorizationOptions>> { DefaultValue = DefaultValue.Mock };
 
             passwordLoginOptions ??= new Mock<IOptions<PasswordLoginOptions>> { DefaultValue = DefaultValue.Mock };
 
@@ -121,7 +124,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 _externalSigninProviderConfigs,
                 _userSessionsSearchServiceMock.Object,
                 _userSessionsServiceMock.Object,
-                _adminUIAccessPolicyMock.Object);
+                _adminUIAccessPolicyMock.Object,
+                _userSignInLogSearchServiceMock.Object);
 
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
             controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
@@ -221,6 +225,49 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             attempt.Succeeded.Should().BeTrue();
             attempt.FailureReason.Should().BeNull();
             attempt.SignInType.Should().Be(SignInType.Password);
+        }
+
+        [Fact]
+        public async Task SearchSignInLog_PassesCriteriaThroughAndReturnsResult()
+        {
+            _userSignInLogSearchServiceMock
+                .Setup(x => x.SearchAsync(It.IsAny<UserSignInLogSearchCriteria>(), true))
+                .ReturnsAsync(new UserSignInLogSearchResult { TotalCount = 3 });
+
+            var response = await _controller.SearchSignInLog(new UserSignInLogSearchCriteria { Take = 20 });
+
+            response.Result.Should().BeOfType<OkObjectResult>()
+                .Which.Value.Should().BeOfType<UserSignInLogSearchResult>()
+                .Which.TotalCount.Should().Be(3);
+        }
+
+        [Fact]
+        public async Task GetSignInLogStats_ReturnsAggregates()
+        {
+            _userSignInLogSearchServiceMock
+                .Setup(x => x.GetStatsAsync(It.IsAny<UserSignInLogSearchCriteria>()))
+                .ReturnsAsync(new UserSignInLogStats { TotalCount = 10, FailedCount = 4, ImpersonationCount = 1 });
+
+            var response = await _controller.GetSignInLogStats(new UserSignInLogSearchCriteria());
+
+            var stats = response.Result.Should().BeOfType<OkObjectResult>()
+                .Which.Value.Should().BeOfType<UserSignInLogStats>().Subject;
+            stats.FailedCount.Should().Be(4);
+            stats.ImpersonationCount.Should().Be(1);
+        }
+
+        [Theory]
+        [InlineData(nameof(SecurityController.SearchSignInLog))]
+        [InlineData(nameof(SecurityController.GetSignInLogStats))]
+        public void SignInLogEndpoints_AreGuardedByTheSignInLogPermission(string methodName)
+        {
+            var attribute = typeof(SecurityController)
+                .GetMethod(methodName)!
+                .GetCustomAttributes(typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute), inherit: false)
+                .Cast<Microsoft.AspNetCore.Authorization.AuthorizeAttribute>()
+                .Single();
+
+            attribute.Policy.Should().Be(PlatformConstants.Security.Permissions.SecuritySignInLogRead);
         }
 
         private List<UserSignInAttemptEvent> CaptureSignInAttempts()
