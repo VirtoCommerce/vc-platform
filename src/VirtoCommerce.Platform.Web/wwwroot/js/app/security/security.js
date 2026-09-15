@@ -337,6 +337,10 @@ angular.module('platformWebApp')
                 controller: 'platformWebApp.accountSessionsWidgetController',
                 template: '$(Platform)/Scripts/app/security/widgets/accountSessionsWidget.html'
             }, 'accountDetail');
+            widgetService.registerWidget({
+                controller: 'platformWebApp.accountSignInLogWidgetController',
+                template: '$(Platform)/Scripts/app/security/widgets/accountSignInLogWidget.html'
+            }, 'accountDetail');
 
 
             $transitions.onBefore({ to: 'workspace.**' }, function (transition) {

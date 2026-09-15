@@ -724,6 +724,39 @@
           "ip-address": "IP address",
           "user-agent": "User agent"
         }
+      },
+      "sign-in-log": {
+        "title": "Sign-in log",
+        "periods": {
+          "24h": "Last 24 hours",
+          "7d": "Last 7 days",
+          "30d": "Last 30 days"
+        },
+        "labels": {
+          "date": "Date",
+          "user-name": "User",
+          "outcome": "Outcome",
+          "succeeded": "Success",
+          "failed": "Failed",
+          "failure-reason": "Reason",
+          "sign-in-type": "Type",
+          "ip-address": "IP address",
+          "organization": "Organization",
+          "impersonation": "On behalf"
+        },
+        "stats": {
+          "total": "Sign-ins",
+          "failed": "Failed attempts",
+          "users": "Distinct users",
+          "impersonation": "On behalf sessions",
+          "top-failed-ips": "Top IPs by failed attempts",
+          "top-failed-users": "Top accounts by failed attempts",
+          "failure-reasons": "Failure reasons",
+          "by-organization": "Sign-ins by organization"
+        },
+        "hints": {
+          "known-accounts-only": "Covers attempts against existing accounts only."
+        }
       }
     },
     "templates": {
@@ -788,6 +821,9 @@
       },
       "sessions": {
         "title": "Active sessions"
+      },
+      "sign-in-log": {
+        "title": "Sign-in log"
       }
     },
     "dialogs": {
@@ -942,7 +978,8 @@
       },
       "restart-application-title": "Restart application",
       "terminate": "Terminate",
-      "sessions-terminate-all": "Terminate all"
+      "sessions-terminate-all": "Terminate all",
+      "reset-filters": "Reset filters"
     }
   },
   "permissions": {
