@@ -221,6 +221,43 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.Cron,
                     DefaultValue = "0 0 */1 * *"
                 };
+
+                /// <summary>
+                /// Master switch for the sign-in audit log. Login-on-behalf rows ignore it and are
+                /// always written — it is the compliance anchor and must not be switchable off.
+                /// </summary>
+                public static SettingDescriptor SignInLogEnabled { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.SignInLogEnabled",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
+                public static SettingDescriptor SignInLogRetentionDays { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.SignInLogRetentionDays",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.Integer,
+                    DefaultValue = 90
+                };
+
+                public static SettingDescriptor EnableSignInLogCleanupJob { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.EnableSignInLogCleanupJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
+                public static SettingDescriptor CronSignInLogCleanupJob { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.CronSignInLogCleanupJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.Cron,
+                    DefaultValue = "0 0 */1 * *"
+                };
+
                 public static SettingDescriptor FileExtensionsBlackList { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.FileExtensionsBlackList",
@@ -297,6 +334,10 @@ namespace VirtoCommerce.Platform.Core
                         yield return DefaultExternalAccountStatus;
                         yield return EnablePruneExpiredTokensJob;
                         yield return CronPruneExpiredTokensJob;
+                        yield return SignInLogEnabled;
+                        yield return SignInLogRetentionDays;
+                        yield return EnableSignInLogCleanupJob;
+                        yield return CronSignInLogCleanupJob;
                         yield return FileExtensionsBlackList;
                         yield return FileExtensionsWhiteList;
                     }
