@@ -148,6 +148,93 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
         #region Login
 
+        [Fact]
+        public async Task Login_UnknownUser_PublishesFailedAttemptWithTypedUserName()
+        {
+            var attempts = CaptureSignInAttempts();
+            _userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null);
+            _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null);
+
+            await _controller.Login(new LoginRequest { UserName = "ghost@test.com", Password = "whatever" });
+
+            var attempt = attempts.Should().ContainSingle().Subject;
+            attempt.UserName.Should().Be("ghost@test.com");
+            attempt.UserId.Should().BeNull();
+            attempt.Succeeded.Should().BeFalse();
+            attempt.FailureReason.Should().Be(SignInFailureReason.UserNotFound);
+            attempt.SignInType.Should().Be(SignInType.Password);
+        }
+
+        [Fact]
+        public async Task Login_WrongPassword_PublishesInvalidPasswordWithStoreAndMember()
+        {
+            var attempts = CaptureSignInAttempts();
+            var user = new ApplicationUser
+            {
+                Id = "user-1",
+                UserName = "b2badmin@test.com",
+                StoreId = "B2B-store",
+                MemberId = "member-1",
+            };
+            _userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
+            _signInManagerMock
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Failed);
+
+            await _controller.Login(new LoginRequest { UserName = "b2badmin@test.com", Password = "wrong" });
+
+            var attempt = attempts.Should().ContainSingle().Subject;
+            attempt.UserId.Should().Be("user-1");
+            attempt.FailureReason.Should().Be(SignInFailureReason.InvalidPassword);
+            attempt.StoreId.Should().Be("B2B-store");
+            attempt.MemberId.Should().Be("member-1");
+        }
+
+        [Fact]
+        public async Task Login_LockedOut_PublishesLockedOutReason()
+        {
+            var attempts = CaptureSignInAttempts();
+            var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+            _userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
+            _signInManagerMock
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.LockedOut);
+
+            await _controller.Login(new LoginRequest { UserName = "b2badmin@test.com", Password = "wrong" });
+
+            attempts.Should().ContainSingle().Which.FailureReason.Should().Be(SignInFailureReason.LockedOut);
+        }
+
+        [Fact]
+        public async Task Login_Success_PublishesSucceededAttempt()
+        {
+            var attempts = CaptureSignInAttempts();
+            var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+            _userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
+            _signInManagerMock
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Success);
+
+            await _controller.Login(new LoginRequest { UserName = "b2badmin@test.com", Password = "right" });
+
+            var attempt = attempts.Should().ContainSingle().Subject;
+            attempt.Succeeded.Should().BeTrue();
+            attempt.FailureReason.Should().BeNull();
+            attempt.SignInType.Should().Be(SignInType.Password);
+        }
+
+        private List<UserSignInAttemptEvent> CaptureSignInAttempts()
+        {
+            var attempts = new List<UserSignInAttemptEvent>();
+
+            _eventPublisherMock
+                .Setup(x => x.Publish(It.IsAny<UserSignInAttemptEvent>(), It.IsAny<CancellationToken>()))
+                .Callback<UserSignInAttemptEvent, CancellationToken>((e, _) => attempts.Add(e))
+                .Returns(Task.CompletedTask);
+
+            return attempts;
+        }
+
         /// <summary>
         /// If signin in manager returns fail result we should return 200 OK with succeeded = false to the client
         /// </summary>

@@ -155,6 +155,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
                 catch (DuplicateEmailException)
                 {
+                    await PublishSignInAttempt(request.UserName, user: null, succeeded: false, SignInFailureReason.DuplicateEmail);
                     await delayedResponse.FailAsync();
                     return Ok(SignInResult.Failed);
                 }
@@ -162,6 +163,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (user == null)
             {
+                await PublishSignInAttempt(request.UserName, user: null, succeeded: false, SignInFailureReason.UserNotFound);
                 await delayedResponse.FailAsync();
                 return Ok(SignInResult.Failed);
             }
@@ -172,12 +174,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!loginResult.Succeeded)
             {
+                await PublishSignInAttempt(request.UserName, user, succeeded: false, ToFailureReason(loginResult));
                 await delayedResponse.FailAsync();
                 return Ok(loginResult);
             }
 
             await SetLastLoginDate(user);
             await _eventPublisher.Publish(new UserLoginEvent(user));
+            await PublishSignInAttempt(request.UserName, user, succeeded: true, failureReason: null);
 
             //Do not allow login to admin customers and rejected users
             if (await UserManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer))
@@ -209,6 +213,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await UserManager.UpdateSecurityStampAsync(user);
                 await _signInManager.SignOutAsync();
                 await _eventPublisher.Publish(new UserLogoutEvent(user));
+                await PublishSignInAttempt(user.UserName, user, succeeded: true, failureReason: null, SignInType.Logout);
             }
 
             return NoContent();
@@ -1256,6 +1261,52 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var result = isValid ? IdentityResult.Success : IdentityResult.Failed(errors.ToArray());
             return result;
+        }
+
+        /// <summary>
+        /// Records a sign-in attempt for audit. Publishing is non-blocking (the handler hands the row to a
+        /// buffered writer), so the user-found and user-not-found branches do the same amount of synchronous
+        /// work — turning this into a direct database write would reopen the user-enumeration timing side
+        /// channel that <see cref="DelayedResponse"/> exists to close.
+        /// </summary>
+        private Task PublishSignInAttempt(
+            string userName,
+            ApplicationUser user,
+            bool succeeded,
+            string failureReason,
+            string signInType = SignInType.Password)
+        {
+            return _eventPublisher.Publish(new UserSignInAttemptEvent
+            {
+                UserName = userName,
+                UserId = user?.Id,
+                Succeeded = succeeded,
+                FailureReason = failureReason,
+                SignInType = signInType,
+                StoreId = user?.StoreId,
+                MemberId = user?.MemberId,
+                SessionId = User.FindFirstValue(OpenIddictConstants.Claims.Private.AuthorizationId),
+            });
+        }
+
+        private static string ToFailureReason(SignInResult result)
+        {
+            if (result.IsLockedOut)
+            {
+                return SignInFailureReason.LockedOut;
+            }
+
+            if (result.IsNotAllowed)
+            {
+                return SignInFailureReason.NotAllowed;
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                return SignInFailureReason.RequiresTwoFactor;
+            }
+
+            return SignInFailureReason.InvalidPassword;
         }
 
         private Task SetLastLoginDate(ApplicationUser user)
