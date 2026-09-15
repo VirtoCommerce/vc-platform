@@ -96,11 +96,14 @@ angular.module('platformWebApp')
 							customOnRegisterApiCallback(gridApi);
 						}
 					},
+					// $scope here is the scope of the blade that owns this grid, captured when the
+					// grid was initialized. It has to be passed explicitly: updateColumnsVisibility
+					// is defined outside this closure and cannot see it.
 					onCollapse: function () {
-						updateColumnsVisibility(this, true);
+						updateColumnsVisibility(this, true, $scope);
 					},
 					onExpand: function () {
-						updateColumnsVisibility(this, false);
+						updateColumnsVisibility(this, false, $scope);
 					}
 				});
 
@@ -191,9 +194,13 @@ angular.module('platformWebApp')
 				grid.api.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
 			}
 
-			function updateColumnsVisibility(gridOptions, isCollapsed) {
-				var blade = bladeNavigationService.currentBlade;
-				var $scope = blade.$scope;
+			// ownerScope is the scope of the blade whose grid these gridOptions belong to, passed in
+			// by onCollapse/onExpand. It used to read bladeNavigationService.currentBlade instead,
+			// which resolves to whichever blade is focused at call time - and onCollapse fires on
+			// the parent precisely because a child blade has just become the current one. So this
+			// mutated one grid's columnDefs while notifying a different grid's API, leaving the two
+			// permanently out of sync.
+			function updateColumnsVisibility(gridOptions, isCollapsed, ownerScope) {
 				_.each(gridOptions.columnDefs, function (x) {
 					// normal: visible, if column was predefined
 					// collapsed: visible only if we must display column always
@@ -202,8 +209,8 @@ angular.module('platformWebApp')
 					}
 					x.visible = !isCollapsed ? !!x.wasVisible : !!x.displayAlways;
 				});
-				if ($scope && $scope.gridApi)
-					$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+				if (ownerScope && ownerScope.gridApi)
+					ownerScope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
 			}
 		
 			function toSentenceCase(str)
@@ -295,7 +302,14 @@ angular.module('platformWebApp')
 					};
 					scope.$watch('blade.isExpanded', setGridHeight);
 					scope.$watch('pageSettings.totalItems', setGridHeight);
+
+					// The two watches above die with the scope, but a $window handler outlives it.
+					// Every grid ever opened would otherwise keep resizing a detached element - and
+					// keep calling $timeout, which runs a digest - for the life of the tab.
 					angular.element($window).bind('resize', setGridHeight);
+					scope.$on('$destroy', function () {
+						angular.element($window).unbind('resize', setGridHeight);
+					});
 				}
 			}
 		};
