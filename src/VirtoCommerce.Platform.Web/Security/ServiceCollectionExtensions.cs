@@ -32,6 +32,11 @@ namespace VirtoCommerce.Platform.Web.Security
 
             services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
             services.AddSingleton<IUserSignInLogService, UserSignInLogService>();
+
+            // One instance serving both roles: the hosted service drains the same channel the writer fills.
+            services.AddSingleton<BufferedUserSignInLogWriter>();
+            services.AddSingleton<IUserSignInLogWriter>(provider => provider.GetRequiredService<BufferedUserSignInLogWriter>());
+            services.AddHostedService(provider => provider.GetRequiredService<BufferedUserSignInLogWriter>());
             services.AddSingleton<IUserApiKeySearchService, UserApiKeySearchService>();
 
             services.AddScoped<IUserNameResolver, HttpContextUserResolver>();
