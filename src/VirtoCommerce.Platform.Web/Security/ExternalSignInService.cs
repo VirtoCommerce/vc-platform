@@ -52,6 +52,8 @@ namespace VirtoCommerce.Platform.Web.Security
                 return ExternalSignInResult.Fail();
             }
 
+            // No audit publish here: TryGetUserInfo throws rather than returning false, so this branch
+            // is unreachable. Left as-is - changing that is authentication logic, which is out of scope.
             if (!TryGetUserInfo(externalLoginInfo, out var userName, out var userEmail))
             {
                 return ExternalSignInResult.Fail();
@@ -74,6 +76,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (externalLoginResult == SignInResult.LockedOut)
             {
+                await PublishSignInAttempt(userName, platformUser, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.LockedOut);
                 return ExternalSignInResult.Fail();
             }
 
@@ -84,8 +87,29 @@ namespace VirtoCommerce.Platform.Web.Security
 
             await SetLastLoginDate(platformUser);
             await _eventPublisher.Publish(new UserLoginEvent(platformUser, externalLoginInfo));
+            await PublishSignInAttempt(platformUser.UserName, platformUser, externalLoginInfo.LoginProvider, succeeded: true, failureReason: null);
 
             return ExternalSignInResult.Succeed(externalLoginInfo.LoginProvider, platformUser);
+        }
+
+        private Task PublishSignInAttempt(
+            string userName,
+            ApplicationUser user,
+            string provider,
+            bool succeeded,
+            string failureReason)
+        {
+            return _eventPublisher.Publish(new UserSignInAttemptEvent
+            {
+                UserName = userName ?? user?.UserName,
+                UserId = user?.Id,
+                Succeeded = succeeded,
+                FailureReason = failureReason,
+                SignInType = SignInType.External,
+                Provider = provider,
+                StoreId = user?.StoreId,
+                MemberId = user?.MemberId,
+            });
         }
 
         private Task<IdentityResult> SetLastLoginDate(ApplicationUser user)
