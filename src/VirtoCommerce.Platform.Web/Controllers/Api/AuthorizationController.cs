@@ -23,6 +23,7 @@ using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
+using VirtoCommerce.Platform.Security.NativeSignIn;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.ActionConstraints;
 using VirtoCommerce.Platform.Web.Extensions;
@@ -48,6 +49,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IExternalSignInService _externalSignInService;
         private readonly IOpenIddictAuthorizationManager _authorizationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
+        private readonly IEnumerable<INativeSignInProvider> _nativeSignInProviders;
 
         public AuthorizationController(
             OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> applicationManager,
@@ -62,7 +64,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
             IOpenIddictAuthorizationManager authorizationManager,
-            IOpenIddictScopeManager scopeManager)
+            IOpenIddictScopeManager scopeManager,
+            IEnumerable<INativeSignInProvider> nativeSignInProviders)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -78,6 +81,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalSignInService = externalSignInService;
             _authorizationManager = authorizationManager;
             _scopeManager = scopeManager;
+            _nativeSignInProviders = nativeSignInProviders;
         }
 
         [HttpPost("~/revoke/token")]
@@ -288,6 +292,45 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ticket.Principal.SetAuthenticationMethod(signInResult.LoginProvider, [Destinations.AccessToken]);
 
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
+            }
+
+            if (openIdConnectRequest.IsNativeSignInGrantType())
+            {
+                var providerName = (string)openIdConnectRequest.GetParameter("provider");
+                var provider = _nativeSignInProviders.FirstOrDefault(x => x.Name.EqualsIgnoreCase(providerName));
+
+                var user = provider != null ? await provider.ValidateAsync(openIdConnectRequest) : null;
+                if (user == null)
+                {
+                    return BadRequest(SecurityErrorDescriber.LoginFailed());
+                }
+
+                if (!await _signInManager.CanSignInAsync(user))
+                {
+                    return BadRequest(SecurityErrorDescriber.SignInNotAllowed());
+                }
+
+                context.User = user.CloneTyped();
+
+                foreach (var requestValidator in _requestValidators)
+                {
+                    var errors = await requestValidator.ValidateAsync(context);
+                    if (errors.Count > 0)
+                    {
+                        return BadRequest(errors.First());
+                    }
+                }
+
+                await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
+                await HandleTokenRequest(user, context);
+
+                var nativeSignInTicket = await CreateTicketAsync(user, context);
+                nativeSignInTicket.Principal.SetAuthenticationMethod(providerName, [Destinations.AccessToken]);
+
+                await SetLastLoginDate(user);
+                await _eventPublisher.Publish(new UserLoginEvent(user));
+
+                return SignIn(nativeSignInTicket.Principal, nativeSignInTicket.Properties, nativeSignInTicket.AuthenticationScheme);
             }
 
             if (openIdConnectRequest.IsClientCredentialsGrantType())
