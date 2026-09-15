@@ -24,6 +24,8 @@ namespace VirtoCommerce.Platform.Security.Repositories
         public virtual IQueryable<UserPasswordHistoryEntity> UserPasswordsHistory => DbContext.Set<UserPasswordHistoryEntity>();
 
         public virtual IQueryable<ServerCertificateEntity> ServerCertificates => DbContext.Set<ServerCertificateEntity>();
+
+        public virtual IQueryable<UserSignInLogEntity> UserSignInLogs => DbContext.Set<UserSignInLogEntity>();
         public async Task<IEnumerable<UserPasswordHistoryEntity>> GetUserPasswordsHistoryAsync(string userId, int passwordsCountToCheck)
         {
             return await UserPasswordsHistory

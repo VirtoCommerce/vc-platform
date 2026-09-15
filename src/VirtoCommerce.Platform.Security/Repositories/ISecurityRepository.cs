@@ -14,6 +14,8 @@ namespace VirtoCommerce.Platform.Security.Repositories
 
         IQueryable<ServerCertificateEntity> ServerCertificates { get; }
 
+        IQueryable<UserSignInLogEntity> UserSignInLogs { get; }
+
         Task<IEnumerable<UserPasswordHistoryEntity>> GetUserPasswordsHistoryAsync(string userId, int passwordsCountToCheck);
     }
 }
