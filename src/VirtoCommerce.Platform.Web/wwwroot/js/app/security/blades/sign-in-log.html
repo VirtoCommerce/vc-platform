@@ -40,7 +40,7 @@
 
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 
-<div class="blade-content __wide">
+<div class="blade-content __xlarge-wide">
   <div class="blade-inner">
     <div class="inner-block">
 
@@ -111,44 +111,37 @@
       </div>
 
       <div class="table-wrapper" ng-init="setGridOptions({
-                enableSorting: false,
+                useExternalSorting: true,
                 rowHeight: 40,
                 columnDefs: [
                     {
                        displayName: 'platform.blades.sign-in-log.labels.date',
                        name: 'createdDate',
-                       width: 140,
+                       width: 160,
+                       sort: { direction: uiGridConstants.DESC },
                        cellTemplate: 'sign-in-log-date.cell.html'
                     },
                     {
                        displayName: 'platform.blades.sign-in-log.labels.user-name',
                        name: 'userName',
+                       minWidth: 260,
                        cellTemplate: 'sign-in-log-user.cell.html'
                     },
                     {
                        displayName: 'platform.blades.sign-in-log.labels.outcome',
                        name: 'succeeded',
-                       width: 100,
+                       width: 150,
                        cellTemplate: 'sign-in-log-outcome.cell.html'
-                    },
-                    {
-                       displayName: 'platform.blades.sign-in-log.labels.failure-reason',
-                       name: 'failureReason',
-                       width: 140
                     },
                     {
                        displayName: 'platform.blades.sign-in-log.labels.sign-in-type',
                        name: 'signInType',
-                       width: 150
+                       width: 170
                     },
                     {
                        displayName: 'platform.blades.sign-in-log.labels.ip-address',
                        name: 'ipAddress',
-                       width: 130
-                    },
-                    {
-                       displayName: 'platform.blades.sign-in-log.labels.organization',
-                       name: 'organizationName'
+                       width: 160
                     }
                     ]})">
         <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
@@ -174,8 +167,10 @@
 
 <script type="text/ng-template" id="sign-in-log-outcome.cell.html">
   <div class="ui-grid-cell-contents">
-    <span class="sign-in-log-badge" ng-class="row.entity.succeeded ? '__success' : '__failed'">
+    <span class="sign-in-log-badge" ng-class="row.entity.succeeded ? '__success' : '__failed'"
+          title="{{ row.entity.failureReason }}">
       {{ (row.entity.succeeded ? 'platform.blades.sign-in-log.labels.succeeded' : 'platform.blades.sign-in-log.labels.failed') | translate }}
     </span>
+    <span class="sign-in-log-reason" ng-if="!row.entity.succeeded">{{ row.entity.failureReason }}</span>
   </div>
 </script>

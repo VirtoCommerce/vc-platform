@@ -36,7 +36,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         if (criteria.Take > 0)
         {
             var entities = await query
-                .OrderByDescending(x => x.CreatedDate)
+                .OrderBySortInfos(GetSortInfos(criteria))
                 .Skip(criteria.Skip)
                 .Take(criteria.Take)
                 .ToListAsync();
@@ -67,6 +67,24 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
             FailureReasonBreakdown = await TopAsync(failed.Where(x => x.FailureReason != null), x => x.FailureReason),
             SignInsByOrganization = await TopAsync(query.Where(x => x.OrganizationName != null), x => x.OrganizationName),
         };
+    }
+
+    /// <summary>
+    /// Newest first unless the caller asks otherwise - an audit log is read from the most recent entry back.
+    /// </summary>
+    protected virtual IList<SortInfo> GetSortInfos(UserSignInLogSearchCriteria criteria)
+    {
+        var sortInfos = criteria.SortInfos;
+
+        if (sortInfos.IsNullOrEmpty())
+        {
+            sortInfos =
+            [
+                new SortInfo { SortColumn = nameof(UserSignInLog.CreatedDate), SortDirection = SortDirection.Descending }
+            ];
+        }
+
+        return sortInfos;
     }
 
     protected virtual IQueryable<UserSignInLogEntity> BuildQuery(ISecurityRepository repository, UserSignInLogSearchCriteria criteria)

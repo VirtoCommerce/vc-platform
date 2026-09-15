@@ -85,6 +85,39 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
+    public async Task SearchAsync_HonoursExplicitSortOverTheDefault()
+    {
+        var service = CreateService(
+            Row("older", createdDate: _now.AddHours(-5)),
+            Row("newest", createdDate: _now.AddHours(-1)));
+
+        var result = await service.SearchAsync(new UserSignInLogSearchCriteria
+        {
+            Sort = "createdDate:asc",
+            Take = 20,
+        });
+
+        result.Results.First().Id.Should().Be("older");
+    }
+
+    [Fact]
+    public async Task SearchAsync_PagesWithSkipAndTake()
+    {
+        var service = CreateService(
+            Row("r1", createdDate: _now.AddHours(-1)),
+            Row("r2", createdDate: _now.AddHours(-2)),
+            Row("r3", createdDate: _now.AddHours(-3)),
+            Row("r4", createdDate: _now.AddHours(-4)),
+            Row("r5", createdDate: _now.AddHours(-5)));
+
+        var page2 = await service.SearchAsync(new UserSignInLogSearchCriteria { Skip = 2, Take = 2 });
+
+        // Total is the whole filtered set, not the page.
+        page2.TotalCount.Should().Be(5);
+        page2.Results.Select(x => x.Id).Should().Equal("r3", "r4");
+    }
+
+    [Fact]
     public async Task GetStatsAsync_CountsTotalsAndTopFailedIps()
     {
         var service = CreateService(

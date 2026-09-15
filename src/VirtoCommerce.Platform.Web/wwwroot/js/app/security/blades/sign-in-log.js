@@ -66,7 +66,9 @@ angular.module('platformWebApp')
                     var criteria = {
                         userId: blade.userId,
                         keyword: filter.keyword,
-                        ipAddress: filter.ipAddress
+                        ipAddress: filter.ipAddress,
+                        // Server defaults to CreatedDate descending when this is empty.
+                        sort: uiGridHelper.getSortExpression($scope)
                     };
 
                     if (filter.succeeded !== '') {
@@ -107,7 +109,7 @@ angular.module('platformWebApp')
                         blade.isLoading = false;
                     });
 
-                    accounts.getSignInLogStats({}, criteria, function (stats) {
+                    accounts.getSignInLogStats({}, angular.extend({}, criteria, { sort: null }), function (stats) {
                         blade.stats = stats;
                     });
                 };
