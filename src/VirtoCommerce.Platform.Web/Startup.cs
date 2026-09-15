@@ -554,6 +554,13 @@ namespace VirtoCommerce.Platform.Web
                     PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob,
                     PlatformConstants.Settings.Security.CronPruneExpiredTokensJob));
 
+            // Trims the sign-in audit log to the configured retention window.
+            services.AddRecurringJob<SignInLogCleanupJob, SignInLogCleanupJobPayload>(schedule => schedule
+                .WithId("SignInLogCleanupJob")
+                .FromSettings(
+                    PlatformConstants.Settings.Security.EnableSignInLogCleanupJob,
+                    PlatformConstants.Settings.Security.CronSignInLogCleanupJob));
+
             // Always register so the scheduler reconciles state: when disabled, WithEnabled(false) removes any
             // AutoAccountLockoutJob left in engine storage from a previous run when it was enabled (previously this
             // was an explicit RecurringJob.RemoveIfExists on boot).
