@@ -168,3 +168,28 @@
 
         &:hover
             text-decoration: underline
+
+// Period-over-period movement on each tile.
+.tile-delta
+    display: flex
+    align-items: center
+    gap: 4px
+    margin-top: 6px
+    font-size: 11px
+    line-height: 14px
+    white-space: nowrap
+
+    i
+        font-size: 9px
+
+    &.__worse
+        color: #c62828
+
+    &.__better
+        color: #2e7d32
+
+    &.__neutral
+        color: #777
+
+    &.__flat
+        color: #bbb

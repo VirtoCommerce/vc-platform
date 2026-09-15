@@ -53,20 +53,73 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     {
         using var repository = _repositoryFactory();
 
-        var query = BuildQuery(repository, criteria);
+        var unwindowed = BuildFilterQuery(repository, criteria);
+        var query = ApplyWindow(unwindowed, criteria.StartDate, criteria.EndDate);
         var failed = query.Where(x => !x.Succeeded);
 
-        return new UserSignInLogStats
+        var result = new UserSignInLogStats
         {
             TotalCount = await query.CountAsync(),
             FailedCount = await failed.CountAsync(),
-            DistinctUserCount = await query.Where(x => x.UserId != null).Select(x => x.UserId).Distinct().CountAsync(),
+            DistinctUserCount = await DistinctSignedInUsersAsync(query),
             ImpersonationCount = await query.CountAsync(x => x.SignInType == SignInType.Impersonation),
             TopFailedIpAddresses = await TopAsync(failed.Where(x => x.IpAddress != null), x => x.IpAddress),
             TopFailedUserNames = await TopAsync(failed.Where(x => x.UserName != null), x => x.UserName),
             FailureReasonBreakdown = await TopAsync(failed.Where(x => x.FailureReason != null), x => x.FailureReason),
             SignInsByOrganization = await TopAsync(query.Where(x => x.OrganizationName != null), x => x.OrganizationName),
         };
+
+        await AddPreviousPeriodAsync(result, unwindowed, criteria);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Counts the same-length window immediately before the requested one. Skipped entirely when the
+    /// criteria carry no start date, because "all time" has nothing before it.
+    /// </summary>
+    protected virtual async Task AddPreviousPeriodAsync(
+        UserSignInLogStats result,
+        IQueryable<UserSignInLogEntity> unwindowed,
+        UserSignInLogSearchCriteria criteria)
+    {
+        if (criteria.StartDate == null)
+        {
+            return;
+        }
+
+        var start = criteria.StartDate.Value;
+        var duration = (criteria.EndDate ?? DateTime.UtcNow) - start;
+
+        if (duration <= TimeSpan.Zero)
+        {
+            return;
+        }
+
+        var previous = ApplyWindow(unwindowed, start - duration, start);
+
+        result.PreviousTotalCount = await previous.CountAsync();
+        result.PreviousFailedCount = await previous.CountAsync(x => !x.Succeeded);
+        result.PreviousDistinctUserCount = await DistinctSignedInUsersAsync(previous);
+        result.PreviousImpersonationCount = await previous.CountAsync(x => x.SignInType == SignInType.Impersonation);
+    }
+
+    protected static IQueryable<UserSignInLogEntity> ApplyWindow(
+        IQueryable<UserSignInLogEntity> query,
+        DateTime? startDate,
+        DateTime? endDate)
+    {
+        if (startDate != null)
+        {
+            query = query.Where(x => x.CreatedDate >= startDate);
+        }
+
+        if (endDate != null)
+        {
+            query = query.Where(x => x.CreatedDate <= endDate);
+        }
+
+        return query;
     }
 
     /// <summary>
@@ -88,6 +141,12 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     }
 
     protected virtual IQueryable<UserSignInLogEntity> BuildQuery(ISecurityRepository repository, UserSignInLogSearchCriteria criteria)
+    {
+        return ApplyWindow(BuildFilterQuery(repository, criteria), criteria.StartDate, criteria.EndDate);
+    }
+
+    /// <summary>Every predicate except the date window, which callers apply themselves.</summary>
+    protected virtual IQueryable<UserSignInLogEntity> BuildFilterQuery(ISecurityRepository repository, UserSignInLogSearchCriteria criteria)
     {
         var query = repository.UserSignInLogs;
 
@@ -126,22 +185,26 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
             query = query.Where(x => x.OrganizationId == criteria.OrganizationId);
         }
 
-        if (criteria.StartDate != null)
-        {
-            query = query.Where(x => x.CreatedDate >= criteria.StartDate);
-        }
-
-        if (criteria.EndDate != null)
-        {
-            query = query.Where(x => x.CreatedDate <= criteria.EndDate);
-        }
-
         if (!string.IsNullOrEmpty(criteria.Keyword))
         {
             query = query.Where(x => x.UserName.Contains(criteria.Keyword) || x.IpAddress.Contains(criteria.Keyword));
         }
 
         return query;
+    }
+
+    /// <summary>
+    /// Distinct accounts that actually signed in — successful attempts only, and only where the
+    /// account exists. A failed attempt says nothing about who was using the store, and an unknown
+    /// user name has no account to count.
+    /// </summary>
+    private static Task<int> DistinctSignedInUsersAsync(IQueryable<UserSignInLogEntity> query)
+    {
+        return query
+            .Where(x => x.Succeeded && x.UserId != null)
+            .Select(x => x.UserId)
+            .Distinct()
+            .CountAsync();
     }
 
     private static async Task<IList<UserSignInLogStatsEntry>> TopAsync(

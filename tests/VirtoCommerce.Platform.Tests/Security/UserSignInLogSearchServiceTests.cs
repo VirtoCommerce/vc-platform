@@ -140,6 +140,23 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
+    public async Task GetStatsAsync_DistinctUsersCountsSuccessfulSignInsOnlyAndDeduplicates()
+    {
+        var service = CreateService(
+            Row("a", succeeded: true, userId: "user-1"),
+            Row("b", succeeded: true, userId: "user-1"),
+            Row("c", succeeded: true, userId: "user-2"),
+            // Failed attempts say nothing about who used the store.
+            Row("d", succeeded: false, userId: "user-3"),
+            // An unknown user name has no account to count.
+            Row("e", succeeded: false, userId: null));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria());
+
+        stats.DistinctUserCount.Should().Be(2);
+    }
+
+    [Fact]
     public async Task GetStatsAsync_BreaksDownFailureReasons()
     {
         var service = CreateService(
@@ -152,6 +169,64 @@ public class UserSignInLogSearchServiceTests
         stats.FailureReasonBreakdown.Should().HaveCount(2);
         stats.FailureReasonBreakdown.First().Key.Should().Be(SignInFailureReason.InvalidPassword);
         stats.FailureReasonBreakdown.First().Count.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task GetStatsAsync_CountsTheSameLengthWindowImmediatelyBefore()
+    {
+        var service = CreateService(
+            // Current window: the last 24 hours before _now.
+            Row("cur1", succeeded: true, createdDate: _now.AddHours(-1)),
+            Row("cur2", succeeded: false, createdDate: _now.AddHours(-2)),
+            // Previous window: the 24 hours before that.
+            Row("prev1", succeeded: true, createdDate: _now.AddHours(-26)),
+            Row("prev2", succeeded: false, createdDate: _now.AddHours(-30)),
+            Row("prev3", succeeded: false, createdDate: _now.AddHours(-40)),
+            // Older than both windows - must not be counted.
+            Row("ancient", succeeded: false, createdDate: _now.AddDays(-9)));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        {
+            StartDate = _now.AddHours(-24),
+            EndDate = _now,
+        });
+
+        stats.TotalCount.Should().Be(2);
+        stats.FailedCount.Should().Be(1);
+        stats.PreviousTotalCount.Should().Be(3);
+        stats.PreviousFailedCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task GetStatsAsync_NoStartDate_LeavesPreviousPeriodUnset()
+    {
+        var service = CreateService(Row("a"), Row("b"));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria());
+
+        // "All time" has nothing before it.
+        stats.PreviousTotalCount.Should().BeNull();
+        stats.PreviousFailedCount.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetStatsAsync_PreviousPeriodKeepsTheNonDateFilters()
+    {
+        var service = CreateService(
+            Row("cur", succeeded: false, userId: "user-1", createdDate: _now.AddHours(-1)),
+            Row("prev-same-user", succeeded: false, userId: "user-1", createdDate: _now.AddHours(-30)),
+            Row("prev-other-user", succeeded: false, userId: "user-2", createdDate: _now.AddHours(-30)));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        {
+            UserId = "user-1",
+            StartDate = _now.AddHours(-24),
+            EndDate = _now,
+        });
+
+        stats.TotalCount.Should().Be(1);
+        // The other user's row sits in the previous window but must stay filtered out.
+        stats.PreviousTotalCount.Should().Be(1);
     }
 
     private static UserSignInLogEntity Row(

@@ -9,22 +9,25 @@
            ng-click="setPeriod(p.value)">{{ p.label | translate }}</a>
       </div>
 
-      <div class="sign-in-log-tiles" ng-if="blade.stats">
-        <div class="tile __clickable" ng-click="openAll()">
-          <div class="tile-value">{{ blade.stats.totalCount | number:0 }}</div>
-          <div class="tile-label">{{ 'platform.blades.sign-in-log.stats.total' | translate }}</div>
-        </div>
-        <div class="tile __alert __clickable" ng-click="openFailed()">
-          <div class="tile-value">{{ blade.stats.failedCount | number:0 }}</div>
-          <div class="tile-label">{{ 'platform.blades.sign-in-log.stats.failed' | translate }}</div>
-        </div>
-        <div class="tile">
-          <div class="tile-value">{{ blade.stats.distinctUserCount | number:0 }}</div>
-          <div class="tile-label">{{ 'platform.blades.sign-in-log.stats.users' | translate }}</div>
-        </div>
-        <div class="tile __impersonation __clickable" ng-click="openImpersonation()">
-          <div class="tile-value">{{ blade.stats.impersonationCount | number:0 }}</div>
-          <div class="tile-label">{{ 'platform.blades.sign-in-log.stats.impersonation' | translate }}</div>
+      <div class="sign-in-log-tiles" ng-if="blade.tiles">
+        <div class="tile {{ tile.modifier }}"
+             ng-repeat="tile in blade.tiles"
+             ng-class="{'__clickable': !!tile.action}"
+             ng-click="tile.action && tile.action()"
+             title="{{ tile.hint | translate }}">
+          <div class="tile-value">{{ tile.value | number:0 }}</div>
+          <div class="tile-label">{{ tile.label | translate }}</div>
+          <div class="tile-delta {{ tile.deltaClass }}" ng-if="tile.delta">
+            <i class="fa"
+               ng-class="{'fa-arrow-up': tile.delta.direction === 'up',
+                          'fa-arrow-down': tile.delta.direction === 'down',
+                          'fa-minus': tile.delta.direction === 'flat'}"></i>
+            <span ng-if="tile.delta.percent !== undefined">{{ tile.delta.percent }}%</span>
+            <span ng-if="tile.delta.absolute !== undefined">+{{ tile.delta.absolute | number:0 }}</span>
+          </div>
+          <div class="tile-delta __flat" ng-if="!tile.delta">
+            <span>{{ 'platform.blades.sign-in-log.stats.no-comparison' | translate }}</span>
+          </div>
         </div>
       </div>
 

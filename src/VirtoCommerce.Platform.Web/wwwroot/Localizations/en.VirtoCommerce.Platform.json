@@ -759,13 +759,19 @@
         "stats": {
           "total": "Sign-ins",
           "failed": "Failed attempts",
-          "users": "Distinct users",
+          "users": "Users signed in",
           "impersonation": "On behalf sessions",
           "top-failed-ips": "Top IPs by failed attempts",
           "top-failed-users": "Top accounts by failed attempts",
           "failure-reasons": "Failure reasons",
           "by-organization": "Sign-ins by organization",
-          "none": "No data"
+          "none": "No data",
+          "vs-previous": "vs previous period",
+          "no-comparison": "no previous period",
+          "total-hint": "All sign-in attempts in the period, successful and failed. Click to see them.",
+          "failed-hint": "Attempts that did not sign anyone in. Click to see only failures.",
+          "users-hint": "Distinct accounts that signed in successfully, counted once each however many times they signed in. Click to see successful sign-ins.",
+          "impersonation-hint": "Sessions where support signed in on behalf of a customer. Click to see them."
         },
         "hints": {
           "known-accounts-only": "Covers attempts against existing accounts only."
@@ -783,7 +789,8 @@
           "impersonation": "Login on behalf",
           "by-ip": "Failed attempts from IP",
           "by-user": "Failed attempts for account",
-          "by-reason": "Failed attempts by reason"
+          "by-reason": "Failed attempts by reason",
+          "succeeded": "Successful sign-ins"
         }
       }
     },

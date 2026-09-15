@@ -16,6 +16,19 @@ public class UserSignInLogStats
 
     public int ImpersonationCount { get; set; }
 
+    /// <summary>
+    /// Same-length window immediately before the requested one, so the UI can show movement
+    /// rather than a bare number. Null when the criteria have no start date ("all time"),
+    /// because there is then no previous period to compare against.
+    /// </summary>
+    public int? PreviousTotalCount { get; set; }
+
+    public int? PreviousFailedCount { get; set; }
+
+    public int? PreviousDistinctUserCount { get; set; }
+
+    public int? PreviousImpersonationCount { get; set; }
+
     public IList<UserSignInLogStatsEntry> TopFailedIpAddresses { get; set; } = [];
 
     public IList<UserSignInLogStatsEntry> TopFailedUserNames { get; set; } = [];
