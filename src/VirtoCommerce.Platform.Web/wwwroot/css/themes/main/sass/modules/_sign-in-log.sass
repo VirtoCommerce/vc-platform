@@ -11,6 +11,9 @@
     margin-bottom: 14px
 
     .stat-tile
+        display: flex
+        flex-direction: column
+        height: 100%
         min-width: 0
         padding: 9px 10px
         border: 1px solid #ddd
@@ -180,7 +183,8 @@
     flex-wrap: wrap
     align-items: baseline
     gap: 0 3px
-    margin-top: 5px
+    margin-top: auto
+    padding-top: 5px
     font-size: 11px
     line-height: 14px
 
@@ -333,9 +337,17 @@
             background: #43b0e6
             color: #fff
 
-// Read-only record view.
-.inner-block.sign-in-log-detail
-    padding-top: 14px
+// Read-only record view. Markup matches the account blade (form.form > va-metaform), but a
+// record has 18 fields where an account form has five, so the row rhythm is tightened here
+// rather than leaving 15px between every one of them.
+.form.sign-in-log-detail
+    padding: 4px 0
+
+    .form-group
+        margin: 8px 0 0
+
+    .form-label
+        margin-bottom: 1px
 
 .detail-badges
     display: flex
