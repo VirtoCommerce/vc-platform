@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Security.Services;
 
@@ -57,7 +58,7 @@ public class UserSessionsSearchService : IUserSessionsSearchService
                 result.Results.Add(userSession);
             }
 
-            await MarkImpersonatedSessionsAsync(result.Results);
+            await MarkImpersonatedSessions(result.Results);
         }
 
         return result;
@@ -69,7 +70,7 @@ public class UserSessionsSearchService : IUserSessionsSearchService
     /// The token itself carries no readable principal, so this joins on the sign-in audit log through
     /// the OpenIddict authorization id — one query for the whole page, never per row.
     /// </summary>
-    protected virtual async Task MarkImpersonatedSessionsAsync(IList<UserSession> sessions)
+    protected virtual async Task MarkImpersonatedSessions(IList<UserSession> sessions)
     {
         var sessionGroupIds = sessions
             .Select(x => x.SessionGroupId)

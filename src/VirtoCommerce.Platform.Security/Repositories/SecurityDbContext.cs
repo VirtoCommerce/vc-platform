@@ -10,6 +10,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Security.Model;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInLog;
 using static VirtoCommerce.Platform.Data.Infrastructure.DbContextBase;
 
 namespace VirtoCommerce.Platform.Security.Repositories

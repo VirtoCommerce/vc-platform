@@ -1,6 +1,7 @@
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Security.Events;
 
-namespace VirtoCommerce.Platform.Core.Security.Events
+namespace VirtoCommerce.Platform.Core.Security.SignInLog
 {
     /// <summary>
     /// Raised for every sign-in attempt, successful or failed, at every authentication entry point.
@@ -22,7 +23,7 @@ namespace VirtoCommerce.Platform.Core.Security.Events
         /// <summary>One of <see cref="SignInFailureReason"/>. Null when <see cref="Succeeded"/>.</summary>
         public string FailureReason { get; set; }
 
-        /// <summary>One of <see cref="Security.SignInType"/>.</summary>
+        /// <summary>One of <see cref="SignInLog.SignInType"/>.</summary>
         public string SignInType { get; set; }
 
         public string Provider { get; set; }

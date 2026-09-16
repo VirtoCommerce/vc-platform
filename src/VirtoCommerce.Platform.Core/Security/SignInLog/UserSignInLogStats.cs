@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VirtoCommerce.Platform.Core.Security.Search;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 /// <summary>
 /// Aggregates for the sign-in log blade. Every member is produced by a SQL aggregate against an
@@ -8,6 +8,12 @@ namespace VirtoCommerce.Platform.Core.Security.Search;
 /// </summary>
 public class UserSignInLogStats
 {
+    /// <summary>
+    /// False when SignInLogEnabled is off. The dashboard needs this to tell "nothing happened"
+    /// apart from "nothing is being recorded" - zeros look identical otherwise.
+    /// </summary>
+    public bool RecordingEnabled { get; set; } = true;
+
     public int TotalCount { get; set; }
 
     public int FailedCount { get; set; }
@@ -35,7 +41,7 @@ public class UserSignInLogStats
     /// </summary>
     public IList<UserSignInLogTimelinePoint> Timeline { get; set; } = [];
 
-    /// <summary>One of <see cref="Search.TimelineGranularity"/>. Null when the timeline is empty.</summary>
+    /// <summary>One of <see cref="SignInLog.TimelineGranularity"/>. Null when the timeline is empty.</summary>
     public string TimelineGranularity { get; set; }
 
     public IList<UserSignInLogStatsEntry> TopFailedIpAddresses { get; set; } = [];

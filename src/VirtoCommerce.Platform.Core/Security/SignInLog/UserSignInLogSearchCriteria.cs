@@ -1,7 +1,7 @@
 using System;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Platform.Core.Security.Search;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 public class UserSignInLogSearchCriteria : SearchCriteriaBase
 {

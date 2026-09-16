@@ -2,6 +2,14 @@
   <div class="blade-inner">
     <div class="inner-block sign-in-log-dashboard">
 
+      <div class="sign-in-log-disabled" ng-if="blade.stats && !blade.stats.recordingEnabled">
+        <i class="fa fa-exclamation-triangle"></i>
+        <div>
+          <strong>{{ 'platform.blades.sign-in-log.disabled.title' | translate }}</strong>
+          <div>{{ 'platform.blades.sign-in-log.disabled.message' | translate }}</div>
+        </div>
+      </div>
+
       <div class="sign-in-log-period-row">
         <span class="sign-in-log-period-label">{{ 'platform.blades.sign-in-log.filter.period' | translate }}</span>
         <div class="sign-in-log-period">

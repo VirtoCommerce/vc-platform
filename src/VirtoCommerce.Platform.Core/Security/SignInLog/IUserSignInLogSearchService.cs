@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.GenericCrud;
 
-namespace VirtoCommerce.Platform.Core.Security.Search;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 public interface IUserSignInLogSearchService : ISearchService<UserSignInLogSearchCriteria, UserSignInLogSearchResult, UserSignInLog>
 {
-    Task<UserSignInLogStats> GetStatsAsync(UserSignInLogSearchCriteria criteria);
+    Task<UserSignInLogStats> GetStats(UserSignInLogSearchCriteria criteria);
 }

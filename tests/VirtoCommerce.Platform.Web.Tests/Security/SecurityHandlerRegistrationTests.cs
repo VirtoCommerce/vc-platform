@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Web.Tests.Security;
 

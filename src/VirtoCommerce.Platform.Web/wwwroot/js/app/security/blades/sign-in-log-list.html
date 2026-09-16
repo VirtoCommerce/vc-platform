@@ -67,6 +67,14 @@
   <div class="blade-inner">
     <div class="inner-block">
 
+      <div class="sign-in-log-disabled" ng-if="blade.recordingEnabled === false">
+        <i class="fa fa-exclamation-triangle"></i>
+        <div>
+          <strong>{{ 'platform.blades.sign-in-log.disabled.title' | translate }}</strong>
+          <div>{{ 'platform.blades.sign-in-log.disabled.message' | translate }}</div>
+        </div>
+      </div>
+
       <div class="table-wrapper" ng-init="setGridOptions({
                 useExternalSorting: true,
                 rowTemplate: 'sign-in-log.row.html',

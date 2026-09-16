@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -7,6 +8,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 using Xunit;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Web.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Web.Tests.Security;
 
@@ -17,11 +20,11 @@ public class SignInLogCleanupJobTests
     {
         DateTime? cutoff = null;
         var service = new Mock<IUserSignInLogService>();
-        service.Setup(x => x.DeleteOlderThanAsync(It.IsAny<DateTime>(), It.IsAny<int>()))
-            .Callback<DateTime, int>((c, _) => cutoff = c)
+        service.Setup(x => x.DeleteOlderThan(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .Callback<DateTime, int, CancellationToken>((c, _, _) => cutoff = c)
             .ReturnsAsync(0);
 
-        await new SignInLogCleanupJob(service.Object, CreateSettings(30)).Process();
+        await new SignInLogCleanupJob(service.Object, CreateSettings(30)).Process(TestContext.Current.CancellationToken);
 
         cutoff.Should().NotBeNull();
         cutoff!.Value.Should().BeCloseTo(DateTime.UtcNow.AddDays(-30), TimeSpan.FromMinutes(1));
@@ -31,14 +34,14 @@ public class SignInLogCleanupJobTests
     public async Task Process_KeepsDeletingUntilABatchComesBackShort()
     {
         var service = new Mock<IUserSignInLogService>();
-        service.SetupSequence(x => x.DeleteOlderThanAsync(It.IsAny<DateTime>(), It.IsAny<int>()))
+        service.SetupSequence(x => x.DeleteOlderThan(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(1000)
             .ReturnsAsync(1000)
             .ReturnsAsync(7);
 
-        await new SignInLogCleanupJob(service.Object, CreateSettings(90)).Process();
+        await new SignInLogCleanupJob(service.Object, CreateSettings(90)).Process(TestContext.Current.CancellationToken);
 
-        service.Verify(x => x.DeleteOlderThanAsync(It.IsAny<DateTime>(), It.IsAny<int>()), Times.Exactly(3));
+        service.Verify(x => x.DeleteOlderThan(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Exactly(3));
     }
 
     [Theory]
@@ -48,10 +51,10 @@ public class SignInLogCleanupJobTests
     {
         var service = new Mock<IUserSignInLogService>();
 
-        await new SignInLogCleanupJob(service.Object, CreateSettings(retentionDays)).Process();
+        await new SignInLogCleanupJob(service.Object, CreateSettings(retentionDays)).Process(TestContext.Current.CancellationToken);
 
         // Zero or less means keep forever, never "delete everything".
-        service.Verify(x => x.DeleteOlderThanAsync(It.IsAny<DateTime>(), It.IsAny<int>()), Times.Never);
+        service.Verify(x => x.DeleteOlderThan(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     private static ISettingsManager CreateSettings(int retentionDays)

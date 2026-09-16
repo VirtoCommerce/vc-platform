@@ -6,11 +6,15 @@ using FluentAssertions;
 using MockQueryable;
 using Moq;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using Xunit;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Tests.Security;
 
@@ -127,7 +131,7 @@ public class UserSignInLogSearchServiceTests
             Row("d", succeeded: false, ip: "198.51.100.1", createdDate: _now.AddHours(-3)),
             Row("e", succeeded: true, signInType: SignInType.Impersonation, createdDate: _now.AddHours(-1)));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria { StartDate = _now.AddDays(-1) });
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria { StartDate = _now.AddDays(-1) });
 
         stats.TotalCount.Should().Be(5);
         stats.FailedCount.Should().Be(3);
@@ -151,9 +155,28 @@ public class UserSignInLogSearchServiceTests
             // An unknown user name has no account to count.
             Row("e", succeeded: false, userId: null));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria());
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria());
 
         stats.DistinctUserCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task GetStatsAsync_ReportsWhenRecordingIsTurnedOff()
+    {
+        var repository = new Mock<ISecurityRepository>();
+        repository.Setup(x => x.UserSignInLogs).Returns(new List<UserSignInLogEntity>().BuildMock());
+
+        var settings = new Mock<ISettingsManager>();
+        settings.Setup(x => x.GetObjectSettingAsync(
+                PlatformConstants.Settings.Security.SignInLogEnabled.Name, null, null))
+            .ReturnsAsync(new ObjectSettingEntry { Value = false });
+
+        var service = new UserSignInLogSearchService(() => repository.Object, settings.Object);
+
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria());
+
+        // Zeros alone cannot tell "nothing happened" from "nothing is being recorded".
+        stats.RecordingEnabled.Should().BeFalse();
     }
 
     [Fact]
@@ -164,7 +187,7 @@ public class UserSignInLogSearchServiceTests
             Row("b", succeeded: false, failureReason: SignInFailureReason.InvalidPassword),
             Row("c", succeeded: false, failureReason: SignInFailureReason.LockedOut));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria());
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria());
 
         stats.FailureReasonBreakdown.Should().HaveCount(2);
         stats.FailureReasonBreakdown.First().Key.Should().Be(SignInFailureReason.InvalidPassword);
@@ -185,7 +208,7 @@ public class UserSignInLogSearchServiceTests
             // Older than both windows - must not be counted.
             Row("ancient", succeeded: false, createdDate: _now.AddDays(-9)));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria
         {
             StartDate = _now.AddHours(-24),
             EndDate = _now,
@@ -202,7 +225,7 @@ public class UserSignInLogSearchServiceTests
     {
         var service = CreateService(Row("a"), Row("b"));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria());
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria());
 
         // "All time" has nothing before it.
         stats.PreviousTotalCount.Should().BeNull();
@@ -217,7 +240,7 @@ public class UserSignInLogSearchServiceTests
             Row("prev-same-user", succeeded: false, userId: "user-1", createdDate: _now.AddHours(-30)),
             Row("prev-other-user", succeeded: false, userId: "user-2", createdDate: _now.AddHours(-30)));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria
         {
             UserId = "user-1",
             StartDate = _now.AddHours(-24),
@@ -239,7 +262,7 @@ public class UserSignInLogSearchServiceTests
     {
         var service = CreateService(Row("a", createdDate: _now.AddMinutes(-1)));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria
         {
             StartDate = _now.AddMinutes(-windowMinutes),
             EndDate = _now,
@@ -259,7 +282,7 @@ public class UserSignInLogSearchServiceTests
             Row("f1", succeeded: false, createdDate: at.AddMinutes(1)),
             Row("f2", succeeded: false, createdDate: at.AddMinutes(3)));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria
         {
             StartDate = at,
             EndDate = at.AddMinutes(5),
@@ -279,7 +302,7 @@ public class UserSignInLogSearchServiceTests
 
         var service = CreateService(Row("only", succeeded: true, createdDate: at.AddMinutes(2)));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria
         {
             StartDate = at,
             EndDate = at.AddMinutes(4),
@@ -295,7 +318,7 @@ public class UserSignInLogSearchServiceTests
     {
         var service = CreateService(Row("a"), Row("b"));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria());
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria());
 
         stats.Timeline.Should().BeEmpty();
         stats.TimelineGranularity.Should().BeNull();
@@ -310,7 +333,7 @@ public class UserSignInLogSearchServiceTests
             Row("mine", succeeded: true, userId: "user-1", createdDate: at.AddMinutes(1)),
             Row("theirs", succeeded: true, userId: "user-2", createdDate: at.AddMinutes(1)));
 
-        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria
         {
             UserId = "user-1",
             StartDate = at,
@@ -344,6 +367,13 @@ public class UserSignInLogSearchServiceTests
     {
         var repository = new Mock<ISecurityRepository>();
         repository.Setup(x => x.UserSignInLogs).Returns(new List<UserSignInLogEntity>(rows).BuildMock());
-        return new UserSignInLogSearchService(() => repository.Object);
+
+        // GetValueAsync is an extension method; GetObjectSettingAsync is the mockable seam beneath it.
+        var settings = new Mock<ISettingsManager>();
+        settings.Setup(x => x.GetObjectSettingAsync(
+                PlatformConstants.Settings.Security.SignInLogEnabled.Name, null, null))
+            .ReturnsAsync(new ObjectSettingEntry { Value = true });
+
+        return new UserSignInLogSearchService(() => repository.Object, settings.Object);
     }
 }

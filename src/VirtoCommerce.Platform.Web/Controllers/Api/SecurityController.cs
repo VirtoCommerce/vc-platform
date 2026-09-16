@@ -19,6 +19,7 @@ using VirtoCommerce.Platform.Core.Extensions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
@@ -94,6 +95,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
+        private const int MaxSignInLogPageSize = 10000;
+
         private readonly string UserNotFound = "User not found.";
         private readonly string UserForbiddenToEdit = "It is forbidden to edit this user.";
 
@@ -135,6 +138,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecuritySignInLogRead)]
         public async Task<ActionResult<UserSignInLogSearchResult>> SearchSignInLog([FromBody] UserSignInLogSearchCriteria criteria)
         {
+            // The log is sized in millions of rows, so an unbounded page size is a memory hazard
+            // even for a caller who holds the permission.
+            criteria.Take = Math.Clamp(criteria.Take, 0, MaxSignInLogPageSize);
+
             var result = await _userSignInLogSearchService.SearchAsync(criteria);
             return Ok(result);
         }
@@ -147,7 +154,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecuritySignInLogRead)]
         public async Task<ActionResult<UserSignInLogStats>> GetSignInLogStats([FromBody] UserSignInLogSearchCriteria criteria)
         {
-            var result = await _userSignInLogSearchService.GetStatsAsync(criteria);
+            var result = await _userSignInLogSearchService.GetStats(criteria);
             return Ok(result);
         }
 

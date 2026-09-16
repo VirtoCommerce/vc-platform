@@ -4,23 +4,32 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Security.Model;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.Repositories;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 
-namespace VirtoCommerce.Platform.Security.Services;
+namespace VirtoCommerce.Platform.Security.SignInLog;
 
 public class UserSignInLogSearchService : IUserSignInLogSearchService
 {
     private const int TopN = 10;
 
-    private readonly Func<ISecurityRepository> _repositoryFactory;
+    // A start date is client-supplied and unvalidated. Without a cap, a request starting in 1990
+    // would gap-fill ~13,000 buckets and serialise every one of them.
+    private const int MaxTimelinePoints = 500;
 
-    public UserSignInLogSearchService(Func<ISecurityRepository> repositoryFactory)
+    private readonly Func<ISecurityRepository> _repositoryFactory;
+    private readonly ISettingsManager _settingsManager;
+
+    public UserSignInLogSearchService(Func<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
     {
         _repositoryFactory = repositoryFactory;
+        _settingsManager = settingsManager;
     }
 
     public virtual async Task<UserSignInLogSearchResult> SearchAsync(UserSignInLogSearchCriteria criteria, bool clone = true)
@@ -49,7 +58,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         return result;
     }
 
-    public virtual async Task<UserSignInLogStats> GetStatsAsync(UserSignInLogSearchCriteria criteria)
+    public virtual async Task<UserSignInLogStats> GetStats(UserSignInLogSearchCriteria criteria)
     {
         using var repository = _repositoryFactory();
 
@@ -59,19 +68,21 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
 
         var result = new UserSignInLogStats
         {
+            RecordingEnabled = await _settingsManager.GetValueAsync<bool>(
+                PlatformConstants.Settings.Security.SignInLogEnabled),
             TotalCount = await query.CountAsync(),
             FailedCount = await failed.CountAsync(),
-            DistinctUserCount = await DistinctSignedInUsersAsync(query),
+            DistinctUserCount = await DistinctSignedInUsers(query),
             ImpersonationCount = await query.CountAsync(x => x.SignInType == SignInType.Impersonation),
-            TopFailedIpAddresses = await TopAsync(failed.Where(x => x.IpAddress != null), x => x.IpAddress),
-            TopFailedUserNames = await TopAsync(failed.Where(x => x.UserName != null), x => x.UserName),
-            FailureReasonBreakdown = await TopAsync(failed.Where(x => x.FailureReason != null), x => x.FailureReason),
-            SignInsByOrganization = await TopAsync(query.Where(x => x.OrganizationName != null), x => x.OrganizationName),
-            SignInsByStore = await TopAsync(query.Where(x => x.StoreId != null), x => x.StoreId),
+            TopFailedIpAddresses = await Top(failed.Where(x => x.IpAddress != null), x => x.IpAddress),
+            TopFailedUserNames = await Top(failed.Where(x => x.UserName != null), x => x.UserName),
+            FailureReasonBreakdown = await Top(failed.Where(x => x.FailureReason != null), x => x.FailureReason),
+            SignInsByOrganization = await Top(query.Where(x => x.OrganizationName != null), x => x.OrganizationName),
+            SignInsByStore = await Top(query.Where(x => x.StoreId != null), x => x.StoreId),
         };
 
-        await AddPreviousPeriodAsync(result, unwindowed, criteria);
-        await AddTimelineAsync(result, query, criteria);
+        await AddPreviousPeriod(result, unwindowed, criteria);
+        await AddTimeline(result, query, criteria);
 
         return result;
     }
@@ -80,7 +91,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     /// Buckets the window so the chart can show when things happened, not just how many. Skipped
     /// without a start date: "all time" has no bounded window to divide.
     /// </summary>
-    protected virtual async Task AddTimelineAsync(
+    protected virtual async Task AddTimeline(
         UserSignInLogStats result,
         IQueryable<UserSignInLogEntity> query,
         UserSignInLogSearchCriteria criteria)
@@ -102,7 +113,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         var granularity = PickGranularity(duration);
 
         result.TimelineGranularity = granularity;
-        result.Timeline = await BuildTimelineAsync(query, start, end, granularity);
+        result.Timeline = await BuildTimeline(query, start, end, granularity);
     }
 
     /// <summary>
@@ -129,7 +140,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         return TimelineGranularity.Day;
     }
 
-    protected virtual async Task<IList<UserSignInLogTimelinePoint>> BuildTimelineAsync(
+    protected virtual async Task<IList<UserSignInLogTimelinePoint>> BuildTimeline(
         IQueryable<UserSignInLogEntity> query,
         DateTime start,
         DateTime end,
@@ -166,7 +177,9 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         var points = new List<UserSignInLogTimelinePoint>();
 
         // Gap-fill so a quiet stretch reads as zeroes instead of the chart closing the hole up.
-        for (var cursor = Truncate(start, granularity); cursor <= end; cursor = cursor.Add(step))
+        for (var cursor = Truncate(start, granularity);
+             cursor <= end && points.Count < MaxTimelinePoints;
+             cursor = cursor.Add(step))
         {
             var rows = counted[cursor];
 
@@ -203,7 +216,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     /// Counts the same-length window immediately before the requested one. Skipped entirely when the
     /// criteria carry no start date, because "all time" has nothing before it.
     /// </summary>
-    protected virtual async Task AddPreviousPeriodAsync(
+    protected virtual async Task AddPreviousPeriod(
         UserSignInLogStats result,
         IQueryable<UserSignInLogEntity> unwindowed,
         UserSignInLogSearchCriteria criteria)
@@ -225,7 +238,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
 
         result.PreviousTotalCount = await previous.CountAsync();
         result.PreviousFailedCount = await previous.CountAsync(x => !x.Succeeded);
-        result.PreviousDistinctUserCount = await DistinctSignedInUsersAsync(previous);
+        result.PreviousDistinctUserCount = await DistinctSignedInUsers(previous);
         result.PreviousImpersonationCount = await previous.CountAsync(x => x.SignInType == SignInType.Impersonation);
     }
 
@@ -323,7 +336,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     /// account exists. A failed attempt says nothing about who was using the store, and an unknown
     /// user name has no account to count.
     /// </summary>
-    private static Task<int> DistinctSignedInUsersAsync(IQueryable<UserSignInLogEntity> query)
+    private static Task<int> DistinctSignedInUsers(IQueryable<UserSignInLogEntity> query)
     {
         return query
             .Where(x => x.Succeeded && x.UserId != null)
@@ -332,7 +345,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
             .CountAsync();
     }
 
-    private static async Task<IList<UserSignInLogStatsEntry>> TopAsync(
+    private static async Task<IList<UserSignInLogStatsEntry>> Top(
         IQueryable<UserSignInLogEntity> query,
         Expression<Func<UserSignInLogEntity, string>> selector)
     {

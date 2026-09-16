@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Platform.Core.Security;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 /// <summary>
 /// Extension point for modules to add context the platform cannot resolve on its own.
@@ -13,5 +13,5 @@ public interface IUserSignInLogEnricher
 {
     int Priority { get; }
 
-    Task EnrichAsync(UserSignInLog record);
+    Task Enrich(UserSignInLog record);
 }

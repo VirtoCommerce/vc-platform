@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtoCommerce.Platform.Core.Security.Search;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 /// <summary>
 /// One bucket of the sign-in timeline. Buckets are contiguous and gap-filled, so a quiet

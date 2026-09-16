@@ -21,6 +21,7 @@ using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Security;
 using Xunit;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
@@ -245,7 +246,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         public async Task GetSignInLogStats_ReturnsAggregates()
         {
             _userSignInLogSearchServiceMock
-                .Setup(x => x.GetStatsAsync(It.IsAny<UserSignInLogSearchCriteria>()))
+                .Setup(x => x.GetStats(It.IsAny<UserSignInLogSearchCriteria>()))
                 .ReturnsAsync(new UserSignInLogStats { TotalCount = 10, FailedCount = 4, ImpersonationCount = 1 });
 
             var response = await _controller.GetSignInLogStats(new UserSignInLogSearchCriteria());

@@ -17,6 +17,8 @@ using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -33,6 +35,9 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
             services.AddSingleton<IUserSignInLogService, UserSignInLogService>();
             services.AddSingleton<IUserSignInLogSearchService, UserSignInLogSearchService>();
+
+            // Buffer sizing is tunable from the "SignInLog" configuration section rather than baked in.
+            services.AddOptions<SignInLogOptions>().BindConfiguration("SignInLog");
 
             // One instance serving both roles: the hosted service drains the same channel the writer fills.
             services.AddSingleton<BufferedUserSignInLogWriter>();

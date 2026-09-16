@@ -722,6 +722,101 @@
           "ip-address": "Adres IP",
           "user-agent": "Agent użytkownika"
         }
+      },
+      "sign-in-log": {
+        "title": "Dziennik logowań",
+        "subtitle": "Próby logowania i logowanie w imieniu",
+        "filter": {
+          "title": "Filtry dziennika logowań",
+          "all": "Wszystkie",
+          "period": "Ostatnie",
+          "period-24h": "24 godziny",
+          "period-7d": "7 dni",
+          "period-30d": "30 dni",
+          "period-all": "Cały okres",
+          "outcome": "Wynik",
+          "sign-in-type": "Typ",
+          "ip-address": "Adres IP",
+          "type-password": "Hasło",
+          "type-external": "Dostawca zewnętrzny",
+          "type-impersonation": "W imieniu",
+          "type-logout": "Wylogowanie",
+          "period-30m": "30 min",
+          "period-1h": "1 godzina",
+          "period-6h": "6 godzin",
+          "store": "Sklep",
+          "period-custom": "Niestandardowy",
+          "date-from": "Od",
+          "date-to": "Do"
+        },
+        "labels": {
+          "date": "Data",
+          "user-name": "Użytkownik",
+          "outcome": "Wynik",
+          "succeeded": "Powodzenie",
+          "failed": "Niepowodzenie",
+          "failure-reason": "Powód",
+          "sign-in-type": "Typ",
+          "ip-address": "Adres IP",
+          "organization": "Organizacja",
+          "impersonation": "W imieniu"
+        },
+        "stats": {
+          "total": "Logowania",
+          "failed": "Nieudane próby",
+          "users": "Zalogowani użytkownicy",
+          "impersonation": "Sesje w imieniu",
+          "top-failed-ips": "Najczęstsze adresy IP wg nieudanych prób",
+          "top-failed-users": "Najczęstsze konta wg nieudanych prób",
+          "failure-reasons": "Powody niepowodzeń",
+          "by-organization": "Logowania wg organizacji",
+          "none": "Brak danych",
+          "no-comparison": "brak poprzedniego okresu",
+          "total-hint": "Wszystkie próby logowania w okresie, udane i nieudane. Kliknij, aby je zobaczyć.",
+          "failed-hint": "Próby, które nikogo nie zalogowały. Kliknij, aby zobaczyć tylko niepowodzenia.",
+          "users-hint": "Unikalne konta, które zalogowały się pomyślnie, liczone raz niezależnie od liczby logowań. Kliknij, aby zobaczyć udane logowania.",
+          "impersonation-hint": "Sesje, w których wsparcie zalogowało się w imieniu klienta. Kliknij, aby je zobaczyć.",
+          "timeline": "Próby w czasie",
+          "by-store": "Logowania wg sklepu",
+          "vs-prev": "vs poprz."
+        },
+        "hints": {
+          "known-accounts-only": "Obejmuje tylko próby dotyczące istniejących kont."
+        },
+        "detail": {
+          "title": "Wpis dziennika logowań",
+          "user-id": "ID użytkownika",
+          "operator-name": "Operator",
+          "operator-id": "ID operatora",
+          "member-id": "ID członka",
+          "user-agent": "Agent użytkownika",
+          "client-id": "Klient",
+          "store-name": "Nazwa sklepu",
+          "organization-id": "ID organizacji",
+          "session-id": "ID sesji",
+          "provider": "Dostawca tożsamości"
+        },
+        "disabled": {
+          "title": "Rejestrowanie logowań jest wyłączone",
+          "message": "Nowe próby logowania nie są rejestrowane, więc ten dziennik pozostanie bez zmian. Poproś administratora o włączenie opcji „Rejestruj próby logowania” w Ustawienia › Platforma › Dziennik logowań. Logowanie w imieniu jest rejestrowane zawsze."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Dziennik logowań",
+        "subtitle": "Aktywność logowań i logowanie w imieniu",
+        "commands": {
+          "view-all": "Pokaż wszystkie wpisy"
+        },
+        "presets": {
+          "all": "Wszystkie wpisy",
+          "failed": "Nieudane próby",
+          "impersonation": "Logowanie w imieniu",
+          "by-ip": "Nieudane próby z adresu IP",
+          "by-user": "Nieudane próby dla konta",
+          "by-reason": "Nieudane próby wg powodu",
+          "succeeded": "Udane logowania",
+          "by-store": "Logowania dla sklepu"
+        }
       }
     },
     "templates": {
@@ -786,6 +881,9 @@
       },
       "sessions": {
         "title": "Aktywne sesje"
+      },
+      "sign-in-log": {
+        "title": "Dziennik logowań"
       }
     },
     "dialogs": {
@@ -1032,6 +1130,22 @@
           "FileExtensionsWhiteList": {
             "description": "Rozszerzenia plików dozwolone do przesłania przez platformę (dodatkowo do 'FileExtensionsWhiteList' w appsettings.json)",
             "title": "Biała lista"
+          },
+          "SignInLogEnabled": {
+            "title": "Rejestruj próby logowania",
+            "description": "Rejestruje każdą próbę logowania, udaną i nieudaną, w dzienniku logowań. Logowanie w imieniu jest rejestrowane zawsze i nie zależy od tego ustawienia."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Przechowuj wpisy przez (dni)",
+            "description": "Jak długo wpisy logowań są przechowywane, zanim usunie je zadanie czyszczące. Ustaw 0 lub mniej, aby przechowywać je bezterminowo."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Czyść stare wpisy logowań",
+            "description": "Uruchamia zaplanowane zadanie usuwające wpisy logowań starsze niż okres przechowywania."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron dla zadania czyszczenia dziennika logowań",
+            "description": "Wyrażenie cron dla zadania usuwającego wpisy logowań starsze niż okres przechowywania."
           }
         },
         "UI": {

@@ -4,6 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Security;
@@ -11,6 +13,8 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.Handlers;
 using Xunit;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Tests.Security;
 
@@ -87,7 +91,7 @@ public class LogUserSignInEventHandlerTests
         var written = new List<UserSignInLog>();
         var enricher = new Mock<IUserSignInLogEnricher>();
         enricher.SetupGet(x => x.Priority).Returns(0);
-        enricher.Setup(x => x.EnrichAsync(It.IsAny<UserSignInLog>())).ThrowsAsync(new Exception("module down"));
+        enricher.Setup(x => x.Enrich(It.IsAny<UserSignInLog>())).ThrowsAsync(new Exception("module down"));
 
         var handler = CreateHandler(written, signInLogEnabled: true, enrichers: [enricher.Object]);
 
@@ -109,12 +113,12 @@ public class LogUserSignInEventHandlerTests
 
         var second = new Mock<IUserSignInLogEnricher>();
         second.SetupGet(x => x.Priority).Returns(10);
-        second.Setup(x => x.EnrichAsync(It.IsAny<UserSignInLog>()))
+        second.Setup(x => x.Enrich(It.IsAny<UserSignInLog>()))
             .Callback(() => order.Add(10)).Returns(Task.CompletedTask);
 
         var first = new Mock<IUserSignInLogEnricher>();
         first.SetupGet(x => x.Priority).Returns(1);
-        first.Setup(x => x.EnrichAsync(It.IsAny<UserSignInLog>()))
+        first.Setup(x => x.Enrich(It.IsAny<UserSignInLog>()))
             .Callback(() => order.Add(1)).Returns(Task.CompletedTask);
 
         var handler = CreateHandler(written, signInLogEnabled: true, enrichers: [second.Object, first.Object]);
@@ -159,6 +163,18 @@ public class LogUserSignInEventHandlerTests
         var accessor = new Mock<IHttpContextAccessor>();
         accessor.SetupGet(x => x.HttpContext).Returns(httpContext);
 
-        return new LogUserSignInEventHandler(writer.Object, settings.Object, accessor.Object, enrichers ?? []);
+        // Enrichers are resolved from a scope per event, so the test supplies a real container.
+        var services = new ServiceCollection();
+        foreach (var enricher in enrichers ?? [])
+        {
+            services.AddSingleton(enricher);
+        }
+
+        return new LogUserSignInEventHandler(
+            writer.Object,
+            settings.Object,
+            accessor.Object,
+            services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>(),
+            NullLogger<LogUserSignInEventHandler>.Instance);
     }
 }

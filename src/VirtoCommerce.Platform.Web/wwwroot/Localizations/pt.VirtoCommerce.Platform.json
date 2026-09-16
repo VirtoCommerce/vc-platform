@@ -722,6 +722,101 @@
           "ip-address": "Endereço IP",
           "user-agent": "Agente do usuário"
         }
+      },
+      "sign-in-log": {
+        "title": "Registo de início de sessão",
+        "subtitle": "Tentativas de início de sessão e início em nome de",
+        "filter": {
+          "title": "Filtros do registo de início de sessão",
+          "all": "Todos",
+          "period": "Últimas",
+          "period-24h": "24 horas",
+          "period-7d": "7 dias",
+          "period-30d": "30 dias",
+          "period-all": "Todo o período",
+          "outcome": "Resultado",
+          "sign-in-type": "Tipo",
+          "ip-address": "Endereço IP",
+          "type-password": "Palavra-passe",
+          "type-external": "Fornecedor externo",
+          "type-impersonation": "Em nome de",
+          "type-logout": "Terminar sessão",
+          "period-30m": "30 min",
+          "period-1h": "1 hora",
+          "period-6h": "6 horas",
+          "store": "Loja",
+          "period-custom": "Personalizado",
+          "date-from": "De",
+          "date-to": "Até"
+        },
+        "labels": {
+          "date": "Data",
+          "user-name": "Utilizador",
+          "outcome": "Resultado",
+          "succeeded": "Com êxito",
+          "failed": "Falhou",
+          "failure-reason": "Motivo",
+          "sign-in-type": "Tipo",
+          "ip-address": "Endereço IP",
+          "organization": "Organização",
+          "impersonation": "Em nome de"
+        },
+        "stats": {
+          "total": "Inícios de sessão",
+          "failed": "Tentativas falhadas",
+          "users": "Utilizadores com sessão iniciada",
+          "impersonation": "Sessões em nome de",
+          "top-failed-ips": "Principais IP por tentativas falhadas",
+          "top-failed-users": "Principais contas por tentativas falhadas",
+          "failure-reasons": "Motivos de falha",
+          "by-organization": "Inícios de sessão por organização",
+          "none": "Sem dados",
+          "no-comparison": "sem período anterior",
+          "total-hint": "Todas as tentativas de início de sessão no período, com êxito e falhadas. Clique para as ver.",
+          "failed-hint": "Tentativas que não iniciaram sessão de ninguém. Clique para ver apenas as falhas.",
+          "users-hint": "Contas distintas que iniciaram sessão com êxito, contadas uma vez cada, independentemente do número de inícios. Clique para ver os inícios com êxito.",
+          "impersonation-hint": "Sessões em que o suporte iniciou sessão em nome de um cliente. Clique para as ver.",
+          "timeline": "Tentativas ao longo do tempo",
+          "by-store": "Inícios de sessão por loja",
+          "vs-prev": "vs ant."
+        },
+        "hints": {
+          "known-accounts-only": "Abrange apenas tentativas em contas existentes."
+        },
+        "detail": {
+          "title": "Registo de início de sessão",
+          "user-id": "ID do utilizador",
+          "operator-name": "Operador",
+          "operator-id": "ID do operador",
+          "member-id": "ID do membro",
+          "user-agent": "Agente do utilizador",
+          "client-id": "Cliente",
+          "store-name": "Nome da loja",
+          "organization-id": "ID da organização",
+          "session-id": "ID da sessão",
+          "provider": "Fornecedor de identidade"
+        },
+        "disabled": {
+          "title": "O registo de inícios de sessão está desativado",
+          "message": "As novas tentativas de início de sessão não estão a ser registadas, pelo que este registo permanecerá inalterado. Peça a um administrador para ativar «Registar tentativas de início de sessão» em Definições › Plataforma › Registo de início de sessão. O início em nome de é sempre registado."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Registo de início de sessão",
+        "subtitle": "Atividade de início de sessão e início em nome de",
+        "commands": {
+          "view-all": "Ver todos os registos"
+        },
+        "presets": {
+          "all": "Todos os registos",
+          "failed": "Tentativas falhadas",
+          "impersonation": "Início de sessão em nome de",
+          "by-ip": "Tentativas falhadas do IP",
+          "by-user": "Tentativas falhadas para a conta",
+          "by-reason": "Tentativas falhadas por motivo",
+          "succeeded": "Inícios de sessão com êxito",
+          "by-store": "Inícios de sessão da loja"
+        }
       }
     },
     "templates": {
@@ -786,6 +881,9 @@
       },
       "sessions": {
         "title": "Sessões ativas"
+      },
+      "sign-in-log": {
+        "title": "Registo de início de sessão"
       }
     },
     "dialogs": {
@@ -1032,6 +1130,22 @@
           "FileExtensionsWhiteList": {
             "description": "Extensões de arquivo permitidas para upload pela Plataforma (além de 'FileExtensionsWhiteList' em appsettings.json)",
             "title": "Lista branca"
+          },
+          "SignInLogEnabled": {
+            "title": "Registar tentativas de início de sessão",
+            "description": "Regista cada tentativa de início de sessão, com êxito ou falhada, no registo de início de sessão. O início em nome de é sempre registado e não é afetado por esta definição."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Manter registos durante (dias)",
+            "description": "Durante quanto tempo os registos de início de sessão são mantidos antes de a tarefa de limpeza os remover. Defina 0 ou menos para os manter para sempre."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Limpar registos de início de sessão antigos",
+            "description": "Executa uma tarefa agendada que elimina os registos de início de sessão mais antigos do que o período de retenção."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron para a tarefa de limpeza do registo de início de sessão",
+            "description": "Expressão cron para a tarefa que elimina os registos de início de sessão mais antigos do que o período de retenção."
           }
         },
         "UI": {

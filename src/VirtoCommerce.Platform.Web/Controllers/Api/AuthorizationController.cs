@@ -19,6 +19,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
@@ -270,6 +271,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     await PublishImpersonationAttempt(
                         userName: user.UserName,
+                        attemptedUserId: user.Id,
                         impersonatedUser: user,
                         operatorUserId: refreshedOperatorUserId,
                         operatorUserName: info.Principal.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)?.EmptyToNull(),
@@ -352,7 +354,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     if (!loginOnBehalfAuthResult.Succeeded)
                     {
                         await PublishImpersonationAttempt(
-                            userName: (string)openIdConnectRequest.GetParameter("user_id"),
+                            userName: null,
+                            attemptedUserId: (string)openIdConnectRequest.GetParameter("user_id"),
                             impersonatedUser: null,
                             operatorUserId: user.Id,
                             operatorUserName: user.UserName,
@@ -392,7 +395,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 if (impersonatedUser == null)
                 {
                     await PublishImpersonationAttempt(
-                        userName: userId,
+                        userName: null,
+                        attemptedUserId: userId,
                         impersonatedUser: null,
                         operatorUserId: user.Id,
                         operatorUserName: user.UserName,
@@ -429,6 +433,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 await PublishImpersonationAttempt(
                     userName: impersonatedUser.UserName,
+                    attemptedUserId: impersonatedUser.Id,
                     impersonatedUser: impersonatedUser,
                     operatorUserId: operatorUserId.EmptyToNull() ?? user.Id,
                     operatorUserName: operatorUserName.EmptyToNull() ?? user.UserName,
@@ -712,6 +717,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private Task PublishImpersonationAttempt(
             string userName,
+            string attemptedUserId,
             ApplicationUser impersonatedUser,
             string operatorUserId,
             string operatorUserName,
@@ -724,7 +730,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return _eventPublisher.Publish(new UserSignInAttemptEvent
             {
                 UserName = userName ?? impersonatedUser?.UserName,
-                UserId = impersonatedUser?.Id,
+                // Falls back to the id that was attempted, so a denied or unresolved target is
+                // still identifiable without putting a GUID in the user name column.
+                UserId = impersonatedUser?.Id ?? attemptedUserId,
                 Succeeded = succeeded,
                 FailureReason = failureReason,
                 SignInType = signInType,

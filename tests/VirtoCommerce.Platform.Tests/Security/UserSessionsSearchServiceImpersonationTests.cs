@@ -8,6 +8,8 @@ using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using Xunit;
 using MockQueryable;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Tests.Security;
 
@@ -31,7 +33,7 @@ public class UserSessionsSearchServiceImpersonationTests
 
         var sessions = new List<UserSession> { new() { Id = "t1", SessionGroupId = "auth-1" } };
 
-        await service.MarkImpersonatedSessionsAsync(sessions);
+        await service.MarkImpersonatedSessions(sessions);
 
         var session = sessions.Should().ContainSingle().Subject;
         session.IsImpersonated.Should().BeTrue();
@@ -52,7 +54,7 @@ public class UserSessionsSearchServiceImpersonationTests
 
         var sessions = new List<UserSession> { new() { Id = "t1", SessionGroupId = "auth-1" } };
 
-        await service.MarkImpersonatedSessionsAsync(sessions);
+        await service.MarkImpersonatedSessions(sessions);
 
         sessions.Should().ContainSingle().Which.IsImpersonated.Should().BeFalse();
     }
@@ -69,7 +71,7 @@ public class UserSessionsSearchServiceImpersonationTests
 
         var sessions = new List<UserSession> { new() { Id = "t1", SessionGroupId = "auth-1" } };
 
-        await service.MarkImpersonatedSessionsAsync(sessions);
+        await service.MarkImpersonatedSessions(sessions);
 
         sessions.Should().ContainSingle().Which.IsImpersonated.Should().BeFalse();
     }
@@ -89,7 +91,7 @@ public class UserSessionsSearchServiceImpersonationTests
         {
         }
 
-        public new Task MarkImpersonatedSessionsAsync(IList<UserSession> sessions)
-            => base.MarkImpersonatedSessionsAsync(sessions);
+        public new Task MarkImpersonatedSessions(IList<UserSession> sessions)
+            => base.MarkImpersonatedSessions(sessions);
     }
 }

@@ -724,6 +724,101 @@
           "ip-address": "IP-Adresse",
           "user-agent": "Benutzeragent"
         }
+      },
+      "sign-in-log": {
+        "title": "Anmeldeprotokoll",
+        "subtitle": "Anmeldeversuche und Anmeldung im Namen",
+        "filter": {
+          "title": "Filter für Anmeldeprotokoll",
+          "all": "Alle",
+          "period": "Letzte",
+          "period-24h": "24 Stunden",
+          "period-7d": "7 Tage",
+          "period-30d": "30 Tage",
+          "period-all": "Gesamter Zeitraum",
+          "outcome": "Ergebnis",
+          "sign-in-type": "Typ",
+          "ip-address": "IP-Adresse",
+          "type-password": "Passwort",
+          "type-external": "Externer Anbieter",
+          "type-impersonation": "Im Namen",
+          "type-logout": "Abmeldung",
+          "period-30m": "30 Min.",
+          "period-1h": "1 Stunde",
+          "period-6h": "6 Stunden",
+          "store": "Shop",
+          "period-custom": "Benutzerdefiniert",
+          "date-from": "Von",
+          "date-to": "Bis"
+        },
+        "labels": {
+          "date": "Datum",
+          "user-name": "Benutzer",
+          "outcome": "Ergebnis",
+          "succeeded": "Erfolgreich",
+          "failed": "Fehlgeschlagen",
+          "failure-reason": "Grund",
+          "sign-in-type": "Typ",
+          "ip-address": "IP-Adresse",
+          "organization": "Organisation",
+          "impersonation": "Im Namen"
+        },
+        "stats": {
+          "total": "Anmeldungen",
+          "failed": "Fehlgeschlagene Versuche",
+          "users": "Angemeldete Benutzer",
+          "impersonation": "Sitzungen im Namen",
+          "top-failed-ips": "Top-IP-Adressen nach fehlgeschlagenen Versuchen",
+          "top-failed-users": "Top-Konten nach fehlgeschlagenen Versuchen",
+          "failure-reasons": "Fehlergründe",
+          "by-organization": "Anmeldungen nach Organisation",
+          "none": "Keine Daten",
+          "no-comparison": "kein Vorzeitraum",
+          "total-hint": "Alle Anmeldeversuche im Zeitraum, erfolgreich und fehlgeschlagen. Zum Anzeigen klicken.",
+          "failed-hint": "Versuche, bei denen niemand angemeldet wurde. Klicken, um nur Fehlschläge zu sehen.",
+          "users-hint": "Eindeutige Konten mit erfolgreicher Anmeldung, jeweils einmal gezählt, unabhängig von der Anzahl der Anmeldungen. Klicken, um erfolgreiche Anmeldungen zu sehen.",
+          "impersonation-hint": "Sitzungen, in denen der Support im Namen eines Kunden angemeldet war. Zum Anzeigen klicken.",
+          "timeline": "Versuche im Zeitverlauf",
+          "by-store": "Anmeldungen nach Shop",
+          "vs-prev": "ggü. Vorz."
+        },
+        "hints": {
+          "known-accounts-only": "Erfasst nur Versuche für vorhandene Konten."
+        },
+        "detail": {
+          "title": "Anmeldeeintrag",
+          "user-id": "Benutzer-ID",
+          "operator-name": "Bediener",
+          "operator-id": "Bediener-ID",
+          "member-id": "Mitglieds-ID",
+          "user-agent": "User-Agent",
+          "client-id": "Client",
+          "store-name": "Shop-Name",
+          "organization-id": "Organisations-ID",
+          "session-id": "Sitzungs-ID",
+          "provider": "Identitätsanbieter"
+        },
+        "disabled": {
+          "title": "Aufzeichnung von Anmeldungen ist deaktiviert",
+          "message": "Neue Anmeldeversuche werden nicht aufgezeichnet, dieses Protokoll bleibt daher unverändert. Bitten Sie einen Administrator, „Anmeldeversuche aufzeichnen“ unter Einstellungen › Plattform › Anmeldeprotokoll zu aktivieren. Anmeldungen im Namen werden immer aufgezeichnet."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Anmeldeprotokoll",
+        "subtitle": "Anmeldeaktivität und Anmeldung im Namen",
+        "commands": {
+          "view-all": "Alle Einträge anzeigen"
+        },
+        "presets": {
+          "all": "Alle Einträge",
+          "failed": "Fehlgeschlagene Versuche",
+          "impersonation": "Anmeldung im Namen",
+          "by-ip": "Fehlgeschlagene Versuche von IP",
+          "by-user": "Fehlgeschlagene Versuche für Konto",
+          "by-reason": "Fehlgeschlagene Versuche nach Grund",
+          "succeeded": "Erfolgreiche Anmeldungen",
+          "by-store": "Anmeldungen für Shop"
+        }
       }
     },
     "templates": {
@@ -788,6 +883,9 @@
       },
       "sessions": {
         "title": "Aktive Sitzungen"
+      },
+      "sign-in-log": {
+        "title": "Anmeldeprotokoll"
       }
     },
     "dialogs": {
@@ -1034,6 +1132,22 @@
           "FileExtensionsWhiteList": {
             "description": "Von der Plattform erlaubte Dateierweiterungen für den Upload (zusätzlich zu 'FileExtensionsWhiteList' in appsettings.json)",
             "title": "Weiße Liste"
+          },
+          "SignInLogEnabled": {
+            "title": "Anmeldeversuche aufzeichnen",
+            "description": "Zeichnet jeden Anmeldeversuch, erfolgreich wie fehlgeschlagen, im Anmeldeprotokoll auf. Anmeldungen im Namen werden immer aufgezeichnet und sind von dieser Einstellung nicht betroffen."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Einträge aufbewahren (Tage)",
+            "description": "Wie lange Anmeldeeinträge aufbewahrt werden, bevor der Bereinigungsauftrag sie entfernt. Auf 0 oder weniger setzen, um Einträge dauerhaft aufzubewahren."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Alte Anmeldeeinträge bereinigen",
+            "description": "Führt einen geplanten Auftrag aus, der Anmeldeeinträge löscht, die älter als der Aufbewahrungszeitraum sind."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron für den Bereinigungsauftrag des Anmeldeprotokolls",
+            "description": "Cron-Ausdruck für den Auftrag, der Anmeldeeinträge löscht, die älter als der Aufbewahrungszeitraum sind."
           }
         },
         "UI": {

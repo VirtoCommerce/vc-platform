@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Platform.Core.Security;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 /// <summary>
 /// Why a sign-in attempt failed. Only values reachable from an actual call site are defined —

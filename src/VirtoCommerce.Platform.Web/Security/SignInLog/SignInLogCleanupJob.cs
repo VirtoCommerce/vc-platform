@@ -5,8 +5,9 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 
-namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
+namespace VirtoCommerce.Platform.Web.Security.SignInLog
 {
     /// <summary>
     /// Trims the sign-in audit log to the configured retention window. Not optional: a store at
@@ -25,7 +26,9 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
             _settingsManager = settingsManager;
         }
 
-        public async Task Process()
+        public Task Process() => Process(CancellationToken.None);
+
+        public async Task Process(CancellationToken cancellationToken)
         {
             var retentionDays = await _settingsManager.GetValueAsync<int>(
                 PlatformConstants.Settings.Security.SignInLogRetentionDays);
@@ -42,12 +45,13 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
             int deleted;
             do
             {
-                deleted = await _service.DeleteOlderThanAsync(cutoff, BatchSize);
+                cancellationToken.ThrowIfCancellationRequested();
+                deleted = await _service.DeleteOlderThan(cutoff, BatchSize, cancellationToken);
             }
             while (deleted == BatchSize);
         }
 
         public Task Execute(SignInLogCleanupJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
-            => Process();
+            => Process(cancellationToken);
     }
 }

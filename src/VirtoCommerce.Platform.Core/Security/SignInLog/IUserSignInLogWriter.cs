@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Platform.Core.Security;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 /// <summary>
 /// Non-blocking entry point for audit rows. Implementations must never throw and never

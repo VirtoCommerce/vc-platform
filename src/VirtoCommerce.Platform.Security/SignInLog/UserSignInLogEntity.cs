@@ -1,8 +1,9 @@
 using System;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 
-namespace VirtoCommerce.Platform.Security.Model;
+namespace VirtoCommerce.Platform.Security.SignInLog;
 
 /// <summary>
 /// Append-only audit row. Derives from <see cref="Entity"/> rather than AuditableEntity:

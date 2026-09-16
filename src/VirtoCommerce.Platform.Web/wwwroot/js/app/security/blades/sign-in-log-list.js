@@ -94,6 +94,7 @@ angular.module('platformWebApp')
                 blade.stores = [];
                 accounts.getSignInLogStats({}, {}, function (stats) {
                     blade.stores = _.pluck(stats.signInsByStore || [], 'key');
+                    blade.recordingEnabled = stats.recordingEnabled;
                 });
 
                 blade.searchText = filter.keyword || '';

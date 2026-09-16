@@ -87,6 +87,7 @@ using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Swagger;
+using VirtoCommerce.Platform.Web.Security.SignInLog;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using MsTokens = Microsoft.IdentityModel.Tokens;
 

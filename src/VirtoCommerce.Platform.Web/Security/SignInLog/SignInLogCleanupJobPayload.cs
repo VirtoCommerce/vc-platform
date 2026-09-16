@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
+namespace VirtoCommerce.Platform.Web.Security.SignInLog
 {
     /// <summary>
     /// Payload for the recurring sign-in log cleanup job. Carries no data — the schedule and the

@@ -1,7 +1,7 @@
 using System;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Platform.Core.Security;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 /// <summary>
 /// One sign-in attempt — successful or failed, including login-on-behalf.
@@ -23,7 +23,7 @@ public class UserSignInLog : Entity
     /// <summary>One of <see cref="SignInFailureReason"/>. Null when <see cref="Succeeded"/>.</summary>
     public string FailureReason { get; set; }
 
-    /// <summary>One of <see cref="Security.SignInType"/>.</summary>
+    /// <summary>One of <see cref="SignInLog.SignInType"/>.</summary>
     public string SignInType { get; set; }
 
     /// <summary>External identity provider name.</summary>

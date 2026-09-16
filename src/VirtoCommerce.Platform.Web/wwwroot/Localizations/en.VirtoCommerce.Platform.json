@@ -797,6 +797,10 @@
           "organization-id": "Organization ID",
           "session-id": "Session ID",
           "provider": "Identity provider"
+        },
+        "disabled": {
+          "title": "Sign-in recording is turned off",
+          "message": "New sign-in attempts are not being recorded, so this log will stay as it is. Ask an administrator to turn on \"Record sign-in attempts\" in Settings › Platform › Sign In Log. Login on behalf is always recorded."
         }
       },
       "sign-in-log-dashboard": {

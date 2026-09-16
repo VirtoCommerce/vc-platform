@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Platform.Core.Security;
+namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 
 /// <summary>
 /// Kind of authentication that produced a <see cref="UserSignInLog"/> row.

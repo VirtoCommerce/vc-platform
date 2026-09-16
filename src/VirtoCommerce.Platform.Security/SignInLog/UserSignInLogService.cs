@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 
-namespace VirtoCommerce.Platform.Security.Services;
+namespace VirtoCommerce.Platform.Security.SignInLog;
 
 public class UserSignInLogService : IUserSignInLogService
 {
@@ -19,7 +21,7 @@ public class UserSignInLogService : IUserSignInLogService
         _repositoryFactory = repositoryFactory;
     }
 
-    public virtual async Task SaveChangesAsync(IList<UserSignInLog> records)
+    public virtual async Task SaveChanges(IList<UserSignInLog> records, CancellationToken cancellationToken = default)
     {
         if (records is null || records.Count == 0)
         {
@@ -38,28 +40,26 @@ public class UserSignInLogService : IUserSignInLogService
         await repository.UnitOfWork.CommitAsync();
     }
 
-    public virtual async Task<int> DeleteOlderThanAsync(DateTime cutoff, int batchSize)
+    /// <summary>
+    /// Deletes a batch of expired rows with a single statement. Audit rows are never edited, so
+    /// there is nothing to load, track or map - ExecuteDeleteAsync does the whole batch server-side.
+    /// </summary>
+    public virtual async Task<int> DeleteOlderThan(DateTime cutoff, int batchSize, CancellationToken cancellationToken = default)
     {
         using var repository = _repositoryFactory();
 
-        var expired = await repository.UserSignInLogs
+        return await BuildExpiredQuery(repository, cutoff, batchSize).ExecuteDeleteAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Which rows a cleanup batch will remove. Separate from the delete itself so the selection
+    /// can be tested without a database - ExecuteDeleteAsync needs a real provider.
+    /// </summary>
+    protected virtual IQueryable<UserSignInLogEntity> BuildExpiredQuery(ISecurityRepository repository, DateTime cutoff, int batchSize)
+    {
+        return repository.UserSignInLogs
             .Where(x => x.CreatedDate < cutoff)
             .OrderBy(x => x.CreatedDate)
-            .Take(batchSize)
-            .ToListAsync();
-
-        if (expired.Count == 0)
-        {
-            return 0;
-        }
-
-        foreach (var entity in expired)
-        {
-            repository.Remove(entity);
-        }
-
-        await repository.UnitOfWork.CommitAsync();
-
-        return expired.Count;
+            .Take(batchSize);
     }
 }

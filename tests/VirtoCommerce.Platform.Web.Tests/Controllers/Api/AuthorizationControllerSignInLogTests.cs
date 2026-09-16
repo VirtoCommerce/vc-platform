@@ -23,6 +23,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api;
 

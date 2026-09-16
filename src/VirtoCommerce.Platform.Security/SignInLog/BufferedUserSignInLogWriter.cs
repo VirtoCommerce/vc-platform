@@ -5,9 +5,11 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 
-namespace VirtoCommerce.Platform.Security.Services;
+namespace VirtoCommerce.Platform.Security.SignInLog;
 
 /// <summary>
 /// Buffers audit rows in a bounded channel and flushes them in batches on a background loop.
@@ -16,11 +18,10 @@ namespace VirtoCommerce.Platform.Security.Services;
 /// </summary>
 public class BufferedUserSignInLogWriter : BackgroundService, IUserSignInLogWriter
 {
-    private static readonly TimeSpan _flushInterval = TimeSpan.FromSeconds(5);
-
     private readonly IUserSignInLogService _service;
     private readonly ILogger<BufferedUserSignInLogWriter> _logger;
     private readonly Channel<UserSignInLog> _channel;
+    private readonly TimeSpan _flushInterval;
     private readonly int _batchSize;
 
     private int _droppedCount;
@@ -28,16 +29,21 @@ public class BufferedUserSignInLogWriter : BackgroundService, IUserSignInLogWrit
     public BufferedUserSignInLogWriter(
         IUserSignInLogService service,
         ILogger<BufferedUserSignInLogWriter> logger,
-        int capacity = 10_000,
-        int batchSize = 200)
+        IOptions<SignInLogOptions> options)
     {
+        var settings = options?.Value ?? new SignInLogOptions();
+
         _service = service;
         _logger = logger;
-        _batchSize = batchSize;
-        _channel = Channel.CreateBounded<UserSignInLog>(new BoundedChannelOptions(capacity)
+        _batchSize = Math.Max(1, settings.BatchSize);
+        _flushInterval = TimeSpan.FromSeconds(Math.Max(1, settings.FlushIntervalSeconds));
+        _channel = Channel.CreateBounded<UserSignInLog>(new BoundedChannelOptions(Math.Max(1, settings.BufferCapacity))
         {
-            // Keep the newest rows: under a flood, the recent attempts are the ones worth having.
-            FullMode = BoundedChannelFullMode.DropOldest,
+            // Wait is the only mode where TryWrite reports a rejection: every Drop* mode returns
+            // true and discards silently. Since the caller uses TryWrite and never WriteAsync, this
+            // never blocks a sign-in - it just makes the loss counter trustworthy, which an audit
+            // buffer needs more than it needs to keep the newest rows of an extreme burst.
+            FullMode = BoundedChannelFullMode.Wait,
             SingleReader = true,
         });
     }
@@ -65,41 +71,34 @@ public class BufferedUserSignInLogWriter : BackgroundService, IUserSignInLogWrit
             record.CreatedDate = DateTime.UtcNow;
         }
 
-        // DropOldest means TryWrite still succeeds after evicting, so the queue depth staying flat
-        // across the write is the only signal that something was discarded.
-        var before = _channel.Reader.Count;
-
+        // Exact: with FullMode.Wait, TryWrite returns false only when the buffer is genuinely full.
+        // Inferring drops from queue depth was wrong - the background reader drains concurrently,
+        // so a falling count is not evidence of an eviction.
         if (!_channel.Writer.TryWrite(record))
-        {
-            Interlocked.Increment(ref _droppedCount);
-            return;
-        }
-
-        if (before > 0 && _channel.Reader.Count <= before)
         {
             var dropped = Interlocked.Increment(ref _droppedCount);
             _logger.LogWarning("Sign-in audit buffer full; dropped {DroppedCount} record(s) so far.", dropped);
         }
     }
 
-    public virtual async Task FlushAsync(CancellationToken cancellationToken)
+    public virtual async Task Flush(CancellationToken cancellationToken)
     {
         var batch = new List<UserSignInLog>(_batchSize);
 
-        while (_channel.Reader.TryRead(out var record))
+        while (!cancellationToken.IsCancellationRequested && _channel.Reader.TryRead(out var record))
         {
             batch.Add(record);
 
             if (batch.Count >= _batchSize)
             {
-                await PersistAsync(batch);
+                await PersistAsync(batch, cancellationToken);
                 batch = new List<UserSignInLog>(_batchSize);
             }
         }
 
         if (batch.Count > 0)
         {
-            await PersistAsync(batch);
+            await PersistAsync(batch, cancellationToken);
         }
     }
 
@@ -118,18 +117,19 @@ public class BufferedUserSignInLogWriter : BackgroundService, IUserSignInLogWrit
                 break;
             }
 
-            await FlushAsync(stoppingToken);
+            await Flush(stoppingToken);
         }
 
-        // Drain what is left so a graceful shutdown does not lose the tail of the trail.
-        await FlushAsync(CancellationToken.None);
+        // Drain what is left so a graceful shutdown does not lose the tail of the trail. The host
+        // bounds this with its own stop timeout, so it cannot hang shutdown indefinitely.
+        await Flush(CancellationToken.None);
     }
 
-    private async Task PersistAsync(List<UserSignInLog> batch)
+    private async Task PersistAsync(List<UserSignInLog> batch, CancellationToken cancellationToken)
     {
         try
         {
-            await _service.SaveChangesAsync(batch);
+            await _service.SaveChanges(batch, cancellationToken);
         }
         catch (Exception ex)
         {
