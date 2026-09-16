@@ -1,35 +1,45 @@
-// Sign-in log blade: statistics strip (tiles + top-10 breakdowns) above the grid.
-// Used by: platformWebApp.signInLogController
+// Sign-in log dashboard: statistics strip (tiles + top-10 breakdowns) above the record list.
+// Used by: platformWebApp.signInLogDashboardController
+//
+// Deliberately NOT called .tile - _base-modules.sass owns a global .tile with its own borders,
+// hover and __selected states, which is what made these read differently from .breakdown.
 
 .sign-in-log-tiles
     display: grid
-    grid-template-columns: repeat(2, 1fr)
-    gap: 10px
-    margin-bottom: 16px
+    grid-template-columns: repeat(4, 1fr)
+    gap: 8px
+    margin-bottom: 14px
 
-    .tile
+    .stat-tile
         min-width: 0
-        padding: 10px 12px
+        padding: 9px 10px
         border: 1px solid #ddd
         border-radius: 3px
         background: #fff
 
-        &.__alert .tile-value
+        &.__clickable
+            cursor: pointer
+
+            &:hover
+                border-color: #43b0e6
+
+        &.__alert .stat-tile-value
             color: #f4614c
 
-        &.__impersonation .tile-value
+        &.__impersonation .stat-tile-value
             color: #e08b00
 
-    .tile-value
-        font-size: 24px
-        line-height: 28px
+    .stat-tile-value
+        font-size: 21px
+        line-height: 25px
         font-weight: 600
         color: #333
+        font-variant-numeric: tabular-nums
 
-    .tile-label
-        margin-top: 2px
-        font-size: 11px
-        line-height: 14px
+    .stat-tile-label
+        margin-top: 1px
+        font-size: 10px
+        line-height: 13px
         color: #999
         text-transform: uppercase
         letter-spacing: .02em
@@ -126,13 +136,14 @@
 
 // Dashboard: period switcher and the explicit "all records" entry point.
 .sign-in-log-period
-    display: flex
-    flex-wrap: wrap
+    display: grid
+    grid-template-columns: repeat(4, 1fr)
     gap: 4px
     margin-bottom: 12px
 
     a
-        padding: 3px 10px
+        text-align: center
+        padding: 3px 6px
         border: 1px solid #ddd
         border-radius: 3px
         font-size: 12px
@@ -148,11 +159,6 @@
             background: #43b0e6
             color: #fff
 
-.sign-in-log-tiles .tile.__clickable
-    cursor: pointer
-
-    &:hover
-        border-color: #43b0e6
 
 .sign-in-log-all
     margin-top: 4px
@@ -169,14 +175,22 @@
             text-decoration: underline
 
 // Period-over-period movement on each tile.
-.tile-delta
+.stat-tile-delta
     display: flex
-    align-items: center
-    gap: 4px
-    margin-top: 6px
-    font-size: 11px
-    line-height: 14px
+    align-items: baseline
+    gap: 3px
+    margin-top: 5px
+    font-size: 10px
+    line-height: 13px
     white-space: nowrap
+    overflow: hidden
+
+    i
+        font-size: 8px
+
+    em
+        font-style: normal
+        color: #bbb
 
     i
         font-size: 9px
@@ -278,3 +292,74 @@
     &:focus
         border-color: #1a73e8
         outline: none
+
+// Period presets as a 4-column grid inside the filter panel, with Custom revealing dates.
+.va-filter-panel__row.__stacked
+    display: block
+
+    .va-filter-panel__label
+        display: block
+        margin-bottom: 6px
+
+.period-grid
+    display: grid
+    grid-template-columns: repeat(4, 1fr)
+    gap: 4px
+
+    a
+        padding: 4px 2px
+        border: 1px solid #ddd
+        border-radius: 3px
+        font-size: 11px
+        line-height: 14px
+        text-align: center
+        color: #666
+        text-decoration: none
+        overflow: hidden
+        text-overflow: ellipsis
+        white-space: nowrap
+
+        &:hover
+            border-color: #43b0e6
+            color: #43b0e6
+
+        &.__active
+            border-color: #43b0e6
+            background: #43b0e6
+            color: #fff
+
+// Read-only record view.
+.inner-block.sign-in-log-detail
+    padding-top: 14px
+
+.detail-section
+    margin-bottom: 18px
+
+    h4
+        margin: 0 0 6px
+        font-size: 11px
+        font-weight: 600
+        letter-spacing: .02em
+        text-transform: uppercase
+        color: #999
+
+.detail-row
+    display: flex
+    align-items: baseline
+    gap: 12px
+    padding: 5px 0
+    border-bottom: 1px solid #f0f0f0
+    font-size: 13px
+
+    &:last-child
+        border-bottom: none
+
+.detail-label
+    flex: 0 0 130px
+    color: #999
+
+.detail-value
+    flex: 1 1 auto
+    min-width: 0
+    color: #333
+    word-break: break-word

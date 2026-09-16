@@ -6,11 +6,26 @@
         search-text="blade.searchText"
         filter-title="{{ 'platform.blades.sign-in-log.filter.title' | translate }}">
 
-      <div class="va-filter-panel__row">
+      <div class="va-filter-panel__row __stacked">
         <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.period' | translate }}</span>
-        <select class="va-filter-panel__select" ng-model="filter.period" ng-change="filter.criteriaChanged()">
-          <option ng-repeat="p in blade.periods" value="{{p.value}}">{{p.label | translate}}</option>
-        </select>
+        <div class="period-grid">
+          <a href="javascript:void(0)"
+             ng-repeat="p in blade.periods"
+             ng-class="{'__active': filter.period === p.value}"
+             ng-click="filter.period = p.value; filter.criteriaChanged()">{{ p.label | translate }}</a>
+        </div>
+      </div>
+
+      <div class="va-filter-panel__row" ng-if="filter.period === 'custom'">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.date-from' | translate }}</span>
+        <input type="date" id="signInLogDateFrom" class="va-filter-panel__date-input"
+               ng-model="filter.dateFrom" ng-change="filter.criteriaChanged()">
+      </div>
+
+      <div class="va-filter-panel__row" ng-if="filter.period === 'custom'">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.date-to' | translate }}</span>
+        <input type="date" id="signInLogDateTo" class="va-filter-panel__date-input"
+               ng-model="filter.dateTo" ng-change="filter.criteriaChanged()">
       </div>
 
       <div class="va-filter-panel__row">
@@ -54,6 +69,7 @@
 
       <div class="table-wrapper" ng-init="setGridOptions({
                 useExternalSorting: true,
+                rowTemplate: 'sign-in-log.row.html',
                 rowHeight: 40,
                 columnDefs: [
                     {
@@ -115,4 +131,14 @@
     </span>
     <span class="sign-in-log-reason" ng-if="!row.entity.succeeded">{{ row.entity.failureReason }}</span>
   </div>
+</script>
+
+<script type="text/ng-template" id="sign-in-log.row.html">
+  <div ng-click="grid.appScope.selectRecord(row.entity)"
+       ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+       ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'"
+       class="ui-grid-cell"
+       ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedRecordId}"
+       role="{{col.isRowHeader ? 'rowheader' : 'gridcell'}}"
+       ui-grid-cell></div>
 </script>

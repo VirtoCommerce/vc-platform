@@ -11,11 +11,8 @@ angular.module('platformWebApp')
                 blade.periods = [
                     { label: 'platform.blades.sign-in-log.filter.period-30m', value: '30m', minutes: 30 },
                     { label: 'platform.blades.sign-in-log.filter.period-1h', value: '1h', minutes: 60 },
-                    { label: 'platform.blades.sign-in-log.filter.period-6h', value: '6h', minutes: 360 },
                     { label: 'platform.blades.sign-in-log.filter.period-24h', value: '24h', minutes: 1440 },
-                    { label: 'platform.blades.sign-in-log.filter.period-7d', value: '7d', minutes: 1440 * 7 },
-                    { label: 'platform.blades.sign-in-log.filter.period-30d', value: '30d', minutes: 1440 * 30 },
-                    { label: 'platform.blades.sign-in-log.filter.period-all', value: '', minutes: 0 }
+                    { label: 'platform.blades.sign-in-log.filter.period-7d', value: '7d', minutes: 1440 * 7 }
                 ];
 
                 blade.period = '24h';

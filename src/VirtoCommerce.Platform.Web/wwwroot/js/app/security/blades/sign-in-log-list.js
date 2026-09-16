@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.signInLogListController',
-        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
-            function ($scope, accounts, bladeUtils, uiGridHelper) {
+        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService',
+            function ($scope, accounts, bladeUtils, uiGridHelper, bladeNavigationService) {
                 $scope.uiGridConstants = uiGridHelper.uiGridConstants;
                 var blade = $scope.blade;
 
@@ -15,7 +15,8 @@ angular.module('platformWebApp')
                     { label: 'platform.blades.sign-in-log.filter.period-24h', value: '24h', minutes: 1440 },
                     { label: 'platform.blades.sign-in-log.filter.period-7d', value: '7d', minutes: 1440 * 7 },
                     { label: 'platform.blades.sign-in-log.filter.period-30d', value: '30d', minutes: 1440 * 30 },
-                    { label: 'platform.blades.sign-in-log.filter.period-all', value: '', minutes: 0 }
+                    { label: 'platform.blades.sign-in-log.filter.period-all', value: '', minutes: 0 },
+                    { label: 'platform.blades.sign-in-log.filter.period-custom', value: 'custom', minutes: 0 }
                 ];
 
                 blade.outcomes = [
@@ -45,7 +46,9 @@ angular.module('platformWebApp')
                         signInType: seed.signInType || '',
                         failureReason: seed.failureReason || null,
                         ipAddress: seed.ipAddress || null,
-                        storeId: seed.storeId || ''
+                        storeId: seed.storeId || '',
+                        dateFrom: null,
+                        dateTo: null
                     };
                 }
 
@@ -56,7 +59,9 @@ angular.module('platformWebApp')
                                filter.signInType !== '' ||
                                !!filter.failureReason ||
                                !!filter.ipAddress ||
-                               filter.storeId !== '';
+                               filter.storeId !== '' ||
+                               !!filter.dateFrom ||
+                               !!filter.dateTo;
                     },
 
                     // Clear resets to the plain defaults, not to the dashboard preset: the point of
@@ -68,6 +73,8 @@ angular.module('platformWebApp')
                         filter.failureReason = null;
                         filter.ipAddress = null;
                         filter.storeId = '';
+                        filter.dateFrom = null;
+                        filter.dateTo = null;
                         blade.searchText = '';
                         filter.keyword = null;
                         filter.criteriaChanged();
@@ -119,9 +126,23 @@ angular.module('platformWebApp')
                         criteria.failureReasons = [filter.failureReason];
                     }
 
-                    var period = _.findWhere(blade.periods, { value: filter.period });
-                    if (period && period.minutes) {
-                        criteria.startDate = new Date(Date.now() - period.minutes * 60000).toISOString();
+                    if (filter.period === 'custom') {
+                        // Date inputs give a local calendar day; widen "to" to the end of it so a
+                        // single-day range does not silently exclude everything after midnight.
+                        if (filter.dateFrom) {
+                            criteria.startDate = new Date(filter.dateFrom).toISOString();
+                        }
+
+                        if (filter.dateTo) {
+                            var to = new Date(filter.dateTo);
+                            to.setHours(23, 59, 59, 999);
+                            criteria.endDate = to.toISOString();
+                        }
+                    } else {
+                        var period = _.findWhere(blade.periods, { value: filter.period });
+                        if (period && period.minutes) {
+                            criteria.startDate = new Date(Date.now() - period.minutes * 60000).toISOString();
+                        }
                     }
 
                     return criteria;
@@ -158,6 +179,21 @@ angular.module('platformWebApp')
                         canExecuteMethod: function () { return true; }
                     }
                 ];
+
+                $scope.selectedRecordId = null;
+
+                // Rows open a read-only detail blade: the grid shows five columns, the record has
+                // eighteen fields, and an audit trail is worth reading in full.
+                $scope.selectRecord = function (record) {
+                    $scope.selectedRecordId = record.id;
+
+                    bladeNavigationService.showBlade({
+                        id: 'signInLogDetail',
+                        record: record,
+                        controller: 'platformWebApp.signInLogDetailController',
+                        template: '$(Platform)/Scripts/app/security/blades/sign-in-log-detail.html'
+                    }, blade);
+                };
 
                 $scope.setGridOptions = function (gridOptions) {
                     uiGridHelper.initialize($scope, gridOptions, function () {

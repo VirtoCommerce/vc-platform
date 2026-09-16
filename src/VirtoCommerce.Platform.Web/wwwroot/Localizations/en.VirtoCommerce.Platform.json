@@ -746,7 +746,10 @@
           "period-30m": "Last 30 minutes",
           "period-1h": "Last hour",
           "period-6h": "Last 6 hours",
-          "store": "Store"
+          "store": "Store",
+          "period-custom": "Custom",
+          "date-from": "From",
+          "date-to": "To"
         },
         "labels": {
           "date": "Date",
@@ -770,17 +773,33 @@
           "failure-reasons": "Failure reasons",
           "by-organization": "Sign-ins by organization",
           "none": "No data",
-          "vs-previous": "vs previous period",
           "no-comparison": "no previous period",
           "total-hint": "All sign-in attempts in the period, successful and failed. Click to see them.",
           "failed-hint": "Attempts that did not sign anyone in. Click to see only failures.",
           "users-hint": "Distinct accounts that signed in successfully, counted once each however many times they signed in. Click to see successful sign-ins.",
           "impersonation-hint": "Sessions where support signed in on behalf of a customer. Click to see them.",
           "timeline": "Attempts over time",
-          "by-store": "Sign-ins by store"
+          "by-store": "Sign-ins by store",
+          "vs-prev": "vs prev"
         },
         "hints": {
           "known-accounts-only": "Covers attempts against existing accounts only."
+        },
+        "detail": {
+          "title": "Sign-in record",
+          "section-what": "What happened",
+          "section-who": "Who",
+          "section-where": "Where from",
+          "section-context": "Context",
+          "user-id": "User ID",
+          "operator-name": "Operator",
+          "operator-id": "Operator ID",
+          "member-id": "Member ID",
+          "user-agent": "User agent",
+          "client-id": "Client",
+          "store-name": "Store name",
+          "organization-id": "Organization ID",
+          "session-id": "Session ID"
         }
       },
       "sign-in-log-dashboard": {
