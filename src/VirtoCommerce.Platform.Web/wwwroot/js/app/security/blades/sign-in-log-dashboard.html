@@ -114,14 +114,11 @@
           </div>
         </div>
 
-        <div class="breakdown">
+        <div class="breakdown" ng-if="blade.stats.signInsByOrganization.length">
           <h4>{{ 'platform.blades.sign-in-log.stats.by-organization' | translate }}</h4>
           <div class="breakdown-row" ng-repeat="entry in blade.stats.signInsByOrganization">
             <span class="breakdown-key">{{ entry.key }}</span>
             <span class="breakdown-count">{{ entry.count | number:0 }}</span>
-          </div>
-          <div class="breakdown-empty" ng-if="!blade.stats.signInsByOrganization.length">
-            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
           </div>
           <div class="hint">{{ 'platform.blades.sign-in-log.hints.known-accounts-only' | translate }}</div>
         </div>
