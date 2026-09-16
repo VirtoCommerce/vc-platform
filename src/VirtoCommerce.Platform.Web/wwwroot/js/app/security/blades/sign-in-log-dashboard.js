@@ -126,8 +126,7 @@ angular.module('platformWebApp')
                             badY: baseline - okHeight - badHeight - (okHeight && badHeight ? 2 : 0),
                             badHeight: badHeight,
                             point: p,
-                            tooltip: formatBucket(p.timestamp, stats.timelineGranularity) +
-                                     ' — ' + p.succeededCount + ' ok, ' + p.failedCount + ' failed'
+                            tooltip: `${formatBucket(p.timestamp, stats.timelineGranularity)} — ${p.succeededCount} ok, ${p.failedCount} failed`
                         };
                     });
 
@@ -185,8 +184,8 @@ angular.module('platformWebApp')
                         var movement = delta(d.value, d.previous);
 
                         return {
-                            label: 'platform.blades.sign-in-log.stats.' + d.label,
-                            hint: 'platform.blades.sign-in-log.stats.' + d.label + '-hint',
+                            label: `platform.blades.sign-in-log.stats.${d.label}`,
+                            hint: `platform.blades.sign-in-log.stats.${d.label}-hint`,
                             value: d.value,
                             delta: movement,
                             deltaClass: deltaClass(movement, d.worse),

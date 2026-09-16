@@ -31,8 +31,8 @@ angular.module('platformWebApp').controller('platformWebApp.securityMainControll
             id: 'securityDetails',
             title: data.name,
             subtitle: data.subtitle,
-            controller: data.controller || ('platformWebApp.' + data.entityName + 'ListController'),
-            template: data.template || ('$(Platform)/Scripts/app/security/blades/' + data.entityName + '-list.tpl.html')
+            controller: data.controller || `platformWebApp.${data.entityName}ListController`,
+            template: data.template || `$(Platform)/Scripts/app/security/blades/${data.entityName}-list.tpl.html`
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
