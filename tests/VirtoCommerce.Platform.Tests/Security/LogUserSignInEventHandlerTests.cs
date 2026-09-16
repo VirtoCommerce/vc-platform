@@ -85,60 +85,11 @@ public class LogUserSignInEventHandlerTests
         written.Should().ContainSingle().Which.OperatorUserName.Should().Be("support@virtocommerce.com");
     }
 
-    [Fact]
-    public async Task Handle_WhenEnricherThrows_StillWritesTheRecord()
-    {
-        var written = new List<UserSignInLog>();
-        var enricher = new Mock<IUserSignInLogEnricher>();
-        enricher.SetupGet(x => x.Priority).Returns(0);
-        enricher.Setup(x => x.Enrich(It.IsAny<UserSignInLog>())).ThrowsAsync(new Exception("module down"));
-
-        var handler = CreateHandler(written, signInLogEnabled: true, enrichers: [enricher.Object]);
-
-        await handler.Handle(new UserSignInAttemptEvent
-        {
-            UserName = "a",
-            SignInType = SignInType.Password,
-            Succeeded = true,
-        });
-
-        written.Should().ContainSingle();
-    }
-
-    [Fact]
-    public async Task Handle_RunsEnrichersInPriorityOrder()
-    {
-        var order = new List<int>();
-        var written = new List<UserSignInLog>();
-
-        var second = new Mock<IUserSignInLogEnricher>();
-        second.SetupGet(x => x.Priority).Returns(10);
-        second.Setup(x => x.Enrich(It.IsAny<UserSignInLog>()))
-            .Callback(() => order.Add(10)).Returns(Task.CompletedTask);
-
-        var first = new Mock<IUserSignInLogEnricher>();
-        first.SetupGet(x => x.Priority).Returns(1);
-        first.Setup(x => x.Enrich(It.IsAny<UserSignInLog>()))
-            .Callback(() => order.Add(1)).Returns(Task.CompletedTask);
-
-        var handler = CreateHandler(written, signInLogEnabled: true, enrichers: [second.Object, first.Object]);
-
-        await handler.Handle(new UserSignInAttemptEvent
-        {
-            UserName = "a",
-            SignInType = SignInType.Password,
-            Succeeded = true,
-        });
-
-        order.Should().Equal(1, 10);
-    }
-
     private static LogUserSignInEventHandler CreateHandler(
         List<UserSignInLog> written,
         bool signInLogEnabled,
         string ip = null,
-        string userAgent = null,
-        IEnumerable<IUserSignInLogEnricher> enrichers = null)
+        string userAgent = null)
     {
         var writer = new Mock<IUserSignInLogWriter>();
         writer.Setup(x => x.Write(It.IsAny<UserSignInLog>())).Callback<UserSignInLog>(written.Add);
@@ -163,18 +114,12 @@ public class LogUserSignInEventHandlerTests
         var accessor = new Mock<IHttpContextAccessor>();
         accessor.SetupGet(x => x.HttpContext).Returns(httpContext);
 
-        // Enrichers are resolved from a scope per event, so the test supplies a real container.
-        var services = new ServiceCollection();
-        foreach (var enricher in enrichers ?? [])
-        {
-            services.AddSingleton(enricher);
-        }
-
+        // No enrichers here: they run on the writer's flush loop, not on this thread.
+        // See BufferedUserSignInLogWriterTests.
         return new LogUserSignInEventHandler(
             writer.Object,
             settings.Object,
             accessor.Object,
-            services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>(),
             NullLogger<LogUserSignInEventHandler>.Instance);
     }
 }

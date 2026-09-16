@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -80,7 +81,41 @@ public class ExternalSignInServiceSignInLogTests
         attempt.Provider.Should().Be("AzureAD");
     }
 
-    private ExternalSignInService CreateService(ApplicationUser user, SignInResult signInResult)
+    [Fact]
+    public async Task SignInAsync_ProviderNotLinked_PublishesNotAllowedBeforeThrowing()
+    {
+        var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+
+        var service = CreateService(user, SignInResult.Failed);
+
+        // The exception is the existing behaviour; the point is that the attempt is recorded on the
+        // way out. Without the publish, a repeated unlinked-provider probe leaves no trace at all.
+        await Assert.ThrowsAsync<AuthenticationException>(service.SignInAsync);
+
+        var attempt = _published.Should().ContainSingle().Subject;
+        attempt.Succeeded.Should().BeFalse();
+        attempt.FailureReason.Should().Be(SignInFailureReason.NotAllowed);
+        attempt.SignInType.Should().Be(SignInType.External);
+        attempt.Provider.Should().Be("AzureAD");
+    }
+
+    [Fact]
+    public async Task SignInAsync_NoPlatformUser_PublishesUserNotFoundBeforeThrowing()
+    {
+        var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+
+        var service = CreateService(user, SignInResult.Success, platformUserExists: false);
+
+        await Assert.ThrowsAsync<AuthenticationException>(service.SignInAsync);
+
+        var attempt = _published.Should().ContainSingle().Subject;
+        attempt.Succeeded.Should().BeFalse();
+        attempt.FailureReason.Should().Be(SignInFailureReason.UserNotFound);
+        attempt.UserName.Should().Be("b2badmin@test.com");
+        attempt.UserId.Should().BeNull();
+    }
+
+    private ExternalSignInService CreateService(ApplicationUser user, SignInResult signInResult, bool platformUserExists = true)
     {
         var principal = new ClaimsPrincipal(new ClaimsIdentity(
         [
@@ -96,7 +131,9 @@ public class ExternalSignInServiceSignInLogTests
             .Setup(x => x.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
             .ReturnsAsync(signInResult);
 
-        _userManager.Setup(x => x.FindByLoginAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(user);
+        _userManager.Setup(x => x.FindByLoginAsync(It.IsAny<string>(), It.IsAny<string>()))
+            .ReturnsAsync(platformUserExists ? user : null);
+        _userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null);
         _userManager.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
 
         var provider = new Mock<IExternalSignInProvider>();

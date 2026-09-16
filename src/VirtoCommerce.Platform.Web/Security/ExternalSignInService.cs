@@ -63,6 +63,10 @@ namespace VirtoCommerce.Platform.Web.Security
             var platformUser = await GetOrCreatePlatformUser(externalLoginInfo, userName, userEmail);
             if (platformUser == null)
             {
+                // Every exit from here throws, and an attempt that ends in an exception is still an
+                // attempt: without these publishes the log would show external sign-ins as either
+                // successful or locked out and nothing else.
+                await PublishSignInAttempt(userName, user: null, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.UserNotFound);
                 throw new AuthenticationException($"The user {externalLoginInfo.Principal.Identity?.Name} for the external provider {externalLoginInfo.ProviderDisplayName} is not found.");
             }
 
@@ -72,6 +76,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (externalLoginResult == SignInResult.Failed)
             {
+                await PublishSignInAttempt(userName, platformUser, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.NotAllowed);
                 throw new AuthenticationException($"The requested provider {externalLoginInfo.ProviderDisplayName} has not been linked to an account, the provider must be linked from the back office.");
             }
 
@@ -83,6 +88,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (externalLoginResult == SignInResult.TwoFactorRequired)
             {
+                await PublishSignInAttempt(userName, platformUser, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.RequiresTwoFactor);
                 throw new NotImplementedException();
             }
 

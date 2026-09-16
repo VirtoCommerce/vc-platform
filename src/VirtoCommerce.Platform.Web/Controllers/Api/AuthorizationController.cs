@@ -264,6 +264,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 CopyClaim(info.Principal, ticket.Principal, PlatformConstants.Security.Claims.OperatorUserId, destinations);
                 CopyClaim(info.Principal, ticket.Principal, PlatformConstants.Security.Claims.OperatorUserName, destinations);
 
+                // Keep the rotated token on the authorization the incoming one belonged to, so a session
+                // holds one identity across its whole life. Without this the id is only restored by
+                // OpenIddict internally and is not readable here - and the audit row below would be
+                // written with a null session id, which is what broke the Active Sessions join.
+                var refreshedAuthorizationId = info.Principal.GetClaim(Claims.Private.AuthorizationId);
+                if (!string.IsNullOrEmpty(refreshedAuthorizationId))
+                {
+                    ticket.Principal.SetAuthorizationId(refreshedAuthorizationId);
+                }
+
                 // Ordinary token rotation is deliberately not audited: high volume, low value. A refresh that
                 // carries operator claims is different - it is how an impersonation session extends itself.
                 var refreshedOperatorUserId = info.Principal.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)?.EmptyToNull();
@@ -279,7 +289,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         failureReason: null,
                         signInType: SignInType.Impersonation,
                         clientId: openIdConnectRequest.ClientId,
-                        sessionId: ticket.Principal.FindFirstValue(Claims.Private.AuthorizationId));
+                        sessionId: refreshedAuthorizationId);
                 }
 
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
@@ -339,10 +349,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (openIdConnectRequest.IsImpersonateGrantType())
             {
+                var requestedUserId = (string)openIdConnectRequest.GetParameter("user_id");
+
                 // Only Authorized User has access for impersonation
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
+                    // There is no operator to name, but an unauthenticated call to the impersonate
+                    // grant is exactly the kind of probe an audit trail exists to surface.
+                    await PublishImpersonationAttempt(
+                        userName: null,
+                        attemptedUserId: requestedUserId,
+                        impersonatedUser: null,
+                        operatorUserId: null,
+                        operatorUserName: null,
+                        succeeded: false,
+                        failureReason: SignInFailureReason.Forbidden,
+                        signInType: SignInType.Impersonation,
+                        clientId: openIdConnectRequest.ClientId);
+
                     return Unauthorized();
                 }
 
@@ -355,7 +380,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     {
                         await PublishImpersonationAttempt(
                             userName: null,
-                            attemptedUserId: (string)openIdConnectRequest.GetParameter("user_id"),
+                            attemptedUserId: requestedUserId,
                             impersonatedUser: null,
                             operatorUserId: user.Id,
                             operatorUserName: user.UserName,
@@ -372,13 +397,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var operatorUserId = User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)?.EmptyToNull() ?? user.Id;
                 var operatorUserName = User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)?.EmptyToNull() ?? user.UserName;
 
-                var userId = (string)openIdConnectRequest.GetParameter("user_id");
+                // The audit row names the real operator whichever direction the call goes. Captured
+                // before the revert branch below clears these: reading them afterwards is what made a
+                // revert row record the customer as their own operator.
+                var auditOperatorUserId = operatorUserId;
+                var auditOperatorUserName = operatorUserName;
+
                 ApplicationUser impersonatedUser;
 
-                if (!string.IsNullOrEmpty(userId))
+                if (!string.IsNullOrEmpty(requestedUserId))
                 {
                     // Find impersonated user by id
-                    impersonatedUser = await _userManager.FindByIdAsync(userId);
+                    impersonatedUser = await _userManager.FindByIdAsync(requestedUserId);
                 }
                 else
                 {
@@ -392,14 +422,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var isRevert = string.IsNullOrEmpty(operatorUserId);
                 var auditSignInType = isRevert ? SignInType.ImpersonationRevert : SignInType.Impersonation;
 
+                // Both row types are about the customer account: the one being entered on a grant, the
+                // one being left on a revert - which is the account this request authenticated as.
+                var auditUser = isRevert ? user : impersonatedUser;
+
                 if (impersonatedUser == null)
                 {
                     await PublishImpersonationAttempt(
-                        userName: null,
-                        attemptedUserId: userId,
-                        impersonatedUser: null,
-                        operatorUserId: user.Id,
-                        operatorUserName: user.UserName,
+                        userName: auditUser?.UserName,
+                        attemptedUserId: auditUser?.Id ?? requestedUserId,
+                        impersonatedUser: auditUser,
+                        operatorUserId: auditOperatorUserId,
+                        operatorUserName: auditOperatorUserName,
                         succeeded: false,
                         failureReason: SignInFailureReason.UserNotFound,
                         signInType: auditSignInType,
@@ -415,6 +449,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var errors = await requestValidator.ValidateAsync(context);
                     if (errors.Count > 0)
                     {
+                        await PublishImpersonationAttempt(
+                            userName: auditUser.UserName,
+                            attemptedUserId: auditUser.Id,
+                            impersonatedUser: auditUser,
+                            operatorUserId: auditOperatorUserId,
+                            operatorUserName: auditOperatorUserName,
+                            succeeded: false,
+                            failureReason: SignInFailureReason.NotAllowed,
+                            signInType: auditSignInType,
+                            clientId: openIdConnectRequest.ClientId);
+
                         return BadRequest(errors.First());
                     }
                 }
@@ -431,17 +476,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     .SetClaimWithDestinations(PlatformConstants.Security.Claims.OperatorUserId, operatorUserId, destinations)
                     .SetClaimWithDestinations(PlatformConstants.Security.Claims.OperatorUserName, operatorUserName, destinations);
 
+                // A revert row is about the impersonated session that is ending, so it carries that
+                // session's id - which is what ties it back to the grant row. A grant row needs the id
+                // of the session it opens, and that only exists if we create the authorization here:
+                // see AttachAuthorizationId.
+                var sessionId = isRevert
+                    ? User.GetClaim(Claims.Private.AuthorizationId)
+                    : await AttachAuthorizationId(ticket.Principal, impersonatedUser, openIdConnectRequest.ClientId);
+
                 await PublishImpersonationAttempt(
-                    userName: impersonatedUser.UserName,
-                    attemptedUserId: impersonatedUser.Id,
-                    impersonatedUser: impersonatedUser,
-                    operatorUserId: operatorUserId.EmptyToNull() ?? user.Id,
-                    operatorUserName: operatorUserName.EmptyToNull() ?? user.UserName,
+                    userName: auditUser.UserName,
+                    attemptedUserId: auditUser.Id,
+                    impersonatedUser: auditUser,
+                    operatorUserId: auditOperatorUserId,
+                    operatorUserName: auditOperatorUserName,
                     succeeded: true,
                     failureReason: null,
                     signInType: auditSignInType,
                     clientId: openIdConnectRequest.ClientId,
-                    sessionId: ticket.Principal.FindFirstValue(Claims.Private.AuthorizationId));
+                    sessionId: sessionId);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -745,6 +798,50 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             });
         }
 
+        /// <summary>
+        /// Creates the OpenIddict authorization for a session up front, attaches it to the ticket
+        /// principal and returns its id, so the audit row and the Active Sessions listing agree on what
+        /// identifies a session.
+        /// <para>
+        /// This cannot be read back instead. OpenIddict assigns the authorization id while it processes
+        /// the <see cref="ControllerBase.SignIn(ClaimsPrincipal)"/> result, which is after this action has
+        /// returned, so <c>Claims.Private.AuthorizationId</c> on a freshly built ticket is always null.
+        /// OpenIddict honours an authorization already attached to the principal and skips creating its
+        /// own ad-hoc one — the same mechanism the authorization-code path uses in <c>SignInAsync</c>.
+        /// </para>
+        /// <para>
+        /// The type is ad-hoc to match exactly what OpenIddict would otherwise have created: a permanent
+        /// authorization would outlive the session and carry remembered-consent semantics this grant has
+        /// no notion of. Returns null when no refresh token is being issued, because then there is no
+        /// session for Active Sessions to list and nothing to correlate.
+        /// </para>
+        /// </summary>
+        private async Task<string> AttachAuthorizationId(ClaimsPrincipal principal, ApplicationUser user, string clientId)
+        {
+            if (!principal.HasScope(Scopes.OfflineAccess))
+            {
+                return null;
+            }
+
+            var application = await _applicationManager.FindByClientIdAsync(clientId);
+            if (application == null)
+            {
+                return null;
+            }
+
+            var authorization = await _authorizationManager.CreateAsync(
+                principal: principal,
+                subject: await _userManager.GetUserIdAsync(user),
+                client: await _applicationManager.GetIdAsync(application),
+                type: AuthorizationTypes.AdHoc,
+                scopes: principal.GetScopes());
+
+            var authorizationId = await _authorizationManager.GetIdAsync(authorization);
+            principal.SetAuthorizationId(authorizationId);
+
+            return authorizationId;
+        }
+
         private static string ToFailureReason(Microsoft.AspNetCore.Identity.SignInResult result)
         {
             if (result == null)
@@ -765,6 +862,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (result.RequiresTwoFactor)
             {
                 return SignInFailureReason.RequiresTwoFactor;
+            }
+
+            // A succeeded result reaching a failure publish means the credentials were fine and
+            // something after the password check rejected the request - a token request validator,
+            // typically an expired password. Reporting that as a bad password would send an
+            // administrator hunting a credential-stuffing run that never happened.
+            if (result.Succeeded)
+            {
+                return SignInFailureReason.NotAllowed;
             }
 
             return SignInFailureReason.InvalidPassword;

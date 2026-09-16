@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
@@ -16,9 +13,10 @@ using VirtoCommerce.Platform.Core.Security.SignInLog;
 namespace VirtoCommerce.Platform.Security.SignInLog
 {
     /// <summary>
-    /// Turns a <see cref="UserSignInAttemptEvent"/> into a <see cref="UserSignInLog"/> row.
-    /// Enriches it with request context and whatever modules contribute, then hands it to the
-    /// buffered writer. Never throws — a failing audit log must not fail a sign-in.
+    /// Turns a <see cref="UserSignInAttemptEvent"/> into a <see cref="UserSignInLog"/> row, stamps it
+    /// with the request context only this thread can see, and hands it to the buffered writer.
+    /// Module enrichment happens later, on the writer's flush loop, so nothing a module does lands on
+    /// the sign-in latency path. Never throws — a failing audit log must not fail a sign-in.
     /// </summary>
     public class LogUserSignInEventHandler : IEventHandler<UserSignInAttemptEvent>
     {
@@ -31,20 +29,17 @@ namespace VirtoCommerce.Platform.Security.SignInLog
         private readonly IUserSignInLogWriter _writer;
         private readonly ISettingsManager _settingsManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<LogUserSignInEventHandler> _logger;
 
         public LogUserSignInEventHandler(
             IUserSignInLogWriter writer,
             ISettingsManager settingsManager,
             IHttpContextAccessor httpContextAccessor,
-            IServiceScopeFactory scopeFactory,
             ILogger<LogUserSignInEventHandler> logger)
         {
             _writer = writer;
             _settingsManager = settingsManager;
             _httpContextAccessor = httpContextAccessor;
-            _scopeFactory = scopeFactory;
             _logger = logger;
         }
 
@@ -95,8 +90,8 @@ namespace VirtoCommerce.Platform.Security.SignInLog
                 record.UserAgent = Truncate(httpContext.Request.Headers.UserAgent.ToString().EmptyToNull(), UserAgentLength);
             }
 
-            await Enrich(record);
-
+            // Request context is captured here because only this thread has it; everything a module
+            // has to look up is enriched later, on the writer's flush loop, off the sign-in path.
             _writer.Write(record);
         }
 
@@ -118,34 +113,6 @@ namespace VirtoCommerce.Platform.Security.SignInLog
             }
 
             return await _settingsManager.GetValueAsync<bool>(PlatformConstants.Settings.Security.SignInLogEnabled);
-        }
-
-        /// <summary>
-        /// Enrichers are resolved in their own scope per event rather than injected once. They are
-        /// the extension point for modules, and a module resolving an organization needs a scoped
-        /// repository - capturing one in this singleton would hold a DbContext for the process life.
-        /// A broken enricher must never block a sign-in or lose a row, so failures are swallowed and
-        /// the record is written with whatever enrichment succeeded.
-        /// </summary>
-        protected virtual async Task Enrich(UserSignInLog record)
-        {
-            using var scope = _scopeFactory.CreateScope();
-
-            var enrichers = scope.ServiceProvider
-                .GetServices<IUserSignInLogEnricher>()
-                .OrderBy(x => x.Priority);
-
-            foreach (var enricher in enrichers)
-            {
-                try
-                {
-                    await enricher.Enrich(record);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Sign-in log enricher {Enricher} failed.", enricher.GetType().Name);
-                }
-            }
         }
     }
 }

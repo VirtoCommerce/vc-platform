@@ -27,11 +27,14 @@ namespace VirtoCommerce.Platform.Core.Security.SignInLog;
 ///     }
 /// }
 /// </code>
-/// Register it as Scoped - the handler resolves enrichers in their own scope per event.
+/// Register it as Scoped - the buffered writer resolves enrichers in one scope per flushed batch.
 /// Organization is the motivating case: the platform knows MemberId, but resolving it to an
 /// organization lives in the customer module, and Platform.Security must not depend on a module.
-/// Implementations run in <see cref="Priority"/> order and must be cheap — they sit on the
-/// audit write path.
+///
+/// Implementations run in <see cref="Priority"/> order on the writer's background flush loop, never
+/// on the request thread, so an enricher cannot add latency to a sign-in. It also cannot read
+/// <c>HttpContext</c> - by the time it runs, the request is long gone. Everything it needs has to
+/// come off the record.
 /// </summary>
 public interface IUserSignInLogEnricher
 {

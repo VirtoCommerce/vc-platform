@@ -51,6 +51,11 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Security
                 columns: new[] { "IpAddress", "CreatedDate" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserSignInLog_SessionId",
+                table: "UserSignInLog",
+                column: "SessionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserSignInLog_UserId_CreatedDate",
                 table: "UserSignInLog",
                 columns: new[] { "UserId", "CreatedDate" });

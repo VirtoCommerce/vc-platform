@@ -12,7 +12,7 @@ using VirtoCommerce.Platform.Security.Repositories;
 namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
 {
     [DbContext(typeof(SecurityDbContext))]
-    [Migration("20260915123122_AddUserSignInLog")]
+    [Migration("20260916132657_AddUserSignInLog")]
     partial class AddUserSignInLog
     {
         /// <inheritdoc />
@@ -605,7 +605,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
                     b.ToTable("AspNetUserPasswordsHistory", (string)null);
                 });
 
-            modelBuilder.Entity("VirtoCommerce.Platform.Security.Model.UserSignInLogEntity", b =>
+            modelBuilder.Entity("VirtoCommerce.Platform.Security.SignInLog.UserSignInLogEntity", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -686,6 +686,8 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedDate");
+
+                    b.HasIndex("SessionId");
 
                     b.HasIndex("IpAddress", "CreatedDate");
 

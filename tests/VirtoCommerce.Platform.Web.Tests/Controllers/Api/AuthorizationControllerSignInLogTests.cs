@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,9 +11,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using OpenIddict.Abstractions;
+using OpenIddict.Core;
 using OpenIddict.Server;
 using OpenIddict.Server.AspNetCore;
 using VirtoCommerce.Platform.Core;
@@ -20,6 +23,8 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Security.Model.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
@@ -38,9 +43,39 @@ public class AuthorizationControllerSignInLogTests
     private readonly Mock<UserManager<ApplicationUser>> _userManager;
     private readonly Mock<SignInManager<ApplicationUser>> _signInManager;
     private readonly Mock<IAuthorizationService> _authorizationService = new();
+    private readonly Mock<IOpenIddictAuthorizationManager> _authorizationManager = new();
+    private readonly Mock<OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>> _applicationManager;
 
     public AuthorizationControllerSignInLogTests()
     {
+        // Only FindByClientIdAsync and GetIdAsync are exercised, and both are overridden below, so the
+        // cache and store are never reached - they exist because the base constructor rejects nulls.
+        _applicationManager = new Mock<OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>>(
+            Mock.Of<IOpenIddictApplicationCache<VirtoOpenIddictEntityFrameworkCoreApplication>>(),
+            NullLogger<OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>>.Instance,
+            Mock.Of<IOptionsMonitor<OpenIddictCoreOptions>>(x => x.CurrentValue == new OpenIddictCoreOptions()),
+            Mock.Of<IOpenIddictApplicationStore<VirtoOpenIddictEntityFrameworkCoreApplication>>());
+
+        var application = new VirtoOpenIddictEntityFrameworkCoreApplication { Id = "app-1" };
+
+        _applicationManager
+            .Setup(x => x.FindByClientIdAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+        _applicationManager
+            .Setup(x => x.GetIdAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync("app-1");
+
+        var authorization = new object();
+
+        _authorizationManager
+            .Setup(x => x.CreateAsync(
+                It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<ImmutableArray<string>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(authorization);
+        _authorizationManager
+            .Setup(x => x.GetIdAsync(authorization, It.IsAny<CancellationToken>()))
+            .ReturnsAsync("auth-1");
+
         _eventPublisher
             .Setup(x => x.Publish(It.IsAny<UserSignInAttemptEvent>(), It.IsAny<CancellationToken>()))
             .Callback<UserSignInAttemptEvent, CancellationToken>((e, _) => _published.Add(e))
@@ -135,6 +170,88 @@ public class AuthorizationControllerSignInLogTests
     }
 
     [Fact]
+    public async Task Exchange_ImpersonateGrant_Revert_NamesTheCustomerAndTheRealOperator()
+    {
+        // The live shape of a revert: the request is authenticated as the customer, and the operator
+        // only exists in the claims the impersonation grant attached.
+        var customer = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+        var operatorUser = new ApplicationUser { Id = "op-1", UserName = "support@virtocommerce.com" };
+
+        var controller = CreateController(customer, permitted: true, targetUserId: null, target: operatorUser,
+            principalClaims:
+            [
+                new Claim(PlatformConstants.Security.Claims.OperatorUserId, "op-1"),
+                new Claim(PlatformConstants.Security.Claims.OperatorUserName, "support@virtocommerce.com"),
+            ]);
+
+        await controller.Exchange();
+
+        var attempt = _published.Should().ContainSingle().Subject;
+        attempt.SignInType.Should().Be(SignInType.ImpersonationRevert);
+
+        // The row is about the customer being left, driven by the operator. Reading the operator after
+        // the revert branch cleared it used to invert both columns: the operator was recorded as the
+        // user and the customer as their own operator.
+        attempt.UserId.Should().Be("user-1");
+        attempt.UserName.Should().Be("b2badmin@test.com");
+        attempt.OperatorUserId.Should().Be("op-1");
+        attempt.OperatorUserName.Should().Be("support@virtocommerce.com");
+    }
+
+    [Fact]
+    public async Task Exchange_ImpersonateGrant_Unauthenticated_PublishesForbidden()
+    {
+        var controller = CreateController(currentUser: null, permitted: false, targetUserId: "user-1", target: null);
+
+        await controller.Exchange();
+
+        // No operator to name, but a call to the impersonate grant with no session at all is exactly
+        // what an audit trail exists to surface.
+        var attempt = _published.Should().ContainSingle().Subject;
+        attempt.Succeeded.Should().BeFalse();
+        attempt.FailureReason.Should().Be(SignInFailureReason.Forbidden);
+        attempt.SignInType.Should().Be(SignInType.Impersonation);
+        attempt.UserId.Should().Be("user-1");
+        attempt.OperatorUserId.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Exchange_ImpersonateGrant_ValidatorRejects_PublishesNotAllowed()
+    {
+        var operatorUser = new ApplicationUser { Id = "op-1", UserName = "support@virtocommerce.com" };
+        var target = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+
+        var controller = CreateController(operatorUser, permitted: true, targetUserId: "user-1", target: target,
+            validators: [RejectingValidator("Password expired")]);
+
+        await controller.Exchange();
+
+        var attempt = _published.Should().ContainSingle().Subject;
+        attempt.Succeeded.Should().BeFalse();
+        attempt.FailureReason.Should().Be(SignInFailureReason.NotAllowed);
+        attempt.UserId.Should().Be("user-1");
+        attempt.OperatorUserId.Should().Be("op-1");
+    }
+
+    [Fact]
+    public async Task Exchange_ImpersonateGrant_PublishesTheSessionIdOfTheAuthorizationItCreates()
+    {
+        var operatorUser = new ApplicationUser { Id = "op-1", UserName = "support@virtocommerce.com" };
+        var target = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+
+        var controller = CreateController(operatorUser, permitted: true, targetUserId: "user-1", target: target,
+            // offline_access is what makes this a session Active Sessions can list.
+            scope: OpenIddictConstants.Scopes.OfflineAccess);
+
+        await controller.Exchange();
+
+        // OpenIddict only assigns an authorization id while it processes the SignIn result, so reading
+        // it off the freshly built ticket - as this used to - always produced null, and the Active
+        // Sessions join never matched a single impersonation row.
+        _published.Should().ContainSingle().Which.SessionId.Should().Be("auth-1");
+    }
+
+    [Fact]
     public async Task Exchange_PasswordGrant_UnknownUser_PublishesUserNotFound()
     {
         _userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null);
@@ -157,6 +274,33 @@ public class AuthorizationControllerSignInLogTests
         attempt.FailureReason.Should().Be(SignInFailureReason.UserNotFound);
         attempt.SignInType.Should().Be(SignInType.Password);
         attempt.ClientId.Should().Be("frontend");
+    }
+
+    [Fact]
+    public async Task Exchange_PasswordGrant_ValidatorRejects_PublishesNotAllowedNotInvalidPassword()
+    {
+        var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+        _userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _signInManager
+            .Setup(x => x.CheckPasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+
+        var controller = BuildController(
+            new OpenIddictRequest
+            {
+                GrantType = OpenIddictConstants.GrantTypes.Password,
+                Username = "b2badmin@test.com",
+                Password = "right",
+                ClientId = "frontend",
+            },
+            validators: [RejectingValidator("Password expired")]);
+
+        await controller.Exchange();
+
+        // The password itself was accepted - something after the check rejected the request. Recording
+        // that as a bad password sends an administrator hunting a credential-stuffing run that never
+        // happened, and hides the real cause.
+        _published.Should().ContainSingle().Which.FailureReason.Should().Be(SignInFailureReason.NotAllowed);
     }
 
     [Fact]
@@ -247,14 +391,31 @@ public class AuthorizationControllerSignInLogTests
         return controller;
     }
 
+    /// <summary>
+    /// A token request validator that always rejects, standing in for the password-expiry validator.
+    /// </summary>
+    private static ITokenRequestValidator RejectingValidator(string error)
+    {
+        var validator = new Mock<ITokenRequestValidator>();
+        validator.Setup(x => x.ValidateAsync(It.IsAny<TokenRequestContext>()))
+            .ReturnsAsync([new TokenResponse { Error = error }]);
+
+        return validator.Object;
+    }
+
     private AuthorizationController CreateController(
         ApplicationUser currentUser,
         bool permitted,
         string targetUserId,
-        ApplicationUser target)
+        ApplicationUser target,
+        IEnumerable<Claim> principalClaims = null,
+        IEnumerable<ITokenRequestValidator> validators = null,
+        string scope = null)
     {
         _userManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(currentUser);
         _userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(target);
+        _userManager.Setup(x => x.GetUserIdAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync((ApplicationUser u) => u.Id);
 
         _authorizationService
             .Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<object>(), It.IsAny<IEnumerable<IAuthorizationRequirement>>()))
@@ -264,6 +425,7 @@ public class AuthorizationControllerSignInLogTests
         {
             GrantType = PlatformConstants.Security.GrantTypes.Impersonate,
             ClientId = "frontend",
+            Scope = scope,
         };
 
         if (targetUserId != null)
@@ -271,31 +433,37 @@ public class AuthorizationControllerSignInLogTests
             request.SetParameter("user_id", targetUserId);
         }
 
-        return BuildController(request);
+        return BuildController(request, principalClaims, validators);
     }
 
-    private AuthorizationController BuildController(OpenIddictRequest request)
+    private AuthorizationController BuildController(
+        OpenIddictRequest request,
+        IEnumerable<Claim> principalClaims = null,
+        IEnumerable<ITokenRequestValidator> validators = null)
     {
         var controller = new AuthorizationController(
-            // The impersonate branch never touches the application or token manager, and the constructor
-            // only assigns fields. Passing null keeps this harness off OpenIddict's internal store plumbing.
-            applicationManager: null,
+            applicationManager: _applicationManager.Object,
             identityOptions: Options.Create(new IdentityOptions()),
             signInManager: _signInManager.Object,
             passwordLoginOptions: Options.Create(new PasswordLoginOptions { Enabled = true }),
             eventPublisher: _eventPublisher.Object,
-            requestValidators: [],
+            requestValidators: validators ?? [],
             claimProviders: [],
             requestHandlers: [],
+            // The audited branches never touch the token manager, and the constructor only assigns
+            // fields. Passing null keeps this harness off OpenIddict's internal store plumbing.
             tokenManager: null,
             authorizationService: _authorizationService.Object,
             externalSignInService: Mock.Of<IExternalSignInService>(),
-            authorizationManager: Mock.Of<IOpenIddictAuthorizationManager>(),
+            authorizationManager: _authorizationManager.Object,
             scopeManager: Mock.Of<IOpenIddictScopeManager>());
+
+        var claims = new List<Claim> { new(ClaimTypes.Name, "operator") };
+        claims.AddRange(principalClaims ?? []);
 
         var httpContext = new DefaultHttpContext
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Name, "operator")], "test")),
+            User = new ClaimsPrincipal(new ClaimsIdentity(claims, "test")),
         };
 
         // GetOpenIddictServerRequest() reads the request off the server transaction feature.

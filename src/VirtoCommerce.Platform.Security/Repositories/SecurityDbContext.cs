@@ -69,7 +69,7 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<UserSignInLogEntity>().Property(x => x.OrganizationId).HasMaxLength(IdLength);
             builder.Entity<UserSignInLogEntity>().Property(x => x.OrganizationName).HasMaxLength(Length256);
 
-            // Three indexes only. Each one is write amplification on the highest-insert table in the
+            // Four indexes only. Each one is write amplification on the highest-insert table in the
             // system; the deferred ones (Succeeded, StoreId, OrganizationId) are added once real query
             // patterns exist.
             // There is deliberately no foreign key to ApplicationUser: rows must survive user deletion,
@@ -77,6 +77,11 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<UserSignInLogEntity>().HasIndex(x => x.CreatedDate);
             builder.Entity<UserSignInLogEntity>().HasIndex(x => new { x.UserId, x.CreatedDate });
             builder.Entity<UserSignInLogEntity>().HasIndex(x => new { x.IpAddress, x.CreatedDate });
+
+            // SessionId earns its keep despite being null on almost every row: UserSessionsSearchService
+            // joins on it to mark impersonated sessions, and that runs on an interactive blade against
+            // the largest table here. Without it, opening Active Sessions scans the whole log.
+            builder.Entity<UserSignInLogEntity>().HasIndex(x => x.SessionId);
 
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
