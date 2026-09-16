@@ -28,8 +28,17 @@
       </div>
 
       <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.store' | translate }}</span>
+        <select class="va-filter-panel__select" ng-model="filter.storeId" ng-change="filter.criteriaChanged()">
+          <option value="">{{ 'platform.blades.sign-in-log.filter.all' | translate }}</option>
+          <option ng-repeat="s in blade.stores" value="{{s}}">{{s}}</option>
+        </select>
+      </div>
+
+      <div class="va-filter-panel__row">
         <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.ip-address' | translate }}</span>
-        <input type="text" class="va-filter-panel__select" ng-model="filter.ipAddress" ng-change="filter.criteriaChanged()"
+        <input type="text" id="signInLogIpFilter" class="va-filter-panel__text-input"
+               ng-model="filter.ipAddress" ng-change="filter.criteriaChanged()"
                ng-model-options="{ debounce: 400 }">
       </div>
 

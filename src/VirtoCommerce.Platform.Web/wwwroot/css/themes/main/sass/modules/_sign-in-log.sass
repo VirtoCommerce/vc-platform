@@ -2,14 +2,13 @@
 // Used by: platformWebApp.signInLogController
 
 .sign-in-log-tiles
-    display: flex
-    flex-wrap: wrap
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
     gap: 10px
     margin-bottom: 16px
 
     .tile
-        flex: 1 1 120px
-        min-width: 110px
+        min-width: 0
         padding: 10px 12px
         border: 1px solid #ddd
         border-radius: 3px
@@ -247,8 +246,8 @@
         stroke: #eee
         stroke-width: 1
 
-    .gridlines text,
-    .ticks text
+    .axis-y text,
+    .axis-x text
         fill: #aaa
         font-size: 9px
 
@@ -260,3 +259,22 @@
 
     g.bars g:hover rect
         opacity: .75
+
+// The blade toolbar sits flush against the first row without this.
+.inner-block.sign-in-log-dashboard
+    padding-top: 14px
+
+// An <input> does not inherit the select's box model, so it has to be stated.
+.va-filter-panel__text-input
+    box-sizing: border-box
+    width: 160px
+    padding: 4px 8px
+    border: 1px solid #ddd
+    border-radius: 3px
+    font-size: 13px
+    color: #333
+    background: #fff
+
+    &:focus
+        border-color: #1a73e8
+        outline: none

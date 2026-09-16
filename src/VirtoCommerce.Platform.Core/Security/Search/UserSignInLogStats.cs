@@ -48,6 +48,12 @@ public class UserSignInLogStats
     /// Covers attempts against existing accounts only: an unknown user name has no organization.
     /// </summary>
     public IList<UserSignInLogStatsEntry> SignInsByOrganization { get; set; } = [];
+
+    /// <summary>
+    /// Stores present in the log, so the filter can offer real values. The platform has no store
+    /// catalogue of its own, so the log is the only source for this list.
+    /// </summary>
+    public IList<UserSignInLogStatsEntry> SignInsByStore { get; set; } = [];
 }
 
 public class UserSignInLogStatsEntry

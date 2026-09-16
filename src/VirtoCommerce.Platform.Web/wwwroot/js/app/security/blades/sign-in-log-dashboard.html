@@ -1,6 +1,6 @@
 <div class="blade-content __medium-wide">
   <div class="blade-inner">
-    <div class="inner-block">
+    <div class="inner-block sign-in-log-dashboard">
 
       <div class="sign-in-log-period">
         <a href="javascript:void(0)"
@@ -17,29 +17,31 @@
             <span><i class="__bad"></i>{{ 'platform.blades.sign-in-log.labels.failed' | translate }}</span>
           </div>
         </div>
-        <svg class="timeline-svg"
-             viewBox="0 0 {{ chartGeometry.width }} {{ chartGeometry.height }}"
-             preserveAspectRatio="xMidYMid meet"
-             role="img"
-             aria-label="{{ 'platform.blades.sign-in-log.stats.timeline' | translate }}">
+        <svg class="timeline-svg" viewBox="0 0 660 126"
+             role="img" aria-label="{{ 'platform.blades.sign-in-log.stats.timeline' | translate }}">
           <g class="gridlines">
-            <line ng-repeat-start="line in blade.chart.gridlines"
-                  x1="{{ chartGeometry.left }}" y1="{{ line.y }}"
-                  x2="{{ chartGeometry.width - chartGeometry.right }}" y2="{{ line.y }}"></line>
-            <text ng-repeat-end x="{{ chartGeometry.left - 6 }}" y="{{ line.y + 3 }}" text-anchor="end">{{ line.label }}</text>
+            <line ng-repeat="line in blade.chart.gridlines"
+                  ng-attr-x1="{{ 34 }}" ng-attr-y1="{{ line.y }}"
+                  ng-attr-x2="{{ 652 }}" ng-attr-y2="{{ line.y }}"></line>
+          </g>
+          <g class="axis-y">
+            <text ng-repeat="line in blade.chart.gridlines"
+                  ng-attr-x="{{ 28 }}" ng-attr-y="{{ line.y + 3 }}" text-anchor="end">{{ line.label | number:0 }}</text>
           </g>
           <g class="bars">
             <g ng-repeat="bar in blade.chart.bars">
               <title>{{ bar.tooltip }}</title>
               <rect ng-if="bar.okHeight" class="__ok"
-                    x="{{ bar.x }}" y="{{ bar.okY }}" width="{{ bar.width }}" height="{{ bar.okHeight }}" rx="2"></rect>
+                    ng-attr-x="{{ bar.x }}" ng-attr-y="{{ bar.okY }}"
+                    ng-attr-width="{{ bar.width }}" ng-attr-height="{{ bar.okHeight }}"></rect>
               <rect ng-if="bar.badHeight" class="__bad"
-                    x="{{ bar.x }}" y="{{ bar.badY }}" width="{{ bar.width }}" height="{{ bar.badHeight }}" rx="2"></rect>
+                    ng-attr-x="{{ bar.x }}" ng-attr-y="{{ bar.badY }}"
+                    ng-attr-width="{{ bar.width }}" ng-attr-height="{{ bar.badHeight }}"></rect>
             </g>
           </g>
-          <g class="ticks">
+          <g class="axis-x">
             <text ng-repeat="tick in blade.chart.ticks"
-                  x="{{ tick.x }}" y="{{ chartGeometry.height - 4 }}" text-anchor="middle">{{ tick.label }}</text>
+                  ng-attr-x="{{ tick.x }}" ng-attr-y="{{ 122 }}" text-anchor="middle">{{ tick.label }}</text>
           </g>
         </svg>
       </div>
@@ -59,6 +61,7 @@
                           'fa-minus': tile.delta.direction === 'flat'}"></i>
             <span ng-if="tile.delta.percent !== undefined">{{ tile.delta.percent }}%</span>
             <span ng-if="tile.delta.absolute !== undefined">+{{ tile.delta.absolute | number:0 }}</span>
+            <em>{{ 'platform.blades.sign-in-log.stats.vs-previous' | translate }}</em>
           </div>
           <div class="tile-delta __flat" ng-if="!tile.delta">
             <span>{{ 'platform.blades.sign-in-log.stats.no-comparison' | translate }}</span>
@@ -110,6 +113,17 @@
             {{ 'platform.blades.sign-in-log.stats.none' | translate }}
           </div>
           <div class="hint">{{ 'platform.blades.sign-in-log.hints.known-accounts-only' | translate }}</div>
+        </div>
+
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.by-store' | translate }}</h4>
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.signInsByStore" ng-click="openByStore(entry)">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.signInsByStore.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
         </div>
       </div>
 

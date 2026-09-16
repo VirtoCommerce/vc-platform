@@ -67,6 +67,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
             TopFailedUserNames = await TopAsync(failed.Where(x => x.UserName != null), x => x.UserName),
             FailureReasonBreakdown = await TopAsync(failed.Where(x => x.FailureReason != null), x => x.FailureReason),
             SignInsByOrganization = await TopAsync(query.Where(x => x.OrganizationName != null), x => x.OrganizationName),
+            SignInsByStore = await TopAsync(query.Where(x => x.StoreId != null), x => x.StoreId),
         };
 
         await AddPreviousPeriodAsync(result, unwindowed, criteria);

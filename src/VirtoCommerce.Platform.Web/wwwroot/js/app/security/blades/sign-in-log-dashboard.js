@@ -93,7 +93,7 @@ angular.module('platformWebApp')
 
                 // Plain SVG bars: the marks are rectangles, so a charting library would add ~40 KB
                 // to the admin bundle for geometry we can compute here.
-                var CHART = { width: 660, height: 120, left: 34, right: 8, top: 10, bottom: 18 };
+                var CHART = { width: 660, height: 126, left: 34, right: 8, top: 8, bottom: 22 };
 
                 function buildChart(stats) {
                     var points = stats.timeline || [];
@@ -249,6 +249,10 @@ angular.module('platformWebApp')
                     $scope.openList(
                         { succeeded: 'false', keyword: entry.key },
                         'platform.blades.sign-in-log-dashboard.presets.by-user');
+                };
+
+                $scope.openByStore = function (entry) {
+                    $scope.openList({ storeId: entry.key }, 'platform.blades.sign-in-log-dashboard.presets.by-store');
                 };
 
                 $scope.openByFailureReason = function (entry) {

@@ -44,7 +44,8 @@ angular.module('platformWebApp')
                         succeeded: seed.succeeded !== undefined ? seed.succeeded : '',
                         signInType: seed.signInType || '',
                         failureReason: seed.failureReason || null,
-                        ipAddress: seed.ipAddress || null
+                        ipAddress: seed.ipAddress || null,
+                        storeId: seed.storeId || ''
                     };
                 }
 
@@ -54,7 +55,8 @@ angular.module('platformWebApp')
                                filter.succeeded !== '' ||
                                filter.signInType !== '' ||
                                !!filter.failureReason ||
-                               !!filter.ipAddress;
+                               !!filter.ipAddress ||
+                               filter.storeId !== '';
                     },
 
                     // Clear resets to the plain defaults, not to the dashboard preset: the point of
@@ -65,6 +67,7 @@ angular.module('platformWebApp')
                         filter.signInType = '';
                         filter.failureReason = null;
                         filter.ipAddress = null;
+                        filter.storeId = '';
                         blade.searchText = '';
                         filter.keyword = null;
                         filter.criteriaChanged();
@@ -77,6 +80,13 @@ angular.module('platformWebApp')
                             blade.refresh();
                         }
                     }
+                });
+
+                // The platform has no store catalogue, so the stores on offer are the ones that
+                // actually appear in the log. One unfiltered call, once, on open.
+                blade.stores = [];
+                accounts.getSignInLogStats({}, {}, function (stats) {
+                    blade.stores = _.pluck(stats.signInsByStore || [], 'key');
                 });
 
                 blade.searchText = filter.keyword || '';
@@ -92,6 +102,7 @@ angular.module('platformWebApp')
                         userId: blade.userId,
                         keyword: filter.keyword,
                         ipAddress: filter.ipAddress,
+                        storeId: filter.storeId || null,
                         // Server defaults to CreatedDate descending when this is empty.
                         sort: uiGridHelper.getSortExpression($scope)
                     };
