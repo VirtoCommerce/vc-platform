@@ -746,6 +746,7 @@
           "period-1h": "1 tunti",
           "period-6h": "6 tuntia",
           "store": "Kauppa",
+          "any-store": "Mikä tahansa kauppa",
           "no-store": "Ei kauppaa",
           "period-custom": "Mukautettu",
           "date-from": "Alkaen",

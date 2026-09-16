@@ -18,10 +18,12 @@ public class UserSignInLogSearchCriteria : SearchCriteriaBase
     public string StoreId { get; set; }
 
     /// <summary>
-    /// When true, matches only rows with no store at all, and <see cref="StoreId"/> is ignored.
-    /// A store cannot be expressed as "no store" through <see cref="StoreId"/> itself, because an
-    /// empty value there already means "any store" — which is how back-office sign-ins and failed
-    /// attempts against unknown user names would otherwise be unfindable.
+    /// Tri-state, like <see cref="Succeeded"/>: null matches any row, true only rows with no store at
+    /// all, false only rows that belong to one. Set either way it overrides <see cref="StoreId"/>.
+    /// Neither case can be expressed through <see cref="StoreId"/> itself, because an empty value
+    /// there already means "any store" — which is how back-office sign-ins and failed attempts
+    /// against unknown user names would otherwise be unfindable, and how "storefront traffic only"
+    /// would need every store id listed.
     /// </summary>
     public bool? WithoutStore { get; set; }
 

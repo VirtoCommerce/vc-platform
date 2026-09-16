@@ -746,6 +746,7 @@
           "period-1h": "1 time",
           "period-6h": "6 timer",
           "store": "Butikk",
+          "any-store": "Hvilken som helst butikk",
           "no-store": "Ingen butikk",
           "period-custom": "Egendefinert",
           "date-from": "Fra",

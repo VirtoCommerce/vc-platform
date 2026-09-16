@@ -745,6 +745,7 @@
           "period-1h": "1 godzina",
           "period-6h": "6 godzin",
           "store": "Sklep",
+          "any-store": "Dowolny sklep",
           "no-store": "Bez sklepu",
           "period-custom": "Niestandardowy",
           "date-from": "Od",

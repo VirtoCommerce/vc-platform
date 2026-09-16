@@ -35,8 +35,10 @@ angular.module('platformWebApp')
                     { label: 'platform.blades.sign-in-log.filter.type-logout', value: 'Logout' }
                 ];
 
-                // A sentinel for the store select: "" already means "any store", so "no store at all"
-                // needs a value of its own. Kept off the wire - buildCriteria turns it into a flag.
+                // Sentinels for the store select. "" already means "don't filter by store", so the two
+                // presence questions - belongs to some store, belongs to none - each need a value of
+                // their own. Neither reaches the server: buildCriteria turns them into a tri-state flag.
+                blade.anyStoreValue = '__any__';
                 blade.noStoreValue = '__none__';
 
                 // Seeded by the dashboard; falls back to the plain defaults when opened directly.
@@ -109,12 +111,17 @@ angular.module('platformWebApp')
                 });
 
                 function buildCriteria() {
+                    // null asks nothing about the store, true demands none, false demands one.
+                    var withoutStore = filter.storeId === blade.noStoreValue ? true
+                                     : filter.storeId === blade.anyStoreValue ? false
+                                     : null;
+
                     var criteria = {
                         userId: blade.userId,
                         keyword: filter.keyword,
                         ipAddress: filter.ipAddress,
-                        storeId: filter.storeId === blade.noStoreValue ? null : (filter.storeId || null),
-                        withoutStore: filter.storeId === blade.noStoreValue ? true : null,
+                        storeId: withoutStore === null ? (filter.storeId || null) : null,
+                        withoutStore: withoutStore,
                         // Server defaults to CreatedDate descending when this is empty.
                         sort: uiGridHelper.getSortExpression($scope)
                     };

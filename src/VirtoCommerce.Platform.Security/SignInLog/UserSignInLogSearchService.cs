@@ -313,9 +313,11 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
             query = query.Where(x => x.IpAddress == criteria.IpAddress);
         }
 
-        if (criteria.WithoutStore == true)
+        if (criteria.WithoutStore != null)
         {
-            query = query.Where(x => x.StoreId == null);
+            query = criteria.WithoutStore == true
+                ? query.Where(x => x.StoreId == null)
+                : query.Where(x => x.StoreId != null);
         }
         else if (!string.IsNullOrEmpty(criteria.StoreId))
         {

@@ -746,6 +746,7 @@
           "period-1h": "1 timme",
           "period-6h": "6 timmar",
           "store": "Butik",
+          "any-store": "Valfri butik",
           "no-store": "Ingen butik",
           "period-custom": "Anpassad",
           "date-from": "Från",

@@ -74,6 +74,22 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
+    public async Task SearchAsync_WithoutStoreFalse_FindsOnlyRowsThatBelongToAStore()
+    {
+        var service = CreateService(
+            Row("b2b", storeId: "B2B-store"),
+            Row("electronics", storeId: "Electronics"),
+            Row("backoffice"));
+
+        // The mirror of WithoutStore = true, and the reason the flag is tri-state rather than a bool:
+        // "storefront traffic only" would otherwise mean naming every store id in the criteria.
+        var result = await service.SearchAsync(new UserSignInLogSearchCriteria { WithoutStore = false, Take = 20 });
+
+        result.TotalCount.Should().Be(2);
+        result.Results.Select(x => x.Id).Should().BeEquivalentTo("b2b", "electronics");
+    }
+
+    [Fact]
     public async Task SearchAsync_WithoutStore_OverridesAStoreIdSetAlongsideIt()
     {
         var service = CreateService(

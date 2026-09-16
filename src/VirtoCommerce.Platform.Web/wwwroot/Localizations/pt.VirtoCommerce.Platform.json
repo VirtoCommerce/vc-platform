@@ -745,6 +745,7 @@
           "period-1h": "1 hora",
           "period-6h": "6 horas",
           "store": "Loja",
+          "any-store": "Qualquer loja",
           "no-store": "Sem loja",
           "period-custom": "Personalizado",
           "date-from": "De",

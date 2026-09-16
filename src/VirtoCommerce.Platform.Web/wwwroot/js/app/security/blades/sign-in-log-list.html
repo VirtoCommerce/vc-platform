@@ -46,8 +46,10 @@
         <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.store' | translate }}</span>
         <select class="va-filter-panel__select" ng-model="filter.storeId" ng-change="filter.criteriaChanged()">
           <option value="">{{ 'platform.blades.sign-in-log.filter.all' | translate }}</option>
-          <!-- Back-office sign-ins and attempts against unknown user names carry no store at all,
-               and an empty selection already means "any store" - so they need their own option. -->
+          <!-- Presence, not identity. "All" skips the filter entirely; these two ask whether the row
+               belongs to a store at all - back-office sign-ins and attempts against unknown user
+               names carry none, and neither question can be put through a store id. -->
+          <option value="{{ blade.anyStoreValue }}">{{ 'platform.blades.sign-in-log.filter.any-store' | translate }}</option>
           <option value="{{ blade.noStoreValue }}">{{ 'platform.blades.sign-in-log.filter.no-store' | translate }}</option>
           <option ng-repeat="s in blade.stores" value="{{s}}">{{s}}</option>
         </select>

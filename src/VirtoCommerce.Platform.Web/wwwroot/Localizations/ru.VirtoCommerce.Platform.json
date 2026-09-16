@@ -747,6 +747,7 @@
           "period-1h": "1 час",
           "period-6h": "6 часов",
           "store": "Магазин",
+          "any-store": "Любой магазин",
           "no-store": "Без магазина",
           "period-custom": "Произвольный",
           "date-from": "С",

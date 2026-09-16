@@ -745,6 +745,7 @@
           "period-1h": "1 小时",
           "period-6h": "6 小时",
           "store": "商店",
+          "any-store": "任意商店",
           "no-store": "无商店",
           "period-custom": "自定义",
           "date-from": "从",
