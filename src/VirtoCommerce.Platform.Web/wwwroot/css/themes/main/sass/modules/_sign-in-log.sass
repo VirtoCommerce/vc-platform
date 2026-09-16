@@ -82,7 +82,7 @@
         justify-content: space-between
         gap: 8px
         padding: 3px 0
-        font-size: 13px
+        font-size: 14px
         border-bottom: 1px solid #f2f2f2
 
         &:last-of-type
@@ -177,19 +177,20 @@
 // Period-over-period movement on each tile.
 .stat-tile-delta
     display: flex
+    flex-wrap: wrap
     align-items: baseline
-    gap: 3px
+    gap: 0 3px
     margin-top: 5px
-    font-size: 10px
-    line-height: 13px
-    white-space: nowrap
-    overflow: hidden
+    font-size: 11px
+    line-height: 14px
 
     i
-        font-size: 8px
+        font-size: 9px
 
     em
+        flex-basis: 100%
         font-style: normal
+        font-size: 10px
         color: #bbb
 
     i
@@ -209,6 +210,7 @@
 
 // Timeline chart. Marks are plain SVG rects, so the colours live here with the rest of the module.
 .sign-in-log-chart
+    margin-bottom: 16px
     padding: 10px 12px 6px
     border: 1px solid #ddd
     border-radius: 3px
@@ -260,10 +262,13 @@
         stroke: #eee
         stroke-width: 1
 
-    .axis-y text,
+    .axis-y text
+        fill: #aaa
+        font-size: 12px
+
     .axis-x text
         fill: #aaa
-        font-size: 9px
+        font-size: 14px
 
     rect.__ok
         fill: #5a9ec9
@@ -332,34 +337,8 @@
 .inner-block.sign-in-log-detail
     padding-top: 14px
 
-.detail-section
-    margin-bottom: 18px
-
-    h4
-        margin: 0 0 6px
-        font-size: 11px
-        font-weight: 600
-        letter-spacing: .02em
-        text-transform: uppercase
-        color: #999
-
-.detail-row
+.detail-badges
     display: flex
-    align-items: baseline
-    gap: 12px
-    padding: 5px 0
-    border-bottom: 1px solid #f0f0f0
-    font-size: 13px
-
-    &:last-child
-        border-bottom: none
-
-.detail-label
-    flex: 0 0 130px
-    color: #999
-
-.detail-value
-    flex: 1 1 auto
-    min-width: 0
-    color: #333
-    word-break: break-word
+    flex-wrap: wrap
+    gap: 6px
+    margin-bottom: 14px

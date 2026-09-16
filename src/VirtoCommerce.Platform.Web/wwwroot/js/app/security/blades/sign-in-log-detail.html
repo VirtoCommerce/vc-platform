@@ -2,22 +2,16 @@
   <div class="blade-inner">
     <div class="inner-block sign-in-log-detail">
 
-      <div class="detail-section" ng-repeat="section in sections">
-        <h4>{{ section.title | translate }}</h4>
-        <div class="detail-row" ng-repeat="field in section.fields" ng-if="field.value || field.isOutcome">
-          <span class="detail-label">{{ field.label | translate }}</span>
-          <span class="detail-value" ng-if="field.isDate">{{ field.value | date:'medium' }}</span>
-          <span class="detail-value" ng-if="field.isOutcome">
-            <span class="sign-in-log-badge" ng-class="record.succeeded ? '__success' : '__failed'">
-              {{ (record.succeeded ? 'platform.blades.sign-in-log.labels.succeeded' : 'platform.blades.sign-in-log.labels.failed') | translate }}
-            </span>
-            <span class="sign-in-log-badge __impersonation" ng-if="isImpersonation">
-              {{ 'platform.blades.sign-in-log.labels.impersonation' | translate }}
-            </span>
-          </span>
-          <span class="detail-value" ng-if="!field.isDate && !field.isOutcome">{{ field.value }}</span>
-        </div>
+      <div class="detail-badges">
+        <span class="sign-in-log-badge" ng-class="blade.currentEntity.succeeded ? '__success' : '__failed'">
+          {{ (blade.currentEntity.succeeded ? 'platform.blades.sign-in-log.labels.succeeded' : 'platform.blades.sign-in-log.labels.failed') | translate }}
+        </span>
+        <span class="sign-in-log-badge __impersonation" ng-if="isImpersonation">
+          {{ 'platform.blades.sign-in-log.labels.impersonation' | translate }}
+        </span>
       </div>
+
+      <va-metaform registered-inputs="blade.metaFields" blade="blade" column-count="1"></va-metaform>
 
     </div>
   </div>

@@ -787,10 +787,6 @@
         },
         "detail": {
           "title": "Sign-in record",
-          "section-what": "What happened",
-          "section-who": "Who",
-          "section-where": "Where from",
-          "section-context": "Context",
           "user-id": "User ID",
           "operator-name": "Operator",
           "operator-id": "Operator ID",
@@ -799,7 +795,8 @@
           "client-id": "Client",
           "store-name": "Store name",
           "organization-id": "Organization ID",
-          "session-id": "Session ID"
+          "session-id": "Session ID",
+          "provider": "Identity provider"
         }
       },
       "sign-in-log-dashboard": {
