@@ -36,17 +36,16 @@ angular.module('platformWebApp')
                         return;
                     }
 
+                    // Same dashboard as the Security workspace, scoped to this account: the
+                    // statistics answer "what has been happening to this user" before the
+                    // record list answers "exactly which attempts".
                     var newBlade = {
                         id: "signInLogBlade",
                         userId: userId,
-                        // The widget counts every attempt for this user, so the list must not
-                        // silently narrow to the last 24 hours.
-                        initialFilter: { period: '' },
-                        refreshCountCallback: function (newCount) {
-                            blade.signInLogCount = newCount;
-                        },
-                        controller: 'platformWebApp.signInLogListController',
-                        template: '$(Platform)/Scripts/app/security/blades/sign-in-log-list.html'
+                        title: 'platform.blades.sign-in-log-dashboard.title',
+                        subtitle: blade.currentEntity.userName || blade.title,
+                        controller: 'platformWebApp.signInLogDashboardController',
+                        template: '$(Platform)/Scripts/app/security/blades/sign-in-log-dashboard.html'
                     };
                     bladeNavigationService.showBlade(newBlade, $scope.blade);
                 };

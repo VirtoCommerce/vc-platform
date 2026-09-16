@@ -742,7 +742,10 @@
           "type-password": "Password",
           "type-external": "External provider",
           "type-impersonation": "On behalf",
-          "type-logout": "Sign out"
+          "type-logout": "Sign out",
+          "period-30m": "Last 30 minutes",
+          "period-1h": "Last hour",
+          "period-6h": "Last 6 hours"
         },
         "labels": {
           "date": "Date",
@@ -771,7 +774,8 @@
           "total-hint": "All sign-in attempts in the period, successful and failed. Click to see them.",
           "failed-hint": "Attempts that did not sign anyone in. Click to see only failures.",
           "users-hint": "Distinct accounts that signed in successfully, counted once each however many times they signed in. Click to see successful sign-ins.",
-          "impersonation-hint": "Sessions where support signed in on behalf of a customer. Click to see them."
+          "impersonation-hint": "Sessions where support signed in on behalf of a customer. Click to see them.",
+          "timeline": "Attempts over time"
         },
         "hints": {
           "known-accounts-only": "Covers attempts against existing accounts only."

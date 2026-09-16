@@ -29,6 +29,15 @@ public class UserSignInLogStats
 
     public int? PreviousImpersonationCount { get; set; }
 
+    /// <summary>
+    /// Contiguous, gap-filled buckets across the requested window. Empty when the criteria carry
+    /// no start date, because "all time" has no bounded window to bucket.
+    /// </summary>
+    public IList<UserSignInLogTimelinePoint> Timeline { get; set; } = [];
+
+    /// <summary>One of <see cref="Search.TimelineGranularity"/>. Null when the timeline is empty.</summary>
+    public string TimelineGranularity { get; set; }
+
     public IList<UserSignInLogStatsEntry> TopFailedIpAddresses { get; set; } = [];
 
     public IList<UserSignInLogStatsEntry> TopFailedUserNames { get; set; } = [];

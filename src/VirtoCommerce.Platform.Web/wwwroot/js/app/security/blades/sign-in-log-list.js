@@ -9,10 +9,13 @@ angular.module('platformWebApp')
                 blade.headIcon = 'fas fa-clipboard-list';
 
                 blade.periods = [
-                    { label: 'platform.blades.sign-in-log.filter.period-24h', value: '24h', hours: 24 },
-                    { label: 'platform.blades.sign-in-log.filter.period-7d', value: '7d', hours: 24 * 7 },
-                    { label: 'platform.blades.sign-in-log.filter.period-30d', value: '30d', hours: 24 * 30 },
-                    { label: 'platform.blades.sign-in-log.filter.period-all', value: '', hours: 0 }
+                    { label: 'platform.blades.sign-in-log.filter.period-30m', value: '30m', minutes: 30 },
+                    { label: 'platform.blades.sign-in-log.filter.period-1h', value: '1h', minutes: 60 },
+                    { label: 'platform.blades.sign-in-log.filter.period-6h', value: '6h', minutes: 360 },
+                    { label: 'platform.blades.sign-in-log.filter.period-24h', value: '24h', minutes: 1440 },
+                    { label: 'platform.blades.sign-in-log.filter.period-7d', value: '7d', minutes: 1440 * 7 },
+                    { label: 'platform.blades.sign-in-log.filter.period-30d', value: '30d', minutes: 1440 * 30 },
+                    { label: 'platform.blades.sign-in-log.filter.period-all', value: '', minutes: 0 }
                 ];
 
                 blade.outcomes = [
@@ -106,10 +109,8 @@ angular.module('platformWebApp')
                     }
 
                     var period = _.findWhere(blade.periods, { value: filter.period });
-                    if (period && period.hours) {
-                        var startDate = new Date();
-                        startDate.setHours(startDate.getHours() - period.hours);
-                        criteria.startDate = startDate.toISOString();
+                    if (period && period.minutes) {
+                        criteria.startDate = new Date(Date.now() - period.minutes * 60000).toISOString();
                     }
 
                     return criteria;

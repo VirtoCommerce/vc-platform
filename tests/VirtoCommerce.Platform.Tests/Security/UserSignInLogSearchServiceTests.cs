@@ -229,6 +229,97 @@ public class UserSignInLogSearchServiceTests
         stats.PreviousTotalCount.Should().Be(1);
     }
 
+    [Theory]
+    [InlineData(30, TimelineGranularity.Minute)]      // 30 minutes
+    [InlineData(60, TimelineGranularity.Minute)]      // 1 hour
+    [InlineData(360, TimelineGranularity.TenMinutes)] // 6 hours
+    [InlineData(1440, TimelineGranularity.Hour)]      // 24 hours
+    [InlineData(43200, TimelineGranularity.Day)]      // 30 days
+    public async Task GetStatsAsync_PicksBucketSizeFromTheWindow(int windowMinutes, string expected)
+    {
+        var service = CreateService(Row("a", createdDate: _now.AddMinutes(-1)));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        {
+            StartDate = _now.AddMinutes(-windowMinutes),
+            EndDate = _now,
+        });
+
+        stats.TimelineGranularity.Should().Be(expected);
+    }
+
+    [Fact]
+    public async Task GetStatsAsync_TimelineSplitsSuccessesFromFailuresPerBucket()
+    {
+        var at = new DateTime(2026, 9, 15, 11, 0, 0, DateTimeKind.Utc);
+
+        var service = CreateService(
+            Row("s1", succeeded: true, createdDate: at.AddMinutes(1)),
+            Row("s2", succeeded: true, createdDate: at.AddMinutes(1)),
+            Row("f1", succeeded: false, createdDate: at.AddMinutes(1)),
+            Row("f2", succeeded: false, createdDate: at.AddMinutes(3)));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        {
+            StartDate = at,
+            EndDate = at.AddMinutes(5),
+        });
+
+        var busy = stats.Timeline.Single(x => x.Timestamp == at.AddMinutes(1));
+        busy.SucceededCount.Should().Be(2);
+        busy.FailedCount.Should().Be(1);
+
+        stats.Timeline.Single(x => x.Timestamp == at.AddMinutes(3)).FailedCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task GetStatsAsync_TimelineGapFillsQuietBuckets()
+    {
+        var at = new DateTime(2026, 9, 15, 11, 0, 0, DateTimeKind.Utc);
+
+        var service = CreateService(Row("only", succeeded: true, createdDate: at.AddMinutes(2)));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        {
+            StartDate = at,
+            EndDate = at.AddMinutes(4),
+        });
+
+        // A quiet stretch must read as zeroes, not as a hole the chart closes up.
+        stats.Timeline.Should().HaveCount(5);
+        stats.Timeline.Select(x => x.SucceededCount).Should().Equal(0, 0, 1, 0, 0);
+    }
+
+    [Fact]
+    public async Task GetStatsAsync_NoStartDate_ProducesNoTimeline()
+    {
+        var service = CreateService(Row("a"), Row("b"));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria());
+
+        stats.Timeline.Should().BeEmpty();
+        stats.TimelineGranularity.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetStatsAsync_TimelineKeepsTheNonDateFilters()
+    {
+        var at = new DateTime(2026, 9, 15, 11, 0, 0, DateTimeKind.Utc);
+
+        var service = CreateService(
+            Row("mine", succeeded: true, userId: "user-1", createdDate: at.AddMinutes(1)),
+            Row("theirs", succeeded: true, userId: "user-2", createdDate: at.AddMinutes(1)));
+
+        var stats = await service.GetStatsAsync(new UserSignInLogSearchCriteria
+        {
+            UserId = "user-1",
+            StartDate = at,
+            EndDate = at.AddMinutes(3),
+        });
+
+        stats.Timeline.Sum(x => x.SucceededCount).Should().Be(1);
+    }
+
     private static UserSignInLogEntity Row(
         string id,
         string userId = null,

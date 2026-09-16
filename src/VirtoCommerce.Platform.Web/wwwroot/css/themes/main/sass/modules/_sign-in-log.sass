@@ -193,3 +193,70 @@
 
     &.__flat
         color: #bbb
+
+// Timeline chart. Marks are plain SVG rects, so the colours live here with the rest of the module.
+.sign-in-log-chart
+    padding: 10px 12px 6px
+    border: 1px solid #ddd
+    border-radius: 3px
+    background: #fff
+
+    .chart-head
+        display: flex
+        align-items: baseline
+        justify-content: space-between
+        flex-wrap: wrap
+        gap: 8px
+        margin-bottom: 6px
+
+        h5
+            margin: 0
+            font-size: 11px
+            font-weight: 600
+            letter-spacing: .02em
+            text-transform: uppercase
+            color: #999
+
+    .chart-legend
+        display: flex
+        gap: 12px
+        font-size: 11px
+        color: #666
+
+        i
+            display: inline-block
+            width: 9px
+            height: 9px
+            border-radius: 2px
+            margin-right: 5px
+            vertical-align: -1px
+
+            &.__ok
+                background: #5a9ec9
+
+            &.__bad
+                background: #c0392f
+
+.timeline-svg
+    display: block
+    width: 100%
+    height: auto
+    max-width: 100%
+
+    .gridlines line
+        stroke: #eee
+        stroke-width: 1
+
+    .gridlines text,
+    .ticks text
+        fill: #aaa
+        font-size: 9px
+
+    rect.__ok
+        fill: #5a9ec9
+
+    rect.__bad
+        fill: #c0392f
+
+    g.bars g:hover rect
+        opacity: .75

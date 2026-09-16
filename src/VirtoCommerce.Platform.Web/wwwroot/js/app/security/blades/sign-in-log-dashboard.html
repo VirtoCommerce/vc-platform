@@ -9,6 +9,41 @@
            ng-click="setPeriod(p.value)">{{ p.label | translate }}</a>
       </div>
 
+      <div class="sign-in-log-chart" ng-if="blade.chart">
+        <div class="chart-head">
+          <h5>{{ 'platform.blades.sign-in-log.stats.timeline' | translate }}</h5>
+          <div class="chart-legend">
+            <span><i class="__ok"></i>{{ 'platform.blades.sign-in-log.labels.succeeded' | translate }}</span>
+            <span><i class="__bad"></i>{{ 'platform.blades.sign-in-log.labels.failed' | translate }}</span>
+          </div>
+        </div>
+        <svg class="timeline-svg"
+             viewBox="0 0 {{ chartGeometry.width }} {{ chartGeometry.height }}"
+             preserveAspectRatio="xMidYMid meet"
+             role="img"
+             aria-label="{{ 'platform.blades.sign-in-log.stats.timeline' | translate }}">
+          <g class="gridlines">
+            <line ng-repeat-start="line in blade.chart.gridlines"
+                  x1="{{ chartGeometry.left }}" y1="{{ line.y }}"
+                  x2="{{ chartGeometry.width - chartGeometry.right }}" y2="{{ line.y }}"></line>
+            <text ng-repeat-end x="{{ chartGeometry.left - 6 }}" y="{{ line.y + 3 }}" text-anchor="end">{{ line.label }}</text>
+          </g>
+          <g class="bars">
+            <g ng-repeat="bar in blade.chart.bars">
+              <title>{{ bar.tooltip }}</title>
+              <rect ng-if="bar.okHeight" class="__ok"
+                    x="{{ bar.x }}" y="{{ bar.okY }}" width="{{ bar.width }}" height="{{ bar.okHeight }}" rx="2"></rect>
+              <rect ng-if="bar.badHeight" class="__bad"
+                    x="{{ bar.x }}" y="{{ bar.badY }}" width="{{ bar.width }}" height="{{ bar.badHeight }}" rx="2"></rect>
+            </g>
+          </g>
+          <g class="ticks">
+            <text ng-repeat="tick in blade.chart.ticks"
+                  x="{{ tick.x }}" y="{{ chartGeometry.height - 4 }}" text-anchor="middle">{{ tick.label }}</text>
+          </g>
+        </svg>
+      </div>
+
       <div class="sign-in-log-tiles" ng-if="blade.tiles">
         <div class="tile {{ tile.modifier }}"
              ng-repeat="tile in blade.tiles"

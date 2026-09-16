@@ -70,9 +70,133 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         };
 
         await AddPreviousPeriodAsync(result, unwindowed, criteria);
+        await AddTimelineAsync(result, query, criteria);
 
         return result;
     }
+
+    /// <summary>
+    /// Buckets the window so the chart can show when things happened, not just how many. Skipped
+    /// without a start date: "all time" has no bounded window to divide.
+    /// </summary>
+    protected virtual async Task AddTimelineAsync(
+        UserSignInLogStats result,
+        IQueryable<UserSignInLogEntity> query,
+        UserSignInLogSearchCriteria criteria)
+    {
+        if (criteria.StartDate == null)
+        {
+            return;
+        }
+
+        var start = criteria.StartDate.Value;
+        var end = criteria.EndDate ?? DateTime.UtcNow;
+        var duration = end - start;
+
+        if (duration <= TimeSpan.Zero)
+        {
+            return;
+        }
+
+        var granularity = PickGranularity(duration);
+
+        result.TimelineGranularity = granularity;
+        result.Timeline = await BuildTimelineAsync(query, start, end, granularity);
+    }
+
+    /// <summary>
+    /// Bucket size that keeps the point count readable at blade width for every offered period:
+    /// 30m and 1h by minute, 6h in ten-minute steps, a day by hour, anything longer by day.
+    /// </summary>
+    protected static string PickGranularity(TimeSpan duration)
+    {
+        if (duration <= TimeSpan.FromHours(1))
+        {
+            return TimelineGranularity.Minute;
+        }
+
+        if (duration <= TimeSpan.FromHours(12))
+        {
+            return TimelineGranularity.TenMinutes;
+        }
+
+        if (duration <= TimeSpan.FromDays(3))
+        {
+            return TimelineGranularity.Hour;
+        }
+
+        return TimelineGranularity.Day;
+    }
+
+    protected virtual async Task<IList<UserSignInLogTimelinePoint>> BuildTimelineAsync(
+        IQueryable<UserSignInLogEntity> query,
+        DateTime start,
+        DateTime end,
+        string granularity)
+    {
+        // Grouping happens in SQL on date parts, which every supported provider translates.
+        // Only the grouped rows come back, never the underlying records.
+        var buckets = granularity switch
+        {
+            TimelineGranularity.Minute => await query
+                .GroupBy(x => new { x.CreatedDate.Year, x.CreatedDate.Month, x.CreatedDate.Day, x.CreatedDate.Hour, x.CreatedDate.Minute, x.Succeeded })
+                .Select(g => new BucketRow(g.Key.Year, g.Key.Month, g.Key.Day, g.Key.Hour, g.Key.Minute, g.Key.Succeeded, g.Count()))
+                .ToListAsync(),
+
+            TimelineGranularity.TenMinutes => await query
+                .GroupBy(x => new { x.CreatedDate.Year, x.CreatedDate.Month, x.CreatedDate.Day, x.CreatedDate.Hour, Slot = x.CreatedDate.Minute / 10, x.Succeeded })
+                .Select(g => new BucketRow(g.Key.Year, g.Key.Month, g.Key.Day, g.Key.Hour, g.Key.Slot * 10, g.Key.Succeeded, g.Count()))
+                .ToListAsync(),
+
+            TimelineGranularity.Hour => await query
+                .GroupBy(x => new { x.CreatedDate.Year, x.CreatedDate.Month, x.CreatedDate.Day, x.CreatedDate.Hour, x.Succeeded })
+                .Select(g => new BucketRow(g.Key.Year, g.Key.Month, g.Key.Day, g.Key.Hour, 0, g.Key.Succeeded, g.Count()))
+                .ToListAsync(),
+
+            _ => await query
+                .GroupBy(x => new { x.CreatedDate.Year, x.CreatedDate.Month, x.CreatedDate.Day, x.Succeeded })
+                .Select(g => new BucketRow(g.Key.Year, g.Key.Month, g.Key.Day, 0, 0, g.Key.Succeeded, g.Count()))
+                .ToListAsync(),
+        };
+
+        var step = BucketSize(granularity);
+        var counted = buckets.ToLookup(x => new DateTime(x.Year, x.Month, x.Day, x.Hour, x.Minute, 0, DateTimeKind.Utc));
+
+        var points = new List<UserSignInLogTimelinePoint>();
+
+        // Gap-fill so a quiet stretch reads as zeroes instead of the chart closing the hole up.
+        for (var cursor = Truncate(start, granularity); cursor <= end; cursor = cursor.Add(step))
+        {
+            var rows = counted[cursor];
+
+            points.Add(new UserSignInLogTimelinePoint
+            {
+                Timestamp = cursor,
+                SucceededCount = rows.Where(x => x.Succeeded).Sum(x => x.Count),
+                FailedCount = rows.Where(x => !x.Succeeded).Sum(x => x.Count),
+            });
+        }
+
+        return points;
+    }
+
+    protected static TimeSpan BucketSize(string granularity) => granularity switch
+    {
+        TimelineGranularity.Minute => TimeSpan.FromMinutes(1),
+        TimelineGranularity.TenMinutes => TimeSpan.FromMinutes(10),
+        TimelineGranularity.Hour => TimeSpan.FromHours(1),
+        _ => TimeSpan.FromDays(1),
+    };
+
+    protected static DateTime Truncate(DateTime value, string granularity) => granularity switch
+    {
+        TimelineGranularity.Minute => new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, 0, DateTimeKind.Utc),
+        TimelineGranularity.TenMinutes => new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute / 10 * 10, 0, DateTimeKind.Utc),
+        TimelineGranularity.Hour => new DateTime(value.Year, value.Month, value.Day, value.Hour, 0, 0, DateTimeKind.Utc),
+        _ => new DateTime(value.Year, value.Month, value.Day, 0, 0, 0, DateTimeKind.Utc),
+    };
+
+    private sealed record BucketRow(int Year, int Month, int Day, int Hour, int Minute, bool Succeeded, int Count);
 
     /// <summary>
     /// Counts the same-length window immediately before the requested one. Skipped entirely when the
