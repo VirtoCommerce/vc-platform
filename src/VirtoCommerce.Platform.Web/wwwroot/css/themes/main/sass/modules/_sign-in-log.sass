@@ -13,7 +13,10 @@
     .stat-tile
         display: flex
         flex-direction: column
-        height: 100%
+        // No height:100% here. The platform's box-sizing is content-box, so height:100% plus
+        // padding and border made every tile 21px taller than its grid row, overflowing the
+        // container and swallowing the gap to the panels below. Grid items already stretch.
+        box-sizing: border-box
         min-width: 0
         padding: 9px 10px
         border: 1px solid #ddd
@@ -363,6 +366,10 @@
 
     .form-label
         margin-bottom: 1px
+
+// Matches the dashboard's top offset so the badges do not sit flush against the blade header.
+.inner-block.sign-in-log-detail-body
+    padding-top: 14px
 
 .detail-badges
     display: flex
