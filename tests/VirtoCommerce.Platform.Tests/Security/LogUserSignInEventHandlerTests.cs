@@ -24,7 +24,8 @@ public class LogUserSignInEventHandlerTests
     public async Task Handle_PasswordSignIn_WritesRecordWithRequestContext()
     {
         var written = new List<UserSignInLog>();
-        var handler = CreateHandler(written, signInLogEnabled: true, ip: "203.0.113.7", userAgent: "UA/1.0");
+        var handler = CreateHandler(written, signInLogEnabled: true, ip: "203.0.113.7", userAgent: "UA/1.0",
+            host: "b2b.example.com");
 
         await handler.Handle(new UserSignInAttemptEvent
         {
@@ -44,6 +45,9 @@ public class LogUserSignInEventHandlerTests
         record.FailureReason.Should().Be(SignInFailureReason.InvalidPassword);
         record.IpAddress.Should().Be("203.0.113.7");
         record.UserAgent.Should().Be("UA/1.0");
+        // Which domain the attempt was aimed at: several storefront hosts commonly resolve to one
+        // deployment, and nothing else on the row distinguishes them.
+        record.Host.Should().Be("b2b.example.com");
         record.StoreId.Should().Be("B2B-store");
         record.MemberId.Should().Be("member-1");
         record.CreatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
@@ -89,7 +93,8 @@ public class LogUserSignInEventHandlerTests
         List<UserSignInLog> written,
         bool signInLogEnabled,
         string ip = null,
-        string userAgent = null)
+        string userAgent = null,
+        string host = null)
     {
         var writer = new Mock<IUserSignInLogWriter>();
         writer.Setup(x => x.Write(It.IsAny<UserSignInLog>())).Callback<UserSignInLog>(written.Add);
@@ -109,6 +114,11 @@ public class LogUserSignInEventHandlerTests
         if (userAgent != null)
         {
             httpContext.Request.Headers.UserAgent = userAgent;
+        }
+
+        if (host != null)
+        {
+            httpContext.Request.Host = new HostString(host);
         }
 
         var accessor = new Mock<IHttpContextAccessor>();

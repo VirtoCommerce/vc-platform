@@ -12,7 +12,7 @@ using VirtoCommerce.Platform.Security.Repositories;
 namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Security
 {
     [DbContext(typeof(SecurityDbContext))]
-    [Migration("20260916132706_AddUserSignInLog")]
+    [Migration("20260916143005_AddUserSignInLog")]
     partial class AddUserSignInLog
     {
         /// <inheritdoc />
@@ -619,6 +619,10 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Security
                     b.Property<string>("FailureReason")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Host")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("IpAddress")
                         .HasMaxLength(64)

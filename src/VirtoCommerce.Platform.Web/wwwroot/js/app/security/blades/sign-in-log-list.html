@@ -46,6 +46,9 @@
         <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.store' | translate }}</span>
         <select class="va-filter-panel__select" ng-model="filter.storeId" ng-change="filter.criteriaChanged()">
           <option value="">{{ 'platform.blades.sign-in-log.filter.all' | translate }}</option>
+          <!-- Back-office sign-ins and attempts against unknown user names carry no store at all,
+               and an empty selection already means "any store" - so they need their own option. -->
+          <option value="{{ blade.noStoreValue }}">{{ 'platform.blades.sign-in-log.filter.no-store' | translate }}</option>
           <option ng-repeat="s in blade.stores" value="{{s}}">{{s}}</option>
         </select>
       </div>
@@ -67,14 +70,6 @@
   <div class="blade-inner">
     <div class="inner-block">
 
-      <div class="sign-in-log-disabled" ng-if="blade.recordingEnabled === false">
-        <i class="fa fa-exclamation-triangle"></i>
-        <div>
-          <strong>{{ 'platform.blades.sign-in-log.disabled.title' | translate }}</strong>
-          <div>{{ 'platform.blades.sign-in-log.disabled.message' | translate }}</div>
-        </div>
-      </div>
-
       <div class="table-wrapper" ng-init="setGridOptions({
                 useExternalSorting: true,
                 rowTemplate: 'sign-in-log.row.html',
@@ -90,7 +85,7 @@
                     {
                        displayName: 'platform.blades.sign-in-log.labels.user-name',
                        name: 'userName',
-                       minWidth: 260,
+                       minWidth: 360,
                        cellTemplate: 'sign-in-log-user.cell.html'
                     },
                     {
@@ -121,13 +116,17 @@
 </script>
 
 <script type="text/ng-template" id="sign-in-log-user.cell.html">
-  <div class="ui-grid-cell-contents">
-    {{ row.entity.userName }}
-    <span class="sign-in-log-badge __impersonation"
-          ng-if="grid.appScope.isImpersonation(row.entity)"
-          title="{{ row.entity.operatorUserName }}">
-      {{ 'platform.blades.sign-in-log.labels.impersonation' | translate }}
+  <!-- Reads as a sentence: "support@virto.com on behalf of b2badmin@test.com". The row data is
+       unchanged - this is only how the two names are put together for the column. -->
+  <div class="ui-grid-cell-contents" ng-if="grid.appScope.isOnBehalf(row.entity)">
+    {{ row.entity.operatorUserName }}
+    <span class="sign-in-log-badge __impersonation">
+      {{ 'platform.blades.sign-in-log.labels.on-behalf-of' | translate }}
     </span>
+    {{ row.entity.userName }}
+  </div>
+  <div class="ui-grid-cell-contents" ng-if="!grid.appScope.isOnBehalf(row.entity)">
+    {{ row.entity.userName }}
   </div>
 </script>
 

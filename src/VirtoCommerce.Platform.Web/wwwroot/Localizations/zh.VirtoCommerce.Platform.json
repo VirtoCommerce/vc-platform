@@ -745,6 +745,7 @@
           "period-1h": "1 小时",
           "period-6h": "6 小时",
           "store": "商店",
+          "no-store": "无商店",
           "period-custom": "自定义",
           "date-from": "从",
           "date-to": "至"
@@ -759,26 +760,25 @@
           "sign-in-type": "类型",
           "ip-address": "IP 地址",
           "organization": "组织",
-          "impersonation": "代客登录"
+          "impersonation": "代客登录",
+          "on-behalf-of": "代表"
         },
         "stats": {
           "total": "登录次数",
           "failed": "失败尝试",
           "users": "登录用户数",
-          "impersonation": "代客登录会话",
+          "impersonation": "代客登录",
           "top-failed-ips": "失败尝试最多的 IP",
           "top-failed-users": "失败尝试最多的账户",
           "failure-reasons": "失败原因",
           "by-organization": "按组织统计的登录",
           "none": "暂无数据",
-          "no-comparison": "无上一周期",
           "total-hint": "该周期内的所有登录尝试，包括成功与失败。点击查看。",
           "failed-hint": "未能完成登录的尝试。点击仅查看失败记录。",
           "users-hint": "成功登录的独立账户数，无论登录多少次均只计一次。点击查看成功登录。",
           "impersonation-hint": "客服代客户登录的会话。点击查看。",
           "timeline": "登录尝试趋势",
-          "by-store": "按商店统计的登录",
-          "vs-prev": "较上期"
+          "by-store": "按商店统计的登录"
         },
         "hints": {
           "known-accounts-only": "仅统计针对已有账户的尝试。"
@@ -791,6 +791,7 @@
           "member-id": "成员 ID",
           "user-agent": "User agent",
           "client-id": "客户端",
+          "host": "主机",
           "store-name": "商店名称",
           "organization-id": "组织 ID",
           "session-id": "会话 ID",

@@ -22,6 +22,7 @@ public class UserSignInLogEntity : Entity
     public string OperatorUserId { get; set; }
     public string OperatorUserName { get; set; }
     public string IpAddress { get; set; }
+    public string Host { get; set; }
     public string UserAgent { get; set; }
     public string ClientId { get; set; }
     public string SessionId { get; set; }
@@ -48,6 +49,7 @@ public class UserSignInLogEntity : Entity
         OperatorUserId = record.OperatorUserId;
         OperatorUserName = record.OperatorUserName;
         IpAddress = record.IpAddress;
+        Host = record.Host;
         UserAgent = record.UserAgent;
         ClientId = record.ClientId;
         SessionId = record.SessionId;
@@ -75,6 +77,7 @@ public class UserSignInLogEntity : Entity
         record.OperatorUserId = OperatorUserId;
         record.OperatorUserName = OperatorUserName;
         record.IpAddress = IpAddress;
+        record.Host = Host;
         record.UserAgent = UserAgent;
         record.ClientId = ClientId;
         record.SessionId = SessionId;

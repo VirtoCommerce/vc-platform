@@ -26,6 +26,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
                     OperatorUserId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     OperatorUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     IpAddress = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    Host = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     UserAgent = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     ClientId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     SessionId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),

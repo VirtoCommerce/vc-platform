@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Security.SignInLog
         // other record in it - including impersonation rows.
         private const int UserNameLength = 256;
         private const int UserAgentLength = 512;
+        private const int HostLength = 256;
 
         private readonly IUserSignInLogWriter _writer;
         private readonly ISettingsManager _settingsManager;
@@ -88,6 +89,12 @@ namespace VirtoCommerce.Platform.Security.SignInLog
             {
                 record.IpAddress = httpContext.Connection.RemoteIpAddress?.ToString();
                 record.UserAgent = Truncate(httpContext.Request.Headers.UserAgent.ToString().EmptyToNull(), UserAgentLength);
+
+                // Which domain the attempt was aimed at. Several storefront hosts commonly resolve to
+                // one deployment, and the request is otherwise identical whichever one was used.
+                // Behind a proxy this is only the real host when forwarded-headers handling is on -
+                // like the user agent, it is unvalidated client input, hence the truncation.
+                record.Host = Truncate(httpContext.Request.Host.Value.EmptyToNull(), HostLength);
             }
 
             // Request context is captured here because only this thread has it; everything a module

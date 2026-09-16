@@ -746,6 +746,7 @@
           "period-1h": "1 timme",
           "period-6h": "6 timmar",
           "store": "Butik",
+          "no-store": "Ingen butik",
           "period-custom": "Anpassad",
           "date-from": "Från",
           "date-to": "Till"
@@ -760,26 +761,25 @@
           "sign-in-type": "Typ",
           "ip-address": "IP-adress",
           "organization": "Organisation",
-          "impersonation": "Å annans vägnar"
+          "impersonation": "Å annans vägnar",
+          "on-behalf-of": "På uppdrag av"
         },
         "stats": {
           "total": "Inloggningar",
           "failed": "Misslyckade försök",
           "users": "Inloggade användare",
-          "impersonation": "Sessioner å annans vägnar",
+          "impersonation": "Å annans vägnar",
           "top-failed-ips": "Vanligaste IP-adresserna efter misslyckade försök",
           "top-failed-users": "Vanligaste kontona efter misslyckade försök",
           "failure-reasons": "Felorsaker",
           "by-organization": "Inloggningar per organisation",
           "none": "Inga data",
-          "no-comparison": "ingen föregående period",
           "total-hint": "Alla inloggningsförsök under perioden, både lyckade och misslyckade. Klicka för att visa dem.",
           "failed-hint": "Försök som inte loggade in någon. Klicka för att endast visa misslyckade.",
           "users-hint": "Unika konton som loggade in, räknade en gång vardera oavsett antal inloggningar. Klicka för att visa lyckade inloggningar.",
           "impersonation-hint": "Sessioner där supporten loggade in å en kunds vägnar. Klicka för att visa dem.",
           "timeline": "Försök över tid",
-          "by-store": "Inloggningar per butik",
-          "vs-prev": "mot föreg."
+          "by-store": "Inloggningar per butik"
         },
         "hints": {
           "known-accounts-only": "Omfattar endast försök mot befintliga konton."
@@ -792,6 +792,7 @@
           "member-id": "Medlems-ID",
           "user-agent": "Användaragent",
           "client-id": "Klient",
+          "host": "Värd",
           "store-name": "Butiksnamn",
           "organization-id": "Organisations-ID",
           "session-id": "Sessions-ID",

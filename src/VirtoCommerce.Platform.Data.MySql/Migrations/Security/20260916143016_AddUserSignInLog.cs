@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
     {
         // The scaffolder also wanted to narrow the OpenIddict Id, ApplicationId and AuthorizationId
         // columns from varchar(255) to varchar(95) on this provider. That is pre-existing model drift
-        // on MySql - the snapshot recorded 255 while the model resolves to 95 - and it has nothing to
+        // on MySql - the snapshot records 255 while the model resolves to 95 - and it has nothing to
         // do with this feature. Narrowing primary and foreign keys that already carry data can fail
         // outright on a live store, so those operations are deliberately left out and the snapshot
         // still records 255. Whoever reconciles that drift should do it in its own migration, where
@@ -41,6 +41,8 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                     OperatorUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IpAddress = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Host = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserAgent = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),

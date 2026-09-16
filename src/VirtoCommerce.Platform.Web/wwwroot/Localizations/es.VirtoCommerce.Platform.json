@@ -745,6 +745,7 @@
           "period-1h": "1 hora",
           "period-6h": "6 horas",
           "store": "Tienda",
+          "no-store": "Sin tienda",
           "period-custom": "Personalizado",
           "date-from": "Desde",
           "date-to": "Hasta"
@@ -759,26 +760,25 @@
           "sign-in-type": "Tipo",
           "ip-address": "Dirección IP",
           "organization": "Organización",
-          "impersonation": "En nombre de"
+          "impersonation": "En nombre de",
+          "on-behalf-of": "En nombre de"
         },
         "stats": {
           "total": "Inicios de sesión",
           "failed": "Intentos fallidos",
           "users": "Usuarios que iniciaron sesión",
-          "impersonation": "Sesiones en nombre de",
+          "impersonation": "En nombre de",
           "top-failed-ips": "Principales IP por intentos fallidos",
           "top-failed-users": "Principales cuentas por intentos fallidos",
           "failure-reasons": "Motivos de fallo",
           "by-organization": "Inicios de sesión por organización",
           "none": "Sin datos",
-          "no-comparison": "sin periodo anterior",
           "total-hint": "Todos los intentos de inicio de sesión del periodo, correctos y fallidos. Haga clic para verlos.",
           "failed-hint": "Intentos que no iniciaron sesión de nadie. Haga clic para ver solo los fallos.",
           "users-hint": "Cuentas distintas que iniciaron sesión correctamente, contadas una vez cada una sin importar cuántas veces. Haga clic para ver los inicios correctos.",
           "impersonation-hint": "Sesiones en las que el soporte inició sesión en nombre de un cliente. Haga clic para verlas.",
           "timeline": "Intentos a lo largo del tiempo",
-          "by-store": "Inicios de sesión por tienda",
-          "vs-prev": "frente al ant."
+          "by-store": "Inicios de sesión por tienda"
         },
         "hints": {
           "known-accounts-only": "Solo cubre intentos contra cuentas existentes."
@@ -791,6 +791,7 @@
           "member-id": "ID de miembro",
           "user-agent": "Agente de usuario",
           "client-id": "Cliente",
+          "host": "Host",
           "store-name": "Nombre de la tienda",
           "organization-id": "ID de organización",
           "session-id": "ID de sesión",

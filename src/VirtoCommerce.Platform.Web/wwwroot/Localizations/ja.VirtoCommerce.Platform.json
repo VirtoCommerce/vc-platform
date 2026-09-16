@@ -745,6 +745,7 @@
           "period-1h": "1 時間",
           "period-6h": "6 時間",
           "store": "ストア",
+          "no-store": "ストアなし",
           "period-custom": "カスタム",
           "date-from": "開始",
           "date-to": "終了"
@@ -759,26 +760,25 @@
           "sign-in-type": "種類",
           "ip-address": "IP アドレス",
           "organization": "組織",
-          "impersonation": "代理"
+          "impersonation": "代理",
+          "on-behalf-of": "代理:"
         },
         "stats": {
           "total": "サインイン数",
           "failed": "失敗した試行",
           "users": "サインインしたユーザー数",
-          "impersonation": "代理サインインのセッション",
+          "impersonation": "代理",
           "top-failed-ips": "失敗試行の多い IP",
           "top-failed-users": "失敗試行の多いアカウント",
           "failure-reasons": "失敗の理由",
           "by-organization": "組織別サインイン",
           "none": "データなし",
-          "no-comparison": "前期間なし",
           "total-hint": "期間内のすべてのサインイン試行（成功・失敗を含む）。クリックして表示します。",
           "failed-hint": "サインインに至らなかった試行。クリックすると失敗のみ表示します。",
           "users-hint": "サインインに成功した一意のアカウント数。回数にかかわらず 1 件として集計します。クリックすると成功したサインインを表示します。",
           "impersonation-hint": "サポートが顧客に代わってサインインしたセッション。クリックして表示します。",
           "timeline": "時系列の試行",
-          "by-store": "ストア別サインイン",
-          "vs-prev": "前期間比"
+          "by-store": "ストア別サインイン"
         },
         "hints": {
           "known-accounts-only": "既存アカウントに対する試行のみが対象です。"
@@ -791,6 +791,7 @@
           "member-id": "メンバー ID",
           "user-agent": "ユーザーエージェント",
           "client-id": "クライアント",
+          "host": "ホスト",
           "store-name": "ストア名",
           "organization-id": "組織 ID",
           "session-id": "セッション ID",

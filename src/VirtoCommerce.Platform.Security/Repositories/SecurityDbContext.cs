@@ -60,6 +60,7 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<UserSignInLogEntity>().Property(x => x.OperatorUserId).HasMaxLength(IdLength);
             builder.Entity<UserSignInLogEntity>().Property(x => x.OperatorUserName).HasMaxLength(Length256);
             builder.Entity<UserSignInLogEntity>().Property(x => x.IpAddress).HasMaxLength(Length64);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.Host).HasMaxLength(Length256);
             builder.Entity<UserSignInLogEntity>().Property(x => x.UserAgent).HasMaxLength(Length512);
             builder.Entity<UserSignInLogEntity>().Property(x => x.ClientId).HasMaxLength(IdLength);
             builder.Entity<UserSignInLogEntity>().Property(x => x.SessionId).HasMaxLength(IdLength);

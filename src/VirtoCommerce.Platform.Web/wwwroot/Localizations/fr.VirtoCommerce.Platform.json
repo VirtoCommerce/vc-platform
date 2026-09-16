@@ -745,6 +745,7 @@
           "period-1h": "1 heure",
           "period-6h": "6 heures",
           "store": "Boutique",
+          "no-store": "Sans boutique",
           "period-custom": "Personnalisé",
           "date-from": "Du",
           "date-to": "Au"
@@ -759,26 +760,25 @@
           "sign-in-type": "Type",
           "ip-address": "Adresse IP",
           "organization": "Organisation",
-          "impersonation": "Au nom de"
+          "impersonation": "Au nom de",
+          "on-behalf-of": "Au nom de"
         },
         "stats": {
           "total": "Connexions",
           "failed": "Tentatives échouées",
           "users": "Utilisateurs connectés",
-          "impersonation": "Sessions au nom de",
+          "impersonation": "Au nom de",
           "top-failed-ips": "Principales IP par tentatives échouées",
           "top-failed-users": "Principaux comptes par tentatives échouées",
           "failure-reasons": "Motifs d'échec",
           "by-organization": "Connexions par organisation",
           "none": "Aucune donnée",
-          "no-comparison": "pas de période précédente",
           "total-hint": "Toutes les tentatives de connexion sur la période, réussies et échouées. Cliquez pour les afficher.",
           "failed-hint": "Tentatives n'ayant connecté personne. Cliquez pour n'afficher que les échecs.",
           "users-hint": "Comptes distincts s'étant connectés avec succès, comptés une seule fois quel que soit le nombre de connexions. Cliquez pour voir les connexions réussies.",
           "impersonation-hint": "Sessions où le support s'est connecté au nom d'un client. Cliquez pour les afficher.",
           "timeline": "Tentatives dans le temps",
-          "by-store": "Connexions par boutique",
-          "vs-prev": "vs préc."
+          "by-store": "Connexions par boutique"
         },
         "hints": {
           "known-accounts-only": "Ne couvre que les tentatives sur des comptes existants."
@@ -791,6 +791,7 @@
           "member-id": "ID membre",
           "user-agent": "Agent utilisateur",
           "client-id": "Client",
+          "host": "Hôte",
           "store-name": "Nom de la boutique",
           "organization-id": "ID organisation",
           "session-id": "ID de session",

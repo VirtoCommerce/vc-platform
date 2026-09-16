@@ -745,6 +745,7 @@
           "period-1h": "1 godzina",
           "period-6h": "6 godzin",
           "store": "Sklep",
+          "no-store": "Bez sklepu",
           "period-custom": "Niestandardowy",
           "date-from": "Od",
           "date-to": "Do"
@@ -759,26 +760,25 @@
           "sign-in-type": "Typ",
           "ip-address": "Adres IP",
           "organization": "Organizacja",
-          "impersonation": "W imieniu"
+          "impersonation": "W imieniu",
+          "on-behalf-of": "W imieniu"
         },
         "stats": {
           "total": "Logowania",
           "failed": "Nieudane próby",
           "users": "Zalogowani użytkownicy",
-          "impersonation": "Sesje w imieniu",
+          "impersonation": "W imieniu",
           "top-failed-ips": "Najczęstsze adresy IP wg nieudanych prób",
           "top-failed-users": "Najczęstsze konta wg nieudanych prób",
           "failure-reasons": "Powody niepowodzeń",
           "by-organization": "Logowania wg organizacji",
           "none": "Brak danych",
-          "no-comparison": "brak poprzedniego okresu",
           "total-hint": "Wszystkie próby logowania w okresie, udane i nieudane. Kliknij, aby je zobaczyć.",
           "failed-hint": "Próby, które nikogo nie zalogowały. Kliknij, aby zobaczyć tylko niepowodzenia.",
           "users-hint": "Unikalne konta, które zalogowały się pomyślnie, liczone raz niezależnie od liczby logowań. Kliknij, aby zobaczyć udane logowania.",
           "impersonation-hint": "Sesje, w których wsparcie zalogowało się w imieniu klienta. Kliknij, aby je zobaczyć.",
           "timeline": "Próby w czasie",
-          "by-store": "Logowania wg sklepu",
-          "vs-prev": "vs poprz."
+          "by-store": "Logowania wg sklepu"
         },
         "hints": {
           "known-accounts-only": "Obejmuje tylko próby dotyczące istniejących kont."
@@ -791,6 +791,7 @@
           "member-id": "ID członka",
           "user-agent": "Agent użytkownika",
           "client-id": "Klient",
+          "host": "Host",
           "store-name": "Nazwa sklepu",
           "organization-id": "ID organizacji",
           "session-id": "ID sesji",

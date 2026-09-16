@@ -48,6 +48,50 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
+    public async Task SearchAsync_FiltersByStoreId()
+    {
+        var service = CreateService(
+            Row("b2b", storeId: "B2B-store"),
+            Row("none"));
+
+        var result = await service.SearchAsync(new UserSignInLogSearchCriteria { StoreId = "B2B-store", Take = 20 });
+
+        result.Results.Should().ContainSingle().Which.Id.Should().Be("b2b");
+    }
+
+    [Fact]
+    public async Task SearchAsync_WithoutStore_FindsTheRowsNoStoreIdCanReach()
+    {
+        var service = CreateService(
+            Row("b2b", storeId: "B2B-store"),
+            Row("backoffice"));
+
+        // An empty StoreId already means "any store", so back-office sign-ins and failed attempts
+        // against unknown user names are otherwise unfindable.
+        var result = await service.SearchAsync(new UserSignInLogSearchCriteria { WithoutStore = true, Take = 20 });
+
+        result.Results.Should().ContainSingle().Which.Id.Should().Be("backoffice");
+    }
+
+    [Fact]
+    public async Task SearchAsync_WithoutStore_OverridesAStoreIdSetAlongsideIt()
+    {
+        var service = CreateService(
+            Row("b2b", storeId: "B2B-store"),
+            Row("backoffice"));
+
+        var result = await service.SearchAsync(new UserSignInLogSearchCriteria
+        {
+            WithoutStore = true,
+            StoreId = "B2B-store",
+            Take = 20,
+        });
+
+        // The two are mutually exclusive by definition; combining them must not return nothing.
+        result.Results.Should().ContainSingle().Which.Id.Should().Be("backoffice");
+    }
+
+    [Fact]
     public async Task SearchAsync_FiltersBySignInTypeAndDateRange()
     {
         var service = CreateService(
@@ -350,6 +394,7 @@ public class UserSignInLogSearchServiceTests
         string signInType = SignInType.Password,
         string ip = null,
         string failureReason = null,
+        string storeId = null,
         DateTime? createdDate = null)
         => new()
         {
@@ -358,6 +403,7 @@ public class UserSignInLogSearchServiceTests
             UserName = userId ?? "anonymous",
             Succeeded = succeeded,
             SignInType = signInType,
+            StoreId = storeId,
             IpAddress = ip,
             FailureReason = failureReason,
             CreatedDate = createdDate ?? _now,

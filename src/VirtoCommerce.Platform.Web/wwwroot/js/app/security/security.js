@@ -327,7 +327,7 @@ angular.module('platformWebApp')
                 [
                     { name: "createdDate", title: "platform.blades.sign-in-log.labels.date", valueType: "DateTime", priority: 10 },
                     { name: "userName", title: "platform.blades.sign-in-log.labels.user-name", valueType: "ShortText", priority: 20 },
-                    { name: "succeeded", title: "platform.blades.sign-in-log.labels.outcome", valueType: "Boolean", priority: 30 },
+                    // No "succeeded" field: the outcome badge at the top of the blade already says it.
                     { name: "failureReason", title: "platform.blades.sign-in-log.labels.failure-reason", valueType: "ShortText", priority: 40 },
                     { name: "signInType", title: "platform.blades.sign-in-log.labels.sign-in-type", valueType: "ShortText", priority: 50 },
                     { name: "provider", title: "platform.blades.sign-in-log.detail.provider", valueType: "ShortText", priority: 60 },
@@ -336,6 +336,7 @@ angular.module('platformWebApp')
                     { name: "userId", title: "platform.blades.sign-in-log.detail.user-id", valueType: "ShortText", priority: 90 },
                     { name: "memberId", title: "platform.blades.sign-in-log.detail.member-id", valueType: "ShortText", priority: 100 },
                     { name: "ipAddress", title: "platform.blades.sign-in-log.labels.ip-address", valueType: "ShortText", priority: 110 },
+                    { name: "host", title: "platform.blades.sign-in-log.detail.host", valueType: "ShortText", priority: 115 },
                     { name: "userAgent", title: "platform.blades.sign-in-log.detail.user-agent", valueType: "LongText", priority: 120 },
                     { name: "clientId", title: "platform.blades.sign-in-log.detail.client-id", valueType: "ShortText", priority: 130 },
                     { name: "sessionId", title: "platform.blades.sign-in-log.detail.session-id", valueType: "ShortText", priority: 140 },

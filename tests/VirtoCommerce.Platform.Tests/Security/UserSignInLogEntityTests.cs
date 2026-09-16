@@ -27,6 +27,7 @@ public class UserSignInLogEntityTests
             OperatorUserId = "op-1",
             OperatorUserName = "support@virtocommerce.com",
             IpAddress = "203.0.113.7",
+            Host = "b2b.example.com",
             UserAgent = "Mozilla/5.0",
             ClientId = "frontend",
             SessionId = "auth-1",

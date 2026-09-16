@@ -746,6 +746,7 @@
           "period-1h": "1 time",
           "period-6h": "6 timer",
           "store": "Butikk",
+          "no-store": "Ingen butikk",
           "period-custom": "Egendefinert",
           "date-from": "Fra",
           "date-to": "Til"
@@ -760,26 +761,25 @@
           "sign-in-type": "Type",
           "ip-address": "IP-adresse",
           "organization": "Organisasjon",
-          "impersonation": "På vegne av"
+          "impersonation": "På vegne av",
+          "on-behalf-of": "På vegne av"
         },
         "stats": {
           "total": "Innlogginger",
           "failed": "Mislykkede forsøk",
           "users": "Innloggede brukere",
-          "impersonation": "Økter på vegne av",
+          "impersonation": "På vegne av",
           "top-failed-ips": "Vanligste IP-adresser etter mislykkede forsøk",
           "top-failed-users": "Vanligste kontoer etter mislykkede forsøk",
           "failure-reasons": "Feilårsaker",
           "by-organization": "Innlogginger per organisasjon",
           "none": "Ingen data",
-          "no-comparison": "ingen forrige periode",
           "total-hint": "Alle innloggingsforsøk i perioden, både vellykkede og mislykkede. Klikk for å se dem.",
           "failed-hint": "Forsøk som ikke logget inn noen. Klikk for å se bare de mislykkede.",
           "users-hint": "Unike kontoer som logget inn, talt én gang hver uansett antall innlogginger. Klikk for å se vellykkede innlogginger.",
           "impersonation-hint": "Økter der support logget inn på vegne av en kunde. Klikk for å se dem.",
           "timeline": "Forsøk over tid",
-          "by-store": "Innlogginger per butikk",
-          "vs-prev": "mot forrige"
+          "by-store": "Innlogginger per butikk"
         },
         "hints": {
           "known-accounts-only": "Omfatter bare forsøk mot eksisterende kontoer."
@@ -792,6 +792,7 @@
           "member-id": "Medlems-ID",
           "user-agent": "Brukeragent",
           "client-id": "Klient",
+          "host": "Vert",
           "store-name": "Butikknavn",
           "organization-id": "Organisasjons-ID",
           "session-id": "Økt-ID",

@@ -746,6 +746,7 @@
           "period-1h": "1 tunti",
           "period-6h": "6 tuntia",
           "store": "Kauppa",
+          "no-store": "Ei kauppaa",
           "period-custom": "Mukautettu",
           "date-from": "Alkaen",
           "date-to": "Päättyen"
@@ -760,26 +761,25 @@
           "sign-in-type": "Tyyppi",
           "ip-address": "IP-osoite",
           "organization": "Organisaatio",
-          "impersonation": "Toisen puolesta"
+          "impersonation": "Toisen puolesta",
+          "on-behalf-of": "Edustaa"
         },
         "stats": {
           "total": "Kirjautumiset",
           "failed": "Epäonnistuneet yritykset",
           "users": "Kirjautuneet käyttäjät",
-          "impersonation": "Istunnot toisen puolesta",
+          "impersonation": "Toisen puolesta",
           "top-failed-ips": "Yleisimmät IP-osoitteet epäonnistuneiden yritysten mukaan",
           "top-failed-users": "Yleisimmät tilit epäonnistuneiden yritysten mukaan",
           "failure-reasons": "Epäonnistumisen syyt",
           "by-organization": "Kirjautumiset organisaatioittain",
           "none": "Ei tietoja",
-          "no-comparison": "ei edellistä jaksoa",
           "total-hint": "Kaikki jakson kirjautumisyritykset, sekä onnistuneet että epäonnistuneet. Napsauta nähdäksesi ne.",
           "failed-hint": "Yritykset, jotka eivät kirjanneet ketään sisään. Napsauta nähdäksesi vain epäonnistuneet.",
           "users-hint": "Eri tilit, jotka kirjautuivat onnistuneesti; kukin lasketaan kerran kirjautumiskerroista riippumatta. Napsauta nähdäksesi onnistuneet kirjautumiset.",
           "impersonation-hint": "Istunnot, joissa tuki kirjautui asiakkaan puolesta. Napsauta nähdäksesi ne.",
           "timeline": "Yritykset ajan kuluessa",
-          "by-store": "Kirjautumiset kaupoittain",
-          "vs-prev": "ed. jaksoon"
+          "by-store": "Kirjautumiset kaupoittain"
         },
         "hints": {
           "known-accounts-only": "Kattaa vain olemassa oleviin tileihin kohdistuneet yritykset."
@@ -792,6 +792,7 @@
           "member-id": "Jäsen-ID",
           "user-agent": "Selaintunniste",
           "client-id": "Asiakassovellus",
+          "host": "Isäntänimi",
           "store-name": "Kaupan nimi",
           "organization-id": "Organisaation ID",
           "session-id": "Istunnon ID",

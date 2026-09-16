@@ -65,6 +65,9 @@
              title="{{ tile.hint | translate }}">
           <div class="stat-tile-value">{{ tile.value | number:0 }}</div>
           <div class="stat-tile-label">{{ tile.label | translate }}</div>
+          <!-- Movement against the previous window. The arrow and the number carry the meaning, so
+               the trailing "vs prev" caption was dropped - it wrapped onto its own line and doubled
+               the height of every tile to repeat what the arrow already said. -->
           <div class="stat-tile-delta {{ tile.deltaClass }}" ng-if="tile.delta">
             <i class="fa"
                ng-class="{'fa-arrow-up': tile.delta.direction === 'up',
@@ -72,10 +75,6 @@
                           'fa-minus': tile.delta.direction === 'flat'}"></i>
             <span ng-if="tile.delta.percent !== undefined">{{ tile.delta.percent }}%</span>
             <span ng-if="tile.delta.absolute !== undefined">+{{ tile.delta.absolute | number:0 }}</span>
-            <em>{{ 'platform.blades.sign-in-log.stats.vs-prev' | translate }}</em>
-          </div>
-          <div class="stat-tile-delta __flat" ng-if="!tile.delta">
-            <span>{{ 'platform.blades.sign-in-log.stats.no-comparison' | translate }}</span>
           </div>
         </div>
       </div>

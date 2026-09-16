@@ -35,6 +35,10 @@ angular.module('platformWebApp')
                     { label: 'platform.blades.sign-in-log.filter.type-logout', value: 'Logout' }
                 ];
 
+                // A sentinel for the store select: "" already means "any store", so "no store at all"
+                // needs a value of its own. Kept off the wire - buildCriteria turns it into a flag.
+                blade.noStoreValue = '__none__';
+
                 // Seeded by the dashboard; falls back to the plain defaults when opened directly.
                 var seed = blade.initialFilter || {};
 
@@ -94,7 +98,6 @@ angular.module('platformWebApp')
                 blade.stores = [];
                 accounts.getSignInLogStats({}, {}, function (stats) {
                     blade.stores = _.pluck(stats.signInsByStore || [], 'key');
-                    blade.recordingEnabled = stats.recordingEnabled;
                 });
 
                 blade.searchText = filter.keyword || '';
@@ -110,7 +113,8 @@ angular.module('platformWebApp')
                         userId: blade.userId,
                         keyword: filter.keyword,
                         ipAddress: filter.ipAddress,
-                        storeId: filter.storeId || null,
+                        storeId: filter.storeId === blade.noStoreValue ? null : (filter.storeId || null),
+                        withoutStore: filter.storeId === blade.noStoreValue ? true : null,
                         // Server defaults to CreatedDate descending when this is empty.
                         sort: uiGridHelper.getSortExpression($scope)
                     };
@@ -171,6 +175,12 @@ angular.module('platformWebApp')
                 $scope.isImpersonation = function (entity) {
                     return !!entity &&
                         (entity.signInType === 'Impersonation' || entity.signInType === 'ImpersonationRevert');
+                };
+
+                // Both names are needed to render "operator on behalf of user". A denied attempt can
+                // have no operator to name, and that falls back to the plain user name.
+                $scope.isOnBehalf = function (entity) {
+                    return $scope.isImpersonation(entity) && !!entity.operatorUserName;
                 };
 
                 blade.toolbarCommands = [
