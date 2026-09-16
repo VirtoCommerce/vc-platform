@@ -2,11 +2,14 @@
   <div class="blade-inner">
     <div class="inner-block sign-in-log-dashboard">
 
-      <div class="sign-in-log-period">
-        <a href="javascript:void(0)"
-           ng-repeat="p in blade.periods"
-           ng-class="{'__active': blade.period === p.value}"
-           ng-click="setPeriod(p.value)">{{ p.label | translate }}</a>
+      <div class="sign-in-log-period-row">
+        <span class="sign-in-log-period-label">{{ 'platform.blades.sign-in-log.filter.period' | translate }}</span>
+        <div class="sign-in-log-period">
+          <a href="javascript:void(0)"
+             ng-repeat="p in blade.periods"
+             ng-class="{'__active': blade.period === p.value}"
+             ng-click="setPeriod(p.value)">{{ p.label | translate }}</a>
+        </div>
       </div>
 
       <div class="sign-in-log-chart" ng-if="blade.chart">
