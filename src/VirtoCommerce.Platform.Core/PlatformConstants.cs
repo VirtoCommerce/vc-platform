@@ -161,6 +161,8 @@ namespace VirtoCommerce.Platform.Core
 
             public static class Security
             {
+                private const string SignInLogGroup = "Platform|Sign In Log";
+
                 public static SettingDescriptor SecurityAccountTypes { get; } = new()
                 {
                     Name = "VirtoCommerce.Platform.Security.AccountTypes",
@@ -230,33 +232,41 @@ namespace VirtoCommerce.Platform.Core
                 public static SettingDescriptor SignInLogEnabled { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.SignInLogEnabled",
-                    GroupName = "Platform|Security",
+                    GroupName = SignInLogGroup,
                     ValueType = SettingValueType.Boolean,
                     DefaultValue = true
                 };
 
+                /// <summary>
+                /// How long audit rows are kept. Zero or less means keep forever: the cleanup job
+                /// deletes nothing rather than treating an unset value as "delete everything".
+                /// </summary>
                 public static SettingDescriptor SignInLogRetentionDays { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.SignInLogRetentionDays",
-                    GroupName = "Platform|Security",
+                    GroupName = SignInLogGroup,
                     ValueType = SettingValueType.Integer,
-                    DefaultValue = 90
+                    DefaultValue = 30
                 };
 
                 public static SettingDescriptor EnableSignInLogCleanupJob { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.EnableSignInLogCleanupJob",
-                    GroupName = "Platform|Security",
+                    GroupName = SignInLogGroup,
                     ValueType = SettingValueType.Boolean,
                     DefaultValue = true
                 };
 
+                /// <summary>
+                /// Runs at 01:00 daily, off the hour so it does not contend with the other
+                /// midnight maintenance jobs.
+                /// </summary>
                 public static SettingDescriptor CronSignInLogCleanupJob { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.CronSignInLogCleanupJob",
-                    GroupName = "Platform|Security",
+                    GroupName = SignInLogGroup,
                     ValueType = SettingValueType.Cron,
-                    DefaultValue = "0 0 */1 * *"
+                    DefaultValue = "0 1 */1 * *"
                 };
 
                 public static SettingDescriptor FileExtensionsBlackList { get; } = new SettingDescriptor

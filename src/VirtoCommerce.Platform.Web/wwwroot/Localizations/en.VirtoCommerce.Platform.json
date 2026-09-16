@@ -1131,6 +1131,22 @@
           "FileExtensionsWhiteList": {
             "description": "File extensions permitted for upload by the Platform (additionally to 'FileExtensionsWhiteList' in appsettings.json)",
             "title": "White list"
+          },
+          "SignInLogEnabled": {
+            "title": "Record sign-in attempts",
+            "description": "Records every sign-in attempt, successful and failed, in the sign-in log. Login on behalf is always recorded and is not affected by this setting."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Keep records for (days)",
+            "description": "How long sign-in records are kept before the cleanup job removes them. Set to 0 or less to keep records forever."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Clean up old sign-in records",
+            "description": "Runs a scheduled job that deletes sign-in records older than the retention period."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron for the sign-in log cleanup job",
+            "description": "Cron expression for the job that deletes sign-in records older than the retention period."
           }
         },
         "UI": {

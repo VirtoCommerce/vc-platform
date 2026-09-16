@@ -30,7 +30,8 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
             var retentionDays = await _settingsManager.GetValueAsync<int>(
                 PlatformConstants.Settings.Security.SignInLogRetentionDays);
 
-            // A misconfigured 0 must not be read as "delete everything".
+            // Zero or less means keep forever. Reading an unset or cleared value as
+            // "delete everything" would destroy the audit trail it exists to protect.
             if (retentionDays <= 0)
             {
                 return;

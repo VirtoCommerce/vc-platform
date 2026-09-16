@@ -41,14 +41,16 @@ public class SignInLogCleanupJobTests
         service.Verify(x => x.DeleteOlderThanAsync(It.IsAny<DateTime>(), It.IsAny<int>()), Times.Exactly(3));
     }
 
-    [Fact]
-    public async Task Process_RetentionDaysZeroOrLess_DeletesNothing()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task Process_RetentionDaysZeroOrLess_KeepsEverythingForever(int retentionDays)
     {
         var service = new Mock<IUserSignInLogService>();
 
-        await new SignInLogCleanupJob(service.Object, CreateSettings(0)).Process();
+        await new SignInLogCleanupJob(service.Object, CreateSettings(retentionDays)).Process();
 
-        // A misconfigured retention of 0 must not be read as "delete everything".
+        // Zero or less means keep forever, never "delete everything".
         service.Verify(x => x.DeleteOlderThanAsync(It.IsAny<DateTime>(), It.IsAny<int>()), Times.Never);
     }
 
