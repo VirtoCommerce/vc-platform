@@ -58,8 +58,14 @@ public class AuthorizationControllerSignInLogTests
 
         var application = new VirtoOpenIddictEntityFrameworkCoreApplication { Id = "app-1" };
 
+        // Faithful to OpenIddict: FindByClientIdAsync calls ArgumentException.ThrowIfNullOrEmpty and
+        // throws on a missing identifier rather than returning null. A mock that quietly answered any
+        // string is why a token request with no client_id reached production as a 500.
         _applicationManager
-            .Setup(x => x.FindByClientIdAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.FindByClientIdAsync(It.Is<string>(s => string.IsNullOrEmpty(s)), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new ArgumentNullException("identifier"));
+        _applicationManager
+            .Setup(x => x.FindByClientIdAsync(It.Is<string>(s => !string.IsNullOrEmpty(s)), It.IsAny<CancellationToken>()))
             .ReturnsAsync(application);
         _applicationManager
             .Setup(x => x.GetIdAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
@@ -196,6 +202,32 @@ public class AuthorizationControllerSignInLogTests
         attempt.UserName.Should().Be("b2badmin@test.com");
         attempt.OperatorUserId.Should().Be("op-1");
         attempt.OperatorUserName.Should().Be("support@virtocommerce.com");
+    }
+
+    [Fact]
+    public async Task Exchange_ImpersonateGrant_WithoutClientId_StillGrantsAndRecords()
+    {
+        var operatorUser = new ApplicationUser { Id = "op-1", UserName = "support@virtocommerce.com" };
+        var target = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+
+        // The storefront's impersonate call carries no client_id at all:
+        //   grant_type=impersonate&scope=offline_access&user_id=...
+        // Resolving an application from a null identifier threw, and the whole grant answered 500.
+        var controller = CreateController(operatorUser, permitted: true, targetUserId: "user-1", target: target,
+            scope: OpenIddictConstants.Scopes.OfflineAccess, clientId: null);
+
+        var result = await controller.Exchange();
+
+        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.SignInResult>();
+
+        var attempt = _published.Should().ContainSingle().Subject;
+        attempt.Succeeded.Should().BeTrue();
+        attempt.UserId.Should().Be("user-1");
+        attempt.OperatorUserId.Should().Be("op-1");
+
+        // Without a client there is no application to hang an authorization on, so the row simply
+        // carries no session id rather than failing the sign-in.
+        attempt.SessionId.Should().BeNull();
     }
 
     [Fact]
@@ -410,7 +442,8 @@ public class AuthorizationControllerSignInLogTests
         ApplicationUser target,
         IEnumerable<Claim> principalClaims = null,
         IEnumerable<ITokenRequestValidator> validators = null,
-        string scope = null)
+        string scope = null,
+        string clientId = "frontend")
     {
         _userManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(currentUser);
         _userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(target);
@@ -424,7 +457,7 @@ public class AuthorizationControllerSignInLogTests
         var request = new OpenIddictRequest
         {
             GrantType = PlatformConstants.Security.GrantTypes.Impersonate,
-            ClientId = "frontend",
+            ClientId = clientId,
             Scope = scope,
         };
 

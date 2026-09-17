@@ -826,6 +826,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return null;
             }
 
+            // This grant is routinely called with no client_id - the storefront sends only
+            // grant_type, scope and user_id - and FindByClientIdAsync throws on a missing identifier
+            // rather than returning null. Correlating the session is a nice-to-have; failing the
+            // login on behalf because of it is not.
+            if (string.IsNullOrEmpty(clientId))
+            {
+                return null;
+            }
+
             var application = await _applicationManager.FindByClientIdAsync(clientId);
             if (application == null)
             {
