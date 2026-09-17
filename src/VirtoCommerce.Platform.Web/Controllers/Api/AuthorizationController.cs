@@ -84,8 +84,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost("~/revoke/token")]
         public async Task<ActionResult> RevokeCurrentUserToken()
         {
-            var tokenId = HttpContext.User.GetClaim("oi_tkn_id");
-            var authId = HttpContext.User.GetClaim("oi_au_id");
+            // Same claims as everywhere else that reads them, named rather than spelled out: "oi_au_id"
+            // and "oi_tkn_id" are what these constants hold, and the two spellings sitting side by side
+            // in one controller read as if they were different claims.
+            var tokenId = HttpContext.User.GetClaim(Claims.Private.TokenId);
+            var authId = HttpContext.User.GetClaim(Claims.Private.AuthorizationId);
 
             if (authId != null)
             {

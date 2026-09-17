@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Security.Search;
-using VirtoCommerce.Platform.Security.Model;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.Repositories;
-using VirtoCommerce.Platform.Core.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Security.SignInLog;
 
@@ -331,7 +328,9 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
 
         if (!string.IsNullOrEmpty(criteria.Keyword))
         {
-            query = query.Where(x => x.UserName.Contains(criteria.Keyword) || x.IpAddress.Contains(criteria.Keyword));
+            query = query.Where(x => x.UserName != null && x.UserName.Contains(criteria.Keyword) ||
+                                     x.OperatorUserName != null && x.OperatorUserName.Contains(criteria.Keyword) ||
+                                     x.IpAddress != null && x.IpAddress.Contains(criteria.Keyword));
         }
 
         return query;

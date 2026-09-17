@@ -48,6 +48,21 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
+    public async Task SearchAsync_Keyword_FindsRowsByTheOperatorTheGridShows()
+    {
+        var service = CreateService(
+            Row("onbehalf", userId: "customer", signInType: SignInType.Impersonation, operatorUserName: "support@virto.com"),
+            // No operator at all, which is the ordinary case and the one that used to throw.
+            Row("unrelated", userId: "someone-else"));
+
+        // The grid leads with the operator on these rows, so the name an administrator can see has to
+        // be a name they can search for.
+        var result = await service.SearchAsync(new UserSignInLogSearchCriteria { Keyword = "support@", Take = 20 });
+
+        result.Results.Should().ContainSingle().Which.Id.Should().Be("onbehalf");
+    }
+
+    [Fact]
     public async Task SearchAsync_FiltersByStoreId()
     {
         var service = CreateService(
@@ -411,6 +426,7 @@ public class UserSignInLogSearchServiceTests
         string ip = null,
         string failureReason = null,
         string storeId = null,
+        string operatorUserName = null,
         DateTime? createdDate = null)
         => new()
         {
@@ -420,6 +436,7 @@ public class UserSignInLogSearchServiceTests
             Succeeded = succeeded,
             SignInType = signInType,
             StoreId = storeId,
+            OperatorUserName = operatorUserName,
             IpAddress = ip,
             FailureReason = failureReason,
             CreatedDate = createdDate ?? _now,
