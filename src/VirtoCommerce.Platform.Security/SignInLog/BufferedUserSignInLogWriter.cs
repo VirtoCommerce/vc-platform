@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Security.SignInLog;
@@ -216,7 +215,9 @@ public class BufferedUserSignInLogWriter : BackgroundService, IUserSignInLogWrit
 
     public override void Dispose()
     {
-        _flushLock.Dispose();
         base.Dispose();
+        _flushLock.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 }
