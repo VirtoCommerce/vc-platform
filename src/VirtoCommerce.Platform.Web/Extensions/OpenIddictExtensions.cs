@@ -12,11 +12,4 @@ public static class OpenIddictExtensions
 
         return string.Equals(request.GrantType, PlatformConstants.Security.GrantTypes.Impersonate, StringComparison.Ordinal);
     }
-
-    public static bool IsNativeSignInGrantType(this OpenIddictRequest request)
-    {
-        ArgumentNullException.ThrowIfNull(request);
-
-        return string.Equals(request.GrantType, PlatformConstants.Security.GrantTypes.NativeSignIn, StringComparison.Ordinal);
-    }
 }
