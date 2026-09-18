@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
@@ -18,9 +17,8 @@ using VirtoCommerce.Platform.Security.Caching;
 
 namespace VirtoCommerce.Platform.Security
 {
-    public class CustomRoleManager : AspNetRoleManager<Role>, IServiceScopeOwner
+    public class CustomRoleManager : AspNetRoleManager<Role>
     {
-        private IServiceScope _ownedScope;
         private readonly IPermissionsRegistrar _knownPermissions;
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly MvcNewtonsoftJsonOptions _jsonOptions;
@@ -176,24 +174,6 @@ namespace VirtoCommerce.Platform.Security
                     }
                     role.Permissions.Add(storedPermission);
                 }
-            }
-        }
-
-        void IServiceScopeOwner.OwnScope(IServiceScope scope)
-        {
-            _ownedScope = scope;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing && _ownedScope != null)
-            {
-                // Disposing the scope disposes this manager once more; the base class guards against that.
-                var scope = _ownedScope;
-                _ownedScope = null;
-                scope.Dispose();
             }
         }
     }

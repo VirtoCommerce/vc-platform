@@ -30,7 +30,7 @@ namespace VirtoCommerce.Platform.Web.Security
         public static IServiceCollection AddSecurityServices(this IServiceCollection services, Action<AuthorizationOptions> setupAction = null)
         {
             services.AddTransient<ISecurityRepository, SecurityRepository>();
-            services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.ResolveInOwnScope<ISecurityRepository>());
+            services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<ISecurityRepository>());
 
             services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
             services.AddSingleton<IUserSignInLogService, UserSignInLogService>();
@@ -60,10 +60,9 @@ namespace VirtoCommerce.Platform.Web.Security
             services.TryAddScoped<IPasswordValidator<ApplicationUser>, CustomPasswordValidator>();
             services.TryAddScoped<IdentityErrorDescriber, CustomIdentityErrorDescriber>();
             services.TryAddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
-            // CustomRoleManager and CustomUserManager own the scope they are resolved from and dispose it with themselves.
-            services.AddSingleton<Func<RoleManager<Role>>>(provider => () => provider.ResolveInOwnScope<RoleManager<Role>>());
-            services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.ResolveInOwnScope<UserManager<ApplicationUser>>());
-            // SignInManager is not disposable, so nothing can own its scope; new code should resolve it through IServiceScopeFactory instead.
+            // Legacy factories: nothing owns the scope they create. Prefer IScopedServiceFactory<T> in new code.
+            services.AddSingleton<Func<RoleManager<Role>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<RoleManager<Role>>());
+            services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<UserManager<ApplicationUser>>());
             services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();

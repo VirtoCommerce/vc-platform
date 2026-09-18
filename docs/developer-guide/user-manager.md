@@ -26,15 +26,15 @@ public void Initialize(IServiceCollection serviceCollection)
 **CustomRoleManager** is registered in the same way.
 
 ## Usage
-You can get both user and role managers by adding a respective factory to your service constructor:
+You can get both user and role managers by adding `IScopedServiceFactory<T>` to your service constructor. Each `Create()` call resolves the manager in a DI scope of its own; disposing the returned `ScopedService<T>` releases the manager together with its security `DbContext`:
 
 ```csharp
     public class MyCoolService 
     {
-        private readonly Func<UserManager<ApplicationUser>> _userManagerFactory;
-        private readonly Func<RoleManager<Role>> _roleManagerFactory;
+        private readonly IScopedServiceFactory<UserManager<ApplicationUser>> _userManagerFactory;
+        private readonly IScopedServiceFactory<RoleManager<Role>> _roleManagerFactory;
     
-        public MyCoolService(Func<UserManager<ApplicationUser>> userManagerFactory, Func<RoleManager<Role>> roleManagerFactory)
+        public MyCoolService(IScopedServiceFactory<UserManager<ApplicationUser>> userManagerFactory, IScopedServiceFactory<RoleManager<Role>> roleManagerFactory)
         {
             _userManagerFactory = userManagerFactory;
             _roleManagerFactory = roleManagerFactory;
@@ -42,12 +42,15 @@ You can get both user and role managers by adding a respective factory to your s
         
         public void DoMyCoolWork()
         {
-            using var userManager = userManagerFactory();
-            using var roleManager = roleManagerFactory();
+            using var userManager = _userManagerFactory.Create();
+            using var roleManager = _roleManagerFactory.Create();
+            userManager.Service.FindByNameAsync(...);
             ...
         }
     }
 ```
+
+The `Func<UserManager<ApplicationUser>>` and `Func<RoleManager<Role>>` factories shown above are kept for compatibility. They do not release the scope they create, so prefer `IScopedServiceFactory<T>` in new code. See [Resolving scoped services outside a request](../techniques/resolving-scoped-services-outside-a-request.md).
 
 ## Recomendations
 
