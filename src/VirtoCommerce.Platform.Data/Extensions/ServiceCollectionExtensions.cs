@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddOptions<CrudOptions>().Bind(configuration.GetSection("Crud"));
 
             services.AddTransient<IPlatformRepository, PlatformRepository>();
-            services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
+            services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.ResolveInOwnScope<IPlatformRepository>());
 
             services.AddSettings();
             services.AddLocalizedItems();

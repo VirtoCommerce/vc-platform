@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Caching;
@@ -18,8 +19,9 @@ using VirtoCommerce.Platform.Security.Repositories;
 
 namespace VirtoCommerce.Platform.Security
 {
-    public class CustomUserManager : AspNetUserManager<ApplicationUser>
+    public class CustomUserManager : AspNetUserManager<ApplicationUser>, IServiceScopeOwner
     {
+        private IServiceScope _ownedScope;
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly RoleManager<Role> _roleManager;
         private readonly IEventPublisher _eventPublisher;
@@ -474,6 +476,24 @@ namespace VirtoCommerce.Platform.Security
             }
 
             return result;
+        }
+
+        void IServiceScopeOwner.OwnScope(IServiceScope scope)
+        {
+            _ownedScope = scope;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing && _ownedScope != null)
+            {
+                // Disposing the scope disposes this manager once more; the base class guards against that.
+                var scope = _ownedScope;
+                _ownedScope = null;
+                scope.Dispose();
+            }
         }
     }
 }

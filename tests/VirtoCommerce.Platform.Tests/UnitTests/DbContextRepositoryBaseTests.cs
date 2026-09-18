@@ -1,5 +1,8 @@
+using System;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using Xunit;
 
@@ -56,7 +59,30 @@ public class DbContextRepositoryBaseTests
         repository.DbContext.Database.GetCommandTimeout().Should().Be(0);
     }
 
-    private class TestDbContext : DbContext
+    [Fact]
+    public void Dispose_ResolvedInOwnScope_DisposesScopeWithRepository()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddDbContext<TestDbContext>(options => options.UseSqlServer(ConnectionString));
+        services.AddScoped<DisposableSpy>();
+        services.AddTransient<SpyingRepository>();
+        using var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
+
+        var repository = provider.ResolveInOwnScope<SpyingRepository>();
+        var spy = repository.Spy;
+        spy.IsDisposed.Should().BeFalse();
+
+        // Act — the second call must be a no-op: disposing the owned scope disposes the repository again.
+        repository.Dispose();
+        repository.Dispose();
+
+        // Assert
+        spy.IsDisposed.Should().BeTrue();
+        repository.DbContext.Should().BeNull();
+    }
+
+    public class TestDbContext : DbContext
     {
         public TestDbContext(DbContextOptions<TestDbContext> options)
             : base(options)
@@ -70,5 +96,26 @@ public class DbContextRepositoryBaseTests
             : base(dbContext)
         {
         }
+    }
+
+    public class DisposableSpy : IDisposable
+    {
+        public bool IsDisposed { get; private set; }
+
+        public void Dispose()
+        {
+            IsDisposed = true;
+        }
+    }
+
+    public class SpyingRepository : DbContextRepositoryBase<TestDbContext>
+    {
+        public SpyingRepository(TestDbContext dbContext, DisposableSpy spy)
+            : base(dbContext)
+        {
+            Spy = spy;
+        }
+
+        public DisposableSpy Spy { get; }
     }
 }

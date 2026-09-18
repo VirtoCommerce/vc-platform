@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 
@@ -9,8 +10,10 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
     /// <summary>
     /// Base class for repository implementations that are based on the Entity Framework.
     /// </summary>
-    public abstract class DbContextRepositoryBase<TContext> : IRepository where TContext : DbContext
+    public abstract class DbContextRepositoryBase<TContext> : IRepository, IServiceScopeOwner where TContext : DbContext
     {
+        private IServiceScope _ownedScope;
+
         protected DbContextRepositoryBase(TContext dbContext, IUnitOfWork unitOfWork = null)
         {
             DbContext = dbContext;
@@ -102,7 +105,20 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                 DbContext = null;
                 UnitOfWork = null;
             }
+
+            if (disposing && _ownedScope != null)
+            {
+                // Disposing the scope disposes this repository once more; DbContext is already null, so that call is a no-op.
+                var scope = _ownedScope;
+                _ownedScope = null;
+                scope.Dispose();
+            }
         }
         #endregion
+
+        void IServiceScopeOwner.OwnScope(IServiceScope scope)
+        {
+            _ownedScope = scope;
+        }
     }
 }
