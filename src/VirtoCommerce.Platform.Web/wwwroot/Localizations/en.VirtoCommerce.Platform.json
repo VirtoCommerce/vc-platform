@@ -742,6 +742,7 @@
           "type-password": "Password",
           "type-external": "External provider",
           "type-impersonation": "On behalf",
+          "type-impersonation-revert": "On behalf revert",
           "type-logout": "Sign out",
           "period-30m": "30 min",
           "period-1h": "1 hour",

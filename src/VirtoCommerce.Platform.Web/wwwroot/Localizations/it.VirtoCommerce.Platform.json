@@ -740,6 +740,7 @@
           "type-password": "Password",
           "type-external": "Provider esterno",
           "type-impersonation": "Per conto di",
+          "type-impersonation-revert": "Per conto di (ritorno)",
           "type-logout": "Disconnessione",
           "period-30m": "30 min",
           "period-1h": "1 ora",

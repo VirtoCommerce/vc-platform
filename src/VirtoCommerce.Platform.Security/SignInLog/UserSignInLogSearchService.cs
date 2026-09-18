@@ -20,6 +20,15 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     // would gap-fill ~13,000 buckets and serialise every one of them.
     private const int MaxTimelinePoints = 500;
 
+    /// <summary>
+    /// What the "On behalf" tile counts: sessions actually opened on behalf of a customer. A revert
+    /// ends a session rather than opening one, and a denied attempt opens nothing, so counting either
+    /// would put the tile out of step with the list it drills into. Declared once so the period and
+    /// its comparison window cannot drift apart.
+    /// </summary>
+    private static readonly Expression<Func<UserSignInLogEntity, bool>> ImpersonationSession =
+        x => x.SignInType == SignInType.Impersonation && x.Succeeded;
+
     private readonly Func<ISecurityRepository> _repositoryFactory;
     private readonly ISettingsManager _settingsManager;
 
@@ -70,7 +79,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
             TotalCount = await query.CountAsync(),
             FailedCount = await failed.CountAsync(),
             DistinctUserCount = await DistinctSignedInUsers(query),
-            ImpersonationCount = await query.CountAsync(x => x.SignInType == SignInType.Impersonation),
+            ImpersonationCount = await query.CountAsync(ImpersonationSession),
             TopFailedIpAddresses = await Top(failed.Where(x => x.IpAddress != null), x => x.IpAddress),
             TopFailedUserNames = await Top(failed.Where(x => x.UserName != null), x => x.UserName),
             FailureReasonBreakdown = await Top(failed.Where(x => x.FailureReason != null), x => x.FailureReason),
@@ -236,7 +245,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         result.PreviousTotalCount = await previous.CountAsync();
         result.PreviousFailedCount = await previous.CountAsync(x => !x.Succeeded);
         result.PreviousDistinctUserCount = await DistinctSignedInUsers(previous);
-        result.PreviousImpersonationCount = await previous.CountAsync(x => x.SignInType == SignInType.Impersonation);
+        result.PreviousImpersonationCount = await previous.CountAsync(ImpersonationSession);
     }
 
     protected static IQueryable<UserSignInLogEntity> ApplyWindow(

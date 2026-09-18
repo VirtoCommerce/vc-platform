@@ -741,6 +741,7 @@
           "type-password": "Passord",
           "type-external": "Ekstern leverandør",
           "type-impersonation": "På vegne av",
+          "type-impersonation-revert": "På vegne av (retur)",
           "type-logout": "Utlogging",
           "period-30m": "30 min",
           "period-1h": "1 time",

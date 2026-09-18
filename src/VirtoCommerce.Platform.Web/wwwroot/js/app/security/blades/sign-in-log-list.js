@@ -25,13 +25,17 @@ angular.module('platformWebApp')
                     { label: 'platform.blades.sign-in-log.labels.failed', value: 'false' }
                 ];
 
-                // A comma-joined value expands into several signInTypes, so "On behalf" can cover
-                // both the grant and the revert without needing a multi-select.
+                // Grant and revert are separate options rather than one combined entry: they answer
+                // different questions - who is acting as a customer right now, versus who stopped -
+                // and lumping them together left the dashboard tile disagreeing with this list.
+                // A comma-joined value still expands into several signInTypes, so a caller seeding
+                // this blade can ask for both at once.
                 blade.signInTypeOptions = [
                     { label: 'platform.blades.sign-in-log.filter.all', value: '' },
                     { label: 'platform.blades.sign-in-log.filter.type-password', value: 'Password' },
                     { label: 'platform.blades.sign-in-log.filter.type-external', value: 'External' },
-                    { label: 'platform.blades.sign-in-log.filter.type-impersonation', value: 'Impersonation,ImpersonationRevert' },
+                    { label: 'platform.blades.sign-in-log.filter.type-impersonation', value: 'Impersonation' },
+                    { label: 'platform.blades.sign-in-log.filter.type-impersonation-revert', value: 'ImpersonationRevert' },
                     { label: 'platform.blades.sign-in-log.filter.type-logout', value: 'Logout' }
                 ];
 

@@ -741,6 +741,7 @@
           "type-password": "Lösenord",
           "type-external": "Extern leverantör",
           "type-impersonation": "Å annans vägnar",
+          "type-impersonation-revert": "Å annans vägnar (retur)",
           "type-logout": "Utloggning",
           "period-30m": "30 min",
           "period-1h": "1 timme",

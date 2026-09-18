@@ -48,6 +48,36 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
+    public async Task GetStats_ImpersonationCount_MatchesWhatItsDrillDownReturns()
+    {
+        var service = CreateService(
+            Row("grant-1", signInType: SignInType.Impersonation, succeeded: true),
+            Row("grant-2", signInType: SignInType.Impersonation, succeeded: true),
+            // Ends a session rather than opening one.
+            Row("revert", signInType: SignInType.ImpersonationRevert, succeeded: true),
+            // Opens nothing.
+            Row("denied", signInType: SignInType.Impersonation, succeeded: false,
+                failureReason: SignInFailureReason.Forbidden),
+            Row("ordinary"));
+
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria());
+
+        // The tile opens this exact list, so the two have to be the same set. Counting every
+        // Impersonation row while the drill-down also pulled in ImpersonationRevert put the tile and
+        // the list out of step by precisely the revert rows.
+        var drilldown = await service.SearchAsync(new UserSignInLogSearchCriteria
+        {
+            SignInTypes = [SignInType.Impersonation],
+            Succeeded = true,
+            Take = 20,
+        });
+
+        stats.ImpersonationCount.Should().Be(2);
+        drilldown.TotalCount.Should().Be(stats.ImpersonationCount);
+        drilldown.Results.Select(x => x.Id).Should().BeEquivalentTo("grant-1", "grant-2");
+    }
+
+    [Fact]
     public async Task SearchAsync_UserName_MatchesExactlyWhatTheTopAccountsPanelCounted()
     {
         var service = CreateService(

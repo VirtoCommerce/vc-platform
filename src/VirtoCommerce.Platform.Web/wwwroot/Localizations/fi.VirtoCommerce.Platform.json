@@ -741,6 +741,7 @@
           "type-password": "Salasana",
           "type-external": "Ulkoinen palveluntarjoaja",
           "type-impersonation": "Toisen puolesta",
+          "type-impersonation-revert": "Toisen puolesta (paluu)",
           "type-logout": "Uloskirjautuminen",
           "period-30m": "30 min",
           "period-1h": "1 tunti",

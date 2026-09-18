@@ -740,6 +740,7 @@
           "type-password": "パスワード",
           "type-external": "外部プロバイダー",
           "type-impersonation": "代理",
+          "type-impersonation-revert": "代理の解除",
           "type-logout": "サインアウト",
           "period-30m": "30 分",
           "period-1h": "1 時間",

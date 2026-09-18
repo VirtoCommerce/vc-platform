@@ -740,6 +740,7 @@
           "type-password": "Hasło",
           "type-external": "Dostawca zewnętrzny",
           "type-impersonation": "W imieniu",
+          "type-impersonation-revert": "W imieniu (powrót)",
           "type-logout": "Wylogowanie",
           "period-30m": "30 min",
           "period-1h": "1 godzina",

@@ -229,9 +229,11 @@ angular.module('platformWebApp')
                     $scope.openList({ succeeded: 'false' }, 'platform.blades.sign-in-log-dashboard.presets.failed');
                 };
 
+                // Grants only, and successful ones - exactly what the tile counts. Including reverts
+                // made the list longer than the number that was clicked, by precisely the revert rows.
                 $scope.openImpersonation = function () {
                     $scope.openList(
-                        { signInType: 'Impersonation,ImpersonationRevert' },
+                        { succeeded: 'true', signInType: 'Impersonation' },
                         'platform.blades.sign-in-log-dashboard.presets.impersonation');
                 };
 

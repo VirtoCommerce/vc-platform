@@ -742,6 +742,7 @@
           "type-password": "Пароль",
           "type-external": "Внешний провайдер",
           "type-impersonation": "От имени",
+          "type-impersonation-revert": "От имени (возврат)",
           "type-logout": "Выход",
           "period-30m": "30 мин",
           "period-1h": "1 час",

@@ -740,6 +740,7 @@
           "type-password": "密码",
           "type-external": "外部提供程序",
           "type-impersonation": "代客登录",
+          "type-impersonation-revert": "结束代客登录",
           "type-logout": "登出",
           "period-30m": "30 分钟",
           "period-1h": "1 小时",

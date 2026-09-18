@@ -740,6 +740,7 @@
           "type-password": "Palavra-passe",
           "type-external": "Fornecedor externo",
           "type-impersonation": "Em nome de",
+          "type-impersonation-revert": "Em nome de (regresso)",
           "type-logout": "Terminar sessão",
           "period-30m": "30 min",
           "period-1h": "1 hora",
