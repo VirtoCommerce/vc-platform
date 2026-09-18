@@ -11,10 +11,10 @@ namespace VirtoCommerce.Platform.Security.Services
 {
     public class UserSearchService : IUserSearchService
     {
-        private readonly Func<UserManager<ApplicationUser>> _userManagerFactory;
-        private readonly Func<RoleManager<Role>> _roleManagerFactory;
+        private readonly IScopedServiceFactory<UserManager<ApplicationUser>> _userManagerFactory;
+        private readonly IScopedServiceFactory<RoleManager<Role>> _roleManagerFactory;
 
-        public UserSearchService(Func<UserManager<ApplicationUser>> userManager, Func<RoleManager<Role>> roleManagerFactory)
+        public UserSearchService(IScopedServiceFactory<UserManager<ApplicationUser>> userManager, IScopedServiceFactory<RoleManager<Role>> roleManagerFactory)
         {
             _userManagerFactory = userManager;
             _roleManagerFactory = roleManagerFactory;
@@ -22,8 +22,10 @@ namespace VirtoCommerce.Platform.Security.Services
 
         public async Task<UserSearchResult> SearchUsersAsync(UserSearchCriteria criteria)
         {
-            using var userManager = _userManagerFactory();
-            using var roleManager = _roleManagerFactory();
+            using var scopedUserManager = _userManagerFactory.Create();
+            var userManager = scopedUserManager.Service;
+            using var scopedRoleManager = _roleManagerFactory.Create();
+            var roleManager = scopedRoleManager.Service;
 
             if (criteria == null)
             {

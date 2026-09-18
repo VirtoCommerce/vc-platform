@@ -305,7 +305,7 @@ public class UserSignInLogSearchServiceTests
                 PlatformConstants.Settings.Security.SignInLogEnabled.Name, null, null))
             .ReturnsAsync(new ObjectSettingEntry { Value = false });
 
-        var service = new UserSignInLogSearchService(() => repository.Object, settings.Object);
+        var service = new UserSignInLogSearchService(ScopedServiceFactoryStub.Of(repository.Object), settings.Object);
 
         var stats = await service.GetStats(new UserSignInLogSearchCriteria());
 
@@ -513,6 +513,6 @@ public class UserSignInLogSearchServiceTests
                 PlatformConstants.Settings.Security.SignInLogEnabled.Name, null, null))
             .ReturnsAsync(new ObjectSettingEntry { Value = true });
 
-        return new UserSignInLogSearchService(() => repository.Object, settings.Object);
+        return new UserSignInLogSearchService(ScopedServiceFactoryStub.Of(repository.Object), settings.Object);
     }
 }

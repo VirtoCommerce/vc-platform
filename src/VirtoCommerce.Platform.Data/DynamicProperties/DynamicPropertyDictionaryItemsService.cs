@@ -14,10 +14,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 {
     public class DynamicPropertyDictionaryItemsService : IDynamicPropertyDictionaryItemsService
     {
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        public DynamicPropertyDictionaryItemsService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+        public DynamicPropertyDictionaryItemsService(IScopedServiceFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
@@ -29,8 +29,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     //Optimize performance and CPU usage
                     repository.DisableChangesTracking();
 
@@ -51,8 +52,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 throw new InvalidCollectionItemException("One or more items in the collection have a null or empty Name.");
             }
 
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 var dbExistItems = await repository.GetDynamicPropertyDictionaryItemByIdsAsync(items.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray());
                 foreach (var item in items)
                 {
@@ -81,8 +83,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 throw new ArgumentNullException(nameof(itemIds));
             }
 
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 var items = repository.DynamicPropertyDictionaryItems
                     .Where(v => itemIds.Contains(v.Id))
                     .ToList();

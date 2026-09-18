@@ -31,7 +31,7 @@ public class UserSignInLogServiceTests
         repository.Setup(x => x.Add(It.IsAny<UserSignInLogEntity>()))
             .Callback<UserSignInLogEntity>(added.Add);
 
-        var service = new UserSignInLogService(() => repository.Object);
+        var service = new UserSignInLogService(ScopedServiceFactoryStub.Of(repository.Object));
 
         await service.SaveChanges(
         [
@@ -48,7 +48,7 @@ public class UserSignInLogServiceTests
     public async Task SaveChangesAsync_EmptyBatch_DoesNotTouchTheRepository()
     {
         var repository = new Mock<ISecurityRepository>();
-        var service = new UserSignInLogService(() => repository.Object);
+        var service = new UserSignInLogService(ScopedServiceFactoryStub.Of(repository.Object));
 
         await service.SaveChanges([], TestContext.Current.CancellationToken);
 
@@ -104,7 +104,7 @@ public class UserSignInLogServiceTests
         private readonly ISecurityRepository _repository;
 
         public TestableUserSignInLogService(ISecurityRepository repository)
-            : base(() => repository)
+            : base(ScopedServiceFactoryStub.Of(repository))
         {
             _repository = repository;
         }

@@ -532,14 +532,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddTransient<IUserSessionsSearchService, UserSessionsSearchService>();
 
-            // Func<(IUserSessionsService, IServiceScope)> - need to dispose the scope inside the singleton consumer 
             services.AddScoped<IUserSessionsService, UserSessionsService>();
-            services.AddSingleton<Func<(IUserSessionsService SessionService, IServiceScope Scope)>>(provider => () =>
-                {
-                    var scope = provider.CreateScope();
-                    var sessionService = scope.ServiceProvider.GetRequiredService<IUserSessionsService>();
-                    return (SessionService: sessionService, Scope: scope);
-                });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security;
@@ -34,7 +35,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                 IdentityOptions identityOptions = null,
                 PlatformMemoryCache platformMemoryCache = null,
                 IEventPublisher eventPublisher = null,
-                Func<ISecurityRepository> repositoryFactory = null,
+                IScopedServiceFactory<ISecurityRepository> repositoryFactory = null,
                 Mock<IPasswordHasher<ApplicationUser>> passwordHasher = null)
             {
                 storeMock ??= new Mock<IUserStore<ApplicationUser>>();
@@ -82,7 +83,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                 var validator = new Mock<IUserValidator<ApplicationUser>>();
                 userValidators.Add(validator.Object);
 
-                repositoryFactory ??= () => Mock.Of<ISecurityRepository>();
+                repositoryFactory ??= ScopedServiceFactoryStub.Of(Mock.Of<ISecurityRepository>());
                 var passwordOptionsMock = new Mock<IOptions<PasswordOptionsExtended>>();
                 passwordOptionsMock.Setup(o => o.Value).Returns(new PasswordOptionsExtended());
 

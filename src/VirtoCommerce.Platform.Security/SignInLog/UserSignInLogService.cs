@@ -14,9 +14,9 @@ namespace VirtoCommerce.Platform.Security.SignInLog;
 
 public class UserSignInLogService : IUserSignInLogService
 {
-    private readonly Func<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
 
-    public UserSignInLogService(Func<ISecurityRepository> repositoryFactory)
+    public UserSignInLogService(IScopedServiceFactory<ISecurityRepository> repositoryFactory)
     {
         _repositoryFactory = repositoryFactory;
     }
@@ -30,7 +30,8 @@ public class UserSignInLogService : IUserSignInLogService
 
         var pkMap = new PrimaryKeyResolvingMap();
 
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         foreach (var record in records)
         {
@@ -46,7 +47,8 @@ public class UserSignInLogService : IUserSignInLogService
     /// </summary>
     public virtual async Task<int> DeleteOlderThan(DateTime cutoff, int batchSize, CancellationToken cancellationToken = default)
     {
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         return await BuildExpiredQuery(repository, cutoff, batchSize).ExecuteDeleteAsync(cancellationToken);
     }

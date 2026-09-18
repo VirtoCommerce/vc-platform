@@ -50,9 +50,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddScoped<IRoleSearchService, RoleSearchService>();
 
             //Register as singleton because this abstraction can be used as dependency in singleton services
-            services.AddSingleton<IUserSearchService>(provider => new UserSearchService(
-                provider.GetRequiredService<Func<UserManager<ApplicationUser>>>(),
-                provider.GetRequiredService<Func<RoleManager<Role>>>()));
+            services.AddSingleton<IUserSearchService, UserSearchService>();
 
             //Identity dependencies override
             services.TryAddScoped<RoleManager<Role>, CustomRoleManager>();

@@ -16,9 +16,9 @@ namespace VirtoCommerce.Platform.Security.Services;
 public class UserSessionsSearchService : IUserSessionsSearchService
 {
     private readonly IOpenIddictTokenManager _tokenManager;
-    private readonly Func<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
 
-    public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, Func<ISecurityRepository> repositoryFactory)
+    public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, IScopedServiceFactory<ISecurityRepository> repositoryFactory)
     {
         _tokenManager = tokenManager;
         _repositoryFactory = repositoryFactory;
@@ -83,7 +83,8 @@ public class UserSessionsSearchService : IUserSessionsSearchService
             return;
         }
 
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         var impersonations = await repository.UserSignInLogs
             .Where(x => x.SignInType == SignInType.Impersonation && sessionGroupIds.Contains(x.SessionId))

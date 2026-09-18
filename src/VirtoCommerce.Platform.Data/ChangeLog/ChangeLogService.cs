@@ -13,11 +13,11 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 {
     public class ChangeLogService : IChangeLogService, ILastModifiedDateTime
     {
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
         public ChangeLogService(
-            Func<IPlatformRepository> platformRepositoryFactory
+            IScopedServiceFactory<IPlatformRepository> platformRepositoryFactory
             , IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = platformRepositoryFactory;
@@ -47,8 +47,9 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         #region IChangeLogService Members
         public async Task<OperationLog[]> GetByIdsAsync(string[] ids)
         {
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 repository.DisableChangesTracking();
 
                 var existEntities = await repository.GetOperationLogsByIdsAsync(ids);
@@ -64,8 +65,9 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             }
             var pkMap = new PrimaryKeyResolvingMap();
 
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 var ids = operationLogs.Where(x => !x.IsTransient()).Select(x => x.Id).Distinct().ToArray();
                 var existEntities = await repository.GetOperationLogsByIdsAsync(ids);
                 foreach (var operation in operationLogs)
@@ -88,8 +90,9 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
         public virtual async Task DeleteAsync(string[] ids)
         {
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 var existEntities = await repository.GetOperationLogsByIdsAsync(ids);
                 foreach (var entity in existEntities)
                 {
