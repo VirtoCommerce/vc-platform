@@ -1,5 +1,7 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace VirtoCommerce.Platform.Core.Events;
 
@@ -9,9 +11,18 @@ public static class ApplicationBuilderExtensions
         where TEvent : IEvent
         where THandler : IEventHandler<TEvent>
     {
-        var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
-        var handler = applicationBuilder.ApplicationServices.GetRequiredService<THandler>();
-        registrar.RegisterEventHandler(handler);
+        var services = applicationBuilder.ApplicationServices;
+        var registrar = services.GetRequiredService<IEventHandlerRegistrar>();
+
+        if (ResolveHandlersPerInvocation(services))
+        {
+            registrar.RegisterEventHandler<TEvent, THandler>(services);
+        }
+        else
+        {
+            registrar.RegisterEventHandler<TEvent>(services.GetRequiredService<THandler>());
+        }
+
         return applicationBuilder;
     }
 
@@ -19,9 +30,18 @@ public static class ApplicationBuilderExtensions
         where TEvent : IEvent
         where THandler : ICancellableEventHandler<TEvent>
     {
-        var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
-        var handler = applicationBuilder.ApplicationServices.GetRequiredService<THandler>();
-        registrar.RegisterEventHandler(handler);
+        var services = applicationBuilder.ApplicationServices;
+        var registrar = services.GetRequiredService<IEventHandlerRegistrar>();
+
+        if (ResolveHandlersPerInvocation(services))
+        {
+            registrar.RegisterCancellableEventHandler<TEvent, THandler>(services);
+        }
+        else
+        {
+            registrar.RegisterEventHandler<TEvent>(services.GetRequiredService<THandler>());
+        }
+
         return applicationBuilder;
     }
 
@@ -56,5 +76,10 @@ public static class ApplicationBuilderExtensions
         var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
         registrar.UnregisterAllEventHandlers();
         return applicationBuilder;
+    }
+
+    private static bool ResolveHandlersPerInvocation(IServiceProvider services)
+    {
+        return services.GetService<IOptions<EventHandlerOptions>>()?.Value.ResolveHandlersPerInvocation ?? true;
     }
 }
