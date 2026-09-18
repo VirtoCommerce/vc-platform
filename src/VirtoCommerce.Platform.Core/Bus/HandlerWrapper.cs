@@ -13,7 +13,11 @@ namespace VirtoCommerce.Platform.Core.Bus
     {
         public Type EventType { get; set; }
 
+        // The type the handler was registered as; for instance registrations this is the runtime type.
         public Type HandlerType { get; set; }
+
+        // The runtime type of the resolved handler, which differs from HandlerType when a derived type is registered for a base type.
+        public Type ImplementationType { get; set; }
 
         public string HandlerModuleName { get; set; }
 

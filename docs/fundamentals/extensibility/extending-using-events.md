@@ -9,46 +9,65 @@ A domain event is just a simple POCO type that represents an interesting occurre
 ```C#
 public class CustomDomainEvent : DomainEvent
 {
- public Customer Customer { get; set; }
+    public Customer Customer { get; set; }
 }
 ```
 
-## How to define a new event handler 
+## How to define a new event handler
 
 ```C#
-public class CutomDomainEventHandler : IEventHandler<CustomDomainEvent>
+public class CustomDomainEventHandler : IEventHandler<CustomDomainEvent>
 {
-  public async Task Handle(CustomDomainEventmessage)
-  {
-    //Some logic here
-  }
+    public async Task Handle(CustomDomainEvent message)
+    {
+        //Some logic here
+    }
 }
 ```
+
+A handler that needs to observe cancellation implements `ICancellableEventHandler<CustomDomainEvent>` instead and receives the `CancellationToken` passed to `IEventPublisher.Publish`.
 
 ## How to register an event handler, subscribe to a domain event
 
+Register the handler in the DI container with the lifetime it needs, then subscribe it to the event in `PostInitialize`:
+
 ```C#
-void  Initialize(IServiceCollection serviceCollection)
+public void Initialize(IServiceCollection serviceCollection)
 {
-  ...
-   serviceCollection.AddTransient<CustomDomainEventHandler>();
-  ...
+    ...
+    serviceCollection.AddTransient<CustomDomainEventHandler>();
+    ...
 }
 
-void PostInitialize(IApplicationBuilder appBuilder)
+public void PostInitialize(IApplicationBuilder appBuilder)
 {
-  ...
-var eventHandlerRegistrar = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
-eventHandlerRegistrar.RegisterHandler<CustomDomainEvent>((message, token) => appBuilder.ApplicationServices.GetService<CustomDomainEventHandler>().Handle(message));
-  ...
+    ...
+    appBuilder.RegisterEventHandler<CustomDomainEvent, CustomDomainEventHandler>();
+    ...
 }
 ```
+
+Cancellable handlers are subscribed with `appBuilder.RegisterCancellableEventHandler<CustomDomainEvent, CustomDomainEventHandler>()`.
+
+The handler is resolved from the DI container when an event is published, in a DI scope of its own, so it gets exactly the lifetime it was registered with:
+
+| Lifetime | Behavior |
+|---|---|
+| `AddSingleton` | One instance shared by all events, resolved once at startup. Use it for stateless handlers on hot events or for handlers that must keep state. |
+| `AddTransient` | A new instance for every event. |
+| `AddScoped` | A new instance for every event. Scoped dependencies such as `UserManager<ApplicationUser>` or a repository can be injected directly; they are disposed when the handler completes. |
+
+Handlers of the same event run concurrently, each in its own scope. A handler registered as transient or scoped must not keep state in fields between events.
+
+Registration validates that the handler can be resolved, so a handler that is not registered in the DI container fails at application startup rather than at the first event.
+
+Earlier platform versions resolved every handler once at startup and kept that single instance for the lifetime of the application regardless of the registered lifetime. To restore that behavior for an application that depends on it, set `VirtoCommerce:Events:ResolveHandlersPerInvocation` to `false` in `appsettings.json`.
 
 ## How to raise domain events
-In your domain entities, when a significant state change happens you’ll want to raise your domain events like this
-```
-var eventPublisher = _container.Resolve<IEventPublisher>();
-eventPublisher.Publish(new CustomDomainEvent()));
+Inject `IEventPublisher` and publish the event where the significant state change happens:
+
+```C#
+await _eventPublisher.Publish(new CustomDomainEvent { Customer = customer });
 ```
 
 ## How to override an existing event handler with a new derived type
@@ -64,3 +83,14 @@ void Initialize(IServiceCollection serviceCollection)
   ...
 }
 ```
+
+## How to unsubscribe an existing event handler
+
+```C#
+public void PostInitialize(IApplicationBuilder appBuilder)
+{
+    appBuilder.UnregisterEventHandler<CustomDomainEvent, CustomDomainEventHandler>();
+}
+```
+
+The handler type may be either the type it was registered as or the derived type that the DI container actually resolves.

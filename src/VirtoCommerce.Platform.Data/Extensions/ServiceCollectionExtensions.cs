@@ -34,6 +34,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddLocalizedItems();
             services.AddDynamicProperties();
 
+            services.AddOptions<EventHandlerOptions>().Bind(configuration.GetSection("VirtoCommerce:Events"));
             services.AddSingleton<InProcessBus>();
             services.AddSingleton<IEventHandlerRegistrar>(x => x.GetRequiredService<InProcessBus>());
             services.AddSingleton<IEventPublisher>(x => x.GetRequiredService<InProcessBus>());
