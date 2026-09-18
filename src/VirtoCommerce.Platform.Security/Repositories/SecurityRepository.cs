@@ -1,14 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Security.Model;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Security.Repositories
 {
@@ -24,6 +21,8 @@ namespace VirtoCommerce.Platform.Security.Repositories
         public virtual IQueryable<UserPasswordHistoryEntity> UserPasswordsHistory => DbContext.Set<UserPasswordHistoryEntity>();
 
         public virtual IQueryable<ServerCertificateEntity> ServerCertificates => DbContext.Set<ServerCertificateEntity>();
+
+        public virtual IQueryable<UserSignInLogEntity> UserSignInLogs => DbContext.Set<UserSignInLogEntity>();
         public async Task<IEnumerable<UserPasswordHistoryEntity>> GetUserPasswordsHistoryAsync(string userId, int passwordsCountToCheck)
         {
             return await UserPasswordsHistory

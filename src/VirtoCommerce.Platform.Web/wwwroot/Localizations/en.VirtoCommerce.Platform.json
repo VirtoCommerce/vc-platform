@@ -724,6 +724,104 @@
           "ip-address": "IP address",
           "user-agent": "User agent"
         }
+      },
+      "sign-in-log": {
+        "title": "Sign-in log",
+        "subtitle": "Sign-in attempts and login on behalf",
+        "filter": {
+          "title": "Sign-in log filters",
+          "all": "All",
+          "period": "Last",
+          "period-24h": "24 hours",
+          "period-7d": "7 days",
+          "period-30d": "30 days",
+          "period-all": "All time",
+          "outcome": "Outcome",
+          "sign-in-type": "Type",
+          "ip-address": "IP address",
+          "type-password": "Password",
+          "type-external": "External provider",
+          "type-impersonation": "On behalf",
+          "type-impersonation-revert": "On behalf revert",
+          "type-logout": "Sign out",
+          "period-30m": "30 min",
+          "period-1h": "1 hour",
+          "period-6h": "6 hours",
+          "store": "Store",
+          "any-store": "Any store",
+          "no-store": "No store",
+          "period-custom": "Custom",
+          "date-from": "From",
+          "date-to": "To"
+        },
+        "labels": {
+          "date": "Date",
+          "user-name": "User",
+          "outcome": "Outcome",
+          "succeeded": "Success",
+          "failed": "Failed",
+          "failure-reason": "Reason",
+          "sign-in-type": "Type",
+          "ip-address": "IP address",
+          "organization": "Organization",
+          "impersonation": "On behalf",
+          "on-behalf-of": "On behalf of"
+        },
+        "stats": {
+          "total": "Sign-ins",
+          "failed": "Failed attempts",
+          "users": "Users signed in",
+          "impersonation": "On behalf",
+          "top-failed-ips": "Top IPs by failed attempts",
+          "top-failed-users": "Top accounts by failed attempts",
+          "failure-reasons": "Failure reasons",
+          "by-organization": "Sign-ins by organization",
+          "none": "No data",
+          "total-hint": "All sign-in attempts in the period, successful and failed. Click to see them.",
+          "failed-hint": "Attempts that did not sign anyone in. Click to see only failures.",
+          "users-hint": "Distinct accounts that signed in successfully, counted once each however many times they signed in. Click to see successful sign-ins.",
+          "impersonation-hint": "Sessions where support signed in on behalf of a customer. Click to see them.",
+          "timeline": "Attempts over time",
+          "by-store": "Sign-ins by store"
+        },
+        "hints": {
+          "known-accounts-only": "Covers attempts against existing accounts only."
+        },
+        "detail": {
+          "title": "Sign-in record",
+          "user-id": "User ID",
+          "operator-name": "Operator",
+          "operator-id": "Operator ID",
+          "member-id": "Member ID",
+          "user-agent": "User agent",
+          "client-id": "Client",
+          "host": "Host",
+          "store-name": "Store name",
+          "organization-id": "Organization ID",
+          "session-id": "Session ID",
+          "provider": "Identity provider"
+        },
+        "disabled": {
+          "title": "Sign-in recording is turned off",
+          "message": "New sign-in attempts are not being recorded, so this log will stay as it is. Ask an administrator to turn on \"Record sign-in attempts\" in Settings › Platform › Sign In Log. Login on behalf is always recorded."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Sign-in log",
+        "subtitle": "Sign-in activity and login on behalf",
+        "commands": {
+          "view-all": "View all records"
+        },
+        "presets": {
+          "all": "All records",
+          "failed": "Failed attempts",
+          "impersonation": "Login on behalf",
+          "by-ip": "Failed attempts from IP",
+          "by-user": "Failed attempts for account",
+          "by-reason": "Failed attempts by reason",
+          "succeeded": "Successful sign-ins",
+          "by-store": "Sign-ins for store"
+        }
       }
     },
     "templates": {
@@ -788,6 +886,9 @@
       },
       "sessions": {
         "title": "Active sessions"
+      },
+      "sign-in-log": {
+        "title": "Sign-in log"
       }
     },
     "dialogs": {
@@ -1034,6 +1135,22 @@
           "FileExtensionsWhiteList": {
             "description": "File extensions permitted for upload by the Platform (additionally to 'FileExtensionsWhiteList' in appsettings.json)",
             "title": "White list"
+          },
+          "SignInLogEnabled": {
+            "title": "Record sign-in attempts",
+            "description": "Records every sign-in attempt, successful and failed, in the sign-in log. Login on behalf is always recorded and is not affected by this setting."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Keep records for (days)",
+            "description": "How long sign-in records are kept before the cleanup job removes them. Set to 0 or less to keep records forever."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Clean up old sign-in records",
+            "description": "Runs a scheduled job that deletes sign-in records older than the retention period."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron for the sign-in log cleanup job",
+            "description": "Cron expression for the job that deletes sign-in records older than the retention period."
           }
         },
         "UI": {
