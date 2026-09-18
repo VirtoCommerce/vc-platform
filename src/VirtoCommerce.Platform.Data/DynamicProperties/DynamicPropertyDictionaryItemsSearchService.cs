@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +12,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 {
     public class DynamicPropertyDictionaryItemsSearchService : IDynamicPropertyDictionaryItemsSearchService
     {
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
 
-        public DynamicPropertyDictionaryItemsSearchService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService)
+        public DynamicPropertyDictionaryItemsSearchService(IScopedServiceFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
@@ -31,8 +30,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             {
                 cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
                 var result = AbstractTypeFactory<DynamicPropertyDictionaryItemSearchResult>.TryCreateInstance();
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     //Optimize performance and CPU usage
                     repository.DisableChangesTracking();
 

@@ -1,8 +1,8 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Repositories;
 
@@ -15,11 +15,11 @@ namespace VirtoCommerce.Platform.Security
     {
         public const string RecentPasswordUsed = "RecentPasswordUsed";
 
-        protected readonly Func<ISecurityRepository> _repositoryFactory;
+        protected readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
         protected readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         protected readonly PasswordOptionsExtended _passwordOptions;
 
-        public CustomPasswordValidator(IdentityErrorDescriber errors, Func<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
+        public CustomPasswordValidator(IdentityErrorDescriber errors, IScopedServiceFactory<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
             : base(errors)
 
         {
@@ -34,7 +34,8 @@ namespace VirtoCommerce.Platform.Security
 
             if (result.Succeeded)
             {
-                using var repository = _repositoryFactory();
+                using var scopedRepository = _repositoryFactory.Create();
+                var repository = scopedRepository.Service;
                 var userPasswords = await repository.GetUserPasswordsHistoryAsync(user?.Id, _passwordOptions.PasswordHistory.GetValueOrDefault());
 
                 if (userPasswords.Any(x => _passwordHasher.VerifyHashedPassword(user, x.PasswordHash, password) != PasswordVerificationResult.Failed))

@@ -24,10 +24,10 @@ namespace VirtoCommerce.Platform.Security.Services
 
         private static readonly TimeSpan _missingApiKeyExpiration = TimeSpan.FromSeconds(30);
 
-        private readonly Func<ISecurityRepository> _repositoryFactory;
+        private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        public UserApiKeyService(Func<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+        public UserApiKeyService(IScopedServiceFactory<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
@@ -40,8 +40,9 @@ namespace VirtoCommerce.Platform.Security.Services
             {
                 //Add cache  expiration token
                 cacheEntry.AddExpirationToken(ApiKeyCacheRegion.CreateChangeToken());
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     var result = await repository.UserApiKeys.Where(x => x.ApiKey == apiKey)
                                                         .AsNoTracking()
                                                         .FirstOrDefaultAsync();
@@ -88,8 +89,9 @@ namespace VirtoCommerce.Platform.Security.Services
             {
                 //Add cache  expiration token
                 cacheEntry.AddExpirationToken(ApiKeyCacheRegion.CreateChangeToken());
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     var result = await repository.UserApiKeys.Where(x => x.UserId == userId)
                                                         .AsNoTracking()
                                                         .ToArrayAsync();
@@ -110,8 +112,9 @@ namespace VirtoCommerce.Platform.Security.Services
             {
                 //Add cache  expiration token
                 cacheEntry.AddExpirationToken(ApiKeyCacheRegion.CreateChangeToken());
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     var result = await repository.UserApiKeys.Where(x => ids.Contains(x.Id))
                                                              .AsNoTracking()
                                                              .ToArrayAsync();
@@ -128,8 +131,9 @@ namespace VirtoCommerce.Platform.Security.Services
             }
 
             var pkMap = new PrimaryKeyResolvingMap();
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 var ids = apiKeys.Where(x => !x.IsTransient()).Select(x => x.Id).Distinct().ToArray();
                 var apiKeysEntities = await repository.UserApiKeys.Where(x => ids.Contains(x.Id))
                                                                   .ToArrayAsync();
@@ -160,8 +164,9 @@ namespace VirtoCommerce.Platform.Security.Services
                 throw new ArgumentNullException(nameof(ids));
             }
 
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 foreach (var id in ids)
                 {
                     var apiKey = new UserApiKeyEntity { Id = id };

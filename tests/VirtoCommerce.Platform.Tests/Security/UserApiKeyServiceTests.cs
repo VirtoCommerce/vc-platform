@@ -122,7 +122,7 @@ public class UserApiKeyServiceTests
         var repository = new Mock<ISecurityRepository>();
         repository.Setup(x => x.UserApiKeys).Returns(new List<UserApiKeyEntity>(rows).BuildMock());
 
-        return new UserApiKeyService(() => repository.Object, cache);
+        return new UserApiKeyService(ScopedServiceFactoryStub.Of(repository.Object), cache);
     }
 
     private sealed class RecordingPlatformMemoryCache : PlatformMemoryCache

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,10 +14,10 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 {
     public class ChangeLogSearchService : IChangeLogSearchService
     {
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        public ChangeLogSearchService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+        public ChangeLogSearchService(IScopedServiceFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
@@ -32,8 +31,9 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                 cacheEntry.AddExpirationToken(ChangeLogCacheRegion.CreateChangeToken());
                 var searchResult = AbstractTypeFactory<ChangeLogSearchResult>.TryCreateInstance();
 
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     repository.DisableChangesTracking();
 
                     var sortInfos = GetSortInfos(criteria);

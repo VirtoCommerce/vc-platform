@@ -209,7 +209,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var overrideProvider = new Mock<ISettingsOverrideProvider>(); // no overrides (TryGet* default to false)
 
             return new SettingsManager(
-                () => repositoryMock.Object,
+                ScopedServiceFactoryStub.Of(repositoryMock.Object),
                 MemoryCacheMockHelper.GetPlatformMemoryCache(),
                 new Mock<IEventPublisher>().Object,
                 Options.Create(new FixedSettings { Settings = fixedSettings ?? [] }),

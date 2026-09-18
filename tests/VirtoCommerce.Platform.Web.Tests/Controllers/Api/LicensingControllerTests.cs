@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Web.Controllers.Api;
@@ -23,7 +24,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
     {
         private readonly Mock<IOptions<PlatformOptions>> _platformOptionsMock = new Mock<IOptions<PlatformOptions>>();
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
-        private readonly Mock<Func<IPlatformRepository>> _platformRepository = new Mock<Func<IPlatformRepository>>();
+        private readonly Mock<IScopedServiceFactory<IPlatformRepository>> _platformRepository = new Mock<IScopedServiceFactory<IPlatformRepository>>();
         private readonly Mock<ILogger<LicensingController>> _logger = new Mock<ILogger<LicensingController>>();
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();

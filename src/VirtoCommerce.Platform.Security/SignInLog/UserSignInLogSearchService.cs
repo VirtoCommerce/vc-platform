@@ -29,10 +29,10 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     private static readonly Expression<Func<UserSignInLogEntity, bool>> ImpersonationSession =
         x => x.SignInType == SignInType.Impersonation && x.Succeeded;
 
-    private readonly Func<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
     private readonly ISettingsManager _settingsManager;
 
-    public UserSignInLogSearchService(Func<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
+    public UserSignInLogSearchService(IScopedServiceFactory<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
     {
         _repositoryFactory = repositoryFactory;
         _settingsManager = settingsManager;
@@ -42,7 +42,8 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     {
         var result = AbstractTypeFactory<UserSignInLogSearchResult>.TryCreateInstance();
 
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         var query = BuildQuery(repository, criteria);
 
@@ -66,7 +67,8 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
 
     public virtual async Task<UserSignInLogStats> GetStats(UserSignInLogSearchCriteria criteria)
     {
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         var unwindowed = BuildFilterQuery(repository, criteria);
         var query = ApplyWindow(unwindowed, criteria.StartDate, criteria.EndDate);

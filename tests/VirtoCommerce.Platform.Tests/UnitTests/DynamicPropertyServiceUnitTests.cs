@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
     public class DynamicPropertyServiceUnitTests
     {
         private readonly Mock<IPlatformRepository> _platformRepositoryMock;
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly Mock<IPlatformMemoryCache> _memoryCasheMock;
         private readonly DynamicPropertyService _dynamicPropertyService;
@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         public DynamicPropertyServiceUnitTests()
         {
             _platformRepositoryMock = new Mock<IPlatformRepository>();
-            _repositoryFactory = () => _platformRepositoryMock.Object;
+            _repositoryFactory = ScopedServiceFactoryStub.Of(_platformRepositoryMock.Object);
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _platformRepositoryMock.Setup(ss => ss.UnitOfWork).Returns(_mockUnitOfWork.Object);
             _memoryCasheMock = new Mock<IPlatformMemoryCache>();

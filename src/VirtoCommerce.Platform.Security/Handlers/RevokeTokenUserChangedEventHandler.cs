@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -9,7 +8,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 
 namespace VirtoCommerce.Platform.Security.Handlers;
 
-public class RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionService, IServiceScope Scope)> userSessionsServiceFactory) :
+public class RevokeUserTokenEventHandler(IScopedServiceFactory<IUserSessionsService> userSessionsServiceFactory) :
     IEventHandler<UserChangedEvent>
 {
     public virtual async Task Handle(UserChangedEvent message)
@@ -32,9 +31,8 @@ public class RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionServi
 
     protected virtual async Task RevokeUserTokensAsync(string userId)
     {
-        var (SessionService, Scope) = userSessionsServiceFactory();
-        using var scope = Scope;
-        await SessionService.TerminateAllUserSessions(userId);
+        using var scopedSessionService = userSessionsServiceFactory.Create();
+        await scopedSessionService.Service.TerminateAllUserSessions(userId);
     }
 
     [Obsolete("Use RevokeUserTokensAsync(string userId) class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]

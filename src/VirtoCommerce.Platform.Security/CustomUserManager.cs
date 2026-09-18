@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Security
         private readonly RoleManager<Role> _roleManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly UserOptionsExtended _userOptionsExtended;
-        private readonly Func<ISecurityRepository> _repositoryFactory;
+        private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
         private readonly PasswordOptionsExtended _passwordOptionsExtended;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
 
@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Security
             IOptions<UserOptionsExtended> userOptionsExtended,
             IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
-            ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher, Func<ISecurityRepository> repositoryFactory, IOptions<PasswordOptionsExtended> passwordOptionsExtended)
+            ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher, IScopedServiceFactory<ISecurityRepository> repositoryFactory, IOptions<PasswordOptionsExtended> passwordOptionsExtended)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _memoryCache = memoryCache;
@@ -193,7 +193,8 @@ namespace VirtoCommerce.Platform.Security
                 userPasswordHistoryRecord.UserId = user.Id;
                 userPasswordHistoryRecord.PasswordHash = PasswordHasher.HashPassword(user, newPassword);
 
-                using var repository = _repositoryFactory();
+                using var scopedRepository = _repositoryFactory.Create();
+                var repository = scopedRepository.Service;
                 repository.Add(userPasswordHistoryRecord);
                 await repository.UnitOfWork.CommitAsync();
             }

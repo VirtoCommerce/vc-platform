@@ -14,10 +14,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 {
     public class DynamicPropertyService : IDynamicPropertyService, IDynamicPropertyRegistrar
     {
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        public DynamicPropertyService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+        public DynamicPropertyService(IScopedServiceFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
@@ -50,8 +50,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             {
                 //Add cache  expiration token
                 cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     //Optimize performance and CPU usage
                     repository.DisableChangesTracking();
 
@@ -68,8 +69,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 throw new ArgumentNullException(nameof(properties));
             }
             var pkMap = new PrimaryKeyResolvingMap();
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 var dbExistProperties = (await repository.GetDynamicPropertiesForTypesAsync(properties.Select(x => x.ObjectType).Distinct().ToArray())).ToList();
                 foreach (var property in properties)
                 {
@@ -99,8 +101,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 throw new ArgumentNullException(nameof(propertyIds));
             }
 
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 var properties = repository.DynamicProperties.Where(p => propertyIds.Contains(p.Id))
                                            .ToList();
 
