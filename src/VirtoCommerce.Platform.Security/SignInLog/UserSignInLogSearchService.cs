@@ -290,6 +290,11 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
             query = query.Where(x => x.UserId == criteria.UserId);
         }
 
+        if (!string.IsNullOrEmpty(criteria.UserName))
+        {
+            query = query.Where(x => x.UserName == criteria.UserName);
+        }
+
         if (criteria.Succeeded != null)
         {
             query = query.Where(x => x.Succeeded == criteria.Succeeded);

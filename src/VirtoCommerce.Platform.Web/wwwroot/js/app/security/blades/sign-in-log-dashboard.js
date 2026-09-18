@@ -241,9 +241,13 @@ angular.module('platformWebApp')
                         'platform.blades.sign-in-log-dashboard.presets.by-ip');
                 };
 
+                // userName, not keyword: the panel groups by the exact column, while keyword is a
+                // substring match that also spans the operator name and the IP. Drilling into
+                // "admin - 6" through keyword returned b2badmin@test.com, admin@vc-demostore.com and
+                // rows where admin was only the operator - a list that did not match the number clicked.
                 $scope.openByUserName = function (entry) {
                     $scope.openList(
-                        { succeeded: 'false', keyword: entry.key },
+                        { succeeded: 'false', userName: entry.key },
                         'platform.blades.sign-in-log-dashboard.presets.by-user');
                 };
 

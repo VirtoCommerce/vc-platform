@@ -48,6 +48,35 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
+    public async Task SearchAsync_UserName_MatchesExactlyWhatTheTopAccountsPanelCounted()
+    {
+        var service = CreateService(
+            Row("admin-1", userName: "admin", succeeded: false),
+            Row("admin-2", userName: "admin", succeeded: false),
+            // Substring neighbours the panel counts separately.
+            Row("b2b", userName: "b2badmin@test.com", succeeded: false),
+            Row("demo", userName: "admin@vc-demostore.com", succeeded: false),
+            // admin is only the operator here, never the account that was attempted.
+            Row("onbehalf", userName: "customer", succeeded: false,
+                signInType: SignInType.Impersonation, operatorUserName: "admin"));
+
+        var stats = await service.GetStats(new UserSignInLogSearchCriteria());
+        var panel = stats.TopFailedUserNames.Single(x => x.Key == "admin");
+
+        var drilldown = await service.SearchAsync(new UserSignInLogSearchCriteria
+        {
+            UserName = "admin",
+            Succeeded = false,
+            Take = 20,
+        });
+
+        // The panel groups by the exact column, so the drill-down has to filter by it exactly.
+        // Going through Keyword instead returned all five rows against a count of two.
+        drilldown.TotalCount.Should().Be(panel.Count);
+        drilldown.Results.Select(x => x.Id).Should().BeEquivalentTo("admin-1", "admin-2");
+    }
+
+    [Fact]
     public async Task SearchAsync_Keyword_FindsRowsByTheOperatorTheGridShows()
     {
         var service = CreateService(
@@ -421,6 +450,7 @@ public class UserSignInLogSearchServiceTests
     private static UserSignInLogEntity Row(
         string id,
         string userId = null,
+        string userName = null,
         bool succeeded = true,
         string signInType = SignInType.Password,
         string ip = null,
@@ -432,7 +462,7 @@ public class UserSignInLogSearchServiceTests
         {
             Id = id,
             UserId = userId,
-            UserName = userId ?? "anonymous",
+            UserName = userName ?? userId ?? "anonymous",
             Succeeded = succeeded,
             SignInType = signInType,
             StoreId = storeId,

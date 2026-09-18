@@ -7,6 +7,8 @@ public class UserSignInLogSearchCriteria : SearchCriteriaBase
 {
     public string UserId { get; set; }
 
+    public string UserName { get; set; }
+
     public bool? Succeeded { get; set; }
 
     public string[] SignInTypes { get; set; }

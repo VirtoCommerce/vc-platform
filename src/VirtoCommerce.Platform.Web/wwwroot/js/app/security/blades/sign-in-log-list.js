@@ -51,6 +51,7 @@ angular.module('platformWebApp')
                         succeeded: seed.succeeded !== undefined ? seed.succeeded : '',
                         signInType: seed.signInType || '',
                         failureReason: seed.failureReason || null,
+                        userName: seed.userName || null,
                         ipAddress: seed.ipAddress || null,
                         storeId: seed.storeId || '',
                         dateFrom: null,
@@ -64,6 +65,7 @@ angular.module('platformWebApp')
                                filter.succeeded !== '' ||
                                filter.signInType !== '' ||
                                !!filter.failureReason ||
+                               !!filter.userName ||
                                !!filter.ipAddress ||
                                filter.storeId !== '' ||
                                !!filter.dateFrom ||
@@ -77,6 +79,7 @@ angular.module('platformWebApp')
                         filter.succeeded = '';
                         filter.signInType = '';
                         filter.failureReason = null;
+                        filter.userName = null;
                         filter.ipAddress = null;
                         filter.storeId = '';
                         filter.dateFrom = null;
@@ -119,6 +122,7 @@ angular.module('platformWebApp')
                     var criteria = {
                         userId: blade.userId,
                         keyword: filter.keyword,
+                        userName: filter.userName,
                         ipAddress: filter.ipAddress,
                         storeId: withoutStore === null ? (filter.storeId || null) : null,
                         withoutStore: withoutStore,
