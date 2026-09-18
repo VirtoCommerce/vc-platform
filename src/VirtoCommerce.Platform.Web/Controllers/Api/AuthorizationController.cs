@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
@@ -25,6 +26,7 @@ using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Security.TokenGrants;
 using VirtoCommerce.Platform.Web.ActionConstraints;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model;
@@ -121,7 +123,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OpenIddictResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(OpenIddictResponse))]
         // Be aware: look into OpenIDEndpointDescriptionFilter to know parameters description for the swagger document about this endpoint
-        public async Task<ActionResult> Exchange()
+        public async Task<IActionResult> Exchange()
         {
             var openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
 
@@ -131,6 +133,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Request = openIdConnectRequest,
                 DetailedErrors = _passwordLoginOptions.DetailedErrors,
             };
+
+            var tokenGrantHandler = HttpContext.RequestServices.GetKeyedService<ITokenGrantHandler>(openIdConnectRequest.GrantType);
+            if (tokenGrantHandler != null)
+            {
+                return await tokenGrantHandler.HandleAsync(openIdConnectRequest, context);
+            }
 
             if (openIdConnectRequest.IsPasswordGrantType())
             {
