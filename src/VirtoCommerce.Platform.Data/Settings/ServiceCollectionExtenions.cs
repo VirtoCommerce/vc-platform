@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         public static IServiceCollection AddSettings(this IServiceCollection services)
         {
             services.AddSingleton<ISettingsOverrideProvider, ConfigurationSettingsOverrideProvider>();
-            services.AddActivated<ISettingsManager, SettingsManager>(ServiceLifetime.Singleton);
+            services.AddSingleton<ISettingsManager, SettingsManager>();
             services.AddSingleton<ISettingsRegistrar>(context => context.GetService<ISettingsManager>());
             services.AddSingleton<ISettingsSearchService, SettingsSearchService>();
             services.AddSingleton<ILocalizableSettingService, LocalizableSettingService>();

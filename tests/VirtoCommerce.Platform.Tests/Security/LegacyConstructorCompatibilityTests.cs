@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using MockQueryable;
 using Moq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -15,13 +18,14 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Security;
 
-// Modules and custom projects compiled against earlier platform versions still call the Func<T> constructors.
-// These tests fail to compile if one of them disappears.
+// Modules and custom projects compiled against earlier platform versions derive from these services and forward a
+// Func<T> to base(...). The legacy constructors are protected, so that is the only way to reach them; these tests
+// fail to compile if one of them disappears.
 [Trait("Category", "Unit")]
 public class LegacyConstructorCompatibilityTests
 {
     [Fact]
-    public async Task UserSignInLogService_FuncConstructor_StillWritesThroughTheRepository()
+    public async Task DerivedService_ForwardingFuncToBase_StillWritesThroughTheRepository()
     {
         var added = new List<UserSignInLogEntity>();
         var unitOfWork = new Mock<IUnitOfWork>();
@@ -30,9 +34,7 @@ public class LegacyConstructorCompatibilityTests
         repository.Setup(x => x.UnitOfWork).Returns(unitOfWork.Object);
         repository.Setup(x => x.Add(It.IsAny<UserSignInLogEntity>())).Callback<UserSignInLogEntity>(added.Add);
 
-#pragma warning disable VC0016 // The legacy constructor is the subject of the test.
-        var service = new UserSignInLogService(() => repository.Object);
-#pragma warning restore VC0016
+        var service = new LegacyUserSignInLogService(() => repository.Object);
 
         await service.SaveChanges([new UserSignInLog { UserName = "a", SignInType = SignInType.Password, Succeeded = true }], TestContext.Current.CancellationToken);
 
@@ -42,14 +44,35 @@ public class LegacyConstructorCompatibilityTests
     }
 
     [Fact]
-    public void UserApiKeySearchService_FuncConstructor_Compiles()
+    public void DerivedService_ForwardingFuncToBase_Compiles()
     {
         var repository = Mock.Of<ISecurityRepository>();
 
-#pragma warning disable VC0016
-        var service = new UserApiKeySearchService(() => repository);
-#pragma warning restore VC0016
+        var service = new LegacyUserApiKeySearchService(() => repository);
 
         service.Should().NotBeNull();
     }
+
+    [Fact]
+    public void PlainRegistration_WithLegacyAndNewFactoriesRegistered_Activates()
+    {
+        // The legacy constructor is protected, so the container sees a single public constructor and never
+        // reports an ambiguity, even though both Func<T> and IScopedServiceFactory<T> are resolvable.
+        var services = new ServiceCollection();
+        services.AddSingleton(typeof(IScopedServiceFactory<>), typeof(ScopedServiceFactory<>));
+        services.AddTransient<ISecurityRepository>(_ => Mock.Of<ISecurityRepository>());
+        services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.GetRequiredService<ISecurityRepository>());
+        services.AddSingleton<IUserApiKeySearchService, UserApiKeySearchService>();
+        services.AddSingleton<IUserSignInLogService, UserSignInLogService>();
+        using var provider = services.BuildServiceProvider();
+
+        provider.GetRequiredService<IUserApiKeySearchService>().Should().BeOfType<UserApiKeySearchService>();
+        provider.GetRequiredService<IUserSignInLogService>().Should().BeOfType<UserSignInLogService>();
+    }
+
+#pragma warning disable VC0016 // The legacy constructors are the subject of these tests.
+    private sealed class LegacyUserSignInLogService(Func<ISecurityRepository> repositoryFactory) : UserSignInLogService(repositoryFactory);
+
+    private sealed class LegacyUserApiKeySearchService(Func<ISecurityRepository> repositoryFactory) : UserApiKeySearchService(repositoryFactory);
+#pragma warning restore VC0016
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -40,7 +39,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private volatile IDictionary<string, string[]> _cachedTypeAssignments;
 
         [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public SettingsManager(Func<IPlatformRepository> repositoryFactory,
+        protected SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,
@@ -59,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         }
 
         [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public SettingsManager(Func<IPlatformRepository> repositoryFactory,
+        protected SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,
@@ -69,7 +68,6 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
         }
 
-        [ActivatorUtilitiesConstructor]
         public SettingsManager(IScopedServiceFactory<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,

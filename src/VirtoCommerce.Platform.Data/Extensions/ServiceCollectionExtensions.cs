@@ -42,13 +42,13 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddSingleton<InProcessBus>();
             services.AddSingleton<IEventHandlerRegistrar>(x => x.GetRequiredService<InProcessBus>());
             services.AddSingleton<IEventPublisher>(x => x.GetRequiredService<InProcessBus>());
-            services.AddActivated<IChangeLogService, ChangeLogService>(ServiceLifetime.Transient);
-            services.AddActivated<ILastModifiedDateTime, ChangeLogService>(ServiceLifetime.Transient);
+            services.AddTransient<IChangeLogService, ChangeLogService>();
+            services.AddTransient<ILastModifiedDateTime, ChangeLogService>();
             services.AddSingleton<ILastChangesService, LastChangesService>();
             services.AddOptions<LastChangesOptions>().Bind(configuration.GetSection("LastChanges"));
             services.AddSingleton<ILastChangesNotifier, LastChangesNotifier>();
 
-            services.AddActivated<IChangeLogSearchService, ChangeLogSearchService>(ServiceLifetime.Transient);
+            services.AddTransient<IChangeLogSearchService, ChangeLogSearchService>();
 
             services.AddCaching(configuration);
 

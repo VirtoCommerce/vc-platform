@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
@@ -20,12 +19,11 @@ public class UserSessionsSearchService : IUserSessionsSearchService
     private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
 
     [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-    public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, Func<ISecurityRepository> repositoryFactory)
+    protected UserSessionsSearchService(IOpenIddictTokenManager tokenManager, Func<ISecurityRepository> repositoryFactory)
         : this(tokenManager, new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory))
     {
     }
 
-    [ActivatorUtilitiesConstructor]
     public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, IScopedServiceFactory<ISecurityRepository> repositoryFactory)
     {
         _tokenManager = tokenManager;

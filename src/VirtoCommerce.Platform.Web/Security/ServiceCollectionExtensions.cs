@@ -32,9 +32,9 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddTransient<ISecurityRepository, SecurityRepository>();
             services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<ISecurityRepository>());
 
-            services.AddActivated<IUserApiKeyService, UserApiKeyService>(ServiceLifetime.Singleton);
-            services.AddActivated<IUserSignInLogService, UserSignInLogService>(ServiceLifetime.Singleton);
-            services.AddActivated<IUserSignInLogSearchService, UserSignInLogSearchService>(ServiceLifetime.Singleton);
+            services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
+            services.AddSingleton<IUserSignInLogService, UserSignInLogService>();
+            services.AddSingleton<IUserSignInLogSearchService, UserSignInLogSearchService>();
 
             // Buffer sizing is tunable from the "SignInLog" configuration section rather than baked in.
             services.AddOptions<SignInLogOptions>().BindConfiguration("SignInLog");
@@ -43,19 +43,19 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<BufferedUserSignInLogWriter>();
             services.AddSingleton<IUserSignInLogWriter>(provider => provider.GetRequiredService<BufferedUserSignInLogWriter>());
             services.AddHostedService(provider => provider.GetRequiredService<BufferedUserSignInLogWriter>());
-            services.AddActivated<IUserApiKeySearchService, UserApiKeySearchService>(ServiceLifetime.Singleton);
+            services.AddSingleton<IUserApiKeySearchService, UserApiKeySearchService>();
 
             services.AddScoped<IUserNameResolver, HttpContextUserResolver>();
             services.AddSingleton<IPermissionsRegistrar, DefaultPermissionProvider>();
             services.AddScoped<IRoleSearchService, RoleSearchService>();
 
             //Register as singleton because this abstraction can be used as dependency in singleton services
-            services.AddActivated<IUserSearchService, UserSearchService>(ServiceLifetime.Singleton);
+            services.AddSingleton<IUserSearchService, UserSearchService>();
 
             //Identity dependencies override
             services.TryAddScoped<RoleManager<Role>, CustomRoleManager>();
-            services.TryAddActivated<UserManager<ApplicationUser>, CustomUserManager>(ServiceLifetime.Scoped);
-            services.TryAddActivated<IPasswordValidator<ApplicationUser>, CustomPasswordValidator>(ServiceLifetime.Scoped);
+            services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
+            services.TryAddScoped<IPasswordValidator<ApplicationUser>, CustomPasswordValidator>();
             services.TryAddScoped<IdentityErrorDescriber, CustomIdentityErrorDescriber>();
             services.TryAddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
             // Legacy factories: nothing owns the scope they create. Prefer IScopedServiceFactory<T> in new code.
@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<LogChangesUserChangedEventHandler>();
             services.AddSingleton<LogUserSignInEventHandler>();
             services.AddSingleton<UserApiKeyActualizeEventHandler>();
-            services.AddActivated<RevokeUserTokenEventHandler, RevokeUserTokenEventHandler>(ServiceLifetime.Singleton);
+            services.AddSingleton<RevokeUserTokenEventHandler>();
 
             services.AddTransient<IServerCertificateService, ServerCertificateService>();
 

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -19,12 +18,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
 
         [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public DynamicPropertyDictionaryItemsSearchService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService)
+        protected DynamicPropertyDictionaryItemsSearchService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService)
             : this(new DelegateScopedServiceFactory<IPlatformRepository>(repositoryFactory), memoryCache, dynamicPropertyDictionaryItemsService)
         {
         }
 
-        [ActivatorUtilitiesConstructor]
         public DynamicPropertyDictionaryItemsSearchService(IScopedServiceFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService)
         {
             _repositoryFactory = repositoryFactory;

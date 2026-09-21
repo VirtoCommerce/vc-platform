@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model;
@@ -18,12 +17,11 @@ public class UserSignInLogService : IUserSignInLogService
     private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
 
     [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-    public UserSignInLogService(Func<ISecurityRepository> repositoryFactory)
+    protected UserSignInLogService(Func<ISecurityRepository> repositoryFactory)
         : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory))
     {
     }
 
-    [ActivatorUtilitiesConstructor]
     public UserSignInLogService(IScopedServiceFactory<ISecurityRepository> repositoryFactory)
     {
         _repositoryFactory = repositoryFactory;

@@ -31,15 +31,15 @@ factory.Setup(x => x.Create()).Returns(() => new ScopedService<ICatalogRepositor
 
 ## Compatibility with the `Func<T>` signatures
 
-Platform services that used to take `Func<IPlatformRepository>`, `Func<ISecurityRepository>`, `Func<UserManager<ApplicationUser>>` or `Func<RoleManager<Role>>` keep those constructors, marked `[Obsolete]`. They delegate to the new constructor through `DelegateScopedServiceFactory<T>`, which turns a `Func<T>` into an `IScopedServiceFactory<T>`:
+Platform services that used to take `Func<IPlatformRepository>`, `Func<ISecurityRepository>`, `Func<UserManager<ApplicationUser>>` or `Func<RoleManager<Role>>` keep those constructors as **protected** members marked `[Obsolete]`. They delegate to the new constructor through `DelegateScopedServiceFactory<T>`, which turns a `Func<T>` into an `IScopedServiceFactory<T>`:
 
 ```csharp
 IScopedServiceFactory<ICatalogRepository> factory = new DelegateScopedServiceFactory<ICatalogRepository>(() => repositoryMock.Object);
 ```
 
-A derived class that still calls the old `base(...)` constructor compiles with a deprecation warning and behaves as before. `CustomPasswordValidator` keeps its protected `_repositoryFactory` field for the same reason; new code uses `_scopedRepositoryFactory`.
+A derived class that still calls the old `base(...)` constructor keeps compiling (with a deprecation warning) and keeps binding at runtime, so already-built modules and customizations are unaffected. `CustomPasswordValidator` keeps its protected `_repositoryFactory` field for the same reason; new code uses `_scopedRepositoryFactory`.
 
-A class that has both constructors cannot be registered with a plain `AddSingleton<TService, TImplementation>()`: the container sees two resolvable constructors with different parameter types and refuses to activate the type. The platform registers such classes with `services.AddActivated<TService, TImplementation>(ServiceLifetime.Singleton)` (or `TryAddActivated`), which selects the constructor marked `[ActivatorUtilitiesConstructor]`. Use the same helper if your own class keeps a legacy constructor alongside the new one.
+The legacy constructors are protected rather than public on purpose: the dependency-injection container only considers public constructors, so each service still exposes exactly one and plain `AddSingleton<TService, TImplementation>()` registrations keep working. Code that constructed one of these services directly with `new` and a `Func<T>` (in practice only unit tests) must switch to the `IScopedServiceFactory<T>` constructor.
 
 ## Legacy `Func<T>` factories
 

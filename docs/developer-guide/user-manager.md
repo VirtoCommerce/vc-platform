@@ -7,10 +7,11 @@ The custom User Manager is registered in the DI as the **UserManager<Application
 
 ```csharp
 services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
-services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.ResolveInOwnScope<UserManager<ApplicationUser>>());
 ```
 
-`ResolveInOwnScope` creates a DI scope for every call. **CustomUserManager** owns that scope and disposes it together with itself, so `using var userManager = _userManagerFactory();` releases the manager, its security `DbContext` and everything else the scope created. A manager derived from **CustomUserManager** inherits this behavior. See [Resolving scoped services outside a request](../techniques/resolving-scoped-services-outside-a-request.md) for the general pattern.
+The platform registers `IScopedServiceFactory<T>` once as an open generic, so `IScopedServiceFactory<UserManager<ApplicationUser>>` can be injected anywhere without further registration. Each `Create()` call resolves the manager in a DI scope of its own and returns a `ScopedService<T>`; disposing that wrapper disposes the scope, and with it the manager and its security `DbContext`. See [Resolving scoped services outside a request](../techniques/resolving-scoped-services-outside-a-request.md) for the general pattern.
+
+The older `Func<UserManager<ApplicationUser>>` registration is still present for compatibility, but it does not release the scope it creates.
 
 You can create a specific User Manager implementation by creating a class inherited from **CustomUserManager** or **AspNetUserManager<ApplicationUser>** directly and registering it in the DI in your own module:
 

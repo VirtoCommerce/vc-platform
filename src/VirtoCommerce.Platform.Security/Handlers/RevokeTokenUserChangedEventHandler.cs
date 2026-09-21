@@ -13,14 +13,13 @@ public class RevokeUserTokenEventHandler : IEventHandler<UserChangedEvent>
 {
     private readonly IScopedServiceFactory<IUserSessionsService> _userSessionsServiceFactory;
 
-    [ActivatorUtilitiesConstructor]
     public RevokeUserTokenEventHandler(IScopedServiceFactory<IUserSessionsService> userSessionsServiceFactory)
     {
         _userSessionsServiceFactory = userSessionsServiceFactory;
     }
 
     [Obsolete("Use the constructor that takes IScopedServiceFactory<IUserSessionsService> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-    public RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionService, IServiceScope Scope)> userSessionsServiceFactory)
+    protected RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionService, IServiceScope Scope)> userSessionsServiceFactory)
         : this(new DelegateScopedServiceFactory<IUserSessionsService>(() =>
         {
             var (sessionService, scope) = userSessionsServiceFactory();

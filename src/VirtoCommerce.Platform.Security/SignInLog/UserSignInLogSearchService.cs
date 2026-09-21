@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
@@ -34,12 +33,11 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     private readonly ISettingsManager _settingsManager;
 
     [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-    public UserSignInLogSearchService(Func<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
+    protected UserSignInLogSearchService(Func<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
         : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), settingsManager)
     {
     }
 
-    [ActivatorUtilitiesConstructor]
     public UserSignInLogSearchService(IScopedServiceFactory<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
     {
         _repositoryFactory = repositoryFactory;

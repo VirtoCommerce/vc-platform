@@ -176,7 +176,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddPlatformServices(Configuration);
 
-            services.AddActivated<LicenseProvider, LicenseProvider>(ServiceLifetime.Singleton);
+            services.AddSingleton<LicenseProvider>();
 
             var platformOptions = Configuration.GetSection("VirtoCommerce").Get<PlatformOptions>();
 
@@ -530,7 +530,7 @@ namespace VirtoCommerce.Platform.Web
             // Must be registered AFTER AddOpenIddict() so it overrides the default store.
             services.AddScoped<IOpenIddictTokenStore<VirtoOpenIddictEntityFrameworkCoreToken>, VirtoOpenIddictEntityFrameworkCoreTokenStore>();
 
-            services.AddActivated<IUserSessionsSearchService, UserSessionsSearchService>(ServiceLifetime.Transient);
+            services.AddTransient<IUserSessionsSearchService, UserSessionsSearchService>();
 
             // Legacy factory kept for modules that still inject it (Customer, ProfileExperienceApi). New code uses IScopedServiceFactory<IUserSessionsService>.
             services.AddScoped<IUserSessionsService, UserSessionsService>();

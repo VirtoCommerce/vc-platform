@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
@@ -25,12 +24,11 @@ namespace VirtoCommerce.Platform.Security
         protected readonly PasswordOptionsExtended _passwordOptions;
 
         [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
-        public CustomPasswordValidator(IdentityErrorDescriber errors, Func<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
+        protected CustomPasswordValidator(IdentityErrorDescriber errors, Func<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
             : this(errors, new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), passwordHasher, passwordOptions)
         {
         }
 
-        [ActivatorUtilitiesConstructor]
         public CustomPasswordValidator(IdentityErrorDescriber errors, IScopedServiceFactory<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
             : base(errors)
 
