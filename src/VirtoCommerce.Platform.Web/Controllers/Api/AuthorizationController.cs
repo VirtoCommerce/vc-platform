@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
@@ -45,6 +44,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly List<ITokenRequestValidator> _requestValidators;
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
+        private readonly IEnumerable<ITokenGrantHandler> _tokenGrantHandlers;
         private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IExternalSignInService _externalSignInService;
@@ -60,6 +60,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ITokenRequestValidator> requestValidators,
             IEnumerable<ITokenClaimProvider> claimProviders,
             IEnumerable<ITokenRequestHandler> requestHandlers,
+            IEnumerable<ITokenGrantHandler> tokenGrantHandlers,
             OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> tokenManager,
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
@@ -75,6 +76,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _requestValidators = requestValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList();
             _claimProviders = claimProviders;
             _requestHandlers = requestHandlers;
+            _tokenGrantHandlers = tokenGrantHandlers;
             _tokenManager = tokenManager;
             _authorizationService = authorizationService;
             _externalSignInService = externalSignInService;
@@ -119,7 +121,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OpenIddictResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(OpenIddictResponse))]
         // Be aware: look into OpenIDEndpointDescriptionFilter to know parameters description for the swagger document about this endpoint
-        public async Task<IActionResult> Exchange()
+        public async Task<ActionResult> Exchange()
         {
             var openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
 
@@ -130,10 +132,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 DetailedErrors = _passwordLoginOptions.DetailedErrors,
             };
 
-            var tokenGrantHandler = HttpContext.RequestServices.GetKeyedService<ITokenGrantHandler>(openIdConnectRequest.GrantType);
+            var tokenGrantHandler = _tokenGrantHandlers.FirstOrDefault(x => x.GrantType == openIdConnectRequest.GrantType);
             if (tokenGrantHandler != null)
             {
-                return await tokenGrantHandler.HandleAsync(openIdConnectRequest, context);
+                var tokenGrantResult = await tokenGrantHandler.HandleAsync(openIdConnectRequest, context);
+                return tokenGrantResult.Success
+                    ? SignIn(tokenGrantResult.Principal, tokenGrantResult.Properties, tokenGrantResult.AuthenticationScheme)
+                    : BadRequest(tokenGrantResult.Error);
             }
 
             if (openIdConnectRequest.IsPasswordGrantType())

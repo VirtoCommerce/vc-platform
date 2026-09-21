@@ -5,15 +5,14 @@ using VirtoCommerce.Platform.Security.OpenIddict;
 namespace VirtoCommerce.Platform.Security.TokenGrants
 {
     /// <summary>
-    /// Lets a module take over a custom OAuth grant type at "/connect/token". Register with a keyed
-    /// DI registration whose key is <see cref="GrantType"/> (e.g.
-    /// <c>services.AddKeyedTransient&lt;ITokenGrantHandler, MyHandler&gt;("my_grant_type")</c>) - the
-    /// platform resolves the one matching handler without constructing any others.
+    /// Lets a module take over a custom OAuth grant type at "/connect/token". Register with
+    /// <c>services.AddTransient&lt;ITokenGrantHandler, MyHandler&gt;()</c>; the platform picks the
+    /// one whose <see cref="GrantType"/> matches the request.
     /// </summary>
     public interface ITokenGrantHandler
     {
         /// <summary>
-        /// The "grant_type" value this handler takes over. Must match the key it's registered under.
+        /// The "grant_type" value this handler takes over.
         /// </summary>
         string GrantType { get; }
 
