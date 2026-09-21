@@ -722,6 +722,104 @@
           "ip-address": "IPアドレス",
           "user-agent": "ユーザーエージェント"
         }
+      },
+      "sign-in-log": {
+        "title": "サインインログ",
+        "subtitle": "サインイン試行と代理サインイン",
+        "filter": {
+          "title": "サインインログのフィルター",
+          "all": "すべて",
+          "period": "直近",
+          "period-24h": "24 時間",
+          "period-7d": "7 日間",
+          "period-30d": "30 日間",
+          "period-all": "全期間",
+          "outcome": "結果",
+          "sign-in-type": "種類",
+          "ip-address": "IP アドレス",
+          "type-password": "パスワード",
+          "type-external": "外部プロバイダー",
+          "type-impersonation": "代理",
+          "type-impersonation-revert": "代理の解除",
+          "type-logout": "サインアウト",
+          "period-30m": "30 分",
+          "period-1h": "1 時間",
+          "period-6h": "6 時間",
+          "store": "ストア",
+          "any-store": "いずれかのストア",
+          "no-store": "ストアなし",
+          "period-custom": "カスタム",
+          "date-from": "開始",
+          "date-to": "終了"
+        },
+        "labels": {
+          "date": "日時",
+          "user-name": "ユーザー",
+          "outcome": "結果",
+          "succeeded": "成功",
+          "failed": "失敗",
+          "failure-reason": "理由",
+          "sign-in-type": "種類",
+          "ip-address": "IP アドレス",
+          "organization": "組織",
+          "impersonation": "代理",
+          "on-behalf-of": "代理:"
+        },
+        "stats": {
+          "total": "サインイン数",
+          "failed": "失敗した試行",
+          "users": "サインインしたユーザー数",
+          "impersonation": "代理",
+          "top-failed-ips": "失敗試行の多い IP",
+          "top-failed-users": "失敗試行の多いアカウント",
+          "failure-reasons": "失敗の理由",
+          "by-organization": "組織別サインイン",
+          "none": "データなし",
+          "total-hint": "期間内のすべてのサインイン試行（成功・失敗を含む）。クリックして表示します。",
+          "failed-hint": "サインインに至らなかった試行。クリックすると失敗のみ表示します。",
+          "users-hint": "サインインに成功した一意のアカウント数。回数にかかわらず 1 件として集計します。クリックすると成功したサインインを表示します。",
+          "impersonation-hint": "サポートが顧客に代わってサインインしたセッション。クリックして表示します。",
+          "timeline": "時系列の試行",
+          "by-store": "ストア別サインイン"
+        },
+        "hints": {
+          "known-accounts-only": "既存アカウントに対する試行のみが対象です。"
+        },
+        "detail": {
+          "title": "サインイン記録",
+          "user-id": "ユーザー ID",
+          "operator-name": "オペレーター",
+          "operator-id": "オペレーター ID",
+          "member-id": "メンバー ID",
+          "user-agent": "ユーザーエージェント",
+          "client-id": "クライアント",
+          "host": "ホスト",
+          "store-name": "ストア名",
+          "organization-id": "組織 ID",
+          "session-id": "セッション ID",
+          "provider": "ID プロバイダー"
+        },
+        "disabled": {
+          "title": "サインインの記録が無効になっています",
+          "message": "新しいサインイン試行は記録されないため、このログは変化しません。管理者に「設定 › プラットフォーム › サインインログ」で「サインイン試行を記録する」を有効にするよう依頼してください。代理サインインは常に記録されます。"
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "サインインログ",
+        "subtitle": "サインインアクティビティと代理サインイン",
+        "commands": {
+          "view-all": "すべての記録を表示"
+        },
+        "presets": {
+          "all": "すべての記録",
+          "failed": "失敗した試行",
+          "impersonation": "代理サインイン",
+          "by-ip": "この IP からの失敗した試行",
+          "by-user": "このアカウントの失敗した試行",
+          "by-reason": "理由別の失敗した試行",
+          "succeeded": "成功したサインイン",
+          "by-store": "このストアのサインイン"
+        }
       }
     },
     "templates": {
@@ -786,6 +884,9 @@
       },
       "sessions": {
         "title": "アクティブなセッション"
+      },
+      "sign-in-log": {
+        "title": "サインインログ"
       }
     },
     "dialogs": {
@@ -1032,6 +1133,22 @@
           "FileExtensionsWhiteList": {
             "description": "プラットフォームによってアップロードが許可されているファイル拡張子（appsettings.jsonの'FileExtensionsWhiteList'に加えて）",
             "title": "ホワイトリスト"
+          },
+          "SignInLogEnabled": {
+            "title": "サインイン試行を記録する",
+            "description": "成功・失敗を問わず、すべてのサインイン試行をサインインログに記録します。代理サインインは常に記録され、この設定の影響を受けません。"
+          },
+          "SignInLogRetentionDays": {
+            "title": "記録の保持期間（日）",
+            "description": "クリーンアップジョブが削除するまでサインイン記録を保持する期間です。0 以下を設定すると無期限に保持します。"
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "古いサインイン記録をクリーンアップする",
+            "description": "保持期間を過ぎたサインイン記録を削除するスケジュールジョブを実行します。"
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "サインインログのクリーンアップジョブの Cron",
+            "description": "保持期間を過ぎたサインイン記録を削除するジョブの Cron 式です。"
           }
         },
         "UI": {

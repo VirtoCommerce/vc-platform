@@ -13,6 +13,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -40,6 +42,8 @@ namespace VirtoCommerce.Platform.Web.Security
             appBuilder.RegisterEventHandler<UserLogoutEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserRoleAddedEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserRoleRemovedEvent, LogChangesUserChangedEventHandler>();
+
+            appBuilder.RegisterEventHandler<UserSignInAttemptEvent, LogUserSignInEventHandler>();
 
             appBuilder.RegisterEventHandler<UserChangedEvent, RevokeUserTokenEventHandler>();
 
