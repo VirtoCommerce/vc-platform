@@ -1,0 +1,153 @@
+<div class="blade-static">
+  <div class="form-group" style="display: flex; align-items: center;">
+    <va-filter-panel
+        has-active-filters="filter.hasActiveFilters()"
+        on-clear-filters="filter.clearFilters()"
+        search-text="blade.searchText"
+        filter-title="{{ 'platform.blades.sign-in-log.filter.title' | translate }}">
+
+      <div class="va-filter-panel__row __stacked">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.period' | translate }}</span>
+        <div class="period-grid">
+          <a href="javascript:void(0)"
+             ng-repeat="p in blade.periods"
+             ng-class="{'__active': filter.period === p.value}"
+             ng-click="filter.period = p.value; filter.criteriaChanged()">{{ p.label | translate }}</a>
+        </div>
+      </div>
+
+      <div class="va-filter-panel__row" ng-if="filter.period === 'custom'">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.date-from' | translate }}</span>
+        <input type="date" id="signInLogDateFrom" class="va-filter-panel__date-input"
+               ng-model="filter.dateFrom" ng-change="filter.criteriaChanged()">
+      </div>
+
+      <div class="va-filter-panel__row" ng-if="filter.period === 'custom'">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.date-to' | translate }}</span>
+        <input type="date" id="signInLogDateTo" class="va-filter-panel__date-input"
+               ng-model="filter.dateTo" ng-change="filter.criteriaChanged()">
+      </div>
+
+      <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.outcome' | translate }}</span>
+        <select class="va-filter-panel__select" ng-model="filter.succeeded" ng-change="filter.criteriaChanged()">
+          <option ng-repeat="o in blade.outcomes" value="{{o.value}}">{{o.label | translate}}</option>
+        </select>
+      </div>
+
+      <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.sign-in-type' | translate }}</span>
+        <select class="va-filter-panel__select" ng-model="filter.signInType" ng-change="filter.criteriaChanged()">
+          <option ng-repeat="t in blade.signInTypeOptions" value="{{t.value}}">{{t.label | translate}}</option>
+        </select>
+      </div>
+
+      <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.store' | translate }}</span>
+        <select class="va-filter-panel__select" ng-model="filter.storeId" ng-change="filter.criteriaChanged()">
+          <option value="">{{ 'platform.blades.sign-in-log.filter.all' | translate }}</option>
+          <!-- Presence, not identity. "All" skips the filter entirely; these two ask whether the row
+               belongs to a store at all - back-office sign-ins and attempts against unknown user
+               names carry none, and neither question can be put through a store id. -->
+          <option value="{{ blade.anyStoreValue }}">{{ 'platform.blades.sign-in-log.filter.any-store' | translate }}</option>
+          <option value="{{ blade.noStoreValue }}">{{ 'platform.blades.sign-in-log.filter.no-store' | translate }}</option>
+          <option ng-repeat="s in blade.stores" value="{{s}}">{{s}}</option>
+        </select>
+      </div>
+
+      <div class="va-filter-panel__row">
+        <span class="va-filter-panel__label">{{ 'platform.blades.sign-in-log.filter.ip-address' | translate }}</span>
+        <input type="text" id="signInLogIpFilter" class="va-filter-panel__text-input"
+               ng-model="filter.ipAddress" ng-change="filter.criteriaChanged()"
+               ng-model-options="{ debounce: 400 }">
+      </div>
+
+    </va-filter-panel>
+  </div>
+</div>
+
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+
+<div class="blade-content __xlarge-wide">
+  <div class="blade-inner">
+    <div class="inner-block">
+
+      <div class="table-wrapper" ng-init="setGridOptions({
+                useExternalSorting: true,
+                rowTemplate: 'sign-in-log.row.html',
+                rowHeight: 40,
+                columnDefs: [
+                    {
+                       displayName: 'platform.blades.sign-in-log.labels.date',
+                       name: 'createdDate',
+                       width: 160,
+                       sort: { direction: uiGridConstants.DESC },
+                       cellTemplate: 'sign-in-log-date.cell.html'
+                    },
+                    {
+                       displayName: 'platform.blades.sign-in-log.labels.user-name',
+                       name: 'userName',
+                       minWidth: 360,
+                       cellTemplate: 'sign-in-log-user.cell.html'
+                    },
+                    {
+                       displayName: 'platform.blades.sign-in-log.labels.outcome',
+                       name: 'succeeded',
+                       width: 150,
+                       cellTemplate: 'sign-in-log-outcome.cell.html'
+                    },
+                    {
+                       displayName: 'platform.blades.sign-in-log.labels.sign-in-type',
+                       name: 'signInType',
+                       width: 170
+                    },
+                    {
+                       displayName: 'platform.blades.sign-in-log.labels.ip-address',
+                       name: 'ipAddress',
+                       width: 160
+                    }
+                    ]})">
+        <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/ng-template" id="sign-in-log-date.cell.html">
+  <div class="ui-grid-cell-contents">{{ row.entity.createdDate | date:'short' }}</div>
+</script>
+
+<script type="text/ng-template" id="sign-in-log-user.cell.html">
+  <!-- Reads as a sentence: "support@virto.com on behalf of b2badmin@test.com". The row data is
+       unchanged - this is only how the two names are put together for the column. -->
+  <div class="ui-grid-cell-contents" ng-if="grid.appScope.isOnBehalf(row.entity)">
+    {{ row.entity.operatorUserName }}
+    <span class="sign-in-log-badge __impersonation">
+      {{ 'platform.blades.sign-in-log.labels.on-behalf-of' | translate }}
+    </span>
+    {{ row.entity.userName }}
+  </div>
+  <div class="ui-grid-cell-contents" ng-if="!grid.appScope.isOnBehalf(row.entity)">
+    {{ row.entity.userName }}
+  </div>
+</script>
+
+<script type="text/ng-template" id="sign-in-log-outcome.cell.html">
+  <div class="ui-grid-cell-contents">
+    <span class="sign-in-log-badge" ng-class="row.entity.succeeded ? '__success' : '__failed'"
+          title="{{ row.entity.failureReason }}">
+      {{ (row.entity.succeeded ? 'platform.blades.sign-in-log.labels.succeeded' : 'platform.blades.sign-in-log.labels.failed') | translate }}
+    </span>
+    <span class="sign-in-log-reason" ng-if="!row.entity.succeeded">{{ row.entity.failureReason }}</span>
+  </div>
+</script>
+
+<script type="text/ng-template" id="sign-in-log.row.html">
+  <div ng-click="grid.appScope.selectRecord(row.entity)"
+       ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+       ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'"
+       class="ui-grid-cell"
+       ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id === grid.appScope.selectedRecordId}"
+       role="{{col.isRowHeader ? 'rowheader' : 'gridcell'}}"
+       ui-grid-cell></div>
+</script>

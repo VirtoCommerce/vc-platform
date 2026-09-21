@@ -5,7 +5,9 @@
 If you are an administrator or a support personnel on Virto Commerce based web store, you can log in under another user credentials. This functionality is called `Login on Behalf`. You may wish to do this to see what a user sees in the webpage, help to place an order and even make a payment on their behalf.
 
 !!! note
-    All operations are strictly logged to avoid possible claims from customers. 
+    Every login on behalf session is recorded in the sign-in log, including who the operator
+    was, which account they acted as, the IP address and the time. These records are always
+    written and cannot be disabled.
 
 ## How it works
 `Login on Behalf` feature which helps to increase the productivity of web store personnel. It also contributes significantly to customer satisfaction and brand loyalty while decreasing the number of abandoned carts.
@@ -48,4 +50,17 @@ And help customers to find the products, add products to the cart, complete the 
 
 ## Security
 
-All actions will be insight customer account but for security reasons original `Created by` and `Modified by` will be triggered with Customer Support Account.
+All actions take place inside the customer account, but `Created by` and `Modified by` are
+recorded against the customer support account, not the customer.
+
+To review login on behalf activity, open the account and use the **Sign-in log** widget, or
+filter the sign-in log by the *On behalf* type. The log also shows the live session in
+**Active sessions**, marked with the operator's name, where it can be terminated.
+
+Reading the sign-in log requires the `platform:security:sign_in_log:read` permission.
+
+!!! warning
+    The `platform:security:loginOnBehalf` permission is not limited to customer accounts. An
+    operator holding it can sign in as any user, including an administrator, and the resulting
+    session carries that user's full permissions. Grant this permission only to trusted support
+    staff. Login on behalf activity is recorded for audit, but it is not restricted.

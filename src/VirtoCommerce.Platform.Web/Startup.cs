@@ -87,6 +87,7 @@ using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Swagger;
+using VirtoCommerce.Platform.Web.Security.SignInLog;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using MsTokens = Microsoft.IdentityModel.Tokens;
 
@@ -555,6 +556,13 @@ namespace VirtoCommerce.Platform.Web
                 .FromSettings(
                     PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob,
                     PlatformConstants.Settings.Security.CronPruneExpiredTokensJob));
+
+            // Trims the sign-in audit log to the configured retention window.
+            services.AddRecurringJob<SignInLogCleanupJob, SignInLogCleanupJobPayload>(schedule => schedule
+                .WithId("SignInLogCleanupJob")
+                .FromSettings(
+                    PlatformConstants.Settings.Security.EnableSignInLogCleanupJob,
+                    PlatformConstants.Settings.Security.CronSignInLogCleanupJob));
 
             // Always register so the scheduler reconciles state: when disabled, WithEnabled(false) removes any
             // AutoAccountLockoutJob left in engine storage from a previous run when it was enabled (previously this
