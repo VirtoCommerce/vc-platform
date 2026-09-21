@@ -59,9 +59,9 @@ The handler is resolved from the DI container when an event is published, in a D
 
 Handlers of the same event run concurrently, each in its own scope. A handler registered as transient or scoped must not keep state in fields between events.
 
-Registration validates that the handler can be resolved, so a handler that is not registered in the DI container fails at application startup rather than at the first event.
+Registration constructs the handler once to validate it, so a handler that is not registered in the DI container fails at application startup rather than at the first event. Expect that one extra construction per registration at startup; a transient or scoped handler is then constructed again for every event.
 
-Earlier platform versions resolved every handler once at startup and kept that single instance for the lifetime of the application regardless of the registered lifetime. To restore that behavior for an application that depends on it, set `VirtoCommerce:Events:ResolveHandlersPerInvocation` to `false` in `appsettings.json`.
+Earlier platform versions resolved every handler once at startup and kept that single instance for the lifetime of the application regardless of the registered lifetime. A handler written against that behavior, for example one that keeps state in fields or opens a connection in its constructor, must be registered as a singleton. That also works for a handler shipped in a module you cannot change: register the same type again as a singleton from your own module's `Initialize`; the last registration wins.
 
 ## How to raise domain events
 Inject `IEventPublisher` and publish the event where the significant state change happens:
@@ -93,4 +93,4 @@ public void PostInitialize(IApplicationBuilder appBuilder)
 }
 ```
 
-The handler type may be either the type it was registered as or the derived type that the DI container actually resolves.
+The handler type may be either the type it was registered as or the derived type that the DI container actually resolves. When both a base handler and a handler derived from it are subscribed to the same event, unsubscribing by the derived type removes both.

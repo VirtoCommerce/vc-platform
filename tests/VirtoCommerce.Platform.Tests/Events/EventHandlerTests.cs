@@ -59,7 +59,7 @@ public class EventHandlerTests
     }
 
     [Fact]
-    public async Task UnregisterEventHandler_ByImplementationType()
+    public async Task UnregisterEventHandler_TransientRegisteredAsDerivedType_ByImplementationType()
     {
         var (applicationBuilder, publisher, provider) = GetServices(services => services.AddTransient<Handler, Handler2>());
 
@@ -70,6 +70,29 @@ public class EventHandlerTests
 
         // Only the probe at registration created a handler; the event reached nobody.
         provider.GetRequiredService<Recorder>().Instances.Should().ContainSingle();
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task UnregisterEventHandler_SingletonRegisteredAsDerivedType_ByEitherType(bool byDeclaredType)
+    {
+        var (applicationBuilder, publisher, provider) = GetServices(services => services.AddSingleton<Handler, Handler2>());
+
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
+
+        if (byDeclaredType)
+        {
+            applicationBuilder.UnregisterEventHandler<UserLoginEvent, Handler>();
+        }
+        else
+        {
+            applicationBuilder.UnregisterEventHandler<UserLoginEvent, Handler2>();
+        }
+
+        await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
+
+        provider.GetRequiredService<Handler>().UserLoginEvents.Should().BeEmpty();
     }
 
     [Fact]
@@ -118,6 +141,23 @@ public class EventHandlerTests
     }
 
     [Fact]
+    public async Task SingletonHandler_WithoutServiceCollectionSnapshot_IsStillOneInstance()
+    {
+        // Hosts that do not register the IServiceCollection (custom hosts, test containers) take the per-invocation path for
+        // every handler; a singleton still comes back as the one root instance.
+        var (applicationBuilder, publisher, provider) = GetServices(services => services.AddSingleton<Handler>(), registerServiceCollection: false);
+
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
+
+        await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
+        await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
+
+        var handler = provider.GetRequiredService<Recorder>().Instances.Should().ContainSingle().Which;
+        handler.Should().BeSameAs(provider.GetRequiredService<Handler>());
+        ((Handler)handler).UserLoginEvents.Should().HaveCount(2);
+    }
+
+    [Fact]
     public async Task ScopedDependency_IsAliveDuringHandlingAndDisposedAfterwards()
     {
         var (applicationBuilder, publisher, provider) = GetServices(services =>
@@ -137,24 +177,6 @@ public class EventHandlerTests
     }
 
     [Fact]
-    public async Task LegacyMode_TransientHandlerIsResolvedOnce()
-    {
-        var (applicationBuilder, publisher, provider) = GetServices(services =>
-        {
-            services.AddTransient<Handler>();
-            services.Configure<EventHandlerOptions>(options => options.ResolveHandlersPerInvocation = false);
-        });
-
-        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
-
-        await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
-        await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
-
-        var handler = provider.GetRequiredService<Recorder>().Instances.Should().ContainSingle().Which;
-        ((Handler)handler).UserLoginEvents.Should().HaveCount(2);
-    }
-
-    [Fact]
     public void MissingHandler_ThrowsAtRegistration()
     {
         var (applicationBuilder, _, _) = GetServices(_ => { });
@@ -165,7 +187,7 @@ public class EventHandlerTests
     }
 
 
-    private static (IApplicationBuilder, IEventPublisher, IServiceProvider) GetServices(Action<IServiceCollection> configure)
+    private static (IApplicationBuilder, IEventPublisher, IServiceProvider) GetServices(Action<IServiceCollection> configure, bool registerServiceCollection = true)
     {
         var services = new ServiceCollection();
         services.AddSingleton(new Mock<ILogger<InProcessBus>>().Object);
@@ -175,8 +197,11 @@ public class EventHandlerTests
         services.AddSingleton<Recorder>();
         configure(services);
 
-        // Startup registers the collection itself, which is how the bus learns the declared lifetime of a handler.
-        services.AddSingleton<IServiceCollection>(services);
+        if (registerServiceCollection)
+        {
+            // Startup registers the collection itself, which is how the bus learns the declared lifetime of a handler.
+            services.AddSingleton<IServiceCollection>(services);
+        }
 
         var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
 

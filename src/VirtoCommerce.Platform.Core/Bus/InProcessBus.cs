@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Messages;
 
 namespace VirtoCommerce.Platform.Core.Bus
 {
@@ -22,33 +23,13 @@ namespace VirtoCommerce.Platform.Core.Bus
         public void RegisterEventHandler<T>(IEventHandler<T> handler)
             where T : IEvent
         {
-            var handlerType = handler.GetType();
-
-            _handlers.Add(new HandlerWrapper
-            {
-                EventType = typeof(T),
-                HandlerType = handlerType,
-                ImplementationType = handlerType,
-                HandlerModuleName = handlerType.Module.Assembly.GetName().Name,
-                Handler = (message, _) => handler.Handle((T)message),
-                Logger = _logger,
-            });
+            AddHandler<T>(handler.GetType(), handler.GetType(), (message, _) => handler.Handle((T)message));
         }
 
         public void RegisterEventHandler<T>(ICancellableEventHandler<T> handler)
             where T : IEvent
         {
-            var handlerType = handler.GetType();
-
-            _handlers.Add(new HandlerWrapper
-            {
-                EventType = typeof(T),
-                HandlerType = handlerType,
-                ImplementationType = handlerType,
-                HandlerModuleName = handlerType.Module.Assembly.GetName().Name,
-                Handler = (message, cancellationToken) => handler.Handle((T)message, cancellationToken),
-                Logger = _logger,
-            });
+            AddHandler<T>(handler.GetType(), handler.GetType(), (message, cancellationToken) => handler.Handle((T)message, cancellationToken));
         }
 
         public void RegisterEventHandler<TEvent, THandler>(IServiceProvider serviceProvider)
@@ -57,7 +38,8 @@ namespace VirtoCommerce.Platform.Core.Bus
         {
             if (IsSingleton<THandler>(serviceProvider))
             {
-                RegisterEventHandler<TEvent>(serviceProvider.GetRequiredService<THandler>());
+                var handler = serviceProvider.GetRequiredService<THandler>();
+                AddHandler<TEvent>(typeof(THandler), handler.GetType(), (message, _) => handler.Handle((TEvent)message));
             }
             else
             {
@@ -71,7 +53,8 @@ namespace VirtoCommerce.Platform.Core.Bus
         {
             if (IsSingleton<THandler>(serviceProvider))
             {
-                RegisterEventHandler<TEvent>(serviceProvider.GetRequiredService<THandler>());
+                var handler = serviceProvider.GetRequiredService<THandler>();
+                AddHandler<TEvent>(typeof(THandler), handler.GetType(), (message, cancellationToken) => handler.Handle((TEvent)message, cancellationToken));
             }
             else
             {
@@ -123,31 +106,39 @@ namespace VirtoCommerce.Platform.Core.Bus
         {
             var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
-            // Same fail-fast as instance registration: a handler missing from DI is a startup error, not a first-event error.
+            // The handler is constructed once here, as it was before type-based registration: a handler missing from DI stays
+            // a startup error rather than a first-event error, and the probe yields the runtime type for Unregister and logging.
             Type implementationType;
             using (var probe = scopeFactory.CreateScope())
             {
                 implementationType = probe.ServiceProvider.GetRequiredService<THandler>().GetType();
             }
 
+            AddHandler<TEvent>(typeof(THandler), implementationType, async (message, cancellationToken) =>
+            {
+                // One scope per invocation: handlers of the same event run concurrently and must not share scoped services.
+                await using var scope = scopeFactory.CreateAsyncScope();
+                await invoke(scope.ServiceProvider.GetRequiredService<THandler>(), (TEvent)message, cancellationToken);
+            });
+        }
+
+        private void AddHandler<TEvent>(Type handlerType, Type implementationType, Func<IMessage, CancellationToken, Task> handler)
+            where TEvent : IEvent
+        {
             _handlers.Add(new HandlerWrapper
             {
                 EventType = typeof(TEvent),
-                HandlerType = typeof(THandler),
+                HandlerType = handlerType,
                 ImplementationType = implementationType,
                 HandlerModuleName = implementationType.Module.Assembly.GetName().Name,
-                Handler = async (message, cancellationToken) =>
-                {
-                    // One scope per invocation: handlers of the same event run concurrently and must not share scoped services.
-                    await using var scope = scopeFactory.CreateAsyncScope();
-                    await invoke(scope.ServiceProvider.GetRequiredService<THandler>(), (TEvent)message, cancellationToken);
-                },
+                Handler = handler,
                 Logger = _logger,
             });
         }
 
-        // Startup registers the IServiceCollection itself as a singleton once all modules are initialized.
-        // A singleton handler is registered as an instance, exactly as before; without the snapshot every handler is resolved per invocation.
+        // Startup registers the IServiceCollection itself as a singleton once all modules are initialized. With it, a singleton
+        // handler is registered as an instance, exactly as before. Without it (custom hosts, test containers) every handler takes
+        // the per-invocation path, which still yields the root singleton instance but creates and disposes a scope per event.
         private static bool IsSingleton<THandler>(IServiceProvider serviceProvider)
         {
             var descriptor = serviceProvider.GetService<IServiceCollection>()?.LastOrDefault(x => x.ServiceType == typeof(THandler));
