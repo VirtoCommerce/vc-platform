@@ -286,13 +286,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 Scheme = "basic",
                 Description = "Basic authentication using username and password",
             });
-            options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
-            {
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT",
-                Description = "Bearer token authentication: paste an access_token you already obtained (e.g. from POST /connect/token)",
-            });
 
             // Register SecurityRequirementsOperationFilter for each security scheme
             // This allows API clients to use any of the supported authentication methods
@@ -301,7 +294,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
             options.OperationFilter<SecurityRequirementsOperationFilter>(true, "api_key_header");
             options.OperationFilter<SecurityRequirementsOperationFilter>(true, "http-signature");
             options.OperationFilter<SecurityRequirementsOperationFilter>(true, "basic");
-            options.OperationFilter<SecurityRequirementsOperationFilter>(true, "bearer");
         }
     }
 }
