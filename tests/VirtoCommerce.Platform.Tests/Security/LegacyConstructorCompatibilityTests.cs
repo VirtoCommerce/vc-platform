@@ -30,9 +30,9 @@ public class LegacyConstructorCompatibilityTests
         repository.Setup(x => x.UnitOfWork).Returns(unitOfWork.Object);
         repository.Setup(x => x.Add(It.IsAny<UserSignInLogEntity>())).Callback<UserSignInLogEntity>(added.Add);
 
-#pragma warning disable VC0014 // The legacy constructor is the subject of the test.
+#pragma warning disable VC0016 // The legacy constructor is the subject of the test.
         var service = new UserSignInLogService(() => repository.Object);
-#pragma warning restore VC0014
+#pragma warning restore VC0016
 
         await service.SaveChanges([new UserSignInLog { UserName = "a", SignInType = SignInType.Password, Succeeded = true }], TestContext.Current.CancellationToken);
 
@@ -46,9 +46,9 @@ public class LegacyConstructorCompatibilityTests
     {
         var repository = Mock.Of<ISecurityRepository>();
 
-#pragma warning disable VC0014
+#pragma warning disable VC0016
         var service = new UserApiKeySearchService(() => repository);
-#pragma warning restore VC0014
+#pragma warning restore VC0016
 
         service.Should().NotBeNull();
     }

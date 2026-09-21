@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Security.Services
         private readonly IScopedServiceFactory<UserManager<ApplicationUser>> _userManagerFactory;
         private readonly IScopedServiceFactory<RoleManager<Role>> _roleManagerFactory;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public UserSearchService(Func<UserManager<ApplicationUser>> userManager, Func<RoleManager<Role>> roleManagerFactory)
             : this(new DelegateScopedServiceFactory<UserManager<ApplicationUser>>(userManager), new DelegateScopedServiceFactory<RoleManager<Role>>(roleManagerFactory))
         {

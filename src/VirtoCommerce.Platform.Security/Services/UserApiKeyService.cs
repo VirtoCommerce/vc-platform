@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Security.Services
         private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public UserApiKeyService(Func<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
             : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), memoryCache)
         {

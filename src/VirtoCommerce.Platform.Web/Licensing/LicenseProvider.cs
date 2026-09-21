@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
         private readonly PlatformOptions _platformOptions;
         private readonly IScopedServiceFactory<IPlatformRepository> _platformRepositoryFactory;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public LicenseProvider(IOptions<PlatformOptions> platformOptions, Func<IPlatformRepository> platformRepositoryFactory)
             : this(platformOptions, new DelegateScopedServiceFactory<IPlatformRepository>(platformRepositoryFactory))
         {

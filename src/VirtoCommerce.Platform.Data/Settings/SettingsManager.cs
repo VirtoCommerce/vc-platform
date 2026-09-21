@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly ILogger<SettingsManager> _logger;
         private volatile IDictionary<string, string[]> _cachedTypeAssignments;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
         }
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,

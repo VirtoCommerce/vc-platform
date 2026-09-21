@@ -19,7 +19,7 @@ public class UserSessionsSearchService : IUserSessionsSearchService
     private readonly IOpenIddictTokenManager _tokenManager;
     private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
 
-    [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, Func<ISecurityRepository> repositoryFactory)
         : this(tokenManager, new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory))
     {

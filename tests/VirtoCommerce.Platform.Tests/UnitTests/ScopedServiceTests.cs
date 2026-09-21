@@ -96,15 +96,16 @@ public class ScopedServiceTests
     }
 
     [Fact]
-    public void Dispose_AsyncOnlyService_ThrowsAndKeepsOwnership()
+    public async Task Dispose_AsyncOnlyService_IsNoOpAndKeepsOwnershipForDisposeAsync()
     {
         var service = new AsyncOnlyService();
         var scoped = new ScopedService<AsyncOnlyService>(service);
 
-        var act = () => scoped.Dispose();
+        scoped.Dispose();
+        service.IsDisposed.Should().BeFalse("Dispose never throws and cannot release an async-only owner");
 
-        act.Should().Throw<InvalidOperationException>().WithMessage("*DisposeAsync*");
-        service.IsDisposed.Should().BeFalse();
+        await scoped.DisposeAsync();
+        service.IsDisposed.Should().BeTrue("ownership survived the synchronous Dispose");
     }
 
     [Fact]

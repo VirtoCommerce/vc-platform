@@ -19,12 +19,12 @@ namespace VirtoCommerce.Platform.Security
 
         protected readonly IScopedServiceFactory<ISecurityRepository> _scopedRepositoryFactory;
 
-        [Obsolete("Use _scopedRepositoryFactory instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use _scopedRepositoryFactory instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected readonly Func<ISecurityRepository> _repositoryFactory;
         protected readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         protected readonly PasswordOptionsExtended _passwordOptions;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public CustomPasswordValidator(IdentityErrorDescriber errors, Func<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
             : this(errors, new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), passwordHasher, passwordOptions)
         {
@@ -36,9 +36,9 @@ namespace VirtoCommerce.Platform.Security
 
         {
             _scopedRepositoryFactory = repositoryFactory;
-#pragma warning disable VC0014 // Kept for derived validators that still read the legacy field; it hands out the scoped service without owning the scope, exactly as the old Func did.
+#pragma warning disable VC0016 // Kept for derived validators that still read the legacy field; it hands out the scoped service without owning the scope, exactly as the old Func did.
             _repositoryFactory = () => repositoryFactory.Create().Service;
-#pragma warning restore VC0014
+#pragma warning restore VC0016
             _passwordHasher = passwordHasher;
             _passwordOptions = passwordOptions.Value;
         }

@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
         private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public DynamicPropertyDictionaryItemsService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
             : this(new DelegateScopedServiceFactory<IPlatformRepository>(repositoryFactory), memoryCache)
         {
