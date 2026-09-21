@@ -21,11 +21,17 @@ namespace VirtoCommerce.Platform.Caching
                 services.AddOptions<RedisCachingOptions>().Bind(configuration.GetSection("Caching:Redis")).ValidateDataAnnotations();
 
                 services.AddSingleton<IPlatformMemoryCache, RedisPlatformMemoryCache>();
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                    options.InstanceName = $"{configuration.GetValue("Caching:Redis:ChannelName", "VirtoCommerceChannel")}:cache:";
+                });
             }
             else
             {
                 //Use MemoryCache decorator to use global platform cache settings
                 services.AddSingleton<IPlatformMemoryCache, PlatformMemoryCache>();
+                services.AddDistributedMemoryCache();
             }
 
             services.AddScoped<IRequestScopedCache, RequestScopedCache>();
