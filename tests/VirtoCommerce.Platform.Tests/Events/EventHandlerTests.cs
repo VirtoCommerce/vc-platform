@@ -225,7 +225,7 @@ public class EventHandlerTests
 
     public class Handler2(Recorder recorder) : Handler(recorder);
 
-    public class DisposableDependency(Recorder recorder) : IDisposable
+    public sealed class DisposableDependency(Recorder recorder) : IDisposable
     {
         public bool IsDisposed { get; private set; }
 
