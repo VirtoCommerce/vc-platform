@@ -9,43 +9,57 @@ namespace VirtoCommerce.Platform.Core.Common;
 public sealed class ScopedService<T> : IDisposable, IAsyncDisposable
     where T : class
 {
-    private IServiceScope _scope;
+    // The DI scope, or the service itself when no scope owns it.
+    private object _owned;
 
     public ScopedService(T service, IServiceScope scope)
     {
         Service = service ?? throw new ArgumentNullException(nameof(service));
-        _scope = scope ?? throw new ArgumentNullException(nameof(scope));
+        _owned = scope ?? throw new ArgumentNullException(nameof(scope));
     }
 
-    // For test doubles and adapters: wraps an instance that no scope owns, so Dispose releases nothing.
+    // Wraps a service that no DI scope owns (legacy Func<T> factories, test doubles):
+    // disposing the wrapper disposes the service itself when it is disposable.
     public ScopedService(T service)
     {
         Service = service ?? throw new ArgumentNullException(nameof(service));
+        _owned = service;
     }
 
     public T Service { get; }
 
-    // The scope's provider, for services that must live in the same scope as Service.
-    public IServiceProvider ServiceProvider => _scope?.ServiceProvider;
+    // The scope's provider, for services that must live in the same scope as Service. Null when no scope owns the service.
+    public IServiceProvider ServiceProvider => (_owned as IServiceScope)?.ServiceProvider;
 
     public void Dispose()
     {
-        var scope = _scope;
-        _scope = null;
-        scope?.Dispose();
+        var owned = _owned;
+        _owned = null;
+
+        switch (owned)
+        {
+            case IDisposable disposable:
+                disposable.Dispose();
+                break;
+            case IAsyncDisposable asyncDisposable:
+                asyncDisposable.DisposeAsync().AsTask().GetAwaiter().GetResult();
+                break;
+        }
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        var scope = _scope;
-        _scope = null;
+        var owned = _owned;
+        _owned = null;
 
-        if (scope is IAsyncDisposable asyncDisposable)
+        switch (owned)
         {
-            return asyncDisposable.DisposeAsync();
+            case IAsyncDisposable asyncDisposable:
+                await asyncDisposable.DisposeAsync();
+                break;
+            case IDisposable disposable:
+                disposable.Dispose();
+                break;
         }
-
-        scope?.Dispose();
-        return default;
     }
 }

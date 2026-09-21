@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Caching;
@@ -28,6 +29,17 @@ namespace VirtoCommerce.Platform.Security
         private readonly PasswordOptionsExtended _passwordOptionsExtended;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
 
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher,
+            IOptions<UserOptionsExtended> userOptionsExtended,
+            IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
+            ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
+            ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher, Func<ISecurityRepository> repositoryFactory, IOptions<PasswordOptionsExtended> passwordOptionsExtended)
+            : this(store, optionsAccessor, passwordHasher, userOptionsExtended, userValidators, passwordValidators, keyNormalizer, errors, services, logger, roleManager, memoryCache, eventPublisher, new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), passwordOptionsExtended)
+        {
+        }
+
+        [ActivatorUtilitiesConstructor]
         public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher,
             IOptions<UserOptionsExtended> userOptionsExtended,
             IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
@@ -16,6 +17,15 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public ChangeLogService(
+            Func<IPlatformRepository> platformRepositoryFactory
+            , IPlatformMemoryCache memoryCache)
+            : this(new DelegateScopedServiceFactory<IPlatformRepository>(platformRepositoryFactory), memoryCache)
+        {
+        }
+
+        [ActivatorUtilitiesConstructor]
         public ChangeLogService(
             IScopedServiceFactory<IPlatformRepository> platformRepositoryFactory
             , IPlatformMemoryCache memoryCache)

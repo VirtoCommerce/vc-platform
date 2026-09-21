@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -11,6 +13,13 @@ namespace VirtoCommerce.Platform.Web.Licensing
         private readonly PlatformOptions _platformOptions;
         private readonly IScopedServiceFactory<IPlatformRepository> _platformRepositoryFactory;
 
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public LicenseProvider(IOptions<PlatformOptions> platformOptions, Func<IPlatformRepository> platformRepositoryFactory)
+            : this(platformOptions, new DelegateScopedServiceFactory<IPlatformRepository>(platformRepositoryFactory))
+        {
+        }
+
+        [ActivatorUtilitiesConstructor]
         public LicenseProvider(IOptions<PlatformOptions> platformOptions, IScopedServiceFactory<IPlatformRepository> platformRepositoryFactory)
         {
             _platformOptions = platformOptions.Value;

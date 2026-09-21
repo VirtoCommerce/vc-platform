@@ -71,7 +71,20 @@ public class ScopedServiceTests
     }
 
     [Fact]
-    public void Constructor_WithoutScope_DisposeIsNoOp()
+    public void Constructor_WithoutScope_OwnsTheServiceItself()
+    {
+        var dependency = new DisposableDependency(new Recorder());
+
+        var scoped = new ScopedService<DisposableDependency>(dependency);
+        scoped.ServiceProvider.Should().BeNull();
+        scoped.Dispose();
+        scoped.Dispose();
+
+        dependency.IsDisposed.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Constructor_WithoutScope_NonDisposableService_DisposeIsNoOp()
     {
         var service = new Service(new DisposableDependency(new Recorder()));
 
@@ -79,8 +92,38 @@ public class ScopedServiceTests
         scoped.Dispose();
 
         scoped.Service.Should().BeSameAs(service);
-        scoped.ServiceProvider.Should().BeNull();
-        service.Dependency.IsDisposed.Should().BeFalse();
+        service.Dependency.IsDisposed.Should().BeFalse("the wrapper owns the service, not what the service holds");
+    }
+
+    [Fact]
+    public void DelegateFactory_FromFunc_WrapperDisposesTheProducedInstance()
+    {
+        var dependency = new DisposableDependency(new Recorder());
+        var factory = new DelegateScopedServiceFactory<DisposableDependency>(() => dependency);
+
+        using (var scoped = factory.Create())
+        {
+            scoped.Service.Should().BeSameAs(dependency);
+            dependency.IsDisposed.Should().BeFalse();
+        }
+
+        dependency.IsDisposed.Should().BeTrue("legacy Func<T> callers disposed what the factory returned, and so does the wrapper");
+    }
+
+    [Fact]
+    public void DelegateFactory_FromScopedServiceDelegate_UsesTheProducedWrapper()
+    {
+        using var provider = BuildProvider();
+        var factory = new DelegateScopedServiceFactory<Service>(() =>
+        {
+            var scope = provider.CreateScope();
+            return new ScopedService<Service>(scope.ServiceProvider.GetRequiredService<Service>(), scope);
+        });
+
+        var scoped = factory.Create();
+        scoped.Dispose();
+
+        scoped.Service.Dependency.IsDisposed.Should().BeTrue();
     }
 
     private static ServiceProvider BuildProvider(Action<IServiceCollection> configure = null)

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -13,6 +14,13 @@ namespace VirtoCommerce.Platform.Security.Services
     {
         private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
 
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public UserApiKeySearchService(Func<ISecurityRepository> repositoryFactory)
+            : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory))
+        {
+        }
+
+        [ActivatorUtilitiesConstructor]
         public UserApiKeySearchService(IScopedServiceFactory<ISecurityRepository> repositoryFactory)
         {
             _repositoryFactory = repositoryFactory;

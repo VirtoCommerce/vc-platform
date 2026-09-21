@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -8,9 +9,26 @@ using VirtoCommerce.Platform.Core.Security.Events;
 
 namespace VirtoCommerce.Platform.Security.Handlers;
 
-public class RevokeUserTokenEventHandler(IScopedServiceFactory<IUserSessionsService> userSessionsServiceFactory) :
-    IEventHandler<UserChangedEvent>
+public class RevokeUserTokenEventHandler : IEventHandler<UserChangedEvent>
 {
+    private readonly IScopedServiceFactory<IUserSessionsService> _userSessionsServiceFactory;
+
+    [ActivatorUtilitiesConstructor]
+    public RevokeUserTokenEventHandler(IScopedServiceFactory<IUserSessionsService> userSessionsServiceFactory)
+    {
+        _userSessionsServiceFactory = userSessionsServiceFactory;
+    }
+
+    [Obsolete("Use the constructor that takes IScopedServiceFactory<IUserSessionsService> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    public RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionService, IServiceScope Scope)> userSessionsServiceFactory)
+        : this(new DelegateScopedServiceFactory<IUserSessionsService>(() =>
+        {
+            var (sessionService, scope) = userSessionsServiceFactory();
+            return new ScopedService<IUserSessionsService>(sessionService, scope);
+        }))
+    {
+    }
+
     public virtual async Task Handle(UserChangedEvent message)
     {
         foreach (var changedEntry in message.ChangedEntries)
@@ -31,7 +49,7 @@ public class RevokeUserTokenEventHandler(IScopedServiceFactory<IUserSessionsServ
 
     protected virtual async Task RevokeUserTokensAsync(string userId)
     {
-        using var scopedSessionService = userSessionsServiceFactory.Create();
+        using var scopedSessionService = _userSessionsServiceFactory.Create();
         await scopedSessionService.Service.TerminateAllUserSessions(userId);
     }
 

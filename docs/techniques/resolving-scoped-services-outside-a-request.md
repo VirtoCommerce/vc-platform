@@ -22,12 +22,24 @@ public class MyService(IScopedServiceFactory<ICatalogRepository> repositoryFacto
 
 The same operation is available from startup code through `IServiceScopeFactory.CreateScopedService<T>()` and `IServiceProvider.CreateScopedService<T>()`.
 
-Unit tests of a consumer can hand it a wrapper that owns no scope:
+Unit tests of a consumer can hand it a wrapper created without a scope. Such a wrapper owns the instance itself: disposing it disposes the instance when it is disposable, and nothing else.
 
 ```csharp
 var factory = new Mock<IScopedServiceFactory<ICatalogRepository>>();
 factory.Setup(x => x.Create()).Returns(() => new ScopedService<ICatalogRepository>(repositoryMock.Object));
 ```
+
+## Compatibility with the `Func<T>` signatures
+
+Platform services that used to take `Func<IPlatformRepository>`, `Func<ISecurityRepository>`, `Func<UserManager<ApplicationUser>>` or `Func<RoleManager<Role>>` keep those constructors, marked `[Obsolete]`. They delegate to the new constructor through `DelegateScopedServiceFactory<T>`, which turns a `Func<T>` into an `IScopedServiceFactory<T>`:
+
+```csharp
+IScopedServiceFactory<ICatalogRepository> factory = new DelegateScopedServiceFactory<ICatalogRepository>(() => repositoryMock.Object);
+```
+
+A derived class that still calls the old `base(...)` constructor compiles with a deprecation warning and behaves as before. `CustomPasswordValidator` keeps its protected `_repositoryFactory` field for the same reason; new code uses `_scopedRepositoryFactory`.
+
+A class that has both constructors cannot be registered with a plain `AddSingleton<TService, TImplementation>()`: the container sees two resolvable constructors with different parameter types and refuses to activate the type. The platform registers such classes with `services.AddActivated<TService, TImplementation>(ServiceLifetime.Singleton)` (or `TryAddActivated`), which selects the constructor marked `[ActivatorUtilitiesConstructor]`. Use the same helper if your own class keeps a legacy constructor alongside the new one.
 
 ## Legacy `Func<T>` factories
 

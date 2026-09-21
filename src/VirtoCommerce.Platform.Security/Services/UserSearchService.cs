@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -14,6 +15,13 @@ namespace VirtoCommerce.Platform.Security.Services
         private readonly IScopedServiceFactory<UserManager<ApplicationUser>> _userManagerFactory;
         private readonly IScopedServiceFactory<RoleManager<Role>> _roleManagerFactory;
 
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public UserSearchService(Func<UserManager<ApplicationUser>> userManager, Func<RoleManager<Role>> roleManagerFactory)
+            : this(new DelegateScopedServiceFactory<UserManager<ApplicationUser>>(userManager), new DelegateScopedServiceFactory<RoleManager<Role>>(roleManagerFactory))
+        {
+        }
+
+        [ActivatorUtilitiesConstructor]
         public UserSearchService(IScopedServiceFactory<UserManager<ApplicationUser>> userManager, IScopedServiceFactory<RoleManager<Role>> roleManagerFactory)
         {
             _userManagerFactory = userManager;

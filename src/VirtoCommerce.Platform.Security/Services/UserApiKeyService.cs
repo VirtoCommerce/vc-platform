@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
@@ -27,6 +28,13 @@ namespace VirtoCommerce.Platform.Security.Services
         private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
+        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public UserApiKeyService(Func<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+            : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), memoryCache)
+        {
+        }
+
+        [ActivatorUtilitiesConstructor]
         public UserApiKeyService(IScopedServiceFactory<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
