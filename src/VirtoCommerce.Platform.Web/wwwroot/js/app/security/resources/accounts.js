@@ -18,6 +18,8 @@ angular.module('platformWebApp').factory('platformWebApp.accounts', ['$resource'
         passwordChangeEnabled: { url: 'api/platform/security/passwordchangeenabled', method: 'GET' },
         searchSessions: { url: 'api/platform/security/users/:userId/sessions/search', method: 'POST' },
         terminateSession: { url: 'api/platform/security/users/:userId/sessions/:id', method: 'DELETE' },
-        terminateAllSessions: { url: 'api/platform/security/users/:userId/sessions', method: 'DELETE' }
+        terminateAllSessions: { url: 'api/platform/security/users/:userId/sessions', method: 'DELETE' },
+        searchSignInLog: { url: 'api/platform/security/sign-in-log/search', method: 'POST' },
+        getSignInLogStats: { url: 'api/platform/security/sign-in-log/stats', method: 'POST' }
     });
 }]);

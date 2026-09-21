@@ -298,3 +298,4 @@ BenchmarkDotNet.Artifacts/
 
 /.claude/settings.local.json
 /.serena
+/.claude/launch.json

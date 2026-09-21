@@ -723,6 +723,104 @@
           "ip-address": "IP-adress",
           "user-agent": "Användaragent"
         }
+      },
+      "sign-in-log": {
+        "title": "Inloggningslogg",
+        "subtitle": "Inloggningsförsök och inloggning å annans vägnar",
+        "filter": {
+          "title": "Filter för inloggningsloggen",
+          "all": "Alla",
+          "period": "Senaste",
+          "period-24h": "24 timmar",
+          "period-7d": "7 dagar",
+          "period-30d": "30 dagar",
+          "period-all": "Hela perioden",
+          "outcome": "Resultat",
+          "sign-in-type": "Typ",
+          "ip-address": "IP-adress",
+          "type-password": "Lösenord",
+          "type-external": "Extern leverantör",
+          "type-impersonation": "Å annans vägnar",
+          "type-impersonation-revert": "Å annans vägnar (retur)",
+          "type-logout": "Utloggning",
+          "period-30m": "30 min",
+          "period-1h": "1 timme",
+          "period-6h": "6 timmar",
+          "store": "Butik",
+          "any-store": "Valfri butik",
+          "no-store": "Ingen butik",
+          "period-custom": "Anpassad",
+          "date-from": "Från",
+          "date-to": "Till"
+        },
+        "labels": {
+          "date": "Datum",
+          "user-name": "Användare",
+          "outcome": "Resultat",
+          "succeeded": "Lyckades",
+          "failed": "Misslyckades",
+          "failure-reason": "Orsak",
+          "sign-in-type": "Typ",
+          "ip-address": "IP-adress",
+          "organization": "Organisation",
+          "impersonation": "Å annans vägnar",
+          "on-behalf-of": "På uppdrag av"
+        },
+        "stats": {
+          "total": "Inloggningar",
+          "failed": "Misslyckade försök",
+          "users": "Inloggade användare",
+          "impersonation": "Å annans vägnar",
+          "top-failed-ips": "Vanligaste IP-adresserna efter misslyckade försök",
+          "top-failed-users": "Vanligaste kontona efter misslyckade försök",
+          "failure-reasons": "Felorsaker",
+          "by-organization": "Inloggningar per organisation",
+          "none": "Inga data",
+          "total-hint": "Alla inloggningsförsök under perioden, både lyckade och misslyckade. Klicka för att visa dem.",
+          "failed-hint": "Försök som inte loggade in någon. Klicka för att endast visa misslyckade.",
+          "users-hint": "Unika konton som loggade in, räknade en gång vardera oavsett antal inloggningar. Klicka för att visa lyckade inloggningar.",
+          "impersonation-hint": "Sessioner där supporten loggade in å en kunds vägnar. Klicka för att visa dem.",
+          "timeline": "Försök över tid",
+          "by-store": "Inloggningar per butik"
+        },
+        "hints": {
+          "known-accounts-only": "Omfattar endast försök mot befintliga konton."
+        },
+        "detail": {
+          "title": "Inloggningspost",
+          "user-id": "Användar-ID",
+          "operator-name": "Operatör",
+          "operator-id": "Operatörs-ID",
+          "member-id": "Medlems-ID",
+          "user-agent": "Användaragent",
+          "client-id": "Klient",
+          "host": "Värd",
+          "store-name": "Butiksnamn",
+          "organization-id": "Organisations-ID",
+          "session-id": "Sessions-ID",
+          "provider": "Identitetsleverantör"
+        },
+        "disabled": {
+          "title": "Registrering av inloggningar är avstängd",
+          "message": "Nya inloggningsförsök registreras inte, så den här loggen förblir oförändrad. Be en administratör att aktivera ”Registrera inloggningsförsök” under Inställningar › Plattform › Inloggningslogg. Inloggning å annans vägnar registreras alltid."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Inloggningslogg",
+        "subtitle": "Inloggningsaktivitet och inloggning å annans vägnar",
+        "commands": {
+          "view-all": "Visa alla poster"
+        },
+        "presets": {
+          "all": "Alla poster",
+          "failed": "Misslyckade försök",
+          "impersonation": "Inloggning å annans vägnar",
+          "by-ip": "Misslyckade försök från IP",
+          "by-user": "Misslyckade försök för konto",
+          "by-reason": "Misslyckade försök per orsak",
+          "succeeded": "Lyckade inloggningar",
+          "by-store": "Inloggningar för butik"
+        }
       }
     },
     "templates": {
@@ -787,6 +885,9 @@
       },
       "sessions": {
         "title": "Aktiva sessioner"
+      },
+      "sign-in-log": {
+        "title": "Inloggningslogg"
       }
     },
     "dialogs": {
@@ -1033,6 +1134,22 @@
           "FileExtensionsWhiteList": {
             "description": "Filändelser som är tillåtna att ladda upp av plattformen (utöver 'FileExtensionsWhiteList' i appsettings.json)",
             "title": "Vit lista"
+          },
+          "SignInLogEnabled": {
+            "title": "Registrera inloggningsförsök",
+            "description": "Registrerar varje inloggningsförsök, både lyckade och misslyckade, i inloggningsloggen. Inloggning å annans vägnar registreras alltid och påverkas inte av den här inställningen."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Behåll poster i (dagar)",
+            "description": "Hur länge inloggningsposter behålls innan rensningsjobbet tar bort dem. Ange 0 eller mindre för att behålla dem för alltid."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Rensa gamla inloggningsposter",
+            "description": "Kör ett schemalagt jobb som tar bort inloggningsposter äldre än lagringsperioden."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron för rensningsjobbet för inloggningsloggen",
+            "description": "Cron-uttryck för jobbet som tar bort inloggningsposter äldre än lagringsperioden."
           }
         },
         "UI": {
