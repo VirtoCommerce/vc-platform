@@ -135,7 +135,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var tokenGrantHandler = _tokenGrantHandlers.FirstOrDefault(x => x.GrantType == openIdConnectRequest.GrantType);
             if (tokenGrantHandler != null)
             {
-                var tokenGrantResult = await tokenGrantHandler.HandleAsync(openIdConnectRequest, context);
+                var tokenGrantResult = await tokenGrantHandler.HandleAsync(context);
                 return tokenGrantResult.Success
                     ? SignIn(tokenGrantResult.Principal, tokenGrantResult.Properties, tokenGrantResult.AuthenticationScheme)
                     : BadRequest(tokenGrantResult.Error);

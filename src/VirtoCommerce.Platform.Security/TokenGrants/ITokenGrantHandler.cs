@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Security.OpenIddict;
 
 namespace VirtoCommerce.Platform.Security.TokenGrants
@@ -17,8 +16,9 @@ namespace VirtoCommerce.Platform.Security.TokenGrants
         string GrantType { get; }
 
         /// <summary>
-        /// Handles the token request and returns a signed-in principal or an error.
+        /// Handles the token request (<see cref="TokenRequestContext.Request"/>) and returns a signed-in
+        /// principal or an error.
         /// </summary>
-        Task<TokenGrantResult> HandleAsync(OpenIddictRequest request, TokenRequestContext context);
+        Task<TokenGrantResult> HandleAsync(TokenRequestContext context);
     }
 }
