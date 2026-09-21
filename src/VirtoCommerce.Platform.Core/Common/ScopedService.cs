@@ -33,18 +33,15 @@ public sealed class ScopedService<T> : IDisposable, IAsyncDisposable
 
     public void Dispose()
     {
+        // Same rule as the DI container: a service that is only IAsyncDisposable cannot be released synchronously.
+        if (_owned is IAsyncDisposable and not IDisposable)
+        {
+            throw new InvalidOperationException($"'{_owned.GetType()}' only implements IAsyncDisposable. Use DisposeAsync to dispose it.");
+        }
+
         var owned = _owned;
         _owned = null;
-
-        switch (owned)
-        {
-            case IDisposable disposable:
-                disposable.Dispose();
-                break;
-            case IAsyncDisposable asyncDisposable:
-                asyncDisposable.DisposeAsync().AsTask().GetAwaiter().GetResult();
-                break;
-        }
+        (owned as IDisposable)?.Dispose();
     }
 
     public async ValueTask DisposeAsync()

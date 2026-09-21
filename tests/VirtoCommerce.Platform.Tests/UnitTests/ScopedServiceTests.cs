@@ -96,6 +96,29 @@ public class ScopedServiceTests
     }
 
     [Fact]
+    public void Dispose_AsyncOnlyService_ThrowsAndKeepsOwnership()
+    {
+        var service = new AsyncOnlyService();
+        var scoped = new ScopedService<AsyncOnlyService>(service);
+
+        var act = () => scoped.Dispose();
+
+        act.Should().Throw<InvalidOperationException>().WithMessage("*DisposeAsync*");
+        service.IsDisposed.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task DisposeAsync_AsyncOnlyService_Disposes()
+    {
+        var service = new AsyncOnlyService();
+        var scoped = new ScopedService<AsyncOnlyService>(service);
+
+        await scoped.DisposeAsync();
+
+        service.IsDisposed.Should().BeTrue();
+    }
+
+    [Fact]
     public void DelegateFactory_FromFunc_WrapperDisposesTheProducedInstance()
     {
         var dependency = new DisposableDependency(new Recorder());
@@ -143,7 +166,7 @@ public class ScopedServiceTests
         public int Disposed { get; set; }
     }
 
-    public class DisposableDependency(Recorder recorder) : IDisposable
+    public sealed class DisposableDependency(Recorder recorder) : IDisposable
     {
         public bool IsDisposed { get; private set; }
 
@@ -151,6 +174,17 @@ public class ScopedServiceTests
         {
             IsDisposed = true;
             recorder.Disposed++;
+        }
+    }
+
+    public sealed class AsyncOnlyService : IAsyncDisposable
+    {
+        public bool IsDisposed { get; private set; }
+
+        public ValueTask DisposeAsync()
+        {
+            IsDisposed = true;
+            return default;
         }
     }
 
