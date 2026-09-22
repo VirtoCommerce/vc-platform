@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Testing;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Security;
@@ -122,7 +123,7 @@ public class UserApiKeyServiceTests
         var repository = new Mock<ISecurityRepository>();
         repository.Setup(x => x.UserApiKeys).Returns(new List<UserApiKeyEntity>(rows).BuildMock());
 
-        return new UserApiKeyService(ScopedServiceFactoryStub.Of(repository.Object), cache);
+        return new UserApiKeyService(ScopedFactoryStub.Of(repository.Object), cache);
     }
 
     private sealed class RecordingPlatformMemoryCache : PlatformMemoryCache

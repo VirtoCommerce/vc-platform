@@ -13,17 +13,17 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 {
     public class DynamicPropertySearchService : IDynamicPropertySearchService
     {
-        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _repositoryFactory;
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected DynamicPropertySearchService(Func<IPlatformRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, IPlatformMemoryCache memoryCache)
-            : this(new DelegateScopedServiceFactory<IPlatformRepository>(repositoryFactory), dynamicPropertyService, memoryCache)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), dynamicPropertyService, memoryCache)
         {
         }
 
-        public DynamicPropertySearchService(IScopedServiceFactory<IPlatformRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, IPlatformMemoryCache memoryCache)
+        public DynamicPropertySearchService(IScopedFactory<IPlatformRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _dynamicPropertyService = dynamicPropertyService;

@@ -15,16 +15,16 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 {
     public class ChangeLogSearchService : IChangeLogSearchService
     {
-        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected ChangeLogSearchService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
-            : this(new DelegateScopedServiceFactory<IPlatformRepository>(repositoryFactory), memoryCache)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), memoryCache)
         {
         }
 
-        public ChangeLogSearchService(IScopedServiceFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+        public ChangeLogSearchService(IScopedFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;

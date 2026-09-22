@@ -24,17 +24,17 @@ namespace VirtoCommerce.Platform.Security
         private readonly RoleManager<Role> _roleManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly UserOptionsExtended _userOptionsExtended;
-        private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
+        private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
         private readonly PasswordOptionsExtended _passwordOptionsExtended;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher,
             IOptions<UserOptionsExtended> userOptionsExtended,
             IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
             ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher, Func<ISecurityRepository> repositoryFactory, IOptions<PasswordOptionsExtended> passwordOptionsExtended)
-            : this(store, optionsAccessor, passwordHasher, userOptionsExtended, userValidators, passwordValidators, keyNormalizer, errors, services, logger, roleManager, memoryCache, eventPublisher, new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), passwordOptionsExtended)
+            : this(store, optionsAccessor, passwordHasher, userOptionsExtended, userValidators, passwordValidators, keyNormalizer, errors, services, logger, roleManager, memoryCache, eventPublisher, new DelegateScopedFactory<ISecurityRepository>(repositoryFactory), passwordOptionsExtended)
         {
         }
 
@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Security
             IOptions<UserOptionsExtended> userOptionsExtended,
             IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
-            ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher, IScopedServiceFactory<ISecurityRepository> repositoryFactory, IOptions<PasswordOptionsExtended> passwordOptionsExtended)
+            ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher, IScopedFactory<ISecurityRepository> repositoryFactory, IOptions<PasswordOptionsExtended> passwordOptionsExtended)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _memoryCache = memoryCache;

@@ -13,19 +13,19 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 {
     public class ChangeLogService : IChangeLogService, ILastModifiedDateTime
     {
-        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected ChangeLogService(
             Func<IPlatformRepository> platformRepositoryFactory
             , IPlatformMemoryCache memoryCache)
-            : this(new DelegateScopedServiceFactory<IPlatformRepository>(platformRepositoryFactory), memoryCache)
+            : this(new DelegateScopedFactory<IPlatformRepository>(platformRepositoryFactory), memoryCache)
         {
         }
 
         public ChangeLogService(
-            IScopedServiceFactory<IPlatformRepository> platformRepositoryFactory
+            IScopedFactory<IPlatformRepository> platformRepositoryFactory
             , IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = platformRepositoryFactory;

@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.Settings

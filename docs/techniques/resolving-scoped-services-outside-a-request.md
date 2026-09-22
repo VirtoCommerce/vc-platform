@@ -2,12 +2,12 @@
 
 Singletons, event handlers and background jobs have no request scope, so a scoped service such as a `DbContext`-backed repository or `UserManager<ApplicationUser>` cannot be injected into them directly. Such a service has to be created in a DI scope of its own, and that scope has to be released when the work is done.
 
-## `IScopedServiceFactory<T>`
+## `IScopedFactory<T>`
 
-Inject `IScopedServiceFactory<T>` for the service you need. The platform registers it once as an open generic, so no per-type registration is needed in your module:
+Inject `IScopedFactory<T>` for the service you need. The platform registers it once as an open generic, so no per-type registration is needed in your module:
 
 ```csharp
-public class MyService(IScopedServiceFactory<ICatalogRepository> repositoryFactory)
+public class MyService(IScopedFactory<ICatalogRepository> repositoryFactory)
 {
     public async Task DoWork()
     {
@@ -25,22 +25,22 @@ The same operation is available from startup code through `IServiceScopeFactory.
 Unit tests of a consumer can hand it a wrapper created without a scope. Such a wrapper owns the instance itself: disposing it disposes the instance when it is disposable, and nothing else.
 
 ```csharp
-var factory = new Mock<IScopedServiceFactory<ICatalogRepository>>();
+var factory = new Mock<IScopedFactory<ICatalogRepository>>();
 factory.Setup(x => x.Create()).Returns(() => new ScopedService<ICatalogRepository>(repositoryMock.Object));
 ```
 
 ## Compatibility with the `Func<T>` signatures
 
-Platform services that used to take `Func<IPlatformRepository>`, `Func<ISecurityRepository>`, `Func<UserManager<ApplicationUser>>` or `Func<RoleManager<Role>>` keep those constructors as **protected** members marked `[Obsolete]`. They delegate to the new constructor through `DelegateScopedServiceFactory<T>`, which turns a `Func<T>` into an `IScopedServiceFactory<T>`:
+Platform services that used to take `Func<IPlatformRepository>`, `Func<ISecurityRepository>`, `Func<UserManager<ApplicationUser>>` or `Func<RoleManager<Role>>` keep those constructors as **protected** members marked `[Obsolete]`. They delegate to the new constructor through `DelegateScopedFactory<T>`, which turns a `Func<T>` into an `IScopedFactory<T>`:
 
 ```csharp
-IScopedServiceFactory<ICatalogRepository> factory = new DelegateScopedServiceFactory<ICatalogRepository>(() => repositoryMock.Object);
+IScopedFactory<ICatalogRepository> factory = new DelegateScopedFactory<ICatalogRepository>(() => repositoryMock.Object);
 ```
 
 A derived class that still calls the old `base(...)` constructor keeps compiling (with a deprecation warning) and keeps binding at runtime, so already-built modules and customizations are unaffected. `CustomPasswordValidator` keeps its protected `_repositoryFactory` field for the same reason; new code uses `_scopedRepositoryFactory`.
 
-The legacy constructors are protected rather than public on purpose: the dependency-injection container only considers public constructors, so each service still exposes exactly one and plain `AddSingleton<TService, TImplementation>()` registrations keep working. Code that constructed one of these services directly with `new` and a `Func<T>` (in practice only unit tests) must switch to the `IScopedServiceFactory<T>` constructor.
+The legacy constructors are protected rather than public on purpose: the dependency-injection container only considers public constructors, so each service still exposes exactly one and plain `AddSingleton<TService, TImplementation>()` registrations keep working. Code that constructed one of these services directly with `new` and a `Func<T>` (in practice only unit tests) must switch to the `IScopedFactory<T>` constructor.
 
 ## Legacy `Func<T>` factories
 
-Older code injects `Func<ICatalogRepository>` or `Func<UserManager<ApplicationUser>>` and calls `using var repository = _repositoryFactory();`. Those factories are written as `provider.CreateScope().ServiceProvider.GetService<T>()`: nothing owns the scope they create, so the scope and every service in it stay alive until the returned instance is garbage collected, and a misconfigured `T` comes back as `null` instead of failing at the call. The registrations are kept for compatibility. Move a consumer to `IScopedServiceFactory<T>` when you touch it, and do not register new factories in that shape.
+Older code injects `Func<ICatalogRepository>` or `Func<UserManager<ApplicationUser>>` and calls `using var repository = _repositoryFactory();`. Those factories are written as `provider.CreateScope().ServiceProvider.GetService<T>()`: nothing owns the scope they create, so the scope and every service in it stay alive until the returned instance is garbage collected, and a misconfigured `T` comes back as `null` instead of failing at the call. The registrations are kept for compatibility. Move a consumer to `IScopedFactory<T>` when you touch it, and do not register new factories in that shape.

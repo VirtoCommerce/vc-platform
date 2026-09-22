@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Data.Settings
     /// </summary>
     public class SettingsManager : ISettingsManager
     {
-        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly IDictionary<string, SettingDescriptor> _registeredSettingsByNameDict = new Dictionary<string, SettingDescriptor>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IDictionary<string, IEnumerable<SettingDescriptor>> _registeredTypeSettingsByNameDict = new Dictionary<string, IEnumerable<SettingDescriptor>>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
@@ -38,17 +38,17 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly ILogger<SettingsManager> _logger;
         private volatile IDictionary<string, string[]> _cachedTypeAssignments;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,
             ISettingsOverrideProvider overrideProvider)
-            : this(new DelegateScopedServiceFactory<IPlatformRepository>(repositoryFactory), memoryCache, eventPublisher, fixedSettings, overrideProvider)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), memoryCache, eventPublisher, fixedSettings, overrideProvider)
         {
         }
 
-        public SettingsManager(IScopedServiceFactory<IPlatformRepository> repositoryFactory,
+        public SettingsManager(IScopedFactory<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,
@@ -57,18 +57,18 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
         }
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,
             ISettingsOverrideProvider overrideProvider,
             ILogger<SettingsManager> logger)
-            : this(new DelegateScopedServiceFactory<IPlatformRepository>(repositoryFactory), memoryCache, eventPublisher, fixedSettings, overrideProvider, logger)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), memoryCache, eventPublisher, fixedSettings, overrideProvider, logger)
         {
         }
 
-        public SettingsManager(IScopedServiceFactory<IPlatformRepository> repositoryFactory,
+        public SettingsManager(IScopedFactory<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,

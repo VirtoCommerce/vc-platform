@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace VirtoCommerce.Platform.Core.Common;
 
-public class ScopedServiceFactory<T>(IServiceScopeFactory scopeFactory) : IScopedServiceFactory<T>
+public class ScopedFactory<T>(IServiceScopeFactory scopeFactory) : IScopedFactory<T>
     where T : class
 {
     public ScopedService<T> Create()

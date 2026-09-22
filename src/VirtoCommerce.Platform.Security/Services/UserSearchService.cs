@@ -11,16 +11,16 @@ namespace VirtoCommerce.Platform.Security.Services
 {
     public class UserSearchService : IUserSearchService
     {
-        private readonly IScopedServiceFactory<UserManager<ApplicationUser>> _userManagerFactory;
-        private readonly IScopedServiceFactory<RoleManager<Role>> _roleManagerFactory;
+        private readonly IScopedFactory<UserManager<ApplicationUser>> _userManagerFactory;
+        private readonly IScopedFactory<RoleManager<Role>> _roleManagerFactory;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected UserSearchService(Func<UserManager<ApplicationUser>> userManager, Func<RoleManager<Role>> roleManagerFactory)
-            : this(new DelegateScopedServiceFactory<UserManager<ApplicationUser>>(userManager), new DelegateScopedServiceFactory<RoleManager<Role>>(roleManagerFactory))
+            : this(new DelegateScopedFactory<UserManager<ApplicationUser>>(userManager), new DelegateScopedFactory<RoleManager<Role>>(roleManagerFactory))
         {
         }
 
-        public UserSearchService(IScopedServiceFactory<UserManager<ApplicationUser>> userManager, IScopedServiceFactory<RoleManager<Role>> roleManagerFactory)
+        public UserSearchService(IScopedFactory<UserManager<ApplicationUser>> userManager, IScopedFactory<RoleManager<Role>> roleManagerFactory)
         {
             _userManagerFactory = userManager;
             _roleManagerFactory = roleManagerFactory;

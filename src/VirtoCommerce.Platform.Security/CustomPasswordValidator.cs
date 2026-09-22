@@ -16,20 +16,20 @@ namespace VirtoCommerce.Platform.Security
     {
         public const string RecentPasswordUsed = "RecentPasswordUsed";
 
-        protected readonly IScopedServiceFactory<ISecurityRepository> _scopedRepositoryFactory;
+        protected readonly IScopedFactory<ISecurityRepository> _scopedRepositoryFactory;
 
         [Obsolete("Use _scopedRepositoryFactory instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected readonly Func<ISecurityRepository> _repositoryFactory;
         protected readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         protected readonly PasswordOptionsExtended _passwordOptions;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected CustomPasswordValidator(IdentityErrorDescriber errors, Func<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
-            : this(errors, new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), passwordHasher, passwordOptions)
+            : this(errors, new DelegateScopedFactory<ISecurityRepository>(repositoryFactory), passwordHasher, passwordOptions)
         {
         }
 
-        public CustomPasswordValidator(IdentityErrorDescriber errors, IScopedServiceFactory<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
+        public CustomPasswordValidator(IdentityErrorDescriber errors, IScopedFactory<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
             : base(errors)
 
         {

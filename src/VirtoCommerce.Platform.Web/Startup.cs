@@ -532,7 +532,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddTransient<IUserSessionsSearchService, UserSessionsSearchService>();
 
-            // Legacy factory kept for modules that still inject it (Customer, ProfileExperienceApi). New code uses IScopedServiceFactory<IUserSessionsService>.
+            // Legacy factory kept for modules that still inject it (Customer, ProfileExperienceApi). New code uses IScopedFactory<IUserSessionsService>.
             services.AddScoped<IUserSessionsService, UserSessionsService>();
             services.AddSingleton<Func<(IUserSessionsService SessionService, IServiceScope Scope)>>(provider => () =>
                 {

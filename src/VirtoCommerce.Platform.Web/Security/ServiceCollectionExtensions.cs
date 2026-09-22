@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.TryAddScoped<IPasswordValidator<ApplicationUser>, CustomPasswordValidator>();
             services.TryAddScoped<IdentityErrorDescriber, CustomIdentityErrorDescriber>();
             services.TryAddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
-            // Legacy factories: nothing owns the scope they create. Prefer IScopedServiceFactory<T> in new code.
+            // Legacy factories: nothing owns the scope they create. Prefer IScopedFactory<T> in new code.
             services.AddSingleton<Func<RoleManager<Role>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<RoleManager<Role>>());
             services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<UserManager<ApplicationUser>>());
             services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());

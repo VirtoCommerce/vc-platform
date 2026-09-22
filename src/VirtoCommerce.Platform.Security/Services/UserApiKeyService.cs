@@ -24,16 +24,16 @@ namespace VirtoCommerce.Platform.Security.Services
 
         private static readonly TimeSpan _missingApiKeyExpiration = TimeSpan.FromSeconds(30);
 
-        private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
+        private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected UserApiKeyService(Func<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
-            : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), memoryCache)
+            : this(new DelegateScopedFactory<ISecurityRepository>(repositoryFactory), memoryCache)
         {
         }
 
-        public UserApiKeyService(IScopedServiceFactory<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+        public UserApiKeyService(IScopedFactory<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;

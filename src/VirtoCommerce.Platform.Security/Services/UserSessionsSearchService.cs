@@ -16,15 +16,15 @@ namespace VirtoCommerce.Platform.Security.Services;
 public class UserSessionsSearchService : IUserSessionsSearchService
 {
     private readonly IOpenIddictTokenManager _tokenManager;
-    private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
 
-    [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     protected UserSessionsSearchService(IOpenIddictTokenManager tokenManager, Func<ISecurityRepository> repositoryFactory)
-        : this(tokenManager, new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory))
+        : this(tokenManager, new DelegateScopedFactory<ISecurityRepository>(repositoryFactory))
     {
     }
 
-    public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, IScopedServiceFactory<ISecurityRepository> repositoryFactory)
+    public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, IScopedFactory<ISecurityRepository> repositoryFactory)
     {
         _tokenManager = tokenManager;
         _repositoryFactory = repositoryFactory;

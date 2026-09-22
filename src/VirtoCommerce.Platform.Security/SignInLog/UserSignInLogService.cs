@@ -14,15 +14,15 @@ namespace VirtoCommerce.Platform.Security.SignInLog;
 
 public class UserSignInLogService : IUserSignInLogService
 {
-    private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
 
-    [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     protected UserSignInLogService(Func<ISecurityRepository> repositoryFactory)
-        : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory))
+        : this(new DelegateScopedFactory<ISecurityRepository>(repositoryFactory))
     {
     }
 
-    public UserSignInLogService(IScopedServiceFactory<ISecurityRepository> repositoryFactory)
+    public UserSignInLogService(IScopedFactory<ISecurityRepository> repositoryFactory)
     {
         _repositoryFactory = repositoryFactory;
     }

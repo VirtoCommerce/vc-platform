@@ -57,9 +57,9 @@ public class LegacyConstructorCompatibilityTests
     public void PlainRegistration_WithLegacyAndNewFactoriesRegistered_Activates()
     {
         // The legacy constructor is protected, so the container sees a single public constructor and never
-        // reports an ambiguity, even though both Func<T> and IScopedServiceFactory<T> are resolvable.
+        // reports an ambiguity, even though both Func<T> and IScopedFactory<T> are resolvable.
         var services = new ServiceCollection();
-        services.AddSingleton(typeof(IScopedServiceFactory<>), typeof(ScopedServiceFactory<>));
+        services.AddSingleton(typeof(IScopedFactory<>), typeof(ScopedFactory<>));
         services.AddTransient<ISecurityRepository>(_ => Mock.Of<ISecurityRepository>());
         services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.GetRequiredService<ISecurityRepository>());
         services.AddSingleton<IUserApiKeySearchService, UserApiKeySearchService>();

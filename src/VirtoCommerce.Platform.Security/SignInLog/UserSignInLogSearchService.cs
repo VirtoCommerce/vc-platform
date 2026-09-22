@@ -29,16 +29,16 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     private static readonly Expression<Func<UserSignInLogEntity, bool>> ImpersonationSession =
         x => x.SignInType == SignInType.Impersonation && x.Succeeded;
 
-    private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
     private readonly ISettingsManager _settingsManager;
 
-    [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     protected UserSignInLogSearchService(Func<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
-        : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory), settingsManager)
+        : this(new DelegateScopedFactory<ISecurityRepository>(repositoryFactory), settingsManager)
     {
     }
 
-    public UserSignInLogSearchService(IScopedServiceFactory<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
+    public UserSignInLogSearchService(IScopedFactory<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
     {
         _repositoryFactory = repositoryFactory;
         _settingsManager = settingsManager;

@@ -9,7 +9,7 @@ The custom User Manager is registered in the DI as the **UserManager<Application
 services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
 ```
 
-The platform registers `IScopedServiceFactory<T>` once as an open generic, so `IScopedServiceFactory<UserManager<ApplicationUser>>` can be injected anywhere without further registration. Each `Create()` call resolves the manager in a DI scope of its own and returns a `ScopedService<T>`; disposing that wrapper disposes the scope, and with it the manager and its security `DbContext`. See [Resolving scoped services outside a request](../techniques/resolving-scoped-services-outside-a-request.md) for the general pattern.
+The platform registers `IScopedFactory<T>` once as an open generic, so `IScopedFactory<UserManager<ApplicationUser>>` can be injected anywhere without further registration. Each `Create()` call resolves the manager in a DI scope of its own and returns a `ScopedService<T>`; disposing that wrapper disposes the scope, and with it the manager and its security `DbContext`. See [Resolving scoped services outside a request](../techniques/resolving-scoped-services-outside-a-request.md) for the general pattern.
 
 The older `Func<UserManager<ApplicationUser>>` registration is still present for compatibility, but it does not release the scope it creates.
 
@@ -27,15 +27,15 @@ public void Initialize(IServiceCollection serviceCollection)
 **CustomRoleManager** is registered in the same way.
 
 ## Usage
-You can get both user and role managers by adding `IScopedServiceFactory<T>` to your service constructor. Each `Create()` call resolves the manager in a DI scope of its own; disposing the returned `ScopedService<T>` releases the manager together with its security `DbContext`:
+You can get both user and role managers by adding `IScopedFactory<T>` to your service constructor. Each `Create()` call resolves the manager in a DI scope of its own; disposing the returned `ScopedService<T>` releases the manager together with its security `DbContext`:
 
 ```csharp
     public class MyCoolService 
     {
-        private readonly IScopedServiceFactory<UserManager<ApplicationUser>> _userManagerFactory;
-        private readonly IScopedServiceFactory<RoleManager<Role>> _roleManagerFactory;
+        private readonly IScopedFactory<UserManager<ApplicationUser>> _userManagerFactory;
+        private readonly IScopedFactory<RoleManager<Role>> _roleManagerFactory;
     
-        public MyCoolService(IScopedServiceFactory<UserManager<ApplicationUser>> userManagerFactory, IScopedServiceFactory<RoleManager<Role>> roleManagerFactory)
+        public MyCoolService(IScopedFactory<UserManager<ApplicationUser>> userManagerFactory, IScopedFactory<RoleManager<Role>> roleManagerFactory)
         {
             _userManagerFactory = userManagerFactory;
             _roleManagerFactory = roleManagerFactory;
@@ -51,7 +51,7 @@ You can get both user and role managers by adding `IScopedServiceFactory<T>` to 
     }
 ```
 
-The `Func<UserManager<ApplicationUser>>` and `Func<RoleManager<Role>>` factories shown above are kept for compatibility. They do not release the scope they create, so prefer `IScopedServiceFactory<T>` in new code. See [Resolving scoped services outside a request](../techniques/resolving-scoped-services-outside-a-request.md).
+The `Func<UserManager<ApplicationUser>>` and `Func<RoleManager<Role>>` factories shown above are kept for compatibility. They do not release the scope they create, so prefer `IScopedFactory<T>` in new code. See [Resolving scoped services outside a request](../techniques/resolving-scoped-services-outside-a-request.md).
 
 ## Recomendations
 

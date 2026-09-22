@@ -13,17 +13,17 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 {
     public class DynamicPropertyDictionaryItemsSearchService : IDynamicPropertyDictionaryItemsSearchService
     {
-        private readonly IScopedServiceFactory<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected DynamicPropertyDictionaryItemsSearchService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService)
-            : this(new DelegateScopedServiceFactory<IPlatformRepository>(repositoryFactory), memoryCache, dynamicPropertyDictionaryItemsService)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), memoryCache, dynamicPropertyDictionaryItemsService)
         {
         }
 
-        public DynamicPropertyDictionaryItemsSearchService(IScopedServiceFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService)
+        public DynamicPropertyDictionaryItemsSearchService(IScopedFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;

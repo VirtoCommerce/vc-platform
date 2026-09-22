@@ -7,6 +7,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Testing;
 using Xunit;
 using MockQueryable;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
@@ -82,12 +83,12 @@ public class UserSessionsSearchServiceImpersonationTests
         var repository = new Mock<ISecurityRepository>();
         repository.Setup(x => x.UserSignInLogs).Returns(new List<UserSignInLogEntity>(rows).BuildMock());
 
-        return new TestableUserSessionsSearchService(ScopedServiceFactoryStub.Of(repository.Object));
+        return new TestableUserSessionsSearchService(ScopedFactoryStub.Of(repository.Object));
     }
 
     private sealed class TestableUserSessionsSearchService : UserSessionsSearchService
     {
-        public TestableUserSessionsSearchService(IScopedServiceFactory<ISecurityRepository> repositoryFactory)
+        public TestableUserSessionsSearchService(IScopedFactory<ISecurityRepository> repositoryFactory)
             : base(Mock.Of<OpenIddict.Abstractions.IOpenIddictTokenManager>(), repositoryFactory)
         {
         }

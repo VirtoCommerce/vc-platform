@@ -14,7 +14,7 @@ public class ScopedServiceTests
     public void Create_ResolvesServiceInOwnScope_DisposeReleasesScope()
     {
         using var provider = BuildProvider();
-        var factory = provider.GetRequiredService<IScopedServiceFactory<Service>>();
+        var factory = provider.GetRequiredService<IScopedFactory<Service>>();
 
         var scoped = factory.Create();
         scoped.Service.Dependency.IsDisposed.Should().BeFalse();
@@ -41,7 +41,7 @@ public class ScopedServiceTests
     public void Create_EveryCallGetsItsOwnScope()
     {
         using var provider = BuildProvider();
-        var factory = provider.GetRequiredService<IScopedServiceFactory<Service>>();
+        var factory = provider.GetRequiredService<IScopedFactory<Service>>();
 
         using var first = factory.Create();
         using var second = factory.Create();
@@ -123,7 +123,7 @@ public class ScopedServiceTests
     public void DelegateFactory_FromFunc_WrapperDisposesTheProducedInstance()
     {
         var dependency = new DisposableDependency(new Recorder());
-        var factory = new DelegateScopedServiceFactory<DisposableDependency>(() => dependency);
+        var factory = new DelegateScopedFactory<DisposableDependency>(() => dependency);
 
         using (var scoped = factory.Create())
         {
@@ -138,7 +138,7 @@ public class ScopedServiceTests
     public void DelegateFactory_FromScopedServiceDelegate_UsesTheProducedWrapper()
     {
         using var provider = BuildProvider();
-        var factory = new DelegateScopedServiceFactory<Service>(() =>
+        var factory = new DelegateScopedFactory<Service>(() =>
         {
             var scope = provider.CreateScope();
             return new ScopedService<Service>(scope.ServiceProvider.GetRequiredService<Service>(), scope);
@@ -153,7 +153,7 @@ public class ScopedServiceTests
     private static ServiceProvider BuildProvider(Action<IServiceCollection> configure = null)
     {
         var services = new ServiceCollection();
-        services.AddSingleton(typeof(IScopedServiceFactory<>), typeof(ScopedServiceFactory<>));
+        services.AddSingleton(typeof(IScopedFactory<>), typeof(ScopedFactory<>));
         services.AddSingleton<Recorder>();
         services.AddScoped<DisposableDependency>();
         services.AddTransient<Service>();

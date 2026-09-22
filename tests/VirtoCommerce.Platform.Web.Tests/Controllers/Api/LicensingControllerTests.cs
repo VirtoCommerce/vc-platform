@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
     {
         private readonly Mock<IOptions<PlatformOptions>> _platformOptionsMock = new Mock<IOptions<PlatformOptions>>();
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
-        private readonly Mock<IScopedServiceFactory<IPlatformRepository>> _platformRepository = new Mock<IScopedServiceFactory<IPlatformRepository>>();
+        private readonly Mock<IScopedFactory<IPlatformRepository>> _platformRepository = new Mock<IScopedFactory<IPlatformRepository>>();
         private readonly Mock<ILogger<LicensingController>> _logger = new Mock<ILogger<LicensingController>>();
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();

@@ -11,15 +11,15 @@ namespace VirtoCommerce.Platform.Security.Services
 {
     public class UserApiKeySearchService : IUserApiKeySearchService
     {
-        private readonly IScopedServiceFactory<ISecurityRepository> _repositoryFactory;
+        private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
 
-        [Obsolete("Use the constructor that takes IScopedServiceFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected UserApiKeySearchService(Func<ISecurityRepository> repositoryFactory)
-            : this(new DelegateScopedServiceFactory<ISecurityRepository>(repositoryFactory))
+            : this(new DelegateScopedFactory<ISecurityRepository>(repositoryFactory))
         {
         }
 
-        public UserApiKeySearchService(IScopedServiceFactory<ISecurityRepository> repositoryFactory)
+        public UserApiKeySearchService(IScopedFactory<ISecurityRepository> repositoryFactory)
         {
             _repositoryFactory = repositoryFactory;
         }
