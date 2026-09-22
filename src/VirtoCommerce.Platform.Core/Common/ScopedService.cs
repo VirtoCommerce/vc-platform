@@ -9,13 +9,14 @@ namespace VirtoCommerce.Platform.Core.Common;
 public sealed class ScopedService<T> : IDisposable, IAsyncDisposable
     where T : class
 {
-    // The DI scope, or the service itself when no scope owns it.
-    private object _owned;
+    // Null when no scope owns the service; the wrapper then owns the instance itself.
+    private readonly IServiceScope _scope;
+    private bool _disposed;
 
     public ScopedService(T service, IServiceScope scope)
     {
         Service = service ?? throw new ArgumentNullException(nameof(service));
-        _owned = scope ?? throw new ArgumentNullException(nameof(scope));
+        _scope = scope ?? throw new ArgumentNullException(nameof(scope));
     }
 
     // Wraps a service that no DI scope owns (legacy Func<T> factories, test doubles):
@@ -23,33 +24,65 @@ public sealed class ScopedService<T> : IDisposable, IAsyncDisposable
     public ScopedService(T service)
     {
         Service = service ?? throw new ArgumentNullException(nameof(service));
-        _owned = service;
     }
 
     public T Service { get; }
 
     // The scope's provider, for services that must live in the same scope as Service. Null when no scope owns the service.
-    public IServiceProvider ServiceProvider => (_owned as IServiceScope)?.ServiceProvider;
+    public IServiceProvider ServiceProvider => _scope?.ServiceProvider;
 
     public void Dispose()
     {
-        // An owner that is only IAsyncDisposable cannot be released synchronously; ownership is kept so DisposeAsync still can.
-        if (_owned is IAsyncDisposable and not IDisposable)
+        if (_disposed)
         {
             return;
         }
 
-        var owned = _owned;
-        _owned = null;
-        (owned as IDisposable)?.Dispose();
+        // The scope disposes the service together with everything else it created; a singleton resolved through it is left alone.
+        if (_scope != null)
+        {
+            _disposed = true;
+            _scope.Dispose();
+            return;
+        }
+
+        if (Service is IDisposable disposable)
+        {
+            _disposed = true;
+            disposable.Dispose();
+        }
+        else if (Service is not IAsyncDisposable)
+        {
+            _disposed = true;
+        }
+
+        // An instance that is only IAsyncDisposable cannot be released synchronously; ownership is kept so DisposeAsync still can.
     }
 
     public async ValueTask DisposeAsync()
     {
-        var owned = _owned;
-        _owned = null;
+        if (_disposed)
+        {
+            return;
+        }
 
-        switch (owned)
+        _disposed = true;
+
+        if (_scope != null)
+        {
+            if (_scope is IAsyncDisposable asyncScope)
+            {
+                await asyncScope.DisposeAsync();
+            }
+            else
+            {
+                _scope.Dispose();
+            }
+
+            return;
+        }
+
+        switch (Service)
         {
             case IAsyncDisposable asyncDisposable:
                 await asyncDisposable.DisposeAsync();
