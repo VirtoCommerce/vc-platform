@@ -20,6 +20,26 @@ namespace VirtoCommerce.Platform.Core.Security
         public string OAuthLoginPath { get; set; }
 
         /// <summary>
+        /// Per-host override of <see cref="OAuthLoginPath"/>, keyed by the host the authorization
+        /// request arrives on. A deployment serves several front-ends from one Platform - storefronts
+        /// on their own hosts and the Admin application on the Platform host - and the login path is
+        /// redirected to relatively, so it has to exist on the host that is being used. An empty value
+        /// selects the built-in Platform login page for that host.
+        /// </summary>
+        public IDictionary<string, string> OAuthLoginPaths { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// The login path to use for an authorization request arriving on <paramref name="host"/>.
+        /// Null or empty means the request is served by the built-in Platform login page.
+        /// </summary>
+        public string GetOAuthLoginPath(string host)
+        {
+            return host != null && OAuthLoginPaths != null && OAuthLoginPaths.TryGetValue(host, out var path)
+                ? path
+                : OAuthLoginPath;
+        }
+
+        /// <summary>
         /// Interval after which the authentication cookie's security stamp is re-validated
         /// against the store. Lower values reject stale or replayed cookies faster at the cost
         /// of more frequent database calls. By default, 5 minutes.

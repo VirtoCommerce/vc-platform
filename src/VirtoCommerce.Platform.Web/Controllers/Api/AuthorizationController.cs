@@ -115,7 +115,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            if (!string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            if (!string.IsNullOrEmpty(OAuthLoginPath))
             {
                 await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             }
@@ -526,7 +526,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public IActionResult GetSessionToken([FromServices] IAntiforgery antiforgery)
         {
-            if (string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            if (string.IsNullOrEmpty(OAuthLoginPath))
             {
                 return NotFound();
             }
@@ -539,7 +539,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<IActionResult> CreateSession([FromQuery] string returnUrl)
         {
-            if (string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            if (string.IsNullOrEmpty(OAuthLoginPath))
             {
                 return NotFound();
             }
@@ -590,7 +590,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
             var returnUrl = Request.PathBase + Request.Path + QueryString.Create(
                 Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList());
-            var useStorefrontLogin = !string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath);
+            var useStorefrontLogin = !string.IsNullOrEmpty(OAuthLoginPath);
 
             if (!result.Succeeded || RequestHasExpired(request, result) ||
                 (useStorefrontLogin && result.Properties?.RedirectUri != returnUrl))
@@ -754,6 +754,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             target.SetClaimWithDestinations(claimType, value, destinations);
         }
 
+        /// <summary>
+        /// The login path configured for the host this request arrived on: the redirect to it is
+        /// relative, so a deployment with several front-ends needs the one that exists here. Empty
+        /// means the built-in Platform login page, which does not bind the session to one request.
+        /// </summary>
+        private string OAuthLoginPath => _authorizationOptions.GetOAuthLoginPath(Request.Host.Value);
+
         private bool IsLocalAuthorizationReturnUrl(string returnUrl)
         {
             return Url.IsLocalUrl(returnUrl) &&
@@ -790,9 +797,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }));
             }
 
-            if (!string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            if (!string.IsNullOrEmpty(OAuthLoginPath))
             {
-                return LocalRedirect(_authorizationOptions.OAuthLoginPath + QueryString.Create("returnUrl", returnUrl));
+                return LocalRedirect(OAuthLoginPath + QueryString.Create("returnUrl", returnUrl));
             }
 
             return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, IdentityConstants.ApplicationScheme);
