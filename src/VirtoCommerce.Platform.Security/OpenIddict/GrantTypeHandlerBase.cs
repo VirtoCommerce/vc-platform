@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core.Common;
@@ -13,13 +14,11 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
-using VirtoCommerce.Platform.Security.OpenIddict;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
-using BadRequestObjectResult = Microsoft.AspNetCore.Mvc.BadRequestObjectResult;
+// Microsoft.AspNetCore.Identity also has a SignInResult, so the Mvc one needs disambiguating.
 using MvcSignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
 
-namespace VirtoCommerce.Platform.Security.TokenGrants
+namespace VirtoCommerce.Platform.Security.OpenIddict
 {
     /// <summary>
     /// Base class for an <see cref="IGrantTypeHandler"/> that authenticates a user and signs them in.
@@ -27,7 +26,7 @@ namespace VirtoCommerce.Platform.Security.TokenGrants
     /// grant that needs to skip or change one - e.g. impersonation skipping <see cref="CanSignInAsync"/>, or
     /// a refresh reusing scopes via <see cref="SetTicketScopes"/> - overrides just that step.
     /// </summary>
-    public abstract class TokenGrantHandlerBase : IGrantTypeHandler
+    public abstract class GrantTypeHandlerBase : IGrantTypeHandler
     {
         protected SignInManager<ApplicationUser> SignInManager { get; }
         protected IdentityOptions IdentityOptions { get; }
@@ -37,7 +36,7 @@ namespace VirtoCommerce.Platform.Security.TokenGrants
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
 
-        protected TokenGrantHandlerBase(
+        protected GrantTypeHandlerBase(
             SignInManager<ApplicationUser> signInManager,
             IOptions<IdentityOptions> identityOptions,
             IEnumerable<ITokenRequestValidator> requestValidators,
@@ -55,32 +54,19 @@ namespace VirtoCommerce.Platform.Security.TokenGrants
 
         public abstract string GrantType { get; }
 
-        public async Task<ActionResult> HandleAsync(TokenRequestContext context)
-        {
-            var result = await ProcessGrantAsync(context);
-
-            return result.Success
-                ? new MvcSignInResult(result.AuthenticationScheme, result.Principal, result.Properties)
-                : new BadRequestObjectResult(result.Error);
-        }
-
-        /// <summary>
-        /// Runs the grant pipeline and returns the raw result, before <see cref="HandleAsync"/> converts it
-        /// to an HTTP response. Public so tests can assert on it directly.
-        /// </summary>
-        public virtual async Task<TokenGrantResult> ProcessGrantAsync(TokenRequestContext context)
+        public virtual async Task<ActionResult> HandleAsync(TokenRequestContext context)
         {
             var authenticationResult = await AuthenticateAsync(context);
             if (!authenticationResult.Success)
             {
-                return TokenGrantResult.Failed(authenticationResult.Error);
+                return new BadRequestObjectResult(authenticationResult.Error);
             }
 
             var user = authenticationResult.User;
 
             if (!await CanSignInAsync(user))
             {
-                return TokenGrantResult.Failed(SecurityErrorDescriber.SignInNotAllowed());
+                return new BadRequestObjectResult(SecurityErrorDescriber.SignInNotAllowed());
             }
 
             context.User = user.CloneTyped();
@@ -88,7 +74,7 @@ namespace VirtoCommerce.Platform.Security.TokenGrants
             var validationError = await ValidateRequestAsync(context);
             if (validationError != null)
             {
-                return TokenGrantResult.Failed(validationError);
+                return new BadRequestObjectResult(validationError);
             }
 
             await BeforeSignInAsync(user, context);
@@ -104,12 +90,12 @@ namespace VirtoCommerce.Platform.Security.TokenGrants
             var lastLoginError = await UpdateLastLoginAsync(user);
             if (lastLoginError != null)
             {
-                return TokenGrantResult.Failed(lastLoginError);
+                return new BadRequestObjectResult(lastLoginError);
             }
 
             await AfterSignInAsync(user, context);
 
-            return TokenGrantResult.SignedIn(ticket.Principal, ticket.Properties, context.AuthenticationScheme);
+            return new MvcSignInResult(context.AuthenticationScheme, ticket.Principal, ticket.Properties);
         }
 
         /// <summary>

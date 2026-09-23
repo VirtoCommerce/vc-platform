@@ -9,50 +9,50 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.OpenIddict;
-using VirtoCommerce.Platform.Security.TokenGrants;
 using Xunit;
 using SignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
 
-namespace VirtoCommerce.Platform.Tests.Security.TokenGrants;
+namespace VirtoCommerce.Platform.Tests.Security;
 
-public class TokenGrantHandlerBaseTests
+public class GrantTypeHandlerBaseTests
 {
     private const string _grantType = "test_grant";
 
     [Fact]
-    public async Task HandleAsync_Should_ReturnFailed_When_AuthenticationFails()
+    public async Task HandleAsync_Should_ReturnBadRequest_When_AuthenticationFails()
     {
         var authError = new TokenResponse { Code = "bad_credential" };
         var context = CreateContext(authenticationResult: GrantAuthenticationResult.Failed(authError));
 
-        var result = await context.Handler.ProcessGrantAsync(context.RequestContext);
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
-        Assert.False(result.Success);
-        Assert.Same(authError, result.Error);
+        var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
+        badRequest.Value.Should().BeSameAs(authError);
         context.SignInManager.Verify(x => x.CanSignInAsync(It.IsAny<ApplicationUser>()), Times.Never);
     }
 
     [Fact]
-    public async Task HandleAsync_Should_ReturnSignInNotAllowed_When_UserCannotSignIn()
+    public async Task HandleAsync_Should_ReturnBadRequest_When_UserCannotSignIn()
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
         var context = CreateContext(authenticationResult: GrantAuthenticationResult.Authenticated(user));
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(false);
 
-        var result = await context.Handler.ProcessGrantAsync(context.RequestContext);
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
-        Assert.False(result.Success);
-        Assert.Equal("sign_in_not_allowed", result.Error.Code);
+        var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
+        ((TokenResponse)badRequest.Value).Code.Should().Be("sign_in_not_allowed");
         context.SignInManager.Verify(x => x.CreateUserPrincipalAsync(It.IsAny<ApplicationUser>()), Times.Never);
     }
 
     [Fact]
-    public async Task HandleAsync_Should_ReturnFirstValidatorError_When_ARequestValidatorRejects()
+    public async Task HandleAsync_Should_ReturnBadRequest_When_ARequestValidatorRejects()
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
         var validatorError = new TokenResponse { Code = "custom_error" };
@@ -65,15 +65,15 @@ public class TokenGrantHandlerBaseTests
             requestValidators: [validator.Object]);
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
 
-        var result = await context.Handler.ProcessGrantAsync(context.RequestContext);
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
-        Assert.False(result.Success);
-        Assert.Same(validatorError, result.Error);
+        var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
+        badRequest.Value.Should().BeSameAs(validatorError);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Never);
     }
 
     [Fact]
-    public async Task HandleAsync_Should_ReturnDuplicateEmailError_When_UpdatingLastLoginDateThrows()
+    public async Task HandleAsync_Should_ReturnBadRequest_When_UpdatingLastLoginDateThrows()
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
         var context = CreateContext(authenticationResult: GrantAuthenticationResult.Authenticated(user));
@@ -82,10 +82,10 @@ public class TokenGrantHandlerBaseTests
         context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
         context.UserManager.Setup(x => x.UpdateAsync(user)).ThrowsAsync(new DuplicateEmailException("duplicate"));
 
-        var result = await context.Handler.ProcessGrantAsync(context.RequestContext);
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
-        Assert.False(result.Success);
-        Assert.Equal("duplicate_email_login_attempt", result.Error.Code);
+        var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
+        ((TokenResponse)badRequest.Value).Code.Should().Be("duplicate_email_login_attempt");
     }
 
     [Fact]
@@ -103,11 +103,11 @@ public class TokenGrantHandlerBaseTests
         context.SignInManager.Object.UserManager = context.UserManager.Object;
         context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
 
-        var result = await context.Handler.ProcessGrantAsync(context.RequestContext);
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
-        result.Success.Should().BeTrue();
-        result.Principal.Should().NotBeNull();
-        result.Principal.FindFirst(ClaimTypes.AuthenticationMethod)?.Value.Should().Be(_grantType);
+        var signInResult = actionResult.Should().BeOfType<SignInResult>().Subject;
+        signInResult.Principal.Should().NotBeNull();
+        signInResult.Principal.FindFirst(ClaimTypes.AuthenticationMethod)?.Value.Should().Be(_grantType);
         user.LastLoginDate.Should().NotBeNull();
         context.UserManager.Verify(x => x.UpdateAsync(user), Times.Once);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Once);
@@ -125,41 +125,14 @@ public class TokenGrantHandlerBaseTests
         context.SignInManager.Object.UserManager = context.UserManager.Object;
         context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
 
-        var result = await context.Handler.ProcessGrantAsync(context.RequestContext);
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
-        result.Success.Should().BeTrue();
+        actionResult.Should().BeOfType<SignInResult>();
         context.SignInManager.Verify(x => x.CanSignInAsync(It.IsAny<ApplicationUser>()), Times.Never);
         context.UserManager.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
         user.LastLoginDate.Should().BeNull();
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Never);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<UserLoginEvent>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task HandleAsync_Should_ReturnSignInResult_When_AuthenticationSucceeds()
-    {
-        var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var context = CreateContext(authenticationResult: GrantAuthenticationResult.Authenticated(user));
-        context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
-        context.SignInManager.Object.UserManager = context.UserManager.Object;
-        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
-
-        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
-
-        var signInResult = actionResult.Should().BeOfType<SignInResult>().Subject;
-        signInResult.Principal.Should().NotBeNull();
-    }
-
-    [Fact]
-    public async Task HandleAsync_Should_ReturnBadRequest_When_AuthenticationFails()
-    {
-        var authError = new TokenResponse { Code = "bad_credential" };
-        var context = CreateContext(authenticationResult: GrantAuthenticationResult.Failed(authError));
-
-        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
-
-        var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
-        badRequest.Value.Should().BeSameAs(authError);
     }
 
     private static TestContext CreateContext(
@@ -197,7 +170,7 @@ public class TokenGrantHandlerBaseTests
         var requestContext = new TokenRequestContext
         {
             AuthenticationScheme = "test-scheme",
-            Request = new OpenIddict.Abstractions.OpenIddictRequest { GrantType = _grantType },
+            Request = new OpenIddictRequest { GrantType = _grantType },
             Properties = new AuthenticationProperties(),
         };
 
@@ -211,7 +184,7 @@ public class TokenGrantHandlerBaseTests
         Mock<UserManager<ApplicationUser>> UserManager,
         Mock<IEventPublisher> EventPublisher);
 
-    private sealed class TestGrantHandler : TokenGrantHandlerBase
+    private sealed class TestGrantHandler : GrantTypeHandlerBase
     {
         private readonly GrantAuthenticationResult _authenticationResult;
         private readonly bool _skipOptionalSteps;

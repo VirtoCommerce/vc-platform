@@ -1,10 +1,9 @@
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Security.OpenIddict;
 
-namespace VirtoCommerce.Platform.Security.TokenGrants
+namespace VirtoCommerce.Platform.Security.OpenIddict
 {
     /// <summary>
-    /// The outcome of <see cref="TokenGrantHandlerBase.AuthenticateAsync"/>: the user the grant-specific
+    /// The outcome of <see cref="GrantTypeHandlerBase.AuthenticateAsync"/>: the user the grant-specific
     /// credential resolved to, or the error to report for it.
     /// </summary>
     public class GrantAuthenticationResult
