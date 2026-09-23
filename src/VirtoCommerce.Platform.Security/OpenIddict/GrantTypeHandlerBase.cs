@@ -15,7 +15,6 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-// Microsoft.AspNetCore.Identity also has a SignInResult, so the Mvc one needs disambiguating.
 using MvcSignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
 
 namespace VirtoCommerce.Platform.Security.OpenIddict
