@@ -20,6 +20,17 @@
     <WarningsNotAsErrors>NU5048</WarningsNotAsErrors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- System.Security.Cryptography.Xml, via OpenIddict.AspNetCore -> Microsoft.AspNetCore.DataProtection.
+         Framework-provided and pruned for host apps, but library projects (e.g. Platform.Security) don't
+         get that pruning and can't pin a patched version explicitly. -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-23rf-6693-g89p" />
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-8q5v-6pqq-x66h" />
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-cvvh-rhrc-wg4q" />
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-g8r8-53c2-pm3f" />
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-mmjf-rqrv-855v" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
     <!-- Nuget Package Details -->
     <PackageVersion>$(VersionPrefix)</PackageVersion>

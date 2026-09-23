@@ -25,7 +25,6 @@ using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
-using VirtoCommerce.Platform.Security.TokenGrants;
 using VirtoCommerce.Platform.Web.ActionConstraints;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model;
@@ -45,7 +44,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly List<ITokenRequestValidator> _requestValidators;
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
-        private readonly IEnumerable<ITokenGrantHandler> _tokenGrantHandlers;
+        private readonly IEnumerable<IGrantTypeHandler> _tokenGrantHandlers;
         private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IExternalSignInService _externalSignInService;
@@ -61,7 +60,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ITokenRequestValidator> requestValidators,
             IEnumerable<ITokenClaimProvider> claimProviders,
             IEnumerable<ITokenRequestHandler> requestHandlers,
-            IEnumerable<ITokenGrantHandler> tokenGrantHandlers,
+            IEnumerable<IGrantTypeHandler> tokenGrantHandlers,
             OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> tokenManager,
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
@@ -139,10 +138,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var tokenGrantHandler = _tokenGrantHandlers.FirstOrDefault(x => x.GrantType == openIdConnectRequest.GrantType);
             if (tokenGrantHandler != null)
             {
-                var tokenGrantResult = await tokenGrantHandler.HandleAsync(context);
-                return tokenGrantResult.Success
-                    ? SignIn(tokenGrantResult.Principal, tokenGrantResult.Properties, tokenGrantResult.AuthenticationScheme)
-                    : BadRequest(tokenGrantResult.Error);
+                return await tokenGrantHandler.HandleAsync(context);
             }
 
             if (openIdConnectRequest.IsPasswordGrantType())

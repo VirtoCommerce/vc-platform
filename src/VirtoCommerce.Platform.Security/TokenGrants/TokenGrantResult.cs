@@ -5,8 +5,8 @@ using VirtoCommerce.Platform.Security.OpenIddict;
 namespace VirtoCommerce.Platform.Security.TokenGrants
 {
     /// <summary>
-    /// The outcome of an <see cref="ITokenGrantHandler"/>: a signed-in principal or an error. The
-    /// caller (<c>AuthorizationController</c>) is responsible for turning this into an HTTP response.
+    /// The outcome of an <see cref="IGrantTypeHandler"/>: a signed-in principal or an error. Carries only
+    /// data, no ASP.NET Core MVC types, so handlers stay free of a web-layer dependency.
     /// </summary>
     public class TokenGrantResult
     {
