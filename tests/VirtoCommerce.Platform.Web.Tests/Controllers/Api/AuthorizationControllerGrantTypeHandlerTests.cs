@@ -68,7 +68,8 @@ public class AuthorizationControllerGrantTypeHandlerTests
             authorizationService: null,
             externalSignInService: null,
             authorizationManager: null,
-            scopeManager: null);
+            scopeManager: null,
+            authorizationOptions: Options.Create(new AuthorizationOptions()));
 
         var httpContext = new DefaultHttpContext();
 
