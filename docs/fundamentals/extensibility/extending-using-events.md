@@ -93,4 +93,4 @@ public void PostInitialize(IApplicationBuilder appBuilder)
 }
 ```
 
-The handler type is the type that was passed to `RegisterEventHandler`. A handler that was overridden in the DI container with a derived type can also be unsubscribed by that derived type, as in earlier platform versions.
+The handler type is the type that was passed to `RegisterEventHandler`. A handler that was overridden in the DI container with a derived type can also be unsubscribed by that derived type, as in earlier platform versions. Unsubscribing a type that is not subscribed to the event changes nothing and logs a warning.
