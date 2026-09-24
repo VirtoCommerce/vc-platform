@@ -37,7 +37,7 @@ public class OAuthLoginPathTests : IDisposable
     private readonly AuthorizationOptions _options = new()
     {
         OAuthLoginPath = "/oauth/authorize",
-        OAuthLoginPaths = { ["platform.example"] = string.Empty },
+        BuiltInLoginHosts = ["platform.example"],
     };
 
     public OAuthLoginPathTests()

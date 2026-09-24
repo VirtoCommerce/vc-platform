@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
@@ -20,14 +21,13 @@ namespace VirtoCommerce.Platform.Core.Security
         public string OAuthLoginPath { get; set; }
 
         /// <summary>
-        /// Per-host override of <see cref="OAuthLoginPath"/>, keyed by the host the authorization
-        /// request arrives on. A deployment serves several front-ends from one Platform - storefronts
-        /// on their own hosts and the Admin application on the Platform host - and the login path is
-        /// redirected to relatively, so it has to exist on the host that is being used. An empty value
-        /// selects the built-in Platform login page for that host. Keys are host names without a port:
-        /// a configuration key cannot contain the ':' that separates configuration sections.
+        /// Hosts served by the built-in Platform login page instead of <see cref="OAuthLoginPath"/>.
+        /// A deployment serves several front-ends from one Platform - storefronts on their own hosts
+        /// and the Admin application on the Platform host - and the login path is redirected to
+        /// relatively, so it has to exist on the host that is being used. The Platform host has no
+        /// page of its own to redirect to and is listed here.
         /// </summary>
-        public IDictionary<string, string> OAuthLoginPaths { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        public string[] BuiltInLoginHosts { get; set; } = [];
 
         /// <summary>
         /// The login path to use for an authorization request arriving on <paramref name="host"/>.
@@ -35,8 +35,9 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public string GetOAuthLoginPath(string host)
         {
-            return host != null && OAuthLoginPaths != null && OAuthLoginPaths.TryGetValue(host, out var path)
-                ? path
+            return host != null && BuiltInLoginHosts != null &&
+                   BuiltInLoginHosts.Contains(host, StringComparer.OrdinalIgnoreCase)
+                ? null
                 : OAuthLoginPath;
         }
 

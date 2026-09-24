@@ -8,31 +8,26 @@ namespace VirtoCommerce.Platform.Core.Tests.Security
         private readonly AuthorizationOptions _options = new()
         {
             OAuthLoginPath = "/oauth/authorize",
-            OAuthLoginPaths =
-            {
-                ["platform.example"] = string.Empty,
-                ["Loyalty.Example"] = "/account/oauth",
-            },
+            BuiltInLoginHosts = ["platform.example", "Admin.Example"],
         };
 
         [Fact]
-        public void GetOAuthLoginPath_HostWithoutOverride_UsesTheCommonPath()
+        public void GetOAuthLoginPath_HostWithItsOwnFrontEnd_UsesTheConfiguredPath()
         {
             Assert.Equal("/oauth/authorize", _options.GetOAuthLoginPath("store.example"));
         }
 
         [Fact]
-        public void GetOAuthLoginPath_HostWithOwnFrontEnd_UsesItsPath()
+        public void GetOAuthLoginPath_HostServedByThePlatformItself_SelectsTheBuiltInLoginPage()
         {
-            Assert.Equal("/account/oauth", _options.GetOAuthLoginPath("loyalty.example"));
+            // The Platform host has no front-end of its own to redirect to.
+            Assert.Null(_options.GetOAuthLoginPath("platform.example"));
         }
 
         [Fact]
-        public void GetOAuthLoginPath_HostServedByThePlatformItself_SelectsTheBuiltInLoginPage()
+        public void GetOAuthLoginPath_HostMatchIsCaseInsensitive()
         {
-            // An empty override is the point of the setting: the Platform host has no front-end of
-            // its own to redirect to, so it falls back to the built-in login page.
-            Assert.Empty(_options.GetOAuthLoginPath("platform.example"));
+            Assert.Null(_options.GetOAuthLoginPath("admin.example"));
         }
 
         [Fact]
@@ -42,7 +37,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Security
         }
 
         [Fact]
-        public void GetOAuthLoginPath_NoOverridesConfigured_KeepsPreviousBehaviour()
+        public void GetOAuthLoginPath_NoHostsConfigured_KeepsPreviousBehaviour()
         {
             var options = new AuthorizationOptions { OAuthLoginPath = "/oauth/authorize" };
 
