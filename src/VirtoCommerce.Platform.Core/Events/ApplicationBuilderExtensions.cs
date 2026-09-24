@@ -13,7 +13,7 @@ public static class ApplicationBuilderExtensions
         where THandler : IEventHandler<TEvent>
     {
         var services = applicationBuilder.ApplicationServices;
-        EnsureRegistered<THandler>(services);
+        CheckRegistered<THandler>(services);
 
         var registrar = services.GetRequiredService<IEventHandlerRegistrar>();
         registrar.RegisterEventHandler<TEvent>(new ScopedEventHandler<TEvent, THandler>(services.GetRequiredService<IServiceScopeFactory>()));
@@ -25,7 +25,7 @@ public static class ApplicationBuilderExtensions
         where THandler : ICancellableEventHandler<TEvent>
     {
         var services = applicationBuilder.ApplicationServices;
-        EnsureRegistered<THandler>(services);
+        CheckRegistered<THandler>(services);
 
         var registrar = services.GetRequiredService<IEventHandlerRegistrar>();
         registrar.RegisterEventHandler<TEvent>(new ScopedCancellableEventHandler<TEvent, THandler>(services.GetRequiredService<IServiceScopeFactory>()));
@@ -66,7 +66,7 @@ public static class ApplicationBuilderExtensions
     }
 
     // A handler the module forgot to add to the service collection fails here, at startup, without constructing anything.
-    private static void EnsureRegistered<THandler>(IServiceProvider services)
+    private static void CheckRegistered<THandler>(IServiceProvider services)
     {
         var isService = services.GetService<IServiceProviderIsService>();
 
