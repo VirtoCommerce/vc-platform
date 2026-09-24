@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -150,6 +151,50 @@ public class InProcessDistributedLockTests
         await using var acquired = await waiting;
 
         acquired.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_ManyConcurrentCallersOnOneResource_RunOneAtATime()
+    {
+        var distributedLock = TestLocks.CreateInProcess();
+        var probe = new ConcurrencyProbe();
+
+        var callers = Enumerable.Range(0, 50).Select(_ => Task.Run(() => distributedLock.ExecuteAsync(
+            Resource,
+            ct => probe.EnterAsync(TimeSpan.FromMilliseconds(5), ct),
+            TimeSpan.FromSeconds(30),
+            Token), Token));
+        await Task.WhenAll(callers);
+
+        probe.MaxConcurrency.Should().Be(1);
+        probe.Completed.Should().Be(50);
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_DifferentResources_RunInParallel()
+    {
+        const int resourceCount = 10;
+        var distributedLock = TestLocks.CreateInProcess();
+        var arrived = 0;
+        var allArrived = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        // Each caller holds its own resource until every caller is inside; this completes only if they run in parallel.
+        var callers = Enumerable.Range(0, resourceCount).Select(index => distributedLock.ExecuteAsync(
+            $"test:parallel:{index}",
+            async ct =>
+            {
+                if (Interlocked.Increment(ref arrived) == resourceCount)
+                {
+                    allArrived.SetResult();
+                }
+
+                await allArrived.Task.WaitAsync(TimeSpan.FromSeconds(10), ct);
+            },
+            cancellationToken: Token));
+
+        await Task.WhenAll(callers);
+
+        arrived.Should().Be(resourceCount);
     }
 
     [Fact]
