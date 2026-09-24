@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Events;
@@ -186,11 +185,28 @@ public class EventHandlerTests
         act.Should().Throw<InvalidOperationException>();
     }
 
+    [Fact]
+    public async Task Publish_HandlerThrowsBeforeFirstAwait_OtherHandlersStillReceiveTheEvent()
+    {
+        var (applicationBuilder, publisher, provider) = GetServices(services =>
+        {
+            services.AddSingleton<ThrowingHandler>();
+            services.AddSingleton<Handler>();
+        });
+
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, ThrowingHandler>();
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
+
+        var act = () => publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
+
+        await act.Should().ThrowAsync<InvalidOperationException>().WithMessage(ThrowingHandler.Message);
+        provider.GetRequiredService<Handler>().UserLoginEvents.Should().BeEquivalentTo([nameof(UserLoginEvent)]);
+    }
+
 
     private static (IApplicationBuilder, IEventPublisher, IServiceProvider) GetServices(Action<IServiceCollection> configure, bool registerServiceCollection = true)
     {
         var services = new ServiceCollection();
-        services.AddSingleton(new Mock<ILogger<InProcessBus>>().Object);
         services.AddSingleton<InProcessBus>();
         services.AddSingleton<IEventHandlerRegistrar>(x => x.GetRequiredService<InProcessBus>());
         services.AddSingleton<IEventPublisher>(x => x.GetRequiredService<InProcessBus>());
@@ -249,6 +265,17 @@ public class EventHandlerTests
     }
 
     public class Handler2(Recorder recorder) : Handler(recorder);
+
+    // Throws synchronously, before returning a task.
+    public class ThrowingHandler : IEventHandler<UserLoginEvent>
+    {
+        public const string Message = "Handler failed";
+
+        public Task Handle(UserLoginEvent message)
+        {
+            throw new InvalidOperationException(Message);
+        }
+    }
 
     public sealed class DisposableDependency(Recorder recorder) : IDisposable
     {

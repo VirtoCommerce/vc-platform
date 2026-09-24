@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Messages;
 
@@ -12,13 +11,7 @@ namespace VirtoCommerce.Platform.Core.Bus
 {
     public class InProcessBus : IEventHandlerRegistrar, IEventPublisher
     {
-        private readonly ILogger<InProcessBus> _logger;
-        private readonly List<HandlerWrapper> _handlers = [];
-
-        public InProcessBus(ILogger<InProcessBus> logger)
-        {
-            _logger = logger;
-        }
+        private readonly List<EventHandlerRegistration> _registrations = [];
 
         public void RegisterEventHandler<T>(IEventHandler<T> handler)
             where T : IEvent
@@ -67,18 +60,14 @@ namespace VirtoCommerce.Platform.Core.Bus
         {
             var eventType = typeof(T);
 
-            var handlersToRemove = _handlers
-                .Where(x =>
-                    x.EventType.IsAssignableFrom(eventType) &&
-                    (handlerType is null || x.HandlerType == handlerType || x.ImplementationType == handlerType))
-                .ToList();
-
-            handlersToRemove.ForEach(x => _handlers.Remove(x));
+            _registrations.RemoveAll(x =>
+                x.EventType.IsAssignableFrom(eventType) &&
+                (handlerType is null || x.HandlerType == handlerType || x.ImplementationType == handlerType));
         }
 
         public void UnregisterAllEventHandlers()
         {
-            _handlers.Clear();
+            _registrations.Clear();
         }
 
         public async Task Publish<T>(T @event, CancellationToken cancellationToken = default)
@@ -91,14 +80,20 @@ namespace VirtoCommerce.Platform.Core.Bus
 
             var eventType = @event.GetType();
 
-            var handlers = _handlers
+            var registrations = _registrations
                 .Where(x => x.EventType.IsAssignableFrom(eventType))
                 .ToList();
 
-            if (handlers.Count > 0)
+            if (registrations.Count > 0)
             {
-                await Task.WhenAll(handlers.Select(x => x.Handle(@event, cancellationToken)));
+                await Task.WhenAll(registrations.Select(x => Handle(x, @event, cancellationToken)));
             }
+        }
+
+        // Every registered handler receives the event, even when another one throws before its first await.
+        private static async Task Handle(EventHandlerRegistration registration, IEvent @event, CancellationToken cancellationToken)
+        {
+            await registration.Handler(@event, cancellationToken);
         }
 
         private void RegisterScopedEventHandler<TEvent, THandler>(IServiceProvider serviceProvider, Func<THandler, TEvent, CancellationToken, Task> invoke)
@@ -107,7 +102,7 @@ namespace VirtoCommerce.Platform.Core.Bus
             var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
             // The handler is constructed once here, as it was before type-based registration: a handler missing from DI stays
-            // a startup error rather than a first-event error, and the probe yields the runtime type for Unregister and logging.
+            // a startup error rather than a first-event error, and the probe yields the runtime type for Unregister.
             Type implementationType;
             using (var probe = scopeFactory.CreateScope())
             {
@@ -125,15 +120,7 @@ namespace VirtoCommerce.Platform.Core.Bus
         private void AddHandler<TEvent>(Type handlerType, Type implementationType, Func<IMessage, CancellationToken, Task> handler)
             where TEvent : IEvent
         {
-            _handlers.Add(new HandlerWrapper
-            {
-                EventType = typeof(TEvent),
-                HandlerType = handlerType,
-                ImplementationType = implementationType,
-                HandlerModuleName = implementationType.Module.Assembly.GetName().Name,
-                Handler = handler,
-                Logger = _logger,
-            });
+            _registrations.Add(new EventHandlerRegistration(typeof(TEvent), handlerType, implementationType, handler));
         }
 
         // Startup registers the IServiceCollection itself as a singleton once all modules are initialized. With it, a singleton
