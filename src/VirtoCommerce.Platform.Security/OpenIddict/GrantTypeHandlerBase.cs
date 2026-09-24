@@ -23,11 +23,10 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IdentityOptions _identityOptions;
-    private readonly IEventPublisher _eventPublisher;
-
     private readonly IEnumerable<ITokenRequestValidator> _requestValidators;
     private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
     private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
+    private readonly IEventPublisher _eventPublisher;
 
     protected GrantTypeHandlerBase(
         SignInManager<ApplicationUser> signInManager,

@@ -28,7 +28,7 @@ public class GrantTypeHandlerBaseTests
     public async Task HandleAsync_Should_ReturnBadRequest_When_AuthenticationFails()
     {
         var authError = new TokenResponse { Code = "bad_credential" };
-        var context = CreateContext(validationResult: GrantValidationResult.Failed(authError));
+        var context = CreateContext(validationResult: GrantValidationResult.Fail(authError));
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
@@ -41,7 +41,7 @@ public class GrantTypeHandlerBaseTests
     public async Task HandleAsync_Should_ReturnBadRequest_When_UserCannotSignIn()
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var context = CreateContext(validationResult: GrantValidationResult.Authenticated(user));
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(false);
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
@@ -61,7 +61,7 @@ public class GrantTypeHandlerBaseTests
             .ReturnsAsync((IList<TokenResponse>)[validatorError]);
 
         var context = CreateContext(
-            validationResult: GrantValidationResult.Authenticated(user),
+            validationResult: GrantValidationResult.Succeed(user),
             requestValidators: [validator.Object]);
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
 
@@ -76,7 +76,7 @@ public class GrantTypeHandlerBaseTests
     public async Task HandleAsync_Should_ReturnBadRequest_When_UpdatingLastLoginDateThrows()
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var context = CreateContext(validationResult: GrantValidationResult.Authenticated(user));
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
         context.SignInManager.Object.UserManager = context.UserManager.Object;
         context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
@@ -96,7 +96,7 @@ public class GrantTypeHandlerBaseTests
         var requestHandler = new Mock<ITokenRequestHandler>();
 
         var context = CreateContext(
-            validationResult: GrantValidationResult.Authenticated(user),
+            validationResult: GrantValidationResult.Succeed(user),
             claimProviders: [claimProvider.Object],
             requestHandlers: [requestHandler.Object]);
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
@@ -121,7 +121,7 @@ public class GrantTypeHandlerBaseTests
     {
         // Proves CanSignInAsync/LastLoginDate/Before-AfterSignIn are each independently skippable.
         var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var context = CreateContext(GrantValidationResult.Authenticated(user), skipOptionalSteps: true);
+        var context = CreateContext(GrantValidationResult.Succeed(user), skipOptionalSteps: true);
         context.SignInManager.Object.UserManager = context.UserManager.Object;
         context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
 

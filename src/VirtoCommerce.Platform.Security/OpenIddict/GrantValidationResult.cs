@@ -10,7 +10,7 @@ public class GrantValidationResult
 
     public TokenResponse Error { get; set; }
 
-    public static GrantValidationResult Authenticated(ApplicationUser user)
+    public static GrantValidationResult Succeed(ApplicationUser user)
     {
         return new GrantValidationResult
         {
@@ -18,7 +18,7 @@ public class GrantValidationResult
         };
     }
 
-    public static GrantValidationResult Failed(TokenResponse error)
+    public static GrantValidationResult Fail(TokenResponse error)
     {
         return new GrantValidationResult
         {
