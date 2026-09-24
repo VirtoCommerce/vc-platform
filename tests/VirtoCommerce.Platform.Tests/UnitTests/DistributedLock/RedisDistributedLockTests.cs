@@ -46,6 +46,19 @@ public class RedisDistributedLockTests
     }
 
     [Fact]
+    public async Task TryAcquireAsync_WithInfiniteTimeout_WaitsWithoutLimit()
+    {
+        var redLock = CreateRedLock(isAcquired: true);
+        var factory = new Mock<IDistributedLockFactory>();
+        factory.Setup(x => x.CreateLockAsync(Resource, Expiry, TimeSpan.MaxValue, TimeSpan.FromMilliseconds(100), Token))
+            .ReturnsAsync(redLock.Object);
+
+        await using var handle = await CreateLock(factory.Object).TryAcquireAsync(Resource, Timeout.InfiniteTimeSpan, Token);
+
+        handle.Should().NotBeNull();
+    }
+
+    [Fact]
     public async Task TryAcquireAsync_WithKeyPrefix_PrefixesRedisKeyButKeepsResourceName()
     {
         var redLock = CreateRedLock(isAcquired: true);

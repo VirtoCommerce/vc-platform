@@ -134,4 +134,44 @@ public class InProcessDistributedLockTests
 
         await act.Should().ThrowAsync<ArgumentOutOfRangeException>();
     }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(long.MaxValue)]
+    public async Task TryAcquireAsync_InfiniteOrVeryLongTimeout_WaitsForRelease(long timeoutTicks)
+    {
+        // -1 ms (Timeout.InfiniteTimeSpan) waits forever; TimeSpan.MaxValue exceeds SemaphoreSlim's limit.
+        var timeout = timeoutTicks == -1 ? Timeout.InfiniteTimeSpan : TimeSpan.FromTicks(timeoutTicks);
+        var distributedLock = TestLocks.CreateInProcess();
+        var held = await distributedLock.TryAcquireAsync(Resource, cancellationToken: Token);
+
+        var waiting = distributedLock.TryAcquireAsync(Resource, timeout, Token);
+        await held.DisposeAsync();
+        await using var acquired = await waiting;
+
+        acquired.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task TryAcquireAsync_RecordsHashedResourceOnSpan()
+    {
+        var resource = $"loyalty-balance:{Guid.NewGuid():N}";
+        var stopped = new System.Collections.Concurrent.ConcurrentQueue<System.Diagnostics.Activity>();
+        using var listener = new System.Diagnostics.ActivityListener
+        {
+            ShouldListenTo = source => source.Name == DistributedLockBase.ActivitySourceName,
+            Sample = (ref System.Diagnostics.ActivityCreationOptions<System.Diagnostics.ActivityContext> _) => System.Diagnostics.ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = stopped.Enqueue,
+        };
+        System.Diagnostics.ActivitySource.AddActivityListener(listener);
+        var expectedHash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(resource)))[..16];
+
+        await using (await TestLocks.CreateInProcess().TryAcquireAsync(resource, cancellationToken: Token))
+        {
+        }
+
+        var span = stopped.Should().ContainSingle(x => (string)x.GetTagItem("vc.lock.resource_hash") == expectedHash).Which;
+        span.GetTagItem("vc.lock.outcome").Should().Be("acquired");
+        span.TagObjects.Should().NotContain(tag => tag.Value is string && ((string)tag.Value).Contains(resource));
+    }
 }

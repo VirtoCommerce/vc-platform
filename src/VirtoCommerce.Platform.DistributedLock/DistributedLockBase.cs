@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -34,11 +36,16 @@ namespace VirtoCommerce.Platform.DistributedLock
         public virtual async Task<IDistributedLockHandle> TryAcquireAsync(string resource, TimeSpan timeout = default, CancellationToken cancellationToken = default)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(resource);
-            ArgumentOutOfRangeException.ThrowIfLessThan(timeout, TimeSpan.Zero);
+            if (timeout < TimeSpan.Zero && timeout != Timeout.InfiniteTimeSpan)
+            {
+                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, "The timeout must be non-negative or Timeout.InfiniteTimeSpan.");
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
 
             using var activity = _activitySource.StartActivity("DistributedLock acquire");
-            activity?.SetTag("vc.lock.resource", resource);
+            // Resource names often contain user or entity ids; traces get a stable hash instead of the name.
+            activity?.SetTag("vc.lock.resource_hash", HashResource(resource));
             var stopwatch = Stopwatch.StartNew();
 
             try
@@ -59,8 +66,14 @@ namespace VirtoCommerce.Platform.DistributedLock
         }
 
         /// <summary>
-        /// Acquires the lock within <paramref name="timeout"/> (already validated), or returns <c>null</c>.
+        /// Acquires the lock within <paramref name="timeout"/>, or returns <c>null</c>. The timeout is validated:
+        /// non-negative, or <see cref="Timeout.InfiniteTimeSpan"/> to wait until acquired or cancelled.
         /// </summary>
         protected abstract Task<IDistributedLockHandle> TryAcquireCoreAsync(string resource, TimeSpan timeout, CancellationToken cancellationToken);
+
+        private static string HashResource(string resource)
+        {
+            return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(resource)))[..16];
+        }
     }
 }

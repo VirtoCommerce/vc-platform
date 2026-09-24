@@ -84,9 +84,9 @@ public static class DistributedLockExtensions
 
 Rules:
 
-- `resource` must not be null or white space; `timeout` must not be negative.
+- `resource` must not be null or white space; `timeout` must be non-negative or `Timeout.InfiniteTimeSpan` (wait until acquired or cancelled).
 - Locks are not reentrant: acquiring the same resource twice in one flow waits for itself.
-- Resource names follow `{module}:{entity}:{id}`, for example `cart:recalc:{cartId}`. They appear in Redis and in traces, so they must not contain secrets.
+- Resource names follow `{module}:{entity}:{id}`, for example `cart:recalc:{cartId}`. They appear in Redis keys and exception messages, so they must not contain secrets. Traces carry only a hash, because names often contain user or entity ids.
 - Implementations are async only. Synchronous callers use the blocking extension methods (`Acquire`, `TryAcquire`, `Execute`, `TryExecute`), which are intended for startup and synchronous legacy code.
 - `DistributedLockTimeoutException` derives from `PlatformException`, so existing `catch (PlatformException)` blocks keep working.
 
@@ -102,7 +102,7 @@ Rules:
 
 ## Implementations (`VirtoCommerce.Platform.DistributedLock`)
 
-- `DistributedLockBase` — validation, default timeout, timeout exception and tracing (`ActivitySource` `VirtoCommerce.Platform.DistributedLock`, span `DistributedLock acquire` with `vc.lock.resource`, `vc.lock.outcome` = `acquired` / `timeout` / `cancelled`, `vc.lock.wait_ms`).
+- `DistributedLockBase` — validation, default timeout, timeout exception and tracing (`ActivitySource` `VirtoCommerce.Platform.DistributedLock`, span `DistributedLock acquire` with `vc.lock.resource_hash` (first 16 hex characters of SHA-256), `vc.lock.outcome` = `acquired` / `timeout` / `cancelled`, `vc.lock.wait_ms`).
 - `RedisDistributedLock` — uses the singleton `IDistributedLockFactory` registered by Platform; no factory per call. Zero timeout tries once; a positive timeout waits with `RetryInterval` and honours cancellation.
 - `InProcessDistributedLock` — per-resource `SemaphoreSlim` with reference-counted eviction. Public so tests can use a real lock.
 - `DistributedLockServiceAdapter` — implements the existing Platform `IDistributedLockService` on `IDistributedLock`. `tryLockTimeout` becomes the wait (`null` = try once, as today). `lockTimeout` and `retryInterval` are ignored because expiry and retry are configured once.

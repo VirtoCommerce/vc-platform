@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
         /// Acquires the lock, waiting up to <paramref name="timeout"/> (default: <c>DistributedLock:DefaultTimeout</c>).
         /// </summary>
         /// <param name="resource">Lock name, for example <c>cart:recalc:{cartId}</c>. Must not contain secrets.</param>
-        /// <param name="timeout">Maximum wait; <see cref="TimeSpan.Zero"/> tries once.</param>
+        /// <param name="timeout">Maximum wait; <see cref="TimeSpan.Zero"/> tries once, <see cref="Timeout.InfiniteTimeSpan"/> waits until acquired or cancelled.</param>
         /// <param name="cancellationToken">Cancels the wait.</param>
         /// <returns>A handle that releases the lock when disposed.</returns>
         /// <exception cref="DistributedLockTimeoutException">The lock was not acquired within <paramref name="timeout"/>.</exception>
@@ -28,7 +28,8 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
         Task<IDistributedLockHandle> AcquireAsync(string resource, TimeSpan? timeout = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Tries to acquire the lock within <paramref name="timeout"/>. The default tries once without waiting.
+        /// Tries to acquire the lock within <paramref name="timeout"/>. The default tries once without waiting;
+        /// <see cref="Timeout.InfiniteTimeSpan"/> waits until acquired or cancelled.
         /// </summary>
         /// <returns>A handle that releases the lock when disposed, or <c>null</c> when the lock is held elsewhere.</returns>
         /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was cancelled while waiting.</exception>

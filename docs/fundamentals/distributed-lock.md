@@ -4,7 +4,8 @@ Use `IDistributedLock` (`VirtoCommerce.Platform.Core.DistributedLock`) when code
 
 - With `ConnectionStrings:RedisConnectionString`, locks are held in Redis and exclude every instance.
 - Without Redis, locks serialize callers inside the current instance only.
-- Locks are not reentrant. Resource names follow `{module}:{entity}:{id}`; they appear in Redis and traces, so never put secrets in them.
+- Locks are not reentrant. Resource names follow `{module}:{entity}:{id}`. They appear in Redis keys and in `DistributedLockTimeoutException` messages, so never put secrets in them; traces record only a hash of the name.
+- Pass `Timeout.InfiniteTimeSpan` to wait until the lock is acquired or the cancellation token is cancelled.
 
 ## Scenarios
 
@@ -116,7 +117,7 @@ var distributedLock = new InProcessDistributedLock(
 
 ## Tracing
 
-Each acquisition emits a `DistributedLock acquire` span from the `VirtoCommerce.Platform.DistributedLock` activity source, with `vc.lock.resource`, `vc.lock.outcome` (`acquired`, `timeout`, `cancelled`) and `vc.lock.wait_ms`.
+Each acquisition emits a `DistributedLock acquire` span from the `VirtoCommerce.Platform.DistributedLock` activity source, with `vc.lock.resource_hash` (the first 16 hex characters of the SHA-256 of the resource name), `vc.lock.outcome` (`acquired`, `timeout`, `cancelled`) and `vc.lock.wait_ms`. Resource names often contain user or entity ids, so the name itself is not exported. To find the spans for a known resource, compute the same hash.
 
 ## Migrating from `IDistributedLockService`
 

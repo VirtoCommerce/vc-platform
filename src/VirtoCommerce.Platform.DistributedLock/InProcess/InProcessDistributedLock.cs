@@ -15,6 +15,9 @@ namespace VirtoCommerce.Platform.DistributedLock.InProcess
     /// </summary>
     public sealed class InProcessDistributedLock : DistributedLockBase
     {
+        // SemaphoreSlim accepts at most int.MaxValue milliseconds; longer waits are treated as infinite.
+        private static readonly TimeSpan _maxWait = TimeSpan.FromMilliseconds(int.MaxValue);
+
         private readonly ConcurrentDictionary<string, LockEntry> _entries = new(StringComparer.Ordinal);
 
         public InProcessDistributedLock(IOptions<DistributedLockOptions> options, ILogger<InProcessDistributedLock> logger)
@@ -30,7 +33,8 @@ namespace VirtoCommerce.Platform.DistributedLock.InProcess
 
             try
             {
-                acquired = await entry.Semaphore.WaitAsync(timeout, cancellationToken);
+                var wait = timeout > _maxWait ? Timeout.InfiniteTimeSpan : timeout;
+                acquired = await entry.Semaphore.WaitAsync(wait, cancellationToken);
             }
             finally
             {

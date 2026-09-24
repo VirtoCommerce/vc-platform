@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
 
             var redLock = timeout == TimeSpan.Zero
                 ? await _lockFactory.CreateLockAsync(key, LockOptions.Expiry)
-                : await _lockFactory.CreateLockAsync(key, LockOptions.Expiry, timeout, LockOptions.RetryInterval, cancellationToken);
+                : await _lockFactory.CreateLockAsync(key, LockOptions.Expiry, ToRedLockWait(timeout), LockOptions.RetryInterval, cancellationToken);
 
             if (redLock.IsAcquired)
             {
@@ -37,6 +37,12 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
 
             await redLock.DisposeAsync();
             return null;
+        }
+
+        // RedLock.net stops waiting once the elapsed time exceeds the wait, so an infinite wait becomes the largest TimeSpan.
+        private static TimeSpan ToRedLockWait(TimeSpan timeout)
+        {
+            return timeout == Timeout.InfiniteTimeSpan ? TimeSpan.MaxValue : timeout;
         }
 
         private sealed class Handle : IDistributedLockHandle
