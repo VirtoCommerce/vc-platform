@@ -759,7 +759,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// relative, so a deployment with several front-ends needs the one that exists here. Empty
         /// means the built-in Platform login page, which does not bind the session to one request.
         /// </summary>
-        private string OAuthLoginPath => _authorizationOptions.GetOAuthLoginPath(Request.Host.Value);
+        private string OAuthLoginPath => _authorizationOptions.GetOAuthLoginPath(Request.Host.Host);
 
         private bool IsLocalAuthorizationReturnUrl(string returnUrl)
         {

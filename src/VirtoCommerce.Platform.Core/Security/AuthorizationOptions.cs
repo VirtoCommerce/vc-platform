@@ -24,7 +24,8 @@ namespace VirtoCommerce.Platform.Core.Security
         /// request arrives on. A deployment serves several front-ends from one Platform - storefronts
         /// on their own hosts and the Admin application on the Platform host - and the login path is
         /// redirected to relatively, so it has to exist on the host that is being used. An empty value
-        /// selects the built-in Platform login page for that host.
+        /// selects the built-in Platform login page for that host. Keys are host names without a port:
+        /// a configuration key cannot contain the ':' that separates configuration sections.
         /// </summary>
         public IDictionary<string, string> OAuthLoginPaths { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
