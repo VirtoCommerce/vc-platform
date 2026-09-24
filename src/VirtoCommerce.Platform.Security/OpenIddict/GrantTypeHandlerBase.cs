@@ -19,17 +19,11 @@ using MvcSignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
 
 namespace VirtoCommerce.Platform.Security.OpenIddict;
 
-/// <summary>
-/// Base class for an <see cref="IGrantTypeHandler"/> that authenticates a user and signs them in.
-/// Every step past <see cref="AuthenticateAsync"/> is a separate <c>protected virtual</c> method, so a
-/// grant that needs to skip or change one - e.g. impersonation skipping <see cref="CanSignInAsync"/>, or
-/// a refresh reusing scopes via <see cref="SetTicketScopes"/> - overrides just that step.
-/// </summary>
 public abstract class GrantTypeHandlerBase : IGrantTypeHandler
 {
-    protected SignInManager<ApplicationUser> SignInManager { get; }
-    protected IdentityOptions IdentityOptions { get; }
-    protected IEventPublisher EventPublisher { get; }
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IdentityOptions _identityOptions;
+    private readonly IEventPublisher _eventPublisher;
 
     private readonly IEnumerable<ITokenRequestValidator> _requestValidators;
     private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
@@ -43,28 +37,32 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         IEnumerable<ITokenRequestHandler> requestHandlers,
         IEventPublisher eventPublisher)
     {
-        SignInManager = signInManager;
-        IdentityOptions = identityOptions.Value;
+        _signInManager = signInManager;
+        _identityOptions = identityOptions.Value;
         _requestValidators = requestValidators;
         _claimProviders = claimProviders;
         _requestHandlers = requestHandlers;
-        EventPublisher = eventPublisher;
+        _eventPublisher = eventPublisher;
     }
 
     public abstract string GrantType { get; }
 
     public virtual async Task<ActionResult> HandleAsync(TokenRequestContext context)
     {
-        var authenticationResult = await AuthenticateAsync(context);
-        if (!authenticationResult.Success)
+        var delayedResponse = DelayedResponse.Create(nameof(GrantTypeHandlerBase), nameof(HandleAsync), GrantType);
+
+        var validationResult = await ValidateGrantAsync(context);
+        if (!validationResult.Success)
         {
-            return new BadRequestObjectResult(authenticationResult.Error);
+            await delayedResponse.FailAsync();
+            return new BadRequestObjectResult(validationResult.Error);
         }
 
-        var user = authenticationResult.User;
+        var user = validationResult.User;
 
         if (!await CanSignInAsync(user))
         {
+            await delayedResponse.FailAsync();
             return new BadRequestObjectResult(SecurityErrorDescriber.SignInNotAllowed());
         }
 
@@ -73,6 +71,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         var validationError = await ValidateRequestAsync(context);
         if (validationError != null)
         {
+            await delayedResponse.FailAsync();
             return new BadRequestObjectResult(validationError);
         }
 
@@ -89,22 +88,26 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         var lastLoginError = await UpdateLastLoginAsync(user);
         if (lastLoginError != null)
         {
+            await delayedResponse.FailAsync();
             return new BadRequestObjectResult(lastLoginError);
         }
 
         await AfterSignInAsync(user, context);
 
+        await delayedResponse.SucceedAsync();
+
         return new MvcSignInResult(context.AuthenticationScheme, ticket.Principal, ticket.Properties);
     }
 
     /// <summary>
-    /// Verifies the grant-specific credential and resolves the user it belongs to.
+    /// Verifies the authorization grant in the token request and resolves the user it was issued for,
+    /// or returns the error to report instead.
     /// </summary>
-    protected abstract Task<GrantAuthenticationResult> AuthenticateAsync(TokenRequestContext context);
+    protected abstract Task<GrantValidationResult> ValidateGrantAsync(TokenRequestContext context);
 
     protected virtual Task<bool> CanSignInAsync(ApplicationUser user)
     {
-        return SignInManager.CanSignInAsync(user);
+        return _signInManager.CanSignInAsync(user);
     }
 
     protected virtual async Task<TokenResponse> ValidateRequestAsync(TokenRequestContext context)
@@ -123,12 +126,12 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
 
     protected virtual Task BeforeSignInAsync(ApplicationUser user, TokenRequestContext context)
     {
-        return EventPublisher.Publish(new BeforeUserLoginEvent(user));
+        return _eventPublisher.Publish(new BeforeUserLoginEvent(user));
     }
 
     protected virtual async Task<AuthenticationTicket> CreateTicketAsync(ApplicationUser user, TokenRequestContext context)
     {
-        var principal = await SignInManager.CreateUserPrincipalAsync(user);
+        var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
         SetTicketScopes(principal, context);
 
@@ -144,10 +147,6 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         return new AuthenticationTicket(principal, context.Properties, context.AuthenticationScheme);
     }
 
-    /// <summary>
-    /// Sets the ticket's scopes. Override to reuse an existing authorization's scopes (refresh,
-    /// authorization code) instead of recomputing them from the request.
-    /// </summary>
     protected virtual void SetTicketScopes(ClaimsPrincipal principal, TokenRequestContext context)
     {
         principal.SetScopes(new[]
@@ -164,7 +163,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
     {
         foreach (var claim in principal.Claims)
         {
-            if (claim.Type == IdentityOptions.ClaimsIdentity.SecurityStampClaimType)
+            if (claim.Type == _identityOptions.ClaimsIdentity.SecurityStampClaimType)
             {
                 continue;
             }
@@ -191,10 +190,6 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         }
     }
 
-    /// <summary>
-    /// Adds anything grant-specific to the ticket. Defaults to setting the authentication-method claim
-    /// to <see cref="GrantType"/> - override to add claims like an impersonation grant's operator id/name.
-    /// </summary>
     protected virtual Task EnrichTicketAsync(AuthenticationTicket ticket, ApplicationUser user, TokenRequestContext context)
     {
         ticket.Principal.SetAuthenticationMethod(GrantType, [Destinations.AccessToken]);
@@ -208,7 +203,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
 
         try
         {
-            await SignInManager.UserManager.UpdateAsync(user);
+            await _signInManager.UserManager.UpdateAsync(user);
         }
         catch (DuplicateEmailException)
         {
@@ -220,6 +215,6 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
 
     protected virtual Task AfterSignInAsync(ApplicationUser user, TokenRequestContext context)
     {
-        return EventPublisher.Publish(new UserLoginEvent(user));
+        return _eventPublisher.Publish(new UserLoginEvent(user));
     }
 }

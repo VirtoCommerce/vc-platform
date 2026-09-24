@@ -28,7 +28,7 @@ public class GrantTypeHandlerBaseTests
     public async Task HandleAsync_Should_ReturnBadRequest_When_AuthenticationFails()
     {
         var authError = new TokenResponse { Code = "bad_credential" };
-        var context = CreateContext(authenticationResult: GrantAuthenticationResult.Failed(authError));
+        var context = CreateContext(validationResult: GrantValidationResult.Failed(authError));
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
@@ -41,7 +41,7 @@ public class GrantTypeHandlerBaseTests
     public async Task HandleAsync_Should_ReturnBadRequest_When_UserCannotSignIn()
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var context = CreateContext(authenticationResult: GrantAuthenticationResult.Authenticated(user));
+        var context = CreateContext(validationResult: GrantValidationResult.Authenticated(user));
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(false);
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
@@ -61,7 +61,7 @@ public class GrantTypeHandlerBaseTests
             .ReturnsAsync((IList<TokenResponse>)[validatorError]);
 
         var context = CreateContext(
-            authenticationResult: GrantAuthenticationResult.Authenticated(user),
+            validationResult: GrantValidationResult.Authenticated(user),
             requestValidators: [validator.Object]);
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
 
@@ -76,7 +76,7 @@ public class GrantTypeHandlerBaseTests
     public async Task HandleAsync_Should_ReturnBadRequest_When_UpdatingLastLoginDateThrows()
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var context = CreateContext(authenticationResult: GrantAuthenticationResult.Authenticated(user));
+        var context = CreateContext(validationResult: GrantValidationResult.Authenticated(user));
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
         context.SignInManager.Object.UserManager = context.UserManager.Object;
         context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
@@ -96,7 +96,7 @@ public class GrantTypeHandlerBaseTests
         var requestHandler = new Mock<ITokenRequestHandler>();
 
         var context = CreateContext(
-            authenticationResult: GrantAuthenticationResult.Authenticated(user),
+            validationResult: GrantValidationResult.Authenticated(user),
             claimProviders: [claimProvider.Object],
             requestHandlers: [requestHandler.Object]);
         context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
@@ -121,7 +121,7 @@ public class GrantTypeHandlerBaseTests
     {
         // Proves CanSignInAsync/LastLoginDate/Before-AfterSignIn are each independently skippable.
         var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var context = CreateContext(GrantAuthenticationResult.Authenticated(user), skipOptionalSteps: true);
+        var context = CreateContext(GrantValidationResult.Authenticated(user), skipOptionalSteps: true);
         context.SignInManager.Object.UserManager = context.UserManager.Object;
         context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
 
@@ -136,7 +136,7 @@ public class GrantTypeHandlerBaseTests
     }
 
     private static TestContext CreateContext(
-        GrantAuthenticationResult authenticationResult,
+        GrantValidationResult validationResult,
         IEnumerable<ITokenRequestValidator> requestValidators = null,
         IEnumerable<ITokenClaimProvider> claimProviders = null,
         IEnumerable<ITokenRequestHandler> requestHandlers = null,
@@ -158,7 +158,7 @@ public class GrantTypeHandlerBaseTests
         var eventPublisher = new Mock<IEventPublisher>();
 
         var handler = new TestGrantHandler(
-            authenticationResult,
+            validationResult,
             skipOptionalSteps,
             signInManager.Object,
             identityOptions,
@@ -186,11 +186,11 @@ public class GrantTypeHandlerBaseTests
 
     private sealed class TestGrantHandler : GrantTypeHandlerBase
     {
-        private readonly GrantAuthenticationResult _authenticationResult;
+        private readonly GrantValidationResult _validationResult;
         private readonly bool _skipOptionalSteps;
 
         public TestGrantHandler(
-            GrantAuthenticationResult authenticationResult,
+            GrantValidationResult validationResult,
             bool skipOptionalSteps,
             SignInManager<ApplicationUser> signInManager,
             IOptions<IdentityOptions> identityOptions,
@@ -200,15 +200,15 @@ public class GrantTypeHandlerBaseTests
             IEventPublisher eventPublisher)
             : base(signInManager, identityOptions, requestValidators, claimProviders, requestHandlers, eventPublisher)
         {
-            _authenticationResult = authenticationResult;
+            _validationResult = validationResult;
             _skipOptionalSteps = skipOptionalSteps;
         }
 
         public override string GrantType => _grantType;
 
-        protected override Task<GrantAuthenticationResult> AuthenticateAsync(TokenRequestContext context)
+        protected override Task<GrantValidationResult> ValidateGrantAsync(TokenRequestContext context)
         {
-            return Task.FromResult(_authenticationResult);
+            return Task.FromResult(_validationResult);
         }
 
         // Simulates a grant (e.g. impersonation) that skips these steps entirely.
