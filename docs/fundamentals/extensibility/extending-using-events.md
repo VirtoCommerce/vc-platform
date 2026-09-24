@@ -9,46 +9,65 @@ A domain event is just a simple POCO type that represents an interesting occurre
 ```C#
 public class CustomDomainEvent : DomainEvent
 {
- public Customer Customer { get; set; }
+    public Customer Customer { get; set; }
 }
 ```
 
-## How to define a new event handler 
+## How to define a new event handler
 
 ```C#
-public class CutomDomainEventHandler : IEventHandler<CustomDomainEvent>
+public class CustomDomainEventHandler : IEventHandler<CustomDomainEvent>
 {
-  public async Task Handle(CustomDomainEventmessage)
-  {
-    //Some logic here
-  }
+    public async Task Handle(CustomDomainEvent message)
+    {
+        //Some logic here
+    }
 }
 ```
+
+A handler that needs to observe cancellation implements `ICancellableEventHandler<CustomDomainEvent>` instead and receives the `CancellationToken` passed to `IEventPublisher.Publish`.
 
 ## How to register an event handler, subscribe to a domain event
 
+Register the handler in the DI container with the lifetime it needs, then subscribe it to the event in `PostInitialize`:
+
 ```C#
-void  Initialize(IServiceCollection serviceCollection)
+public void Initialize(IServiceCollection serviceCollection)
 {
-  ...
-   serviceCollection.AddTransient<CustomDomainEventHandler>();
-  ...
+    ...
+    serviceCollection.AddTransient<CustomDomainEventHandler>();
+    ...
 }
 
-void PostInitialize(IApplicationBuilder appBuilder)
+public void PostInitialize(IApplicationBuilder appBuilder)
 {
-  ...
-var eventHandlerRegistrar = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
-eventHandlerRegistrar.RegisterHandler<CustomDomainEvent>((message, token) => appBuilder.ApplicationServices.GetService<CustomDomainEventHandler>().Handle(message));
-  ...
+    ...
+    appBuilder.RegisterEventHandler<CustomDomainEvent, CustomDomainEventHandler>();
+    ...
 }
 ```
+
+Cancellable handlers are subscribed with `appBuilder.RegisterCancellableEventHandler<CustomDomainEvent, CustomDomainEventHandler>()`.
+
+The handler is resolved from the DI container when an event is published, in a DI scope of its own, so it gets exactly the lifetime it was registered with:
+
+| Lifetime | Behavior |
+|---|---|
+| `AddSingleton` | One instance shared by all events, created when the first event arrives. Use it for stateless handlers on hot events or for handlers that must keep state. |
+| `AddTransient` | A new instance for every event. |
+| `AddScoped` | A new instance for every event. Scoped dependencies such as `UserManager<ApplicationUser>` or a repository can be injected directly; they are disposed when the handler completes. |
+
+Handlers of the same event run concurrently, each in its own scope. A handler registered as transient or scoped must not keep state in fields between events.
+
+Registration does not construct the handler. It checks that the handler type is registered in the DI container, so a handler the module forgot to register fails at application startup with a clear message. A handler whose own dependencies cannot be resolved fails when the container is built in Development, where `ValidateOnBuild` is on, and at the first event in Production.
+
+Earlier platform versions resolved every handler once at startup and kept that single instance for the lifetime of the application regardless of the registered lifetime. A handler written against that behavior, for example one that keeps state in fields or opens a connection in its constructor, must be registered as a singleton. That also works for a handler shipped in a module you cannot change: register the same type again as a singleton from your own module's `Initialize`; the last registration wins.
 
 ## How to raise domain events
-In your domain entities, when a significant state change happens you’ll want to raise your domain events like this
-```
-var eventPublisher = _container.Resolve<IEventPublisher>();
-eventPublisher.Publish(new CustomDomainEvent()));
+Inject `IEventPublisher` and publish the event where the significant state change happens:
+
+```C#
+await _eventPublisher.Publish(new CustomDomainEvent { Customer = customer });
 ```
 
 ## How to override an existing event handler with a new derived type
@@ -64,3 +83,14 @@ void Initialize(IServiceCollection serviceCollection)
   ...
 }
 ```
+
+## How to unsubscribe an existing event handler
+
+```C#
+public void PostInitialize(IApplicationBuilder appBuilder)
+{
+    appBuilder.UnregisterEventHandler<CustomDomainEvent, CustomDomainEventHandler>();
+}
+```
+
+The handler type is the type that was passed to `RegisterEventHandler`. A handler that was overridden in the DI container with a derived type can also be unsubscribed by that derived type, as in earlier platform versions. Unsubscribing a type that is not subscribed to the event changes nothing and logs a warning.
