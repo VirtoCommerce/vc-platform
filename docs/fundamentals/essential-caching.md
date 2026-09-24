@@ -13,7 +13,7 @@ The pattern enables applications to load data on demand:
 When we need specific data, we first try to get it from the cache. If the data is not in the cache, we get it from the source, add it to the cache and return it. Next time, this data will be returned from the cache. This pattern improves performance and also helps maintain consistency between data held in the cache and data in the underlying data storage.
 
 ## Challenges
-For entity caching through `IPlatformMemoryCache`, values are stored locally. This keeps the platform configuration flexible and simple; consistency between instances is handled by invalidation (see *Scaling* below). Temporary state that must be shared between instances can use the separate `IDistributedCache` registration described in *Distributed state* below.
+We don't use the distributed cache in the platform code, because we want to keep the platform configuration flexible and simple, and prefer to solve potential scalability problems by other means (see *Scalability* below).
 
 There are three additional cons of using distributed cache that influenced our decision:
 
@@ -193,25 +193,6 @@ The default platform caching options can be changed from configuration:
 ## Scaling
 
 Running multiple instances of the platform, all accessing the local cache that must be consistent with cache of other instances, can be tricky. [How to scale out platform on Azure](../techniques/how-scale-out-platform-on-azure.md) explains how to configure `Redis` service as a cache backplane to sync local caches for multiple platform instances.
-
-## Distributed state
-
-Modules that need temporary state shared between platform instances can use the standard `IDistributedCache` interface. Platform registers its provider in `AddCaching`:
-
-- When `ConnectionStrings:RedisConnectionString` is configured, Platform uses `Microsoft.Extensions.Caching.StackExchangeRedis`.
-- Without that connection string, Platform uses `MemoryDistributedCache`. Its values are local to one process and are lost on restart.
-
-Platform calls `AddCaching` before `AddMvc`, so MVC preserves the selected provider instead of adding its memory fallback.
-
-Modules should consume `IDistributedCache` through dependency injection and should not register a provider. The Redis provider owns its connection; it does not take ownership of the connection used by Platform's invalidation backplane, distributed locks, or Data Protection. Redis failures propagate to the caller; Platform does not fall back to local memory when a configured Redis server is unavailable.
-
-Redis keys are prefixed with `<Caching:Redis:ChannelName>:cache:`. If the channel name is absent, the prefix is `VirtoCommerceChannel:cache:`. Use the same channel name on every replica of one application and a different name for each application or environment sharing Redis. Modules must add their own key namespace and set expiration appropriate to their state. Changing the prefix makes existing entries inaccessible to the application until they expire.
-
-All replicas must use the same provider and key prefix. Existing process-local entries are not migrated when enabling Redis; consumers may need to create new sessions during the transition.
-
-`IPlatformMemoryCache` remains a separate local cache with Redis-based invalidation. `Caching:CacheEnabled` and the platform cache expiration defaults apply to that cache, not to `IDistributedCache`. Switching the distributed provider does not move catalog or other `IPlatformMemoryCache` values into Redis.
-
-`IDistributedCache` provides reads, writes, removal, and expiration, but not atomic read-and-remove or concurrent updates. Consumers requiring those guarantees must coordinate access, for example through Platform's `IDistributedLockService`.
 
 ## Conclusions
 
