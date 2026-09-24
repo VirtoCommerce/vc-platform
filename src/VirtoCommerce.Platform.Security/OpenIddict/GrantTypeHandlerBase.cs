@@ -12,8 +12,8 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Exceptions;
-using VirtoCommerce.Platform.Security.Extensions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using MvcSignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
 
@@ -46,67 +46,65 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
 
     public abstract string GrantType { get; }
 
+    /// <summary>
+    /// Sign-in type recorded in the sign-in log, at most 32 characters.
+    /// </summary>
+    protected abstract string SignInType { get; }
+
     public virtual async Task<ActionResult> HandleAsync(TokenRequestContext context)
     {
-        var delayedResponse = DelayedResponse.Create(nameof(GrantTypeHandlerBase), nameof(HandleAsync), GrantType);
+        context.DelayedResponse = DelayedResponse.Create(nameof(GrantTypeHandlerBase), nameof(HandleAsync), GrantType);
 
-        var validationResult = await ValidateGrantAsync(context);
-        if (!validationResult.Success)
+        context.GrantValidationResult = await ValidateGrantAsync(context);
+        context.User = context.GrantValidationResult.User;
+
+        if (!context.GrantValidationResult.Success)
         {
-            await delayedResponse.FailAsync();
-            return new BadRequestObjectResult(validationResult.Error);
+            return await FailAsync(context, context.GrantValidationResult.Error, context.GrantValidationResult.ErrorResult);
         }
 
-        var user = validationResult.User;
-
-        if (!await CanSignInAsync(user))
+        if (!await CanSignInAsync(context))
         {
-            await delayedResponse.FailAsync();
-            return new BadRequestObjectResult(SecurityErrorDescriber.SignInNotAllowed());
+            return await FailAsync(context, SecurityErrorDescriber.SignInNotAllowed());
         }
-
-        context.User = user.CloneTyped();
 
         var validationError = await ValidateRequestAsync(context);
         if (validationError != null)
         {
-            await delayedResponse.FailAsync();
-            return new BadRequestObjectResult(validationError);
+            return await FailAsync(context, validationError);
         }
 
-        await BeforeSignInAsync(user, context);
+        await BeforeSignInAsync(context);
+        await CallRequestHandlersAsync(context);
 
-        foreach (var requestHandler in _requestHandlers)
-        {
-            await requestHandler.HandleAsync(user, context);
-        }
+        var ticket = await CreateTicketAsync(context);
 
-        var ticket = await CreateTicketAsync(user, context);
-        await EnrichTicketAsync(ticket, user, context);
-
-        var lastLoginError = await UpdateLastLoginAsync(user);
+        var lastLoginError = await UpdateLastLoginAsync(context);
         if (lastLoginError != null)
         {
-            await delayedResponse.FailAsync();
-            return new BadRequestObjectResult(lastLoginError);
+            return await FailAsync(context, lastLoginError);
         }
 
-        await AfterSignInAsync(user, context);
+        await AfterSignInAsync(context);
 
-        await delayedResponse.SucceedAsync();
-
-        return new MvcSignInResult(context.AuthenticationScheme, ticket.Principal, ticket.Properties);
+        return await SucceedAsync(context, ticket);
     }
 
     /// <summary>
     /// Verifies the authorization grant in the token request and resolves the user it was issued for,
-    /// or returns the error to report instead.
+    /// or returns the error to report instead. On failure, it also sets <see cref="TokenRequestContext.FailureReason"/>.
     /// </summary>
     protected abstract Task<GrantValidationResult> ValidateGrantAsync(TokenRequestContext context);
 
-    protected virtual Task<bool> CanSignInAsync(ApplicationUser user)
+    protected virtual async Task<bool> CanSignInAsync(TokenRequestContext context)
     {
-        return _signInManager.CanSignInAsync(user);
+        var canSignIn = await _signInManager.CanSignInAsync(context.User);
+        if (!canSignIn)
+        {
+            context.FailureReason = SignInFailureReason.NotAllowed;
+        }
+
+        return canSignIn;
     }
 
     protected virtual async Task<TokenResponse> ValidateRequestAsync(TokenRequestContext context)
@@ -123,16 +121,24 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         return null;
     }
 
-    protected virtual Task BeforeSignInAsync(ApplicationUser user, TokenRequestContext context)
+    protected virtual Task BeforeSignInAsync(TokenRequestContext context)
     {
-        return _eventPublisher.Publish(new BeforeUserLoginEvent(user));
+        return _eventPublisher.Publish(new BeforeUserLoginEvent(context.User));
     }
 
-    protected virtual async Task<AuthenticationTicket> CreateTicketAsync(ApplicationUser user, TokenRequestContext context)
+    protected virtual async Task CallRequestHandlersAsync(TokenRequestContext context)
     {
-        var principal = await _signInManager.CreateUserPrincipalAsync(user);
+        foreach (var requestHandler in _requestHandlers)
+        {
+            await requestHandler.HandleAsync(context.User, context);
+        }
+    }
 
-        SetTicketScopes(principal, context);
+    protected virtual async Task<AuthenticationTicket> CreateTicketAsync(TokenRequestContext context)
+    {
+        var principal = await _signInManager.CreateUserPrincipalAsync(context.User);
+
+        SetTicketScopes(context, principal);
 
         principal.SetResources("resource_server");
 
@@ -146,7 +152,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         return new AuthenticationTicket(principal, context.Properties, context.AuthenticationScheme);
     }
 
-    protected virtual void SetTicketScopes(ClaimsPrincipal principal, TokenRequestContext context)
+    protected virtual void SetTicketScopes(TokenRequestContext context, ClaimsPrincipal principal)
     {
         principal.SetScopes(new[]
         {
@@ -154,7 +160,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
             Scopes.Email,
             Scopes.Profile,
             Scopes.OfflineAccess,
-            Scopes.Roles
+            Scopes.Roles,
         }.Intersect(context.Request.GetScopes()));
     }
 
@@ -169,7 +175,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
 
             var destinations = new List<string>
             {
-                Destinations.AccessToken
+                Destinations.AccessToken,
             };
 
             var requiredScope = claim.Type switch
@@ -189,31 +195,62 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         }
     }
 
-    protected virtual Task EnrichTicketAsync(AuthenticationTicket ticket, ApplicationUser user, TokenRequestContext context)
+    protected virtual async Task<TokenResponse> UpdateLastLoginAsync(TokenRequestContext context)
     {
-        ticket.Principal.SetAuthenticationMethod(GrantType, [Destinations.AccessToken]);
-
-        return Task.CompletedTask;
-    }
-
-    protected virtual async Task<TokenResponse> UpdateLastLoginAsync(ApplicationUser user)
-    {
-        user.LastLoginDate = DateTime.UtcNow;
+        context.User.LastLoginDate = DateTime.UtcNow;
 
         try
         {
-            await _signInManager.UserManager.UpdateAsync(user);
+            await _signInManager.UserManager.UpdateAsync(context.User);
         }
         catch (DuplicateEmailException)
         {
+            context.FailureReason = SignInFailureReason.DuplicateEmail;
             return SecurityErrorDescriber.DuplicateEmailLoginAttempt();
         }
 
         return null;
     }
 
-    protected virtual Task AfterSignInAsync(ApplicationUser user, TokenRequestContext context)
+    protected virtual Task AfterSignInAsync(TokenRequestContext context)
     {
-        return _eventPublisher.Publish(new UserLoginEvent(user));
+        return _eventPublisher.Publish(new UserLoginEvent(context.User));
+    }
+
+    protected virtual async Task<ActionResult> SucceedAsync(TokenRequestContext context, AuthenticationTicket ticket)
+    {
+        await PublishSignInAttemptAsync(context, succeeded: true);
+        await context.DelayedResponse.SucceedAsync();
+
+        return new MvcSignInResult(context.AuthenticationScheme, ticket.Principal, ticket.Properties);
+    }
+
+    protected virtual async Task<ActionResult> FailAsync(TokenRequestContext context, TokenResponse error = null, ActionResult errorResult = null)
+    {
+        await PublishSignInAttemptAsync(context, succeeded: false);
+        await context.DelayedResponse.FailAsync();
+
+        return errorResult ?? new BadRequestObjectResult(error);
+    }
+
+    protected virtual Task PublishSignInAttemptAsync(TokenRequestContext context, bool succeeded)
+    {
+        return _eventPublisher.Publish(BuildSignInAttemptEvent(context, succeeded));
+    }
+
+    protected virtual UserSignInAttemptEvent BuildSignInAttemptEvent(TokenRequestContext context, bool succeeded)
+    {
+        var result = AbstractTypeFactory<UserSignInAttemptEvent>.TryCreateInstance();
+
+        result.UserName = context.Request.Username ?? context.User?.UserName;
+        result.UserId = context.User?.Id;
+        result.Succeeded = succeeded;
+        result.FailureReason = succeeded ? null : context.FailureReason ?? SignInFailureReason.Unknown;
+        result.SignInType = SignInType;
+        result.ClientId = context.Request.ClientId;
+        result.StoreId = context.User?.StoreId;
+        result.MemberId = context.User?.MemberId;
+
+        return result;
     }
 }

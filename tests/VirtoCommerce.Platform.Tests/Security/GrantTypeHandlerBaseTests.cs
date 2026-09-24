@@ -13,6 +13,7 @@ using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using Xunit;
@@ -28,13 +29,26 @@ public class GrantTypeHandlerBaseTests
     public async Task HandleAsync_Should_ReturnBadRequest_When_AuthenticationFails()
     {
         var authError = new TokenResponse { Code = "bad_credential" };
-        var context = CreateContext(validationResult: GrantValidationResult.Fail(authError));
+        var context = CreateContext(validationResult: GrantValidationResult.Fail(authError), failureReason: SignInFailureReason.InvalidPassword);
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
         var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
         badRequest.Value.Should().BeSameAs(authError);
         context.SignInManager.Verify(x => x.CanSignInAsync(It.IsAny<ApplicationUser>()), Times.Never);
+        VerifySignInAttempt(context, succeeded: false, SignInFailureReason.InvalidPassword);
+    }
+
+    [Fact]
+    public async Task HandleAsync_Should_ReturnTheGrantErrorResult_When_GrantFailsWithAnActionResult()
+    {
+        var errorResult = new ForbidResult();
+        var context = CreateContext(validationResult: GrantValidationResult.Fail(errorResult), failureReason: SignInFailureReason.Forbidden);
+
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
+
+        actionResult.Should().BeSameAs(errorResult);
+        VerifySignInAttempt(context, succeeded: false, SignInFailureReason.Forbidden);
     }
 
     [Fact]
@@ -42,13 +56,14 @@ public class GrantTypeHandlerBaseTests
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
         var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
-        context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(false);
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(false);
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
         var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
         ((TokenResponse)badRequest.Value).Code.Should().Be("sign_in_not_allowed");
         context.SignInManager.Verify(x => x.CreateUserPrincipalAsync(It.IsAny<ApplicationUser>()), Times.Never);
+        VerifySignInAttempt(context, succeeded: false, SignInFailureReason.NotAllowed);
     }
 
     [Fact]
@@ -58,18 +73,20 @@ public class GrantTypeHandlerBaseTests
         var validatorError = new TokenResponse { Code = "custom_error" };
         var validator = new Mock<ITokenRequestValidator>();
         validator.Setup(x => x.ValidateAsync(It.IsAny<TokenRequestContext>()))
+            .Callback<TokenRequestContext>(x => x.FailureReason = SignInFailureReason.LockedOut)
             .ReturnsAsync((IList<TokenResponse>)[validatorError]);
 
         var context = CreateContext(
             validationResult: GrantValidationResult.Succeed(user),
             requestValidators: [validator.Object]);
-        context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
         var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
         badRequest.Value.Should().BeSameAs(validatorError);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Never);
+        VerifySignInAttempt(context, succeeded: false, SignInFailureReason.LockedOut);
     }
 
     [Fact]
@@ -96,15 +113,16 @@ public class GrantTypeHandlerBaseTests
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
         var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
-        context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
         context.SignInManager.Object.UserManager = context.UserManager.Object;
-        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
-        context.UserManager.Setup(x => x.UpdateAsync(user)).ThrowsAsync(new DuplicateEmailException("duplicate"));
+        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
+        context.UserManager.Setup(x => x.UpdateAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ThrowsAsync(new DuplicateEmailException("duplicate"));
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
         var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
         ((TokenResponse)badRequest.Value).Code.Should().Be("duplicate_email_login_attempt");
+        VerifySignInAttempt(context, succeeded: false, SignInFailureReason.DuplicateEmail);
     }
 
     [Fact]
@@ -118,21 +136,22 @@ public class GrantTypeHandlerBaseTests
             validationResult: GrantValidationResult.Succeed(user),
             claimProviders: [claimProvider.Object],
             requestHandlers: [requestHandler.Object]);
-        context.SignInManager.Setup(x => x.CanSignInAsync(user)).ReturnsAsync(true);
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
         context.SignInManager.Object.UserManager = context.UserManager.Object;
-        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
+        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
         var signInResult = actionResult.Should().BeOfType<SignInResult>().Subject;
         signInResult.Principal.Should().NotBeNull();
-        signInResult.Principal.FindFirst(ClaimTypes.AuthenticationMethod)?.Value.Should().Be(_grantType);
-        user.LastLoginDate.Should().NotBeNull();
-        context.UserManager.Verify(x => x.UpdateAsync(user), Times.Once);
+        signInResult.Principal.FindFirst(ClaimTypes.AuthenticationMethod).Should().BeNull();
+        context.RequestContext.User.LastLoginDate.Should().NotBeNull();
+        context.UserManager.Verify(x => x.UpdateAsync(It.Is<ApplicationUser>(u => u.Id == user.Id)), Times.Once);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Once);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<UserLoginEvent>()), Times.Once);
-        requestHandler.Verify(x => x.HandleAsync(user, context.RequestContext), Times.Once);
+        requestHandler.Verify(x => x.HandleAsync(It.Is<ApplicationUser>(u => u.Id == user.Id), context.RequestContext), Times.Once);
         claimProvider.Verify(x => x.SetClaimsAsync(It.IsAny<ClaimsPrincipal>(), context.RequestContext), Times.Once);
+        VerifySignInAttempt(context, succeeded: true, failureReason: null);
     }
 
     [Fact]
@@ -142,16 +161,24 @@ public class GrantTypeHandlerBaseTests
         var user = new ApplicationUser { Email = "buyer@acme.com" };
         var context = CreateContext(GrantValidationResult.Succeed(user), skipOptionalSteps: true);
         context.SignInManager.Object.UserManager = context.UserManager.Object;
-        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(user)).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
+        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
 
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
         actionResult.Should().BeOfType<SignInResult>();
         context.SignInManager.Verify(x => x.CanSignInAsync(It.IsAny<ApplicationUser>()), Times.Never);
         context.UserManager.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
-        user.LastLoginDate.Should().BeNull();
+        context.RequestContext.User.LastLoginDate.Should().BeNull();
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Never);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<UserLoginEvent>()), Times.Never);
+    }
+
+    private static void VerifySignInAttempt(TestContext context, bool succeeded, string failureReason)
+    {
+        context.EventPublisher.Verify(x => x.Publish(It.Is<UserSignInAttemptEvent>(e =>
+            e.Succeeded == succeeded &&
+            e.FailureReason == failureReason &&
+            e.SignInType == _grantType)), Times.Once);
     }
 
     private static ITokenRequestValidator CreateRejectingValidator(int priority, TokenResponse error)
@@ -168,7 +195,8 @@ public class GrantTypeHandlerBaseTests
         IEnumerable<ITokenRequestValidator> requestValidators = null,
         IEnumerable<ITokenClaimProvider> claimProviders = null,
         IEnumerable<ITokenRequestHandler> requestHandlers = null,
-        bool skipOptionalSteps = false)
+        bool skipOptionalSteps = false,
+        string failureReason = null)
     {
         var userStore = new Mock<IUserStore<ApplicationUser>>();
         var userManager = new Mock<UserManager<ApplicationUser>>(userStore.Object, null, null, null, null, null, null, null, null);
@@ -187,6 +215,7 @@ public class GrantTypeHandlerBaseTests
 
         var handler = new TestGrantHandler(
             validationResult,
+            failureReason,
             skipOptionalSteps,
             signInManager.Object,
             identityOptions,
@@ -215,10 +244,12 @@ public class GrantTypeHandlerBaseTests
     private sealed class TestGrantHandler : GrantTypeHandlerBase
     {
         private readonly GrantValidationResult _validationResult;
+        private readonly string _failureReason;
         private readonly bool _skipOptionalSteps;
 
         public TestGrantHandler(
             GrantValidationResult validationResult,
+            string failureReason,
             bool skipOptionalSteps,
             SignInManager<ApplicationUser> signInManager,
             IOptions<IdentityOptions> identityOptions,
@@ -229,35 +260,40 @@ public class GrantTypeHandlerBaseTests
             : base(signInManager, identityOptions, requestValidators, claimProviders, requestHandlers, eventPublisher)
         {
             _validationResult = validationResult;
+            _failureReason = failureReason;
             _skipOptionalSteps = skipOptionalSteps;
         }
 
         public override string GrantType => _grantType;
 
+        protected override string SignInType => _grantType;
+
         protected override Task<GrantValidationResult> ValidateGrantAsync(TokenRequestContext context)
         {
+            context.FailureReason = _failureReason;
+
             return Task.FromResult(_validationResult);
         }
 
         // Simulates a grant (e.g. impersonation) that skips these steps entirely.
-        protected override Task<bool> CanSignInAsync(ApplicationUser user)
+        protected override Task<bool> CanSignInAsync(TokenRequestContext context)
         {
-            return _skipOptionalSteps ? Task.FromResult(true) : base.CanSignInAsync(user);
+            return _skipOptionalSteps ? Task.FromResult(true) : base.CanSignInAsync(context);
         }
 
-        protected override Task<TokenResponse> UpdateLastLoginAsync(ApplicationUser user)
+        protected override Task<TokenResponse> UpdateLastLoginAsync(TokenRequestContext context)
         {
-            return _skipOptionalSteps ? Task.FromResult<TokenResponse>(null) : base.UpdateLastLoginAsync(user);
+            return _skipOptionalSteps ? Task.FromResult<TokenResponse>(null) : base.UpdateLastLoginAsync(context);
         }
 
-        protected override Task BeforeSignInAsync(ApplicationUser user, TokenRequestContext context)
+        protected override Task BeforeSignInAsync(TokenRequestContext context)
         {
-            return _skipOptionalSteps ? Task.CompletedTask : base.BeforeSignInAsync(user, context);
+            return _skipOptionalSteps ? Task.CompletedTask : base.BeforeSignInAsync(context);
         }
 
-        protected override Task AfterSignInAsync(ApplicationUser user, TokenRequestContext context)
+        protected override Task AfterSignInAsync(TokenRequestContext context)
         {
-            return _skipOptionalSteps ? Task.CompletedTask : base.AfterSignInAsync(user, context);
+            return _skipOptionalSteps ? Task.CompletedTask : base.AfterSignInAsync(context);
         }
     }
 }
