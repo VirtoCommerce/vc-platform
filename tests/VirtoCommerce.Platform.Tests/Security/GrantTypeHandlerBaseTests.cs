@@ -73,6 +73,25 @@ public class GrantTypeHandlerBaseTests
     }
 
     [Fact]
+    public async Task HandleAsync_Should_ReturnTheErrorOfTheHighestPriorityValidator()
+    {
+        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        var lowPriorityError = new TokenResponse { Code = "low_priority_error" };
+        var highPriorityError = new TokenResponse { Code = "high_priority_error" };
+
+        var context = CreateContext(
+            validationResult: GrantValidationResult.Succeed(user),
+            requestValidators: [CreateRejectingValidator(1, lowPriorityError), CreateRejectingValidator(10, highPriorityError)]);
+
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
+
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
+
+        var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
+        badRequest.Value.Should().BeSameAs(highPriorityError);
+    }
+
+    [Fact]
     public async Task HandleAsync_Should_ReturnBadRequest_When_UpdatingLastLoginDateThrows()
     {
         var user = new ApplicationUser { Email = "buyer@acme.com" };
@@ -133,6 +152,15 @@ public class GrantTypeHandlerBaseTests
         user.LastLoginDate.Should().BeNull();
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Never);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<UserLoginEvent>()), Times.Never);
+    }
+
+    private static ITokenRequestValidator CreateRejectingValidator(int priority, TokenResponse error)
+    {
+        var validator = new Mock<ITokenRequestValidator>();
+        validator.SetupGet(x => x.Priority).Returns(priority);
+        validator.Setup(x => x.ValidateAsync(It.IsAny<TokenRequestContext>())).ReturnsAsync((IList<TokenResponse>)[error]);
+
+        return validator.Object;
     }
 
     private static TestContext CreateContext(

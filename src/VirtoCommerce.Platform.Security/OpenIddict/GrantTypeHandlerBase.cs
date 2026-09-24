@@ -38,7 +38,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
     {
         _signInManager = signInManager;
         _identityOptions = identityOptions.Value;
-        _requestValidators = requestValidators;
+        _requestValidators = requestValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList();
         _claimProviders = claimProviders;
         _requestHandlers = requestHandlers;
         _eventPublisher = eventPublisher;

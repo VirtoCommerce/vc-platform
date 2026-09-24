@@ -135,7 +135,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 DetailedErrors = _passwordLoginOptions.DetailedErrors,
             };
 
-            var grantTypeHandler = _grantTypeHandlers.FirstOrDefault(x => x.GrantType == openIdConnectRequest.GrantType);
+            var grantTypeHandler = _grantTypeHandlers.LastOrDefault(x => x.GrantType == openIdConnectRequest.GrantType);
             if (grantTypeHandler != null)
             {
                 return await grantTypeHandler.HandleAsync(context);
