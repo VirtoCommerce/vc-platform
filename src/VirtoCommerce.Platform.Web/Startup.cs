@@ -38,6 +38,7 @@ using Serilog;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
+using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -775,9 +776,13 @@ namespace VirtoCommerce.Platform.Web
 
             ConfigureRequestPipeline(app, Configuration, WebHostEnvironment);
 
-            app.ExecuteSynchronized(() =>
+            var distributedLock = app.ApplicationServices.GetRequiredService<IDistributedLock>();
+            var startupLockTimeout = TimeSpan.FromSeconds(app.ApplicationServices.GetRequiredService<IOptions<DistributedLockOptions>>().Value.WaitTime);
+
+            // Configure is synchronous, so startup takes the lock with the blocking Acquire.
+            using (distributedLock.Acquire(nameof(Startup), startupLockTimeout))
             {
-                // This method contents will run inside critical section of instance distributed lock.
+                // This block runs inside the critical section of the instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
                 // This ensures only one active EF-migration ran simultaneously to avoid DB-related side effects.
 
@@ -805,7 +810,7 @@ namespace VirtoCommerce.Platform.Web
                 // Platform recurring maintenance jobs (token prune, auto account lockout) are registered as
                 // engine-agnostic message-based recurring jobs in ConfigureServices (AddRecurringJob); the active
                 // engine module's scheduler fires them after startup. Nothing to do here.
-            });
+            }
 
             app.UseEndpoints(SetupEndpoints);
 

@@ -7,7 +7,7 @@ using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock;
-using VirtoCommerce.Platform.DistributedLock.NoLock;
+using VirtoCommerce.Platform.DistributedLock.InProcess;
 using VirtoCommerce.Platform.DistributedLock.Redis;
 
 namespace VirtoCommerce.Platform.Web.Redis
@@ -30,14 +30,20 @@ namespace VirtoCommerce.Platform.Web.Redis
                 var redLockFactory = RedLockFactory.Create(new[] { new RedLockMultiplexer(redis) });
                 services.AddSingleton<IDistributedLockFactory>(redLockFactory);
 
+#pragma warning disable VC0015 // Platform startup lock is internal to Platform
                 services.AddSingleton<IInternalDistributedLockService, InternalDistributedLockService>();
-                services.AddSingleton<IDistributedLockService, DistributedLockService>();
+#pragma warning restore VC0015
+                services.AddSingleton<IDistributedLock, RedisDistributedLock>();
             }
             else
             {
+#pragma warning disable VC0015 // Platform startup lock is internal to Platform
                 services.AddSingleton<IInternalDistributedLockService, InternalNoLockService>();
-                services.AddSingleton<IDistributedLockService, NoLockService>();
+#pragma warning restore VC0015
+                services.AddSingleton<IDistributedLock, InProcessDistributedLock>();
             }
+
+            services.AddSingleton<IDistributedLockService, DistributedLockServiceAdapter>();
 
             return services;
         }

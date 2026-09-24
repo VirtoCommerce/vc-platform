@@ -7,6 +7,7 @@ using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.DistributedLock.Redis
 {
+    [Obsolete("No longer registered. Resolve IDistributedLock, or IDistributedLockService for existing code.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class DistributedLockService : IDistributedLockService
     {
         private readonly IDistributedLockFactory _distributedLockFactory;
