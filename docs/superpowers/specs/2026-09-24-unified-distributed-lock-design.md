@@ -98,7 +98,7 @@ Rules:
 | Key | Default | Meaning |
 |---|---|---|
 | `WaitTime` | `180` | Existing. Seconds the startup lock waits. |
-| `DefaultTimeout` | `00:00:10` | Wait used by `AcquireAsync` without an explicit timeout. |
+| `DefaultTimeout` | `00:00:30` | Wait used by `AcquireAsync` without an explicit timeout. |
 | `Expiry` | `00:00:30` | Redis lock TTL; extended automatically while the handle is held, so it bounds only how long a crashed holder blocks others. |
 | `RetryInterval` | `00:00:00.1` | Interval between Redis acquisition attempts while waiting. |
 | `KeyPrefix` | empty | Optional application prefix: key becomes `redlock:{KeyPrefix}:{resource}`. Changing it during a rolling deploy breaks mutual exclusion between old and new instances. |
@@ -120,7 +120,7 @@ Rules:
 | `tryLockTimeout` without `retryInterval` now waits instead of failing immediately | No current caller; all pass both |
 | Failure message text changes; the type is `DistributedLockTimeoutException : PlatformException` | Nobody matches on the message |
 | Startup synchronization uses `IDistributedLock`: waits up to `WaitTime` with `RetryInterval` (100 ms instead of 3 s), expiry 30 s auto-extended instead of 300 s; without Redis it takes the in-process lock | Multi-instance startups poll Redis more often while waiting; a crashed instance blocks the others for about 30 s instead of 5 minutes |
-| XAPI waits the Platform default (10 s, retry 100 ms instead of 2 s) and still throws `LockError` (`ServiceAccessLocked`) | Faster acquisition under contention; same GraphQL error |
+| XAPI waits the Platform default (30 s instead of 10 s, retry 100 ms instead of 2 s) and still throws `LockError` (`ServiceAccessLocked`) | Faster acquisition under contention; same GraphQL error |
 
 ## Scenarios
 

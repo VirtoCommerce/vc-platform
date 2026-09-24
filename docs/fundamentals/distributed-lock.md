@@ -16,7 +16,7 @@ await _distributedLock.ExecuteAsync($"cart:recalc:{cartId}",
     ct => RecalculateAndSaveAsync(cartId, ct), cancellationToken: cancellationToken);
 ```
 
-`ExecuteAsync` waits up to `DistributedLock:DefaultTimeout` (10 s) and throws `DistributedLockTimeoutException` if the lock stays busy.
+`ExecuteAsync` waits up to `DistributedLock:DefaultTimeout` (30 s) and throws `DistributedLockTimeoutException` if the lock stays busy.
 
 ### Consume a single-use token
 
@@ -100,7 +100,7 @@ var distributedLock = new InProcessDistributedLock(
 
 ```json
 "DistributedLock": {
-  "DefaultTimeout": "00:00:10",
+  "DefaultTimeout": "00:00:30",
   "Expiry": "00:00:30",
   "RetryInterval": "00:00:00.1",
   "KeyPrefix": ""
@@ -109,7 +109,7 @@ var distributedLock = new InProcessDistributedLock(
 
 | Key | Default | Meaning |
 |---|---|---|
-| `DefaultTimeout` | `00:00:10` | Wait for `AcquireAsync`, `ExecuteAsync`, `Acquire` and `Execute` without an explicit timeout |
+| `DefaultTimeout` | `00:00:30` | Wait for `AcquireAsync`, `ExecuteAsync`, `Acquire` and `Execute` without an explicit timeout |
 | `Expiry` | `00:00:30` | Redis lock TTL. Extended automatically while held; bounds only how long a crashed holder blocks others |
 | `RetryInterval` | `00:00:00.1` | Interval between Redis acquisition attempts while waiting |
 | `KeyPrefix` | empty | Isolates applications sharing one Redis: keys become `redlock:{KeyPrefix}:{resource}`. Changing it during a rolling deploy breaks mutual exclusion between old and new instances |

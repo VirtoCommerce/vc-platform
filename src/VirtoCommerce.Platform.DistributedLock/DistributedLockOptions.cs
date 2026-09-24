@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.DistributedLock
         /// <summary>
         /// Wait used by <c>IDistributedLock.AcquireAsync</c> when no timeout is passed.
         /// </summary>
-        public TimeSpan DefaultTimeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan DefaultTimeout { get; set; } = TimeSpan.FromSeconds(30);
 
         /// <summary>
         /// Redis lock time-to-live. Extended automatically while the lock is held, so it only bounds how long

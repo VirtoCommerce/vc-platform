@@ -20,6 +20,18 @@ public class DistributedLockTimeoutExceptionTests
     }
 
     [Fact]
+    public void DistributedLockOptions_Defaults()
+    {
+        var options = new VirtoCommerce.Platform.DistributedLock.DistributedLockOptions();
+
+        options.DefaultTimeout.Should().Be(TimeSpan.FromSeconds(30));
+        options.Expiry.Should().Be(TimeSpan.FromSeconds(30));
+        options.RetryInterval.Should().Be(TimeSpan.FromMilliseconds(100));
+        options.KeyPrefix.Should().BeNull();
+        options.WaitTime.Should().Be(180);
+    }
+
+    [Fact]
     public void Constructor_WithInnerException_KeepsCause()
     {
         var cause = new TimeoutException("store did not answer");
