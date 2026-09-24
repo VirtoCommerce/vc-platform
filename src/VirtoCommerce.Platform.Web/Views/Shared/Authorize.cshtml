@@ -112,7 +112,10 @@
             @foreach (var parameter in Context.Request.HasFormContentType ?
             (IEnumerable<KeyValuePair<string, StringValues>>)Context.Request.Form : Context.Request.Query)
             {
-                <input type="hidden" name="@parameter.Key" value="@parameter.Value" />
+                @foreach (var value in parameter.Value)
+                {
+                    <input type="hidden" name="@parameter.Key" value="@value" />
+                }
             }
             <input type="submit" class="submit-button" name="submit.Accept" value="Submit Consent" />
             <input type="submit" class="cancel-button" name="submit.Deny" value="Cancel" />

@@ -490,7 +490,8 @@ public class AuthorizationControllerSignInLogTests
             authorizationService: _authorizationService.Object,
             externalSignInService: Mock.Of<IExternalSignInService>(),
             authorizationManager: _authorizationManager.Object,
-            scopeManager: Mock.Of<IOpenIddictScopeManager>());
+            scopeManager: Mock.Of<IOpenIddictScopeManager>(),
+            authorizationOptions: Options.Create(new Core.Security.AuthorizationOptions()));
 
         var claims = new List<Claim> { new(ClaimTypes.Name, "operator") };
         claims.AddRange(principalClaims ?? []);

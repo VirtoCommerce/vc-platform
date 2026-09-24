@@ -486,6 +486,8 @@ namespace VirtoCommerce.Platform.Web
 
                     serverBuilder.DisableScopeValidation();
 
+                    serverBuilder.RegisterResources(authorizationOptions?.Resources ?? []);
+
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
                     serverBuilder.DisableAccessTokenEncryption();
