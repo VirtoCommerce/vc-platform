@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock.InProcess;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 internal static class TestLocks
 {

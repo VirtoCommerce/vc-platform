@@ -4,7 +4,7 @@ using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.Core.Exceptions;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class DistributedLockTimeoutExceptionTests
 {

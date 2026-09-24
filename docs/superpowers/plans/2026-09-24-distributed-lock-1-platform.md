@@ -34,7 +34,7 @@ Build note: `Directory.Build.props` sets `TreatWarningsAsErrors`. Every Platform
 | Modify `src/VirtoCommerce.Platform.DistributedLock/IInternalDistributedLockService.cs`, `DistributedLockCondition.cs`, `NoLock/InternalNoLockService.cs`, `Redis/InternalDistributedLockService.cs` | Startup lock `[Obsolete]` + `[EditorBrowsable(Never)]`; message fix |
 | Modify `src/VirtoCommerce.Platform.Web/Extensions/ApplicationBuilderExtensions.cs` | Suppress VC0015 for the startup lock |
 | Modify `src/VirtoCommerce.Platform.Web/Redis/ServiceCollectionExtensions.cs` | Registration |
-| Create `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/*.cs` | Tests |
+| Create `tests/VirtoCommerce.Platform.Tests/DistributedLock/*.cs` | Tests |
 | Create `docs/fundamentals/distributed-lock.md` | Developer guide |
 
 ---
@@ -45,7 +45,7 @@ Build note: `Directory.Build.props` sets `TreatWarningsAsErrors`. Every Platform
 - Create: `src/VirtoCommerce.Platform.Core/DistributedLock/IDistributedLock.cs`
 - Create: `src/VirtoCommerce.Platform.Core/DistributedLock/IDistributedLockHandle.cs`
 - Create: `src/VirtoCommerce.Platform.Core/DistributedLock/DistributedLockTimeoutException.cs`
-- Test: `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/DistributedLockTimeoutExceptionTests.cs`
+- Test: `tests/VirtoCommerce.Platform.Tests/DistributedLock/DistributedLockTimeoutExceptionTests.cs`
 
 - [ ] **Step 1: Write the failing test**
 
@@ -56,7 +56,7 @@ using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.Core.Exceptions;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class DistributedLockTimeoutExceptionTests
 {
@@ -75,7 +75,7 @@ public class DistributedLockTimeoutExceptionTests
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: build error `The type or namespace name 'DistributedLockTimeoutException' could not be found`.
 
 - [ ] **Step 3: Create the contracts**
@@ -170,13 +170,13 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
 
 - [ ] **Step 4: Run the test to verify it passes**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: PASS (1 test).
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/VirtoCommerce.Platform.Core/DistributedLock tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock
+git add src/VirtoCommerce.Platform.Core/DistributedLock tests/VirtoCommerce.Platform.Tests/DistributedLock
 git commit -m "feat(VCST-6052): add IDistributedLock contracts"
 ```
 
@@ -248,8 +248,8 @@ git commit -m "feat(VCST-6052): add distributed lock timeout, expiry, retry and 
 **Files:**
 - Create: `src/VirtoCommerce.Platform.DistributedLock/DistributedLockBase.cs`
 - Create: `src/VirtoCommerce.Platform.DistributedLock/InProcess/InProcessDistributedLock.cs`
-- Create: `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/TestLocks.cs`
-- Test: `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/InProcessDistributedLockTests.cs`
+- Create: `tests/VirtoCommerce.Platform.Tests/DistributedLock/TestLocks.cs`
+- Test: `tests/VirtoCommerce.Platform.Tests/DistributedLock/InProcessDistributedLockTests.cs`
 
 - [ ] **Step 1: Write the test helper and failing tests**
 
@@ -260,7 +260,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock.InProcess;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 internal static class TestLocks
 {
@@ -284,7 +284,7 @@ using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class InProcessDistributedLockTests
 {
@@ -417,7 +417,7 @@ public class InProcessDistributedLockTests
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: build error `The type or namespace name 'InProcess' does not exist in the namespace 'VirtoCommerce.Platform.DistributedLock'`.
 
 - [ ] **Step 3: Implement the base class**
@@ -634,13 +634,13 @@ namespace VirtoCommerce.Platform.DistributedLock.InProcess
 
 - [ ] **Step 5: Run the tests to verify they pass**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: PASS (13 tests).
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/VirtoCommerce.Platform.DistributedLock tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock
+git add src/VirtoCommerce.Platform.DistributedLock tests/VirtoCommerce.Platform.Tests/DistributedLock
 git commit -m "feat(VCST-6052): add in-process distributed lock"
 ```
 
@@ -650,7 +650,7 @@ git commit -m "feat(VCST-6052): add in-process distributed lock"
 
 **Files:**
 - Create: `src/VirtoCommerce.Platform.Core/DistributedLock/DistributedLockExtensions.cs`
-- Test: `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/DistributedLockExtensionsTests.cs`
+- Test: `tests/VirtoCommerce.Platform.Tests/DistributedLock/DistributedLockExtensionsTests.cs`
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -662,7 +662,7 @@ using FluentAssertions;
 using VirtoCommerce.Platform.Core.DistributedLock;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class DistributedLockExtensionsTests
 {
@@ -746,7 +746,7 @@ public class DistributedLockExtensionsTests
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: build error `'InProcessDistributedLock' does not contain a definition for 'ExecuteAsync'`.
 
 - [ ] **Step 3: Implement the helpers**
@@ -813,13 +813,13 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
 
 - [ ] **Step 4: Run the tests to verify they pass**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: PASS (18 tests).
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/VirtoCommerce.Platform.Core/DistributedLock/DistributedLockExtensions.cs tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/DistributedLockExtensionsTests.cs
+git add src/VirtoCommerce.Platform.Core/DistributedLock/DistributedLockExtensions.cs tests/VirtoCommerce.Platform.Tests/DistributedLock/DistributedLockExtensionsTests.cs
 git commit -m "feat(VCST-6052): add ExecuteAsync and TryExecuteAsync lock helpers"
 ```
 
@@ -829,7 +829,7 @@ git commit -m "feat(VCST-6052): add ExecuteAsync and TryExecuteAsync lock helper
 
 **Files:**
 - Create: `src/VirtoCommerce.Platform.DistributedLock/Redis/RedisDistributedLock.cs`
-- Test: `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/RedisDistributedLockTests.cs`
+- Test: `tests/VirtoCommerce.Platform.Tests/DistributedLock/RedisDistributedLockTests.cs`
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -845,7 +845,7 @@ using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock.Redis;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class RedisDistributedLockTests
 {
@@ -940,7 +940,7 @@ public class RedisDistributedLockTests
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: build error `The type or namespace name 'RedisDistributedLock' could not be found`.
 
 - [ ] **Step 3: Implement the Redis lock**
@@ -1015,13 +1015,13 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
 
 - [ ] **Step 4: Run the tests to verify they pass**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: PASS (23 tests).
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/VirtoCommerce.Platform.DistributedLock/Redis/RedisDistributedLock.cs tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/RedisDistributedLockTests.cs
+git add src/VirtoCommerce.Platform.DistributedLock/Redis/RedisDistributedLock.cs tests/VirtoCommerce.Platform.Tests/DistributedLock/RedisDistributedLockTests.cs
 git commit -m "feat(VCST-6052): add Redis distributed lock"
 ```
 
@@ -1032,7 +1032,7 @@ git commit -m "feat(VCST-6052): add Redis distributed lock"
 **Files:**
 - Create: `src/VirtoCommerce.Platform.DistributedLock/DistributedLockServiceAdapter.cs`
 - Modify: `src/VirtoCommerce.Platform.Core/DistributedLock/IDistributedLockService.cs`
-- Test: `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/DistributedLockServiceAdapterTests.cs`
+- Test: `tests/VirtoCommerce.Platform.Tests/DistributedLock/DistributedLockServiceAdapterTests.cs`
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -1045,7 +1045,7 @@ using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.DistributedLock;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class DistributedLockServiceAdapterTests
 {
@@ -1092,7 +1092,7 @@ public class DistributedLockServiceAdapterTests
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: build error `The type or namespace name 'DistributedLockServiceAdapter' could not be found`.
 
 - [ ] **Step 3: Implement the adapter**
@@ -1164,13 +1164,13 @@ with:
 
 - [ ] **Step 5: Run the tests to verify they pass**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: PASS (26 tests).
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/VirtoCommerce.Platform.DistributedLock/DistributedLockServiceAdapter.cs src/VirtoCommerce.Platform.Core/DistributedLock/IDistributedLockService.cs tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/DistributedLockServiceAdapterTests.cs
+git add src/VirtoCommerce.Platform.DistributedLock/DistributedLockServiceAdapter.cs src/VirtoCommerce.Platform.Core/DistributedLock/IDistributedLockService.cs tests/VirtoCommerce.Platform.Tests/DistributedLock/DistributedLockServiceAdapterTests.cs
 git commit -m "feat(VCST-6052): run IDistributedLockService on IDistributedLock"
 ```
 
@@ -1185,7 +1185,7 @@ git commit -m "feat(VCST-6052): run IDistributedLockService on IDistributedLock"
 - Modify: `src/VirtoCommerce.Platform.DistributedLock/Redis/InternalDistributedLockService.cs`
 - Modify: `src/VirtoCommerce.Platform.Web/Extensions/ApplicationBuilderExtensions.cs:97-102`
 - Modify: `src/VirtoCommerce.Platform.Web/Redis/ServiceCollectionExtensions.cs:33,38`
-- Test: `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/StartupLockTests.cs`
+- Test: `tests/VirtoCommerce.Platform.Tests/DistributedLock/StartupLockTests.cs`
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -1202,7 +1202,7 @@ using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.DistributedLock;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class StartupLockTests
 {
@@ -1244,7 +1244,7 @@ public class StartupLockTests
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock.StartupLockTests"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock.StartupLockTests"`
 Expected: FAIL — the four theory cases fail on `ObsoleteAttribute` being null, and `ExecuteSynchronized_WhenLockNotAcquired_NamesResourceInError` fails because the message contains the type name instead of `startup-resource`.
 
 - [ ] **Step 3: Mark the startup lock types**
@@ -1311,13 +1311,13 @@ In `src/VirtoCommerce.Platform.Web/Redis/ServiceCollectionExtensions.cs`, wrap e
 Run: `dotnet build VirtoCommerce.Platform.sln`
 Expected: `Build succeeded`, 0 errors. If another file reports `VC0015` for a startup-lock type, wrap that use the same way.
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: PASS (31 tests).
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add src/VirtoCommerce.Platform.DistributedLock src/VirtoCommerce.Platform.Web tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/StartupLockTests.cs
+git add src/VirtoCommerce.Platform.DistributedLock src/VirtoCommerce.Platform.Web tests/VirtoCommerce.Platform.Tests/DistributedLock/StartupLockTests.cs
 git commit -m "feat(VCST-6052): hide the platform startup lock from module code"
 ```
 
@@ -1329,7 +1329,7 @@ git commit -m "feat(VCST-6052): hide the platform startup lock from module code"
 - Modify: `src/VirtoCommerce.Platform.Web/Redis/ServiceCollectionExtensions.cs`
 - Modify: `src/VirtoCommerce.Platform.DistributedLock/Redis/DistributedLockService.cs`
 - Modify: `src/VirtoCommerce.Platform.DistributedLock/NoLock/NoLockService.cs`
-- Test: `tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/DistributedLockRegistrationTests.cs`
+- Test: `tests/VirtoCommerce.Platform.Tests/DistributedLock/DistributedLockRegistrationTests.cs`
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1343,7 +1343,7 @@ using VirtoCommerce.Platform.DistributedLock.InProcess;
 using VirtoCommerce.Platform.Web.Redis;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class DistributedLockRegistrationTests
 {
@@ -1441,13 +1441,13 @@ In `src/VirtoCommerce.Platform.DistributedLock/Redis/DistributedLockService.cs` 
 Run: `dotnet build VirtoCommerce.Platform.sln`
 Expected: `Build succeeded`, 0 errors.
 
-Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~UnitTests.DistributedLock"`
+Run: `dotnet test tests/VirtoCommerce.Platform.Tests/VirtoCommerce.Platform.Tests.csproj --filter "FullyQualifiedName~Platform.Tests.DistributedLock"`
 Expected: PASS (32 tests).
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/VirtoCommerce.Platform.Web/Redis/ServiceCollectionExtensions.cs src/VirtoCommerce.Platform.DistributedLock tests/VirtoCommerce.Platform.Tests/UnitTests/DistributedLock/DistributedLockRegistrationTests.cs
+git add src/VirtoCommerce.Platform.Web/Redis/ServiceCollectionExtensions.cs src/VirtoCommerce.Platform.DistributedLock tests/VirtoCommerce.Platform.Tests/DistributedLock/DistributedLockRegistrationTests.cs
 git commit -m "feat(VCST-6052): register IDistributedLock with Redis and in-process implementations"
 ```
 
@@ -1599,7 +1599,7 @@ Expected: `Build succeeded`, 0 warnings, 0 errors.
 - [ ] **Step 2: Run all Platform unit tests**
 
 Run: `dotnet test VirtoCommerce.Platform.sln --filter "Category!=IntegrationTest"`
-Expected: all tests pass; the `UnitTests.DistributedLock` namespace contributes 32.
+Expected: all tests pass; the `VirtoCommerce.Platform.Tests.DistributedLock` namespace contributes 32.
 
 - [ ] **Step 3: Commit the spec and plans**
 

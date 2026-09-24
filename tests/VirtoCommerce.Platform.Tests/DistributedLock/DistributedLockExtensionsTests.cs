@@ -5,7 +5,7 @@ using FluentAssertions;
 using VirtoCommerce.Platform.Core.DistributedLock;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class DistributedLockExtensionsTests
 {

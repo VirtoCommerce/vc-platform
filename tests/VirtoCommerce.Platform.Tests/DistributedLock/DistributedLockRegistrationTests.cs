@@ -7,7 +7,7 @@ using VirtoCommerce.Platform.DistributedLock.InProcess;
 using VirtoCommerce.Platform.Web.Redis;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class DistributedLockRegistrationTests
 {

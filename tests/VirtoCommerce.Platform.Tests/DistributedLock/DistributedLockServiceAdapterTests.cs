@@ -6,7 +6,7 @@ using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.DistributedLock;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class DistributedLockServiceAdapterTests
 {

@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock.Redis;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests.DistributedLock;
+namespace VirtoCommerce.Platform.Tests.DistributedLock;
 
 public class RedisDistributedLockTests
 {
