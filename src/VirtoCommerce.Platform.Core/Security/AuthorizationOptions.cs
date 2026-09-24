@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
@@ -18,6 +19,27 @@ namespace VirtoCommerce.Platform.Core.Security
         /// Local storefront path that establishes the browser session for OAuth consent. Disabled by default.
         /// </summary>
         public string OAuthLoginPath { get; set; }
+
+        /// <summary>
+        /// Hosts served by the built-in Platform login page instead of <see cref="OAuthLoginPath"/>.
+        /// A deployment serves several front-ends from one Platform - storefronts on their own hosts
+        /// and the Admin application on the Platform host - and the login path is redirected to
+        /// relatively, so it has to exist on the host that is being used. The Platform host has no
+        /// page of its own to redirect to and is listed here.
+        /// </summary>
+        public string[] BuiltInLoginHosts { get; set; } = [];
+
+        /// <summary>
+        /// The login path to use for an authorization request arriving on <paramref name="host"/>.
+        /// Null or empty means the request is served by the built-in Platform login page.
+        /// </summary>
+        public string GetOAuthLoginPath(string host)
+        {
+            return host != null && BuiltInLoginHosts != null &&
+                   BuiltInLoginHosts.Contains(host, StringComparer.OrdinalIgnoreCase)
+                ? null
+                : OAuthLoginPath;
+        }
 
         /// <summary>
         /// Interval after which the authentication cookie's security stamp is re-validated
