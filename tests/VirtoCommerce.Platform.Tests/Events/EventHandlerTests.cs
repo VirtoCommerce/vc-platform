@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Events;
@@ -58,7 +60,7 @@ public class EventHandlerTests
     }
 
     [Fact]
-    public async Task UnregisterEventHandler_TransientRegisteredAsDerivedType_ByImplementationType()
+    public async Task UnregisterEventHandler_TransientOverriddenByDerivedType_ByDerivedType()
     {
         var (applicationBuilder, publisher, provider) = GetServices(services => services.AddTransient<Handler, Handler2>());
 
@@ -67,14 +69,14 @@ public class EventHandlerTests
 
         await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
 
-        // Only the probe at registration created a handler; the event reached nobody.
-        provider.GetRequiredService<Recorder>().Instances.Should().ContainSingle();
+        // Only the resolution that Unregister needed to match the derived type created a handler; the event reached nobody.
+        provider.GetRequiredService<Recorder>().Instances.Should().ContainSingle().Which.Should().BeOfType<Handler2>();
     }
 
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public async Task UnregisterEventHandler_SingletonRegisteredAsDerivedType_ByEitherType(bool byDeclaredType)
+    public async Task UnregisterEventHandler_SingletonOverriddenByDerivedType_ByEitherType(bool byDeclaredType)
     {
         var (applicationBuilder, publisher, provider) = GetServices(services => services.AddSingleton<Handler, Handler2>());
 
@@ -95,6 +97,22 @@ public class EventHandlerTests
     }
 
     [Fact]
+    public async Task UnregisterEventHandler_UnknownType_KeepsRegistrations()
+    {
+        var (applicationBuilder, publisher, provider) = GetServices(services => services.AddTransient<Handler>());
+
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
+        applicationBuilder.UnregisterEventHandler<UserLoginEvent, Handler2>();
+
+        await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
+
+        // One resolution while Unregister looked for the derived type, one for the event.
+        var handlers = provider.GetRequiredService<Recorder>().Instances.OfType<Handler>().ToList();
+        handlers.Should().HaveCount(2);
+        handlers[1].UserLoginEvents.Should().BeEquivalentTo([nameof(UserLoginEvent)]);
+    }
+
+    [Fact]
     public async Task TransientHandler_IsResolvedPerEvent()
     {
         var (applicationBuilder, publisher, provider) = GetServices(services => services.AddTransient<Handler>());
@@ -105,8 +123,8 @@ public class EventHandlerTests
         await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
 
         var handlers = provider.GetRequiredService<Recorder>().Instances.OfType<Handler>().ToList();
-        handlers.Should().HaveCount(3, "one probe at registration plus one instance per event");
-        handlers.Skip(1).Should().OnlyContain(x => x.UserLoginEvents.Count == 1);
+        handlers.Should().HaveCount(2, "one instance per event and none at registration");
+        handlers.Should().OnlyContain(x => x.UserLoginEvents.Count == 1);
     }
 
     [Fact]
@@ -120,8 +138,8 @@ public class EventHandlerTests
         await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
 
         var handlers = provider.GetRequiredService<Recorder>().Instances.OfType<Handler>().ToList();
-        handlers.Should().HaveCount(3);
-        handlers.Skip(1).Should().OnlyContain(x => x.UserLoginEvents.Count == 1);
+        handlers.Should().HaveCount(2);
+        handlers.Should().OnlyContain(x => x.UserLoginEvents.Count == 1);
     }
 
     [Fact]
@@ -140,20 +158,18 @@ public class EventHandlerTests
     }
 
     [Fact]
-    public async Task SingletonHandler_WithoutServiceCollectionSnapshot_IsStillOneInstance()
+    public async Task CancellableHandler_IsResolvedPerEventAndReceivesTheToken()
     {
-        // Hosts that do not register the IServiceCollection (custom hosts, test containers) take the per-invocation path for
-        // every handler; a singleton still comes back as the one root instance.
-        var (applicationBuilder, publisher, provider) = GetServices(services => services.AddSingleton<Handler>(), registerServiceCollection: false);
+        var (applicationBuilder, publisher, provider) = GetServices(services => services.AddTransient<CancellableHandler>());
 
-        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
+        applicationBuilder.RegisterCancellableEventHandler<UserLoginEvent, CancellableHandler>();
 
         await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
         await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
 
-        var handler = provider.GetRequiredService<Recorder>().Instances.Should().ContainSingle().Which;
-        handler.Should().BeSameAs(provider.GetRequiredService<Handler>());
-        ((Handler)handler).UserLoginEvents.Should().HaveCount(2);
+        var handlers = provider.GetRequiredService<Recorder>().Instances.OfType<CancellableHandler>().ToList();
+        handlers.Should().HaveCount(2);
+        handlers.Should().OnlyContain(x => x.Token == TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -167,12 +183,12 @@ public class EventHandlerTests
         var recorder = provider.GetRequiredService<Recorder>();
 
         applicationBuilder.RegisterEventHandler<UserLoginEvent, DependentHandler>();
-        recorder.Disposed.Should().Be(1, "the probe scope used at registration is disposed immediately");
+        recorder.Disposed.Should().Be(0, "registration constructs nothing");
 
         await publisher.Publish(new UserLoginEvent(user: null), TestContext.Current.CancellationToken);
 
         recorder.DependencyDisposedDuringHandle.Should().BeFalse();
-        recorder.Disposed.Should().Be(2, "the invocation scope is disposed once the handler completes");
+        recorder.Disposed.Should().Be(1, "the invocation scope is disposed once the handler completes");
     }
 
     [Fact]
@@ -182,7 +198,29 @@ public class EventHandlerTests
 
         var act = () => applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
 
-        act.Should().Throw<InvalidOperationException>();
+        act.Should().Throw<InvalidOperationException>().WithMessage($"*{typeof(Handler)}*");
+    }
+
+    [Fact]
+    public void RegisterEventHandler_SubscribesAStandInThatNamesTheHandlerType()
+    {
+        // Any registrar, custom ones included, receives an ordinary handler and can see the type it stands in for.
+        var registrar = new RecordingRegistrar();
+        var (applicationBuilder, _, _) = GetServices(services =>
+        {
+            services.AddSingleton<IEventHandlerRegistrar>(registrar);
+            services.AddTransient<Handler>();
+            services.AddTransient<CancellableHandler>();
+        });
+
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
+        applicationBuilder.RegisterCancellableEventHandler<UserLoginEvent, CancellableHandler>();
+
+        registrar.Handlers.Should().HaveCount(2);
+        registrar.Handlers[0].Should().BeOfType<ScopedEventHandler<UserLoginEvent, Handler>>()
+            .Which.HandlerType.Should().Be(typeof(Handler));
+        registrar.Handlers[1].Should().BeOfType<ScopedCancellableEventHandler<UserLoginEvent, CancellableHandler>>()
+            .Which.HandlerType.Should().Be(typeof(CancellableHandler));
     }
 
     [Fact]
@@ -204,20 +242,15 @@ public class EventHandlerTests
     }
 
 
-    private static (IApplicationBuilder, IEventPublisher, IServiceProvider) GetServices(Action<IServiceCollection> configure, bool registerServiceCollection = true)
+    private static (IApplicationBuilder, IEventPublisher, IServiceProvider) GetServices(Action<IServiceCollection> configure)
     {
         var services = new ServiceCollection();
+        services.AddSingleton(new Mock<ILogger<InProcessBus>>().Object);
         services.AddSingleton<InProcessBus>();
         services.AddSingleton<IEventHandlerRegistrar>(x => x.GetRequiredService<InProcessBus>());
         services.AddSingleton<IEventPublisher>(x => x.GetRequiredService<InProcessBus>());
         services.AddSingleton<Recorder>();
         configure(services);
-
-        if (registerServiceCollection)
-        {
-            // Startup registers the collection itself, which is how the bus learns the declared lifetime of a handler.
-            services.AddSingleton<IServiceCollection>(services);
-        }
 
         var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
 
@@ -266,6 +299,22 @@ public class EventHandlerTests
 
     public class Handler2(Recorder recorder) : Handler(recorder);
 
+    public class CancellableHandler : ICancellableEventHandler<UserLoginEvent>
+    {
+        public CancellationToken Token { get; private set; }
+
+        public CancellableHandler(Recorder recorder)
+        {
+            recorder.Instances.Add(this);
+        }
+
+        public Task Handle(UserLoginEvent message, CancellationToken cancellationToken)
+        {
+            Token = cancellationToken;
+            return Task.CompletedTask;
+        }
+    }
+
     // Throws synchronously, before returning a task.
     public class ThrowingHandler : IEventHandler<UserLoginEvent>
     {
@@ -294,6 +343,34 @@ public class EventHandlerTests
         {
             recorder.DependencyDisposedDuringHandle = dependency.IsDisposed;
             return Task.CompletedTask;
+        }
+    }
+
+    public sealed class RecordingRegistrar : IEventHandlerRegistrar
+    {
+        public List<object> Handlers { get; } = [];
+
+        public void RegisterEventHandler<T>(IEventHandler<T> handler)
+            where T : IEvent
+        {
+            Handlers.Add(handler);
+        }
+
+        public void RegisterEventHandler<T>(ICancellableEventHandler<T> handler)
+            where T : IEvent
+        {
+            Handlers.Add(handler);
+        }
+
+        public void UnregisterEventHandler<T>(Type handlerType = null)
+            where T : IEvent
+        {
+            // Not exercised by these tests.
+        }
+
+        public void UnregisterAllEventHandlers()
+        {
+            // Not exercised by these tests.
         }
     }
 }

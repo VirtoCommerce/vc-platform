@@ -53,13 +53,13 @@ The handler is resolved from the DI container when an event is published, in a D
 
 | Lifetime | Behavior |
 |---|---|
-| `AddSingleton` | One instance shared by all events, resolved once at startup. Use it for stateless handlers on hot events or for handlers that must keep state. |
+| `AddSingleton` | One instance shared by all events, created when the first event arrives. Use it for stateless handlers on hot events or for handlers that must keep state. |
 | `AddTransient` | A new instance for every event. |
 | `AddScoped` | A new instance for every event. Scoped dependencies such as `UserManager<ApplicationUser>` or a repository can be injected directly; they are disposed when the handler completes. |
 
 Handlers of the same event run concurrently, each in its own scope. A handler registered as transient or scoped must not keep state in fields between events.
 
-Registration constructs the handler once to validate it, so a handler that is not registered in the DI container fails at application startup rather than at the first event. Expect that one extra construction per registration at startup; a transient or scoped handler is then constructed again for every event.
+Registration does not construct the handler. It checks that the handler type is registered in the DI container, so a handler the module forgot to register fails at application startup with a clear message. A handler whose own dependencies cannot be resolved fails when the container is built in Development, where `ValidateOnBuild` is on, and at the first event in Production.
 
 Earlier platform versions resolved every handler once at startup and kept that single instance for the lifetime of the application regardless of the registered lifetime. A handler written against that behavior, for example one that keeps state in fields or opens a connection in its constructor, must be registered as a singleton. That also works for a handler shipped in a module you cannot change: register the same type again as a singleton from your own module's `Initialize`; the last registration wins.
 
@@ -93,4 +93,4 @@ public void PostInitialize(IApplicationBuilder appBuilder)
 }
 ```
 
-The handler type may be either the type it was registered as or the derived type that the DI container actually resolves. When both a base handler and a handler derived from it are subscribed to the same event, unsubscribing by the derived type removes both.
+The handler type is the type that was passed to `RegisterEventHandler`. A handler that was overridden in the DI container with a derived type can also be unsubscribed by that derived type, as in earlier platform versions.
