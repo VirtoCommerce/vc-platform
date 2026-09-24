@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Tests.Common;
+using VirtoCommerce.Testing;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.UnitTests
@@ -209,7 +210,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var overrideProvider = new Mock<ISettingsOverrideProvider>(); // no overrides (TryGet* default to false)
 
             return new SettingsManager(
-                () => repositoryMock.Object,
+                ScopedFactoryStub.Of(repositoryMock.Object),
                 MemoryCacheMockHelper.GetPlatformMemoryCache(),
                 new Mock<IEventPublisher>().Object,
                 Options.Create(new FixedSettings { Settings = fixedSettings ?? [] }),

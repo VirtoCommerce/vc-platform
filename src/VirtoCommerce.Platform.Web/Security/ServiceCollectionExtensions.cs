@@ -50,12 +50,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddScoped<IRoleSearchService, RoleSearchService>();
 
             //Register as singleton because this abstraction can be used as dependency in singleton services
-            services.AddSingleton<IUserSearchService>(provider =>
-            {
-                var scope = provider.CreateScope();
-                return new UserSearchService(scope.ServiceProvider.GetService<Func<UserManager<ApplicationUser>>>(),
-                                             scope.ServiceProvider.GetService<Func<RoleManager<Role>>>());
-            });
+            services.AddSingleton<IUserSearchService, UserSearchService>();
 
             //Identity dependencies override
             services.TryAddScoped<RoleManager<Role>, CustomRoleManager>();
@@ -63,6 +58,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.TryAddScoped<IPasswordValidator<ApplicationUser>, CustomPasswordValidator>();
             services.TryAddScoped<IdentityErrorDescriber, CustomIdentityErrorDescriber>();
             services.TryAddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
+            // Legacy factories: nothing owns the scope they create. Prefer IScopedFactory<T> in new code.
             services.AddSingleton<Func<RoleManager<Role>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<RoleManager<Role>>());
             services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<UserManager<ApplicationUser>>());
             services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());

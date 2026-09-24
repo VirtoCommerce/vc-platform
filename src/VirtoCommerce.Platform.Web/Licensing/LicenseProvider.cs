@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.Platform.Web.Licensing
@@ -9,9 +10,15 @@ namespace VirtoCommerce.Platform.Web.Licensing
     public class LicenseProvider
     {
         private readonly PlatformOptions _platformOptions;
-        private readonly Func<IPlatformRepository> _platformRepositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _platformRepositoryFactory;
 
-        public LicenseProvider(IOptions<PlatformOptions> platformOptions, Func<IPlatformRepository> platformRepositoryFactory)
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        protected LicenseProvider(IOptions<PlatformOptions> platformOptions, Func<IPlatformRepository> platformRepositoryFactory)
+            : this(platformOptions, new DelegateScopedFactory<IPlatformRepository>(platformRepositoryFactory))
+        {
+        }
+
+        public LicenseProvider(IOptions<PlatformOptions> platformOptions, IScopedFactory<IPlatformRepository> platformRepositoryFactory)
         {
             _platformOptions = platformOptions.Value;
             _platformRepositoryFactory = platformRepositoryFactory;
@@ -21,8 +28,9 @@ namespace VirtoCommerce.Platform.Web.Licensing
         {
             string rawLicenseData;
 
-            using (var repository = _platformRepositoryFactory())
+            using (var scopedRepository = _platformRepositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 rawLicenseData = repository.RawLicenses.OrderBy(x => x.Id).FirstOrDefault()?.Data;
             }
 
@@ -38,8 +46,9 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
         public void SaveLicense(License license)
         {
-            using (var repository = _platformRepositoryFactory())
+            using (var scopedRepository = _platformRepositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 var rawLicense = repository.RawLicenses.OrderBy(x => x.Id).FirstOrDefault();
                 if (rawLicense == null)
                 {

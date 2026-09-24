@@ -34,6 +34,7 @@
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Testing\VirtoCommerce.Testing.csproj" />
   </ItemGroup>
 
 </Project>

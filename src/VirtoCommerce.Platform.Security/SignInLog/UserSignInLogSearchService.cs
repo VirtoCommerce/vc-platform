@@ -29,10 +29,16 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     private static readonly Expression<Func<UserSignInLogEntity, bool>> ImpersonationSession =
         x => x.SignInType == SignInType.Impersonation && x.Succeeded;
 
-    private readonly Func<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
     private readonly ISettingsManager _settingsManager;
 
-    public UserSignInLogSearchService(Func<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
+    [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    protected UserSignInLogSearchService(Func<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
+        : this(new DelegateScopedFactory<ISecurityRepository>(repositoryFactory), settingsManager)
+    {
+    }
+
+    public UserSignInLogSearchService(IScopedFactory<ISecurityRepository> repositoryFactory, ISettingsManager settingsManager)
     {
         _repositoryFactory = repositoryFactory;
         _settingsManager = settingsManager;
@@ -42,7 +48,8 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     {
         var result = AbstractTypeFactory<UserSignInLogSearchResult>.TryCreateInstance();
 
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         var query = BuildQuery(repository, criteria);
 
@@ -66,7 +73,8 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
 
     public virtual async Task<UserSignInLogStats> GetStats(UserSignInLogSearchCriteria criteria)
     {
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         var unwindowed = BuildFilterQuery(repository, criteria);
         var query = ApplyWindow(unwindowed, criteria.StartDate, criteria.EndDate);

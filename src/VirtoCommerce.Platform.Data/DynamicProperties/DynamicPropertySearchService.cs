@@ -13,11 +13,17 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 {
     public class DynamicPropertySearchService : IDynamicPropertySearchService
     {
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _repositoryFactory;
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        public DynamicPropertySearchService(Func<IPlatformRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, IPlatformMemoryCache memoryCache)
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        protected DynamicPropertySearchService(Func<IPlatformRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, IPlatformMemoryCache memoryCache)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), dynamicPropertyService, memoryCache)
+        {
+        }
+
+        public DynamicPropertySearchService(IScopedFactory<IPlatformRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _dynamicPropertyService = dynamicPropertyService;
@@ -31,8 +37,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             {
                 cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
                 var result = AbstractTypeFactory<DynamicPropertySearchResult>.TryCreateInstance();
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     //Optimize performance and CPU usage
                     repository.DisableChangesTracking();
 

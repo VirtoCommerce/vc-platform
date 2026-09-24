@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Repositories;
 
@@ -15,15 +16,27 @@ namespace VirtoCommerce.Platform.Security
     {
         public const string RecentPasswordUsed = "RecentPasswordUsed";
 
+        protected readonly IScopedFactory<ISecurityRepository> _scopedRepositoryFactory;
+
+        [Obsolete("Use _scopedRepositoryFactory instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         protected readonly Func<ISecurityRepository> _repositoryFactory;
         protected readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         protected readonly PasswordOptionsExtended _passwordOptions;
 
-        public CustomPasswordValidator(IdentityErrorDescriber errors, Func<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        protected CustomPasswordValidator(IdentityErrorDescriber errors, Func<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
+            : this(errors, new DelegateScopedFactory<ISecurityRepository>(repositoryFactory), passwordHasher, passwordOptions)
+        {
+        }
+
+        public CustomPasswordValidator(IdentityErrorDescriber errors, IScopedFactory<ISecurityRepository> repositoryFactory, IPasswordHasher<ApplicationUser> passwordHasher, IOptions<PasswordOptionsExtended> passwordOptions)
             : base(errors)
 
         {
-            _repositoryFactory = repositoryFactory;
+            _scopedRepositoryFactory = repositoryFactory;
+#pragma warning disable VC0016 // Kept for derived validators that still read the legacy field; it hands out the scoped service without owning the scope, exactly as the old Func did.
+            _repositoryFactory = () => repositoryFactory.Create().Service;
+#pragma warning restore VC0016
             _passwordHasher = passwordHasher;
             _passwordOptions = passwordOptions.Value;
         }
@@ -34,7 +47,8 @@ namespace VirtoCommerce.Platform.Security
 
             if (result.Succeeded)
             {
-                using var repository = _repositoryFactory();
+                using var scopedRepository = _scopedRepositoryFactory.Create();
+                var repository = scopedRepository.Service;
                 var userPasswords = await repository.GetUserPasswordsHistoryAsync(user?.Id, _passwordOptions.PasswordHistory.GetValueOrDefault());
 
                 if (userPasswords.Any(x => _passwordHasher.VerifyHashedPassword(user, x.PasswordHash, password) != PasswordVerificationResult.Failed))

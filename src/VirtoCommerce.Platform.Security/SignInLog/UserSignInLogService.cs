@@ -14,9 +14,15 @@ namespace VirtoCommerce.Platform.Security.SignInLog;
 
 public class UserSignInLogService : IUserSignInLogService
 {
-    private readonly Func<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
 
-    public UserSignInLogService(Func<ISecurityRepository> repositoryFactory)
+    [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    protected UserSignInLogService(Func<ISecurityRepository> repositoryFactory)
+        : this(new DelegateScopedFactory<ISecurityRepository>(repositoryFactory))
+    {
+    }
+
+    public UserSignInLogService(IScopedFactory<ISecurityRepository> repositoryFactory)
     {
         _repositoryFactory = repositoryFactory;
     }
@@ -30,7 +36,8 @@ public class UserSignInLogService : IUserSignInLogService
 
         var pkMap = new PrimaryKeyResolvingMap();
 
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         foreach (var record in records)
         {
@@ -46,7 +53,8 @@ public class UserSignInLogService : IUserSignInLogService
     /// </summary>
     public virtual async Task<int> DeleteOlderThan(DateTime cutoff, int batchSize, CancellationToken cancellationToken = default)
     {
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         return await BuildExpiredQuery(repository, cutoff, batchSize).ExecuteDeleteAsync(cancellationToken);
     }
