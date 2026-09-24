@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Redis
                         .SetApplicationName("VirtoCommerce.Platform")
                         .PersistKeysToStackExchangeRedis(redis, "VirtoCommerce-Keys");
 
-                var redLockFactory = RedLockFactory.Create(new[] { new RedLockMultiplexer(redis) });
+                var redLockFactory = RedLockFactory.Create([new RedLockMultiplexer(redis)]);
                 services.AddSingleton<IDistributedLockFactory>(redLockFactory);
 
 #pragma warning disable VC0015 // Platform startup lock is internal to Platform

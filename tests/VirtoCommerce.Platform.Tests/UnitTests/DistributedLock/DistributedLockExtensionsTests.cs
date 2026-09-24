@@ -158,4 +158,37 @@ public class DistributedLockExtensionsTests
         executed.Should().BeFalse();
         ran.Should().BeFalse();
     }
+
+    [Fact]
+    public async Task Acquire_UnderSynchronizationContextWhileContended_DoesNotDeadlock()
+    {
+        var distributedLock = TestLocks.CreateInProcess();
+        var held = await distributedLock.TryAcquireAsync(Resource, cancellationToken: Token);
+        IDistributedLockHandle acquired = null;
+
+        // A single-threaded context that never runs posted work, as when its only thread is blocked (desktop UI, some test runners).
+        var thread = new Thread(() =>
+        {
+            SynchronizationContext.SetSynchronizationContext(new NonPumpingSynchronizationContext());
+            acquired = distributedLock.Acquire(Resource, TimeSpan.FromSeconds(10), CancellationToken.None);
+        })
+        {
+            IsBackground = true,
+        };
+        thread.Start();
+        await Task.Delay(100, Token);
+        await held.DisposeAsync();
+
+        thread.Join(TimeSpan.FromSeconds(5)).Should().BeTrue("Acquire must not wait for the blocked synchronization context");
+        acquired.Should().NotBeNull();
+        acquired.Dispose();
+    }
+
+    private sealed class NonPumpingSynchronizationContext : SynchronizationContext
+    {
+        public override void Post(SendOrPostCallback d, object state)
+        {
+            // Dropped: the owning thread is blocked and never processes its queue.
+        }
+    }
 }

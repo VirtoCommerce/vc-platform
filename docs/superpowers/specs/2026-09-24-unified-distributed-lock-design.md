@@ -53,7 +53,7 @@ public interface IDistributedLock
     Task<IDistributedLockHandle> AcquireAsync(string resource, TimeSpan? timeout = null, CancellationToken cancellationToken = default);
 
     // Returns null when not acquired within timeout. Default: try once, do not wait.
-    Task<IDistributedLockHandle> TryAcquireAsync(string resource, TimeSpan timeout = default, CancellationToken cancellationToken = default);
+    Task<IDistributedLockHandle?> TryAcquireAsync(string resource, TimeSpan timeout = default, CancellationToken cancellationToken = default);
 }
 
 public interface IDistributedLockHandle : IAsyncDisposable, IDisposable
@@ -63,7 +63,8 @@ public interface IDistributedLockHandle : IAsyncDisposable, IDisposable
 
 public sealed class DistributedLockTimeoutException : PlatformException
 {
-    public string Resource { get; }
+    // Standard constructors (), (message), (message, inner), plus (resource, timeout) and (resource, timeout, inner).
+    public string? Resource { get; }
     public TimeSpan Timeout { get; }
 }
 
@@ -75,7 +76,7 @@ public static class DistributedLockExtensions
 
     // Blocking counterparts for synchronous code.
     IDistributedLockHandle Acquire(this IDistributedLock, string resource, TimeSpan? timeout = null, CancellationToken cancellationToken = default);
-    IDistributedLockHandle TryAcquire(this IDistributedLock, string resource, TimeSpan timeout = default, CancellationToken cancellationToken = default);
+    IDistributedLockHandle? TryAcquire(this IDistributedLock, string resource, TimeSpan timeout = default, CancellationToken cancellationToken = default);
     void Execute(this IDistributedLock, string resource, Action action, TimeSpan? timeout = null, CancellationToken cancellationToken = default);
     T Execute<T>(this IDistributedLock, string resource, Func<T> action, TimeSpan? timeout = null, CancellationToken cancellationToken = default);
     bool TryExecute(this IDistributedLock, string resource, Action action, TimeSpan timeout = default, CancellationToken cancellationToken = default);
@@ -89,6 +90,8 @@ Rules:
 - Resource names follow `{module}:{entity}:{id}`, for example `cart:recalc:{cartId}`. They appear in Redis keys and exception messages, so they must not contain secrets. Traces carry only a hash, because names often contain user or entity ids.
 - Implementations are async only. Synchronous callers use the blocking extension methods (`Acquire`, `TryAcquire`, `Execute`, `TryExecute`), which are intended for startup and synchronous legacy code.
 - `DistributedLockTimeoutException` derives from `PlatformException`, so existing `catch (PlatformException)` blocks keep working.
+- New files enable nullable reference types, so `TryAcquireAsync` / `TryAcquire` are annotated as returning `null` on contention.
+- Library awaits use `ConfigureAwait(false)`, so the blocking extensions do not deadlock under a `SynchronizationContext`.
 
 ## Configuration (`DistributedLock` section, `DistributedLockOptions`)
 
