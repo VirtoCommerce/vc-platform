@@ -5,14 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Events;
-using VirtoCommerce.Platform.Core.Messages;
 
 namespace VirtoCommerce.Platform.Core.Bus
 {
     public class InProcessBus : IEventHandlerRegistrar, IEventPublisher
     {
         private readonly ILogger<InProcessBus> _logger;
-        private readonly List<EventHandlerRegistration> _registrations = [];
+        private readonly List<EventHandlerRegistration> _handlers = [];
 
         public InProcessBus(ILogger<InProcessBus> logger)
         {
@@ -22,13 +21,15 @@ namespace VirtoCommerce.Platform.Core.Bus
         public void RegisterEventHandler<T>(IEventHandler<T> handler)
             where T : IEvent
         {
-            AddHandler<T>(handler, (message, _) => handler.Handle((T)message));
+            // A registration handed in as a handler, such as the ScopedEventHandler that RegisterEventHandler<TEvent, THandler>()
+            // subscribes, is stored as it is. Any other instance becomes a registration for T.
+            _handlers.Add(handler as EventHandlerRegistration ?? new InstanceEventHandler<T>(handler));
         }
 
         public void RegisterEventHandler<T>(ICancellableEventHandler<T> handler)
             where T : IEvent
         {
-            AddHandler<T>(handler, (message, cancellationToken) => handler.Handle((T)message, cancellationToken));
+            _handlers.Add(handler as EventHandlerRegistration ?? new InstanceCancellableEventHandler<T>(handler));
         }
 
         public void UnregisterEventHandler<T>(Type handlerType = null)
@@ -36,13 +37,13 @@ namespace VirtoCommerce.Platform.Core.Bus
         {
             var eventType = typeof(T);
 
-            var registrations = _registrations
+            var handlers = _handlers
                 .Where(x => x.EventType.IsAssignableFrom(eventType))
                 .ToList();
 
             if (handlerType != null)
             {
-                var matches = registrations
+                var matches = handlers
                     .Where(x => x.HandlerType == handlerType)
                     .ToList();
 
@@ -50,8 +51,8 @@ namespace VirtoCommerce.Platform.Core.Bus
                 {
                     // Before handlers were resolved per event the bus knew each one by its runtime type, so a handler overridden
                     // in DI by a derived type was unregistered by that derived type. Resolve once to keep that working.
-                    matches = registrations
-                        .Where(x => x.Handler is IScopedEventHandler scoped && scoped.ResolveImplementationType() == handlerType)
+                    matches = handlers
+                        .Where(x => x.ResolveImplementationType() == handlerType)
                         .ToList();
                 }
 
@@ -60,15 +61,15 @@ namespace VirtoCommerce.Platform.Core.Bus
                     _logger.LogWarning("No event handler of type {HandlerType} is registered for {EventType}", handlerType, eventType);
                 }
 
-                registrations = matches;
+                handlers = matches;
             }
 
-            registrations.ForEach(x => _registrations.Remove(x));
+            handlers.ForEach(x => _handlers.Remove(x));
         }
 
         public void UnregisterAllEventHandlers()
         {
-            _registrations.Clear();
+            _handlers.Clear();
         }
 
         public async Task Publish<T>(T @event, CancellationToken cancellationToken = default)
@@ -81,29 +82,20 @@ namespace VirtoCommerce.Platform.Core.Bus
 
             var eventType = @event.GetType();
 
-            var registrations = _registrations
+            var handlers = _handlers
                 .Where(x => x.EventType.IsAssignableFrom(eventType))
                 .ToList();
 
-            if (registrations.Count > 0)
+            if (handlers.Count > 0)
             {
-                await Task.WhenAll(registrations.Select(x => Handle(x, @event, cancellationToken)));
+                await Task.WhenAll(handlers.Select(x => Handle(x, @event, cancellationToken)));
             }
         }
 
         // Every registered handler receives the event, even when another one throws before its first await.
-        private static async Task Handle(EventHandlerRegistration registration, IEvent @event, CancellationToken cancellationToken)
+        private static async Task Handle(EventHandlerRegistration handler, IEvent @event, CancellationToken cancellationToken)
         {
-            await registration.Invoke(@event, cancellationToken);
-        }
-
-        private void AddHandler<T>(object handler, Func<IMessage, CancellationToken, Task> invoke)
-            where T : IEvent
-        {
-            // A scoped stand-in is known by the type it resolves, so Unregister works with the type the module registered.
-            var handlerType = handler is IScopedEventHandler scoped ? scoped.HandlerType : handler.GetType();
-
-            _registrations.Add(new EventHandlerRegistration(typeof(T), handlerType, handler, invoke));
+            await handler.Handle(@event, cancellationToken);
         }
     }
 }

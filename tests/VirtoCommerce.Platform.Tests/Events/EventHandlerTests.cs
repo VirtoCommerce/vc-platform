@@ -216,7 +216,7 @@ public class EventHandlerTests
         applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
         applicationBuilder.RegisterCancellableEventHandler<UserLoginEvent, CancellableHandler>();
 
-        registrar.Handlers.Should().HaveCount(2);
+        registrar.Handlers.Should().HaveCount(2).And.AllBeAssignableTo<EventHandlerRegistration>();
         registrar.Handlers[0].Should().BeOfType<ScopedEventHandler<UserLoginEvent, Handler>>()
             .Which.HandlerType.Should().Be(typeof(Handler));
         registrar.Handlers[1].Should().BeOfType<ScopedCancellableEventHandler<UserLoginEvent, CancellableHandler>>()

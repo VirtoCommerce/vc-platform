@@ -1,11 +1,13 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace VirtoCommerce.Platform.Core.Events;
 
 // Stands in for THandler: resolves it from a DI scope of its own for every event, so the handler gets the lifetime it was registered with.
-public sealed class ScopedEventHandler<TEvent, THandler> : IEventHandler<TEvent>, IScopedEventHandler
+// Registered through IEventHandlerRegistrar like any handler; the bus stores it as it is, subscribed to TEvent.
+public sealed class ScopedEventHandler<TEvent, THandler> : EventHandlerRegistration, IEventHandler<TEvent>
     where TEvent : IEvent
     where THandler : IEventHandler<TEvent>
 {
@@ -16,7 +18,9 @@ public sealed class ScopedEventHandler<TEvent, THandler> : IEventHandler<TEvent>
         _scopeFactory = scopeFactory;
     }
 
-    public Type HandlerType => typeof(THandler);
+    public override Type EventType => typeof(TEvent);
+
+    public override Type HandlerType => typeof(THandler);
 
     public async Task Handle(TEvent message)
     {
@@ -25,7 +29,13 @@ public sealed class ScopedEventHandler<TEvent, THandler> : IEventHandler<TEvent>
         await scope.ServiceProvider.GetRequiredService<THandler>().Handle(message);
     }
 
-    public Type ResolveImplementationType()
+    public override Task Handle(IEvent @event, CancellationToken cancellationToken)
+    {
+        return Handle((TEvent)@event);
+    }
+
+    // Resolves the handler once.
+    public override Type ResolveImplementationType()
     {
         using var scope = _scopeFactory.CreateScope();
         return scope.ServiceProvider.GetRequiredService<THandler>().GetType();
