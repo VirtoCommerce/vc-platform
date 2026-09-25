@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using RedLockNet;
@@ -179,6 +181,52 @@ public class RedisDistributedLockTests
         lost.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task DisposeAsync_WhileLossCheckIsRunning_DoesNotReportLoss()
+    {
+        // RedLock reports Unlocked after release; a check that started before release must not see that as a loss.
+        var acquired = true;
+        var blockCheck = false;
+        using var checkEntered = new ManualResetEventSlim();
+        using var releaseCheck = new ManualResetEventSlim();
+        var redLock = new Mock<IRedLock>();
+        redLock.SetupGet(x => x.IsAcquired).Returns(() => Volatile.Read(ref acquired));
+        redLock.SetupGet(x => x.Status).Returns(() => Volatile.Read(ref acquired) ? RedLockStatus.Acquired : RedLockStatus.Unlocked);
+        redLock.SetupGet(x => x.ExtendCount).Returns(() =>
+        {
+            if (Volatile.Read(ref blockCheck))
+            {
+                checkEntered.Set();
+                releaseCheck.Wait(TimeSpan.FromSeconds(10));
+            }
+
+            return 0;
+        });
+        redLock.Setup(x => x.DisposeAsync()).Returns(() =>
+        {
+            Volatile.Write(ref acquired, false);
+            return ValueTask.CompletedTask;
+        });
+        var factory = new Mock<IDistributedLockFactory>();
+        factory.Setup(x => x.CreateLockAsync(Resource, It.IsAny<TimeSpan>())).ReturnsAsync(redLock.Object);
+        var logger = new RecordingLogger();
+        var options = new DistributedLockOptions { Expiry = TimeSpan.FromSeconds(30) };
+
+        var handle = await CreateLock(factory.Object, options, logger).TryAcquireAsync(Resource, cancellationToken: Token);
+        Volatile.Write(ref blockCheck, true);
+        checkEntered.Wait(TimeSpan.FromSeconds(10), Token).Should().BeTrue();
+
+        var release = Task.Run(async () => await handle.DisposeAsync(), Token);
+        await Task.Delay(TimeSpan.FromMilliseconds(100), Token);
+        Volatile.Write(ref blockCheck, false);
+        releaseCheck.Set();
+        await release;
+        await Task.Delay(TimeSpan.FromMilliseconds(300), Token);
+
+        logger.Warnings.Should().BeEmpty();
+        redLock.Verify(x => x.DisposeAsync(), Times.Once);
+    }
+
     private static async Task<bool> WaitForCancellation(CancellationToken token, TimeSpan limit)
     {
         try
@@ -221,11 +269,28 @@ public class RedisDistributedLockTests
         return factory;
     }
 
-    private static RedisDistributedLock CreateLock(IDistributedLockFactory factory, DistributedLockOptions options = null)
+    private static RedisDistributedLock CreateLock(IDistributedLockFactory factory, DistributedLockOptions options = null, ILogger<RedisDistributedLock> logger = null)
     {
         return new RedisDistributedLock(
             factory,
             Microsoft.Extensions.Options.Options.Create(options ?? new DistributedLockOptions()),
-            NullLogger<RedisDistributedLock>.Instance);
+            logger ?? NullLogger<RedisDistributedLock>.Instance);
+    }
+
+    private sealed class RecordingLogger : ILogger<RedisDistributedLock>
+    {
+        public ConcurrentQueue<string> Warnings { get; } = new();
+
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            if (logLevel >= LogLevel.Warning)
+            {
+                Warnings.Enqueue(formatter(state, exception));
+            }
+        }
     }
 }

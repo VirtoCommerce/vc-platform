@@ -111,7 +111,8 @@ public sealed class RedisDistributedLock : DistributedLockBase
         private readonly ILogger _logger;
         private readonly CancellationTokenSource _lost = new();
         private readonly Timer _lostCheck;
-        private int _released;
+        private readonly Lock _sync = new();
+        private bool _released;
         private int _lastExtendCount;
         private long _lastRenewalTimestamp = Stopwatch.GetTimestamp();
 
@@ -150,11 +151,35 @@ public sealed class RedisDistributedLock : DistributedLockBase
 
         private void CheckLost()
         {
-            if (Volatile.Read(ref _released) != 0 || _lost.IsCancellationRequested)
+            // Timer.Dispose does not wait for a running callback, so the check runs under the same lock as the release:
+            // after release, RedLock reports Unlocked and the check would otherwise report a false loss.
+            RedLockStatus status;
+            RedLockInstanceSummary instanceSummary;
+            lock (_sync)
             {
-                return;
+                if (_released || _lost.IsCancellationRequested || !IsLost())
+                {
+                    return;
+                }
+
+                status = _redLock.Status;
+                instanceSummary = _redLock.InstanceSummary;
             }
 
+            _logger.LogWarning("Distributed lock {Resource} lost while held: {Status} ({InstanceSummary}).", Resource, status, instanceSummary);
+            try
+            {
+                // Outside the lock: cancellation runs caller callbacks, which may release the handle.
+                _lost.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Released concurrently.
+            }
+        }
+
+        private bool IsLost()
+        {
             // RedLock renews every Expiry / 2. A failed renewal changes Status, but some failures (for example a closed
             // connection) only log and leave Status as Acquired. Without a successful renewal for a whole Expiry, the key
             // has expired in Redis, so both signals mean the lock may now belong to someone else.
@@ -165,27 +190,19 @@ public sealed class RedisDistributedLock : DistributedLockBase
                 _lastRenewalTimestamp = Stopwatch.GetTimestamp();
             }
 
-            if (_redLock.IsAcquired && Stopwatch.GetElapsedTime(_lastRenewalTimestamp) < _expiry)
-            {
-                return;
-            }
-
-            _logger.LogWarning("Distributed lock {Resource} lost while held: {Status} ({InstanceSummary}).", Resource, _redLock.Status, _redLock.InstanceSummary);
-            try
-            {
-                _lost.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-                // Released concurrently.
-            }
+            return !_redLock.IsAcquired || Stopwatch.GetElapsedTime(_lastRenewalTimestamp) >= _expiry;
         }
 
         private bool StopWatching()
         {
-            if (Interlocked.Exchange(ref _released, 1) != 0)
+            lock (_sync)
             {
-                return false;
+                if (_released)
+                {
+                    return false;
+                }
+
+                _released = true;
             }
 
             _lostCheck.Dispose();
