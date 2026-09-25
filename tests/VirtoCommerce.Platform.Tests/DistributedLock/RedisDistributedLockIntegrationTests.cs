@@ -143,8 +143,11 @@ public class RedisDistributedLockIntegrationTests : IClassFixture<RedisDistribut
         using var unreachable = new PlatformInstance("127.0.0.1:1,abortConnect=false,connectTimeout=500,syncTimeout=500,asyncTimeout=500", new DistributedLockOptions());
 
         var act = () => unreachable.Lock.TryAcquireAsync(NewResource(), TimeSpan.FromSeconds(30), Token);
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
         await act.Should().ThrowAsync<DistributedLockUnavailableException>();
+        // One attempt costs a SET and an UNLOCK, each bounded by the 500 ms command timeout; the 30 s wait is not used.
+        stopwatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(5));
     }
 
     [Fact]

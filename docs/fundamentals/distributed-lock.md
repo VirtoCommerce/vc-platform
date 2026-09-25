@@ -4,7 +4,7 @@ Use `IDistributedLock` (`VirtoCommerce.Platform.Core.DistributedLock`) when code
 
 - With `ConnectionStrings:RedisConnectionString`, locks are held in Redis and exclude every instance.
 - Without Redis, locks serialize callers inside the current instance only.
-- Locks are not reentrant. Resource names follow `{module}:{entity}:{id}`. They appear in Redis keys, logs and exception messages, so never put secrets in them. Traces and metrics record only a hash of the name and its family (the name without the last segment).
+- Locks are not reentrant. Resource names follow `{module}:{entity}:{id}`, with the id in the last segment only. They appear in Redis keys, logs and exception messages, so never put secrets in them. Traces and metrics record only a hash of the name and its family: the name without the last segment, at most two segments, or `other` for a name without `:`.
 - Pass `Timeout.InfiniteTimeSpan` to wait until the lock is acquired or the cancellation token is cancelled.
 
 ## What the lock guarantees
@@ -24,7 +24,7 @@ await _distributedLock.ExecuteAsync($"cart:recalc:{cartId}",
     ct => RecalculateAndSaveAsync(cartId, ct), TimeSpan.FromSeconds(5), cancellationToken);
 ```
 
-The token passed to the action is cancelled when `cancellationToken` is cancelled or the lock is lost.
+The token passed to the action is cancelled when `cancellationToken` is cancelled or the lock is lost. If the lock was lost and `cancellationToken` was not cancelled, `ExecuteAsync` throws `DistributedLockLostException` after the action, whether it completed or stopped on the token. The work may already be done, so treat it as "this ran without the lock", not as a rollback.
 
 ### Skip work that another instance is already doing
 
@@ -51,7 +51,7 @@ await using (var handle = await _distributedLock.AcquireAsync($"export:catalog:{
 await NotifyAsync(cancellationToken);
 ```
 
-`HandleLostToken` is cancelled when the lock is lost while held (see Failures), so long work stops instead of continuing next to a second holder.
+`HandleLostToken` is cancelled when the lock is detected as lost while held (see Failures), so long work stops instead of continuing next to a second holder. Code that ignores the token keeps running. Callbacks registered on the token run on a timer thread, so keep them short; an exception thrown by one is logged, not rethrown.
 
 ### Consume a single-use token
 
@@ -128,11 +128,11 @@ It lives in the `VirtoCommerce.Platform.DistributedLock` package, which also bri
 |---|---|
 | `AcquireAsync` / `ExecuteAsync` / `Acquire` / `Execute`: another holder kept the lock for the whole timeout | `DistributedLockTimeoutException` (derives from `PlatformException`, exposes `Resource` and `Timeout`) |
 | `TryAcquireAsync` / `TryExecuteAsync` / `TryAcquire` / `TryExecute`: another holder kept the lock for the whole timeout | `null` / `false` |
-| Redis cannot be reached (any of the methods) | `DistributedLockUnavailableException` (derives from `PlatformException`), right away rather than after the timeout |
+| Redis cannot be reached (any of the methods) | `DistributedLockUnavailableException` (derives from `PlatformException`) after one attempt, without waiting out the timeout. One attempt is two Redis commands, so during an outage it takes up to twice the StackExchange.Redis `asyncTimeout` (5 s by default) |
 | The cancellation token is cancelled while waiting | `OperationCanceledException` |
-| The lock is lost while held: renewal failed for a whole `Expiry` | `IDistributedLockHandle.HandleLostToken` is cancelled; the token passed to `ExecuteAsync` / `TryExecuteAsync` actions is cancelled too |
+| The lock is detected as lost while held: a renewal failed, or no renewal was observed for a whole `Expiry` | `IDistributedLockHandle.HandleLostToken` is cancelled, and so is the token passed to `Execute*` actions. Those methods then throw `DistributedLockLostException` (derives from `PlatformException`, exposes `Resource`) unless `cancellationToken` was cancelled |
 
-A holder learns about a loss when its renewal fails. On a dropped connection a renewal can block for the StackExchange.Redis `syncTimeout` (5 s by default), and the handle also treats a whole `Expiry` without a successful renewal as lost. With the defaults (renewal every 15 s, 30 s lease) the holder is told before another instance can take the lock.
+Loss detection is best effort and after the fact. A single failed renewal already cancels `HandleLostToken`. When renewals stop without an error, for example because the renewal timer does not run, the handle notices only after `Expiry` plus up to two check intervals, when the key may already have expired and another instance may hold the lock. The deprecated `IDistributedLockService` gives its callers no loss signal at all.
 
 ## Configuration
 
@@ -151,19 +151,23 @@ A holder learns about a loss when its renewal fails. On a dropped connection a r
 |---|---|---|
 | `DefaultTimeout` | `00:00:30` | Wait for `AcquireAsync`, `ExecuteAsync`, `Acquire` and `Execute` without an explicit timeout |
 | `Expiry` | `00:00:30` | Redis lock lease, renewed every `Expiry / 2` while held. It bounds two things: how long a crashed holder blocks others, and how long renewal may fail (for example during a Redis brownout) before a live holder loses the lock |
-| `RetryInterval` | `00:00:00.1` | First delay between Redis acquisition attempts while waiting. Later delays grow by 1.8×, with ±20% jitter, so waiters do not poll a busy key in lockstep |
-| `MaxRetryInterval` | `00:00:02` | Upper bound for that delay |
+| `RetryInterval` | `00:00:00.1` | First delay between Redis acquisition attempts while waiting. Later delays grow by 1.8×, with ±20% jitter, so waiters do not poll a busy key in lockstep. Must be positive |
+| `MaxRetryInterval` | `00:00:02` | Upper bound for that delay, jitter included. Must not be less than `RetryInterval` |
 | `StartupExpiry` | `00:05:00` | Lease of the startup lock that serializes migrations and module `PostInitialize`; longer than `Expiry` so a brownout during a long migration does not let a second instance start migrating |
 | `KeyPrefix` | empty | Isolates applications sharing one Redis: keys become `redlock:{KeyPrefix}:{resource}`. Changing it during a rolling deploy breaks mutual exclusion between old and new instances |
 | `WaitTime` | `180` | Seconds each instance waits for the startup lock |
+
+The platform validates these values at startup: `Expiry`, `StartupExpiry` and `RetryInterval` must be positive, `DefaultTimeout` and `WaitTime` non-negative (`DefaultTimeout` may also be `Timeout.InfiniteTimeSpan`).
+
+If the startup lock is lost while migrations and module `PostInitialize` run, startup is not aborted midway. After the block, it logs a critical error and fails with `DistributedLockLostException`, so the orchestrator restarts the instance and the log shows that migrations may have overlapped.
 
 ## Tracing and metrics
 
 Both use the name `VirtoCommerce.Platform.DistributedLock` (`ActivitySource` and `Meter`).
 
-Each acquisition emits a `DistributedLock acquire` span with:
+Each acquisition that reaches the backend emits a `DistributedLock acquire` span. An invalid argument or an already-cancelled token throws before the span starts. The span has these tags:
 - `vc.lock.resource_hash`: the first 16 hex characters of the SHA-256 of the resource name. To find the spans for a known resource, compute the same hash;
-- `vc.lock.resource_family`: the resource without its last segment, for example `cart:recalc`;
+- `vc.lock.resource_family`: the resource without its last segment and at most two segments, for example `cart:recalc`, or `other` for a name without `:`;
 - `vc.lock.outcome`: `acquired`, `timeout`, `cancelled`, `unavailable` or `error`; the span status is `Error` for the last three;
 - `vc.lock.wait.duration`: seconds spent acquiring.
 
@@ -171,9 +175,9 @@ Metrics, tagged with `vc.lock.resource_family` (and `vc.lock.outcome` where note
 
 | Instrument | Unit | Meaning |
 |---|---|---|
-| `vc.lock.attempts` | `{attempt}` | Acquisitions, by outcome |
-| `vc.lock.wait.duration` | `s` | Time spent acquiring, by outcome |
-| `vc.lock.hold.duration` | `s` | Time from acquisition to release |
+| `vc.lock.acquisitions` | `{acquisition}` | Acquisition calls, by outcome. One call can make several Redis attempts |
+| `vc.lock.wait.duration` | `s` | Time spent acquiring, by outcome. Histogram buckets from 5 ms to 5 min |
+| `vc.lock.hold.duration` | `s` | Time from acquisition to release, with the same buckets |
 | `vc.lock.lost` | `{lock}` | Locks lost while held |
 
 ## Migrating from `IDistributedLockService`
@@ -197,6 +201,6 @@ await _distributedLock.ExecuteAsync($"loyalty-balance:{userId}", ct => UpdateBal
     TimeSpan.FromSeconds(30), cancellationToken);
 ```
 
-Without Redis, the old interface now serializes callers inside the instance instead of running them concurrently. When Redis is unreachable it throws `DistributedLockUnavailableException`, which derives from `PlatformException` like the previous failure.
+Without Redis, the old interface now serializes callers inside the instance instead of running them concurrently. It gives no signal when a lock is lost while held; move to `IDistributedLock` to get `HandleLostToken` and `DistributedLockLostException`. When Redis is unreachable it throws `DistributedLockUnavailableException`, which derives from `PlatformException` like the previous failure.
 
 `IInternalDistributedLockService` and `DistributedLockCondition` are reserved for platform startup and are marked obsolete (`VC0015`); do not use them in modules. The Platform.Web `ExecuteSynchronized` extension was removed; startup uses `IDistributedLock.Acquire`.

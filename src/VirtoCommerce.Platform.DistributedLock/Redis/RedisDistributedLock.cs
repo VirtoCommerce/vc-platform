@@ -55,15 +55,16 @@ public sealed class RedisDistributedLock : DistributedLockBase
                 return new Handle(resource, redLock, LockOptions.Expiry, GetLostCheckInterval(LockOptions.Expiry), _logger);
             }
 
+            // A lock that was not acquired is not disposed: RedLock already released its keys after the failed attempt,
+            // holds no renewal timer, and DisposeAsync would send one more unlock (a full timeout during an outage).
             var status = redLock.Status;
-            var summary = redLock.InstanceSummary;
-            await redLock.DisposeAsync().ConfigureAwait(false);
 
-            // RedLock reports NoQuorum when Redis could not be reached (errors are recorded per instance, not thrown).
-            // That is not contention: report it instead of returning null, which callers read as "held elsewhere".
-            if (status == RedLockStatus.NoQuorum)
+            // Not contention, so report it instead of returning null, which callers read as "held elsewhere":
+            // NoQuorum - Redis could not be reached (errors are recorded per instance, not thrown);
+            // Expired - the key was set, but acquisition took longer than the lease.
+            if (status is RedLockStatus.NoQuorum or RedLockStatus.Expired)
             {
-                throw new DistributedLockUnavailableException(resource, $"{status} ({summary})");
+                throw new DistributedLockUnavailableException(resource, $"{status} ({redLock.InstanceSummary})");
             }
 
             var remaining = timeout == Timeout.InfiniteTimeSpan
@@ -75,7 +76,7 @@ public sealed class RedisDistributedLock : DistributedLockBase
                 return null;
             }
 
-            var wait = WithJitter(delay);
+            var wait = GetRetryWait(delay, LockOptions.MaxRetryInterval, Random.Shared.NextDouble());
             if (remaining != Timeout.InfiniteTimeSpan && wait > remaining)
             {
                 wait = remaining;
@@ -83,14 +84,29 @@ public sealed class RedisDistributedLock : DistributedLockBase
 
             await Task.Delay(wait, cancellationToken).ConfigureAwait(false);
 
-            delay = TimeSpan.FromTicks(Math.Min((long)(delay.Ticks * BackoffFactor), LockOptions.MaxRetryInterval.Ticks));
+            delay = GetNextRetryDelay(delay, LockOptions.MaxRetryInterval);
         }
     }
 
-    private static TimeSpan WithJitter(TimeSpan delay)
+    /// <summary>
+    /// The wait before the next attempt: <paramref name="delay"/> with ±20% jitter, never above <paramref name="maxRetryInterval"/>.
+    /// </summary>
+    /// <param name="delay">The current backoff step.</param>
+    /// <param name="maxRetryInterval">The upper bound for the wait.</param>
+    /// <param name="random">A value in [0, 1) that picks the jitter.</param>
+    internal static TimeSpan GetRetryWait(TimeSpan delay, TimeSpan maxRetryInterval, double random)
     {
-        var factor = 1 + ((Random.Shared.NextDouble() * 2) - 1) * JitterRatio;
-        return TimeSpan.FromTicks((long)(delay.Ticks * factor));
+        var factor = 1 + ((random * 2) - 1) * JitterRatio;
+        var wait = TimeSpan.FromTicks((long)(delay.Ticks * factor));
+        return wait > maxRetryInterval ? maxRetryInterval : wait;
+    }
+
+    /// <summary>
+    /// The next backoff step: 1.8 times <paramref name="delay"/>, capped at <paramref name="maxRetryInterval"/>.
+    /// </summary>
+    internal static TimeSpan GetNextRetryDelay(TimeSpan delay, TimeSpan maxRetryInterval)
+    {
+        return TimeSpan.FromTicks(Math.Min((long)(delay.Ticks * BackoffFactor), maxRetryInterval.Ticks));
     }
 
     private static TimeSpan GetLostCheckInterval(TimeSpan expiry)
@@ -176,13 +192,21 @@ public sealed class RedisDistributedLock : DistributedLockBase
             {
                 // Released concurrently.
             }
+            catch (Exception ex)
+            {
+                // A throwing HandleLostToken callback must not escape: this runs on a timer thread, where an unhandled
+                // exception terminates the process. The token is cancelled even when a callback throws.
+                _logger.LogError(ex, "A HandleLostToken callback for distributed lock {Resource} failed.", Resource);
+            }
         }
 
         private bool IsLost()
         {
-            // RedLock renews every Expiry / 2. A failed renewal changes Status, but some failures (for example a closed
-            // connection) only log and leave Status as Acquired. Without a successful renewal for a whole Expiry, the key
-            // has expired in Redis, so both signals mean the lock may now belong to someone else.
+            // RedLock renews every Expiry / 2. A failed renewal, including an unreachable Redis, changes Status. Some cases
+            // leave Status as Acquired: a renewal that throws outside RedLock's per-instance handling (for example on a closed
+            // multiplexer), a skipped tick while the previous renewal still runs, or a renewal timer that does not run at all
+            // (thread-pool starvation). Without an observed renewal for a whole Expiry the key has probably expired in Redis,
+            // so both signals mean the lock may now belong to someone else.
             var extendCount = _redLock.ExtendCount;
             if (extendCount != _lastExtendCount)
             {

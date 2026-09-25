@@ -26,20 +26,29 @@ public abstract class DistributedLockBase : IDistributedLock
     public const string OutcomeUnavailable = "unavailable";
     public const string OutcomeError = "error";
 
+    /// <summary>Resource family recorded for names without a <c>:</c> separator.</summary>
+    public const string OtherResourceFamily = "other";
+
     // Hex characters of the SHA-256 resource hash recorded on spans: 64 bits, enough to correlate one resource across instances.
     private const int ResourceHashLength = 16;
 
     private static readonly ActivitySource _activitySource = new(ActivitySourceName);
     private static readonly Meter _meter = new(ActivitySourceName);
 
-    private static readonly Histogram<double> _waitDuration = _meter.CreateHistogram<double>(
-        "vc.lock.wait.duration", "s", "Time spent acquiring a distributed lock, by outcome.");
+    // Seconds-based buckets from 5 ms to 5 min. Without advice, OpenTelemetry applies its default bounds, which are sized for milliseconds.
+    private static readonly InstrumentAdvice<double> _durationAdvice = new()
+    {
+        HistogramBucketBoundaries = [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 30, 60, 300],
+    };
 
-    private static readonly Histogram<double> _holdDuration = _meter.CreateHistogram<double>(
-        "vc.lock.hold.duration", "s", "Time a distributed lock was held, from acquisition to release.");
+    private static readonly Histogram<double> _waitDuration = _meter.CreateHistogram(
+        "vc.lock.wait.duration", "s", "Time spent acquiring a distributed lock, by outcome.", tags: null, advice: _durationAdvice);
 
-    private static readonly Counter<long> _attempts = _meter.CreateCounter<long>(
-        "vc.lock.attempts", "{attempt}", "Distributed lock acquisitions, by outcome.");
+    private static readonly Histogram<double> _holdDuration = _meter.CreateHistogram(
+        "vc.lock.hold.duration", "s", "Time a distributed lock was held, from acquisition to release.", tags: null, advice: _durationAdvice);
+
+    private static readonly Counter<long> _acquisitions = _meter.CreateCounter<long>(
+        "vc.lock.acquisitions", "{acquisition}", "Distributed lock acquisition calls (each may make several attempts), by outcome.");
 
     private static readonly Counter<long> _lost = _meter.CreateCounter<long>(
         "vc.lock.lost", "{lock}", "Distributed locks lost while still held.");
@@ -105,7 +114,7 @@ public abstract class DistributedLockBase : IDistributedLock
 
             var tags = new TagList { { "vc.lock.outcome", outcome }, { "vc.lock.resource_family", family } };
             _waitDuration.Record(waitSeconds, tags);
-            _attempts.Add(1, tags);
+            _acquisitions.Add(1, tags);
         }
     }
 
@@ -117,13 +126,31 @@ public abstract class DistributedLockBase : IDistributedLock
     protected abstract Task<IDistributedLockHandle?> TryAcquireCoreAsync(string resource, TimeSpan timeout, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Low-cardinality name used for metrics and spans: the resource without its last <c>:</c> segment,
-    /// for example <c>cart:recalc</c> for <c>cart:recalc:{cartId}</c>. A single-segment name is used as is.
+    /// Low-cardinality name used for metrics and spans: the resource without its last <c>:</c> segment, and at most
+    /// its first two segments, for example <c>cart:recalc</c> for <c>cart:recalc:{cartId}</c>. A name without <c>:</c>
+    /// becomes <see cref="OtherResourceFamily"/>, since it may be an id itself. Names that follow <c>{module}:{entity}:{id}</c>
+    /// keep ids out of telemetry; an id in the first two segments would still reach it.
     /// </summary>
     protected internal static string GetResourceFamily(string resource)
     {
-        var separator = resource.LastIndexOf(':');
-        return separator > 0 ? resource[..separator] : resource;
+        var last = resource.LastIndexOf(':');
+        if (last <= 0)
+        {
+            return OtherResourceFamily;
+        }
+
+        var family = resource.AsSpan(0, last);
+        var first = family.IndexOf(':');
+        if (first >= 0)
+        {
+            var second = family[(first + 1)..].IndexOf(':');
+            if (second >= 0)
+            {
+                family = family[..(first + 1 + second)];
+            }
+        }
+
+        return family.ToString();
     }
 
     private static string HashResource(string resource)

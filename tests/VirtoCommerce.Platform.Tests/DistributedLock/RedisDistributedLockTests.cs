@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -44,7 +46,7 @@ public class RedisDistributedLockTests
 
         handle.Should().BeNull();
         factory.Verify(x => x.CreateLockAsync(Resource, Expiry), Times.Once);
-        redLocks[0].Verify(x => x.DisposeAsync(), Times.Once);
+        redLocks[0].Verify(x => x.DisposeAsync(), Times.Never, "RedLock already released a lock it did not acquire");
     }
 
     [Fact]
@@ -79,7 +81,46 @@ public class RedisDistributedLockTests
 
         (await act.Should().ThrowAsync<DistributedLockUnavailableException>()).Which.Resource.Should().Be(Resource);
         factory.Verify(x => x.CreateLockAsync(Resource, Expiry), Times.Once);
-        redLocks[0].Verify(x => x.DisposeAsync(), Times.Once);
+        redLocks[0].Verify(x => x.DisposeAsync(), Times.Never, "a second unlock would wait out another command timeout");
+    }
+
+    [Fact]
+    public async Task TryAcquireAsync_WhenAcquisitionOutlivedTheLease_ThrowsUnavailable()
+    {
+        // Expired: the key was set, but acquisition took longer than Expiry. That is not contention.
+        var factory = CreateFactory(RedLockStatus.Expired);
+
+        var act = () => CreateLock(factory.Object).TryAcquireAsync(Resource, cancellationToken: Token);
+
+        await act.Should().ThrowAsync<DistributedLockUnavailableException>();
+    }
+
+    [Theory]
+    [InlineData(100, 0.0, 80)]
+    [InlineData(100, 0.5, 100)]
+    [InlineData(100, 0.99999, 120)]
+    [InlineData(1900, 0.99999, 2000)]
+    [InlineData(2000, 0.5, 2000)]
+    public void GetRetryWait_AppliesJitterThenCap(int delayMs, double random, int expectedMs)
+    {
+        var wait = RedisDistributedLock.GetRetryWait(TimeSpan.FromMilliseconds(delayMs), TimeSpan.FromSeconds(2), random);
+
+        wait.TotalMilliseconds.Should().BeApproximately(expectedMs, 0.1);
+    }
+
+    [Fact]
+    public void GetNextRetryDelay_GrowsByFactorUpToCap()
+    {
+        var max = TimeSpan.FromSeconds(2);
+        var delays = new List<double>();
+        var delay = TimeSpan.FromMilliseconds(100);
+        for (var i = 0; i < 8; i++)
+        {
+            delays.Add(delay.TotalMilliseconds);
+            delay = RedisDistributedLock.GetNextRetryDelay(delay, max);
+        }
+
+        delays.Select(x => Math.Round(x, 1)).Should().Equal(100, 180, 324, 583.2, 1049.8, 1889.6, 2000, 2000);
     }
 
     [Fact]
@@ -131,28 +172,42 @@ public class RedisDistributedLockTests
     [Fact]
     public async Task HandleLostToken_IsCancelledWhenRenewalFails()
     {
-        var acquired = true;
-        var redLock = new Mock<IRedLock>();
-        redLock.SetupGet(x => x.IsAcquired).Returns(() => acquired);
-        redLock.SetupGet(x => x.Status).Returns(() => acquired ? RedLockStatus.Acquired : RedLockStatus.NoQuorum);
-        redLock.Setup(x => x.DisposeAsync()).Returns(ValueTask.CompletedTask);
-        var factory = new Mock<IDistributedLockFactory>();
-        factory.Setup(x => x.CreateLockAsync(Resource, It.IsAny<TimeSpan>())).ReturnsAsync(redLock.Object);
-        var options = new DistributedLockOptions { Expiry = TimeSpan.FromMilliseconds(400) };
+        // Renewals keep advancing ExtendCount, so only the failed Status can cancel the token.
+        var failing = new FailingRenewal();
+        var options = new DistributedLockOptions { Expiry = TimeSpan.FromSeconds(2) };
 
-        await using var handle = await CreateLock(factory.Object, options).TryAcquireAsync(Resource, cancellationToken: Token);
-        handle.HandleLostToken.IsCancellationRequested.Should().BeFalse();
+        await using var handle = await CreateLock(failing.Factory, options).TryAcquireAsync(Resource, cancellationToken: Token);
+        (await WaitForCancellation(handle.HandleLostToken, TimeSpan.FromSeconds(1))).Should().BeFalse();
 
-        acquired = false;
+        failing.Fail();
         var lost = await WaitForCancellation(handle.HandleLostToken, TimeSpan.FromSeconds(5));
 
         lost.Should().BeTrue();
     }
 
     [Fact]
+    public async Task HandleLostToken_WhenACallbackThrows_IsStillCancelledAndTheErrorIsLogged()
+    {
+        // Cancellation runs on a timer thread, where an unhandled exception would terminate the process.
+        var failing = new FailingRenewal();
+        var logger = new RecordingLogger();
+        var options = new DistributedLockOptions { Expiry = TimeSpan.FromMilliseconds(400) };
+
+        await using var handle = await CreateLock(failing.Factory, options, logger).TryAcquireAsync(Resource, cancellationToken: Token);
+        handle.HandleLostToken.Register(() => throw new InvalidOperationException("callback failed"));
+
+        failing.Fail();
+        var lost = await WaitForCancellation(handle.HandleLostToken, TimeSpan.FromSeconds(5));
+        await Task.Delay(TimeSpan.FromMilliseconds(100), Token);
+
+        lost.Should().BeTrue();
+        logger.Errors.Should().ContainSingle().Which.Should().BeOfType<AggregateException>();
+    }
+
+    [Fact]
     public async Task HandleLostToken_IsCancelledWhenRenewalsStopWithoutStatusChange()
     {
-        // RedLock can fail to renew without changing Status (for example on a closed connection); ExtendCount then stops.
+        // RedLock can fail to renew without changing Status (for example on a closed multiplexer); ExtendCount then stops.
         var redLock = CreateRedLock(RedLockStatus.Acquired);
         redLock.SetupGet(x => x.ExtendCount).Returns(0);
         var factory = new Mock<IDistributedLockFactory>();
@@ -277,9 +332,37 @@ public class RedisDistributedLockTests
             logger ?? NullLogger<RedisDistributedLock>.Instance);
     }
 
+    // A held RedLock whose renewals succeed until Fail() is called.
+    private sealed class FailingRenewal
+    {
+        private int _extendCount;
+        private volatile bool _failed;
+
+        public FailingRenewal()
+        {
+            var redLock = new Mock<IRedLock>();
+            redLock.SetupGet(x => x.IsAcquired).Returns(() => !_failed);
+            redLock.SetupGet(x => x.Status).Returns(() => _failed ? RedLockStatus.NoQuorum : RedLockStatus.Acquired);
+            redLock.SetupGet(x => x.ExtendCount).Returns(() => _failed ? Volatile.Read(ref _extendCount) : Interlocked.Increment(ref _extendCount));
+            redLock.Setup(x => x.DisposeAsync()).Returns(ValueTask.CompletedTask);
+            var factory = new Mock<IDistributedLockFactory>();
+            factory.Setup(x => x.CreateLockAsync(Resource, It.IsAny<TimeSpan>())).ReturnsAsync(redLock.Object);
+            Factory = factory.Object;
+        }
+
+        public IDistributedLockFactory Factory { get; }
+
+        public void Fail()
+        {
+            _failed = true;
+        }
+    }
+
     private sealed class RecordingLogger : ILogger<RedisDistributedLock>
     {
         public ConcurrentQueue<string> Warnings { get; } = new();
+
+        public ConcurrentQueue<Exception> Errors { get; } = new();
 
         public IDisposable BeginScope<TState>(TState state) where TState : notnull => null;
 
@@ -287,9 +370,13 @@ public class RedisDistributedLockTests
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            if (logLevel >= LogLevel.Warning)
+            if (logLevel == LogLevel.Warning)
             {
                 Warnings.Enqueue(formatter(state, exception));
+            }
+            else if (logLevel >= LogLevel.Error && exception is not null)
+            {
+                Errors.Enqueue(exception);
             }
         }
     }

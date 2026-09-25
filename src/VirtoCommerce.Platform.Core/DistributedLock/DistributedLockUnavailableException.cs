@@ -32,8 +32,9 @@ public sealed class DistributedLockUnavailableException : PlatformException
 
     /// <param name="resource">The lock name.</param>
     /// <param name="details">What the lock store reported, for example the per-instance results.</param>
-    public DistributedLockUnavailableException(string resource, string details)
-        : base($"Distributed lock '{resource}' could not be acquired because the lock store is unavailable: {details}.")
+    /// <param name="innerException">The lock store failure, when there is one.</param>
+    public DistributedLockUnavailableException(string resource, string details, Exception? innerException = null)
+        : base($"Distributed lock '{resource}' could not be acquired because the lock store is unavailable: {details}.", innerException)
     {
         Resource = resource;
     }

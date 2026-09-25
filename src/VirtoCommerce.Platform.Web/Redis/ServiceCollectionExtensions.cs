@@ -78,6 +78,7 @@ namespace VirtoCommerce.Platform.Web.Redis
                 provider.GetRequiredService<ILogger<RedisDistributedLock>>());
         }
 
+        // Copies every option; DistributedLockRegistrationTests compares all public properties, so a new option cannot be dropped here.
         private static DistributedLockOptions WithExpiry(DistributedLockOptions options, TimeSpan expiry)
         {
             return new DistributedLockOptions

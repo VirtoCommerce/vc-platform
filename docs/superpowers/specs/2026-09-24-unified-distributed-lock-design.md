@@ -42,12 +42,13 @@ Callers that depend on the failure type: background-jobs, image-tools and search
 5. The Platform `IDistributedLockService` is deprecated in XML docs only: order and search treat warnings as errors. The XAPI `IDistributedLockService` is `[Obsolete(VC0015)]` (x-cart migrates in the same release). The startup lock has no callers outside vc-platform, so it gets `[Obsolete]` and `[EditorBrowsable(Never)]`. New obsolete members use `DiagnosticId = "VC0015"`.
 6. `Startup.Configure` takes the `Startup` lock with `IDistributedLock.Acquire` (same resource name, so the Redis key `redlock:Startup` is unchanged while `KeyPrefix` is empty), waiting `DistributedLock:WaitTime`. `ApplicationBuilderExtensions.ExecuteSynchronized` is removed; Platform.Web is not a published package.
 7. Synchronous extension methods `Acquire`, `TryAcquire`, `Execute`, `Execute<T>` and `TryExecute` mirror the async API. They are extensions rather than interface members, so implementations stay async only; they block the calling thread and are documented for startup, console tools and synchronous legacy APIs.
-8. "Held elsewhere" and "lock store unavailable" are different outcomes: RedLock reports every Redis error as `NoQuorum`, which throws `DistributedLockUnavailableException` from both `Acquire*` and `TryAcquire*`; `null` / `DistributedLockTimeoutException` mean contention only.
-9. `IDistributedLockHandle.HandleLostToken` is part of the contract from the first release, so third-party backends implement it from the start. Redis cancels it when renewal fails or no renewal succeeded for a whole `Expiry`; in-process returns `CancellationToken.None`. `ExecuteAsync` / `TryExecuteAsync` link it into the action's token.
-10. Acquisition is our own loop of single RedLock attempts (factory with `retryCount: 1`): a zero timeout is one attempt, the token is honoured between attempts, and the delay backs off 1.8× with ±20% jitter from `RetryInterval` to `MaxRetryInterval`.
+8. "Held elsewhere" and "lock store unavailable" are different outcomes: RedLock reports every Redis error as `NoQuorum` (and an acquisition slower than the lease as `Expired`); both throw `DistributedLockUnavailableException` from `Acquire*` and `TryAcquire*`; `null` / `DistributedLockTimeoutException` mean contention only.
+9. `IDistributedLockHandle.HandleLostToken` is part of the contract from the first release, so third-party backends implement it from the start. Redis cancels it when renewal fails or no renewal was observed for a whole `Expiry`; in-process returns `CancellationToken.None`. Detection is best effort and after the fact. `ExecuteAsync` / `TryExecuteAsync` link it into the action's token, and a callback that throws is logged instead of escaping the timer thread.
+10. Acquisition is our own loop of single RedLock attempts (factory with `retryCount: 1`): a zero timeout is one attempt, the token is honoured between attempts, and the delay backs off 1.8× with ±20% jitter from `RetryInterval`, capped at `MaxRetryInterval` after jitter. A lock that was not acquired is not disposed (RedLock already unlocked it), so an attempt is two Redis commands. Options are validated at startup.
 11. The startup lock uses a keyed `IDistributedLock` with `DistributedLock:StartupExpiry` (5 min, the previous `120 s + WaitTime` lease), so a Redis brownout during migrations does not let a second instance start.
-12. Telemetry names are fixed before release: span outcome on every path (`acquired`, `timeout`, `cancelled`, `unavailable`, `error`), durations in seconds, and a `Meter` (`vc.lock.attempts`, `vc.lock.wait.duration`, `vc.lock.hold.duration`, `vc.lock.lost`) tagged by resource family.
+12. Telemetry names are fixed before release: span outcome on every acquisition that reaches the backend (`acquired`, `timeout`, `cancelled`, `unavailable`, `error`), durations in seconds with seconds-based histogram buckets, and a `Meter` (`vc.lock.acquisitions`, `vc.lock.wait.duration`, `vc.lock.hold.duration`, `vc.lock.lost`) tagged by resource family (at most two leading segments, `other` without `:`).
 13. The lock is documented as an efficiency lock: it never replaces a unique constraint, optimistic concurrency or an idempotency key.
+14. A loss the caller did not cause is reported: `Execute*` / `TryExecute*` throw `DistributedLockLostException` after the action, whether it completed or stopped on the token, unless the caller's token was cancelled. Startup does not abort migrations on loss; it logs a critical error and fails after the block.
 
 ## API (`VirtoCommerce.Platform.Core.DistributedLock`)
 
@@ -65,10 +66,15 @@ public interface IDistributedLock
 public interface IDistributedLockHandle : IAsyncDisposable, IDisposable
 {
     string Resource { get; }
-    CancellationToken HandleLostToken { get; } // cancelled when the lock is lost while held
+    CancellationToken HandleLostToken { get; } // cancelled when the lock is detected as lost while held
 }
 
-public sealed class DistributedLockUnavailableException : PlatformException // Redis unreachable (NoQuorum)
+public sealed class DistributedLockUnavailableException : PlatformException // Redis unreachable (NoQuorum, Expired)
+{
+    public string? Resource { get; }
+}
+
+public sealed class DistributedLockLostException : PlatformException // lock lost while an Execute* action ran
 {
     public string? Resource { get; }
 }
@@ -113,7 +119,7 @@ Rules:
 | `DefaultTimeout` | `00:00:30` | Wait used by `AcquireAsync` without an explicit timeout. |
 | `Expiry` | `00:00:30` | Redis lease, renewed every `Expiry / 2`. Bounds how long a crashed holder blocks others, and how long renewal may fail before a live holder loses the lock. |
 | `RetryInterval` | `00:00:00.1` | First delay between acquisition attempts; grows 1.8× with ±20% jitter. |
-| `MaxRetryInterval` | `00:00:02` | Upper bound for that delay. |
+| `MaxRetryInterval` | `00:00:02` | Upper bound for that delay, jitter included. |
 | `StartupExpiry` | `00:05:00` | Lease of the startup lock (migrations, module `PostInitialize`). |
 | `KeyPrefix` | empty | Optional application prefix: key becomes `redlock:{KeyPrefix}:{resource}`. Changing it during a rolling deploy breaks mutual exclusion between old and new instances. |
 

@@ -193,18 +193,92 @@ public class DistributedLockExtensionsTests
     }
 
     [Fact]
-    public async Task ExecuteAsync_WhenLockIsLost_CancelsTheActionToken()
+    public async Task ExecuteAsync_WhenLockIsLost_CancelsTheActionTokenAndThrowsLost()
     {
         using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+        var actionCancelled = false;
+
+        var act = () => distributedLock.ExecuteAsync(Resource, async cancellationToken =>
+        {
+            await lost.CancelAsync();
+            actionCancelled = cancellationToken.IsCancellationRequested;
+            await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
+        }, cancellationToken: Token);
+
+        var thrown = (await act.Should().ThrowAsync<DistributedLockLostException>()).Which;
+        thrown.Resource.Should().Be(Resource);
+        thrown.InnerException.Should().BeAssignableTo<OperationCanceledException>();
+        actionCancelled.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ExecuteAsyncWithResult_WhenLockIsLostAndActionIgnoresToken_ThrowsLostInsteadOfSuccess()
+    {
+        using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+
+        var act = () => distributedLock.ExecuteAsync(Resource, async _ =>
+        {
+            await lost.CancelAsync();
+            return 42;
+        }, cancellationToken: Token);
+
+        (await act.Should().ThrowAsync<DistributedLockLostException>()).Which.InnerException.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task TryExecuteAsync_WhenLockIsLost_ThrowsLost()
+    {
+        using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+
+        var act = () => distributedLock.TryExecuteAsync(Resource, _ => lost.CancelAsync(), cancellationToken: Token);
+
+        await act.Should().ThrowAsync<DistributedLockLostException>();
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WhenCallerCancelsAfterLoss_KeepsOperationCanceledException()
+    {
+        using var lost = new CancellationTokenSource();
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(Token);
         var distributedLock = new LosableLock(lost.Token);
 
         var act = () => distributedLock.ExecuteAsync(Resource, async cancellationToken =>
         {
             await lost.CancelAsync();
-            await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
-        }, cancellationToken: Token);
+            await caller.CancelAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+        }, cancellationToken: caller.Token);
 
-        await act.Should().ThrowAsync<OperationCanceledException>();
+        (await act.Should().ThrowAsync<OperationCanceledException>()).Which.Should().NotBeOfType<DistributedLockLostException>();
+    }
+
+    [Fact]
+    public void Execute_WhenLockIsLost_ThrowsLost()
+    {
+        using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+
+        var execute = () => distributedLock.Execute(Resource, lost.Cancel, cancellationToken: Token);
+        var tryExecute = () => distributedLock.TryExecute(Resource, lost.Cancel, cancellationToken: Token);
+        var executeWithResult = () => distributedLock.Execute(Resource, () => 1, cancellationToken: Token);
+
+        execute.Should().Throw<DistributedLockLostException>();
+        tryExecute.Should().Throw<DistributedLockLostException>();
+        executeWithResult.Should().Throw<DistributedLockLostException>("the lock is already lost when the action returns");
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WhenLockIsNotLost_ReturnsNormally()
+    {
+        using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+
+        var result = await distributedLock.ExecuteAsync(Resource, _ => Task.FromResult(7), cancellationToken: Token);
+
+        result.Should().Be(7);
     }
 
     private sealed class LosableLock(CancellationToken lostToken) : IDistributedLock
