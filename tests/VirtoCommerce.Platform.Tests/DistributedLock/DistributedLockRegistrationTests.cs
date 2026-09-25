@@ -23,5 +23,7 @@ public class DistributedLockRegistrationTests
         provider.GetRequiredService<IDistributedLock>().Should().BeOfType<InProcessDistributedLock>();
         provider.GetRequiredService<IDistributedLockService>().Should().BeOfType<DistributedLockServiceAdapter>();
         provider.GetRequiredService<IDistributedLockService>().Should().BeSameAs(provider.GetRequiredService<IDistributedLockService>());
+        provider.GetRequiredKeyedService<IDistributedLock>(VirtoCommerce.Platform.Web.Redis.ServiceCollectionExtensions.StartupLockServiceKey)
+            .Should().BeSameAs(provider.GetRequiredService<IDistributedLock>(), "in-process locks have no lease, so startup shares the default lock");
     }
 }

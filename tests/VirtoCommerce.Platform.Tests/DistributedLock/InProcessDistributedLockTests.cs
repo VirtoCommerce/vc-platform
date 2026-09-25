@@ -217,7 +217,16 @@ public class InProcessDistributedLockTests
 
         var span = stopped.Should().ContainSingle(x => (string)x.GetTagItem("vc.lock.resource_hash") == expectedHash).Which;
         span.GetTagItem("vc.lock.outcome").Should().Be("acquired");
-        span.GetTagItem("vc.lock.wait_ms").Should().BeOfType<double>();
+        span.GetTagItem("vc.lock.wait.duration").Should().BeOfType<double>();
+        span.GetTagItem("vc.lock.resource_family").Should().Be("loyalty-balance");
         span.TagObjects.Should().NotContain(tag => tag.Value is string && ((string)tag.Value).Contains(resource));
+    }
+
+    [Fact]
+    public async Task HandleLostToken_IsNone()
+    {
+        await using var handle = await TestLocks.CreateInProcess().TryAcquireAsync(Resource, cancellationToken: Token);
+
+        handle.HandleLostToken.CanBeCanceled.Should().BeFalse();
     }
 }

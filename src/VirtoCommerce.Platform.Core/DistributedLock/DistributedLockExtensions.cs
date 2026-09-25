@@ -9,7 +9,8 @@ namespace VirtoCommerce.Platform.Core.DistributedLock;
 public static class DistributedLockExtensions
 {
     /// <summary>
-    /// Runs <paramref name="action"/> under the lock and returns its result.
+    /// Runs <paramref name="action"/> under the lock and returns its result. The token passed to <paramref name="action"/>
+    /// is cancelled when <paramref name="cancellationToken"/> is cancelled or the lock is lost (<see cref="IDistributedLockHandle.HandleLostToken"/>).
     /// </summary>
     /// <exception cref="DistributedLockTimeoutException">The lock was not acquired within <paramref name="timeout"/>.</exception>
     public static async Task<T> ExecuteAsync<T>(this IDistributedLock distributedLock, string resource,
@@ -21,12 +22,14 @@ public static class DistributedLockExtensions
         var handle = await distributedLock.AcquireAsync(resource, timeout, cancellationToken).ConfigureAwait(false);
         await using (handle.ConfigureAwait(false))
         {
-            return await action(cancellationToken).ConfigureAwait(false);
+            using var lockScope = CreateLockScope(handle, cancellationToken);
+            return await action(lockScope?.Token ?? cancellationToken).ConfigureAwait(false);
         }
     }
 
     /// <summary>
-    /// Runs <paramref name="action"/> under the lock.
+    /// Runs <paramref name="action"/> under the lock. The token passed to <paramref name="action"/> is cancelled when
+    /// <paramref name="cancellationToken"/> is cancelled or the lock is lost (<see cref="IDistributedLockHandle.HandleLostToken"/>).
     /// </summary>
     /// <exception cref="DistributedLockTimeoutException">The lock was not acquired within <paramref name="timeout"/>.</exception>
     public static async Task ExecuteAsync(this IDistributedLock distributedLock, string resource,
@@ -38,14 +41,17 @@ public static class DistributedLockExtensions
         var handle = await distributedLock.AcquireAsync(resource, timeout, cancellationToken).ConfigureAwait(false);
         await using (handle.ConfigureAwait(false))
         {
-            await action(cancellationToken).ConfigureAwait(false);
+            using var lockScope = CreateLockScope(handle, cancellationToken);
+            await action(lockScope?.Token ?? cancellationToken).ConfigureAwait(false);
         }
     }
 
     /// <summary>
     /// Runs <paramref name="action"/> only if the lock is acquired within <paramref name="timeout"/> (default: no wait).
+    /// The token passed to <paramref name="action"/> is also cancelled when the lock is lost.
     /// </summary>
     /// <returns><c>true</c> if the action ran; <c>false</c> if the lock was held elsewhere.</returns>
+    /// <exception cref="DistributedLockUnavailableException">The lock store could not be reached; nothing is skipped silently.</exception>
     public static async Task<bool> TryExecuteAsync(this IDistributedLock distributedLock, string resource,
         Func<CancellationToken, Task> action, TimeSpan timeout = default, CancellationToken cancellationToken = default)
     {
@@ -60,7 +66,8 @@ public static class DistributedLockExtensions
 
         await using (handle.ConfigureAwait(false))
         {
-            await action(cancellationToken).ConfigureAwait(false);
+            using var lockScope = CreateLockScope(handle, cancellationToken);
+            await action(lockScope?.Token ?? cancellationToken).ConfigureAwait(false);
         }
 
         return true;
@@ -136,5 +143,13 @@ public static class DistributedLockExtensions
 
         action();
         return true;
+    }
+
+    // Links the caller's token with the handle's lost signal; null when the lock cannot be lost, so the caller's token is used as is.
+    private static CancellationTokenSource? CreateLockScope(IDistributedLockHandle handle, CancellationToken cancellationToken)
+    {
+        return handle.HandleLostToken.CanBeCanceled
+            ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, handle.HandleLostToken)
+            : null;
     }
 }

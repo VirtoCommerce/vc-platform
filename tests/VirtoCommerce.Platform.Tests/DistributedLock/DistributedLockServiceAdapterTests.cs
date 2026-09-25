@@ -48,4 +48,17 @@ public class DistributedLockServiceAdapterTests
         service.Execute(Resource, () => 3, cancellationToken: Token).Should().Be(3);
         service.Execute(Resource, () => 4, cancellationToken: Token).Should().Be(4);
     }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-1000)]
+    public async Task ExecuteAsync_NegativeTryLockTimeout_MakesOneAttemptAsBefore(int milliseconds)
+    {
+        var distributedLock = TestLocks.CreateInProcess();
+        var service = new DistributedLockServiceAdapter(distributedLock);
+
+        var result = await service.ExecuteAsync(Resource, () => Task.FromResult(5), tryLockTimeout: TimeSpan.FromMilliseconds(milliseconds), cancellationToken: Token);
+
+        result.Should().Be(5);
+    }
 }

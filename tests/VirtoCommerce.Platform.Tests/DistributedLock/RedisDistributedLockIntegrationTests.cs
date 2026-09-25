@@ -107,6 +107,7 @@ public class RedisDistributedLockIntegrationTests : IClassFixture<RedisDistribut
             await Task.Delay(TimeSpan.FromSeconds(3), Token);
 
             (await second.Lock.TryAcquireAsync(resource, cancellationToken: Token)).Should().BeNull("the holder is alive, so its lock keeps being extended");
+            held.HandleLostToken.IsCancellationRequested.Should().BeFalse("renewals keep succeeding");
         }
 
         await using var afterRelease = await second.Lock.TryAcquireAsync(resource, WaitLimit, Token);
@@ -129,6 +130,21 @@ public class RedisDistributedLockIntegrationTests : IClassFixture<RedisDistribut
         await using var recovered = await survivor.Lock.TryAcquireAsync(resource, WaitLimit, Token);
 
         recovered.Should().NotBeNull("the lock expires once the crashed holder stops extending it");
+        // The holder learns about the loss when its renewal fails, which on a dropped connection can take up to the
+        // StackExchange.Redis syncTimeout (5 s by default); with this short expiry that is after the survivor acquires.
+        var lost = await WaitForCancellation(held.HandleLostToken, WaitLimit);
+        lost.Should().BeTrue("the holder that lost its connection is told the lock is gone");
+    }
+
+    [Fact]
+    public async Task TryAcquireAsync_WhenRedisUnreachable_ThrowsUnavailableInsteadOfReportingBusy()
+    {
+        // Nothing listens on port 1; short timeouts keep the failing attempt brief.
+        using var unreachable = new PlatformInstance("127.0.0.1:1,abortConnect=false,connectTimeout=500,syncTimeout=500,asyncTimeout=500", new DistributedLockOptions());
+
+        var act = () => unreachable.Lock.TryAcquireAsync(NewResource(), TimeSpan.FromSeconds(30), Token);
+
+        await act.Should().ThrowAsync<DistributedLockUnavailableException>();
     }
 
     [Fact]
@@ -193,6 +209,19 @@ public class RedisDistributedLockIntegrationTests : IClassFixture<RedisDistribut
 
         whileHeld.Should().BeNull();
         afterRelease.Should().NotBeNull();
+    }
+
+    private static async Task<bool> WaitForCancellation(CancellationToken token, TimeSpan limit)
+    {
+        try
+        {
+            await Task.Delay(limit, token);
+            return false;
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+            return true;
+        }
     }
 
     private static string NewResource()

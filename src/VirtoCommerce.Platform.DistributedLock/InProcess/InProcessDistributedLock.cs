@@ -119,6 +119,9 @@ public sealed class InProcessDistributedLock : DistributedLockBase
 
         public string Resource { get; }
 
+        // An in-process lock cannot be lost while held.
+        public CancellationToken HandleLostToken => CancellationToken.None;
+
         public void Dispose()
         {
             if (Interlocked.Exchange(ref _released, 1) == 0)

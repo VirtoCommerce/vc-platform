@@ -25,7 +25,8 @@ public interface IDistributedLock
     /// <param name="timeout">Maximum wait; <see cref="TimeSpan.Zero"/> tries once, <see cref="Timeout.InfiniteTimeSpan"/> waits until acquired or cancelled.</param>
     /// <param name="cancellationToken">Cancels the wait.</param>
     /// <returns>A handle that releases the lock when disposed.</returns>
-    /// <exception cref="DistributedLockTimeoutException">The lock was not acquired within <paramref name="timeout"/>.</exception>
+    /// <exception cref="DistributedLockTimeoutException">Another holder kept the lock for the whole <paramref name="timeout"/>.</exception>
+    /// <exception cref="DistributedLockUnavailableException">The lock store (Redis) could not be reached.</exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was cancelled while waiting.</exception>
     Task<IDistributedLockHandle> AcquireAsync(string resource, TimeSpan? timeout = null, CancellationToken cancellationToken = default);
 
@@ -33,7 +34,8 @@ public interface IDistributedLock
     /// Tries to acquire the lock within <paramref name="timeout"/>. The default tries once without waiting;
     /// <see cref="Timeout.InfiniteTimeSpan"/> waits until acquired or cancelled.
     /// </summary>
-    /// <returns>A handle that releases the lock when disposed, or <c>null</c> when the lock is held elsewhere.</returns>
+    /// <returns>A handle that releases the lock when disposed, or <c>null</c> when another holder kept the lock for the whole timeout.</returns>
+    /// <exception cref="DistributedLockUnavailableException">The lock store (Redis) could not be reached; the resource may be free.</exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was cancelled while waiting.</exception>
     Task<IDistributedLockHandle?> TryAcquireAsync(string resource, TimeSpan timeout = default, CancellationToken cancellationToken = default);
 }

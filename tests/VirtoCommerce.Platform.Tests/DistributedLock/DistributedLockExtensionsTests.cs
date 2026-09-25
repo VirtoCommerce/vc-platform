@@ -191,4 +191,48 @@ public class DistributedLockExtensionsTests
             // Dropped: the owning thread is blocked and never processes its queue.
         }
     }
+
+    [Fact]
+    public async Task ExecuteAsync_WhenLockIsLost_CancelsTheActionToken()
+    {
+        using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+
+        var act = () => distributedLock.ExecuteAsync(Resource, async cancellationToken =>
+        {
+            await lost.CancelAsync();
+            await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
+        }, cancellationToken: Token);
+
+        await act.Should().ThrowAsync<OperationCanceledException>();
+    }
+
+    private sealed class LosableLock(CancellationToken lostToken) : IDistributedLock
+    {
+        public Task<IDistributedLockHandle> AcquireAsync(string resource, TimeSpan? timeout = null, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult<IDistributedLockHandle>(new Handle(resource, lostToken));
+        }
+
+        public Task<IDistributedLockHandle> TryAcquireAsync(string resource, TimeSpan timeout = default, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult<IDistributedLockHandle>(new Handle(resource, lostToken));
+        }
+
+        private sealed class Handle(string resource, CancellationToken lostToken) : IDistributedLockHandle
+        {
+            public string Resource { get; } = resource;
+
+            public CancellationToken HandleLostToken { get; } = lostToken;
+
+            public void Dispose()
+            {
+            }
+
+            public ValueTask DisposeAsync()
+            {
+                return ValueTask.CompletedTask;
+            }
+        }
+    }
 }

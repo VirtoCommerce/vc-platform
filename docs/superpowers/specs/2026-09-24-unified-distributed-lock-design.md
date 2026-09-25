@@ -37,11 +37,17 @@ Callers that depend on the failure type: background-jobs, image-tools and search
 
 1. The existing Platform `IDistributedLockService` switches to the new implementation, including the in-process lock when Redis is not configured.
 2. `DistributedLock:KeyPrefix` defaults to empty, so lock keys do not change during a rolling deploy.
-3. Names: `IDistributedLock`, `IDistributedLockHandle`, `DistributedLockTimeoutException`.
+3. Names: `IDistributedLock`, `IDistributedLockHandle`, `DistributedLockTimeoutException`, `DistributedLockUnavailableException`.
 4. Scope: Platform, XAPI and UCP. Out of scope: experience-api, the 23 in-process `AsyncLock` call sites that intend cross-instance exclusion (cart, order, fast-order, webhooks, Platform settings), and Hangfire `[DisableConcurrentExecution]`.
-5. The two `IDistributedLockService` interfaces are deprecated in XML docs and documentation in this release, but do not get `[Obsolete]`: order, search and x-cart treat warnings as errors, and `[Obsolete]` would fail their build on package upgrade. `[Obsolete]` follows once first-party callers have migrated. The startup lock has no callers outside vc-platform, so it gets `[Obsolete]` and `[EditorBrowsable(Never)]` now. New obsolete members use `DiagnosticId = "VC0015"`.
+5. The Platform `IDistributedLockService` is deprecated in XML docs only: order and search treat warnings as errors. The XAPI `IDistributedLockService` is `[Obsolete(VC0015)]` (x-cart migrates in the same release). The startup lock has no callers outside vc-platform, so it gets `[Obsolete]` and `[EditorBrowsable(Never)]`. New obsolete members use `DiagnosticId = "VC0015"`.
 6. `Startup.Configure` takes the `Startup` lock with `IDistributedLock.Acquire` (same resource name, so the Redis key `redlock:Startup` is unchanged while `KeyPrefix` is empty), waiting `DistributedLock:WaitTime`. `ApplicationBuilderExtensions.ExecuteSynchronized` is removed; Platform.Web is not a published package.
 7. Synchronous extension methods `Acquire`, `TryAcquire`, `Execute`, `Execute<T>` and `TryExecute` mirror the async API. They are extensions rather than interface members, so implementations stay async only; they block the calling thread and are documented for startup, console tools and synchronous legacy APIs.
+8. "Held elsewhere" and "lock store unavailable" are different outcomes: RedLock reports every Redis error as `NoQuorum`, which throws `DistributedLockUnavailableException` from both `Acquire*` and `TryAcquire*`; `null` / `DistributedLockTimeoutException` mean contention only.
+9. `IDistributedLockHandle.HandleLostToken` is part of the contract from the first release, so third-party backends implement it from the start. Redis cancels it when renewal fails or no renewal succeeded for a whole `Expiry`; in-process returns `CancellationToken.None`. `ExecuteAsync` / `TryExecuteAsync` link it into the action's token.
+10. Acquisition is our own loop of single RedLock attempts (factory with `retryCount: 1`): a zero timeout is one attempt, the token is honoured between attempts, and the delay backs off 1.8× with ±20% jitter from `RetryInterval` to `MaxRetryInterval`.
+11. The startup lock uses a keyed `IDistributedLock` with `DistributedLock:StartupExpiry` (5 min, the previous `120 s + WaitTime` lease), so a Redis brownout during migrations does not let a second instance start.
+12. Telemetry names are fixed before release: span outcome on every path (`acquired`, `timeout`, `cancelled`, `unavailable`, `error`), durations in seconds, and a `Meter` (`vc.lock.attempts`, `vc.lock.wait.duration`, `vc.lock.hold.duration`, `vc.lock.lost`) tagged by resource family.
+13. The lock is documented as an efficiency lock: it never replaces a unique constraint, optimistic concurrency or an idempotency key.
 
 ## API (`VirtoCommerce.Platform.Core.DistributedLock`)
 
@@ -59,6 +65,12 @@ public interface IDistributedLock
 public interface IDistributedLockHandle : IAsyncDisposable, IDisposable
 {
     string Resource { get; }
+    CancellationToken HandleLostToken { get; } // cancelled when the lock is lost while held
+}
+
+public sealed class DistributedLockUnavailableException : PlatformException // Redis unreachable (NoQuorum)
+{
+    public string? Resource { get; }
 }
 
 public sealed class DistributedLockTimeoutException : PlatformException
@@ -99,16 +111,18 @@ Rules:
 |---|---|---|
 | `WaitTime` | `180` | Existing. Seconds the startup lock waits. |
 | `DefaultTimeout` | `00:00:30` | Wait used by `AcquireAsync` without an explicit timeout. |
-| `Expiry` | `00:00:30` | Redis lock TTL; extended automatically while the handle is held, so it bounds only how long a crashed holder blocks others. |
-| `RetryInterval` | `00:00:00.1` | Interval between Redis acquisition attempts while waiting. |
+| `Expiry` | `00:00:30` | Redis lease, renewed every `Expiry / 2`. Bounds how long a crashed holder blocks others, and how long renewal may fail before a live holder loses the lock. |
+| `RetryInterval` | `00:00:00.1` | First delay between acquisition attempts; grows 1.8× with ±20% jitter. |
+| `MaxRetryInterval` | `00:00:02` | Upper bound for that delay. |
+| `StartupExpiry` | `00:05:00` | Lease of the startup lock (migrations, module `PostInitialize`). |
 | `KeyPrefix` | empty | Optional application prefix: key becomes `redlock:{KeyPrefix}:{resource}`. Changing it during a rolling deploy breaks mutual exclusion between old and new instances. |
 
 ## Implementations (`VirtoCommerce.Platform.DistributedLock`)
 
-- `DistributedLockBase` — validation, default timeout, timeout exception and tracing (`ActivitySource` `VirtoCommerce.Platform.DistributedLock`, span `DistributedLock acquire` with `vc.lock.resource_hash` (first 16 hex characters of SHA-256), `vc.lock.outcome` = `acquired` / `timeout` / `cancelled`, `vc.lock.wait_ms`).
-- `RedisDistributedLock` — uses the singleton `IDistributedLockFactory` registered by Platform; no factory per call. Zero timeout tries once; a positive timeout waits with `RetryInterval` and honours cancellation.
+- `DistributedLockBase` — validation, default timeout, timeout exception, tracing (`ActivitySource` `VirtoCommerce.Platform.DistributedLock`, span `DistributedLock acquire` with `vc.lock.resource_hash`, `vc.lock.resource_family`, `vc.lock.outcome`, `vc.lock.wait.duration` in seconds) and metrics (`Meter` of the same name), plus a handle wrapper that records hold time and loss.
+- `RedisDistributedLock` — loop of single RedLock attempts on a dedicated single-attempt factory; `NoQuorum` throws `DistributedLockUnavailableException`; the handle polls `IsAcquired` and `ExtendCount` every `Expiry / 4` (100 ms–5 s) to raise `HandleLostToken`. Both RedLock factories get the Platform `ILoggerFactory`, so failed renewals are logged.
 - `InProcessDistributedLock` — per-resource `SemaphoreSlim` with reference-counted eviction. Public so tests can use a real lock.
-- `DistributedLockServiceAdapter` — implements the existing Platform `IDistributedLockService` on `IDistributedLock`. `tryLockTimeout` becomes the wait (`null` = try once, as today). `lockTimeout` and `retryInterval` are ignored because expiry and retry are configured once.
+- `DistributedLockServiceAdapter` — implements the existing Platform `IDistributedLockService` on `IDistributedLock`. `tryLockTimeout` becomes the wait (`null`, zero or negative = one attempt, as before). `lockTimeout` and `retryInterval` are ignored because expiry and retry are configured once.
 - Registration in `AddRedis`: `IDistributedLock` is `RedisDistributedLock` when `ConnectionStrings:RedisConnectionString` is set, otherwise `InProcessDistributedLock`. `IDistributedLockService` is always `DistributedLockServiceAdapter`. `NoLockService` and the old Redis `DistributedLockService` are no longer registered and get `[Obsolete]`.
 
 ## Behaviour changes for existing callers
@@ -119,15 +133,16 @@ Rules:
 | `lockTimeout` no longer sets the Redis TTL; the configured `Expiry` (30 s, auto-extended) does | image-tools (8 h), search (12 h), order payments (30 min): after a crash the stale lock clears in about 30 s instead of hours |
 | `tryLockTimeout` without `retryInterval` now waits instead of failing immediately | No current caller; all pass both |
 | Failure message text changes; the type is `DistributedLockTimeoutException : PlatformException` | Nobody matches on the message |
-| Startup synchronization uses `IDistributedLock`: waits up to `WaitTime` with `RetryInterval` (100 ms instead of 3 s), expiry 30 s auto-extended instead of 300 s; without Redis it takes the in-process lock | Multi-instance startups poll Redis more often while waiting; a crashed instance blocks the others for about 30 s instead of 5 minutes |
-| XAPI waits the Platform default (30 s instead of 10 s, retry 100 ms instead of 2 s) and still throws `LockError` (`ServiceAccessLocked`) | Faster acquisition under contention; same GraphQL error |
+| Startup synchronization uses a keyed `IDistributedLock` with `StartupExpiry` (5 min, as before): waits up to `WaitTime` with backoff from 100 ms instead of a fixed 3 s; without Redis it takes the in-process lock | Multi-instance startups poll Redis more often at first, then back off |
+| Redis unreachable: `IDistributedLockService` throws `DistributedLockUnavailableException` (a `PlatformException`) immediately, instead of a `PlatformException` after the wait | Callers catching `PlatformException` see the same type, sooner |
+| XAPI keeps its 10 s wait (`VirtoCommerce:GraphQLDistributedLock:Timeout`), retries with backoff from 100 ms instead of every 2 s, and still throws `LockError` (`ServiceAccessLocked`) | Faster acquisition under contention; same GraphQL error |
 
 ## Scenarios
 
 1. Serialize changes to one entity — `ExecuteAsync($"cart:recalc:{cartId}", ...)`.
-2. Consume a single-use token — `TryAcquireAsync(key, TimeSpan.FromSeconds(10))`; `null` means return a retryable 409.
+2. Consume a single-use token — the atomic consume in the token store decides single use (`GETDEL`, conditional `UPDATE`); `TryAcquireAsync(key, TimeSpan.FromSeconds(10))` only narrows the race, and `null` means a retryable 409.
 3. Skip if another instance runs it — `TryExecuteAsync("catalog:reindex", ...)`; `false` means skipped.
-4. Hold a lock across several steps and release it early — `await using (await AcquireAsync(...)) { ... }`.
+4. Hold a lock across several steps (for example a multi-step export) — `await using (var handle = await AcquireAsync(...))`, linking `handle.HandleLostToken` into the work.
 5. Unit tests — `new InProcessDistributedLock(Options.Create(new DistributedLockOptions()), NullLogger<InProcessDistributedLock>.Instance)`.
 6. GraphQL resolvers — XAPI `ResolveSynchronizedAsync(prefix, property, IDistributedLock, resolve)` maps a timeout to `LockError`.
 
@@ -149,8 +164,11 @@ Follow-up: evaluate a database-backed `IDistributedLock` (DistributedLock.SqlSer
 
 ## Delivery
 
-1. vc-platform — new API, implementations, adapter, registration, startup-lock deprecation, docs (`docs/fundamentals/distributed-lock.md`). Plan: `docs/superpowers/plans/2026-09-24-distributed-lock-1-platform.md`.
-2. vc-module-x-api — XAPI `IDistributedLockService` becomes an adapter over `IDistributedLock`; new `ResolveSynchronized*` overloads taking `IDistributedLock`; Redis/in-memory/no-lock services deprecated. Plan: `docs/superpowers/plans/2026-09-24-distributed-lock-2-xapi.md`.
-3. vc-module-ucp — handoff restore uses `IDistributedLock.TryAcquireAsync`. Plan: `docs/superpowers/plans/2026-09-24-distributed-lock-3-ucp.md`.
+1. vc-platform — new API, implementations, adapter, registration, startup-lock deprecation, docs (`docs/fundamentals/distributed-lock.md`).
+2. vc-module-x-api — XAPI `IDistributedLockService` becomes an obsolete adapter over `IDistributedLock`; `ResolveSynchronized*` overloads and `AcquireForGraphQLAsync` taking `IDistributedLock`; `VirtoCommerce:GraphQLDistributedLock:Timeout` (10 s).
+3. vc-module-ucp — handoff restore uses `IDistributedLock.TryAcquireAsync`.
+4. vc-module-x-cart — cart locks use `IDistributedLock`; the obsolete `IMediator` constructors of the lock classes are removed (keeping them made DI constructor selection ambiguous).
 
 Each step releases before the next starts: XAPI needs the Platform package, UCP needs both.
+
+Follow-ups: the 23 in-process `AsyncLock` call sites that intend cross-instance exclusion; semaphore and reader-writer primitives; a leader-election helper built on `HandleLostToken`; a database-backed backend.

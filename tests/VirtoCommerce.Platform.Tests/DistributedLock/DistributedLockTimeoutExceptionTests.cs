@@ -27,6 +27,8 @@ public class DistributedLockTimeoutExceptionTests
         options.DefaultTimeout.Should().Be(TimeSpan.FromSeconds(30));
         options.Expiry.Should().Be(TimeSpan.FromSeconds(30));
         options.RetryInterval.Should().Be(TimeSpan.FromMilliseconds(100));
+        options.MaxRetryInterval.Should().Be(TimeSpan.FromSeconds(2));
+        options.StartupExpiry.Should().Be(TimeSpan.FromMinutes(5));
         options.KeyPrefix.Should().BeNull();
         options.WaitTime.Should().Be(180);
     }

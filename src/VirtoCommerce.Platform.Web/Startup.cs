@@ -776,7 +776,8 @@ namespace VirtoCommerce.Platform.Web
 
             ConfigureRequestPipeline(app, Configuration, WebHostEnvironment);
 
-            var distributedLock = app.ApplicationServices.GetRequiredService<IDistributedLock>();
+            // Keyed lock with a longer Redis lease (DistributedLock:StartupExpiry): migrations can run for minutes.
+            var distributedLock = app.ApplicationServices.GetRequiredKeyedService<IDistributedLock>(Redis.ServiceCollectionExtensions.StartupLockServiceKey);
             var startupLockTimeout = TimeSpan.FromSeconds(app.ApplicationServices.GetRequiredService<IOptions<DistributedLockOptions>>().Value.WaitTime);
 
             // Configure is synchronous, so startup takes the lock with the blocking Acquire.
