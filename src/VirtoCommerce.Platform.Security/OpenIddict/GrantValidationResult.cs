@@ -21,19 +21,21 @@ public class GrantValidationResult
         };
     }
 
-    public static GrantValidationResult Fail(TokenResponse error)
+    public static GrantValidationResult Fail(TokenResponse error, ApplicationUser user = null)
     {
         return new GrantValidationResult
         {
             Error = error,
+            User = user,
         };
     }
 
-    public static GrantValidationResult Fail(ActionResult errorResult)
+    public static GrantValidationResult Fail(ActionResult errorResult, ApplicationUser user = null)
     {
         return new GrantValidationResult
         {
             ErrorResult = errorResult,
+            User = user,
         };
     }
 }
