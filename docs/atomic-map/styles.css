@@ -1,0 +1,1366 @@
+/* Virto Commerce — Atomic Architecture Map
+   No framework, no CDN, no webfonts. Light/dark via prefers-color-scheme + [data-theme] override.
+   Family colour comes from a single --h (hue) custom property set per tile, so adding a family
+   means adding one hue in content/atoms.js — no CSS change. */
+
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --text: #151a22;
+  --muted: #5c6675;
+  --border: #dbe0e8;
+  --border-strong: #c3cad6;
+  --accent: #d21f3c;              /* Virto red, matches the docs theme */
+  --focus: #1668dc;
+  --shadow: 0 1px 2px rgba(18, 24, 33, .06), 0 8px 24px rgba(18, 24, 33, .08);
+  --radius: 8px;
+
+  --ok: #17794a;
+  --info: #1668dc;
+  --neutral: #6b7280;
+  --warn: #9a6100;
+  --bad: #b4232d;
+  /* A fourth swimlane accent. Not in the semantic set above because it means nothing on its
+     own — it exists so the integration lane is not the third reading of an existing colour. */
+  --lane-int: #6b3fb8;
+
+  --grid-line: rgba(21, 26, 34, .05);   /* blueprint backdrop, see body::before */
+
+  /* Sized so all eight families sit in one band at 1440px wide AND the whole poster still fits
+     900px — the "one screen" promise. The tallest family is six rows deep, so every pixel here
+     costs six on the page; this is the dial to turn when a tier below needs room.
+     Below ~1360px the grid wraps, which is fine; the poster just gets taller. */
+  --tile: 67px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "Cascadia Mono", "Consolas", "Ubuntu Mono", "SF Mono", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1117;
+    --surface: #161b24;
+    --surface-2: #1d2430;
+    --text: #e7eaf0;
+    --muted: #98a2b3;
+    --border: #262d3a;
+    --border-strong: #37404f;
+    --accent: #ff5c72;
+    --focus: #5aa2ff;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+
+    --ok: #3fbf82;
+    --info: #63a4ff;
+    --neutral: #9aa4b2;
+    --warn: #e3a13a;
+    --bad: #ff6b6b;
+    --lane-int: #b490f0;
+    --grid-line: rgba(255, 255, 255, .04);
+  }
+}
+
+/* Manual toggle wins over the media query, in both directions. */
+:root[data-theme="light"] {
+  --bg: #f4f6f9; --surface: #ffffff; --surface-2: #eef1f6; --text: #151a22;
+  --muted: #5c6675; --border: #dbe0e8; --border-strong: #c3cad6; --accent: #d21f3c;
+  --focus: #1668dc; --shadow: 0 1px 2px rgba(18,24,33,.06), 0 8px 24px rgba(18,24,33,.08);
+  --ok: #17794a; --info: #1668dc; --neutral: #6b7280; --warn: #9a6100; --bad: #b4232d;
+  --lane-int: #6b3fb8; --grid-line: rgba(21, 26, 34, .05);
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b24; --surface-2: #1d2430; --text: #e7eaf0;
+  --muted: #98a2b3; --border: #262d3a; --border-strong: #37404f; --accent: #ff5c72;
+  --focus: #5aa2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  --ok: #3fbf82; --info: #63a4ff; --neutral: #9aa4b2; --warn: #e3a13a; --bad: #ff6b6b;
+  --lane-int: #b490f0; --grid-line: rgba(255, 255, 255, .04);
+}
+
+* { box-sizing: border-box; }
+
+html, body { max-width: 100%; overflow-x: hidden; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 var(--font);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---------- blueprint grid ----------
+   Mirrors the vc-release-notes hero backdrop: 60px squares of 1px lines, masked with a
+   radial gradient so it fades toward the edges. A fixed pseudo-element at z-index -1 paints
+   above the body background and below all content, so it needs no stacking-order changes and
+   cannot intercept clicks. Panels and tiles have solid backgrounds, so the grid reads only
+   through the gaps — which is the whole effect. */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(#000 40%, transparent 80%);
+          mask-image: radial-gradient(#000 40%, transparent 80%);
+}
+
+h2 { margin: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--surface); color: var(--text); padding: 8px 12px; border: 1px solid var(--border);
+}
+.skip-link:focus { left: 8px; top: 8px; }
+
+/* ---------- topbar ---------- */
+
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding: 8px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+
+/* The org avatar is an opaque RGB image with a light background, so it sits on its own
+   white chip in both themes rather than fighting the dark surface. */
+.brand-mark {
+  width: 30px; height: 30px; flex: none;
+  border-radius: 6px;
+  background: #fff;
+  object-fit: contain;
+  border: 1px solid var(--border);
+}
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+.brand-text strong { font-size: 14px; }
+.brand-sub { color: var(--muted); font-size: 11.5px; }
+
+.controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.search-wrap { position: relative; display: flex; }
+
+#search {
+  width: 268px; max-width: 60vw;
+  padding: 6px 28px 6px 10px;
+  font: inherit; color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 6px;
+}
+#search::-webkit-search-cancel-button { display: none; }
+
+#search-clear {
+  position: absolute; right: 2px; top: 2px; bottom: 2px;
+  border: 0; background: none; padding: 0 6px; min-height: 0;
+}
+
+.icon-btn {
+  font: inherit; color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 5px 10px; min-height: 30px;
+  cursor: pointer;
+}
+.icon-btn:hover { border-color: var(--border-strong); }
+.icon-btn[aria-pressed="true"], .icon-btn[aria-expanded="true"] {
+  background: var(--text); color: var(--surface); border-color: var(--text);
+}
+
+.filters { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font: inherit; font-size: 12px;
+  padding: 4px 9px; min-height: 30px;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 999px;
+  cursor: pointer; white-space: nowrap;
+}
+.chip:hover { border-color: var(--border-strong); }
+.chip[aria-pressed="true"] { background: var(--text); color: var(--surface); border-color: var(--text); }
+.chip .glyph { font-size: 12px; line-height: 1; }
+.chip .chip-n { opacity: .65; font-variant-numeric: tabular-nums; }
+
+/* ---------- adoption badge colours ---------- */
+
+.adopt-platform  { color: var(--ok); }
+.adopt-module    { color: var(--info); }
+.adopt-available { color: var(--neutral); }
+.adopt-inflight  { color: var(--warn); }
+.adopt-legacy    { color: var(--bad); }
+.adopt-schema    { color: var(--bad); }
+
+/* ---------- legend ---------- */
+
+.legend {
+  margin: 0 16px; padding: 12px 14px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.legend[hidden] { display: none; }
+.legend h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
+.legend-cols { display: flex; gap: 28px; flex-wrap: wrap; }
+.legend-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.legend-list li { display: flex; gap: 8px; align-items: baseline; font-size: 12.5px; }
+.legend-list .glyph { flex: none; width: 14px; text-align: center; font-size: 13px; }
+.legend-list b { font-weight: 600; }
+.legend-list span { color: var(--muted); }
+.legend-swatch {
+  flex: none; width: 12px; height: 12px; border-radius: 3px;
+  background: hsl(var(--h) 62% 88%); border: 1px solid hsl(var(--h) 40% 68%);
+}
+.legend-keys { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px;
+  padding-top: 10px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--muted); }
+.legend-keys kbd {
+  font: 11px var(--mono); background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px;
+}
+
+/* ---------- layout ---------- */
+
+main { padding: 10px 16px 0; display: flex; flex-direction: column; gap: 8px; }
+
+.section-heading {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); margin-bottom: 4px;
+}
+.section-heading .hint { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 11.5px; opacity: .85; }
+
+/* ---------- architecture band ---------- */
+
+.band { display: grid; grid-template-columns: repeat(auto-fit, minmax(186px, 1fr)); gap: 8px; }
+
+.layer {
+  /* Children stretch to the card, not to their own content. With `align-items: flex-start` the
+     tag row took its max-content width — wider than the card — so `overflow: hidden` on it
+     clipped nothing and the chips painted over the neighbouring card. The .cell tiles worked all
+     along for exactly this reason: they never overrode the default. */
+  display: flex; flex-direction: column; gap: 5px;
+  text-align: left; font: inherit; cursor: pointer;
+  padding: 6px 9px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-left: 3px solid hsl(var(--h) 55% 55%);
+  border-radius: var(--radius);
+}
+.layer:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+.layer .layer-name { font-weight: 650; font-size: 12.5px; }
+.layer .layer-sub {
+  color: var(--muted); font-size: 11px; line-height: 1.32;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+/* One line, always. Wrapping tags made the band height depend on how long a layer's tag
+   strings happened to be, which silently pushed the poster past one screen twice. Overflow
+   is clipped with a soft fade; every tag is listed in full in the drawer under "Key pieces". */
+.layer .layer-tags {
+  display: flex; gap: 4px; flex-wrap: nowrap;
+  /* min-width: 0 so the row may shrink below its content width; without it a flex item refuses
+     to go under min-content and the clip has nothing to clip against. */
+  min-width: 0; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent 100%);
+          mask-image: linear-gradient(90deg, #000 82%, transparent 100%);
+}
+.layer .layer-tag { flex: none; }
+.layer .layer-tag {
+  /* Small enough that 4-6 tags stay within two rows at seven band columns — the band
+     height is set by the worst layer, and every tag is also listed in the drawer. */
+  font: 9.5px var(--mono);
+  background: hsl(var(--h) 55% 94%); color: hsl(var(--h) 55% 26%);
+  border: 1px solid hsl(var(--h) 40% 84%); border-radius: 4px; padding: 0 3px;
+}
+@media (prefers-color-scheme: dark) {
+  .layer .layer-tag { background: hsl(var(--h) 32% 20%); color: hsl(var(--h) 55% 82%); border-color: hsl(var(--h) 28% 32%); }
+}
+:root[data-theme="dark"] .layer .layer-tag { background: hsl(var(--h) 32% 20%); color: hsl(var(--h) 55% 82%); border-color: hsl(var(--h) 28% 32%); }
+:root[data-theme="light"] .layer .layer-tag { background: hsl(var(--h) 55% 94%); color: hsl(var(--h) 55% 26%); border-color: hsl(var(--h) 40% 84%); }
+
+.layer.is-active { border-color: hsl(var(--h) 55% 50%); box-shadow: 0 0 0 2px hsl(var(--h) 60% 55% / .35); }
+.layer.is-dim { opacity: .38; }
+
+/* ---------- atom grid ---------- */
+
+.atom-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(156px, 1fr)); gap: 8px; align-items: start; }
+
+.family { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+.family-label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+  color: hsl(var(--h) 45% 34%);
+  padding-bottom: 3px; border-bottom: 2px solid hsl(var(--h) 55% 72%);
+}
+@media (prefers-color-scheme: dark) { .family-label { color: hsl(var(--h) 55% 74%); border-bottom-color: hsl(var(--h) 40% 40%); } }
+:root[data-theme="dark"] .family-label { color: hsl(var(--h) 55% 74%); border-bottom-color: hsl(var(--h) 40% 40%); }
+:root[data-theme="light"] .family-label { color: hsl(var(--h) 45% 34%); border-bottom-color: hsl(var(--h) 55% 72%); }
+
+.family-label .family-n { margin-left: auto; font-weight: 500; opacity: .7; font-variant-numeric: tabular-nums; }
+
+.family-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tile), 1fr)); gap: 5px; }
+
+.tile {
+  position: relative;
+  display: flex; flex-direction: column; gap: 2px; justify-content: flex-start;
+  min-height: var(--tile); padding: 6px 7px 7px;
+  font: inherit; text-align: left; cursor: pointer;
+  background: hsl(var(--h) 60% 95.5%);
+  color: hsl(var(--h) 45% 22%);
+  border: 1px solid hsl(var(--h) 42% 82%);
+  border-radius: 7px;
+  transition: opacity .12s ease, transform .12s ease;
+}
+@media (prefers-color-scheme: dark) {
+  .tile { background: hsl(var(--h) 32% 15%); color: hsl(var(--h) 45% 88%); border-color: hsl(var(--h) 28% 30%); }
+}
+:root[data-theme="dark"] .tile { background: hsl(var(--h) 32% 15%); color: hsl(var(--h) 45% 88%); border-color: hsl(var(--h) 28% 30%); }
+:root[data-theme="light"] .tile { background: hsl(var(--h) 60% 95.5%); color: hsl(var(--h) 45% 22%); border-color: hsl(var(--h) 42% 82%); }
+
+.tile:hover { border-color: hsl(var(--h) 50% 55%); transform: translateY(-1px); }
+.tile.is-active { border-color: hsl(var(--h) 55% 48%); box-shadow: 0 0 0 2px hsl(var(--h) 60% 55% / .4); }
+.tile.is-dim { opacity: .22; }
+.tile.is-keystone { border-width: 2px; border-color: hsl(var(--h) 50% 58%); }
+
+.tile-symbol { font-size: 17px; font-weight: 700; line-height: 1.05; letter-spacing: -.3px; }
+.tile-name { font-size: 10px; line-height: 1.18; font-weight: 500; overflow-wrap: anywhere; }
+
+.tile-badge {
+  position: absolute; top: 4px; right: 5px;
+  font-size: 11px; line-height: 1;
+}
+
+/* ---------- molecules ---------- */
+
+/* A chip row, not a grid of cards. These are reserved placeholders: they exist so the shape of
+   the picture is honest, and that costs one line each. The room they gave up is what the Cells
+   tier — which is authored — now occupies, so the poster still fits one screen at 1440x900. */
+.molecule-shelf { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.molecule {
+  display: flex; align-items: baseline; gap: 6px; text-align: left;
+  font: inherit; cursor: pointer;
+  padding: 1px 7px; min-height: 0;
+  background: transparent; color: var(--text);
+  border: 1px dashed var(--border-strong); border-radius: 999px;
+}
+.molecule:hover { border-style: solid; background: var(--surface); }
+.molecule .mol-name { font-size: 10.5px; font-weight: 600; line-height: 1.4; white-space: nowrap; }
+/* A module chip is solid-edged: unlike a composite topic, its identity and dependency graph are
+   verified — only the write-up is missing. */
+.molecule.is-module { border-style: solid; border-color: var(--border); }
+.molecule.is-module .mol-name { font-family: var(--mono); font-size: 9.5px; font-weight: 700; }
+.mol-group {
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  padding: 1px 6px; border-radius: 999px; border: 1px solid currentColor;
+}
+.mol-group.is-commerce { color: var(--info); }
+.mol-group.is-extension { color: var(--muted); }
+/* No scroll: the whole inventory is on the poster, which is the point of a poster. It fits by
+   being set tighter than the other tiers rather than by hiding rows behind a scrollbar. */
+.molecule-shelf { gap: 4px; }
+.d-lead.is-quiet { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+/* The one-liner is still in the DOM for search and for screen readers; it is simply not drawn
+   on the poster. It is the first thing the panel shows when the tile is opened. */
+.molecule .mol-sub { display: none; }
+.molecule.is-active { border-style: solid; border-color: var(--accent); box-shadow: 0 0 0 2px hsl(350 70% 55% / .25); }
+.molecule.is-dim { opacity: .3; }
+
+/* A prose cross-reference to another atom — underlined on hover only, so a paragraph with three
+   of them still reads as a paragraph rather than as a list of links. */
+.x-ref {
+  color: var(--focus); text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+}
+.x-ref:hover { text-decoration: none; border-bottom-style: solid; }
+.x-ref:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+
+/* ---------- footer ---------- */
+
+.footer {
+  margin: 8px 16px 10px; padding-top: 6px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 16px; flex-wrap: wrap;
+  font-size: 11.5px; color: var(--muted);
+}
+.footer code { font: 11px var(--mono); }
+
+/* ---------- drawer ---------- */
+
+.scrim {
+  position: fixed; inset: 0; z-index: 40;
+  background: rgba(10, 14, 20, .45);
+  border: 0;
+}
+.scrim[hidden] { display: none; }
+
+/* On wide screens the drawer is non-modal: the poster stays readable and clickable
+   beside it, so no scrim. Narrow screens get the full-width drawer and the scrim. */
+@media (min-width: 721px) { .scrim { display: none !important; } }
+
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 50;
+  width: min(540px, 94vw);
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.drawer[hidden] { display: none; }
+
+/* Expanded mode — the whole viewport, so long snippets and side-by-side
+   when-to-use / avoid lists get room. Toggled by the ⤢ button or "f". */
+.drawer.is-full {
+  left: 0; width: 100%;
+  border-left: 0;
+}
+
+.drawer-head {
+  position: relative;
+  padding: 14px 84px 12px 18px;
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+.drawer-eyebrow {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .9px; color: var(--muted);
+  margin-bottom: 3px;
+}
+.drawer-eyebrow .adopt { font-weight: 700; letter-spacing: .5px; }
+.drawer-title { font-size: 20px; line-height: 1.15; letter-spacing: -.2px; font-weight: 700; }
+
+/* Expanded: the title aligns with the centred content column and gets a little more
+   presence, since it is heading a full-width page rather than a side panel. */
+.drawer.is-full .drawer-head {
+  padding-top: 16px; padding-bottom: 14px;
+  border-bottom: 2px solid var(--border);
+}
+.drawer.is-full .drawer-title { font-size: 25px; }
+.drawer.is-full .drawer-eyebrow { font-size: 11px; margin-bottom: 5px; }
+
+.drawer-actions { position: absolute; top: 12px; right: 14px; display: flex; gap: 6px; }
+.drawer-actions .icon-btn { padding: 4px 9px; font-size: 13px; line-height: 1.1; }
+
+.drawer.is-full .drawer-head { padding-left: max(18px, calc((100vw - 1360px) / 2)); }
+
+.drawer-body { padding: 4px 18px 30px; overflow-y: auto; flex: 1; }
+
+/* Expanded: flow the sections into columns instead of one tall ribbon.
+   Lead text, notes and snippets stay full width — prose and code both suffer
+   from being narrow, for opposite reasons. */
+/* A fixed 4-column track rather than auto-fit, so a block can claim a known share:
+   Gotchas 2/4, Docs 1/4, and the stacked pill column 1/4. minmax(0,1fr) lets a long
+   snippet scroll inside its own box instead of stretching its track. */
+.drawer.is-full .drawer-body {
+  padding: 4px 18px 40px;
+  max-width: 1360px; width: 100%; margin: 0 auto;
+  display: grid; align-items: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 32px;
+}
+@media (min-width: 1120px) {
+  .drawer.is-full .drawer-body { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .drawer.is-full .d-block.is-half { grid-column: span 2; }
+  /* Lead paragraph shares its row when a chip block sits beside it, instead of
+     leaving half the width empty. */
+  .drawer.is-full .drawer-body > .d-lead.is-half { grid-column: span 2; max-width: none; }
+}
+
+/* ---------- static tag chips ---------- */
+
+/* Right-aligned: this block sits opposite the lead paragraph, and flushing its chips to the
+   right edge puts them on the same edge as the diagrams below instead of leaving a ragged gap
+   in the middle of the row. The heading follows the chips. */
+.tag-row { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+.d-block.is-half:has(.tag-row) > h3 { text-align: right; }
+.tag-chip {
+  font: 11px var(--mono);
+  padding: 2px 7px; border-radius: 4px;
+  background: var(--surface-2); color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+/* Two short blocks sharing one column instead of a column each. The margin moves to the
+   wrapper so its box lines up with sibling blocks rather than starting 16px above them. */
+.d-col { min-width: 0; display: flex; flex-direction: column; margin-top: 16px; }
+.d-col > .d-block:first-child { margin-top: 0; }
+
+/* A full-width list would otherwise run a 1360px line. Flow it into columns of a
+   readable measure instead, breaking between items rather than through them. */
+.drawer.is-full .d-block.is-wide .d-list { columns: 330px 3; column-gap: 32px; }
+.drawer.is-full .d-block.is-wide .d-list li { break-inside: avoid; }
+
+/* ---------- horizontal tier flow ----------
+   Structure and proportions follow vc-module-solution-architecture-map (.tier-flow /
+   .tier / .node / .cluster); colours come from this map's tokens so it works in both
+   themes. Scrolls horizontally rather than wrapping — a tier flow that wraps stops
+   reading as a flow. */
+
+.flow-wrap { overflow-x: auto; padding-top: 6px; padding-bottom: 4px; }
+
+.fl-flow { display: flex; align-items: stretch; gap: 0; flex-wrap: nowrap; min-width: max-content; }
+
+.fl-tier {
+  position: relative;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 0 11px;
+}
+/* Soft vertical rule between tiers, fading at both ends. */
+.fl-tier:not(:last-child)::after {
+  content: ""; position: absolute; right: -1px; top: 14%; bottom: 14%; width: 2px;
+  background: linear-gradient(180deg, transparent, var(--border-strong), transparent);
+}
+.fl-tier-label {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--muted); text-align: center;
+}
+.fl-tier-body { display: flex; flex-direction: column; gap: 8px; justify-content: center; flex: 1; }
+
+.fl-arrow { display: flex; align-items: center; padding: 0 2px; color: var(--muted); font-size: 17px; }
+
+.fl-node {
+  display: flex; flex-direction: column; gap: 2px;
+  min-width: 148px; padding: 9px 11px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
+  border-radius: 7px;
+}
+.fl-node-name { font-size: 12px; font-weight: 700; line-height: 1.2; }
+.fl-node-badge {
+  align-self: flex-start; margin-bottom: 3px;
+  font: 8px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  padding: 1px 6px; border-radius: 999px;
+  color: var(--info); border: 1px dashed currentColor;
+}
+/* Dashed edge = reached outside the normal left-to-right path. */
+.fl-node.is-bypass { border-style: dashed; border-left-style: solid; }
+.fl-node-role { font-size: 10px; color: var(--muted); line-height: 1.35; }
+.fl-node-meta { font: 9.5px var(--mono); color: var(--muted); opacity: .85; letter-spacing: .2px; }
+
+/* Kind = who owns it. The left border is the whole legend. */
+.fl-node.is-virto  { border-left-color: var(--info); }
+.fl-node.is-oob    { border-left-color: var(--ok); }
+.fl-node.is-custom { border-left-color: var(--warn); }
+.fl-node.is-data   { border-left-color: var(--syn-keyword); }
+.fl-node.is-infra  { border-left-color: var(--neutral); }
+
+.fl-cluster {
+  display: flex; flex-direction: column; gap: 7px;
+  padding: 9px 10px;
+  border: 1.5px dashed var(--border-strong); border-radius: 9px;
+  background: var(--surface-2);
+}
+.fl-cluster-head { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.fl-cluster-title { font-size: 10.5px; font-weight: 700; }
+.fl-chip {
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  padding: 2px 6px; border-radius: 999px;
+  color: var(--info); border: 1px solid currentColor;
+}
+.fl-cluster-nodes { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 6px; }
+/* Inside a cluster the grid decides the width. Without this the node's own min-width
+   (wider than a track) makes every card overflow its column and overlap its neighbour. */
+.fl-cluster-nodes > .fl-node { min-width: 0; }
+
+.fl-legend {
+  display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  margin-top: 9px; font-size: 10.5px; color: var(--muted);
+}
+.fl-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.fl-legend-swatch { width: 12px; height: 3px; border-radius: 2px; background: var(--border-strong); }
+.fl-legend-swatch.is-virto  { background: var(--info); }
+.fl-legend-swatch.is-oob    { background: var(--ok); }
+.fl-legend-swatch.is-custom { background: var(--warn); }
+.fl-legend-swatch.is-data   { background: var(--syn-keyword); }
+.fl-legend-swatch.is-infra  { background: var(--neutral); }
+.fl-legend-swatch.is-dashed { background: none; border-top: 2px dashed var(--info); }
+
+/* Wider cards once the panel is full screen — the flow has room to breathe. */
+.drawer.is-full .fl-node { min-width: 172px; }
+.drawer.is-full .fl-cluster-nodes { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+
+/* ---------- compact pipeline ----------
+   Parallel lanes converging into full-width steps, joined by small uppercase pills. Scale
+   follows the release-strategy deck: tiny pills, tight cards, no decoration that is not
+   carrying information. */
+
+/* Half width and centred: the pipeline is a narrow vertical story, and stretching it across
+   1300px left the eye travelling much further than the content justified.
+   The tinted panel matters — cards use --surface, which in light theme is the same white as
+   the drawer, so on a plain background only their borders were visible. */
+.pipeline {
+  display: flex; flex-direction: column; align-items: stretch; gap: 0;
+  max-width: min(660px, 100%); margin-inline: auto;
+  padding: 14px 16px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 9px;
+}
+
+.pp-lanes { display: grid; grid-template-columns: repeat(var(--pp-lanes), minmax(0, 1fr)); gap: 14px; }
+.pp-lane { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+.pp-lane-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.1px;
+  color: var(--muted); text-align: center; margin-bottom: 5px;
+}
+/* The lane accent runs through its heading and its card subtitles, so "yours" and "vendor"
+   are two colours read at a glance instead of two borders to compare. */
+.pp-lane.is-custom .pp-lane-label, .pp-lane.is-custom .pp-node-sub { color: var(--warn); }
+.pp-lane.is-virto  .pp-lane-label, .pp-lane.is-virto  .pp-node-sub { color: var(--info); }
+
+.pp-node {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 8px 11px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 7px;
+  text-align: center;
+}
+.pp-node-name { font-size: 11.5px; font-weight: 700; line-height: 1.2; }
+.pp-node-sub { font-size: 9px; font-weight: 600; color: var(--info); }
+
+/* Ownership, carried by the border rather than by a legend — and using the same two colours
+   as everywhere else on the poster: amber is code you own, blue is Virto Commerce. These two
+   were the wrong way round, which made the build view contradict its own legend. */
+.pp-node.is-custom { border-color: var(--warn); box-shadow: inset 0 0 0 1px hsl(35 60% 50% / .18); }
+.pp-node.is-virto  { border-color: var(--info); box-shadow: inset 0 0 0 1px hsl(212 60% 55% / .18); }
+.pp-node.is-select { border-color: var(--warn); border-width: 2px; }
+.pp-node.is-select .pp-node-name { color: var(--warn); }
+.pp-node.is-image  { border-color: var(--ok); }
+.pp-node.is-env    { border-color: var(--border-strong); border-style: dashed; }
+.pp-node.is-env .pp-node-name { color: var(--muted); }
+
+/* The connector is a pill sitting on a short vertical tick. */
+.pp-conn { position: relative; display: flex; justify-content: center; padding: 5px 0; }
+.pp-conn::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 1px; background: var(--border-strong);
+}
+.pp-lbl {
+  position: relative;
+  font: 8px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  padding: 2px 8px; border-radius: 999px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.pp-conn.is-mini .pp-lbl { font-size: 7.5px; padding: 1px 7px; }
+
+/* ---------- swimlanes ----------
+   Columns are stages, rows are isolated paths. Each lane is one continuous rail so the
+   separation is structural rather than repeated per stage. */
+
+.lanes {
+  display: grid;
+  /* Fixed tracks, not 1fr: with a max-content container the flexible tracks stretched to fit
+     unwrapped role text and cards ended up ~900px wide. Fixed columns are also what makes
+     every card exactly the same width. */
+  grid-template-columns: max-content repeat(var(--ln-cols), 212px);
+  /* row 1 headings, row 2 a band for group labels, then one row per lane. */
+  grid-template-rows: auto 19px;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.ln-colhead {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--muted); text-align: center; align-self: end; padding-bottom: 2px;
+}
+/* Flow arrow sitting in the gap between stage headings, so the reading direction is
+   explicit rather than inferred from left-to-right order. */
+.ln-colhead:not(.is-last)::after {
+  /* Inline, right after the label. Absolutely positioning it at the column edge left the
+     arrow a variable distance from its own (centred) label — next to a short label like API
+     it read as belonging to the following column. */
+  content: " →";
+  /* nowrap on the pseudo keeps the arrow welded to the last word: with a long heading the
+     space inside this content was the break opportunity, and the arrow wrapped alone onto a
+     second line. No invisible non-breaking space needed. */
+  white-space: nowrap;
+  margin-left: 3px;
+  /* line-height 1 so the larger glyph does not inflate the heading's line box — with it
+     inflated, headings that had an arrow were 19px tall and the one without was 16px. */
+  font-size: 11px; line-height: 1; color: var(--muted);
+}
+
+/* The lane label doubles as the rail head. */
+.ln-label {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 3px; justify-content: flex-start;
+  padding: 10px 11px 10px 10px;
+  border-left: 3px solid var(--border-strong);
+  border-radius: 7px 0 0 7px;
+  background: var(--surface-2);
+}
+.ln-label-name { font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.ln-label-chip {
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  color: var(--muted); white-space: nowrap;
+}
+
+/* Top-aligned, not centred: centring floated each column to its own vertical middle, so
+   nothing lined up across the diagram. Everything now starts on one line with Services.
+
+   Deliberately untinted. A grid row is as tall as its tallest column, so a per-cell tint drew
+   a filled box down the full row height even where a column held one card — 870px of visible
+   emptiness. With no box there is nothing to look empty; the lane is carried by its label rail
+   and the band below instead. Padding stays: it is what makes every card the same width. */
+.ln-cell {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 8px; justify-content: flex-start;
+  padding: 8px;
+}
+
+/* One faint band per lane, spanning every column — the lane read as a whole, at a tint low
+   enough that the unused stretch of a row is not something the eye stops on. */
+.ln-band {
+  position: relative; z-index: 0;
+  margin: 0 -6px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+/* Each lane gets its own accent, carried on the label rail and its band. */
+.ln-label.is-shopper { border-left-color: var(--info); box-shadow: inset 0 0 0 1px hsl(212 60% 55% / .22); }
+.ln-band.is-shopper { background: hsl(212 60% 55% / .055); }
+.ln-label.is-employee { border-left-color: var(--warn); box-shadow: inset 0 0 0 1px hsl(35 60% 50% / .22); }
+.ln-band.is-employee { background: hsl(35 60% 50% / .06); }
+/* A lane nothing calls — the background-job environment in the production topology. */
+.ln-label.is-jobs { border-left-color: var(--ok); box-shadow: inset 0 0 0 1px hsl(152 55% 50% / .22); }
+.ln-band.is-jobs { background: hsl(152 55% 50% / .055); }
+/* Machine-to-machine traffic: no browser at the head of this lane. */
+.ln-label.is-integration { border-left-color: var(--lane-int); box-shadow: inset 0 0 0 1px hsl(266 50% 55% / .22); }
+.ln-band.is-integration { background: hsl(266 50% 55% / .055); }
+
+/* ---------- cells shelf ----------
+   The rung between an atom and a whole solution: a set of modules that solves a business
+   scenario. Filled, not outlined, because unlike the molecules shelf these are authored — and
+   the deployability verdict sits on the face of the tile, since "where can we cut?" is the
+   question the tier exists to answer. */
+
+.cell-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: 8px;
+}
+
+.cell {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 7px 10px;
+  text-align: left;
+  /* Dashed and unfilled, the same language the molecules shelf uses: the membership and the
+     verdict are verified, the walk-through is not written. The tile should not look finished. */
+  background: transparent;
+  border: 1px dashed var(--border-strong); border-left: 3px solid var(--info);
+  border-radius: 7px;
+  cursor: pointer;
+  font: inherit; color: var(--text);
+  transition: border-color .12s, box-shadow .12s, opacity .12s;
+}
+.cell:hover { border-style: solid; background: var(--surface); box-shadow: var(--shadow); }
+.cell:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.cell.is-active { border-color: var(--info); box-shadow: inset 0 0 0 1px var(--info); }
+.cell.is-dim { opacity: .32; }
+
+.cell-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.cell-name { font-size: 12px; font-weight: 700; }
+.cell-sub { display: none; }
+/* The module list is the evidence for the verdict, so it stays on the tile — one line, faded
+   out rather than wrapped, so tile height never depends on how many modules a cell has. */
+.cell-mods {
+  font: 9px var(--mono); color: var(--muted); opacity: .8;
+  white-space: nowrap; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
+          mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
+}
+
+.cell-split {
+  flex: 0 0 auto;
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  padding: 1px 6px; border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.cell-split.is-yes  { color: var(--ok); }
+.cell-split.is-part { color: var(--warn); }
+.cell-split.is-no   { color: var(--muted); }
+
+/* A module chip the cell can run without — dashed, and labelled, so the meaning survives
+   greyscale and colour blindness. */
+.tag-row.is-left { justify-content: flex-start; }
+.tag-chip.is-optional { border-style: dashed; color: var(--muted); }
+.tag-chip .opt-mark {
+  margin-left: 5px;
+  font: 8px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+  opacity: .85;
+}
+
+/* ---------- classic topology ----------
+   The cloud-architecture idiom: boxes on an authored grid, bounded regions behind them, and
+   labelled orthogonal connectors drawn into an SVG overlay. Column gaps are wide on purpose —
+   that gap is where a connector turns and where its label sits. */
+
+.tp-stage { position: relative; }
+
+.tp-grid {
+  position: relative;
+  /* max-content, and fixed tracks rather than 1fr: with flexible tracks the element's own box
+     stayed at the panel width while its tracks overflowed it, so the SVG overlay was sized to
+     a box narrower than the diagram it had to cover. Now the box is the diagram, and the
+     scrolling is the wrapper's job — the same arrangement the other diagrams use. */
+  width: max-content;
+  display: grid;
+  grid-template-columns: repeat(var(--tp-cols), 170px);
+  /* The column gap is where a connector turns and where its label sits, so it must be wider than
+     the widest label — "reads · writes" is ~62px, and at 74px the label was touching the card
+     beside it. The row gap must clear twice the boundary bleed below, or two image boundaries
+     meet. Both values are mirrored in TP_GUTTER in app.js; change them together. */
+  column-gap: 88px;
+  row-gap: 22px;
+  align-items: stretch;
+  padding: 26px 10px 10px;
+}
+
+/* Above the regions, below nothing: the SVG overlay is drawn on top of the cards but takes no
+   pointer events, so the diagram still behaves like text. */
+.tp-edges {
+  position: absolute; left: 0; top: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 3;
+}
+.tp-edge { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.tp-edge.is-bypass { stroke-dasharray: 5 4; }
+.tp-head.is-solid, .tp-head.is-bypass { fill: var(--muted); }
+.tp-edge-label {
+  font-size: 8.5px; font-weight: 650; letter-spacing: .2px;
+  fill: var(--muted);
+  text-anchor: middle; dominant-baseline: middle;
+  /* Knocked out of the line it sits on: a halo in the panel colour, painted under the glyphs.
+     Cheaper and more robust than measuring the text to place a rectangle behind it. */
+  stroke: var(--surface); stroke-width: 3.5px; paint-order: stroke;
+}
+
+/* A bounded region — the "this is all one environment" box. */
+.tp-region {
+  position: relative; z-index: 1;
+  margin: -18px -10px -8px;
+  border: 1.5px solid hsl(212 55% 55% / .5);
+  border-radius: 10px;
+  background: hsl(212 55% 55% / .05);
+  pointer-events: none;
+}
+.tp-region.is-outer {
+  z-index: 0;
+  margin: -22px -22px -14px;
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+.tp-region.is-shared { border-color: hsl(152 45% 45% / .5); background: hsl(152 45% 45% / .05); }
+/* One deployable image: the boundary that decides what scales and what restarts together. Tight
+   to its cell and unlabelled, because at one card tall there is nowhere to put a label that does
+   not cover the card. The caption says what the boxes mean. */
+.tp-region.is-tight {
+  margin: -7px -9px;
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: none;
+}
+
+.tp-region-label {
+  position: absolute; top: 4px; left: 12px; right: 8px;
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  color: var(--info);
+  /* A label longer than its region used to spill over the boxes beside it. Bounded to the region
+     and clipped, so an over-long label is visibly short rather than invisibly wrong. */
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tp-region.is-outer > .tp-region-label { color: var(--muted); }
+.tp-region.is-shared > .tp-region-label { color: var(--ok); }
+
+/* Cards: same left-border-as-legend vocabulary as every other diagram here. */
+.tp-node {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; gap: 1px; justify-content: center;
+  /* One height for every box, so a row of them reads as a row. */
+  min-height: 58px;
+  padding: 7px 9px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
+  border-radius: 6px;
+}
+.tp-node.is-virto  { border-left-color: var(--info); }
+.tp-node.is-oob    { border-left-color: var(--ok); }
+.tp-node.is-custom { border-left-color: var(--warn); }
+.tp-node.is-data   { border-left-color: var(--syn-keyword); }
+.tp-node.is-infra  { border-left-color: var(--neutral); }
+.tp-node-name { font-size: 11.5px; font-weight: 700; line-height: 1.25; }
+.tp-node-sub {
+  font-size: 9.5px; color: var(--muted); line-height: 1.35;
+  /* One line: a topology is a diagram, and a diagram whose boxes are different heights because
+     of how their subtitles wrapped stops reading as a grid. Author the sub to fit. */
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tp-node-meta {
+  margin-top: 2px;
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted);
+}
+
+/* ---------- annotated tree ----------
+   Path on the left in mono, what it is for on the right. The path column is a fixed width so
+   the descriptions align into a readable column instead of stepping with the indentation. */
+
+.tree {
+  padding: 11px 13px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 9px;
+}
+.tr-root { margin-bottom: 5px; }
+.tr-root code { font-family: var(--mono); font-size: 11px; font-weight: 700; }
+.tr-list { margin: 0; padding: 0; list-style: none; }
+/* Stacked in the panel, two columns in full screen. Scoped to the panel state rather than a
+   viewport width because the constraint is the panel, not the window: at 488px a 258px path
+   column leaves the descriptions a 200px measure, which wraps every line three deep. */
+.tr-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px 14px;
+  align-items: baseline;
+  padding: 1.5px 0;
+}
+.tr-row + .tr-row { margin-top: 2px; }
+.drawer.is-full .tr-row {
+  grid-template-columns: 258px minmax(0, 1fr);
+  gap: 4px 14px;
+  margin-top: 0;
+}
+.tr-name {
+  font-family: var(--mono); font-size: 10.5px;
+  /* Indentation lives inside the path column, so the description column stays straight. */
+  margin-left: calc(var(--tr-depth) * 13px);
+  background: none; border: 0; padding: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tr-desc {
+  font-size: 10.5px; line-height: 1.45; color: var(--muted);
+  margin-left: calc(var(--tr-depth) * 13px + 13px);
+}
+.drawer.is-full .tr-desc { margin-left: 0; }
+/* A project root, not a folder inside one: the line you should read first. */
+.tr-row.is-project { margin-top: 5px; }
+.tr-row.is-project > .tr-name { font-weight: 700; color: var(--info); }
+.tr-row.is-file > .tr-name { color: var(--text); }
+/* Diagram caption: which documented configuration this is, and the numbers behind it. */
+/* Body size, one column. This is the text that explains the picture, so it reads as prose at the
+   same size as every bullet on the page — 14px, matching `.d-list li`. It was set two columns at
+   11.5px to fill the panel width; that filled the space and made the most important paragraph on
+   the layer the smallest text on it. A measure cap keeps the line length readable instead. */
+.dg-cap {
+  max-width: 108ch; margin: 0 0 14px;
+  font-size: 14px; line-height: 1.55; color: var(--text);
+}
+.dg-cap code { font-size: inherit; }
+
+/* ---------- grouped stages ----------
+   One bounded region behind a contiguous run of columns, saying "all of this is the
+   platform". Sits at z-index 0 with the cells at 1, so it reads as a backdrop. */
+.ln-group {
+  position: relative; z-index: 0;
+  margin: 0 -6px -5px;
+  border: 1.5px solid hsl(212 55% 55% / .5); border-radius: 10px;
+  background: hsl(212 55% 55% / .05);
+  pointer-events: none;
+}
+/* Plain text, not a pill. As a bordered chip straddling the region's top edge it read as a
+   badge belonging to the stage heading above it; sitting inside the spacer band, below the
+   border, it reads as the name of the region. */
+.ln-group-label {
+  position: absolute; top: 3px; left: 12px;
+  font: 8.5px var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  color: var(--info);
+}
+
+/* Uniform cards: the grid column fixes the width, a min-height and a clamped role fix the
+   height, so every node in the diagram is the same size. */
+.ln-cell .fl-node, .ln-scope .fl-node {
+  width: 100%; min-width: 0; min-height: 84px;
+  justify-content: flex-start;
+}
+/* Two lines of role text keeps every card the same height; the full text is in the
+   surrounding prose, so nothing is lost by clamping here. */
+.ln-cell .fl-node-role {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.ln-cell .fl-node-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ln-cell .fl-node-meta { margin-top: auto; }
+
+/* ---------- scope box (a Cell in the Atomic Architecture sense) ---------- */
+
+.ln-scope {
+  flex: 1 1 auto;   /* share the column height instead of leaving a gap below */
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 9px 10px 8px;
+  border: 1.5px dashed var(--border-strong); border-radius: 9px;
+  background: var(--surface-2);
+}
+.ln-scope.is-virto  { border-color: hsl(212 55% 55% / .55); }
+.ln-scope.is-custom { border-color: hsl(35 60% 50% / .6); }
+.ln-scope-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ln-scope-title { font-size: 11px; font-weight: 700; }
+.ln-scope-role { font-size: 10px; color: var(--muted); line-height: 1.35; }
+.ln-mods { display: flex; flex-wrap: wrap; gap: 4px; }
+.ln-mod {
+  font: 9.5px var(--mono);
+  padding: 2px 6px; border-radius: 4px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border);
+}
+.ln-scope-count {
+  font: 8.5px var(--mono); text-transform: uppercase; letter-spacing: .9px;
+  color: var(--muted); align-self: flex-start;
+}
+
+/* ---------- name/description matrix ---------- */
+
+.d-matrix { display: grid; gap: 9px; }
+.d-matrix-row { display: flex; flex-direction: column; gap: 1px; min-width: 0; break-inside: avoid; }
+/* Body size. This is a decision table — the thing a solution architect actually reads before
+   choosing a shape — so it is set like prose, not like a footnote. */
+.d-matrix-name { font-size: 14px; font-weight: 700; }
+.d-matrix-desc { font-size: 14px; color: var(--text); line-height: 1.5; }
+.d-matrix-desc code { font-size: inherit; }
+/* Side by side once there is room — six variants stacked full-width wastes the space. */
+.drawer.is-full .d-matrix {
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  column-gap: 32px; row-gap: 11px;
+}
+.drawer.is-full .drawer-body > .d-lead,
+.drawer.is-full .drawer-body > .d-note,
+.drawer.is-full .drawer-body > .d-meta,
+.drawer.is-full .drawer-body > .empty { grid-column: 1 / -1; }
+.drawer.is-full .drawer-body > .d-block.is-wide { grid-column: 1 / -1; }
+.drawer.is-full .d-lead { max-width: 78ch; margin-top: 16px; }
+
+.d-block { margin-top: 16px; min-width: 0; }
+.d-block > h3 {
+  margin: 0 0 5px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted);
+}
+/* A diagram is a section of the panel, not a labelled field: full text colour and a size step
+   up, so "Solution architecture" reads as a heading over the picture rather than a caption. */
+.d-block.is-wide > h3 {
+  margin-bottom: 9px;
+  font-size: 14px; letter-spacing: .4px;
+  color: var(--text);
+}
+.d-lead { margin: 12px 0 0; font-size: 14.5px; line-height: 1.5; }
+
+/* A block li, NOT a flex container: as flex items, inline <code> children were
+   treated as separately shrinkable boxes and broke mid-identifier
+   ("IBackgr / oundJob"). The marker is positioned instead. */
+/* Block flow rather than a flex column: multi-column layout has no effect on a flex
+   container, and a full-width list needs to flow into columns to stay readable. */
+.d-list { margin: 0; padding: 0; list-style: none; }
+.d-list li { position: relative; padding-left: 17px; line-height: 1.5; margin-bottom: 5px; }
+.d-list li:last-child { margin-bottom: 0; }
+/* A small dot on the text baseline, drawn rather than typeset: an em dash reads as punctuation
+   that belongs to the sentence, and at this size a bullet glyph sits too high. */
+.d-list li::before {
+  content: ""; position: absolute; left: 3px; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--border-strong);
+}
+.d-list.good li::before { content: "✓"; color: var(--ok); font-weight: 700; }
+.d-list.bad  li::before,
+.d-list.warn li::before {
+  /* Back to a glyph: these two carry meaning, and a coloured dot cannot say "avoid" or "careful". */
+  width: auto; height: auto; border-radius: 0; background: none; top: 0;
+  font-weight: 700;
+}
+.d-list.bad  li::before { content: "✗"; color: var(--bad); left: 3px; }
+.d-list.warn li::before { content: "!"; color: var(--warn); left: 6px; }
+
+/* Inline code chips only. Scoped with :not(pre) > because these rules —
+   white-space in particular — would otherwise override <pre>'s line
+   preservation and collapse a whole snippet onto one line. */
+:not(pre) > code, .code {
+  /* No mono face and no font-size of its own: inherit both, so an inline chip sits on the
+     same baseline and at the same size as the words around it. A 12px mono chip inside 10px
+     card text was taller than its own line and read as a different typeface mid-sentence.
+     `font-family: inherit` is required, not implied — the UA stylesheet puts `monospace` on
+     <code>, so dropping our own declaration would leave the UA's in force. Snippets are
+     unaffected: `.snippet pre` sets the mono face itself. */
+  font-family: inherit;
+  line-height: 1.35;
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 0 4px;
+  /* break-word, not anywhere: only split an identifier when it genuinely
+     cannot fit, rather than at the first convenient character. */
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.api-list { display: flex; flex-direction: column; gap: 7px; }
+.api-row { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.api-row .api-name { font: 12.5px var(--mono); font-weight: 600; overflow-wrap: break-word; }
+.api-row .api-file { font: 11px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+/* A path that is a link says so on hover rather than shouting in a list of twenty. */
+.api-row .api-file.is-link { color: var(--focus); text-decoration: none; border-bottom: 1px dotted transparent; }
+.api-row:hover .api-file.is-link, .api-file.is-link:focus-visible { border-bottom-color: currentColor; }
+.api-file.is-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+
+/* A framed block with its own thin header, so the language label and copy
+   button sit beside the code instead of floating over its first line. */
+.snippet {
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 6px;
+  overflow: hidden;
+}
+.snippet-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 3px 5px 3px 11px;
+  border-bottom: 1px solid var(--border);
+}
+.snippet-lang {
+  font: 10px var(--mono); text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted);
+}
+.snippet pre {
+  margin: 0; padding: 11px 13px;
+  background: none; border: 0;
+  /* white-space: pre — long lines scroll rather than wrap. Wrapping would
+     destroy the indentation that makes C# readable; use the panel's
+     full-screen mode (f) when a snippet is wide. */
+  white-space: pre;
+  overflow-x: auto;
+  font: 11.5px/1.6 var(--mono);
+  tab-size: 4;
+}
+.snippet pre code {
+  font: inherit; white-space: inherit;
+  background: none; border: 0; padding: 0; border-radius: 0;
+}
+.snippet-copy { font-size: 11px; padding: 3px 8px; min-height: 0; opacity: .6; }
+.snippet:hover .snippet-copy, .snippet-copy:focus-visible { opacity: 1; }
+
+/* ---------- syntax highlighting ----------
+   Deliberately few colours: comment, keyword, type, string, number. Enough to
+   read structure at a glance without turning a memo into a rainbow. */
+
+:root {
+  --syn-comment: #5f6b7a;
+  --syn-keyword: #0550ae;
+  --syn-type:    #0f6e5e;
+  --syn-string:  #a13a17;
+  --syn-number:  #7a4c00;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --syn-comment: #8b96a6;
+    --syn-keyword: #79b8ff;
+    --syn-type:    #6fd8c0;
+    --syn-string:  #ffab8f;
+    --syn-number:  #e3bb7a;
+  }
+}
+:root[data-theme="light"] {
+  --syn-comment: #5f6b7a; --syn-keyword: #0550ae; --syn-type: #0f6e5e;
+  --syn-string: #a13a17;  --syn-number: #7a4c00;
+}
+:root[data-theme="dark"] {
+  --syn-comment: #8b96a6; --syn-keyword: #79b8ff; --syn-type: #6fd8c0;
+  --syn-string: #ffab8f;  --syn-number: #e3bb7a;
+}
+
+.syn-comment { color: var(--syn-comment); font-style: italic; }
+.syn-keyword { color: var(--syn-keyword); }
+.syn-type    { color: var(--syn-type); }
+.syn-string  { color: var(--syn-string); }
+.syn-number  { color: var(--syn-number); }
+
+.d-links { display: flex; flex-direction: column; gap: 5px; }
+.d-links a { color: var(--focus); }
+
+.pill-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.pill {
+  font: inherit; font-size: 11.5px; cursor: pointer;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 999px; padding: 3px 9px;
+}
+.pill:hover { border-color: var(--border-strong); }
+
+.d-note {
+  margin-top: 16px; padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-left: 3px solid var(--warn);
+  border-radius: 6px; font-size: 12.5px; line-height: 1.5;
+}
+.d-note .d-note-label { color: var(--warn); }
+/* Emphasis inside body text must not borrow the note label's colour. */
+.d-note strong:not(.d-note-label), .d-lead strong, .d-list strong { font-weight: 650; color: inherit; }
+
+/* ---------- layered schema (architecture-band drawers) ---------- */
+
+.schema { display: flex; flex-direction: column; gap: 5px; }
+
+.sch-group {
+  padding: 7px 9px 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 6px;
+}
+.sch-group-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.sch-group-title {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted);
+}
+.sch-group-hint { font-size: 10.5px; color: var(--muted); opacity: .8; }
+
+.sch-nodes { display: grid; grid-template-columns: repeat(auto-fit, minmax(136px, 1fr)); gap: 6px; }
+
+.sch-node {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 6px 8px 7px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 5px;
+}
+/* Dashed = not shipped today. Same visual language as the reserved molecule tiles. */
+.sch-node.is-trend { border-style: dashed; border-color: var(--border-strong); background: none; }
+.sch-node-name { font-size: 11.5px; font-weight: 600; line-height: 1.25; }
+.sch-node-name code { font-size: 10.5px; }
+.sch-node-sub { font-size: 10px; color: var(--muted); line-height: 1.3; margin-bottom: 3px; }
+
+/* margin-top:auto pins every chip to the bottom of its card. Grid rows stretch cards to
+   equal height, so the chips land on one baseline instead of floating at whatever height
+   each description happens to end. */
+.sch-via {
+  margin-top: auto; align-self: flex-start;
+  font: 9.5px var(--mono); text-transform: uppercase; letter-spacing: .5px;
+  padding: 2px 6px; border-radius: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border); color: var(--muted);
+  white-space: nowrap;
+}
+/* Colour the transport, so "which protocol does this channel speak" reads at a glance.
+   The card's dashed border already marks a trend, so the chip itself stays solid. */
+.sch-via-graphql { color: var(--syn-keyword); border-color: currentColor; }
+.sch-via-rest    { color: var(--info);       border-color: currentColor; }
+.sch-via-trend   { color: var(--warn);       border-color: currentColor; }
+
+/* Connector between two rows: a centred pill sitting on a vertical line, so the flow
+   direction reads at a glance. The line is drawn behind the pill, not around it. */
+.sch-conn {
+  position: relative;
+  display: flex; justify-content: center;
+  min-height: 18px;
+}
+.sch-conn::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 1px; background: var(--border-strong);
+}
+.sch-conn-pill {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 1px 8px;
+  font: 9.5px var(--mono); text-transform: uppercase; letter-spacing: .6px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 999px;
+}
+.sch-conn-dir { font-size: 11px; line-height: 1; color: var(--text); }
+
+.sch-target {
+  display: flex; flex-direction: column; gap: 2px; align-items: center; text-align: center;
+  padding: 10px 11px;
+  background: var(--surface);
+  border: 2px solid var(--accent); border-radius: 6px;
+}
+.sch-target-name { font-size: 13px; font-weight: 700; }
+.sch-target-sub { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
+
+/* The schema stays vertical at every width — the stack IS the diagram. Extra room in the
+   expanded panel goes into wider nodes within each row, not into re-flowing the rows. */
+.drawer.is-full .sch-nodes { grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); }
+
+.d-meta { margin-top: 20px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 11px; color: var(--muted); }
+
+.empty { padding: 22px 4px; color: var(--muted); font-size: 13px; }
+
+/* ---------- print: the памятка on paper ---------- */
+
+/* Landscape without pinning a paper size: the poster lays out to whatever is loaded.
+   It fits one page on A3; on A4 it runs to two, splitting between tiles rather than
+   through them (see break-inside below). */
+@page { size: landscape; margin: 8mm; }
+
+@media print {
+  :root {
+    --bg: #fff; --surface: #fff; --surface-2: #fff; --text: #000;
+    --muted: #444; --border: #999; --border-strong: #666; --shadow: none;
+    --tile: 66px;
+  }
+  body { background: #fff; font-size: 9pt; }
+  .topbar { position: static; border-bottom: 1px solid #000; padding: 0 0 4pt; }
+  .controls, .scrim, .drawer, .skip-link, #legend-toggle, #theme-toggle { display: none !important; }
+  .legend { display: block !important; margin: 6pt 0 0; box-shadow: none; break-inside: avoid; }
+  main { padding: 6pt 0 0; gap: 8pt; }
+  .tile, .layer, .molecule { break-inside: avoid; box-shadow: none; }
+  .tile { background: #fff !important; color: #000 !important; border-color: #666 !important; }
+  .tile.is-dim, .layer.is-dim, .molecule.is-dim { opacity: 1; }
+  .footer { margin: 8pt 0 0; }
+  body::before { display: none; }
+  .layer .layer-sub { -webkit-line-clamp: unset; overflow: visible; }
+  /* On paper there is no one-screen budget, so the reserved tiles say what they are. */
+  .molecule-shelf {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(146px, 1fr));
+    max-height: none; overflow: visible;
+  }
+  .molecule { display: flex; flex-direction: column; align-items: flex-start; border-radius: 6px; }
+  .molecule .mol-sub { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .cell-sub { display: block; white-space: normal; }
+  /* Syntax colours do not survive greyscale printing; fall back to weight and italics. */
+  :root { --syn-comment: #555; --syn-keyword: #000; --syn-type: #000; --syn-string: #333; --syn-number: #333; }
+  .syn-keyword { font-weight: 700; }
+  a { color: #000; text-decoration: none; }
+}
+
+/* ---------- narrow screens ---------- */
+
+@media (max-width: 720px) {
+  :root { --tile: 72px; }
+  .topbar { gap: 8px; }
+  #search { width: 100%; max-width: none; }
+  .search-wrap { flex: 1 1 100%; }
+  .drawer { width: 100%; }
+  /* The drawer already fills the screen here, so expanding is a no-op. */
+  #drawer-expand { display: none; }
+  .drawer-head { padding-right: 52px; }
+}
+/* Phones. At 430px the band and the atoms table were both packing two columns of 195px — seven
+   layer cards two-up, and eight family columns two-up with two cramped tiles per row inside each.
+   One column each is wider than two of anything, and it lets a family's tiles flow. */
+@media (max-width: 560px) {
+  .band { grid-template-columns: 1fr; }
+  .atom-grid { grid-template-columns: 1fr; }
+  .cell-shelf { grid-template-columns: minmax(0, 1fr); }
+  /* Without min-width the cell refuses to go under the min-content width of its nowrap
+     module list, and the shelf grows past the screen instead of clipping. */
+  .cell { min-width: 0; }
+  /* The poster is a scroll on a phone regardless, so the tiles may as well be legible. */
+  :root { --tile: 84px; }
+  .layer .layer-sub { -webkit-line-clamp: 3; }
+  /* Nothing here is a poster any more, so let the tag row wrap instead of fading out. */
+  .layer .layer-tags { flex-wrap: wrap; -webkit-mask-image: none; mask-image: none; }
+  .molecule-shelf { max-height: none; }
+  .section-heading .hint { display: none; }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
