@@ -271,6 +271,62 @@ public class DistributedLockExtensionsTests
     }
 
     [Fact]
+    public async Task ExecuteAsync_WhenActionFailsAfterLoss_ThrowsLostWithTheFailureAsInner()
+    {
+        // A failure after the loss may be caused by the second holder (for example a concurrency conflict).
+        using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+        var failure = new InvalidOperationException("conflict");
+
+        var execute = () => distributedLock.ExecuteAsync(Resource, async _ =>
+        {
+            await lost.CancelAsync();
+            throw failure;
+        }, cancellationToken: Token);
+        var tryExecute = () => distributedLock.TryExecuteAsync(Resource, async _ =>
+        {
+            await Task.Yield();
+            throw failure;
+        }, cancellationToken: Token);
+
+        (await execute.Should().ThrowAsync<DistributedLockLostException>()).Which.InnerException.Should().BeSameAs(failure);
+        (await tryExecute.Should().ThrowAsync<DistributedLockLostException>()).Which.InnerException.Should().BeSameAs(failure);
+    }
+
+    [Fact]
+    public void Execute_WhenActionFailsAfterLoss_ThrowsLostWithTheFailureAsInner()
+    {
+        using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+        var failure = new InvalidOperationException("conflict");
+
+        var execute = () => distributedLock.Execute(Resource, () =>
+        {
+            lost.Cancel();
+            throw failure;
+        }, cancellationToken: Token);
+        var executeWithResult = () => distributedLock.Execute<int>(Resource, () => throw failure, cancellationToken: Token);
+        var tryExecute = () => distributedLock.TryExecute(Resource, () => throw failure, cancellationToken: Token);
+
+        execute.Should().Throw<DistributedLockLostException>().Which.InnerException.Should().BeSameAs(failure);
+        executeWithResult.Should().Throw<DistributedLockLostException>().Which.InnerException.Should().BeSameAs(failure);
+        tryExecute.Should().Throw<DistributedLockLostException>().Which.InnerException.Should().BeSameAs(failure);
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WhenActionFailsWithoutLoss_PropagatesTheFailure()
+    {
+        using var lost = new CancellationTokenSource();
+        var distributedLock = new LosableLock(lost.Token);
+
+        var executeAsync = () => distributedLock.ExecuteAsync(Resource, _ => Task.FromException(new InvalidOperationException("plain")), cancellationToken: Token);
+        var execute = () => distributedLock.Execute(Resource, () => throw new InvalidOperationException("plain"), cancellationToken: Token);
+
+        await executeAsync.Should().ThrowAsync<InvalidOperationException>();
+        execute.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
     public async Task ExecuteAsync_WhenLockIsNotLost_ReturnsNormally()
     {
         using var lost = new CancellationTokenSource();

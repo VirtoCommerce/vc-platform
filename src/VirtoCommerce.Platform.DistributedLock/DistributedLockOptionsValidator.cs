@@ -12,6 +12,9 @@ namespace VirtoCommerce.Platform.DistributedLock;
 /// </summary>
 public sealed class DistributedLockOptionsValidator : IValidateOptions<DistributedLockOptions>
 {
+    /// <summary>Upper bound for <see cref="DistributedLockOptions.RetryInterval"/> and <see cref="DistributedLockOptions.MaxRetryInterval"/>.</summary>
+    public static readonly TimeSpan MaxRetryIntervalLimit = TimeSpan.FromMinutes(5);
+
     public ValidateOptionsResult Validate(string? name, DistributedLockOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -36,6 +39,11 @@ public sealed class DistributedLockOptionsValidator : IValidateOptions<Distribut
         if (options.RetryInterval <= TimeSpan.Zero)
         {
             failures.Add($"DistributedLock:RetryInterval must be positive; got {options.RetryInterval}.");
+        }
+
+        if (options.MaxRetryInterval > MaxRetryIntervalLimit)
+        {
+            failures.Add($"DistributedLock:MaxRetryInterval must not exceed {MaxRetryIntervalLimit}; got {options.MaxRetryInterval}.");
         }
 
         if (options.MaxRetryInterval < options.RetryInterval)

@@ -86,6 +86,7 @@ public class DistributedLockTelemetryTests
     [InlineData(nameof(DistributedLockOptions.RetryInterval), "00:00:00")]
     [InlineData(nameof(DistributedLockOptions.RetryInterval), "-00:00:01")]
     [InlineData(nameof(DistributedLockOptions.MaxRetryInterval), "00:00:00.05")]
+    [InlineData(nameof(DistributedLockOptions.MaxRetryInterval), "00:05:00.001")]
     [InlineData(nameof(DistributedLockOptions.Expiry), "00:00:00")]
     [InlineData(nameof(DistributedLockOptions.StartupExpiry), "00:00:00")]
     [InlineData(nameof(DistributedLockOptions.DefaultTimeout), "-00:00:02")]

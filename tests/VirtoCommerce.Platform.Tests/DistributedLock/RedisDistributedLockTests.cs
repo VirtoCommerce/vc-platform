@@ -109,6 +109,16 @@ public class RedisDistributedLockTests
     }
 
     [Fact]
+    public void RetryDelays_NearTimeSpanMaxValue_DoNotOverflowBeforeTheCap()
+    {
+        var huge = TimeSpan.MaxValue - TimeSpan.FromTicks(1);
+
+        RedisDistributedLock.GetRetryWait(huge, TimeSpan.FromSeconds(2), 0.99999).Should().Be(TimeSpan.FromSeconds(2));
+        RedisDistributedLock.GetNextRetryDelay(huge, TimeSpan.FromSeconds(2)).Should().Be(TimeSpan.FromSeconds(2));
+        RedisDistributedLock.GetNextRetryDelay(huge, TimeSpan.MaxValue).Should().Be(TimeSpan.MaxValue);
+    }
+
+    [Fact]
     public void GetNextRetryDelay_GrowsByFactorUpToCap()
     {
         var max = TimeSpan.FromSeconds(2);

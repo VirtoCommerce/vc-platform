@@ -116,8 +116,7 @@ public static class DistributedLockExtensions
         ArgumentNullException.ThrowIfNull(action);
 
         using var handle = distributedLock.Acquire(resource, timeout, cancellationToken);
-        action();
-        ThrowIfLost(handle, cancellationToken);
+        Run(handle, action, cancellationToken);
     }
 
     /// <summary>
@@ -132,9 +131,7 @@ public static class DistributedLockExtensions
         ArgumentNullException.ThrowIfNull(action);
 
         using var handle = distributedLock.Acquire(resource, timeout, cancellationToken);
-        var result = action();
-        ThrowIfLost(handle, cancellationToken);
-        return result;
+        return Run(handle, action, cancellationToken);
     }
 
     /// <summary>
@@ -154,14 +151,13 @@ public static class DistributedLockExtensions
             return false;
         }
 
-        action();
-        ThrowIfLost(handle, cancellationToken);
+        Run(handle, action, cancellationToken);
         return true;
     }
 
     // Runs the action with a token that is also cancelled on lock loss. A loss the caller did not cause is reported as
-    // DistributedLockLostException, whether the action completed or stopped on the token, so it is never mistaken for
-    // a user cancellation or a clean run.
+    // DistributedLockLostException however the action ends (completed, cancelled or failed), so it is never mistaken for
+    // a user cancellation, a clean run, or an unrelated failure; the action's own exception stays as InnerException.
     private static Task RunAsync(IDistributedLockHandle handle, Func<CancellationToken, Task> action, CancellationToken cancellationToken)
     {
         return RunAsync(handle, async token =>
@@ -179,13 +175,45 @@ public static class DistributedLockExtensions
         {
             result = await action(lockScope?.Token ?? cancellationToken).ConfigureAwait(false);
         }
-        catch (OperationCanceledException ex) when (IsLost(handle, cancellationToken))
+        catch (Exception ex) when (ex is not DistributedLockLostException && IsLost(handle, cancellationToken))
         {
-            throw new DistributedLockLostException(handle.Resource, "the action was cancelled", ex);
+            throw LostDuring(handle, ex);
         }
 
         ThrowIfLost(handle, cancellationToken);
         return result;
+    }
+
+    private static void Run(IDistributedLockHandle handle, Action action, CancellationToken cancellationToken)
+    {
+        Run(handle, () =>
+        {
+            action();
+            return true;
+        }, cancellationToken);
+    }
+
+    // The sync actions take no token, so only a loss observed when the action ends is reported.
+    private static T Run<T>(IDistributedLockHandle handle, Func<T> action, CancellationToken cancellationToken)
+    {
+        T result;
+        try
+        {
+            result = action();
+        }
+        catch (Exception ex) when (ex is not DistributedLockLostException && IsLost(handle, cancellationToken))
+        {
+            throw LostDuring(handle, ex);
+        }
+
+        ThrowIfLost(handle, cancellationToken);
+        return result;
+    }
+
+    private static DistributedLockLostException LostDuring(IDistributedLockHandle handle, Exception actionException)
+    {
+        var details = actionException is OperationCanceledException ? "the action was cancelled" : "the action failed after the loss";
+        return new DistributedLockLostException(handle.Resource, details, actionException);
     }
 
     private static void ThrowIfLost(IDistributedLockHandle handle, CancellationToken cancellationToken)

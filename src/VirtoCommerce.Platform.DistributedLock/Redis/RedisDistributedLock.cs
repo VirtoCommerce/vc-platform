@@ -96,9 +96,9 @@ public sealed class RedisDistributedLock : DistributedLockBase
     /// <param name="random">A value in [0, 1) that picks the jitter.</param>
     internal static TimeSpan GetRetryWait(TimeSpan delay, TimeSpan maxRetryInterval, double random)
     {
+        // Compared in double before the cast, so a very large delay cannot overflow ahead of the cap.
         var factor = 1 + ((random * 2) - 1) * JitterRatio;
-        var wait = TimeSpan.FromTicks((long)(delay.Ticks * factor));
-        return wait > maxRetryInterval ? maxRetryInterval : wait;
+        return CapTicks(delay.Ticks * factor, maxRetryInterval);
     }
 
     /// <summary>
@@ -106,7 +106,12 @@ public sealed class RedisDistributedLock : DistributedLockBase
     /// </summary>
     internal static TimeSpan GetNextRetryDelay(TimeSpan delay, TimeSpan maxRetryInterval)
     {
-        return TimeSpan.FromTicks(Math.Min((long)(delay.Ticks * BackoffFactor), maxRetryInterval.Ticks));
+        return CapTicks(delay.Ticks * BackoffFactor, maxRetryInterval);
+    }
+
+    private static TimeSpan CapTicks(double ticks, TimeSpan max)
+    {
+        return ticks >= max.Ticks ? max : TimeSpan.FromTicks((long)ticks);
     }
 
     private static TimeSpan GetLostCheckInterval(TimeSpan expiry)

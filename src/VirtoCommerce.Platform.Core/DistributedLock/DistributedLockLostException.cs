@@ -8,7 +8,8 @@ namespace VirtoCommerce.Platform.Core.DistributedLock;
 /// <summary>
 /// The lock was lost while the protected action was running (<see cref="IDistributedLockHandle.HandleLostToken"/>),
 /// so another instance may have run the same work concurrently. Thrown by the <c>Execute*</c> and <c>TryExecute*</c>
-/// extensions after the action has completed or stopped; the work may already be done, so this is a signal, not a rollback.
+/// extensions however the action ended: completed, cancelled or failed (its exception is the <see cref="Exception.InnerException"/>).
+/// The work may already be done, so this is a signal, not a rollback: do not retry it blindly.
 /// Derives from <see cref="PlatformException"/>.
 /// </summary>
 public sealed class DistributedLockLostException : PlatformException

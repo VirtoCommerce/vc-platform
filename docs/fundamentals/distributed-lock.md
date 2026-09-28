@@ -4,7 +4,7 @@ Use `IDistributedLock` (`VirtoCommerce.Platform.Core.DistributedLock`) when code
 
 - With `ConnectionStrings:RedisConnectionString`, locks are held in Redis and exclude every instance.
 - Without Redis, locks serialize callers inside the current instance only.
-- Locks are not reentrant. Resource names follow `{module}:{entity}:{id}`, with the id in the last segment only. They appear in Redis keys, logs and exception messages, so never put secrets in them. Traces and metrics record only a hash of the name and its family: the name without the last segment, at most two segments, or `other` for a name without `:`.
+- Locks are not reentrant. Resource names follow `{module}:{entity}:{id}`, with the id in the last segment only. They appear in Redis keys, logs and exception messages, so never put secrets in them. Traces and metrics record only a hash of the name and its family: the name without the last segment, at most two segments, or `other` for a name without `:`. The rule works by position, so a two-segment name is read as `{module}:{id}`: `catalog:reindex` reports as `catalog`.
 - Pass `Timeout.InfiniteTimeSpan` to wait until the lock is acquired or the cancellation token is cancelled.
 
 ## What the lock guarantees
@@ -24,7 +24,7 @@ await _distributedLock.ExecuteAsync($"cart:recalc:{cartId}",
     ct => RecalculateAndSaveAsync(cartId, ct), TimeSpan.FromSeconds(5), cancellationToken);
 ```
 
-The token passed to the action is cancelled when `cancellationToken` is cancelled or the lock is lost. If the lock was lost and `cancellationToken` was not cancelled, `ExecuteAsync` throws `DistributedLockLostException` after the action, whether it completed or stopped on the token. The work may already be done, so treat it as "this ran without the lock", not as a rollback.
+The token passed to the action is cancelled when `cancellationToken` is cancelled or the lock is lost. If the lock was lost and `cancellationToken` was not cancelled, `ExecuteAsync` throws `DistributedLockLostException` however the action ended: completed, stopped on the token, or failed with its own exception, which is kept as `InnerException`. The work may already be done, so treat it as "this ran without the lock", not as a rollback. Do not retry blindly on it: check whether the work took effect first, as you would after a timeout on a non-idempotent call.
 
 ### Skip work that another instance is already doing
 
@@ -130,7 +130,7 @@ It lives in the `VirtoCommerce.Platform.DistributedLock` package, which also bri
 | `TryAcquireAsync` / `TryExecuteAsync` / `TryAcquire` / `TryExecute`: another holder kept the lock for the whole timeout | `null` / `false` |
 | Redis cannot be reached (any of the methods) | `DistributedLockUnavailableException` (derives from `PlatformException`) after one attempt, without waiting out the timeout. One attempt is two Redis commands, so during an outage it takes up to twice the StackExchange.Redis `asyncTimeout` (5 s by default) |
 | The cancellation token is cancelled while waiting | `OperationCanceledException` |
-| The lock is detected as lost while held: a renewal failed, or no renewal was observed for a whole `Expiry` | `IDistributedLockHandle.HandleLostToken` is cancelled, and so is the token passed to `Execute*` actions. Those methods then throw `DistributedLockLostException` (derives from `PlatformException`, exposes `Resource`) unless `cancellationToken` was cancelled |
+| The lock is detected as lost while held: a renewal failed, or no renewal was observed for a whole `Expiry` | `IDistributedLockHandle.HandleLostToken` is cancelled, and so is the token passed to `Execute*` actions. Those methods then throw `DistributedLockLostException` (derives from `PlatformException`, exposes `Resource`) however the action ended, unless `cancellationToken` was cancelled |
 
 Loss detection is best effort and after the fact. A single failed renewal already cancels `HandleLostToken`. When renewals stop without an error, for example because the renewal timer does not run, the handle notices only after `Expiry` plus up to two check intervals, when the key may already have expired and another instance may hold the lock. The deprecated `IDistributedLockService` gives its callers no loss signal at all.
 
@@ -152,12 +152,12 @@ Loss detection is best effort and after the fact. A single failed renewal alread
 | `DefaultTimeout` | `00:00:30` | Wait for `AcquireAsync`, `ExecuteAsync`, `Acquire` and `Execute` without an explicit timeout |
 | `Expiry` | `00:00:30` | Redis lock lease, renewed every `Expiry / 2` while held. It bounds two things: how long a crashed holder blocks others, and how long renewal may fail (for example during a Redis brownout) before a live holder loses the lock |
 | `RetryInterval` | `00:00:00.1` | First delay between Redis acquisition attempts while waiting. Later delays grow by 1.8×, with ±20% jitter, so waiters do not poll a busy key in lockstep. Must be positive |
-| `MaxRetryInterval` | `00:00:02` | Upper bound for that delay, jitter included. Must not be less than `RetryInterval` |
+| `MaxRetryInterval` | `00:00:02` | Upper bound for that delay, jitter included. Must not be less than `RetryInterval` or more than 5 minutes |
 | `StartupExpiry` | `00:05:00` | Lease of the startup lock that serializes migrations and module `PostInitialize`; longer than `Expiry` so a brownout during a long migration does not let a second instance start migrating |
 | `KeyPrefix` | empty | Isolates applications sharing one Redis: keys become `redlock:{KeyPrefix}:{resource}`. Changing it during a rolling deploy breaks mutual exclusion between old and new instances |
 | `WaitTime` | `180` | Seconds each instance waits for the startup lock |
 
-The platform validates these values at startup: `Expiry`, `StartupExpiry` and `RetryInterval` must be positive, `DefaultTimeout` and `WaitTime` non-negative (`DefaultTimeout` may also be `Timeout.InfiniteTimeSpan`).
+The platform validates these values at startup: `Expiry`, `StartupExpiry` and `RetryInterval` must be positive, `MaxRetryInterval` between `RetryInterval` and 5 minutes, `DefaultTimeout` and `WaitTime` non-negative (`DefaultTimeout` may also be `Timeout.InfiniteTimeSpan`).
 
 If the startup lock is lost while migrations and module `PostInitialize` run, startup is not aborted midway. After the block, it logs a critical error and fails with `DistributedLockLostException`, so the orchestrator restarts the instance and the log shows that migrations may have overlapped.
 
