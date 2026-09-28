@@ -27,4 +27,8 @@
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="VirtoCommerce.Platform.Tests" />
+  </ItemGroup>
+
 </Project>
