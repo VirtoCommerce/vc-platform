@@ -185,7 +185,7 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
         return new CacheMetricsMiddleware(context => handler(context));
     }
 
-    private static HttpContext Context(Activity activity)
+    private static DefaultHttpContext Context(Activity activity)
     {
         var context = new DefaultHttpContext();
         context.Features.Set<IHttpActivityFeature>(new HttpActivityFeature { Activity = activity });

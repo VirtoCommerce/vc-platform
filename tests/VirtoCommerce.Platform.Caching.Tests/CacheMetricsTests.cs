@@ -15,6 +15,8 @@ namespace VirtoCommerce.Platform.Caching.Tests;
 [Collection(nameof(NotThreadSafeCollection))]
 public class CacheMetricsTests : MemoryCacheTestsBase
 {
+    private static readonly string[] _firstOverlappingBatchIds = ["a", "b"];
+
     [Fact]
     public void MemoryCache_GroupsModelsWithoutKeysOrIds_AndPreservesNormalizedIdentity()
     {
@@ -186,7 +188,7 @@ public class CacheMetricsTests : MemoryCacheTestsBase
         using var measurements = new Measurements();
         var cache = new RequestScopedCache();
         var completion = new TaskCompletionSource<IList<string>>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var first = cache.GetOrLoadMapByIdsAsync("products", new[] { "a", "b" }, x => x, _ => completion.Task);
+        var first = cache.GetOrLoadMapByIdsAsync("products", _firstOverlappingBatchIds, x => x, _ => completion.Task);
         var second = cache.GetOrLoadMapByIdsAsync<string>("products", ["b", "c"], x => x, ids => Task.FromResult<IList<string>>(ids.ToList()));
         completion.SetResult(["a", "b"]);
         await Task.WhenAll(first, second);
