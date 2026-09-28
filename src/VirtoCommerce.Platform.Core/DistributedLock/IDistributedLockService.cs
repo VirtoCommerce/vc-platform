@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 namespace VirtoCommerce.Platform.Core.DistributedLock
 {
     /// <summary>
-    /// Povides a unified mechanism for acquiring and managing distributed locks. It encapsulates the execution of critical sections of code in a distributed environment, ensuring that only one process can access the locked resource at a time. 
+    /// Runs a delegate under a distributed lock.
     /// </summary>
+    /// <remarks>
+    /// Deprecated: use <see cref="IDistributedLock"/>. This interface is kept for existing callers and runs on
+    /// <see cref="IDistributedLock"/>; <c>lockTimeout</c> and <c>retryInterval</c> are ignored.
+    /// </remarks>
     public interface IDistributedLockService
     {
         /// <summary>
