@@ -87,6 +87,8 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
             // Assert
             fromArray.Should().Be(expected);
             fromSpan.Should().Be(expected);
+            CacheKey.GetCacheName(fromArray).Should().Be(nameof(CacheKeyTests));
+            CacheKey.GetCacheName(CacheKey.Normalize(fromSpan)).Should().Be(nameof(CacheKeyTests));
         }
     }
 }

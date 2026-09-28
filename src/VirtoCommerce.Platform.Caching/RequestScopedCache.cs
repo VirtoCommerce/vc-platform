@@ -32,10 +32,22 @@ public class RequestScopedCache : IRequestScopedCache
 
     public virtual Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> factory)
     {
+        return GetOrAddAsync(key, CacheKey.GetCacheName(key) ?? nameof(RequestScopedCache), factory);
+    }
+
+    public virtual Task<T> GetOrAddAsync<T>(string key, string cacheName, Func<Task<T>> factory)
+    {
         ArgumentNullException.ThrowIfNull(factory);
 
-        var lazy = _cache.GetOrAdd(key, static (_, arg) => new Lazy<Task>(arg), factory);
+        var hit = _cache.TryGetValue(key, out var lazy);
+        if (!hit)
+        {
+            var candidate = new Lazy<Task>(factory);
+            lazy = _cache.GetOrAdd(key, candidate);
+            hit = !ReferenceEquals(lazy, candidate);
+        }
 
+        CacheMetrics.Record(hit, string.IsNullOrWhiteSpace(cacheName) ? nameof(RequestScopedCache) : cacheName);
         return (Task<T>)lazy.Value;
     }
 
@@ -77,6 +89,7 @@ public class RequestScopedCache : IRequestScopedCache
                 }
 
                 var task = GetOrReserve<T>((keyPrefix, id), out var reservation);
+                CacheMetrics.Record(reservation is null, CacheKey.GetCacheName(keyPrefix) ?? keyPrefix);
                 if (reservation is not null)
                 {
                     (owned ??= new Dictionary<string, TaskCompletionSource<T>>(StringComparer.OrdinalIgnoreCase)).Add(id, reservation);

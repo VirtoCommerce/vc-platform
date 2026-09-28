@@ -59,6 +59,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             _eventPublisher = eventPublisher;
 
             var serviceType = GetType();
+            CacheKey.RegisterCacheName(serviceType, typeof(TModel));
 
             _isToModelOverridden = serviceType.IsMethodOverridden(_toModelMethod);
             _isConfigureCacheOverridden = serviceType.IsMethodOverridden(_configureCacheMethod);

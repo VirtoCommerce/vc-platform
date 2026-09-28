@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using VirtoCommerce.Platform.Core.Extensions;
@@ -7,6 +8,9 @@ namespace VirtoCommerce.Platform.Core.Caching
 {
     public static class CacheKey
     {
+        // Only type-owned prefixes are registered, never individual keys or request data.
+        private static readonly ConcurrentDictionary<string, string> _cacheNames = new(StringComparer.OrdinalIgnoreCase);
+
         public static string With(params string[] keys)
         {
             return string.Join("-", keys);
@@ -19,12 +23,46 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         public static string With(Type ownerType, params string[] keys)
         {
-            return $"{ownerType.GetCacheKey()}:{string.Join("-", keys)}";
+            return $"{GetOwnerPrefix(ownerType)}:{string.Join("-", keys)}";
         }
 
         public static string With(Type ownerType, params ReadOnlySpan<string> keys)
         {
-            return $"{ownerType.GetCacheKey()}:{string.Join("-", keys)}";
+            return $"{GetOwnerPrefix(ownerType)}:{string.Join("-", keys)}";
+        }
+
+        /// <summary>
+        /// Associates an owner's cache keys with a logical model type for telemetry.
+        /// Does not change cache keys, lookup behavior, or invalidation.
+        /// </summary>
+        public static void RegisterCacheName(Type ownerType, Type modelType)
+        {
+            _cacheNames[ownerType.GetCacheKey()] = modelType.GetCacheKey();
+        }
+
+        /// <summary>
+        /// Returns the registered logical group for a type-owned key, or null for an unclassified key.
+        /// Arbitrary string prefixes and the variable part of a key are never used as metric names.
+        /// </summary>
+        public static string GetCacheName(object key)
+        {
+            if (key is string stringKey)
+            {
+                var separator = stringKey.IndexOf(':');
+                if (separator > 0 && _cacheNames.TryGetValue(stringKey[..separator], out var name))
+                {
+                    return name;
+                }
+            }
+
+            return null;
+        }
+
+        private static string GetOwnerPrefix(Type ownerType)
+        {
+            var prefix = ownerType.GetCacheKey();
+            _cacheNames.TryAdd(prefix, prefix);
+            return prefix;
         }
 
         public static object Normalize(object key)
