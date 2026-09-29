@@ -13,12 +13,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.43    
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.1000.1    
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.43    
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.1000.1    
     with:
       uploadPackage: 'true'
       uploadDocker: 'false'
@@ -40,7 +40,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
     steps:
       - name: Install VirtoCommerce.GlobalTool
-        uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+        uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.1
 
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -72,7 +72,7 @@ jobs:
           user: virto
 
       - name: Publish Nuget
-        uses: VirtoCommerce/vc-github-actions/publish-nuget@master
+        uses: VirtoCommerce/.github/actions/publish-nuget@v3.1000.1
         with:
           skipString: 'Clean+Restore+Compile+Test+Pack'
         env:
@@ -84,7 +84,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.43
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.1000.1
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       forceGithub: false

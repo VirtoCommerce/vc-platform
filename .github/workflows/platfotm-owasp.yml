@@ -19,7 +19,7 @@ jobs:
     steps:
 
       - name: Install VirtoCommerce.GlobalTool
-        uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+        uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.1
 
       - name: Docker Login
         uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
@@ -29,7 +29,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker Env
-        uses: VirtoCommerce/vc-github-actions/docker-env@master
+        uses: VirtoCommerce/.github/actions/docker-env@v3.1000.1
         with:
           githubUser: ${{ env.GITHUB_ACTOR }}
           githubToken: ${{ env.GITHUB_TOKEN }}
