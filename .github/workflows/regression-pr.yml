@@ -23,7 +23,7 @@ jobs:
     steps:
     - name: Check regression label
       id: checkLabel
-      uses: VirtoCommerce/vc-github-actions/check-pr-regression-label@master
+      uses: VirtoCommerce/.github/actions/check-pr-regression-label@v3.1000.1
       with:
         githubToken: ${{ secrets.REPO_TOKEN }}
         label: regression
@@ -52,7 +52,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: VirtoCommerce/vc-github-actions/setup-git-credentials-github@master
+    - uses: VirtoCommerce/.github/actions/setup-git-credentials-github@v3.1000.1
       with:
         githubToken: ${{ secrets.REPO_TOKEN }}
 
