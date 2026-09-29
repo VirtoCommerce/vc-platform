@@ -14,8 +14,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.12" />
-    <!-- Breaking Change: After 10.0.5 Microting changed assembly name and C# namespaces from Pomelo.EntityFrameworkCore.MySql to Microting.EntityFrameworkCore.MySql. -->
-    <PackageReference Include="Microting.EntityFrameworkCore.MySql" Version="10.0.12" />
+    <!-- Don't update. Breaking Change: After 10.0.5 Microting changed assembly name and C# namespaces from Pomelo.EntityFrameworkCore.MySql to Microting.EntityFrameworkCore.MySql. -->
+    <!-- Modules compiled against Pomelo.EntityFrameworkCore.MySql fail at runtime with MissingMethodException (UseMySqlDatabase). -->
+    <PackageReference Include="Microting.EntityFrameworkCore.MySql" Version="10.0.5" />
   </ItemGroup>
 
   <ItemGroup>
