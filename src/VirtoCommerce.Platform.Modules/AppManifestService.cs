@@ -275,6 +275,7 @@ public class AppManifestService : IAppManifestService
                 Name = remoteName,
                 Exposed = remoteExposed,
             },
+            Contributions = ReadContributions(manifest, pluginFolder),
         };
 
         if (manifest?.ContentFiles != null)
@@ -291,6 +292,29 @@ public class AppManifestService : IAppManifestService
         }
 
         return plugin;
+    }
+
+    /// <summary>
+    /// The <c>contributions</c> object of <c>plugin.json</c> as compact JSON text. Anything but an
+    /// object is ignored with a warning — the plugin still loads, it just declares nothing.
+    /// </summary>
+    private string ReadContributions(PluginManifestFile manifest, string pluginFolder)
+    {
+        if (manifest?.Contributions is not { } contributions ||
+            contributions.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+        {
+            return null;
+        }
+
+        if (contributions.ValueKind != JsonValueKind.Object)
+        {
+            _logger.LogWarning(
+                "Plugin manifest at {ManifestPath} declares 'contributions' as {ValueKind}, not an object; ignoring it.",
+                Path.Combine(pluginFolder, PluginManifestFileName), contributions.ValueKind);
+            return null;
+        }
+
+        return JsonSerializer.Serialize(contributions);
     }
 
     private PluginManifestFile TryReadPluginManifest(string pluginFolder)
@@ -368,7 +392,8 @@ public class AppManifestService : IAppManifestService
     /// Computes a strong content fingerprint covering every field of the
     /// resulting response body that can change between requests: appId +
     /// the ordered list of plugins + each plugin's id, version, entry hash,
-    /// content-file hashes, and federation remote coordinates.
+    /// content-file hashes, federation remote coordinates, and declared
+    /// contributions.
     /// </summary>
     /// <remarks>
     /// The hash MUST include the per-file cache-busting hashes (file mtimes
@@ -417,6 +442,11 @@ public class AppManifestService : IAppManifestService
                   .Append('/')
                   .Append(plugin.Remote.Exposed ?? string.Empty);
             }
+            // Only when declared, so a plugin without contributions keeps the fingerprint it had.
+            if (plugin.Contributions != null)
+            {
+                sb.Append('|').Append(plugin.Contributions);
+            }
             sb.Append(';');
         }
 
@@ -453,7 +483,8 @@ public class AppManifestService : IAppManifestService
         string Entry,
         List<string> ContentFiles,
         PluginManifestRemote Remote,
-        string Permission);
+        string Permission,
+        JsonElement? Contributions);
 
     private sealed record PluginManifestRemote(string Name, string Exposed);
 }

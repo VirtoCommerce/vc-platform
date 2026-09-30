@@ -37,4 +37,10 @@ public class PluginEntry
     /// Module Federation coordinates. <c>null</c> for the legacy AngularJS host.
     /// </summary>
     public PluginRemote Remote { get; set; }
+
+    /// <summary>
+    /// The <c>contributions</c> object of the plugin's <c>plugin.json</c>, verbatim; <c>null</c>
+    /// when it declares none. Defined by the host app, not by the platform.
+    /// </summary>
+    public object Contributions { get; set; }
 }

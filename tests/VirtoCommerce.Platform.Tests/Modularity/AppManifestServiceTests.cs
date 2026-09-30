@@ -236,6 +236,99 @@ public class AppManifestServiceTests : IDisposable
     }
 
     [Fact]
+    public void GetManifest_ModernApp_Contributions_FlowToDescriptorAsCompactJson()
+    {
+        // The platform does not interpret contributions — it hands the host app the object
+        // its plugin declared, so the host can act on it before fetching any plugin code.
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        {
+          "id": "sales-rep",
+          "contributions": {
+            "format": 1,
+            "when": { "setting": "SalesRep.Enabled" },
+            "routes": [ { "path": "documents", "parent": "Company", "name": "SalesRepDocuments" } ]
+          }
+        }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var result = service.GetManifest("vc-frontend");
+
+        var p = Assert.Single(result.Plugins);
+        Assert.Equal(
+            """{"format":1,"when":{"setting":"SalesRep.Enabled"},"routes":[{"path":"documents","parent":"Company","name":"SalesRepDocuments"}]}""",
+            p.Contributions);
+    }
+
+    [Fact]
+    public void GetManifest_ModernApp_NoContributions_LeavesThemNull()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "id": "sales-rep", "contributions": null }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var p = Assert.Single(service.GetManifest("vc-frontend").Plugins);
+        Assert.Null(p.Contributions);
+    }
+
+    [Fact]
+    public void GetManifest_ModernApp_NonObjectContributions_AreIgnored_PluginStillLoads()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "id": "sales-rep", "contributions": [ "not", "an", "object" ] }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var p = Assert.Single(service.GetManifest("vc-frontend").Plugins);
+        Assert.Equal("sales-rep", p.Id);
+        Assert.Null(p.Contributions);
+    }
+
+    [Fact]
+    public void GetManifest_DescriptorHash_ChangesWhenOnlyContributionsChange()
+    {
+        // plugin.json is not a content file, so no file hash moves when only its
+        // contributions change. Without them in the fingerprint the ETag would stay
+        // put, and a client holding the old descriptor would keep getting 304.
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        var pluginJson = WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "contributions": { "format": 1, "when": { "setting": "A" } } }
+        """);
+        var service = NewService(host, plugin);
+
+        var before = service.GetManifest("vc-frontend").Hash;
+
+        File.WriteAllText(pluginJson, """{ "contributions": { "format": 1, "when": { "setting": "B" } } }""");
+        AppManifestCacheRegion.ExpireRegion();
+        var after = service.GetManifest("vc-frontend").Hash;
+
+        Assert.NotEqual(before, after);
+    }
+
+    [Fact]
     public void GetManifest_ModernApp_MalformedPluginJson_FallsBackToConvention()
     {
         var host = NewModule("VirtoCommerce.MarketplaceVendor");
