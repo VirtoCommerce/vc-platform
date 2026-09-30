@@ -53,10 +53,10 @@ In Visual Studio, right-click **VirtoCommerce.Platform.Web** → **Manage User S
 Or set them from the command line:
 
 ```bash
-dotnet user-secrets set 'ConnectionStrings:VirtoCommerce' 'Data Source=localhost,1433;Initial Catalog=VirtoCommerce3;User ID=sa;Password=My0wn!Passw0rd;TrustServerCertificate=True;' --project src/VirtoCommerce.Platform.Web
+dotnet user-secrets set 'ConnectionStrings:VirtoCommerce' 'Data Source=127.0.0.1,1433;Initial Catalog=VirtoCommerce3;User ID=sa;Password=My0wn!Passw0rd;TrustServerCertificate=True;' --project src/VirtoCommerce.Platform.Web
 ```
 
-The user in the connection string needs permission to create a database.
+The user in the connection string needs permission to create a database. For SQL Server in a Docker Desktop container, use `127.0.0.1` rather than `localhost`: `localhost` can resolve to IPv6 first, and the connection then times out.
 
 `appsettings.Development.json` already points the asset and content URLs at `http://localhost:10645`. Override `Assets:FileSystem:PublicUrl` and `Content:FileSystem:PublicUrl` only if you run the platform on another URL:
 
