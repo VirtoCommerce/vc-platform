@@ -139,9 +139,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         var principal = await _signInManager.CreateUserPrincipalAsync(context.User);
 
         SetTicketScopes(context, principal);
-
         principal.SetResources("resource_server");
-
         SetClaimDestinations(principal);
 
         foreach (var claimProvider in _claimProviders)
