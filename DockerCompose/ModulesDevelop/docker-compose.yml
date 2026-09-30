@@ -1,74 +1,79 @@
-version: '3.4'
+# Runs the published Virto Commerce platform image together with SQL Server, Redis and Elasticsearch,
+# so modules can be developed on the host and bind-mounted into the platform container.
+# See docs/developer-guide/modules-development-via-docker.md
 
 services:
   vc-db:
-    image: mcr.microsoft.com/mssql/server:latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${DB_PASS:?Set DB_PASS in .env}
     ports:
       - "${DOCKER_SQL_PORT:-1433}:1433"
-    expose:  
-      - 1433  
-    environment: 
-      - ACCEPT_EULA=Y
-      - MSSQL_PID=Express
-      - SA_PASSWORD=${DB_PASS}
     volumes:
-      - db-volume:/var/opt/mssql   
-    networks:
-      - virto
+      - db-volume:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -C -b -Q 'SELECT 1' -o /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
 
   virtocommerce.platform.web:
-    build: 
-        context: .
-        dockerfile: Platform.Dockerfile
-        args:
-          platform_arg: ${PLATFORM_VERSION}
+    image: ghcr.io/virtocommerce/platform:${PLATFORM_VERSION:-dev-linux-latest}
     ports:
-      - "${DOCKER_PLATFORM_PORT:-8090}:80"
+      - "${DOCKER_PLATFORM_PORT:-8090}:8080"
     environment:
-     - VirtoCommerce:AllowInsecureHttp=true
-     - ConnectionStrings:VirtoCommerce=Data Source=vc-db;Initial Catalog=VirtoCommerce3docker;Persist Security Info=True;User ID=sa;Password=${DB_PASS};MultipleActiveResultSets=False;
-     - ConnectionStrings:RedisConnectionString=redis,password=${REDIS_PASS}
-     - Assets:FileSystem:PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/assets/
-     - Content:FileSystem:PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/cms-content/
-     - Search:Provider=${SEARCH_PROVIDER}
-     - Search:Scope=platformindex
-     - Search:ElasticSearch:Server=http://elastic:9200
+      ASPNETCORE_HTTP_PORTS: "8080"
+      VirtoCommerce__AllowInsecureHttp: "true"
+      ConnectionStrings__VirtoCommerce: "Data Source=vc-db;Initial Catalog=VirtoCommerce3docker;User ID=sa;Password=${DB_PASS};TrustServerCertificate=True;"
+      ConnectionStrings__RedisConnectionString: "redis,password=${REDIS_PASS}"
+      Assets__FileSystem__PublicUrl: "http://localhost:${DOCKER_PLATFORM_PORT:-8090}/assets/"
+      Content__FileSystem__PublicUrl: "http://localhost:${DOCKER_PLATFORM_PORT:-8090}/cms-content/"
+      Search__Provider: ${SEARCH_PROVIDER:-ElasticSearch8}
+      Search__Scope: platformindex
+      Search__ElasticSearch8__Server: "http://elastic:9200"
     depends_on:
-      - vc-db
-      - elastic
-      - redis
-    entrypoint: ["/wait-for-it.sh", "vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
+      vc-db:
+        condition: service_healthy
+      elastic:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
-      - ${MODULES_VOLUME}:/opt/virtocommerce/platform/modules
-      - ${APP_DATA_MODULES}:/opt/virtocommerce/platform/app_data/modules
-    networks:
-      - virto
+      - ${MODULES_VOLUME:?Set MODULES_VOLUME in .env}:/opt/virtocommerce/platform/modules
+      - ${APP_DATA_MODULES:?Set APP_DATA_MODULES in .env}:/opt/virtocommerce/platform/app_data/modules
     restart: unless-stopped
 
   elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.4
     environment:
-      - discovery.type=single-node
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     ports:
-      - 9200:9200
-    networks:
-      - virto
- 
+      - "${DOCKER_ELASTIC_PORT:-9200}:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
   redis:
-    image: "redis:alpine"
-    command: redis-server --requirepass ${REDIS_PASS}
+    image: redis:7-alpine
+    command: ["redis-server", "--requirepass", "${REDIS_PASS:?Set REDIS_PASS in .env}"]
     ports:
-        - "6379:6379"
+      - "${DOCKER_REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASS}\" --no-auth-warning ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     environment:
-        - REDIS_REPLICATION_MODE=master  
-    networks:
-        - virto       
+      REDIS_PASS: ${REDIS_PASS}
 
 volumes:
   db-volume:
     name: db-volume
-
-networks:
-  virto:
-     external:
-        name: nat
