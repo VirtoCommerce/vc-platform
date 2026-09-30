@@ -238,8 +238,6 @@ public class AppManifestServiceTests : IDisposable
     [Fact]
     public void GetManifest_ModernApp_Contributions_FlowToDescriptorAsCompactJson()
     {
-        // The platform does not interpret contributions — it hands the host app the object
-        // its plugin declared, so the host can act on it before fetching any plugin code.
         var host = NewModule("VirtoCommerce.XFrontend");
         host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
 
@@ -306,9 +304,6 @@ public class AppManifestServiceTests : IDisposable
     [Fact]
     public void GetManifest_DescriptorHash_ChangesWhenOnlyContributionsChange()
     {
-        // plugin.json is not a content file, so no file hash moves when only its
-        // contributions change. Without them in the fingerprint the ETag would stay
-        // put, and a client holding the old descriptor would keep getting 304.
         var host = NewModule("VirtoCommerce.XFrontend");
         host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
 

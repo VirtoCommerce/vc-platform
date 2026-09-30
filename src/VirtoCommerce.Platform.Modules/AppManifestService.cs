@@ -294,10 +294,6 @@ public class AppManifestService : IAppManifestService
         return plugin;
     }
 
-    /// <summary>
-    /// The <c>contributions</c> object of <c>plugin.json</c> as compact JSON text. Anything but an
-    /// object is ignored with a warning — the plugin still loads, it just declares nothing.
-    /// </summary>
     private string ReadContributions(PluginManifestFile manifest, string pluginFolder)
     {
         if (manifest?.Contributions is not { } contributions ||
@@ -442,7 +438,7 @@ public class AppManifestService : IAppManifestService
                   .Append('/')
                   .Append(plugin.Remote.Exposed ?? string.Empty);
             }
-            // Only when declared, so a plugin without contributions keeps the fingerprint it had.
+            // Skipped when null so existing fingerprints stay unchanged.
             if (plugin.Contributions != null)
             {
                 sb.Append('|').Append(plugin.Contributions);

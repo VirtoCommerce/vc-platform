@@ -39,8 +39,7 @@ public class PluginEntry
     public PluginRemote Remote { get; set; }
 
     /// <summary>
-    /// The <c>contributions</c> object of the plugin's <c>plugin.json</c>, verbatim; <c>null</c>
-    /// when it declares none. Defined by the host app, not by the platform.
+    /// The <c>contributions</c> object of <c>plugin.json</c>, verbatim; <c>null</c> when absent.
     /// </summary>
     public object Contributions { get; set; }
 }

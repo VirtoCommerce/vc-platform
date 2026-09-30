@@ -130,8 +130,7 @@ public class AppManifestController : ControllerBase
                 Name = p.Remote.Name,
                 Exposed = p.Remote.Exposed,
             },
-            // Written as the object it is, not as a string: the service stores it as
-            // compact JSON produced by JsonSerializer, so it is valid JSON by construction.
+            // JRaw writes the stored JSON as an object, not a string.
             Contributions = p.Contributions == null ? null : new JRaw(p.Contributions),
         }).ToList(),
     };

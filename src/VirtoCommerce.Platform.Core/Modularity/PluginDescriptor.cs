@@ -15,10 +15,8 @@ public class PluginDescriptor
     public string Permission { get; set; }
 
     /// <summary>
-    /// The <c>contributions</c> object of the plugin's <c>plugin.json</c>, as compact JSON text,
-    /// or <c>null</c> when it declares none. Its shape belongs to the host app: the platform does
-    /// not interpret it, only serves it, so a host learns what a plugin contributes without
-    /// fetching anything of the plugin first.
+    /// The <c>contributions</c> object of <c>plugin.json</c> as compact JSON, or <c>null</c>.
+    /// Opaque to the platform; its shape is defined by the host app.
     /// </summary>
     public string Contributions { get; set; }
 }
