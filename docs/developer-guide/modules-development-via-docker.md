@@ -9,7 +9,7 @@ Read how to [Deploy module from source code](./deploy-from-source-code.md)
 
 ## Description
 
-Virto Commerce Team have created [docker-compose.yml](https://github.com/VirtoCommerce/vc-platform/blob/dev/DockerCompose/ModulesDevelop/docker-compose.yml) to run VC Platform 2Manager web app.
+Virto Commerce Team have created [docker-compose.yml](https://github.com/VirtoCommerce/vc-platform/blob/dev/DockerCompose/ModulesDevelop/docker-compose.yml) to run VC Platform Manager web app.
 
 VC Platform Manager web app was containerized as several services: Web service (Platform manager), External services for MS SQL Server, Elastic Search and Redis. It's run as a multi-container app and orchestrated by using _Docker Compose_.
 
@@ -17,18 +17,20 @@ VC Platform Manager web app was containerized as several services: Web service (
 
 > _Storefront_ and _Theme_ are not included in this solution.
 
-Web service container is based on *virtocommerce/platform* latest Linux image.
+Web service container runs the published `ghcr.io/virtocommerce/platform` Linux image. The platform starts only after SQL Server, Elasticsearch and Redis report healthy.
 
 The Developer writes and builds code for a new module in Visual Studio locally, on host machine. In order to ensure that any code edits on host machine are automatically propagated to the container, `./Modules` and `./App_Data/Modules` folders on host machine is automatically mapped to `/opt/virtocommerce/platform/Modules` and `/opt/virtocommerce/platform/App_Data/Modules` folders in the container. This is only possible through bind mounting. When a path in the host is mounted to a path in the container, the contents of the host directory will completely overwrite whatever is in the container directory, regardless of whether the container directory has files which were not present in the host directory at mount time. The result is that the container directory will be an exact snapshot of the host directory. This makes the development experience feel more natural. This is done by volume mapping in *docker-compose* file.
 
 For the *docker* and *docker-compose* files configuring convenience, all configurable parameters have placed on separate *.env* file. In the *.env* file you can set values for:
 
-* **PLATFORM_VERSION** - tag for required *virtocommerce/platform* image (default value `dev-linux-latest`)
+* **PLATFORM_VERSION** - tag for required `ghcr.io/virtocommerce/platform` image (default value `dev-linux-latest`)
 * **MODULES_VOLUME** - path to the `./Modules` folder on host machine
 * **APP_DATA_MODULES** - path to the `./App_Data/Modules` folder on host machine
-* **DB_PASS** - SQl Server service password
+* **DB_PASS** - SQL Server `sa` password (must meet SQL Server password complexity rules)
 * **REDIS_PASS** - Redis service password (default value `passwd@123`)
-* **SEARCH_PROVIDER** - used in VC Platform search provider (default value ElasticSearch)
+* **SEARCH_PROVIDER** - used in VC Platform search provider (default value `ElasticSearch8`)
+
+Optional: **DOCKER_PLATFORM_PORT** (default `8090`), **DOCKER_SQL_PORT** (default `1433`), **DOCKER_ELASTIC_PORT** (default `9200`), **DOCKER_REDIS_PORT** (default `6379`) - host ports.
 
 ## Prerequisites
 
@@ -46,13 +48,7 @@ For the *docker* and *docker-compose* files configuring convenience, all configu
 ## How to use
 
 1. Copy [ModulesDevelop](https://github.com/VirtoCommerce/vc-platform/blob/dev/DockerCompose/ModulesDevelop/) folder to local machine
-2. Create an external network for the Docker engine. Run the following command in powershell with elevated admimistrator priviliges:
-
-```cmd
-docker network create nat
-```
-
-3. Parameterize values in the *.env* file.
+2. Parameterize values in the *.env* file.
 
 ```cmd
 APP_DATA_MODULES=c:\path\to\folder\modules
@@ -63,21 +59,21 @@ You can also parameterize the platform version and search provider in the .env f
 ```cmd
 PLATFORM_VERSION=dev-linux-latest
 ...
-SEARCH_PROVIDER=ElasticSearch
+SEARCH_PROVIDER=ElasticSearch8
 ```
 
-4. Build and launch `docker-compose` by command:
+3. Launch the containers by command:
 
 ```cmd
-docker-compose -f c:\path\to\modulesdevelop\docker-compose.yml up --build -d
+docker compose -f c:\path\to\modulesdevelop\docker-compose.yml up -d --wait
 ```
 
-5. Run Virto Commerce Platform Manager - http://localhost:8090/ (configure modules as sample data)
-6. [Create new module](./create-new-module.md) as described in the article
-7. Write code for new module
-8. Build new module
-9. Copy built module to `Modules` folder
-10. Debug new module
+4. Run Virto Commerce Platform Manager - http://localhost:8090/ (configure modules as sample data)
+5. [Create new module](./create-new-module.md) as described in the article
+6. Write code for new module
+7. Build new module
+8. Copy built module to `Modules` folder
+9. Debug new module
 
 ## Run Virto Commerce Platform Manager
 
@@ -118,10 +114,10 @@ If the new module has been rebuilt:
 
 ## Cleanup environment after debugging
 
-When debugging process has finished, stop `docker-compose` by command:
+When debugging process has finished, stop the containers by command:
 
 ```cmd
-docker-compose down
+docker compose -f c:\path\to\modulesdevelop\docker-compose.yml down
  ```
 
 Don't forget to delete newly created module from the `Modules` and `Modules\AppData` folders.

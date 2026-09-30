@@ -5,6 +5,5 @@ arrange:
   - deploy-from-source-code.md
   - deploy-module-from-source-code.md
   - create-new-module-advanced.md
-  - docker-app-development-workflow.md
   - modules-development-via-docker.md
   - ...
