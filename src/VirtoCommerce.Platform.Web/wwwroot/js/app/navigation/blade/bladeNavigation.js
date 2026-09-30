@@ -294,6 +294,24 @@ angular.module('platformWebApp')
             }
         }
 
+        // Extracts the error details from a response body. Returns undefined when the body carries no details
+        // (e.g. a ProblemDetails object without 'errors'), so the caller can fall back to the generic error.
+        function getErrorBody(data) {
+            if (angular.isArray(data)) {
+                // Bare list of validation errors, e.g. [{ propertyName: '...', errorMessage: '...' }]
+                var messages = _.filter(_.map(data, function (item) {
+                    return angular.isString(item) ? item : item && item.errorMessage;
+                }), function (message) { return !!message; });
+                return messages.length ? messages.join('<br>') : undefined;
+            }
+
+            if (data.exceptionMessage || data.message) {
+                return data.exceptionMessage || data.message;
+            }
+
+            return angular.isArray(data.errors) ? data.errors.join('<br>') : undefined;
+        }
+
         function clearError(blade) {
             if (blade) {
                 blade.isLoading = false;
@@ -474,7 +492,8 @@ angular.module('platformWebApp')
                     if (response) {
                         response.statusText = service.getStatusText(response);
                         blade.error = response.status && response.statusText ? response.status + ': ' + response.statusText : response;
-                        blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
+                        var errorBody = response.data ? getErrorBody(response.data) : undefined;
+                        blade.errorBody = errorBody !== undefined ? errorBody : blade.errorBody || blade.error;
                     }
                     else {
                         clearError(blade);
