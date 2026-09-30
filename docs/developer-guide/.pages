@@ -2,6 +2,7 @@ arrange:
   - create-new-module.md
   - swagger-endpoints.md
   - using-autorest-with-v3.md
+  - run-platform-in-visual-studio.md
   - deploy-from-source-code.md
   - deploy-module-from-source-code.md
   - create-new-module-advanced.md

@@ -24,7 +24,7 @@ To make a local build
     ```
 1. Build 
     ```console
-    dotnet build -c Development
+    dotnet build
     ```
 
 Or use Visual Studio
@@ -59,33 +59,7 @@ Or use Visual Studio
 
 ## Initial Configuration 
 
-1. Open the **appsettings.json** file in a text editor
-2. In the **ConnectionStrings** section change **VirtoCommerce** node (provided user should have permission to create new database):
-    ```json
-        "ConnectionStrings": {
-            "VirtoCommerce" : "Data Source={SQL Server URL};Initial Catalog={Database name};Persist Security Info=True;User ID={User name};Password={User password};MultipleActiveResultSets=True;Connect Timeout=30"
-        },
-    ```
-3. In the **Assets** section set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images
-    ```json
-    "Assets": {
-            "Provider": "FileSystem",
-            "FileSystem": {
-                "RootPath": "~/assets",
-                "PublicUrl": "http://localhost:10645/assets/" <-- Set your platform application url with port localhost:10645
-            },
-        },
-    ```
-4. In the **Content** section set public url for content `Content:FileSystem:PublicUrl` with url of your application, this step is needed in order for configure CMS content storage
-    ```json
-    "Content*": {
-            "Provider": "FileSystem",
-            "FileSystem": {
-                "RootPath": "~/cms-content",
-                "PublicUrl": "http://localhost:10645/cms-content/" <-- Set your platform application url with port localhost:10645
-            },
-        },
-    ```
+Don't edit `appsettings.json`, `appsettings.Development.json` or `Properties/launchSettings.json` to configure your machine. Keep your connection string and other settings in user secrets, and module folders in environment variables, as described in [Run the platform from source in Visual Studio](./run-platform-in-visual-studio.md#2-configure-your-machine-not-the-repository).
 
 ## Running
 
@@ -97,8 +71,10 @@ To run platform by dotnet CLI:
     ```
 2. Run
     ```console
-    dotnet run -c Development --no-launch-profile
+    dotnet run
     ```
+
+`dotnet run` uses the `VirtoCommerce.Platform.Web` launch profile, which sets the `Development` environment and the `http://localhost:10645` URL. Don't pass `--no-launch-profile`: the platform then starts in the `Production` environment and ignores your user secrets and `appsettings.Development.json`.
 
 !!! note
     you can add `--no-build` flag to speed the start, if you have compiled the solution already.
@@ -114,6 +90,8 @@ Or run from Visual Studio
 * On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in
 
 **Note:** Don't forget to change them after the first sign in.
+
+* Open `http://localhost:10645/health` to check that the database, cache and modules report `Healthy`
 
 ## Backend Debugging
 
@@ -141,23 +119,18 @@ Some additional tips for developing in specific IDEs.
 
 ### Visual Studio
 
-!!! note
-    If you have node-sass issues, run this command
-    ```console
-    npm rebuild node-sass
-    ```
+Restart the Platform to load the new module assemblies into the Platform's application process.
 
-Run to trust the .NET Core SDK HTTPS development certificate:
+Recommend to install [WebPack Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.WebPackTaskRunner) and run webpack tasks from Visual Studio. 
+
+To run the platform over HTTPS, trust the ASP.NET Core development certificate:
 
 ```console
-dotnet.exe dev-certs https --trust
+dotnet dev-certs https --trust
 ```
 
-Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust).
-
-Restart the Platform to load the new module assemblies into the Platform's application process
-Recommend to install [WebPack Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.WebPackTaskRunner) and run webpack tasks from Visual Studio. 
+Read more about [enforcing HTTPS in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/enforcing-ssl#trust-the-aspnet-core-https-development-certificate).
 
 ## Troubleshooting
 
-* ['Could not load file or assembly GitVersionTask.MsBuild' when starting the platform through 'dotnet run' command](https://community.virtocommerce.com/t/could-not-load-file-or-assembly-gitversiontask-msbuild-when-starting-the-platform-through-dotnet-run-command/203)
+See [Run the platform from source in Visual Studio](./run-platform-in-visual-studio.md#troubleshooting).

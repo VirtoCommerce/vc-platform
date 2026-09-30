@@ -104,6 +104,10 @@ The Extensibility Framework lets you add entities, override services, extend API
 
 📖 [Deploy on Virto Cloud](https://docs.virtocommerce.org/platform/deployment-on-cloud/3.0/deploy-on-virto-cloud/)
 
+## 🛠️ Run the Platform from Source in Visual Studio
+
+Working on the platform code itself? 📖 [Run the platform from source in Visual Studio](docs/developer-guide/run-platform-in-visual-studio.md) covers the prerequisites, where to keep your own connection strings and settings (user secrets and environment variables, never the shared `appsettings*.json`), and how to start the platform with F5 or `dotnet run`.
+
 ## Virto Commerce Release Strategy
 Virto Commerce ships as **modules** — independently versioned, independently deployable units. Modules combine into bundles you can pick from based on how you want to balance stability and speed.
 
