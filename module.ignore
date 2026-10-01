@@ -3,6 +3,7 @@ Azure.Identity.dll
 EntityFrameworkCore.Triggers.dll
 FluentValidation.dll
 Humanizer.dll
+libmsalruntime.so
 MessagePack.Annotations.dll
 MessagePack.dll
 Microsoft.AspNetCore.Authentication.JwtBearer.dll
@@ -58,6 +59,11 @@ Microsoft.NET.StringTools.dll
 Microsoft.OpenApi.dll
 Microsoft.SqlServer.Server.dll
 Microsoft.Win32.SystemEvents.dll
+msalruntime.dll
+msalruntime.dylib
+msalruntime_x86.dll
+msalruntime_arm64.dll
+msalruntime_arm64.dylib
 MySqlConnector.dll
 Nager.Country.dll
 NetEscapades.AspNetCore.SecurityHeaders.dll
@@ -139,7 +145,6 @@ VirtoCommerce.Platform.Data.MySql.dll
 VirtoCommerce.Platform.Data.PostgreSql.dll
 VirtoCommerce.Platform.Data.SqlServer.dll
 VirtoCommerce.Platform.DistributedLock.dll
-VirtoCommerce.Platform.Hangfire.dll
 VirtoCommerce.Platform.Modules.dll
 VirtoCommerce.Platform.Security.dll
 VirtoCommerce.Platform.Web.dll
