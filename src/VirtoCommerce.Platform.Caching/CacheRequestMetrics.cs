@@ -1,102 +1,182 @@
 using System;
-using System.Collections.Generic;
+using System.Buffers;
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 
 namespace VirtoCommerce.Platform.Caching;
 
 internal sealed class CacheRequestMetrics : IDisposable
 {
-    // Bound trace size even when a custom cache implementation supplies many group names.
     private const int MaxGroups = 64;
+    private const int MaxSummaryBytes = 8192;
     private static readonly AsyncLocal<CacheRequestMetrics> _current = new();
-    private readonly object _lock = new();
+    private static volatile bool _hasStarted;
     private readonly Activity _activity;
-    private readonly CacheRequestMetrics _previous;
-    private readonly Dictionary<string, (long Hits, long Misses)> _groups = new(StringComparer.Ordinal);
-    private long _hits;
-    private long _misses;
-    private bool _groupsTruncated;
-    private bool _completed;
+    private readonly object _groupLock = new();
+    private ConcurrentDictionary<string, Counts> _groups;
+    private Counts _overflow;
+    private int _groupCount;
+    private int _completed;
+    private int _writers;
 
     private CacheRequestMetrics(Activity activity)
     {
         _activity = activity;
-        _previous = _current.Value;
+        _hasStarted = true;
         _current.Value = this;
     }
 
-    public static bool IsEnabled => _current.Value is not null;
+    public static bool HasStarted => _hasStarted;
+    public static CacheRequestMetrics Current
+    {
+        get
+        {
+            var current = _current.Value;
+            return current is not null && Volatile.Read(ref current._completed) == 0 ? current : null;
+        }
+    }
 
     public static CacheRequestMetrics Begin(Activity activity)
     {
-        return activity?.IsAllDataRequested == true ? new CacheRequestMetrics(activity) : null;
+        return activity is { IsAllDataRequested: true, Recorded: true } ? new CacheRequestMetrics(activity) : null;
     }
 
-    public static void Record(bool hit, string cacheName)
+    public void Record(long hits, long misses, string cacheName)
     {
-        _current.Value?.RecordLookup(hit, cacheName);
-    }
-
-    private void RecordLookup(bool hit, string cacheName)
-    {
-        lock (_lock)
+        if ((hits == 0 && misses == 0) || Volatile.Read(ref _completed) != 0)
         {
-            // AsyncLocal can flow into detached work. It must not change a completed request's totals.
-            if (_completed)
+            return;
+        }
+
+        Interlocked.Increment(ref _writers);
+        try
+        {
+            // Dispose closes admission before waiting for admitted writers. Detached work cannot
+            // mutate the completed snapshot, and a lookup already being recorded is not lost.
+            if (Volatile.Read(ref _completed) != 0)
             {
                 return;
             }
 
-            if (hit)
+            var groups = Volatile.Read(ref _groups);
+            if (groups is null || !groups.TryGetValue(cacheName, out var counts))
             {
-                _hits++;
-            }
-            else
-            {
-                _misses++;
+                // Once full, repeated unretained groups also stay off the monitor path.
+                counts = Volatile.Read(ref _groupCount) == MaxGroups ? Volatile.Read(ref _overflow) : null;
+                counts ??= GetOrAddGroup(cacheName);
             }
 
-            if (_groups.TryGetValue(cacheName, out var counts) || _groups.Count < MaxGroups)
+            if (hits != 0)
             {
-                _groups[cacheName] = (counts.Hits + (hit ? 1 : 0), counts.Misses + (hit ? 0 : 1));
+                Interlocked.Add(ref counts.Hits, hits);
             }
-            else
+            if (misses != 0)
             {
-                _groupsTruncated = true;
+                Interlocked.Add(ref counts.Misses, misses);
             }
+        }
+        finally
+        {
+            Interlocked.Decrement(ref _writers);
+        }
+    }
+
+    private Counts GetOrAddGroup(string cacheName)
+    {
+        // A lock is needed only when a group first appears, to enforce an exact bounded admission.
+        // Existing groups are read and incremented without a monitor, including parallel resolvers.
+        lock (_groupLock)
+        {
+            var groups = _groups;
+            if (groups is null)
+            {
+                groups = new ConcurrentDictionary<string, Counts>(concurrencyLevel: 1, capacity: 3, comparer: StringComparer.Ordinal);
+                Volatile.Write(ref _groups, groups);
+            }
+            if (groups.TryGetValue(cacheName, out var counts))
+            {
+                return counts;
+            }
+            if (_groupCount == MaxGroups)
+            {
+                return _overflow ??= new Counts();
+            }
+            counts = new Counts();
+            groups.TryAdd(cacheName, counts);
+            Volatile.Write(ref _groupCount, _groupCount + 1);
+            return counts;
         }
     }
 
     public void Dispose()
     {
-        lock (_lock)
+        if (Interlocked.Exchange(ref _completed, 1) != 0)
         {
-            if (_completed)
-            {
-                return;
-            }
-
-            _completed = true;
-            _current.Value = _previous;
-            _activity.SetTag("cache.hits", _hits);
-            _activity.SetTag("cache.misses", _misses);
-
-            foreach (var (name, counts) in _groups)
-            {
-                // One summary per group, not an event/span per lookup.
-                _activity.AddEvent(new ActivityEvent("cache.lookup.summary", tags: new ActivityTagsCollection
-                {
-                    { "cache.name", name },
-                    { "cache.hits", counts.Hits },
-                    { "cache.misses", counts.Misses },
-                }));
-            }
-
-            if (_groupsTruncated)
-            {
-                _activity.SetTag("cache.groups.truncated", true);
-            }
+            return;
         }
+
+        var spin = new SpinWait();
+        while (Volatile.Read(ref _writers) != 0)
+        {
+            spin.SpinOnce();
+        }
+
+        if (_groups is null)
+        {
+            return;
+        }
+
+        var hits = _overflow?.Hits ?? 0;
+        var misses = _overflow?.Misses ?? 0;
+        var truncated = hits != 0 || misses != 0;
+        var buffer = new ArrayBufferWriter<byte>();
+        using var writer = new Utf8JsonWriter(buffer);
+        writer.WriteStartArray();
+        foreach (var (name, counts) in _groups)
+        {
+            hits += counts.Hits;
+            misses += counts.Misses;
+            CacheMetrics.RecordRequestGroup(name, counts.Hits, counts.Misses);
+            var encodedName = JsonEncodedText.Encode(name);
+            // JSON punctuation, optional comma and closing outer bracket; the budget is UTF-8 bytes.
+            var entryBytes = encodedName.EncodedUtf8Bytes.Length + NumberLength(counts.Hits) + NumberLength(counts.Misses) + 7;
+            if (writer.BytesCommitted + writer.BytesPending + entryBytes + 1 > MaxSummaryBytes)
+            {
+                truncated = true;
+                continue;
+            }
+            writer.WriteStartArray();
+            writer.WriteStringValue(encodedName);
+            writer.WriteNumberValue(counts.Hits);
+            writer.WriteNumberValue(counts.Misses);
+            writer.WriteEndArray();
+        }
+        writer.WriteEndArray();
+        writer.Flush();
+
+        _activity.SetTag("cache.hits", hits);
+        _activity.SetTag("cache.misses", misses);
+        _activity.SetTag("cache.lookup.summary", Encoding.UTF8.GetString(buffer.WrittenSpan));
+        if (truncated)
+        {
+            _activity.SetTag("cache.groups.truncated", true);
+        }
+    }
+
+    private static int NumberLength(long value)
+    {
+        Span<char> digits = stackalloc char[20];
+        value.TryFormat(digits, out var written, provider: CultureInfo.InvariantCulture);
+        return written;
+    }
+
+    private sealed class Counts
+    {
+        public long Hits;
+        public long Misses;
     }
 }

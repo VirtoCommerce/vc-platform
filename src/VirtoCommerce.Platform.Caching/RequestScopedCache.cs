@@ -32,12 +32,12 @@ public class RequestScopedCache : IRequestScopedCache
 
     public virtual Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> factory)
     {
-        return GetOrAddAsync(key, CacheKey.GetCacheName(key) ?? nameof(RequestScopedCache), factory);
-    }
-
-    public virtual Task<T> GetOrAddAsync<T>(string key, string cacheName, Func<Task<T>> factory)
-    {
         ArgumentNullException.ThrowIfNull(factory);
+
+        if (!CacheMetrics.TryGetRecorder(out var request))
+        {
+            return (Task<T>)_cache.GetOrAdd(key, static (_, arg) => new Lazy<Task>(arg), factory).Value;
+        }
 
         var hit = _cache.TryGetValue(key, out var lazy);
         if (!hit)
@@ -47,7 +47,7 @@ public class RequestScopedCache : IRequestScopedCache
             hit = !ReferenceEquals(lazy, candidate);
         }
 
-        CacheMetrics.Record(hit, string.IsNullOrWhiteSpace(cacheName) ? nameof(RequestScopedCache) : cacheName);
+        CacheMetrics.Record(hit ? 1 : 0, hit ? 0 : 1, CacheKey.GetCacheName(key) ?? nameof(RequestScopedCache), request);
         return (Task<T>)lazy.Value;
     }
 
@@ -76,6 +76,8 @@ public class RequestScopedCache : IRequestScopedCache
         var result = new Dictionary<string, T>(ids.Count, StringComparer.OrdinalIgnoreCase);
         List<KeyValuePair<string, Task<T>>> pending = null;
         Dictionary<string, TaskCompletionSource<T>> owned = null;
+        var recordMetrics = CacheMetrics.TryGetRecorder(out var request);
+        long hits = 0;
 
         try
         {
@@ -89,16 +91,19 @@ public class RequestScopedCache : IRequestScopedCache
                 }
 
                 var task = GetOrReserve<T>((keyPrefix, id), out var reservation);
-                CacheMetrics.Record(reservation is null, CacheKey.GetCacheName(keyPrefix) ?? keyPrefix);
                 if (reservation is not null)
                 {
                     (owned ??= new Dictionary<string, TaskCompletionSource<T>>(StringComparer.OrdinalIgnoreCase)).Add(id, reservation);
+                }
+                else
+                {
+                    hits++;
                 }
 
                 // A just-won reservation task is never completed here, so it lands in pending.
                 if (task.IsCompletedSuccessfully)
                 {
-                    await CollectHitAsync(result, id, task);
+                    CollectHit(result, id, task);
                 }
                 else
                 {
@@ -114,6 +119,13 @@ public class RequestScopedCache : IRequestScopedCache
             // type mismatch does not negatively cache the innocent ids this call happened to own.
             ReleaseReservations(keyPrefix, owned, ex);
             throw;
+        }
+        finally
+        {
+            if (recordMetrics)
+            {
+                CacheMetrics.Record(hits, owned?.Count ?? 0, CacheKey.GetCacheName(keyPrefix) ?? nameof(RequestScopedCache), request);
+            }
         }
 
         if (owned is not null)
@@ -137,11 +149,11 @@ public class RequestScopedCache : IRequestScopedCache
         return result;
     }
 
-    private static async Task CollectHitAsync<T>(Dictionary<string, T> result, string id, Task<T> task)
+    private static void CollectHit<T>(Dictionary<string, T> result, string id, Task<T> task)
         where T : class
     {
-        // Called for completed tasks only - the await continues synchronously, no allocation.
-        var value = await task;
+        // Called only after IsCompletedSuccessfully; this cannot block or throw a cached load failure.
+        var value = task.GetAwaiter().GetResult();
         if (value is not null)
         {
             result[id] = value;

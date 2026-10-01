@@ -40,15 +40,6 @@ public interface IRequestScopedCache
     Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> factory);
 
     /// <summary>
-    /// Gets or adds a value with a stable, low-cardinality name for cache metrics.
-    /// The name does not participate in cache key identity. Existing implementations fall back to the unnamed API.
-    /// </summary>
-    Task<T> GetOrAddAsync<T>(string key, string cacheName, Func<Task<T>> factory)
-    {
-        return GetOrAddAsync(key, factory);
-    }
-
-    /// <summary>
     /// Batch by-id variant: serves ids already loaded during this request from the cache and loads only the
     /// not-yet-cached ids in a single <paramref name="loadMissing"/> call, caching each item under its own
     /// (<paramref name="keyPrefix"/>, id) key - across overlapping id-sets, including concurrent callers,

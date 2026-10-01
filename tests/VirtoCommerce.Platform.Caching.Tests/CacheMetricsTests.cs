@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Moq;
 using VirtoCommerce.Platform.Core.Caching;
 using Xunit;
 
@@ -143,7 +144,7 @@ public class CacheMetricsTests : MemoryCacheTestsBase
         var loads = 0;
         var calls = Enumerable.Range(0, 40).Select(_ => Task.Run(() =>
         {
-            var result = cache.GetOrAddAsync("key", "search", () =>
+            var result = cache.GetOrAddAsync("key", () =>
             {
                 Interlocked.Increment(ref loads);
                 return completion.Task;
@@ -158,18 +159,17 @@ public class CacheMetricsTests : MemoryCacheTestsBase
         completion.SetResult(42);
         Assert.All(await Task.WhenAll(calls), value => Assert.Equal(42, value));
         Assert.Equal(1, loads);
-        measurements.AssertCounts("search", hits: 39, misses: 1);
+        measurements.AssertCounts(nameof(RequestScopedCache), hits: 39, misses: 1);
     }
 
     [Fact]
-    public async Task RequestCache_NameDoesNotChangeIdentityAndFaultIsAHit()
+    public async Task RequestCache_CachedFaultIsAHit()
     {
         using var measurements = new Measurements();
         IRequestScopedCache cache = new RequestScopedCache();
         await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetOrAddAsync<int>("key", () => throw new InvalidOperationException()));
-        await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetOrAddAsync("key", "named", () => Task.FromResult(42)));
-        measurements.AssertCounts(nameof(RequestScopedCache), hits: 0, misses: 1);
-        measurements.AssertCounts("named", hits: 1, misses: 0);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetOrAddAsync("key", () => Task.FromResult(42)));
+        measurements.AssertCounts(nameof(RequestScopedCache), hits: 1, misses: 1);
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public class CacheMetricsTests : MemoryCacheTestsBase
         var cache = new RequestScopedCache();
         await cache.GetOrLoadMapByIdsAsync<string>("products", ["a", "A", "b", null, ""], x => x, _ => Task.FromResult<IList<string>>(["a"]));
         await cache.GetOrLoadMapByIdsAsync<string>("products", ["a", "b"], x => x, _ => throw new InvalidOperationException());
-        measurements.AssertCounts("products", hits: 3, misses: 2);
+        measurements.AssertCounts(nameof(RequestScopedCache), hits: 3, misses: 2);
     }
 
     [Fact]
@@ -192,14 +192,65 @@ public class CacheMetricsTests : MemoryCacheTestsBase
         var second = cache.GetOrLoadMapByIdsAsync<string>("products", ["b", "c"], x => x, ids => Task.FromResult<IList<string>>(ids.ToList()));
         completion.SetResult(["a", "b"]);
         await Task.WhenAll(first, second);
-        measurements.AssertCounts("products", hits: 1, misses: 3);
+        measurements.AssertCounts(nameof(RequestScopedCache), hits: 1, misses: 3);
     }
 
     [Fact]
-    public async Task NamedOverload_DefaultInterfaceImplementationPreservesExistingImplementers()
+    public async Task OriginalInterfacePreservesExistingImplementers()
     {
         IRequestScopedCache cache = new LegacyCache();
-        Assert.Equal(42, await cache.GetOrAddAsync("key", "name", () => Task.FromResult(42)));
+        Assert.Equal(42, await cache.GetOrAddAsync("key", () => Task.FromResult(42)));
+    }
+
+    [Fact]
+    public async Task OriginalVirtualAndMockRemainTheDispatchPoints()
+    {
+        IRequestScopedCache derived = new BypassingCache();
+        Assert.Equal(1, await derived.GetOrAddAsync("key", () => Task.FromResult(1)));
+        Assert.Equal(2, await derived.GetOrAddAsync("key", () => Task.FromResult(2)));
+
+        var mock = new Mock<IRequestScopedCache>();
+        mock.Setup(x => x.GetOrAddAsync("key", It.IsAny<Func<Task<int>>>())).ReturnsAsync(42);
+        Assert.Equal(42, await mock.Object.GetOrAddAsync("key", () => Task.FromResult(0)));
+        mock.Verify(x => x.GetOrAddAsync("key", It.IsAny<Func<Task<int>>>()), Times.Once);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(10)]
+    public async Task PlatformBatch_ColdAndWarmCountsArePhysicalLookups(int count)
+    {
+        using var measurements = new Measurements();
+        using var cache = GetPlatformMemoryCache();
+        var ids = Enumerable.Range(0, count).Select(i => i.ToString()).ToArray();
+        await cache.GetOrLoadByIdsAsync<string>("batch", ids, x => x,
+            missing => Task.FromResult<IList<string>>(missing.ToList()), (_, _, _) => { });
+        measurements.AssertCounts(nameof(PlatformMemoryCache), hits: 0, misses: 3 * count + 1);
+        await cache.GetOrLoadByIdsAsync<string>("batch", ids, x => x,
+            _ => throw new InvalidOperationException("Already cached"), (_, _, _) => { });
+        measurements.AssertCounts(nameof(PlatformMemoryCache), hits: count, misses: 3 * count + 1);
+    }
+
+    [Theory]
+    [InlineData(0, 9)]
+    [InlineData(9, 18)]
+    public async Task PlatformBatch_NineCachedEntitiesDoNotImplyNinetyPercentPhysicalHits(int missingIndex, int expectedHits)
+    {
+        using var cache = GetPlatformMemoryCache();
+        var ids = Enumerable.Range(0, 10).Select(i => i.ToString()).ToArray();
+        foreach (var id in ids.Where((_, index) => index != missingIndex))
+        {
+            cache.Set(CacheKey.With("batch", id), id);
+        }
+        using var measurements = new Measurements();
+        await cache.GetOrLoadByIdsAsync<string>("batch", ids, x => x,
+            missing => Task.FromResult<IList<string>>(missing.ToList()), (_, _, _) => { });
+        measurements.AssertCounts(nameof(PlatformMemoryCache), hits: expectedHits, misses: 4);
+    }
+
+    private sealed class BypassingCache : RequestScopedCache
+    {
+        public override Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> factory) => factory();
     }
 
     private sealed class LegacyCache : IRequestScopedCache

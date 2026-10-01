@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -18,11 +19,11 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
     [Fact]
     public async Task CapturesBothCachesOnServerActivityIncludingChildActivitiesWithoutMeterListener()
     {
-        using var server = new Activity("server").Start();
+        using var server = Sampled("server");
         using var outerChild = new Activity("module").Start();
         using var cache = GetPlatformMemoryCache();
-        CacheKey.RegisterCacheName(typeof(ProductOwner), typeof(Product));
-        var key = CacheKey.With(typeof(ProductOwner), "private-product-id");
+        CacheKey.RegisterCacheName(typeof(RequestMetricsProductOwner), typeof(Product));
+        var key = CacheKey.With(typeof(RequestMetricsProductOwner), "private-product-id");
         var middleware = CreateMiddleware(async httpContext =>
         {
             using var child = new Activity("graphql").Start();
@@ -42,14 +43,14 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
         await middleware.InvokeAsync(Context(server));
 
         AssertCounts(server, 3, 3);
-        var summary = Assert.Single(server.Events);
-        Assert.Equal("cache.lookup.summary", summary.Name);
-        Assert.Equal(nameof(Product), summary.Tags.Single(x => x.Key == "cache.name").Value);
-        Assert.Equal(3L, summary.Tags.Single(x => x.Key == "cache.hits").Value);
-        Assert.Equal(3L, summary.Tags.Single(x => x.Key == "cache.misses").Value);
+        var summary = Assert.Single(Summary(server));
+        Assert.Equal(nameof(Product), summary[0].GetString());
+        Assert.Equal(3L, summary[1].GetInt64());
+        Assert.Equal(3L, summary[2].GetInt64());
+        Assert.Empty(server.Events);
         Assert.Null(outerChild.GetTagItem("cache.hits"));
-        Assert.DoesNotContain("private-product-id", string.Join(',', summary.Tags));
-        Assert.DoesNotContain("secret-id", string.Join(',', summary.Tags));
+        Assert.DoesNotContain("private-product-id", summary.ToString());
+        Assert.DoesNotContain("secret-id", summary.ToString());
     }
 
     [Fact]
@@ -57,19 +58,19 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
     {
         var requests = Enumerable.Range(1, 8).Select(async requestNumber =>
         {
-            using var server = new Activity($"request-{requestNumber}").Start();
+            using var server = Sampled($"request-{requestNumber}");
             var middleware = CreateMiddleware(async httpContext =>
             {
                 var cache = new RequestScopedCache();
                 await Task.WhenAll(Enumerable.Range(0, requestNumber * 25).Select(i => Task.Run(async () =>
                 {
-                    await cache.GetOrAddAsync(i.ToString(), "Products", () => Task.FromResult(i));
-                    await cache.GetOrAddAsync<int>(i.ToString(), "Products", () => throw new Exception());
+                    await cache.GetOrAddAsync(i.ToString(), () => Task.FromResult(i));
+                    await cache.GetOrAddAsync<int>(i.ToString(), () => throw new Exception());
                 })));
             });
             await middleware.InvokeAsync(Context(server));
             AssertCounts(server, requestNumber * 25, requestNumber * 25);
-            Assert.Single(server.Events);
+            Assert.Single(Summary(server));
         });
 
         await Task.WhenAll(requests);
@@ -78,12 +79,12 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
     [Fact]
     public async Task ExceptionStillRecordsTotalsAndDoesNotLeakIntoFollowingRequest()
     {
-        using var failed = new Activity("failed").Start();
+        using var failed = Sampled("failed");
         var failure = new InvalidOperationException("Expected");
         var middleware = CreateMiddleware(async httpContext =>
         {
             var cache = new RequestScopedCache();
-            await cache.GetOrAddAsync<int>("key", "Products", () => throw failure);
+            await cache.GetOrAddAsync<int>("key", () => throw failure);
         });
 
         Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(() => middleware.InvokeAsync(Context(failed))));
@@ -92,7 +93,7 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
         var outside = new RequestScopedCache();
         await outside.GetOrAddAsync("outside", () => Task.FromResult(1));
         AssertCounts(failed, 0, 1);
-        using var next = new Activity("next").Start();
+        using var next = Sampled("next");
         await CreateMiddleware(httpContext => Task.CompletedTask).InvokeAsync(Context(next));
         AssertCounts(next, 0, 0);
         Assert.Empty(next.Events);
@@ -101,7 +102,7 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
     [Fact]
     public async Task DetachedWorkCannotChangeCompletedRequest()
     {
-        using var server = new Activity("server").Start();
+        using var server = Sampled("server");
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         Task detached = null;
         var middleware = CreateMiddleware(httpContext =>
@@ -109,7 +110,7 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
             detached = Task.Run(async () =>
             {
                 await release.Task;
-                await new RequestScopedCache().GetOrAddAsync("late-key", "Products", () => Task.FromResult(1));
+                await new RequestScopedCache().GetOrAddAsync("late-key", () => Task.FromResult(1));
             });
             return Task.CompletedTask;
         });
@@ -126,7 +127,7 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
     [InlineData(true)]
     public async Task MissingOrUnsampledServerActivityDoesNotCreateTraceData(bool unsampled)
     {
-        using var server = new Activity("server").Start();
+        using var server = Sampled("server");
         server.IsAllDataRequested = !unsampled;
         var context = unsampled ? Context(server) : new DefaultHttpContext();
         using var cache = GetPlatformMemoryCache();
@@ -143,29 +144,31 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
     }
 
     [Fact]
-    public async Task GroupLimitBoundsEventsWithoutLosingOverallCounts()
+    public async Task GroupLimitBoundsSummaryWithoutLosingOverallCounts()
     {
-        using var server = new Activity("server").Start();
+        using var server = Sampled("server");
         var middleware = CreateMiddleware(async httpContext =>
         {
             var cache = new RequestScopedCache();
-            for (var i = 0; i < 80; i++)
+            foreach (var type in typeof(object).Assembly.GetExportedTypes().DistinctBy(x => x.Name).Take(80))
             {
-                await cache.GetOrAddAsync(i.ToString(), $"Group{i}", () => Task.FromResult(i));
-                await cache.GetOrAddAsync<int>(i.ToString(), $"Group{i}", () => throw new Exception());
+                var key = CacheKey.With(type, "item");
+                await cache.GetOrAddAsync(key, () => Task.FromResult(1));
+                await cache.GetOrAddAsync<int>(key, () => throw new Exception());
             }
         });
 
         await middleware.InvokeAsync(Context(server));
         AssertCounts(server, 80, 80);
-        Assert.Equal(64, server.Events.Count());
+        Assert.Equal(64, Summary(server).Length);
+        Assert.Empty(server.Events);
         Assert.Equal(true, server.GetTagItem("cache.groups.truncated"));
     }
 
     [Fact]
     public async Task RedisInheritedLookupIsCountedOnce()
     {
-        using var server = new Activity("server").Start();
+        using var server = Sampled("server");
         using var cache = new RedisPlatformMemoryCacheTests().GetRedisPlatformMemoryCache();
         var middleware = CreateMiddleware(httpContext =>
         {
@@ -177,7 +180,7 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
 
         await middleware.InvokeAsync(Context(server));
         AssertCounts(server, 1, 1);
-        Assert.Single(server.Events);
+        Assert.Single(Summary(server));
     }
 
     private static CacheMetricsMiddleware CreateMiddleware(Func<HttpContext, Task> handler)
@@ -194,8 +197,26 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
 
     private static void AssertCounts(Activity activity, long hits, long misses)
     {
+        if (hits == 0 && misses == 0)
+        {
+            Assert.Null(activity.GetTagItem("cache.hits"));
+            Assert.Null(activity.GetTagItem("cache.misses"));
+            return;
+        }
         Assert.Equal(hits, activity.GetTagItem("cache.hits"));
         Assert.Equal(misses, activity.GetTagItem("cache.misses"));
+    }
+
+    private static JsonElement[][] Summary(Activity activity)
+    {
+        return JsonSerializer.Deserialize<JsonElement[][]>((string)activity.GetTagItem("cache.lookup.summary"));
+    }
+
+    private static Activity Sampled(string name)
+    {
+        var activity = new Activity(name).Start();
+        activity.ActivityTraceFlags = ActivityTraceFlags.Recorded;
+        return activity;
     }
 
     private sealed class HttpActivityFeature : IHttpActivityFeature
@@ -203,6 +224,6 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
         public Activity Activity { get; set; }
     }
 
-    private sealed class ProductOwner;
+    private sealed class RequestMetricsProductOwner;
     private sealed class Product;
 }

@@ -192,69 +192,71 @@ The default platform caching options can be changed from configuration:
 
 ## Cache hit/miss metrics
 
-The `VirtoCommerce.Platform.Caching` meter publishes the `virtocommerce.cache.requests` counter
-with `cache.request.type` (`hit` or `miss`) and `cache.name` tags. No consumer changes are required.
+The `VirtoCommerce.Platform.Caching` meter publishes two counters. Subscribe through the deployment's
+existing OpenTelemetry configuration; the platform does not depend on an Application Insights SDK.
 
-| Cache | One measurement | Name |
+| Instrument | Population | Dimensions |
 | --- | --- | --- |
-| `PlatformMemoryCache` and its Redis backplane variant | Each `TryGetValue` lookup | Logical model/owner name; `PlatformMemoryCache` for unclassified keys |
-| `RequestScopedCache.GetOrAddAsync` | Each call; only the entry reservation winner records a miss | Logical model/owner name, `RequestScopedCache` fallback, or the explicit name |
-| `RequestScopedCache.GetOrLoadMapByIdsAsync` | Each nonempty ID lookup; duplicate IDs are additional hits | Logical model/owner name for typed prefixes; otherwise the existing stable `keyPrefix` |
+| `virtocommerce.cache.requests` | Physical lookups, including internal rechecks; independent of trace sampling | `cache.request.type` = `hit` / `miss`, `cache.name` |
+| `virtocommerce.cache.request.groups` | One observation per retained cache group at completion of a sampled HTTP request | `cache.name`, `cache.outcome` = `hit_only` / `mixed` / `miss_only` |
+
+Neither instrument adds request IDs, trace IDs, entity IDs or full cache keys as dimensions.
+Listener failures are isolated from cache reads and request completion; a failing listener can lose
+telemetry but cannot fail a load or leave a request-scoped reservation incomplete.
 
 ### How `cache.name` is selected
 
-Keys created with `CacheKey.With(Type, ...)` register their stable owner prefix. At lookup time,
-`CacheKey.GetCacheName` reads the part before the first `:` and resolves it through the registered
-mapping:
+`CacheKey.With(Type, ...)` registers a stable type-owned prefix. Lookups resolve that registered prefix
+without allocating a substring. Existing key identity, case normalization and invalidation do not change.
 
-- Generic CRUD and search services register their runtime owner type against `TModel`. Their groups
-  use the model's type name, such as `CatalogProduct`, `Category`, or `InventoryInfo`.
-- Other type-owned keys use the owner type name, such as `SettingsManager`.
-- Unclassified memory-cache keys use `PlatformMemoryCache`. Ordinary unnamed request-scoped
-  by-key lookups use `RequestScopedCache` when no registered group is found.
-- An explicitly named request-scoped by-key lookup uses the supplied name. By-ID lookups use the
-  registered group when available, otherwise the caller's stable `keyPrefix`.
+- Generic CRUD and search services associate their runtime owner type with `TModel`, producing names
+  such as `CatalogProduct`, `Category` and `InventoryInfo`.
+- Other registered owners use their type name, such as `SettingsManager`.
+- Unclassified platform-memory keys use `PlatformMemoryCache`. Both request-scoped APIs use
+  `RequestScopedCache` for an unregistered prefix, even when the caller embeds request data in it.
+- Type names omit namespaces. If the same short owner prefix is registered against conflicting model
+  types, it permanently falls back to that owner prefix instead of changing with service resolution order.
 
-For example, after registering `ProductService` against `CatalogProduct`, a key such as
-`ProductService:GetAsync-Full-product123` receives `cache.name = CatalogProduct`. The method,
-response group, and product ID are not included in the group name. Type names omit namespaces;
-generic types use readable names including their type arguments.
+For example, `ProductService:GetAsync-Full-product123` is classified as `CatalogProduct` after
+`ProductService` registers that model. The method, response group and product ID never become tags.
+No per-key metadata is retained. Registration and model association are cached; repeated transient
+service construction does not rewrite the registry.
 
-This also works for modules compiled against the existing key API; no module rebuild is required.
-Unclassified memory-cache strings and object keys keep the fallback name rather than exposing
-arbitrary prefixes or request data. No per-key metadata is retained. Explicit names and fallback
-by-ID prefixes are supplied by callers and must remain stable, without IDs or request data.
-
-Custom services can associate their type-owned keys with a model by calling
-`CacheKey.RegisterCacheName(GetType(), typeof(MyModel))` during construction. Registration only
-changes telemetry classification; the generated keys, case normalization and invalidation stay unchanged.
+Custom services can call `CacheKey.RegisterCacheName(GetType(), typeof(MyModel))` during construction
+and build their keys through `CacheKey.With(GetType(), ...)`. This also works for modules compiled
+against the existing key API. `IRequestScopedCache.GetOrAddAsync(key, factory)` remains the by-key
+interface and virtual extension point; no named overload is required.
 
 ### Counting semantics
 
-These are cache lookups, not HTTP requests or factory invocations. Memory-cache helpers may recheck
-the cache under a lock: a cold `GetOrCreateExclusive` or `GetOrCreateExclusiveAsync` normally records
-two misses. Batch helpers also perform internal lookups. Redis delegates to the base implementation
-and does not add another measurement. Cached nulls, in-flight request-scoped loads and previously
-cached load failures are hits. Skipped null/empty IDs produce no measurement.
+These counters do not describe a logical entity hit rate, HTTP request count, factory invocations,
+saved database calls, freshness or elapsed time.
 
-To name a by-key request-scoped lookup, use the additional overload:
+| Operation | Physical observations |
+| --- | --- |
+| `PlatformMemoryCache.TryGetValue` (including Redis backplane variant) | One lookup; Redis does not add another observation |
+| Cold `GetOrCreateExclusive` / `GetOrCreateExclusiveAsync` | Two misses, including the recheck under the lock |
+| Cold `GetOrLoadByIdsAsync`, N distinct nonempty IDs | `3N + 1` misses: initial all-hit probe, N batch probes, two probes per missing ID |
+| Warm `GetOrLoadByIdsAsync`, N IDs | N hits |
+| `RequestScopedCache.GetOrAddAsync` | One lookup; the reservation winner misses, concurrent followers hit |
+| `RequestScopedCache.GetOrLoadMapByIdsAsync` | One lookup per nonempty input ID; duplicate IDs are additional hits; increments are batched per call |
 
-```csharp
-await requestCache.GetOrAddAsync(key, "ProductSearch", () => LoadProductsAsync());
-```
+A ten-ID platform batch with nine cached entities records 9 hits / 4 misses if the missing ID comes
+first (69% physical hits), or 18 hits / 4 misses if it comes last (82%). Neither is the logical 90%
+entity hit rate. Do not derive that rate from `virtocommerce.cache.requests`. A group with misses
+and **zero hits over an observation window** is a useful signal for keys that never match.
 
-Names must be stable and have low cardinality. Never put full cache keys, entity IDs or request data
-in the name. The name does not change key identity; null/blank names use `RequestScopedCache`.
-Existing signatures remain available. Custom implementations of `IRequestScopedCache` inherit a
-default overload that delegates to their existing unnamed method; they own any custom instrumentation.
+Cached nulls, in-flight request-scoped loads and cached request-scoped failures are hits. Null/empty
+IDs are skipped. These semantics include the existing helpers' internal probes, without changing
+how the helpers load, deduplicate or cache failures.
 
-Observe the meter locally without configuring an exporter:
+Observe locally:
 
 ```console
 dotnet-counters monitor --process-id <pid> --counters VirtoCommerce.Platform.Caching
 ```
 
-With the OpenTelemetry module, add the meter to the deployment's existing meter list:
+With the OpenTelemetry module, include the meter in the deployment's existing list:
 
 ```json
 {
@@ -264,26 +266,73 @@ With the OpenTelemetry module, add the meter to the deployment's existing meter 
 }
 ```
 
-The platform instrumentation uses .NET meters and HTTP activities without depending on an
-Application Insights SDK. Configure the telemetry exporter in the deployment separately.
-Use the sum of counter increments for hit rates. The metric is aggregated; request attribution is available on HTTP traces separately.
+### Cache lookups in one HTTP request
 
-### Cache lookups per HTTP request
+For an HTTP server activity with **both `IsAllDataRequested` and `Recorded` set**, a request with at
+least one lookup receives:
 
-When HTTP tracing records activity data (for example through the OpenTelemetry module), the platform adds these custom attributes to the completed HTTP server span:
+- `cache.hits` and `cache.misses`: numeric totals across both cache implementations.
+- `cache.lookup.summary`: compact JSON arrays `[cacheName, hits, misses]`, for example
+  `[["CatalogProduct",28,0],["Category",3,1]]`.
+- `cache.groups.truncated=true` only if a detail limit was reached.
 
-- `cache.hits`: total successful cache lookups during this request.
-- `cache.misses`: total unsuccessful cache lookups during this request.
+In Aspire, select the HTTP server span under **Traces** and inspect these attributes. No per-group
+`ActivityEvent` is emitted. This avoids the Azure Monitor exporter's separate `traces` telemetry
+item for every such event, while keeping per-group counts on the original request.
 
-The server span also contains one `cache.lookup.summary` event per cache group, with `cache.name`, `cache.hits`, and `cache.misses`. In Aspire, open **Traces**, select the HTTP request and inspect its server span attributes and events. These summaries use the same group names and physical lookup semantics as the aggregate counter. The combined total includes both platform memory cache and request-scoped cache lookups.
+Lookups inside awaited child activities and parallel work belong to the HTTP server activity,
+obtained through `IHttpActivityFeature`, rather than whichever child happens to be current.
+Concurrent requests remain isolated. Completion also runs on downstream failure. Late detached
+work cannot change the completed snapshot. Background lookups still contribute to the aggregate
+physical counter when subscribed.
 
-Lookups inside awaited child activities and parallel work contribute to the owning HTTP request. Concurrent requests remain isolated. Totals are finalized even if downstream code throws; work that continues after the request middleware has completed cannot change them. Background work outside the request remains in the aggregate metric only. An HTTP trace with no cache lookups receives zero totals.
+There is no summary for an absent activity, legacy unsampled activity, `RecordOnly` sampling result,
+or request without lookups. Request attribution does not require a meter listener. An unexported
+trace cannot be inspected.
 
-Tracing does not require subscribing to the cache meter. If the HTTP activity is absent or does not request activity data, request summaries are not allocated. Sampling and exporter limits still apply: an unexported trace cannot be inspected. This uses `System.Diagnostics.Activity` and does not depend on an Application Insights SDK version.
+Detail is bounded to the first 64 admitted groups and 8 KiB of UTF-8 JSON. Truncation never removes
+lookups from overall totals. An exporter can impose a smaller attribute budget; configure it to
+retain the summary if using this drill-down. A storefront action may issue several HTTP requests,
+each with its own summary.
 
-The breakdown is bounded to the first 64 distinct groups in a request. If that limit is exceeded, `cache.groups.truncated=true` indicates an incomplete breakdown; overall hit/miss totals still include every group. Exporter event limits may further restrict the events retained.
+### Application Insights SDK 3.x / Azure Monitor
 
-No request/trace IDs or full cache keys are added as metric dimensions. A storefront action can issue several HTTP requests, each with its own summary. Counts do not measure elapsed time, saved database calls, cache freshness, or lookups inside unrelated private caches.
+The Azure Monitor exporter stores these span attributes as **strings in `customDimensions`**, not
+`customMeasurements`. Convert them in KQL when inspecting an individual request:
+
+```kusto
+requests
+| where id == "<request-span-id>"
+| extend cacheHits = tolong(customDimensions["cache.hits"]),
+         cacheMisses = tolong(customDimensions["cache.misses"]),
+         groups = parse_json(tostring(customDimensions["cache.lookup.summary"]))
+| mv-expand group = groups
+| project timestamp, operation_Id, id,
+          cacheName = tostring(group[0]), hits = tolong(group[1]), misses = tolong(group[2]),
+          cacheHits, cacheMisses,
+          truncated = tobool(customDimensions["cache.groups.truncated"])
+```
+
+For an aggregate signal such as “in how many sampled requests did this cache never hit”, use the
+request-group counter. It emits once per retained group, at completion, including failed requests.
+Its maximum is 64 group observations per sampled request; groups beyond that bound are omitted.
+The JSON byte budget does not further limit the metric's admitted groups.
+
+```kusto
+customMetrics
+| where name == "virtocommerce.cache.request.groups"
+| extend cacheName = tostring(customDimensions["cache.name"]),
+         outcome = tostring(customDimensions["cache.outcome"])
+| summarize hitOnly = sumif(valueSum, outcome == "hit_only"),
+            mixed = sumif(valueSum, outcome == "mixed"),
+            missOnly = sumif(valueSum, outcome == "miss_only") by cacheName
+| extend missOnlyRatio = todouble(missOnly) / (hitOnly + mixed + missOnly)
+```
+
+This is a **sampled population** signal: compare outcome proportions with the sampling policy and
+truncation in mind. It is not an exact all-traffic request count or an entity hit rate. The physical
+lookup counter remains independent of sampling. Exporter configuration and delivery still determine
+which telemetry reaches Azure.
 
 ## Scaling
 
