@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -5,13 +6,17 @@ namespace VirtoCommerce.Platform.Core.Events;
 
 public static class ApplicationBuilderExtensions
 {
+    // The handler is not constructed here. A ScopedEventHandler stands in for it and resolves it from a DI scope of its own
+    // for every event, so the handler gets exactly the lifetime it was registered with.
     public static IApplicationBuilder RegisterEventHandler<TEvent, THandler>(this IApplicationBuilder applicationBuilder)
         where TEvent : IEvent
         where THandler : IEventHandler<TEvent>
     {
-        var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
-        var handler = applicationBuilder.ApplicationServices.GetRequiredService<THandler>();
-        registrar.RegisterEventHandler(handler);
+        var services = applicationBuilder.ApplicationServices;
+        CheckRegistered<THandler>(services);
+
+        var registrar = services.GetRequiredService<IEventHandlerRegistrar>();
+        registrar.RegisterEventHandler<TEvent>(new ScopedEventHandler<TEvent, THandler>(services.GetRequiredService<IServiceScopeFactory>()));
         return applicationBuilder;
     }
 
@@ -19,9 +24,11 @@ public static class ApplicationBuilderExtensions
         where TEvent : IEvent
         where THandler : ICancellableEventHandler<TEvent>
     {
-        var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
-        var handler = applicationBuilder.ApplicationServices.GetRequiredService<THandler>();
-        registrar.RegisterEventHandler(handler);
+        var services = applicationBuilder.ApplicationServices;
+        CheckRegistered<THandler>(services);
+
+        var registrar = services.GetRequiredService<IEventHandlerRegistrar>();
+        registrar.RegisterEventHandler<TEvent>(new ScopedCancellableEventHandler<TEvent, THandler>(services.GetRequiredService<IServiceScopeFactory>()));
         return applicationBuilder;
     }
 
@@ -56,5 +63,16 @@ public static class ApplicationBuilderExtensions
         var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
         registrar.UnregisterAllEventHandlers();
         return applicationBuilder;
+    }
+
+    // A handler the module forgot to add to the service collection fails here, at startup, without constructing anything.
+    private static void CheckRegistered<THandler>(IServiceProvider services)
+    {
+        var isService = services.GetService<IServiceProviderIsService>();
+
+        if (isService != null && !isService.IsService(typeof(THandler)))
+        {
+            throw new InvalidOperationException($"Event handler '{typeof(THandler)}' is not registered in the service collection.");
+        }
     }
 }
