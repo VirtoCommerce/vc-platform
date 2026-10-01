@@ -87,6 +87,76 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
             // Assert
             fromArray.Should().Be(expected);
             fromSpan.Should().Be(expected);
+            CacheKey.GetCacheName(fromArray).Should().Be(nameof(CacheKeyTests));
+            CacheKey.GetCacheName(CacheKey.Normalize(fromSpan)).Should().Be(nameof(CacheKeyTests));
+        }
+
+        [Fact]
+        public void ConflictingShortOwnerNamesSwitchOnceToPermanentOwnerFallback()
+        {
+            var key = CacheKey.With(typeof(First.CollidingOwner), "private-id");
+            CacheKey.RegisterCacheName(typeof(First.CollidingOwner), typeof(FirstModel));
+            CacheKey.GetCacheName(key).Should().Be(nameof(FirstModel));
+            CacheKey.RegisterCacheName(typeof(Second.CollidingOwner), typeof(SecondModel));
+            for (var i = 0; i < 100; i++)
+            {
+                CacheKey.RegisterCacheName(typeof(First.CollidingOwner), typeof(FirstModel));
+                CacheKey.RegisterCacheName(typeof(Second.CollidingOwner), typeof(SecondModel));
+                CacheKey.GetCacheName(key.ToUpperInvariant()).Should().Be(nameof(First.CollidingOwner));
+            }
+            CacheKey.With(typeof(Second.CollidingOwner), "private-id").Should().Be(key);
+        }
+
+        [Fact]
+        [Trait("Contract", "Compatibility")]
+        public void With_CaseInsensitiveOwnerCollision_PreservesEachOriginalKeyPrefix()
+        {
+            // Pins original key identity. This already passed on d0ba70fa; it caught the later,
+            // intermediate regression where case-insensitive telemetry metadata supplied key spelling.
+            var parts = new[] { "id" };
+            var first = CacheKey.With(typeof(CaseDistinctOwner), "id");
+            var second = CacheKey.With(typeof(CASEDISTINCTOWNER), parts);
+
+            first.Should().Be($"{typeof(CaseDistinctOwner).GetCacheKey()}:id");
+            second.Should().Be($"{typeof(CASEDISTINCTOWNER).GetCacheKey()}:id");
+            second.Should().NotBe(first);
+            CacheKey.RegisterCacheName(typeof(CaseDistinctOwner), typeof(FirstModel));
+            CacheKey.RegisterCacheName(typeof(CASEDISTINCTOWNER), typeof(SecondModel));
+            CacheKey.GetCacheName(first).Should().Be(CacheKey.GetCacheName(second));
+            CacheKey.With(typeof(CASEDISTINCTOWNER), "id").Should().Be(second);
+        }
+
+        private static class First
+        {
+            public sealed class CollidingOwner;
+        }
+
+        private static class Second
+        {
+            public sealed class CollidingOwner;
+        }
+
+        private sealed class FirstModel;
+        private sealed class SecondModel;
+        private sealed class CaseDistinctOwner;
+        private sealed class CASEDISTINCTOWNER;
+
+        [Fact]
+        public void UnregisteredOwnerWithSameShortNameSharesExistingModelLabel()
+        {
+            CacheKey.RegisterCacheName(typeof(Registered.SharedLabelOwner), typeof(FirstModel));
+            var key = CacheKey.With(typeof(Unregistered.SharedLabelOwner), "id");
+            CacheKey.GetCacheName(key).Should().Be(nameof(FirstModel));
+        }
+
+        private static class Registered
+        {
+            public sealed class SharedLabelOwner;
+        }
+
+        private static class Unregistered
+        {
+            public sealed class SharedLabelOwner;
         }
     }
 }
