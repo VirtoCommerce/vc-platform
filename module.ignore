@@ -44,7 +44,9 @@ Microsoft.Extensions.Resilience.dll
 Microsoft.Extensions.Telemetry.Abstractions.dll
 Microsoft.Extensions.Telemetry.dll
 Microsoft.Identity.Client.dll
+Microsoft.Identity.Client.Broker.dll
 Microsoft.Identity.Client.Extensions.Msal.dll
+Microsoft.Identity.Client.NativeInterop.dll
 Microsoft.IdentityModel.Abstractions.dll
 Microsoft.IdentityModel.JsonWebTokens.dll
 Microsoft.IdentityModel.Logging.dll
