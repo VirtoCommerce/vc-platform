@@ -16,9 +16,15 @@ namespace VirtoCommerce.Platform.Security.Services;
 public class UserSessionsSearchService : IUserSessionsSearchService
 {
     private readonly IOpenIddictTokenManager _tokenManager;
-    private readonly Func<ISecurityRepository> _repositoryFactory;
+    private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
 
-    public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, Func<ISecurityRepository> repositoryFactory)
+    [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    protected UserSessionsSearchService(IOpenIddictTokenManager tokenManager, Func<ISecurityRepository> repositoryFactory)
+        : this(tokenManager, new DelegateScopedFactory<ISecurityRepository>(repositoryFactory))
+    {
+    }
+
+    public UserSessionsSearchService(IOpenIddictTokenManager tokenManager, IScopedFactory<ISecurityRepository> repositoryFactory)
     {
         _tokenManager = tokenManager;
         _repositoryFactory = repositoryFactory;
@@ -83,7 +89,8 @@ public class UserSessionsSearchService : IUserSessionsSearchService
             return;
         }
 
-        using var repository = _repositoryFactory();
+        using var scopedRepository = _repositoryFactory.Create();
+        var repository = scopedRepository.Service;
 
         var impersonations = await repository.UserSignInLogs
             .Where(x => x.SignInType == SignInType.Impersonation && sessionGroupIds.Contains(x.SessionId))

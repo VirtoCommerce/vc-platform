@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Data.Settings
     /// </summary>
     public class SettingsManager : ISettingsManager
     {
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly IDictionary<string, SettingDescriptor> _registeredSettingsByNameDict = new Dictionary<string, SettingDescriptor>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IDictionary<string, IEnumerable<SettingDescriptor>> _registeredTypeSettingsByNameDict = new Dictionary<string, IEnumerable<SettingDescriptor>>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
@@ -38,7 +38,17 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly ILogger<SettingsManager> _logger;
         private volatile IDictionary<string, string[]> _cachedTypeAssignments;
 
-        public SettingsManager(Func<IPlatformRepository> repositoryFactory,
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        protected SettingsManager(Func<IPlatformRepository> repositoryFactory,
+            IPlatformMemoryCache memoryCache,
+            IEventPublisher eventPublisher,
+            IOptions<FixedSettings> fixedSettings,
+            ISettingsOverrideProvider overrideProvider)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), memoryCache, eventPublisher, fixedSettings, overrideProvider)
+        {
+        }
+
+        public SettingsManager(IScopedFactory<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,
@@ -47,7 +57,18 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
         }
 
-        public SettingsManager(Func<IPlatformRepository> repositoryFactory,
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        protected SettingsManager(Func<IPlatformRepository> repositoryFactory,
+            IPlatformMemoryCache memoryCache,
+            IEventPublisher eventPublisher,
+            IOptions<FixedSettings> fixedSettings,
+            ISettingsOverrideProvider overrideProvider,
+            ILogger<SettingsManager> logger)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), memoryCache, eventPublisher, fixedSettings, overrideProvider, logger)
+        {
+        }
+
+        public SettingsManager(IScopedFactory<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IEventPublisher eventPublisher,
             IOptions<FixedSettings> fixedSettings,
@@ -160,8 +181,9 @@ namespace VirtoCommerce.Platform.Data.Settings
                     var dbStoredSettings = new List<SettingEntity>();
 
                     //Try to load setting value from DB
-                    using (var repository = _repositoryFactory())
+                    using (var scopedRepository = _repositoryFactory.Create())
                     {
+                        var repository = scopedRepository.Service;
                         repository.DisableChangesTracking();
                         //try to load setting from db
                         dbStoredSettings.AddRange(await repository.GetObjectSettingsByNamesAsync(missingNames.ToArray(), objectType, objectId));
@@ -196,8 +218,9 @@ namespace VirtoCommerce.Platform.Data.Settings
             ArgumentNullException.ThrowIfNull(objectSettings);
 
             var settingEntries = objectSettings as ObjectSettingEntry[] ?? objectSettings.ToArray();
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 foreach (var objectSetting in settingEntries)
                 {
                     var dbSetting = repository.Settings.FirstOrDefault(x =>
@@ -248,8 +271,9 @@ namespace VirtoCommerce.Platform.Data.Settings
                 }
             }
 
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 // First: restore forced settings by deleting any DB overrides for that scope
                 foreach (var forced in forcedSettings)
                 {
