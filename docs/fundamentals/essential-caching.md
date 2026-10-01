@@ -203,6 +203,8 @@ existing OpenTelemetry configuration; the platform does not depend on an Applica
 Neither instrument adds request IDs, trace IDs, entity IDs or full cache keys as dimensions.
 Listener failures are isolated from cache reads and request completion; a failing listener can lose
 telemetry but cannot fail a load or leave a request-scoped reservation incomplete.
+This includes instrument publication on first use: a counter whose publication fails remains disabled
+for that process. Other counters and sampled request attributes can still operate.
 
 ### How `cache.name` is selected
 
@@ -214,8 +216,11 @@ without allocating a substring. Existing key identity, case normalization and in
 - Other registered owners use their type name, such as `SettingsManager`.
 - Unclassified platform-memory keys use `PlatformMemoryCache`. Both request-scoped APIs use
   `RequestScopedCache` for an unregistered prefix, even when the caller embeds request data in it.
-- Type names omit namespaces. If the same short owner prefix is registered against conflicting model
-  types, it permanently falls back to that owner prefix instead of changing with service resolution order.
+- Type names omit namespaces. The first model registration labels the shared short prefix. At the
+  first conflicting model registration, that label changes once to the owner prefix and stays there;
+  later service resolutions cannot switch it back. Before that conflict is discovered, resolution
+  order determines which model name is visible. An owner with the same short name that never registers
+  a model shares the existing mapping; the string key cannot distinguish those owner types.
 
 For example, `ProductService:GetAsync-Full-product123` is classified as `CatalogProduct` after
 `ProductService` registers that model. The method, response group and product ID never become tags.
@@ -268,8 +273,8 @@ With the OpenTelemetry module, include the meter in the deployment's existing li
 
 ### Cache lookups in one HTTP request
 
-For an HTTP server activity with **both `IsAllDataRequested` and `Recorded` set**, a request with at
-least one lookup receives:
+For an HTTP server activity with **both `IsAllDataRequested` and `Recorded` set**, whose
+**`ActivitySource` has a listener**, a request with at least one lookup receives:
 
 - `cache.hits` and `cache.misses`: numeric totals across both cache implementations.
 - `cache.lookup.summary`: compact JSON arrays `[cacheName, hits, misses]`, for example
@@ -282,13 +287,16 @@ item for every such event, while keeping per-group counts on the original reques
 
 Lookups inside awaited child activities and parallel work belong to the HTTP server activity,
 obtained through `IHttpActivityFeature`, rather than whichever child happens to be current.
-Concurrent requests remain isolated. Completion also runs on downstream failure. Late detached
-work cannot change the completed snapshot. Background lookups still contribute to the aggregate
-physical counter when subscribed.
+Concurrent requests remain isolated. Completion also runs on downstream failure. It reads each
+counter once and reuses those values for totals, group detail and outcomes. Lookups completed before
+request completion are included; detached lookups still in flight while that snapshot is read may
+be omitted. Completion does not wait for detached work, which cannot change the published snapshot.
+Background lookups still contribute to the aggregate physical counter when subscribed.
 
-There is no summary for an absent activity, legacy unsampled activity, `RecordOnly` sampling result,
-or request without lookups. Request attribution does not require a meter listener. An unexported
-trace cannot be inspected.
+There is no summary for an absent activity, a legacy activity whose source has no listener (even if
+an incoming `traceparent` sets its `Recorded` flag), a `RecordOnly` sampling result, or a request without
+lookups. Request attribution requires a tracing listener, but does not require a meter listener.
+An unexported trace cannot be inspected.
 
 Detail is bounded to the first 64 admitted groups and 8 KiB of UTF-8 JSON. Truncation never removes
 lookups from overall totals. An exporter can impose a smaller attribute budget; configure it to

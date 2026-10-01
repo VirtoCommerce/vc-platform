@@ -92,7 +92,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
         }
 
         [Fact]
-        public void ConflictingShortOwnerNamesRemainAtOwnerFallbackRegardlessOfResolutionOrder()
+        public void ConflictingShortOwnerNamesSwitchOnceToPermanentOwnerFallback()
         {
             var key = CacheKey.With(typeof(First.CollidingOwner), "private-id");
             CacheKey.RegisterCacheName(typeof(First.CollidingOwner), typeof(FirstModel));
@@ -108,8 +108,11 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
         }
 
         [Fact]
+        [Trait("Contract", "Compatibility")]
         public void With_CaseInsensitiveOwnerCollision_PreservesEachOriginalKeyPrefix()
         {
+            // Pins original key identity. This already passed on d0ba70fa; it caught the later,
+            // intermediate regression where case-insensitive telemetry metadata supplied key spelling.
             var parts = new[] { "id" };
             var first = CacheKey.With(typeof(CaseDistinctOwner), "id");
             var second = CacheKey.With(typeof(CASEDISTINCTOWNER), parts);
@@ -137,5 +140,23 @@ namespace VirtoCommerce.Platform.Core.Tests.Caching
         private sealed class SecondModel;
         private sealed class CaseDistinctOwner;
         private sealed class CASEDISTINCTOWNER;
+
+        [Fact]
+        public void UnregisteredOwnerWithSameShortNameSharesExistingModelLabel()
+        {
+            CacheKey.RegisterCacheName(typeof(Registered.SharedLabelOwner), typeof(FirstModel));
+            var key = CacheKey.With(typeof(Unregistered.SharedLabelOwner), "id");
+            CacheKey.GetCacheName(key).Should().Be(nameof(FirstModel));
+        }
+
+        private static class Registered
+        {
+            public sealed class SharedLabelOwner;
+        }
+
+        private static class Unregistered
+        {
+            public sealed class SharedLabelOwner;
+        }
     }
 }

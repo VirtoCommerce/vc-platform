@@ -14,39 +14,59 @@ using VirtoCommerce.Platform.Core.Caching;
 
 namespace VirtoCommerce.Platform.Benchmark.Caching;
 
-// Include accumulator initialization and completion: warmed lookup benchmarks deliberately exclude
-// these costs. Activity/context creation is identical on baseline and branch. The baseline binds
-// directly to the handler when the middleware does not exist; reflection is setup-only.
+// Measure the entire middleware lifecycle, including genuinely incomplete downstream tasks. The
+// controlled completion excludes thread-pool/I/O latency but forces the middleware's async box.
+// Context, Activity and completion-source costs are identical on baseline and branch.
 [MemoryDiagnoser]
 [ThreadingDiagnoser]
 public class CacheMetricsRequestBenchmarks
 {
     private PlatformMemoryCache _cache;
     private MeterListener _listener;
+    private ActivitySource _source;
+    private ActivityListener _traces;
     private RequestDelegate _invoke;
+    private TaskCompletionSource _pending;
     private string[] _keys;
 
-    [Params("RecordOnly", "Recorded")]
+    [Params("Off", "OffAfterRequest", "RecordOnly", "Recorded")]
     public string State { get; set; }
 
     [Params(0, 3)]
     public int Groups { get; set; }
 
+    [Params(false, true)]
+    public bool AsyncDownstream { get; set; }
+
     [GlobalSetup]
     public void Setup()
     {
-        _listener = new MeterListener
+        if (State is "RecordOnly" or "Recorded")
         {
-            InstrumentPublished = (instrument, subscriber) =>
+            _listener = new MeterListener
             {
-                if (instrument.Meter.Name == "VirtoCommerce.Platform.Caching")
+                InstrumentPublished = (instrument, subscriber) =>
                 {
-                    subscriber.EnableMeasurementEvents(instrument);
-                }
-            },
-        };
-        _listener.SetMeasurementEventCallback<long>(static (_, _, _, _) => { });
-        _listener.Start();
+                    if (instrument.Meter.Name == "VirtoCommerce.Platform.Caching")
+                    {
+                        subscriber.EnableMeasurementEvents(instrument);
+                    }
+                },
+            };
+            _listener.SetMeasurementEventCallback<long>(static (_, _, _, _) => { });
+            _listener.Start();
+        }
+        _source = new ActivitySource("CacheMetrics.RequestBenchmark");
+        if (State != "Off")
+        {
+            _traces = new ActivityListener
+            {
+                ShouldListenTo = source => ReferenceEquals(source, _source),
+                Sample = (ref ActivityCreationOptions<ActivityContext> _) => State == "RecordOnly"
+                    ? ActivitySamplingResult.AllData : ActivitySamplingResult.AllDataAndRecorded,
+            };
+            ActivitySource.AddActivityListener(_traces);
+        }
         _cache = new PlatformMemoryCache(new MemoryCache(new MemoryCacheOptions()),
             Options.Create(new CachingOptions { CacheEnabled = true }), NullLogger<PlatformMemoryCache>.Instance);
         _keys = [CacheKey.With(typeof(string), "item"), CacheKey.With(typeof(int), "item"), CacheKey.With(typeof(bool), "item")];
@@ -59,17 +79,26 @@ public class CacheMetricsRequestBenchmarks
         var middlewareType = typeof(PlatformMemoryCache).Assembly.GetType("VirtoCommerce.Platform.Caching.CacheMetricsMiddleware");
         _invoke = middlewareType is null ? handler : middlewareType.GetMethod("InvokeAsync", BindingFlags.Instance | BindingFlags.Public)
             .CreateDelegate<RequestDelegate>(Activator.CreateInstance(middlewareType, handler));
+        // Exercise/validate the selected path outside timing. OffAfterRequest first completes an
+        // actual sampled middleware invocation, then removes the tracing listener for measurements.
+        CompleteRequest().GetAwaiter().GetResult();
+        if (State == "OffAfterRequest")
+        {
+            _traces.Dispose();
+            _traces = null;
+        }
     }
 
     [Benchmark]
     public async Task CompleteRequest()
     {
-        using var activity = new Activity("cache-request").Start();
-        activity.ActivityTraceFlags = State == "Recorded" ? ActivityTraceFlags.Recorded : ActivityTraceFlags.None;
-        activity.IsAllDataRequested = true;
+        using var activity = _source.StartActivity("cache-request", ActivityKind.Server)
+            ?? new Activity("cache-request").SetParentId("00-0123456789abcdef0123456789abcdef-0123456789abcdef-00").Start();
         var context = new DefaultHttpContext();
         context.Features.Set<IHttpActivityFeature>(new HttpActivityFeature { Activity = activity });
-        await _invoke(context);
+        var request = _invoke(context);
+        _pending?.SetResult();
+        await request;
     }
 
     private Task Handle(HttpContext context)
@@ -78,14 +107,17 @@ public class CacheMetricsRequestBenchmarks
         {
             _cache.TryGetValue(_keys[i], out _);
         }
-        return Task.CompletedTask;
+        _pending = AsyncDownstream ? new TaskCompletionSource() : null;
+        return _pending?.Task ?? Task.CompletedTask;
     }
 
     [GlobalCleanup]
     public void Cleanup()
     {
         _cache.Dispose();
-        _listener.Dispose();
+        _listener?.Dispose();
+        _traces?.Dispose();
+        _source.Dispose();
     }
 
     private sealed class HttpActivityFeature : IHttpActivityFeature

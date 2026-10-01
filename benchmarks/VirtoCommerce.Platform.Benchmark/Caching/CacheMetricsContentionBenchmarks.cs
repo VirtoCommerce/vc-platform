@@ -18,7 +18,7 @@ public class CacheMetricsContentionBenchmarks
     private Action _keys;
     private Action _lookups;
 
-    [Params("Off", "Meter", "Request")]
+    [Params("Off", "OffAfterRequest", "Meter", "Request")]
     public string State { get; set; }
 
     [GlobalSetup]

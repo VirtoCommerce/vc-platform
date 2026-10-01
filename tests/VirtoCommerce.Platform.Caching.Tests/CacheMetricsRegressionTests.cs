@@ -20,8 +20,11 @@ namespace VirtoCommerce.Platform.Caching.Tests;
 
 [Trait("Category", "Unit")]
 [Collection(nameof(NotThreadSafeCollection))]
-public class CacheMetricsRegressionTests : MemoryCacheTestsBase
+public class CacheMetricsRegressionTests : MemoryCacheTestsBase, IDisposable
 {
+    private readonly CacheTestActivitySource _activities = new();
+
+    public void Dispose() => _activities.Dispose();
     private const string PrivatePrefix = "GetProductConfigurationQueryHandler:OptionProducts:store|USD|en-US|user-secret|organization-secret|true";
 
     [Fact]
@@ -74,7 +77,7 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
     [InlineData(true, false)]
     public async Task UnexportedActivityUsesOriginalDownstreamTask(bool recorded, bool allData)
     {
-        using var activity = new Activity("server").Start();
+        using var activity = _activities.Start("server");
         activity.ActivityTraceFlags = recorded ? ActivityTraceFlags.Recorded : ActivityTraceFlags.None;
         activity.IsAllDataRequested = allData;
         var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -90,7 +93,7 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
     [Fact]
     public async Task SampledRequestWithNoLookupsHasNoCacheTags()
     {
-        using var activity = new Activity("server").Start();
+        using var activity = _activities.Start("server");
         activity.ActivityTraceFlags = ActivityTraceFlags.Recorded;
         await new CacheMetricsMiddleware(context => Task.CompletedTask).InvokeAsync(Context(activity));
         Assert.DoesNotContain(activity.TagObjects, tag => tag.Key.StartsWith("cache.", StringComparison.Ordinal));
@@ -103,7 +106,7 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
     [InlineData(true, false)]
     public void AccumulatorItselfRejectsUnexportedActivities(bool recorded, bool allData)
     {
-        using var activity = new Activity("server").Start();
+        using var activity = _activities.Start("server");
         activity.ActivityTraceFlags = recorded ? ActivityTraceFlags.Recorded : ActivityTraceFlags.None;
         activity.IsAllDataRequested = allData;
         var metricsType = typeof(CacheMetricsMiddleware).Assembly.GetType("VirtoCommerce.Platform.Caching.CacheRequestMetrics");
@@ -134,7 +137,7 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
             var mixedKey = CacheKey.With(typeof(MixedOwner), "private-id");
             var missKey = CacheKey.With(typeof(MissOnlyOwner), "private-id");
             cache.Set(hitKey, 1);
-            using var activity = new Activity("server").Start();
+            using var activity = _activities.Start("server");
             activity.ActivityTraceFlags = sampled ? ActivityTraceFlags.Recorded : ActivityTraceFlags.None;
             await new CacheMetricsMiddleware(context =>
             {
@@ -157,14 +160,16 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
     [Fact]
     public async Task ThrowingCompletionListenerPreservesOriginalDownstreamException()
     {
+        var callbackCount = 0;
         using var listener = Listen((instrument, _, _, _) =>
         {
             if (instrument.Name == "virtocommerce.cache.request.groups")
             {
+                Interlocked.Increment(ref callbackCount);
                 throw new InvalidOperationException("Listener failed at completion");
             }
         });
-        using var activity = new Activity("server").Start();
+        using var activity = _activities.Start("server");
         activity.ActivityTraceFlags = ActivityTraceFlags.Recorded;
         var expected = new InvalidOperationException("Original downstream error");
         using var cache = GetPlatformMemoryCache();
@@ -175,15 +180,19 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
         });
         var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => middleware.InvokeAsync(Context(activity)));
         Assert.Same(expected, actual);
+        Assert.Equal(1, callbackCount);
         Assert.Equal(1L, activity.GetTagItem("cache.misses"));
     }
 
     [Fact]
-    public async Task NestedMiddlewareRestoresOuterRequestThroughAsyncExecutionContext()
+    [Trait("Contract", "Compatibility")]
+    public async Task NestedMiddlewarePreservesExistingOuterRequestIsolation()
     {
-        using var outer = new Activity("outer").Start();
+        // Compatibility coverage: this passes before and after removing explicit previous/restore.
+        // Allocation/performance evidence for that change belongs in the lifecycle benchmarks.
+        using var outer = _activities.Start("outer");
         outer.ActivityTraceFlags = ActivityTraceFlags.Recorded;
-        using var inner = new Activity("inner").Start();
+        using var inner = _activities.Start("inner");
         inner.ActivityTraceFlags = ActivityTraceFlags.Recorded;
         using var cache = GetPlatformMemoryCache();
         var innerMiddleware = new CacheMetricsMiddleware(async context =>
@@ -219,7 +228,7 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
             var type = module.DefineType($"BudgetGroup{index}_\"_{new string('я', 160)}", TypeAttributes.Public).CreateType();
             return CacheKey.With(type, "private-key");
         }).ToArray();
-        using var activity = new Activity("server").Start();
+        using var activity = _activities.Start("server");
         activity.ActivityTraceFlags = ActivityTraceFlags.Recorded;
         using var cache = GetPlatformMemoryCache();
         await new CacheMetricsMiddleware(context =>
@@ -244,7 +253,7 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
     [Fact]
     public async Task RacingDetachedLookupsCannotChangeCompletedSnapshot()
     {
-        using var activity = new Activity("server").Start();
+        using var activity = _activities.Start("server");
         activity.ActivityTraceFlags = ActivityTraceFlags.Recorded;
         using var cache = GetPlatformMemoryCache();
         var firstHundred = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -273,6 +282,86 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase
         Assert.Equal(misses, Assert.Single(json.RootElement.EnumerateArray())[2].GetInt64());
         await workers.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
         Assert.Equal(snapshot, activity.TagObjects.ToArray());
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(64)]
+    [InlineData(65)]
+    [InlineData(80)]
+    public async Task ConcurrentFirstUseRetainsUniqueBoundedGroupsAndAllCompletedCounts(int groupCount)
+    {
+        using var activity = _activities.Start("concurrent-admission");
+        using var scope = BeginScope(activity);
+        var record = scope.GetType().GetMethod("Record").CreateDelegate<Action<long, long, string>>(scope);
+        var names = Enumerable.Range(0, groupCount).Select(i => $"Group{i}").ToArray();
+        await Task.WhenAll(Enumerable.Range(0, 8).Select(worker => Task.Run(() =>
+        {
+            for (var round = 0; round < 3; round++)
+            {
+                for (var index = 0; index < groupCount; index++)
+                {
+                    record(1, 1, names[(index + worker) % groupCount]);
+                }
+            }
+        })));
+        scope.Dispose();
+        Assert.Equal(groupCount * 24L, activity.GetTagItem("cache.hits"));
+        Assert.Equal(groupCount * 24L, activity.GetTagItem("cache.misses"));
+        using var json = JsonDocument.Parse(Assert.IsType<string>(activity.GetTagItem("cache.lookup.summary")));
+        var groups = json.RootElement.EnumerateArray().ToArray();
+        Assert.Equal(Math.Min(64, groupCount), groups.Length);
+        Assert.Equal(groups.Length, groups.Select(x => x[0].GetString()).Distinct().Count());
+        Assert.All(groups, group =>
+        {
+            Assert.Equal(24L, group[1].GetInt64());
+            Assert.Equal(24L, group[2].GetInt64());
+        });
+        Assert.Equal(groupCount > 64 ? true : null, activity.GetTagItem("cache.groups.truncated"));
+    }
+
+    [Fact]
+    public void SummaryEscapesNamesAndFormatsLargeCounts()
+    {
+        const string name = "quote\" slash\\ newline\n control\u0001 café 😀";
+        using var activity = _activities.Start("escaping");
+        using var scope = BeginScope(activity);
+        var record = scope.GetType().GetMethod("Record").CreateDelegate<Action<long, long, string>>(scope);
+        record(long.MaxValue - 1, 1, name);
+        scope.Dispose();
+        using var json = JsonDocument.Parse(Assert.IsType<string>(activity.GetTagItem("cache.lookup.summary")));
+        var group = Assert.Single(json.RootElement.EnumerateArray());
+        Assert.Equal(name, group[0].GetString());
+        Assert.Equal(long.MaxValue - 1, group[1].GetInt64());
+        Assert.Equal(1L, group[2].GetInt64());
+        Assert.Equal(long.MaxValue - 1, activity.GetTagItem("cache.hits"));
+        Assert.Null(activity.GetTagItem("cache.groups.truncated"));
+    }
+
+    [Theory]
+    [InlineData(8182, 1, false)]
+    [InlineData(8183, 0, true)]
+    public void SummaryHonorsExactByteBoundary(int nameLength, int retained, bool truncated)
+    {
+        using var activity = _activities.Start("byte-boundary");
+        using var scope = BeginScope(activity);
+        var record = scope.GetType().GetMethod("Record").CreateDelegate<Action<long, long, string>>(scope);
+        record(1, 0, new string('a', nameLength));
+        scope.Dispose();
+        var summary = Assert.IsType<string>(activity.GetTagItem("cache.lookup.summary"));
+        using var json = JsonDocument.Parse(summary);
+        Assert.Equal(retained, json.RootElement.GetArrayLength());
+        Assert.Equal(truncated ? 2 : 8192, Encoding.UTF8.GetByteCount(summary));
+        Assert.Equal(1L, activity.GetTagItem("cache.hits"));
+        Assert.Equal(truncated ? true : null, activity.GetTagItem("cache.groups.truncated"));
+    }
+
+    private static IDisposable BeginScope(Activity activity)
+    {
+        var type = typeof(CacheMetricsMiddleware).Assembly.GetType("VirtoCommerce.Platform.Caching.CacheRequestMetrics");
+        return Assert.IsAssignableFrom<IDisposable>(type.GetMethod("Begin").Invoke(null, [activity]));
     }
 
     private sealed class HitOnlyOwner;

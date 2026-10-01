@@ -9,17 +9,31 @@ namespace VirtoCommerce.Platform.Caching;
 internal static class CacheMetrics
 {
     private static readonly Meter _meter = new("VirtoCommerce.Platform.Caching");
-    private static readonly Counter<long> _requests = _meter.CreateCounter<long>(
-        "virtocommerce.cache.requests", "{request}", "Cache lookups, including internal retries and in-flight entries.");
-    private static readonly Counter<long> _requestGroups = _meter.CreateCounter<long>(
-        "virtocommerce.cache.request.groups", "{request}", "Sampled requests by cache group and lookup outcome.");
+    private static readonly Counter<long> _requests = CreateCounter(
+        "virtocommerce.cache.requests", "Cache lookups, including internal retries and in-flight entries.");
+    private static readonly Counter<long> _requestGroups = CreateCounter(
+        "virtocommerce.cache.request.groups", "Sampled requests by cache group and lookup outcome.");
+
+    private static Counter<long> CreateCounter(string name, string description)
+    {
+        try
+        {
+            return _meter.CreateCounter<long>(name, "{request}", description);
+        }
+        catch (Exception)
+        {
+            // First use publishes the instrument to external listeners. A publication failure must
+            // disable this counter, not poison the type initializer and every subsequent cache read.
+            return null;
+        }
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryGetRecorder(out CacheRequestMetrics request)
     {
         // Until the first sampled request, both Off and Meter need only static field reads.
         request = CacheRequestMetrics.HasStarted ? CacheRequestMetrics.Current : null;
-        return _requests.Enabled || request is not null;
+        return _requests?.Enabled == true || request is not null;
     }
 
     public static void RecordLookup(bool hit, object key)
@@ -33,7 +47,7 @@ internal static class CacheMetrics
     public static void Record(long hits, long misses, string cacheName, CacheRequestMetrics request)
     {
         request?.Record(hits, misses, cacheName);
-        if (_requests.Enabled)
+        if (_requests?.Enabled == true)
         {
             if (hits != 0)
             {
@@ -63,7 +77,7 @@ internal static class CacheMetrics
 
     public static void RecordRequestGroup(string cacheName, long hits, long misses)
     {
-        if (!_requestGroups.Enabled)
+        if (_requestGroups?.Enabled != true)
         {
             return;
         }

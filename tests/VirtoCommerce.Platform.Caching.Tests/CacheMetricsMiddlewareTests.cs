@@ -14,8 +14,11 @@ namespace VirtoCommerce.Platform.Caching.Tests;
 
 [Trait("Category", "Unit")]
 [Collection(nameof(NotThreadSafeCollection))]
-public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
+public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase, IDisposable
 {
+    private readonly CacheTestActivitySource _activities = new();
+
+    public void Dispose() => _activities.Dispose();
     [Fact]
     public async Task CapturesBothCachesOnServerActivityIncludingChildActivitiesWithoutMeterListener()
     {
@@ -212,11 +215,9 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase
         return JsonSerializer.Deserialize<JsonElement[][]>((string)activity.GetTagItem("cache.lookup.summary"));
     }
 
-    private static Activity Sampled(string name)
+    private Activity Sampled(string name)
     {
-        var activity = new Activity(name).Start();
-        activity.ActivityTraceFlags = ActivityTraceFlags.Recorded;
-        return activity;
+        return _activities.Start(name);
     }
 
     private sealed class HttpActivityFeature : IHttpActivityFeature

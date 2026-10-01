@@ -58,8 +58,10 @@ Results are written to `BenchmarkDotNet.Artifacts/` by default.
 ## Cache telemetry regression matrix
 
 `Caching/CacheMetricsBenchmarks` measures typed/untyped memory hits, warm exclusive and batch
-helpers, request-scoped hits/batches, key creation and transient CRUD construction in `Off`, `Meter`
-and `Request` states. `Meter` uses a no-op `MeterListener` to isolate instrumentation cost; it does
+helpers, request-scoped hits/batches, key creation and transient CRUD construction in `Off`,
+`OffAfterRequest`, `Meter` and `Request` states. `OffAfterRequest` completes a sampled scope during
+setup, then measures with no listeners and no current scope: the process-wide `HasStarted` flag
+remains set. `Meter` uses a no-op `MeterListener` to isolate instrumentation cost; it does
 not measure an exporter's aggregation or network cost. `Request` adds a sampled accumulator when
 that API exists. On a pre-instrumentation baseline, the same source runs without an accumulator.
 Reflection, listener creation, factories and warming are outside the measured operations.
@@ -80,9 +82,24 @@ timing comparison; small amortized allocation differences also need a warmed job
 or barrier cost from instrumentation cost by comparing the same scenario on every revision.
 
 `CacheMetricsRequestBenchmarks` includes the complete middleware lifecycle (Activity/context,
-accumulator initialization, lookups and completion), for RecordOnly/Recorded requests with zero or
-three groups. This exposes costs excluded by the warmed lookup suites, including empty-request
-allocation, request grouping and summary serialization.
+accumulator initialization, lookups and completion), for true Off, OffAfterRequest, RecordOnly and
+Recorded requests with zero or three groups. Each has synchronous and asynchronous downstream cases.
+The asynchronous case returns an incomplete task from the handler, then completes it after middleware
+invocation has returned. This forces the middleware's await suspension and async-box allocation without
+adding thread-pool scheduling or I/O latency. The completion source is included equally in the baseline.
+Tracing uses a real ActivitySource and listener; Off has neither a tracing nor a meter listener.
+This exposes costs excluded by the warmed lookup suites, including empty-request allocation,
+request grouping and summary serialization.
+
+`CacheGroupScaleBenchmarks` supplements the common one-group hot path with 1, 16 and 64 groups
+in one sampled scope. It uses pre-normalized warm keys and visits each group once per invocation;
+the reported time is per pass, so divide by `Groups` for per-lookup comparisons. The separate
+ShortRun diagnostic in the report includes its wider confidence intervals and does not replace
+the main Default job:
+
+```console
+dotnet run -c Release -- --filter '*CacheGroupScaleBenchmarks*' --job short --exporters json
+```
 
 The [2026-10-01 comparison](Caching/CacheMetricsResults.md) records base, reviewed and fixed
 measurements with timing dispersion, allocation and contention diagnostics.

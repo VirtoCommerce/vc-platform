@@ -31,6 +31,8 @@ public class CacheMetricsBenchmarks
     private RequestScopedCache _requestCache;
     private MeterListener _listener;
     private Activity _activity;
+    private ActivitySource _source;
+    private ActivityListener _traces;
     private IDisposable _requestMetrics;
     private string _typedKey;
     private string _prefix;
@@ -39,13 +41,13 @@ public class CacheMetricsBenchmarks
     private Action<int> _parallelLookups;
     private static readonly Func<Task<int>> _factory = () => Task.FromResult(42);
 
-    [Params("Off", "Meter", "Request")]
+    [Params("Off", "OffAfterRequest", "Meter", "Request")]
     public string State { get; set; }
 
     [GlobalSetup]
     public void Setup()
     {
-        if (State != "Off")
+        if (State is "Meter" or "Request")
         {
             _listener = new MeterListener
             {
@@ -61,13 +63,34 @@ public class CacheMetricsBenchmarks
             _listener.Start();
         }
 
-        if (State == "Request")
+        if (State is "Request" or "OffAfterRequest")
         {
-            _activity = new Activity("cache-benchmark").Start();
-            _activity.ActivityTraceFlags = ActivityTraceFlags.Recorded;
+            _source = new ActivitySource("CacheMetrics.Benchmark");
+            _traces = new ActivityListener
+            {
+                ShouldListenTo = source => ReferenceEquals(source, _source),
+                Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            };
+            ActivitySource.AddActivityListener(_traces);
+            _activity = _source.StartActivity("cache-benchmark", ActivityKind.Server);
             var metricsType = typeof(PlatformMemoryCache).Assembly.GetType("VirtoCommerce.Platform.Caching.CacheRequestMetrics");
-            _requestMetrics = (IDisposable)metricsType?.GetMethod("Begin", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [_activity]);
-            Console.WriteLine($"Request accumulator available: {_requestMetrics is not null}");
+            if (State == "OffAfterRequest")
+            {
+                CompleteSampledRequest(metricsType, _activity).GetAwaiter().GetResult();
+                if (metricsType is not null && (!(bool)metricsType.GetProperty("HasStarted").GetValue(null)
+                    || metricsType.GetProperty("Current").GetValue(null) is not null))
+                {
+                    throw new InvalidOperationException("OffAfterRequest requires HasStarted=true and Current=null");
+                }
+                _activity.Dispose();
+                _activity = null;
+                _traces.Dispose();
+                _source.Dispose();
+            }
+            else
+            {
+                _requestMetrics = BeginRequest(metricsType, _activity);
+            }
         }
 
         _cache = new PlatformMemoryCache(new MemoryCache(new MemoryCacheOptions()),
@@ -101,11 +124,32 @@ public class CacheMetricsBenchmarks
         Parallel.For(0, Workers, _parallel, _parallelLookups);
     }
 
+    private static IDisposable BeginRequest(Type metricsType, Activity activity)
+    {
+        var scope = (IDisposable)metricsType?.GetMethod("Begin", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [activity]);
+        Console.WriteLine($"Request accumulator available: {scope is not null}");
+        if (metricsType is not null && scope is null)
+        {
+            throw new InvalidOperationException("Expected a sampled accumulator on an instrumented revision");
+        }
+        return scope;
+    }
+
+    private static async Task CompleteSampledRequest(Type metricsType, Activity activity)
+    {
+        // As in the middleware, the async builder restores the caller's ExecutionContext. Off after
+        // this request measures HasStarted=true with no stale/completed accumulator in the caller.
+        using var scope = BeginRequest(metricsType, activity);
+        await Task.CompletedTask;
+    }
+
     [GlobalCleanup]
     public void Cleanup()
     {
         _requestMetrics?.Dispose();
         _activity?.Dispose();
+        _traces?.Dispose();
+        _source?.Dispose();
         _listener?.Dispose();
         _cache.Dispose();
     }
