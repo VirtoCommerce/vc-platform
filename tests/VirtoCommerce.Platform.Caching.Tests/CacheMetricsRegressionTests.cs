@@ -24,7 +24,12 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase, IDisposable
 {
     private readonly CacheTestActivitySource _activities = new();
 
-    public void Dispose() => _activities.Dispose();
+    public void Dispose()
+    {
+        _activities.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
     private const string PrivatePrefix = "GetProductConfigurationQueryHandler:OptionProducts:store|USD|en-US|user-secret|organization-secret|true";
 
     [Fact]
@@ -361,7 +366,7 @@ public class CacheMetricsRegressionTests : MemoryCacheTestsBase, IDisposable
     private static IDisposable BeginScope(Activity activity)
     {
         var type = typeof(CacheMetricsMiddleware).Assembly.GetType("VirtoCommerce.Platform.Caching.CacheRequestMetrics");
-        return Assert.IsAssignableFrom<IDisposable>(type.GetMethod("Begin").Invoke(null, [activity]));
+        return Assert.IsType<IDisposable>(type.GetMethod("Begin").Invoke(null, [activity]), exactMatch: false);
     }
 
     private sealed class HitOnlyOwner;

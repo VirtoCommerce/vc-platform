@@ -171,6 +171,7 @@ internal sealed class CacheRequestMetrics : IDisposable
 
     private static bool TryWriteGroup(Span<char> destination, string name, long hits, long misses, out int written)
     {
+        const int minimumMissesSuffixLength = 3; // Comma, at least one digit, closing bracket.
         written = 0;
         if (destination.Length < 8)
         {
@@ -186,7 +187,7 @@ internal sealed class CacheRequestMetrics : IDisposable
         var position = encoded + 2;
         destination[position++] = '"';
         destination[position++] = ',';
-        if (!hits.TryFormat(destination[position..^3], out var digits, provider: CultureInfo.InvariantCulture))
+        if (!hits.TryFormat(destination[position..^minimumMissesSuffixLength], out var digits, provider: CultureInfo.InvariantCulture))
         {
             return false;
         }

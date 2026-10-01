@@ -18,7 +18,12 @@ public class CacheMetricsMiddlewareTests : MemoryCacheTestsBase, IDisposable
 {
     private readonly CacheTestActivitySource _activities = new();
 
-    public void Dispose() => _activities.Dispose();
+    public void Dispose()
+    {
+        _activities.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public async Task CapturesBothCachesOnServerActivityIncludingChildActivitiesWithoutMeterListener()
     {

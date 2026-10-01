@@ -18,6 +18,11 @@ measurement callback, and Request adds a sampled accumulator through a real Acti
 Base has no accumulator. Reflection is used only in setup. These measure platform instrumentation,
 not exporter aggregation, network cost or production throughput.
 
+The subsequent Sonar cleanup names a JSON suffix-length constant and adjusts test-only cleanup/assertions.
+The compiled `TryWriteGroup` IL is byte-identical before and after that product change (278 bytes,
+SHA-256 `2587D8C4DC91A7AAA3A2A078307C4522A9F95FFEAECDAA2925D974E96A92614D`),
+so the measured runtime implementation is unchanged.
+
 Complete-request cases cover Off / OffAfterRequest / RecordOnly / Recorded, zero/three groups,
 and synchronous/suspended downstream tasks. The suspended case returns an incomplete task and completes
 it after middleware invocation returns, forcing the middleware's async box without thread-pool/I/O
