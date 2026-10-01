@@ -70,9 +70,18 @@ internal static class CacheMetrics
 
         try
         {
+            string outcome;
+            if (hits == 0)
+            {
+                outcome = "miss_only";
+            }
+            else
+            {
+                outcome = misses == 0 ? "hit_only" : "mixed";
+            }
             _requestGroups.Add(1,
                 new KeyValuePair<string, object>("cache.name", cacheName),
-                new KeyValuePair<string, object>("cache.outcome", hits == 0 ? "miss_only" : misses == 0 ? "hit_only" : "mixed"));
+                new KeyValuePair<string, object>("cache.outcome", outcome));
         }
         catch (Exception)
         {

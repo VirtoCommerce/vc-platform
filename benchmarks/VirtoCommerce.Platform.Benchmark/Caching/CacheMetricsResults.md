@@ -39,29 +39,13 @@ Normalized SHA-256 (LF and one final newline), identical across the three checko
 
 ## Findings
 
-- All ten `Off` warm-operation cases have the same allocated bytes as the baseline. Single-threaded
-  cases have zero monitor contentions. Parallel diagnostics include harness scheduling/barriers;
-  the steady key/registration paths contain no telemetry monitor or dictionary write.
-- Off typed-key creation is **12.43 → 38.58 → 12.34 ns** (base → reviewed → fixed). On eight fixed
-  threads it is **5.12 → 83.45 → 4.86 ns/op**. Off request by-key is **12.14 → 44.69 → 13.51 ns**,
-  with **0 → 72 → 0 B**. A warm 50-ID request batch is **2807.87 → 4052.99 → 2494.51 ns**,
-  with **1888 → 5488 → 1888 B**.
-- Typed memory hits in Meter/Request return from 160 B to the baseline 88 B. With eight fixed
-  threads in one sampled request, **141.52 → 64.61 ns/op** replaces the contended reviewed path;
-  the baseline without request attribution is 20.41 ns/op. Snapshot synchronization still has a cost.
-- Remaining costs are explicit: Off CRUD construction is **35.25 vs 30.18 ns** in base; Off request
-  by-key is **13.51 vs 12.14 ns**. A single Meter typed hit is **83.12 vs 79.94 ns** in the reviewed
-  version, despite removing its extra allocation. This is not an across-the-board timing improvement.
-- Complete RecordOnly requests have baseline allocations again: **1464 B** with zero groups and
-  **1608 B** with three. Three-group time falls from **880.76 to 424.15 ns** (baseline 347.98 ns).
-  Empty sampled requests allocate **1640 B**, versus 1968 B reviewed and 1464 B baseline; creating
-  the sampled scope still costs 176 B even though no cache tags are published.
-- Complete sampled requests with three groups cost **1018.87 ns / 3280 B**, versus
-  **902.98 ns / 3784 B** reviewed and **351.16 ns / 1608 B** baseline. That is **115.89 ns more CPU
-  and 504 B less allocation than reviewed** in this case. The final implementation serializes one
-  bounded JSON summary and publishes group-outcome metrics instead of creating per-group events.
-  SDK3 capture confirms zero summary MessageData rows; this benchmark does not measure the downstream
-  exporter/network savings, so no net end-to-end speedup is claimed for this lifecycle case.
+- All ten `Off` warm-operation cases have the same allocated bytes as the baseline. Single-threaded cases have zero monitor contentions. Parallel diagnostics include harness scheduling/barriers; steady key/registration paths contain no telemetry monitor or dictionary write.
+- Off typed-key creation is **12.43 → 38.58 → 12.54 ns** (base → reviewed → fixed). On eight fixed threads it is **5.12 → 83.45 → 4.83 ns/op**. Off request by-key is **12.14 → 44.69 → 17.30 ns**, with **0 → 72 → 0 B**. A warm 50-ID request batch is **2807.87 → 4052.99 → 2458.52 ns**, with **1888 → 5488 → 1888 B**.
+- Typed memory hits in Meter/Request return from 160 B to the baseline 88 B. With eight fixed threads in one sampled request, **141.52 → 63.14 ns/op** replaces the contended reviewed path; baseline without request attribution is 20.41 ns/op. Snapshot synchronization still has a cost.
+- Remaining costs are explicit: Off CRUD construction is **35.95 vs 30.18 ns** in base; Off request by-key is **17.30 vs 12.14 ns**. A single Meter typed hit is **82.52 ns**, compared with 79.94 ns reviewed and 51.49 ns baseline. This is not an across-the-board timing improvement.
+- Complete RecordOnly requests have baseline allocations again: **1464 B** with zero groups and **1608 B** with three. Three-group time is **347.98 → 880.76 → 409.91 ns**. Empty sampled requests allocate **1640 B**, versus 1968 B reviewed and 1464 B baseline; creating the sampled scope still costs 176 B even though no cache tags are published.
+- Complete sampled requests with three groups cost **1004.66 ns / 3280 B**, versus **902.98 ns / 3784 B** reviewed and **351.16 ns / 1608 B** baseline. The difference from reviewed is **101.68 ns CPU and 504 B less allocation**. The final path serializes bounded JSON and publishes group outcomes instead of creating per-group events. SDK3 capture confirms zero summary MessageData rows. These benchmarks exclude downstream exporter/network cost, so no net end-to-end speedup is claimed for this lifecycle case.
+- A separate same-source Off by-key control run measured 17.32 ± 0.15 ns / 0 B. This agrees with the full-matrix result of 17.30 ns; both runs retain zero allocation. Repeat with `--filter '*RequestByKeyHit*Off*'`.
 
 ## Reproduce
 
@@ -81,36 +65,36 @@ Times are ns/operation (batch methods: ns/batch). Each timing cell is Mean ± 99
 
 | Method | State | Base ns | Reviewed ns | Fixed ns | Fixed/base | Bytes base / reviewed / fixed | Monitor contentions base / reviewed / fixed |
 |---|---|---:|---:|---:|---:|---:|---:|
-| TypedKey | Meter | 12.00 ± 0.28 (0.38) | 41.63 ± 0.54 (0.48) | 12.56 ± 0.28 (0.30) | 1.05× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| TypedKeyEightThreads | Meter | 5.32 ± 0.21 (0.55) | 86.22 ± 1.67 (2.56) | 4.69 ± 0.09 (0.16) | 0.88× | 88 / 88 / 88 | 7.82E-007 / 8.23E-005 / 9.02E-007 |
-| TypedHit | Meter | 51.49 ± 0.60 (0.73) | 79.94 ± 0.72 (0.64) | 83.12 ± 1.33 (1.24) | 1.61× | 88 / 160 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| UntypedHit | Meter | 42.27 ± 0.40 (0.33) | 48.62 ± 0.46 (0.43) | 49.26 ± 0.35 (0.33) | 1.17× | 0 / 0 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| TypedHitEightThreads | Meter | 20.34 ± 0.23 (0.19) | 37.06 ± 0.74 (1.97) | 21.80 ± 0.20 (0.16) | 1.07× | 88 / 160 / 88 | 2.09E-007 / 4.17E-007 / 1.49E-007 |
-| ExclusiveWarmHit | Meter | 108.03 ± 1.13 (0.88) | 150.77 ± 1.69 (1.58) | 136.03 ± 1.54 (1.44) | 1.26× | 88 / 160 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| PlatformWarmBatch | Meter | 6528.93 ± 53.00 (49.57) | 8500.21 ± 96.28 (85.35) | 8360.78 ± 81.41 (72.16) | 1.28× | 7192 / 10792 / 7192 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| RequestByKeyHit | Meter | 12.20 ± 0.09 (0.07) | 43.34 ± 0.50 (0.41) | 33.97 ± 0.29 (0.24) | 2.78× | 0 / 72 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| RequestWarmBatch | Meter | 2769.05 ± 22.05 (18.41) | 4277.69 ± 77.72 (129.86) | 2502.09 ± 22.68 (20.11) | 0.90× | 1888 / 5488 / 1888 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| CrudConstructor | Meter | 30.98 ± 0.29 (0.24) | 60.78 ± 0.79 (0.74) | 35.21 ± 0.31 (0.26) | 1.14× | 48 / 48 / 48 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| TypedKey | Off | 12.43 ± 0.27 (0.50) | 38.58 ± 0.60 (0.56) | 12.34 ± 0.23 (0.21) | 0.99× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| TypedKeyEightThreads | Off | 4.68 ± 0.09 (0.19) | 89.79 ± 1.76 (3.09) | 4.69 ± 0.09 (0.10) | 1.00× | 88 / 88 / 88 | 9.76E-007 / 1.01E-004 / 1.26E-006 |
-| TypedHit | Off | 52.15 ± 0.77 (0.68) | 53.67 ± 0.75 (0.67) | 51.25 ± 0.28 (0.25) | 0.98× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| UntypedHit | Off | 51.61 ± 1.03 (1.27) | 51.12 ± 0.25 (0.24) | 44.63 ± 0.65 (0.58) | 0.86× | 0 / 0 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| TypedHitEightThreads | Off | 20.16 ± 0.20 (0.19) | 25.31 ± 0.50 (1.24) | 20.46 ± 0.18 (0.14) | 1.01× | 88 / 88 / 88 | 6.56E-007 / 2.38E-007 / 4.17E-007 |
-| ExclusiveWarmHit | Off | 108.09 ± 1.57 (1.47) | 108.77 ± 0.96 (0.90) | 101.07 ± 0.56 (0.49) | 0.94× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| PlatformWarmBatch | Off | 6897.65 ± 51.45 (48.13) | 6985.41 ± 109.02 (101.98) | 6837.74 ± 62.07 (55.03) | 0.99× | 7192 / 7192 / 7192 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| RequestByKeyHit | Off | 12.14 ± 0.14 (0.11) | 44.69 ± 0.64 (0.60) | 13.51 ± 0.12 (0.11) | 1.11× | 0 / 72 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| RequestWarmBatch | Off | 2807.87 ± 39.75 (35.23) | 4052.99 ± 54.91 (48.67) | 2494.51 ± 26.17 (23.20) | 0.89× | 1888 / 5488 / 1888 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| CrudConstructor | Off | 30.18 ± 0.32 (0.28) | 61.33 ± 0.54 (0.48) | 35.25 ± 0.37 (0.35) | 1.17× | 48 / 48 / 48 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| TypedKey | Request | 12.19 ± 0.24 (0.22) | 38.75 ± 0.67 (0.63) | 12.30 ± 0.16 (0.13) | 1.01× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| TypedKeyEightThreads | Request | 5.10 ± 0.10 (0.13) | 89.60 ± 1.18 (1.11) | 4.70 ± 0.09 (0.11) | 0.92× | 88 / 88 / 88 | 1.20E-006 / 8.82E-005 / 1.18E-006 |
-| TypedHit | Request | 53.04 ± 0.37 (0.31) | 101.55 ± 0.95 (0.89) | 93.73 ± 0.58 (0.52) | 1.77× | 88 / 160 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| UntypedHit | Request | 42.66 ± 0.39 (0.34) | 69.24 ± 0.59 (0.52) | 58.80 ± 0.41 (0.38) | 1.38× | 0 / 0 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| TypedHitEightThreads | Request | 20.25 ± 0.21 (0.17) | 138.05 ± 0.84 (0.66) | 63.72 ± 0.33 (0.29) | 3.15× | 88 / 160 / 88 | 8.94E-008 / 4.28E-004 / 7.15E-007 |
-| ExclusiveWarmHit | Request | 107.76 ± 0.69 (0.61) | 173.76 ± 5.57 (15.72) | 148.67 ± 1.16 (1.03) | 1.38× | 88 / 160 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| PlatformWarmBatch | Request | 6586.27 ± 96.95 (90.69) | 9670.05 ± 218.19 (597.29) | 8938.33 ± 89.91 (79.70) | 1.36× | 7192 / 10792 / 7192 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| RequestByKeyHit | Request | 12.29 ± 0.18 (0.23) | 61.11 ± 1.23 (1.15) | 47.37 ± 0.22 (0.19) | 3.85× | 0 / 72 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| RequestWarmBatch | Request | 2846.39 ± 38.32 (35.85) | 5273.71 ± 51.48 (42.99) | 2544.61 ± 17.16 (15.21) | 0.89× | 1888 / 5488 / 1888 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| CrudConstructor | Request | 30.13 ± 0.41 (0.39) | 61.88 ± 1.01 (0.84) | 35.38 ± 0.30 (0.27) | 1.17× | 48 / 48 / 48 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedKey | Meter | 12.00 ± 0.28 (0.38) | 41.63 ± 0.54 (0.48) | 12.16 ± 0.23 (0.22) | 1.01× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedKeyEightThreads | Meter | 5.32 ± 0.21 (0.55) | 86.22 ± 1.67 (2.56) | 4.89 ± 0.10 (0.14) | 0.92× | 88 / 88 / 88 | 7.82E-007 / 8.23E-005 / 1.39E-006 |
+| TypedHit | Meter | 51.49 ± 0.60 (0.73) | 79.94 ± 0.72 (0.64) | 82.52 ± 0.66 (0.55) | 1.60× | 88 / 160 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| UntypedHit | Meter | 42.27 ± 0.40 (0.33) | 48.62 ± 0.46 (0.43) | 48.98 ± 0.24 (0.19) | 1.16× | 0 / 0 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedHitEightThreads | Meter | 20.34 ± 0.23 (0.19) | 37.06 ± 0.74 (1.97) | 22.03 ± 0.42 (0.39) | 1.08× | 88 / 160 / 88 | 2.09E-007 / 4.17E-007 / 2.68E-007 |
+| ExclusiveWarmHit | Meter | 108.03 ± 1.13 (0.88) | 150.77 ± 1.69 (1.58) | 135.16 ± 1.06 (0.94) | 1.25× | 88 / 160 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| PlatformWarmBatch | Meter | 6528.93 ± 53.00 (49.57) | 8500.21 ± 96.28 (85.35) | 8245.95 ± 91.25 (80.89) | 1.26× | 7192 / 10792 / 7192 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| RequestByKeyHit | Meter | 12.20 ± 0.09 (0.07) | 43.34 ± 0.50 (0.41) | 33.92 ± 0.36 (0.34) | 2.78× | 0 / 72 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| RequestWarmBatch | Meter | 2769.05 ± 22.05 (18.41) | 4277.69 ± 77.72 (129.86) | 2510.56 ± 21.90 (19.41) | 0.91× | 1888 / 5488 / 1888 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| CrudConstructor | Meter | 30.98 ± 0.29 (0.24) | 60.78 ± 0.79 (0.74) | 36.27 ± 0.32 (0.28) | 1.17× | 48 / 48 / 48 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedKey | Off | 12.43 ± 0.27 (0.50) | 38.58 ± 0.60 (0.56) | 12.54 ± 0.11 (0.10) | 1.01× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedKeyEightThreads | Off | 4.68 ± 0.09 (0.19) | 89.79 ± 1.76 (3.09) | 4.74 ± 0.09 (0.13) | 1.01× | 88 / 88 / 88 | 9.76E-007 / 1.01E-004 / 1.24E-006 |
+| TypedHit | Off | 52.15 ± 0.77 (0.68) | 53.67 ± 0.75 (0.67) | 51.44 ± 0.39 (0.34) | 0.99× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| UntypedHit | Off | 51.61 ± 1.03 (1.27) | 51.12 ± 0.25 (0.24) | 44.72 ± 0.22 (0.19) | 0.87× | 0 / 0 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedHitEightThreads | Off | 20.16 ± 0.20 (0.19) | 25.31 ± 0.50 (1.24) | 20.52 ± 0.25 (0.23) | 1.02× | 88 / 88 / 88 | 6.56E-007 / 2.38E-007 / 4.77E-007 |
+| ExclusiveWarmHit | Off | 108.09 ± 1.57 (1.47) | 108.77 ± 0.96 (0.90) | 100.62 ± 0.85 (0.79) | 0.93× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| PlatformWarmBatch | Off | 6897.65 ± 51.45 (48.13) | 6985.41 ± 109.02 (101.98) | 6876.35 ± 84.06 (74.51) | 1.00× | 7192 / 7192 / 7192 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| RequestByKeyHit | Off | 12.14 ± 0.14 (0.11) | 44.69 ± 0.64 (0.60) | 17.30 ± 0.28 (0.27) | 1.42× | 0 / 72 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| RequestWarmBatch | Off | 2807.87 ± 39.75 (35.23) | 4052.99 ± 54.91 (48.67) | 2458.52 ± 31.21 (27.66) | 0.88× | 1888 / 5488 / 1888 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| CrudConstructor | Off | 30.18 ± 0.32 (0.28) | 61.33 ± 0.54 (0.48) | 35.95 ± 0.44 (0.39) | 1.19× | 48 / 48 / 48 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedKey | Request | 12.19 ± 0.24 (0.22) | 38.75 ± 0.67 (0.63) | 12.07 ± 0.13 (0.11) | 0.99× | 88 / 88 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedKeyEightThreads | Request | 5.10 ± 0.10 (0.13) | 89.60 ± 1.18 (1.11) | 4.46 ± 0.09 (0.11) | 0.87× | 88 / 88 / 88 | 1.20E-006 / 8.82E-005 / 5.59E-007 |
+| TypedHit | Request | 53.04 ± 0.37 (0.31) | 101.55 ± 0.95 (0.89) | 96.15 ± 1.09 (1.02) | 1.81× | 88 / 160 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| UntypedHit | Request | 42.66 ± 0.39 (0.34) | 69.24 ± 0.59 (0.52) | 59.71 ± 0.35 (0.31) | 1.40× | 0 / 0 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| TypedHitEightThreads | Request | 20.25 ± 0.21 (0.17) | 138.05 ± 0.84 (0.66) | 61.58 ± 0.30 (0.27) | 3.04× | 88 / 160 / 88 | 8.94E-008 / 4.28E-004 / 4.77E-007 |
+| ExclusiveWarmHit | Request | 107.76 ± 0.69 (0.61) | 173.76 ± 5.57 (15.72) | 142.73 ± 0.86 (0.72) | 1.32× | 88 / 160 / 88 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| PlatformWarmBatch | Request | 6586.27 ± 96.95 (90.69) | 9670.05 ± 218.19 (597.29) | 9113.74 ± 60.62 (50.62) | 1.38× | 7192 / 10792 / 7192 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| RequestByKeyHit | Request | 12.29 ± 0.18 (0.23) | 61.11 ± 1.23 (1.15) | 46.71 ± 0.21 (0.19) | 3.80× | 0 / 72 / 0 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| RequestWarmBatch | Request | 2846.39 ± 38.32 (35.85) | 5273.71 ± 51.48 (42.99) | 2495.50 ± 31.95 (29.89) | 0.88× | 1888 / 5488 / 1888 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| CrudConstructor | Request | 30.13 ± 0.41 (0.39) | 61.88 ± 1.01 (0.84) | 35.02 ± 0.21 (0.19) | 1.16× | 48 / 48 / 48 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
 
 Gen0 collections per 1,000 operations:
 
@@ -154,12 +138,12 @@ Times are ns/operation (batch methods: ns/batch). Each timing cell is Mean ± 99
 
 | Method | State | Base ns | Reviewed ns | Fixed ns | Fixed/base | Bytes base / reviewed / fixed | Monitor contentions base / reviewed / fixed |
 |---|---|---:|---:|---:|---:|---:|---:|
-| TypedKey | Meter | 4.90 ± 0.09 (0.17) | 81.65 ± 1.59 (1.49) | 4.66 ± 0.09 (0.22) | 0.95× | 88 / 88 / 88 | 2.95E-004 / 3.52E-004 / 2.73E-004 |
-| TypedHitInOneRequest | Meter | 21.05 ± 0.12 (0.11) | 24.69 ± 0.49 (0.56) | 22.50 ± 0.30 (0.26) | 1.07× | 88 / 160 / 88 | 1.98E-004 / 2.09E-004 / 2.31E-004 |
-| TypedKey | Off | 5.12 ± 0.15 (0.45) | 83.45 ± 1.02 (0.85) | 4.86 ± 0.10 (0.21) | 0.95× | 88 / 88 / 88 | 2.66E-004 / 3.92E-004 / 3.00E-004 |
-| TypedHitInOneRequest | Off | 20.24 ± 0.31 (0.28) | 21.56 ± 0.27 (0.24) | 20.80 ± 0.10 (0.09) | 1.03× | 88 / 88 / 88 | 1.45E-004 / 1.88E-004 / 2.03E-004 |
-| TypedKey | Request | 4.92 ± 0.10 (0.27) | 88.56 ± 0.60 (0.50) | 4.96 ± 0.10 (0.21) | 1.01× | 88 / 88 / 88 | 2.75E-004 / 3.95E-004 / 2.91E-004 |
-| TypedHitInOneRequest | Request | 20.41 ± 0.18 (0.16) | 141.52 ± 1.58 (1.47) | 64.61 ± 0.27 (0.25) | 3.17× | 88 / 160 / 88 | 1.59E-004 / 6.67E-004 / 2.47E-004 |
+| TypedKey | Meter | 4.90 ± 0.09 (0.17) | 81.65 ± 1.59 (1.49) | 4.81 ± 0.09 (0.24) | 0.98× | 88 / 88 / 88 | 2.95E-004 / 3.52E-004 / 2.94E-004 |
+| TypedHitInOneRequest | Meter | 21.05 ± 0.12 (0.11) | 24.69 ± 0.49 (0.56) | 23.36 ± 0.41 (0.70) | 1.11× | 88 / 160 / 88 | 1.98E-004 / 2.09E-004 / 2.31E-004 |
+| TypedKey | Off | 5.12 ± 0.15 (0.45) | 83.45 ± 1.02 (0.85) | 4.83 ± 0.10 (0.22) | 0.94× | 88 / 88 / 88 | 2.66E-004 / 3.92E-004 / 2.94E-004 |
+| TypedHitInOneRequest | Off | 20.24 ± 0.31 (0.28) | 21.56 ± 0.27 (0.24) | 20.78 ± 0.18 (0.16) | 1.03× | 88 / 88 / 88 | 1.45E-004 / 1.88E-004 / 1.95E-004 |
+| TypedKey | Request | 4.92 ± 0.10 (0.27) | 88.56 ± 0.60 (0.50) | 5.03 ± 0.10 (0.23) | 1.02× | 88 / 88 / 88 | 2.75E-004 / 3.95E-004 / 3.02E-004 |
+| TypedHitInOneRequest | Request | 20.41 ± 0.18 (0.16) | 141.52 ± 1.58 (1.47) | 63.14 ± 0.33 (0.28) | 3.09× | 88 / 160 / 88 | 1.59E-004 / 6.67E-004 / 2.62E-004 |
 
 Gen0 collections per 1,000 operations:
 
@@ -179,10 +163,10 @@ Times are ns/operation (batch methods: ns/batch). Each timing cell is Mean ± 99
 
 | Method | State | Base ns | Reviewed ns | Fixed ns | Fixed/base | Bytes base / reviewed / fixed | Monitor contentions base / reviewed / fixed |
 |---|---|---:|---:|---:|---:|---:|---:|
-| CompleteRequest | Recorded&Groups=0 | 202.08 ± 3.60 (3.37) | 319.73 ± 5.72 (4.78) | 262.17 ± 5.16 (9.94) | 1.30× | 1464 / 1968 / 1640 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| CompleteRequest | Recorded&Groups=3 | 351.16 ± 6.51 (6.09) | 902.98 ± 17.86 (17.54) | 1018.87 ± 17.45 (15.47) | 2.90× | 1608 / 3784 / 3280 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| CompleteRequest | RecordOnly&Groups=0 | 198.39 ± 2.16 (1.92) | 319.06 ± 6.15 (11.84) | 241.71 ± 4.69 (4.16) | 1.22× | 1464 / 1968 / 1464 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
-| CompleteRequest | RecordOnly&Groups=3 | 347.98 ± 6.34 (5.62) | 880.76 ± 16.10 (22.57) | 424.15 ± 5.72 (5.35) | 1.22× | 1608 / 3784 / 1608 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| CompleteRequest | Recorded&Groups=0 | 202.08 ± 3.60 (3.37) | 319.73 ± 5.72 (4.78) | 268.83 ± 5.15 (5.29) | 1.33× | 1464 / 1968 / 1640 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| CompleteRequest | Recorded&Groups=3 | 351.16 ± 6.51 (6.09) | 902.98 ± 17.86 (17.54) | 1004.66 ± 19.70 (17.46) | 2.86× | 1608 / 3784 / 3280 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| CompleteRequest | RecordOnly&Groups=0 | 198.39 ± 2.16 (1.92) | 319.06 ± 6.15 (11.84) | 234.09 ± 4.71 (6.29) | 1.18× | 1464 / 1968 / 1464 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
+| CompleteRequest | RecordOnly&Groups=3 | 347.98 ± 6.34 (5.62) | 880.76 ± 16.10 (22.57) | 409.91 ± 8.12 (8.34) | 1.18× | 1608 / 3784 / 1608 | 0.00E+000 / 0.00E+000 / 0.00E+000 |
 
 Gen0 collections per 1,000 operations:
 

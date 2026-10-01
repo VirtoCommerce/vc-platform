@@ -166,7 +166,7 @@ public class CacheMetricsTests : MemoryCacheTestsBase
     public async Task RequestCache_CachedFaultIsAHit()
     {
         using var measurements = new Measurements();
-        IRequestScopedCache cache = new RequestScopedCache();
+        var cache = new RequestScopedCache();
         await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetOrAddAsync<int>("key", () => throw new InvalidOperationException()));
         await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetOrAddAsync("key", () => Task.FromResult(42)));
         measurements.AssertCounts(nameof(RequestScopedCache), hits: 1, misses: 1);

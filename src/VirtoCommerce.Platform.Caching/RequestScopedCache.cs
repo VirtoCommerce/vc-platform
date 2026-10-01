@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
@@ -124,7 +126,7 @@ public class RequestScopedCache : IRequestScopedCache
         {
             if (recordMetrics)
             {
-                CacheMetrics.Record(hits, owned?.Count ?? 0, CacheKey.GetCacheName(keyPrefix) ?? nameof(RequestScopedCache), request);
+                RecordBatch(keyPrefix, hits, owned, request);
             }
         }
 
@@ -149,6 +151,13 @@ public class RequestScopedCache : IRequestScopedCache
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void RecordBatch<T>(string keyPrefix, long hits, Dictionary<string, TaskCompletionSource<T>> owned, CacheRequestMetrics request)
+    {
+        CacheMetrics.Record(hits, owned?.Count ?? 0, CacheKey.GetCacheName(keyPrefix) ?? nameof(RequestScopedCache), request);
+    }
+
+    [SuppressMessage("Reliability", "S4462", Justification = "The only caller checks IsCompletedSuccessfully before this read. GetResult cannot block or throw a cached task failure; an async helper per warm hit adds avoidable overhead.")]
     private static void CollectHit<T>(Dictionary<string, T> result, string id, Task<T> task)
         where T : class
     {

@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -26,7 +27,6 @@ internal sealed class CacheRequestMetrics : IDisposable
     private CacheRequestMetrics(Activity activity)
     {
         _activity = activity;
-        _hasStarted = true;
         _current.Value = this;
     }
 
@@ -42,7 +42,13 @@ internal sealed class CacheRequestMetrics : IDisposable
 
     public static CacheRequestMetrics Begin(Activity activity)
     {
-        return activity is { IsAllDataRequested: true, Recorded: true } ? new CacheRequestMetrics(activity) : null;
+        if (activity is not { IsAllDataRequested: true, Recorded: true })
+        {
+            return null;
+        }
+
+        _hasStarted = true;
+        return new CacheRequestMetrics(activity);
     }
 
     public void Record(long hits, long misses, string cacheName)
@@ -70,14 +76,7 @@ internal sealed class CacheRequestMetrics : IDisposable
                 counts ??= GetOrAddGroup(cacheName);
             }
 
-            if (hits != 0)
-            {
-                Interlocked.Add(ref counts.Hits, hits);
-            }
-            if (misses != 0)
-            {
-                Interlocked.Add(ref counts.Misses, misses);
-            }
+            counts.Add(hits, misses);
         }
         finally
         {
@@ -130,8 +129,13 @@ internal sealed class CacheRequestMetrics : IDisposable
             return;
         }
 
-        var hits = _overflow?.Hits ?? 0;
-        var misses = _overflow?.Misses ?? 0;
+        long hits = 0;
+        long misses = 0;
+        if (_overflow is not null)
+        {
+            hits = _overflow.Hits;
+            misses = _overflow.Misses;
+        }
         var truncated = hits != 0 || misses != 0;
         var buffer = new ArrayBufferWriter<byte>();
         using var writer = new Utf8JsonWriter(buffer);
@@ -178,5 +182,18 @@ internal sealed class CacheRequestMetrics : IDisposable
     {
         public long Hits;
         public long Misses;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add(long hits, long misses)
+        {
+            if (hits != 0)
+            {
+                Interlocked.Add(ref Hits, hits);
+            }
+            if (misses != 0)
+            {
+                Interlocked.Add(ref Misses, misses);
+            }
+        }
     }
 }
