@@ -91,6 +91,7 @@ Polly.RateLimiting.dll
 Pomelo.EntityFrameworkCore.MySql.dll
 RedLockNet.Abstractions.dll
 RedLockNet.SERedis.dll
+RESPite.dll
 Scrutor.dll
 Serialize.Linq.dll
 Serilog.AspNetCore.dll
