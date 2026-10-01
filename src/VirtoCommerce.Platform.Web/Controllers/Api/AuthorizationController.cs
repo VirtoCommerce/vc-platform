@@ -46,6 +46,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly List<ITokenRequestValidator> _requestValidators;
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
+        private readonly IEnumerable<IGrantTypeHandler> _grantTypeHandlers;
         private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IExternalSignInService _externalSignInService;
@@ -62,6 +63,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ITokenRequestValidator> requestValidators,
             IEnumerable<ITokenClaimProvider> claimProviders,
             IEnumerable<ITokenRequestHandler> requestHandlers,
+            IEnumerable<IGrantTypeHandler> grantTypeHandlers,
             OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> tokenManager,
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
@@ -78,6 +80,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _requestValidators = requestValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList();
             _claimProviders = claimProviders;
             _requestHandlers = requestHandlers;
+            _grantTypeHandlers = grantTypeHandlers;
             _tokenManager = tokenManager;
             _authorizationService = authorizationService;
             _externalSignInService = externalSignInService;
@@ -141,6 +144,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Request = openIdConnectRequest,
                 DetailedErrors = _passwordLoginOptions.DetailedErrors,
             };
+
+            var grantTypeHandler = _grantTypeHandlers.LastOrDefault(x => x.GrantType == openIdConnectRequest.GrantType);
+            if (grantTypeHandler != null)
+            {
+                return await grantTypeHandler.HandleAsync(context);
+            }
 
             if (openIdConnectRequest.IsPasswordGrantType())
             {
