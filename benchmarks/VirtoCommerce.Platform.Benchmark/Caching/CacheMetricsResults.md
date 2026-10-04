@@ -2,7 +2,7 @@
 
 - **Base:** `658d74c4247724cb0d260360fc159ef1e67a40d3` (before instrumentation).
 - **Published reference:** `28f7c1c762c2478f90ff8080b358a4557dec1c00`.
-- **Fixed:** the implementation accompanying this report, based on the published reference above.
+- **Fixed measurement snapshot:** `994811d900a98bb8f5d170f701bfc5149e147ef4`, based on the published reference above. Subsequent sampling-gate checks are reported separately below.
 - Windows 11 25H2, AMD Ryzen 7 8845HS (8 cores / 16 logical processors), SDK 10.0.400,
   runtime 10.0.11, BenchmarkDotNet 0.15.8, Release, default warmed job.
 
@@ -49,6 +49,7 @@ Normalized SHA-256 (LF, one final newline), identical across all three checkouts
 - Complete Off, OffAfterRequest and RecordOnly requests: 12 of 12 cases have baseline allocations, including genuinely suspended downstream tasks.
 - Complete sampled request, three groups, synchronous downstream: **380.74 / 1042.62 / 676.23 ns**, **1608 / 3280 / 2232 B**. Suspended downstream: **383.76 / 1152.07 / 756.15 ns**, **1696 / 3496 / 2448 B**.
 - Eight fixed threads sharing one sampled request, typed hit: **20.36 / 62.54 / 23.17 ns/op**, **88 / 88 / 88 B/op**. The shared writers counter and completion drain are removed; per-group atomic increments remain.
+- The separate `Parallel.For` typed-hit Request case is **20.55 / 54.54 / 37.47 ns/op**: improved against the published reference, but still **1.82x the uninstrumented base**. Scheduling differs from the fixed-thread case; neither result replaces the other.
 - Request by-key Off: **12.03 / 12.26 / 12.94 ns**, **0 / 0 / 0 B**; after a sampled request has set HasStarted: **12.10 / 13.69 / 13.59 ns**, **0 / 0 / 0 B**.
 - Empty sampled request: **222.52 / 281.26 / 276.14 ns**, **1464 / 1640 / 1608 B**. A scope still has a cost even when it emits no tags. Single Meter typed hit: **50.59 / 88.34 / 82.19 ns**; Off CRUD constructor: **30.50 / 35.70 / 34.70 ns**. Instrumentation is not free and no universal or production-throughput speedup is claimed.
 - Lookups completed before request completion remain included. A lookup racing completion may be omitted. Each counter is read once into the snapshot used by totals, JSON and group outcomes; detached work cannot change published attributes. This sampled attribution contract avoids waiting for in-flight work and does not change the physical lookup counter.
@@ -266,3 +267,30 @@ Gen0 collections per 1,000 operations:
 | ReadAllGroups | Groups=1 | 0.0000 | 0.0000 | 0.0000 |
 | ReadAllGroups | Groups=16 | 0.0000 | 0.0000 | 0.0000 |
 | ReadAllGroups | Groups=64 | 0.0000 | 0.0000 | 0.0000 |
+
+## Empty-name source exclusion — lifecycle check, 2026-10-04
+
+The historical Default tables above describe 994811d9. This correction adds the nonempty ActivitySource name requirement in middleware and Begin; lookup accounting and serialization are unchanged. The same committed lifecycle harness was run sequentially on 994811d9 and this correction using ShortRun (one launch, three warmups and three measurements), with no concurrent builds/tests. These diagnostics have wide intervals and do not replace or directly compare with the Default results above.
+
+Both isolated legacy-listener entry-point tests failed before the correction and pass afterwards. A real Kestrel request with incoming traceparent -01, an OpenTelemetry legacy subscription and server-source sampling returning None reproduced the unwanted summary before the correction; afterwards it leaves HasStarted false and emits no summary. SDK3 sampled and RecordOnly captures still pass.
+
+| State | Groups | Async | Before mean ± error ns | After mean ± error ns | Before / after SD ns | Before / after B | Before / after Gen0 | Before / after contentions |
+|---|---:|:---:|---:|---:|---:|---:|---:|---:|
+| Off | 0 | False | 268.88 ± 139.81 | 256.51 ± 94.86 | 7.66 / 5.20 | 1464 / 1464 | 0.1750 / 0.1750 | 0 / 0 |
+| Off | 0 | True | 273.72 ± 209.96 | 310.83 ± 265.89 | 11.51 / 14.57 | 1552 / 1552 | 0.1855 / 0.1855 | 0 / 0 |
+| Off | 3 | False | 413.65 ± 338.28 | 426.38 ± 399.55 | 18.54 / 21.90 | 1608 / 1608 | 0.1922 / 0.1922 | 0 / 0 |
+| Off | 3 | True | 456.09 ± 445.15 | 430.19 ± 207.86 | 24.40 / 11.39 | 1696 / 1696 | 0.2027 / 0.2027 | 0 / 0 |
+| OffAfterRequest | 0 | False | 301.97 ± 135.84 | 298.05 ± 1032.94 | 7.45 / 56.62 | 1464 / 1464 | 0.1750 / 0.1750 | 0 / 0 |
+| OffAfterRequest | 0 | True | 280.57 ± 167.96 | 316.77 ± 478.17 | 9.21 / 26.21 | 1552 / 1552 | 0.1855 / 0.1855 | 0 / 0 |
+| OffAfterRequest | 3 | False | 436.15 ± 593.88 | 438.77 ± 55.66 | 32.55 / 3.05 | 1608 / 1608 | 0.1922 / 0.1922 | 0 / 0 |
+| OffAfterRequest | 3 | True | 447.83 ± 724.49 | 439.52 ± 181.34 | 39.71 / 9.94 | 1696 / 1696 | 0.2027 / 0.2027 | 0 / 0 |
+| Recorded | 0 | False | 502.46 ± 350.21 | 310.02 ± 431.24 | 19.20 / 23.64 | 1608 / 1608 | 0.1922 / 0.1922 | 0 / 0 |
+| Recorded | 0 | True | 650.54 ± 485.81 | 399.49 ± 810.16 | 26.63 / 44.41 | 1824 / 1824 | 0.2174 / 0.2179 | 0 / 0 |
+| Recorded | 3 | False | 1150.76 ± 1113.69 | 780.39 ± 825.03 | 61.04 / 45.22 | 2232 / 2232 | 0.2661 / 0.2661 | 0 / 0 |
+| Recorded | 3 | True | 894.35 ± 1328.18 | 842.95 ± 8.07 | 72.80 / 0.44 | 2448 / 2448 | 0.2918 / 0.2918 | 0 / 0 |
+| RecordOnly | 0 | False | 273.98 ± 321.03 | 264.87 ± 97.65 | 17.60 / 5.35 | 1464 / 1464 | 0.1750 / 0.1750 | 0 / 0 |
+| RecordOnly | 0 | True | 339.92 ± 333.54 | 310.94 ± 658.77 | 18.28 / 36.11 | 1552 / 1552 | 0.1855 / 0.1855 | 0 / 0 |
+| RecordOnly | 3 | False | 497.16 ± 1024.02 | 473.29 ± 409.47 | 56.13 / 22.44 | 1608 / 1608 | 0.1917 / 0.1922 | 0 / 0 |
+| RecordOnly | 3 | True | 541.37 ± 1015.61 | 562.52 ± 286.03 | 55.67 / 15.68 | 1696 / 1696 | 0.2022 / 0.2027 | 0 / 0 |
+
+All 16 cases retain identical allocations and zero monitor contentions. ShortRun timing variation is not evidence of a speedup or a precise bound on the added gate cost.

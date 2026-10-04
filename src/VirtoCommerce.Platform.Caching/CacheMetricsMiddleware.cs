@@ -13,7 +13,8 @@ public class CacheMetricsMiddleware(RequestDelegate next)
     public Task InvokeAsync(HttpContext context)
     {
         var activity = context.Features.Get<IHttpActivityFeature>()?.Activity;
-        return activity is { IsAllDataRequested: true, Recorded: true } && activity.Source.HasListeners()
+        return activity is { IsAllDataRequested: true, Recorded: true }
+            && !string.IsNullOrEmpty(activity.Source.Name) && activity.Source.HasListeners()
             ? InvokeWithMetricsAsync(context, activity)
             : next(context);
     }

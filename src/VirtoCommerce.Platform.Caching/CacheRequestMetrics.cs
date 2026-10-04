@@ -40,7 +40,8 @@ internal sealed class CacheRequestMetrics : IDisposable
 
     public static CacheRequestMetrics Begin(Activity activity)
     {
-        if (activity is not { IsAllDataRequested: true, Recorded: true } || !activity.Source.HasListeners())
+        if (activity is not { IsAllDataRequested: true, Recorded: true }
+            || string.IsNullOrEmpty(activity.Source.Name) || !activity.Source.HasListeners())
         {
             return null;
         }

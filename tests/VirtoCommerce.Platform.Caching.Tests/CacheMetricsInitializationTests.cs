@@ -98,6 +98,46 @@ public class CacheMetricsInitializationTests
         Assert.DoesNotContain(activity.TagObjects, tag => tag.Key.StartsWith("cache.", StringComparison.Ordinal));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task IncomingRecordedLegacyActivityWithListenerDoesNotStartRequestMetrics(bool throughMiddleware)
+    {
+        using var isolated = new IsolatedCachingAssembly();
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => string.IsNullOrEmpty(source.Name),
+        };
+        ActivitySource.AddActivityListener(listener);
+        using var activity = new Activity("legacy-server")
+            .SetParentId("00-0123456789abcdef0123456789abcdef-0123456789abcdef-01").Start();
+        Assert.True(activity.Recorded);
+        Assert.True(activity.IsAllDataRequested);
+        Assert.Empty(activity.Source.Name);
+        Assert.True(activity.Source.HasListeners());
+        Assert.False(isolated.HasStarted);
+
+        if (throughMiddleware)
+        {
+            var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            var middleware = isolated.Middleware(_ => completion.Task);
+            var context = new DefaultHttpContext();
+            context.Features.Set<IHttpActivityFeature>(new HttpActivityFeature { Activity = activity });
+            var actual = middleware(context);
+            completion.SetResult();
+            await actual;
+            Assert.Same(completion.Task, actual);
+        }
+        else
+        {
+            using var direct = isolated.Begin(activity);
+            Assert.Null(direct);
+        }
+
+        Assert.False(isolated.HasStarted);
+        Assert.DoesNotContain(activity.TagObjects, tag => tag.Key.StartsWith("cache.", StringComparison.Ordinal));
+    }
+
     private static async Task AssertCacheOperations(IPlatformMemoryCache platform, IRequestScopedCache request)
     {
         Assert.False(platform.TryGetValue("absent", out _));

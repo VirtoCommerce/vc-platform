@@ -274,7 +274,7 @@ With the OpenTelemetry module, include the meter in the deployment's existing li
 ### Cache lookups in one HTTP request
 
 For an HTTP server activity with **both `IsAllDataRequested` and `Recorded` set**, whose
-**`ActivitySource` has a listener**, a request with at least one lookup receives:
+**`ActivitySource` has a nonempty name and a listener**, a request with at least one lookup receives:
 
 - `cache.hits` and `cache.misses`: numeric totals across both cache implementations.
 - `cache.lookup.summary`: compact JSON arrays `[cacheName, hits, misses]`, for example
@@ -293,9 +293,10 @@ request completion are included; detached lookups still in flight while that sna
 be omitted. Completion does not wait for detached work, which cannot change the published snapshot.
 Background lookups still contribute to the aggregate physical counter when subscribed.
 
-There is no summary for an absent activity, a legacy activity whose source has no listener (even if
-an incoming `traceparent` sets its `Recorded` flag), a `RecordOnly` sampling result, or a request without
-lookups. Request attribution requires a tracing listener, but does not require a meter listener.
+There is no summary for an absent activity, a legacy activity with the default empty-name source (even
+if that source has a listener and an incoming `traceparent` sets its `Recorded` flag), a `RecordOnly`
+sampling result, or a request without lookups. Request attribution requires a tracing listener, but
+does not require a meter listener.
 An unexported trace cannot be inspected.
 
 Detail is bounded to the first 64 admitted groups and 8 KiB of UTF-8 JSON. Truncation never removes
