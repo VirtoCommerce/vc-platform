@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 
 namespace VirtoCommerce.Platform.DistributedLock
@@ -6,6 +7,8 @@ namespace VirtoCommerce.Platform.DistributedLock
     /// <summary>
     /// Distributed lock provider that implements bypass mode (no distributed lock)
     /// </summary>
+    [Obsolete("Platform startup synchronization only. Use IDistributedLock from VirtoCommerce.Platform.Core.DistributedLock.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class InternalNoLockService : IInternalDistributedLockService
     {
         private readonly ILogger<InternalNoLockService> _logger;

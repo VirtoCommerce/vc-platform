@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Security
@@ -52,6 +53,8 @@ namespace VirtoCommerce.Platform.Web.Security
                 return ExternalSignInResult.Fail();
             }
 
+            // No audit publish here: TryGetUserInfo throws rather than returning false, so this branch
+            // is unreachable. Left as-is - changing that is authentication logic, which is out of scope.
             if (!TryGetUserInfo(externalLoginInfo, out var userName, out var userEmail))
             {
                 return ExternalSignInResult.Fail();
@@ -60,6 +63,10 @@ namespace VirtoCommerce.Platform.Web.Security
             var platformUser = await GetOrCreatePlatformUser(externalLoginInfo, userName, userEmail);
             if (platformUser == null)
             {
+                // Every exit from here throws, and an attempt that ends in an exception is still an
+                // attempt: without these publishes the log would show external sign-ins as either
+                // successful or locked out and nothing else.
+                await PublishSignInAttempt(userName, user: null, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.UserNotFound);
                 throw new AuthenticationException($"The user {externalLoginInfo.Principal.Identity?.Name} for the external provider {externalLoginInfo.ProviderDisplayName} is not found.");
             }
 
@@ -69,23 +76,47 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (externalLoginResult == SignInResult.Failed)
             {
+                await PublishSignInAttempt(userName, platformUser, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.NotAllowed);
                 throw new AuthenticationException($"The requested provider {externalLoginInfo.ProviderDisplayName} has not been linked to an account, the provider must be linked from the back office.");
             }
 
             if (externalLoginResult == SignInResult.LockedOut)
             {
+                await PublishSignInAttempt(userName, platformUser, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.LockedOut);
                 return ExternalSignInResult.Fail();
             }
 
             if (externalLoginResult == SignInResult.TwoFactorRequired)
             {
+                await PublishSignInAttempt(userName, platformUser, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.RequiresTwoFactor);
                 throw new NotImplementedException();
             }
 
             await SetLastLoginDate(platformUser);
             await _eventPublisher.Publish(new UserLoginEvent(platformUser, externalLoginInfo));
+            await PublishSignInAttempt(platformUser.UserName, platformUser, externalLoginInfo.LoginProvider, succeeded: true, failureReason: null);
 
             return ExternalSignInResult.Succeed(externalLoginInfo.LoginProvider, platformUser);
+        }
+
+        private Task PublishSignInAttempt(
+            string userName,
+            ApplicationUser user,
+            string provider,
+            bool succeeded,
+            string failureReason)
+        {
+            return _eventPublisher.Publish(new UserSignInAttemptEvent
+            {
+                UserName = userName ?? user?.UserName,
+                UserId = user?.Id,
+                Succeeded = succeeded,
+                FailureReason = failureReason,
+                SignInType = SignInType.External,
+                Provider = provider,
+                StoreId = user?.StoreId,
+                MemberId = user?.MemberId,
+            });
         }
 
         private Task<IdentityResult> SetLastLoginDate(ApplicationUser user)

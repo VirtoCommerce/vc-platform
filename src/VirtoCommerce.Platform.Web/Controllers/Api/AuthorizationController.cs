@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,12 +14,14 @@ using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
@@ -43,11 +46,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly List<ITokenRequestValidator> _requestValidators;
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
+        private readonly IEnumerable<IGrantTypeHandler> _grantTypeHandlers;
         private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IExternalSignInService _externalSignInService;
         private readonly IOpenIddictAuthorizationManager _authorizationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
+        private readonly Core.Security.AuthorizationOptions _authorizationOptions;
 
         public AuthorizationController(
             OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> applicationManager,
@@ -58,11 +63,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ITokenRequestValidator> requestValidators,
             IEnumerable<ITokenClaimProvider> claimProviders,
             IEnumerable<ITokenRequestHandler> requestHandlers,
+            IEnumerable<IGrantTypeHandler> grantTypeHandlers,
             OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> tokenManager,
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
             IOpenIddictAuthorizationManager authorizationManager,
-            IOpenIddictScopeManager scopeManager)
+            IOpenIddictScopeManager scopeManager,
+            IOptions<Core.Security.AuthorizationOptions> authorizationOptions)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -73,18 +80,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _requestValidators = requestValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList();
             _claimProviders = claimProviders;
             _requestHandlers = requestHandlers;
+            _grantTypeHandlers = grantTypeHandlers;
             _tokenManager = tokenManager;
             _authorizationService = authorizationService;
             _externalSignInService = externalSignInService;
             _authorizationManager = authorizationManager;
             _scopeManager = scopeManager;
+            _authorizationOptions = authorizationOptions.Value;
         }
 
         [HttpPost("~/revoke/token")]
         public async Task<ActionResult> RevokeCurrentUserToken()
         {
-            var tokenId = HttpContext.User.GetClaim("oi_tkn_id");
-            var authId = HttpContext.User.GetClaim("oi_au_id");
+            // Same claims as everywhere else that reads them, named rather than spelled out: "oi_au_id"
+            // and "oi_tkn_id" are what these constants hold, and the two spellings sitting side by side
+            // in one controller read as if they were different claims.
+            var tokenId = HttpContext.User.GetClaim(Claims.Private.TokenId);
+            var authId = HttpContext.User.GetClaim(Claims.Private.AuthorizationId);
 
             if (authId != null)
             {
@@ -104,6 +116,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         await _tokenManager.TryRevokeAsync(authorizationToken);
                     }
                 }
+            }
+
+            if (!string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            {
+                await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             }
 
             return Ok();
@@ -128,6 +145,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 DetailedErrors = _passwordLoginOptions.DetailedErrors,
             };
 
+            var grantTypeHandler = _grantTypeHandlers.LastOrDefault(x => x.GrantType == openIdConnectRequest.GrantType);
+            if (grantTypeHandler != null)
+            {
+                return await grantTypeHandler.HandleAsync(context);
+            }
+
             if (openIdConnectRequest.IsPasswordGrantType())
             {
                 // Measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks
@@ -144,6 +167,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                     catch (DuplicateEmailException)
                     {
+                        await PublishSignInAttempt(openIdConnectRequest.Username, user: null, succeeded: false,
+                            SignInFailureReason.DuplicateEmail, openIdConnectRequest.ClientId);
                         await delayedResponse.FailAsync();
                         return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
                     }
@@ -151,12 +176,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (user is null)
                 {
+                    await PublishSignInAttempt(openIdConnectRequest.Username, user: null, succeeded: false,
+                        SignInFailureReason.UserNotFound, openIdConnectRequest.ClientId);
                     await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
 
                 if (!_passwordLoginOptions.Enabled && !user.IsAdministrator)
                 {
+                    await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                        SignInFailureReason.PasswordLoginDisabled, openIdConnectRequest.ClientId);
                     await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.PasswordLoginDisabled());
                 }
@@ -168,6 +197,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
                 catch (DuplicateEmailException)
                 {
+                    await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                        SignInFailureReason.DuplicateEmail, openIdConnectRequest.ClientId);
                     await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
                 }
@@ -179,6 +210,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var errors = await requestValidator.ValidateAsync(context);
                     if (errors.Count > 0)
                     {
+                        await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                            ToFailureReason(context.SignInResult), openIdConnectRequest.ClientId);
                         await delayedResponse.FailAsync();
                         return BadRequest(errors.First());
                     }
@@ -201,16 +234,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 await _eventPublisher.Publish(new UserLoginEvent(user));
+                await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: true,
+                    failureReason: null, openIdConnectRequest.ClientId);
 
                 await delayedResponse.SucceedAsync();
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            if (openIdConnectRequest.IsRefreshTokenGrantType())
+            if (openIdConnectRequest.IsRefreshTokenGrantType() || openIdConnectRequest.IsAuthorizationCodeGrantType())
             {
                 // Retrieve the claims principal stored in the authorization code/refresh token.
                 var info = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+                if (openIdConnectRequest.GetResources().Except(info.Principal.GetResources(), StringComparer.Ordinal).Any())
+                {
+                    return BadRequest(SecurityErrorDescriber.InvalidTarget());
+                }
 
                 // Retrieve the user profile corresponding to the authorization code/refresh token.
                 // Note: if you want to automatically invalidate the authorization code/refresh token
@@ -250,6 +290,34 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 CopyClaim(info.Principal, ticket.Principal, ClaimTypes.AuthenticationMethod, destinations);
                 CopyClaim(info.Principal, ticket.Principal, PlatformConstants.Security.Claims.OperatorUserId, destinations);
                 CopyClaim(info.Principal, ticket.Principal, PlatformConstants.Security.Claims.OperatorUserName, destinations);
+
+                // Keep the rotated token on the authorization the incoming one belonged to, so a session
+                // holds one identity across its whole life. Without this the id is only restored by
+                // OpenIddict internally and is not readable here - and the audit row below would be
+                // written with a null session id, which is what broke the Active Sessions join.
+                var refreshedAuthorizationId = info.Principal.GetClaim(Claims.Private.AuthorizationId);
+                if (!string.IsNullOrEmpty(refreshedAuthorizationId))
+                {
+                    ticket.Principal.SetAuthorizationId(refreshedAuthorizationId);
+                }
+
+                // Ordinary token rotation is deliberately not audited: high volume, low value. A refresh that
+                // carries operator claims is different - it is how an impersonation session extends itself.
+                var refreshedOperatorUserId = info.Principal.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)?.EmptyToNull();
+                if (refreshedOperatorUserId != null)
+                {
+                    await PublishImpersonationAttempt(
+                        userName: user.UserName,
+                        attemptedUserId: user.Id,
+                        impersonatedUser: user,
+                        operatorUserId: refreshedOperatorUserId,
+                        operatorUserName: info.Principal.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)?.EmptyToNull(),
+                        succeeded: true,
+                        failureReason: null,
+                        signInType: SignInType.Impersonation,
+                        clientId: openIdConnectRequest.ClientId,
+                        sessionId: refreshedAuthorizationId);
+                }
 
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
@@ -301,17 +369,32 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 // Create a new authentication ticket.
-                var ticket = CreateTicket(application);
+                var ticket = CreateTicket(application, openIdConnectRequest);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
             if (openIdConnectRequest.IsImpersonateGrantType())
             {
+                var requestedUserId = (string)openIdConnectRequest.GetParameter("user_id");
+
                 // Only Authorized User has access for impersonation
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
+                    // There is no operator to name, but an unauthenticated call to the impersonate
+                    // grant is exactly the kind of probe an audit trail exists to surface.
+                    await PublishImpersonationAttempt(
+                        userName: null,
+                        attemptedUserId: requestedUserId,
+                        impersonatedUser: null,
+                        operatorUserId: null,
+                        operatorUserName: null,
+                        succeeded: false,
+                        failureReason: SignInFailureReason.Forbidden,
+                        signInType: SignInType.Impersonation,
+                        clientId: openIdConnectRequest.ClientId);
+
                     return Unauthorized();
                 }
 
@@ -322,6 +405,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         new PermissionAuthorizationRequirement(PlatformConstants.Security.Permissions.SecurityLoginOnBehalf));
                     if (!loginOnBehalfAuthResult.Succeeded)
                     {
+                        await PublishImpersonationAttempt(
+                            userName: null,
+                            attemptedUserId: requestedUserId,
+                            impersonatedUser: null,
+                            operatorUserId: user.Id,
+                            operatorUserName: user.UserName,
+                            succeeded: false,
+                            failureReason: SignInFailureReason.Forbidden,
+                            signInType: SignInType.Impersonation,
+                            clientId: openIdConnectRequest.ClientId);
+
                         return Forbid();
                     }
                 }
@@ -330,13 +424,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var operatorUserId = User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)?.EmptyToNull() ?? user.Id;
                 var operatorUserName = User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)?.EmptyToNull() ?? user.UserName;
 
-                var userId = (string)openIdConnectRequest.GetParameter("user_id");
+                // The audit row names the real operator whichever direction the call goes. Captured
+                // before the revert branch below clears these: reading them afterwards is what made a
+                // revert row record the customer as their own operator.
+                var auditOperatorUserId = operatorUserId;
+                var auditOperatorUserName = operatorUserName;
+
                 ApplicationUser impersonatedUser;
 
-                if (!string.IsNullOrEmpty(userId))
+                if (!string.IsNullOrEmpty(requestedUserId))
                 {
                     // Find impersonated user by id
-                    impersonatedUser = await _userManager.FindByIdAsync(userId);
+                    impersonatedUser = await _userManager.FindByIdAsync(requestedUserId);
                 }
                 else
                 {
@@ -346,8 +445,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     operatorUserName = string.Empty;
                 }
 
+                // An empty operatorUserId at this point means the call reverted the operator back to themselves.
+                var isRevert = string.IsNullOrEmpty(operatorUserId);
+                var auditSignInType = isRevert ? SignInType.ImpersonationRevert : SignInType.Impersonation;
+
+                // Both row types are about the customer account: the one being entered on a grant, the
+                // one being left on a revert - which is the account this request authenticated as.
+                var auditUser = isRevert ? user : impersonatedUser;
+
                 if (impersonatedUser == null)
                 {
+                    await PublishImpersonationAttempt(
+                        userName: auditUser?.UserName,
+                        attemptedUserId: auditUser?.Id ?? requestedUserId,
+                        impersonatedUser: auditUser,
+                        operatorUserId: auditOperatorUserId,
+                        operatorUserName: auditOperatorUserName,
+                        succeeded: false,
+                        failureReason: SignInFailureReason.UserNotFound,
+                        signInType: auditSignInType,
+                        clientId: openIdConnectRequest.ClientId);
+
                     return BadRequest(SecurityErrorDescriber.TokenInvalid());
                 }
 
@@ -358,6 +476,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var errors = await requestValidator.ValidateAsync(context);
                     if (errors.Count > 0)
                     {
+                        await PublishImpersonationAttempt(
+                            userName: auditUser.UserName,
+                            attemptedUserId: auditUser.Id,
+                            impersonatedUser: auditUser,
+                            operatorUserId: auditOperatorUserId,
+                            operatorUserName: auditOperatorUserName,
+                            succeeded: false,
+                            failureReason: SignInFailureReason.NotAllowed,
+                            signInType: auditSignInType,
+                            clientId: openIdConnectRequest.ClientId);
+
                         return BadRequest(errors.First());
                     }
                 }
@@ -374,57 +503,86 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     .SetClaimWithDestinations(PlatformConstants.Security.Claims.OperatorUserId, operatorUserId, destinations)
                     .SetClaimWithDestinations(PlatformConstants.Security.Claims.OperatorUserName, operatorUserName, destinations);
 
+                // A revert row is about the impersonated session that is ending, so it carries that
+                // session's id - which is what ties it back to the grant row. A grant row needs the id
+                // of the session it opens, and that only exists if we create the authorization here:
+                // see AttachAuthorizationId.
+                var sessionId = isRevert
+                    ? User.GetClaim(Claims.Private.AuthorizationId)
+                    : await AttachAuthorizationId(ticket.Principal, impersonatedUser, openIdConnectRequest.ClientId);
+
+                await PublishImpersonationAttempt(
+                    userName: auditUser.UserName,
+                    attemptedUserId: auditUser.Id,
+                    impersonatedUser: auditUser,
+                    operatorUserId: auditOperatorUserId,
+                    operatorUserName: auditOperatorUserName,
+                    succeeded: true,
+                    failureReason: null,
+                    signInType: auditSignInType,
+                    clientId: openIdConnectRequest.ClientId,
+                    sessionId: sessionId);
+
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
-            }
-
-            if (openIdConnectRequest.IsAuthorizationCodeGrantType())
-            {
-                // Retrieve the claims principal stored in the refresh token.
-                var info = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-
-                // Retrieve the user profile corresponding to the refresh token.
-                // Note: if you want to automatically invalidate the refresh token
-                // when the user password/roles change, use _signInManager.ValidateSecurityStampAsync(info.Principal) instead.
-                var user = await _userManager.GetUserAsync(info.Principal);
-                if (user == null)
-                {
-                    var properties = new AuthenticationProperties(new Dictionary<string, string>
-                    {
-                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
-                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The refresh token is no longer valid.",
-                    });
-
-                    return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-                }
-
-                // Ensure the user is still allowed to sign in.
-                if (!await _signInManager.CanSignInAsync(user))
-                {
-                    var properties = new AuthenticationProperties(new Dictionary<string, string>
-                    {
-                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
-                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is no longer allowed to sign in.",
-                    });
-
-                    return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-                }
-
-                // Create a new ClaimsPrincipal containing the claims that
-                // will be used to create an id_token, a token or a code.
-                var principal = await _signInManager.CreateUserPrincipalAsync(user);
-
-                foreach (var claim in principal.Claims)
-                {
-                    claim.SetDestinations(GetDestinations(claim, principal));
-                }
-
-                return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
             return BadRequest(SecurityErrorDescriber.UnsupportedGrantType());
         }
 
         #endregion
+
+        [HttpGet("~/connect/session")]
+        [AllowAnonymous]
+        public IActionResult GetSessionToken([FromServices] IAntiforgery antiforgery)
+        {
+            if (string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            {
+                return NotFound();
+            }
+
+            return Ok(new { RequestToken = antiforgery.GetAndStoreTokens(HttpContext).RequestToken });
+        }
+
+        [HttpPost("~/connect/session")]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateSession([FromQuery] string returnUrl)
+        {
+            if (string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            {
+                return NotFound();
+            }
+
+            if (!IsLocalAuthorizationReturnUrl(returnUrl) ||
+                !string.Equals(Request.Headers.Origin, $"{Request.Scheme}://{Request.Host}", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest();
+            }
+
+            var result = await HttpContext.AuthenticateAsync(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+            if (!result.Succeeded)
+            {
+                return Unauthorized();
+            }
+
+            var user = await GetStorefrontSessionUserAsync(result.Principal);
+            var tokenExpiresUtc = result.Principal.GetExpirationDate();
+            if (user == null || !tokenExpiresUtc.HasValue || tokenExpiresUtc <= DateTimeOffset.UtcNow)
+            {
+                return Unauthorized();
+            }
+
+            var expiresUtc = DateTimeOffset.UtcNow.AddMinutes(5);
+            await _signInManager.SignInAsync(user, new AuthenticationProperties
+            {
+                AllowRefresh = false,
+                IsPersistent = false,
+                ExpiresUtc = tokenExpiresUtc.Value < expiresUtc ? tokenExpiresUtc.Value : expiresUtc,
+                RedirectUri = returnUrl,
+            });
+
+            return NoContent();
+        }
 
         [HttpGet("~/connect/authorize")]
         [HttpPost("~/connect/authorize")]
@@ -439,29 +597,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // If a max_age parameter was provided, ensure that the cookie is not too old.
             // If the user principal can't be extracted or the cookie is too old, redirect the user to the login page.
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+            var returnUrl = Request.PathBase + Request.Path + QueryString.Create(
+                Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList());
+            var useStorefrontLogin = !string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath);
 
-            if (!result.Succeeded || RequestHasExpired(request, result))
+            if (!result.Succeeded || RequestHasExpired(request, result) ||
+                (useStorefrontLogin && result.Properties?.RedirectUri != returnUrl))
             {
-                // If the client application requested promptless authentication,
-                // return an error indicating that the user is not logged in.
-                if (request.HasPromptValue(PromptValues.None))
-                {
-                    return Forbid(
-                        authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                        properties: new AuthenticationProperties(new Dictionary<string, string>
-                        {
-                            [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
-                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in.",
-                        }));
-                }
-
-                return Challenge(
-                    authenticationSchemes: IdentityConstants.ApplicationScheme,
-                    properties: new AuthenticationProperties
-                    {
-                        RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                            Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
-                    });
+                return ChallengeLogin(request, returnUrl);
             }
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
@@ -506,6 +649,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Deny")]
+        [ValidateAntiForgeryToken]
         [Authorize]
         [AllowAnonymous]
         // Notify OpenIddict that the authorization grant has been denied by the resource owner
@@ -517,13 +661,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Accept")]
+        [ValidateAntiForgeryToken]
         [Authorize]
         [AllowAnonymous]
         public async Task<IActionResult> Accept()
         {
             var request = GetOpenIddictServerRequest();
 
-            var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, User);
+            var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+            if (!result.Succeeded || RequestHasExpired(request, result))
+            {
+                return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
+
+            var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
 
             // Note: the same check is already made in the other action but is repeated
             // here to ensure a malicious user can't abuse this POST-only endpoint and
@@ -612,11 +763,199 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             target.SetClaimWithDestinations(claimType, value, destinations);
         }
 
+        private bool IsLocalAuthorizationReturnUrl(string returnUrl)
+        {
+            return Url.IsLocalUrl(returnUrl) &&
+                returnUrl.StartsWith(Request.PathBase + "/connect/authorize?", StringComparison.Ordinal) &&
+                !returnUrl.Contains('#');
+        }
+
+        private async Task<ApplicationUser> GetStorefrontSessionUserAsync(ClaimsPrincipal principal)
+        {
+            if (!principal.HasAudience("resource_server") || principal.HasClaim(claim => claim.Type == Claims.ClientId) || principal.IsImpersonated())
+            {
+                return null;
+            }
+
+            var user = await _userManager.GetUserAsync(principal);
+            if (user == null || user.PasswordExpired || !await _signInManager.CanSignInAsync(user) || await _userManager.IsLockedOutAsync(user))
+            {
+                return null;
+            }
+
+            return user;
+        }
+
+        private IActionResult ChallengeLogin(OpenIddictRequest request, string returnUrl)
+        {
+            if (request.HasPromptValue(PromptValues.None))
+            {
+                return Forbid(
+                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    {
+                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
+                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in.",
+                    }));
+            }
+
+            if (!string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            {
+                return LocalRedirect(_authorizationOptions.OAuthLoginPath + QueryString.Create("returnUrl", returnUrl));
+            }
+
+            return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, IdentityConstants.ApplicationScheme);
+        }
+
         private static bool RequestHasExpired(OpenIddictRequest request, AuthenticateResult result)
         {
             return request.MaxAge != null &&
                    result.Properties?.IssuedUtc != null &&
                    DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value);
+        }
+
+        /// <summary>
+        /// Records a sign-in attempt for audit. Publishing is non-blocking (the handler hands the row to a
+        /// buffered writer), so both the user-found and user-not-found branches do the same amount of
+        /// synchronous work and the user-enumeration timing side channel that <see cref="DelayedResponse"/>
+        /// closes stays closed.
+        /// </summary>
+        private Task PublishSignInAttempt(
+            string userName,
+            ApplicationUser user,
+            bool succeeded,
+            string failureReason,
+            string clientId,
+            string signInType = SignInType.Password)
+        {
+            return _eventPublisher.Publish(new UserSignInAttemptEvent
+            {
+                UserName = userName,
+                UserId = user?.Id,
+                Succeeded = succeeded,
+                FailureReason = failureReason,
+                SignInType = signInType,
+                ClientId = clientId,
+                StoreId = user?.StoreId,
+                MemberId = user?.MemberId,
+            });
+        }
+
+        private Task PublishImpersonationAttempt(
+            string userName,
+            string attemptedUserId,
+            ApplicationUser impersonatedUser,
+            string operatorUserId,
+            string operatorUserName,
+            bool succeeded,
+            string failureReason,
+            string signInType,
+            string clientId,
+            string sessionId = null)
+        {
+            return _eventPublisher.Publish(new UserSignInAttemptEvent
+            {
+                UserName = userName ?? impersonatedUser?.UserName,
+                // Falls back to the id that was attempted, so a denied or unresolved target is
+                // still identifiable without putting a GUID in the user name column.
+                UserId = impersonatedUser?.Id ?? attemptedUserId,
+                Succeeded = succeeded,
+                FailureReason = failureReason,
+                SignInType = signInType,
+                OperatorUserId = operatorUserId,
+                OperatorUserName = operatorUserName,
+                ClientId = clientId,
+                SessionId = sessionId,
+                StoreId = impersonatedUser?.StoreId,
+                MemberId = impersonatedUser?.MemberId,
+            });
+        }
+
+        /// <summary>
+        /// Creates the OpenIddict authorization for a session up front, attaches it to the ticket
+        /// principal and returns its id, so the audit row and the Active Sessions listing agree on what
+        /// identifies a session.
+        /// <para>
+        /// This cannot be read back instead. OpenIddict assigns the authorization id while it processes
+        /// the <see cref="ControllerBase.SignIn(ClaimsPrincipal)"/> result, which is after this action has
+        /// returned, so <c>Claims.Private.AuthorizationId</c> on a freshly built ticket is always null.
+        /// OpenIddict honours an authorization already attached to the principal and skips creating its
+        /// own ad-hoc one — the same mechanism the authorization-code path uses in <c>SignInAsync</c>.
+        /// </para>
+        /// <para>
+        /// The type is ad-hoc to match exactly what OpenIddict would otherwise have created: a permanent
+        /// authorization would outlive the session and carry remembered-consent semantics this grant has
+        /// no notion of. Returns null when no refresh token is being issued, because then there is no
+        /// session for Active Sessions to list and nothing to correlate.
+        /// </para>
+        /// </summary>
+        private async Task<string> AttachAuthorizationId(ClaimsPrincipal principal, ApplicationUser user, string clientId)
+        {
+            if (!principal.HasScope(Scopes.OfflineAccess))
+            {
+                return null;
+            }
+
+            // This grant is routinely called with no client_id - the storefront sends only
+            // grant_type, scope and user_id - and FindByClientIdAsync throws on a missing identifier
+            // rather than returning null. Correlating the session is a nice-to-have; failing the
+            // login on behalf because of it is not.
+            if (string.IsNullOrEmpty(clientId))
+            {
+                return null;
+            }
+
+            var application = await _applicationManager.FindByClientIdAsync(clientId);
+            if (application == null)
+            {
+                return null;
+            }
+
+            var authorization = await _authorizationManager.CreateAsync(
+                principal: principal,
+                subject: await _userManager.GetUserIdAsync(user),
+                client: await _applicationManager.GetIdAsync(application),
+                type: AuthorizationTypes.AdHoc,
+                scopes: principal.GetScopes());
+
+            var authorizationId = await _authorizationManager.GetIdAsync(authorization);
+            principal.SetAuthorizationId(authorizationId);
+
+            return authorizationId;
+        }
+
+        private static string ToFailureReason(Microsoft.AspNetCore.Identity.SignInResult result)
+        {
+            if (result == null)
+            {
+                return SignInFailureReason.InvalidPassword;
+            }
+
+            if (result.IsLockedOut)
+            {
+                return SignInFailureReason.LockedOut;
+            }
+
+            if (result.IsNotAllowed)
+            {
+                return SignInFailureReason.NotAllowed;
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                return SignInFailureReason.RequiresTwoFactor;
+            }
+
+            // A succeeded result reaching a failure publish means the credentials were fine and
+            // something after the password check rejected the request - a token request validator,
+            // typically an expired password. Reporting that as a bad password would send an
+            // administrator hunting a credential-stuffing run that never happened.
+            if (result.Succeeded)
+            {
+                return SignInFailureReason.NotAllowed;
+            }
+
+            return SignInFailureReason.InvalidPassword;
         }
 
         private OpenIddictRequest GetOpenIddictServerRequest()
@@ -671,7 +1010,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // but you may want to allow the user to uncheck specific scopes.
             // For that, simply restrict the list of scopes before calling SetScopes.
             principal.SetScopes(request.GetScopes());
-            principal.SetResources(await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+            var requestedResources = request.GetResources();
+            principal.SetResources(requestedResources.Any()
+                ? requestedResources
+                : await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
 
             // Automatically create a permanent authorization to avoid requiring explicit consent
             // for future authorization or token requests containing the same scopes.
@@ -742,7 +1084,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private AuthenticationTicket CreateTicket(VirtoOpenIddictEntityFrameworkCoreApplication application)
+        private static AuthenticationTicket CreateTicket(VirtoOpenIddictEntityFrameworkCoreApplication application, OpenIddictRequest request)
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
@@ -762,7 +1104,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var principal = new ClaimsPrincipal(identity);
 
-            principal.SetResources("resource_server");
+            var requestedResources = request.GetResources();
+            principal.SetResources(requestedResources.Any() ? requestedResources : ["resource_server"]);
 
             identity.SetDestinations(static _ => [Destinations.AccessToken, Destinations.IdentityToken]);
 
@@ -781,7 +1124,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // will be used to create an id_token, a token or a code.
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-            if (!context.Request.IsAuthorizationCodeGrantType() && !context.Request.IsRefreshTokenGrantType())
+            var reuseGrant = context.Request.IsAuthorizationCodeGrantType() || context.Request.IsRefreshTokenGrantType();
+            var resources = context.Request.GetResources();
+            if (reuseGrant)
+            {
+                principal.SetScopes(context.Principal?.GetScopes() ?? []);
+                principal.SetAuthorizationId(context.Principal?.GetAuthorizationId());
+            }
+            else
             {
                 // Set the list of scopes granted to the client application.
                 // Note: the offline_access scope must be granted
@@ -794,9 +1144,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     Scopes.OfflineAccess,
                     Scopes.Roles
                 }.Intersect(context.Request.GetScopes()));
+
             }
 
-            principal.SetResources("resource_server");
+            if (!resources.Any() && reuseGrant)
+            {
+                resources = context.Principal?.GetResources() ?? [];
+            }
+
+            principal.SetResources(resources.DefaultIfEmpty("resource_server"));
 
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies

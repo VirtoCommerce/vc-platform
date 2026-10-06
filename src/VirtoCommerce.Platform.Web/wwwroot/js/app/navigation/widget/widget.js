@@ -40,6 +40,21 @@ angular.module('platformWebApp')
             if (!this.widgetsMap[containerName]) {
                 this.widgetsMap[containerName] = [];
             }
+            // Registering the same widget twice in one container is always a mistake, but modules
+            // do it by accident: several register from a 'loginStatusChanged' handler, so every
+            // sign-in in the same tab appended another copy and nothing ever removed them.
+            // Duplicates are worse than merely redundant. vaWidgetContainer.getKey() derives a
+            // widget's stored gridster row/col from controller + template + group, so every copy
+            // resolves to the same $localStorage key and claims the same cell - and gridster then
+            // pushes them apart forever, one row per digest, until $digest gives up. Dedupe on the
+            // same identity getKey() uses, so two widgets that would fight over a cell can't both
+            // be registered. Registering one widget in several containers stays supported.
+            var isDuplicate = _.any(this.widgetsMap[containerName], function (x) {
+                return x.controller === widget.controller && x.template === widget.template;
+            });
+            if (isDuplicate) {
+                return;
+            }
             this.widgetsMap[containerName].push(widget);
         },
         unregisterWidget: function (widget, containerName) {

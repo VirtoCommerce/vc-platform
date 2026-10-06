@@ -1,0 +1,146 @@
+<div class="blade-content __medium-wide">
+  <div class="blade-inner">
+    <div class="inner-block sign-in-log-dashboard">
+
+      <div class="sign-in-log-disabled" ng-if="blade.stats && !blade.stats.recordingEnabled">
+        <i class="fa fa-exclamation-triangle"></i>
+        <div>
+          <strong>{{ 'platform.blades.sign-in-log.disabled.title' | translate }}</strong>
+          <div>{{ 'platform.blades.sign-in-log.disabled.message' | translate }}</div>
+        </div>
+      </div>
+
+      <div class="sign-in-log-period-row">
+        <span class="sign-in-log-period-label">{{ 'platform.blades.sign-in-log.filter.period' | translate }}</span>
+        <div class="sign-in-log-period">
+          <a href="javascript:void(0)"
+             ng-repeat="p in blade.periods"
+             ng-class="{'__active': blade.period === p.value}"
+             ng-click="setPeriod(p.value)">{{ p.label | translate }}</a>
+        </div>
+      </div>
+
+      <div class="sign-in-log-chart" ng-if="blade.chart">
+        <div class="chart-head">
+          <h5>{{ 'platform.blades.sign-in-log.stats.timeline' | translate }}</h5>
+          <div class="chart-legend">
+            <span><i class="__ok"></i>{{ 'platform.blades.sign-in-log.labels.succeeded' | translate }}</span>
+            <span><i class="__bad"></i>{{ 'platform.blades.sign-in-log.labels.failed' | translate }}</span>
+          </div>
+        </div>
+        <svg class="timeline-svg" viewBox="0 0 660 126"
+             role="img" aria-label="{{ 'platform.blades.sign-in-log.stats.timeline' | translate }}">
+          <g class="gridlines">
+            <line ng-repeat="line in blade.chart.gridlines"
+                  ng-attr-x1="{{ 34 }}" ng-attr-y1="{{ line.y }}"
+                  ng-attr-x2="{{ 652 }}" ng-attr-y2="{{ line.y }}"></line>
+          </g>
+          <g class="axis-y">
+            <text ng-repeat="line in blade.chart.gridlines"
+                  ng-attr-x="{{ 28 }}" ng-attr-y="{{ line.y + 3 }}" text-anchor="end">{{ line.label | number:0 }}</text>
+          </g>
+          <g class="bars">
+            <g ng-repeat="bar in blade.chart.bars">
+              <title>{{ bar.tooltip }}</title>
+              <rect ng-if="bar.okHeight" class="__ok"
+                    ng-attr-x="{{ bar.x }}" ng-attr-y="{{ bar.okY }}"
+                    ng-attr-width="{{ bar.width }}" ng-attr-height="{{ bar.okHeight }}"></rect>
+              <rect ng-if="bar.badHeight" class="__bad"
+                    ng-attr-x="{{ bar.x }}" ng-attr-y="{{ bar.badY }}"
+                    ng-attr-width="{{ bar.width }}" ng-attr-height="{{ bar.badHeight }}"></rect>
+            </g>
+          </g>
+          <g class="axis-x">
+            <text ng-repeat="tick in blade.chart.ticks"
+                  ng-attr-x="{{ tick.x }}" ng-attr-y="{{ 122 }}" text-anchor="middle">{{ tick.label }}</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="sign-in-log-tiles" ng-if="blade.tiles">
+        <div class="stat-tile {{ tile.modifier }}"
+             ng-repeat="tile in blade.tiles"
+             ng-class="{'__clickable': !!tile.action}"
+             ng-click="tile.action && tile.action()"
+             title="{{ tile.hint | translate }}">
+          <div class="stat-tile-value">{{ tile.value | number:0 }}</div>
+          <div class="stat-tile-label">{{ tile.label | translate }}</div>
+          <!-- Movement against the previous window. The arrow and the number carry the meaning, so
+               the trailing "vs prev" caption was dropped - it wrapped onto its own line and doubled
+               the height of every tile to repeat what the arrow already said. -->
+          <div class="stat-tile-delta {{ tile.deltaClass }}" ng-if="tile.delta">
+            <i class="fa"
+               ng-class="{'fa-arrow-up': tile.delta.direction === 'up',
+                          'fa-arrow-down': tile.delta.direction === 'down',
+                          'fa-minus': tile.delta.direction === 'flat'}"></i>
+            <span ng-if="tile.delta.percent !== undefined">{{ tile.delta.percent }}%</span>
+            <span ng-if="tile.delta.absolute !== undefined">+{{ tile.delta.absolute | number:0 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sign-in-log-breakdowns" ng-if="blade.stats">
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.top-failed-ips' | translate }}</h4>
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.topFailedIpAddresses" ng-click="openByIp(entry)">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.topFailedIpAddresses.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.top-failed-users' | translate }}</h4>
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.topFailedUserNames" ng-click="openByUserName(entry)">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.topFailedUserNames.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.failure-reasons' | translate }}</h4>
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.failureReasonBreakdown" ng-click="openByFailureReason(entry)">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.failureReasonBreakdown.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
+        </div>
+
+        <div class="breakdown" ng-if="blade.stats.signInsByOrganization.length">
+          <h4>{{ 'platform.blades.sign-in-log.stats.by-organization' | translate }}</h4>
+          <div class="breakdown-row" ng-repeat="entry in blade.stats.signInsByOrganization">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="hint">{{ 'platform.blades.sign-in-log.hints.known-accounts-only' | translate }}</div>
+        </div>
+
+        <div class="breakdown">
+          <h4>{{ 'platform.blades.sign-in-log.stats.by-store' | translate }}</h4>
+          <div class="breakdown-row __clickable" ng-repeat="entry in blade.stats.signInsByStore" ng-click="openByStore(entry)">
+            <span class="breakdown-key">{{ entry.key }}</span>
+            <span class="breakdown-count">{{ entry.count | number:0 }}</span>
+          </div>
+          <div class="breakdown-empty" ng-if="!blade.stats.signInsByStore.length">
+            {{ 'platform.blades.sign-in-log.stats.none' | translate }}
+          </div>
+        </div>
+      </div>
+
+      <div class="sign-in-log-all">
+        <a href="javascript:void(0)" ng-click="openAll()">
+          <i class="fa fa-list"></i>
+          {{ 'platform.blades.sign-in-log-dashboard.commands.view-all' | translate }}
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>

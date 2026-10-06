@@ -722,6 +722,104 @@
           "ip-address": "Dirección IP",
           "user-agent": "Agente de usuario"
         }
+      },
+      "sign-in-log": {
+        "title": "Registro de inicios de sesión",
+        "subtitle": "Intentos de inicio de sesión e inicio en nombre de",
+        "filter": {
+          "title": "Filtros del registro de inicios de sesión",
+          "all": "Todos",
+          "period": "Últimas",
+          "period-24h": "24 horas",
+          "period-7d": "7 días",
+          "period-30d": "30 días",
+          "period-all": "Todo el periodo",
+          "outcome": "Resultado",
+          "sign-in-type": "Tipo",
+          "ip-address": "Dirección IP",
+          "type-password": "Contraseña",
+          "type-external": "Proveedor externo",
+          "type-impersonation": "En nombre de",
+          "type-impersonation-revert": "En nombre de (revertir)",
+          "type-logout": "Cierre de sesión",
+          "period-30m": "30 min",
+          "period-1h": "1 hora",
+          "period-6h": "6 horas",
+          "store": "Tienda",
+          "any-store": "Cualquier tienda",
+          "no-store": "Sin tienda",
+          "period-custom": "Personalizado",
+          "date-from": "Desde",
+          "date-to": "Hasta"
+        },
+        "labels": {
+          "date": "Fecha",
+          "user-name": "Usuario",
+          "outcome": "Resultado",
+          "succeeded": "Correcto",
+          "failed": "Fallido",
+          "failure-reason": "Motivo",
+          "sign-in-type": "Tipo",
+          "ip-address": "Dirección IP",
+          "organization": "Organización",
+          "impersonation": "En nombre de",
+          "on-behalf-of": "En nombre de"
+        },
+        "stats": {
+          "total": "Inicios de sesión",
+          "failed": "Intentos fallidos",
+          "users": "Usuarios que iniciaron sesión",
+          "impersonation": "En nombre de",
+          "top-failed-ips": "Principales IP por intentos fallidos",
+          "top-failed-users": "Principales cuentas por intentos fallidos",
+          "failure-reasons": "Motivos de fallo",
+          "by-organization": "Inicios de sesión por organización",
+          "none": "Sin datos",
+          "total-hint": "Todos los intentos de inicio de sesión del periodo, correctos y fallidos. Haga clic para verlos.",
+          "failed-hint": "Intentos que no iniciaron sesión de nadie. Haga clic para ver solo los fallos.",
+          "users-hint": "Cuentas distintas que iniciaron sesión correctamente, contadas una vez cada una sin importar cuántas veces. Haga clic para ver los inicios correctos.",
+          "impersonation-hint": "Sesiones en las que el soporte inició sesión en nombre de un cliente. Haga clic para verlas.",
+          "timeline": "Intentos a lo largo del tiempo",
+          "by-store": "Inicios de sesión por tienda"
+        },
+        "hints": {
+          "known-accounts-only": "Solo cubre intentos contra cuentas existentes."
+        },
+        "detail": {
+          "title": "Registro de inicio de sesión",
+          "user-id": "ID de usuario",
+          "operator-name": "Operador",
+          "operator-id": "ID de operador",
+          "member-id": "ID de miembro",
+          "user-agent": "Agente de usuario",
+          "client-id": "Cliente",
+          "host": "Host",
+          "store-name": "Nombre de la tienda",
+          "organization-id": "ID de organización",
+          "session-id": "ID de sesión",
+          "provider": "Proveedor de identidad"
+        },
+        "disabled": {
+          "title": "El registro de inicios de sesión está desactivado",
+          "message": "Los nuevos intentos de inicio de sesión no se están registrando, por lo que este registro permanecerá igual. Pida a un administrador que active «Registrar intentos de inicio de sesión» en Configuración › Plataforma › Registro de inicios de sesión. El inicio en nombre de siempre se registra."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Registro de inicios de sesión",
+        "subtitle": "Actividad de inicio de sesión e inicio en nombre de",
+        "commands": {
+          "view-all": "Ver todos los registros"
+        },
+        "presets": {
+          "all": "Todos los registros",
+          "failed": "Intentos fallidos",
+          "impersonation": "Inicio en nombre de",
+          "by-ip": "Intentos fallidos desde la IP",
+          "by-user": "Intentos fallidos para la cuenta",
+          "by-reason": "Intentos fallidos por motivo",
+          "succeeded": "Inicios de sesión correctos",
+          "by-store": "Inicios de sesión de la tienda"
+        }
       }
     },
     "templates": {
@@ -786,6 +884,9 @@
       },
       "sessions": {
         "title": "Sesiones activas"
+      },
+      "sign-in-log": {
+        "title": "Registro de inicios de sesión"
       }
     },
     "dialogs": {
@@ -1032,6 +1133,22 @@
           "FileExtensionsWhiteList": {
             "description": "Extensiones de archivo permitidas para cargar por la Plataforma (además de 'FileExtensionsWhiteList' en appsettings.json)",
             "title": "Lista blanca"
+          },
+          "SignInLogEnabled": {
+            "title": "Registrar intentos de inicio de sesión",
+            "description": "Registra cada intento de inicio de sesión, correcto o fallido, en el registro de inicios de sesión. El inicio en nombre de siempre se registra y no se ve afectado por esta opción."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Conservar registros (días)",
+            "description": "Cuánto tiempo se conservan los registros de inicio de sesión antes de que la tarea de limpieza los elimine. Establezca 0 o menos para conservarlos indefinidamente."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Limpiar registros de inicio de sesión antiguos",
+            "description": "Ejecuta una tarea programada que elimina los registros de inicio de sesión más antiguos que el periodo de conservación."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron para la tarea de limpieza del registro de inicios de sesión",
+            "description": "Expresión cron de la tarea que elimina los registros de inicio de sesión más antiguos que el periodo de conservación."
           }
         },
         "UI": {

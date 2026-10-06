@@ -10,6 +10,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Security.Model;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInLog;
 using static VirtoCommerce.Platform.Data.Infrastructure.DbContextBase;
 
 namespace VirtoCommerce.Platform.Security.Repositories
@@ -48,6 +50,39 @@ namespace VirtoCommerce.Platform.Security.Repositories
                 .WithMany()
                 .HasForeignKey(uh => uh.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<UserSignInLogEntity>().ToEntityTable("UserSignInLog");
+            builder.Entity<UserSignInLogEntity>().Property(x => x.UserName).HasMaxLength(Length256);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.UserId).HasMaxLength(IdLength);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.FailureReason).HasMaxLength(Length64);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.SignInType).HasMaxLength(Length32).IsRequired();
+            builder.Entity<UserSignInLogEntity>().Property(x => x.Provider).HasMaxLength(Length128);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.OperatorUserId).HasMaxLength(IdLength);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.OperatorUserName).HasMaxLength(Length256);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.IpAddress).HasMaxLength(Length64);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.Host).HasMaxLength(Length256);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.UserAgent).HasMaxLength(Length512);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.ClientId).HasMaxLength(IdLength);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.SessionId).HasMaxLength(IdLength);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.StoreId).HasMaxLength(IdLength);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.StoreName).HasMaxLength(Length256);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.MemberId).HasMaxLength(IdLength);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.OrganizationId).HasMaxLength(IdLength);
+            builder.Entity<UserSignInLogEntity>().Property(x => x.OrganizationName).HasMaxLength(Length256);
+
+            // Four indexes only. Each one is write amplification on the highest-insert table in the
+            // system; the deferred ones (Succeeded, StoreId, OrganizationId) are added once real query
+            // patterns exist.
+            // There is deliberately no foreign key to ApplicationUser: rows must survive user deletion,
+            // because an audit trail that disappears with the account is not an audit trail.
+            builder.Entity<UserSignInLogEntity>().HasIndex(x => x.CreatedDate);
+            builder.Entity<UserSignInLogEntity>().HasIndex(x => new { x.UserId, x.CreatedDate });
+            builder.Entity<UserSignInLogEntity>().HasIndex(x => new { x.IpAddress, x.CreatedDate });
+
+            // SessionId earns its keep despite being null on almost every row: UserSessionsSearchService
+            // joins on it to mark impersonated sessions, and that runs on an interactive blade against
+            // the largest table here. Without it, opening Active Sessions scans the whole log.
+            builder.Entity<UserSignInLogEntity>().HasIndex(x => x.SessionId);
 
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.

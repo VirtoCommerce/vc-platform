@@ -723,6 +723,104 @@
           "ip-address": "IP-osoite",
           "user-agent": "Käyttäjäagentti"
         }
+      },
+      "sign-in-log": {
+        "title": "Kirjautumisloki",
+        "subtitle": "Kirjautumisyritykset ja kirjautuminen toisen puolesta",
+        "filter": {
+          "title": "Kirjautumislokin suodattimet",
+          "all": "Kaikki",
+          "period": "Viimeiset",
+          "period-24h": "24 tuntia",
+          "period-7d": "7 päivää",
+          "period-30d": "30 päivää",
+          "period-all": "Koko ajanjakso",
+          "outcome": "Tulos",
+          "sign-in-type": "Tyyppi",
+          "ip-address": "IP-osoite",
+          "type-password": "Salasana",
+          "type-external": "Ulkoinen palveluntarjoaja",
+          "type-impersonation": "Toisen puolesta",
+          "type-impersonation-revert": "Toisen puolesta (paluu)",
+          "type-logout": "Uloskirjautuminen",
+          "period-30m": "30 min",
+          "period-1h": "1 tunti",
+          "period-6h": "6 tuntia",
+          "store": "Kauppa",
+          "any-store": "Mikä tahansa kauppa",
+          "no-store": "Ei kauppaa",
+          "period-custom": "Mukautettu",
+          "date-from": "Alkaen",
+          "date-to": "Päättyen"
+        },
+        "labels": {
+          "date": "Päivämäärä",
+          "user-name": "Käyttäjä",
+          "outcome": "Tulos",
+          "succeeded": "Onnistui",
+          "failed": "Epäonnistui",
+          "failure-reason": "Syy",
+          "sign-in-type": "Tyyppi",
+          "ip-address": "IP-osoite",
+          "organization": "Organisaatio",
+          "impersonation": "Toisen puolesta",
+          "on-behalf-of": "Edustaa"
+        },
+        "stats": {
+          "total": "Kirjautumiset",
+          "failed": "Epäonnistuneet yritykset",
+          "users": "Kirjautuneet käyttäjät",
+          "impersonation": "Toisen puolesta",
+          "top-failed-ips": "Yleisimmät IP-osoitteet epäonnistuneiden yritysten mukaan",
+          "top-failed-users": "Yleisimmät tilit epäonnistuneiden yritysten mukaan",
+          "failure-reasons": "Epäonnistumisen syyt",
+          "by-organization": "Kirjautumiset organisaatioittain",
+          "none": "Ei tietoja",
+          "total-hint": "Kaikki jakson kirjautumisyritykset, sekä onnistuneet että epäonnistuneet. Napsauta nähdäksesi ne.",
+          "failed-hint": "Yritykset, jotka eivät kirjanneet ketään sisään. Napsauta nähdäksesi vain epäonnistuneet.",
+          "users-hint": "Eri tilit, jotka kirjautuivat onnistuneesti; kukin lasketaan kerran kirjautumiskerroista riippumatta. Napsauta nähdäksesi onnistuneet kirjautumiset.",
+          "impersonation-hint": "Istunnot, joissa tuki kirjautui asiakkaan puolesta. Napsauta nähdäksesi ne.",
+          "timeline": "Yritykset ajan kuluessa",
+          "by-store": "Kirjautumiset kaupoittain"
+        },
+        "hints": {
+          "known-accounts-only": "Kattaa vain olemassa oleviin tileihin kohdistuneet yritykset."
+        },
+        "detail": {
+          "title": "Kirjautumistietue",
+          "user-id": "Käyttäjätunnus (ID)",
+          "operator-name": "Operaattori",
+          "operator-id": "Operaattorin ID",
+          "member-id": "Jäsen-ID",
+          "user-agent": "Selaintunniste",
+          "client-id": "Asiakassovellus",
+          "host": "Isäntänimi",
+          "store-name": "Kaupan nimi",
+          "organization-id": "Organisaation ID",
+          "session-id": "Istunnon ID",
+          "provider": "Identiteetin tarjoaja"
+        },
+        "disabled": {
+          "title": "Kirjautumisten tallennus on poissa käytöstä",
+          "message": "Uusia kirjautumisyrityksiä ei tallenneta, joten tämä loki pysyy ennallaan. Pyydä järjestelmänvalvojaa ottamaan käyttöön ”Tallenna kirjautumisyritykset” kohdassa Asetukset › Alusta › Kirjautumisloki. Kirjautuminen toisen puolesta tallennetaan aina."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Kirjautumisloki",
+        "subtitle": "Kirjautumisaktiivisuus ja kirjautuminen toisen puolesta",
+        "commands": {
+          "view-all": "Näytä kaikki tietueet"
+        },
+        "presets": {
+          "all": "Kaikki tietueet",
+          "failed": "Epäonnistuneet yritykset",
+          "impersonation": "Kirjautuminen toisen puolesta",
+          "by-ip": "Epäonnistuneet yritykset IP-osoitteesta",
+          "by-user": "Tilin epäonnistuneet yritykset",
+          "by-reason": "Epäonnistuneet yritykset syyn mukaan",
+          "succeeded": "Onnistuneet kirjautumiset",
+          "by-store": "Kaupan kirjautumiset"
+        }
       }
     },
     "templates": {
@@ -787,6 +885,9 @@
       },
       "sessions": {
         "title": "Aktiiviset istunnot"
+      },
+      "sign-in-log": {
+        "title": "Kirjautumisloki"
       }
     },
     "dialogs": {
@@ -1033,6 +1134,22 @@
           "FileExtensionsWhiteList": {
             "description": "Alustan sallimat tiedostopäätteet lataukseen (lisäksi 'FileExtensionsWhiteList' appsettings.json-tiedostossa)",
             "title": "Valkoinen lista"
+          },
+          "SignInLogEnabled": {
+            "title": "Tallenna kirjautumisyritykset",
+            "description": "Tallentaa jokaisen kirjautumisyrityksen, sekä onnistuneen että epäonnistuneen, kirjautumislokiin. Kirjautuminen toisen puolesta tallennetaan aina, eikä tämä asetus vaikuta siihen."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Säilytä tietueita (päivää)",
+            "description": "Kuinka kauan kirjautumistietueita säilytetään ennen kuin siivoustyö poistaa ne. Aseta arvoksi 0 tai vähemmän säilyttääksesi ne pysyvästi."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Siivoa vanhat kirjautumistietueet",
+            "description": "Suorittaa ajastetun työn, joka poistaa säilytysaikaa vanhemmat kirjautumistietueet."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Kirjautumislokin siivoustyön cron",
+            "description": "Cron-lauseke työlle, joka poistaa säilytysaikaa vanhemmat kirjautumistietueet."
           }
         },
         "UI": {

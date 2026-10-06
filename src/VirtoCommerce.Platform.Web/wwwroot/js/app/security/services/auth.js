@@ -144,7 +144,21 @@ angular.module('platformWebApp')
     };
 
     function changeAuth(user) {
-        angular.extend(authContext, user);
+        // logout() calls this with {}, and extending with an empty object leaves the previous
+        // user's permissions and isAdministrator in place - so a signed-out context, and then the
+        // next user signed in over it, still answered checkPermission() with the old grants.
+        // Reset the identity fields first, then layer the new user on top.
+        angular.extend(authContext, {
+            userId: null,
+            userName: null,
+            userLogin: null,
+            fullName: null,
+            permissions: null,
+            isAdministrator: false,
+            memberId: null,
+            canAccessAdminUI: false,
+            passwordExpired: false
+        }, user);
         authContext.userLogin = user.userName;
         authContext.fullName = user.userLogin;
         authContext.isAuthenticated = user.userName != null;

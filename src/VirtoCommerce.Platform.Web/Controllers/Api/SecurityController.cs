@@ -19,6 +19,7 @@ using VirtoCommerce.Platform.Core.Extensions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
@@ -49,6 +50,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
         private readonly IUserSessionsSearchService _userSessionsSearchService;
         private readonly IUserSessionsService _userSessionsService;
+        private readonly IUserSignInLogSearchService _userSignInLogSearchService;
         private readonly IAdminUIAccessPolicy _adminUIAccessPolicy;
 
         public SecurityController(
@@ -68,7 +70,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs,
             IUserSessionsSearchService userSessionsSearchService,
             IUserSessionsService userSessionsService,
-            IAdminUIAccessPolicy adminUIAccessPolicy)
+            IAdminUIAccessPolicy adminUIAccessPolicy,
+            IUserSignInLogSearchService userSignInLogSearchService)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -87,9 +90,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userSessionsSearchService = userSessionsSearchService;
             _userSessionsService = userSessionsService;
             _adminUIAccessPolicy = adminUIAccessPolicy;
+            _userSignInLogSearchService = userSignInLogSearchService;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
+
+        private const int MaxSignInLogPageSize = 10000;
 
         private readonly string UserNotFound = "User not found.";
         private readonly string UserForbiddenToEdit = "It is forbidden to edit this user.";
@@ -125,6 +131,34 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Search the sign-in audit log: every sign-in attempt, successful or failed, including login-on-behalf.
+        /// </summary>
+        [HttpPost]
+        [Route("sign-in-log/search")]
+        [Authorize(PlatformPermissions.SecuritySignInLogRead)]
+        public async Task<ActionResult<UserSignInLogSearchResult>> SearchSignInLog([FromBody] UserSignInLogSearchCriteria criteria)
+        {
+            // The log is sized in millions of rows, so an unbounded page size is a memory hazard
+            // even for a caller who holds the permission.
+            criteria.Take = Math.Clamp(criteria.Take, 0, MaxSignInLogPageSize);
+
+            var result = await _userSignInLogSearchService.SearchAsync(criteria);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Aggregates over the sign-in audit log for the given criteria.
+        /// </summary>
+        [HttpPost]
+        [Route("sign-in-log/stats")]
+        [Authorize(PlatformPermissions.SecuritySignInLogRead)]
+        public async Task<ActionResult<UserSignInLogStats>> GetSignInLogStats([FromBody] UserSignInLogSearchCriteria criteria)
+        {
+            var result = await _userSignInLogSearchService.GetStats(criteria);
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Sign in with user name and password
         /// </summary>
         /// <remarks>
@@ -155,6 +189,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
                 catch (DuplicateEmailException)
                 {
+                    await PublishSignInAttempt(request.UserName, user: null, succeeded: false, SignInFailureReason.DuplicateEmail);
                     await delayedResponse.FailAsync();
                     return Ok(SignInResult.Failed);
                 }
@@ -162,6 +197,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (user == null)
             {
+                await PublishSignInAttempt(request.UserName, user: null, succeeded: false, SignInFailureReason.UserNotFound);
                 await delayedResponse.FailAsync();
                 return Ok(SignInResult.Failed);
             }
@@ -172,12 +208,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!loginResult.Succeeded)
             {
+                await PublishSignInAttempt(request.UserName, user, succeeded: false, ToFailureReason(loginResult));
                 await delayedResponse.FailAsync();
                 return Ok(loginResult);
             }
 
             await SetLastLoginDate(user);
             await _eventPublisher.Publish(new UserLoginEvent(user));
+            await PublishSignInAttempt(request.UserName, user, succeeded: true, failureReason: null);
 
             //Do not allow login to admin customers and rejected users
             if (await UserManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer))
@@ -209,6 +247,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await UserManager.UpdateSecurityStampAsync(user);
                 await _signInManager.SignOutAsync();
                 await _eventPublisher.Publish(new UserLogoutEvent(user));
+                await PublishSignInAttempt(user.UserName, user, succeeded: true, failureReason: null, SignInType.Logout);
             }
 
             return NoContent();
@@ -1256,6 +1295,52 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var result = isValid ? IdentityResult.Success : IdentityResult.Failed(errors.ToArray());
             return result;
+        }
+
+        /// <summary>
+        /// Records a sign-in attempt for audit. Publishing is non-blocking (the handler hands the row to a
+        /// buffered writer), so the user-found and user-not-found branches do the same amount of synchronous
+        /// work — turning this into a direct database write would reopen the user-enumeration timing side
+        /// channel that <see cref="DelayedResponse"/> exists to close.
+        /// </summary>
+        private Task PublishSignInAttempt(
+            string userName,
+            ApplicationUser user,
+            bool succeeded,
+            string failureReason,
+            string signInType = SignInType.Password)
+        {
+            return _eventPublisher.Publish(new UserSignInAttemptEvent
+            {
+                UserName = userName,
+                UserId = user?.Id,
+                Succeeded = succeeded,
+                FailureReason = failureReason,
+                SignInType = signInType,
+                StoreId = user?.StoreId,
+                MemberId = user?.MemberId,
+                SessionId = User.FindFirstValue(OpenIddictConstants.Claims.Private.AuthorizationId),
+            });
+        }
+
+        private static string ToFailureReason(SignInResult result)
+        {
+            if (result.IsLockedOut)
+            {
+                return SignInFailureReason.LockedOut;
+            }
+
+            if (result.IsNotAllowed)
+            {
+                return SignInFailureReason.NotAllowed;
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                return SignInFailureReason.RequiresTwoFactor;
+            }
+
+            return SignInFailureReason.InvalidPassword;
         }
 
         private Task SetLastLoginDate(ApplicationUser user)

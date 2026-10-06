@@ -13,12 +13,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.42    
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.1000.1    
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.42    
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.1000.1    
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
@@ -42,12 +42,12 @@ jobs:
 
     - name: Get Changelog
       id: changelog
-      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+      uses: VirtoCommerce/.github/actions/changelog-generator@v3.1000.1
 
   publish-docker:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.42    
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.1000.1    
     with:
       fullKey: ${{ needs.build.outputs.dockerFullKey }}
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
@@ -70,7 +70,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
     steps:
       - name: Install VirtoCommerce.GlobalTool
-        uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+        uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.1
 
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -101,7 +101,7 @@ jobs:
           user: virto
 
       - name: Publish Nuget
-        uses: VirtoCommerce/vc-github-actions/publish-nuget@master
+        uses: VirtoCommerce/.github/actions/publish-nuget@v3.1000.1
         with:
           skipString: 'Clean+Restore+Compile+Test+Pack'
         env:
@@ -111,7 +111,7 @@ jobs:
   publish-github-release:
     needs:
       [build, test, get-metadata, publish-nuget]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.42
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.1000.1
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
@@ -131,10 +131,10 @@ jobs:
       uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
     - name: Install VirtoCommerce.GlobalTool
-      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+      uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.1
 
     - name: Setup Git Credentials
-      uses: VirtoCommerce/vc-github-actions/setup-git-credentials-github@master
+      uses: VirtoCommerce/.github/actions/setup-git-credentials-github@v3.1000.1
       with:
         githubToken: ${{ secrets.REPO_TOKEN }}
 

@@ -722,6 +722,104 @@
           "ip-address": "Adresse IP",
           "user-agent": "Agent utilisateur"
         }
+      },
+      "sign-in-log": {
+        "title": "Journal de connexion",
+        "subtitle": "Tentatives de connexion et connexion au nom de",
+        "filter": {
+          "title": "Filtres du journal de connexion",
+          "all": "Tous",
+          "period": "Dernières",
+          "period-24h": "24 heures",
+          "period-7d": "7 jours",
+          "period-30d": "30 jours",
+          "period-all": "Toute la période",
+          "outcome": "Résultat",
+          "sign-in-type": "Type",
+          "ip-address": "Adresse IP",
+          "type-password": "Mot de passe",
+          "type-external": "Fournisseur externe",
+          "type-impersonation": "Au nom de",
+          "type-impersonation-revert": "Au nom de (retour)",
+          "type-logout": "Déconnexion",
+          "period-30m": "30 min",
+          "period-1h": "1 heure",
+          "period-6h": "6 heures",
+          "store": "Boutique",
+          "any-store": "N'importe quelle boutique",
+          "no-store": "Sans boutique",
+          "period-custom": "Personnalisé",
+          "date-from": "Du",
+          "date-to": "Au"
+        },
+        "labels": {
+          "date": "Date",
+          "user-name": "Utilisateur",
+          "outcome": "Résultat",
+          "succeeded": "Réussite",
+          "failed": "Échec",
+          "failure-reason": "Motif",
+          "sign-in-type": "Type",
+          "ip-address": "Adresse IP",
+          "organization": "Organisation",
+          "impersonation": "Au nom de",
+          "on-behalf-of": "Au nom de"
+        },
+        "stats": {
+          "total": "Connexions",
+          "failed": "Tentatives échouées",
+          "users": "Utilisateurs connectés",
+          "impersonation": "Au nom de",
+          "top-failed-ips": "Principales IP par tentatives échouées",
+          "top-failed-users": "Principaux comptes par tentatives échouées",
+          "failure-reasons": "Motifs d'échec",
+          "by-organization": "Connexions par organisation",
+          "none": "Aucune donnée",
+          "total-hint": "Toutes les tentatives de connexion sur la période, réussies et échouées. Cliquez pour les afficher.",
+          "failed-hint": "Tentatives n'ayant connecté personne. Cliquez pour n'afficher que les échecs.",
+          "users-hint": "Comptes distincts s'étant connectés avec succès, comptés une seule fois quel que soit le nombre de connexions. Cliquez pour voir les connexions réussies.",
+          "impersonation-hint": "Sessions où le support s'est connecté au nom d'un client. Cliquez pour les afficher.",
+          "timeline": "Tentatives dans le temps",
+          "by-store": "Connexions par boutique"
+        },
+        "hints": {
+          "known-accounts-only": "Ne couvre que les tentatives sur des comptes existants."
+        },
+        "detail": {
+          "title": "Enregistrement de connexion",
+          "user-id": "ID utilisateur",
+          "operator-name": "Opérateur",
+          "operator-id": "ID opérateur",
+          "member-id": "ID membre",
+          "user-agent": "Agent utilisateur",
+          "client-id": "Client",
+          "host": "Hôte",
+          "store-name": "Nom de la boutique",
+          "organization-id": "ID organisation",
+          "session-id": "ID de session",
+          "provider": "Fournisseur d'identité"
+        },
+        "disabled": {
+          "title": "L'enregistrement des connexions est désactivé",
+          "message": "Les nouvelles tentatives de connexion ne sont pas enregistrées, ce journal restera donc en l'état. Demandez à un administrateur d'activer « Enregistrer les tentatives de connexion » dans Paramètres › Plateforme › Journal de connexion. Les connexions au nom de sont toujours enregistrées."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Journal de connexion",
+        "subtitle": "Activité de connexion et connexion au nom de",
+        "commands": {
+          "view-all": "Voir tous les enregistrements"
+        },
+        "presets": {
+          "all": "Tous les enregistrements",
+          "failed": "Tentatives échouées",
+          "impersonation": "Connexion au nom de",
+          "by-ip": "Tentatives échouées depuis l'IP",
+          "by-user": "Tentatives échouées pour le compte",
+          "by-reason": "Tentatives échouées par motif",
+          "succeeded": "Connexions réussies",
+          "by-store": "Connexions pour la boutique"
+        }
       }
     },
     "templates": {
@@ -786,6 +884,9 @@
       },
       "sessions": {
         "title": "Sessions actives"
+      },
+      "sign-in-log": {
+        "title": "Journal de connexion"
       }
     },
     "dialogs": {
@@ -1032,6 +1133,22 @@
           "FileExtensionsWhiteList": {
             "description": "Extensions de fichiers autorisées au téléchargement par la plateforme (en plus de 'FileExtensionsWhiteList' dans appsettings.json)",
             "title": "Liste blanche"
+          },
+          "SignInLogEnabled": {
+            "title": "Enregistrer les tentatives de connexion",
+            "description": "Enregistre chaque tentative de connexion, réussie ou échouée, dans le journal de connexion. Les connexions au nom de sont toujours enregistrées et ne sont pas affectées par ce paramètre."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Conserver les enregistrements (jours)",
+            "description": "Durée de conservation des enregistrements de connexion avant leur suppression par la tâche de nettoyage. Définissez 0 ou moins pour les conserver indéfiniment."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Nettoyer les anciens enregistrements de connexion",
+            "description": "Exécute une tâche planifiée qui supprime les enregistrements de connexion plus anciens que la période de conservation."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron pour la tâche de nettoyage du journal de connexion",
+            "description": "Expression cron de la tâche qui supprime les enregistrements de connexion plus anciens que la période de conservation."
           }
         },
         "UI": {

@@ -722,6 +722,104 @@
           "ip-address": "Indirizzo IP",
           "user-agent": "Agente utente"
         }
+      },
+      "sign-in-log": {
+        "title": "Registro accessi",
+        "subtitle": "Tentativi di accesso e accesso per conto di",
+        "filter": {
+          "title": "Filtri del registro accessi",
+          "all": "Tutti",
+          "period": "Ultime",
+          "period-24h": "24 ore",
+          "period-7d": "7 giorni",
+          "period-30d": "30 giorni",
+          "period-all": "Tutto il periodo",
+          "outcome": "Esito",
+          "sign-in-type": "Tipo",
+          "ip-address": "Indirizzo IP",
+          "type-password": "Password",
+          "type-external": "Provider esterno",
+          "type-impersonation": "Per conto di",
+          "type-impersonation-revert": "Per conto di (ritorno)",
+          "type-logout": "Disconnessione",
+          "period-30m": "30 min",
+          "period-1h": "1 ora",
+          "period-6h": "6 ore",
+          "store": "Negozio",
+          "any-store": "Qualsiasi negozio",
+          "no-store": "Senza negozio",
+          "period-custom": "Personalizzato",
+          "date-from": "Da",
+          "date-to": "A"
+        },
+        "labels": {
+          "date": "Data",
+          "user-name": "Utente",
+          "outcome": "Esito",
+          "succeeded": "Riuscito",
+          "failed": "Non riuscito",
+          "failure-reason": "Motivo",
+          "sign-in-type": "Tipo",
+          "ip-address": "Indirizzo IP",
+          "organization": "Organizzazione",
+          "impersonation": "Per conto di",
+          "on-behalf-of": "Per conto di"
+        },
+        "stats": {
+          "total": "Accessi",
+          "failed": "Tentativi non riusciti",
+          "users": "Utenti che hanno effettuato l'accesso",
+          "impersonation": "Per conto di",
+          "top-failed-ips": "Principali IP per tentativi non riusciti",
+          "top-failed-users": "Principali account per tentativi non riusciti",
+          "failure-reasons": "Motivi di errore",
+          "by-organization": "Accessi per organizzazione",
+          "none": "Nessun dato",
+          "total-hint": "Tutti i tentativi di accesso nel periodo, riusciti e non. Fare clic per visualizzarli.",
+          "failed-hint": "Tentativi che non hanno effettuato l'accesso di nessuno. Fare clic per vedere solo gli errori.",
+          "users-hint": "Account distinti che hanno effettuato l'accesso con successo, contati una sola volta indipendentemente dal numero di accessi. Fare clic per vedere gli accessi riusciti.",
+          "impersonation-hint": "Sessioni in cui l'assistenza ha effettuato l'accesso per conto di un cliente. Fare clic per visualizzarle.",
+          "timeline": "Tentativi nel tempo",
+          "by-store": "Accessi per negozio"
+        },
+        "hints": {
+          "known-accounts-only": "Include solo i tentativi su account esistenti."
+        },
+        "detail": {
+          "title": "Record di accesso",
+          "user-id": "ID utente",
+          "operator-name": "Operatore",
+          "operator-id": "ID operatore",
+          "member-id": "ID membro",
+          "user-agent": "User agent",
+          "client-id": "Client",
+          "host": "Host",
+          "store-name": "Nome negozio",
+          "organization-id": "ID organizzazione",
+          "session-id": "ID sessione",
+          "provider": "Provider di identità"
+        },
+        "disabled": {
+          "title": "La registrazione degli accessi è disattivata",
+          "message": "I nuovi tentativi di accesso non vengono registrati, quindi questo registro resterà invariato. Chiedere a un amministratore di attivare «Registra i tentativi di accesso» in Impostazioni › Piattaforma › Registro accessi. L'accesso per conto di viene sempre registrato."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Registro accessi",
+        "subtitle": "Attività di accesso e accesso per conto di",
+        "commands": {
+          "view-all": "Visualizza tutti i record"
+        },
+        "presets": {
+          "all": "Tutti i record",
+          "failed": "Tentativi non riusciti",
+          "impersonation": "Accesso per conto di",
+          "by-ip": "Tentativi non riusciti dall'IP",
+          "by-user": "Tentativi non riusciti per l'account",
+          "by-reason": "Tentativi non riusciti per motivo",
+          "succeeded": "Accessi riusciti",
+          "by-store": "Accessi per il negozio"
+        }
       }
     },
     "templates": {
@@ -786,6 +884,9 @@
       },
       "sessions": {
         "title": "Sessioni attive"
+      },
+      "sign-in-log": {
+        "title": "Registro accessi"
       }
     },
     "dialogs": {
@@ -1032,6 +1133,22 @@
           "FileExtensionsWhiteList": {
             "description": "Estensioni di file consentite per il caricamento dalla Piattaforma (in aggiunta a 'FileExtensionsWhiteList' in appsettings.json)",
             "title": "Lista bianca"
+          },
+          "SignInLogEnabled": {
+            "title": "Registra i tentativi di accesso",
+            "description": "Registra ogni tentativo di accesso, riuscito o meno, nel registro accessi. L'accesso per conto di viene sempre registrato e non è influenzato da questa impostazione."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Conserva i record (giorni)",
+            "description": "Per quanto tempo i record di accesso vengono conservati prima che il processo di pulizia li rimuova. Impostare 0 o meno per conservarli per sempre."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Pulisci i vecchi record di accesso",
+            "description": "Esegue un processo pianificato che elimina i record di accesso più vecchi del periodo di conservazione."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron per il processo di pulizia del registro accessi",
+            "description": "Espressione cron per il processo che elimina i record di accesso più vecchi del periodo di conservazione."
           }
         },
         "UI": {

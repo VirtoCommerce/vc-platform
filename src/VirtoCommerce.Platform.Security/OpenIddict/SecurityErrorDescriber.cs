@@ -61,6 +61,13 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
             ErrorDescription = "The client application was not found in the database."
         };
 
+        public static TokenResponse InvalidTarget() => new()
+        {
+            Error = Errors.InvalidTarget,
+            Code = nameof(InvalidTarget).ToSnakeCase(),
+            ErrorDescription = "The requested resource was not granted by the original authorization.",
+        };
+
         public static TokenResponse UnsupportedGrantType() => new()
         {
             Error = Errors.UnsupportedGrantType,
