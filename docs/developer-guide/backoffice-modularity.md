@@ -240,7 +240,7 @@ GET /api/apps/{appId}/manifest
 }
 ```
 
-**Top-level `hash`** is a strong fingerprint of the entire descriptor — covers `appId`, `version`, and the ordered `plugins[]` (id, version, entry hash, content-file hashes, federation remote coordinates, declared contributions). The platform surfaces it as the response ETag (`ETag: "8DBA4F3C9E2A..."`), so a client with a matching `If-None-Match` gets a `304 Not Modified` without re-sending the body. Per-file `hash` inside each entry is the cache-busting token for that single file (mtime-derived).
+**Top-level `hash`** is a strong fingerprint of the entire descriptor — covers `appId`, `version`, and the ordered `plugins[]` (id, version, entry hash, content-file hashes, federation remote coordinates, permission, declared contributions). The platform surfaces it as the response ETag (`ETag: "8DBA4F3C9E2A..."`), so a client with a matching `If-None-Match` gets a `304 Not Modified` without re-sending the body. Per-file `hash` inside each entry is the cache-busting token for that single file (mtime-derived).
 
 Each `entry` and `contentFiles` element shares the same `ContentFile` shape:
 

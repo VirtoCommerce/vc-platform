@@ -407,8 +407,8 @@ public class AppManifestService : IAppManifestService
     /// Computes a strong content fingerprint covering every field of the
     /// resulting response body that can change between requests: appId +
     /// the ordered list of plugins + each plugin's id, version, entry hash,
-    /// content-file hashes, federation remote coordinates, and declared
-    /// contributions.
+    /// content-file hashes, federation remote coordinates, permission, and
+    /// declared contributions.
     /// </summary>
     /// <remarks>
     /// The hash MUST include the per-file cache-busting hashes (file mtimes
@@ -457,7 +457,11 @@ public class AppManifestService : IAppManifestService
                   .Append('/')
                   .Append(plugin.Remote.Exposed ?? string.Empty);
             }
-            // Skipped when null so existing fingerprints stay unchanged.
+            // Both skipped when null so existing fingerprints stay unchanged.
+            if (plugin.Permission != null)
+            {
+                sb.Append("|permission:").Append(plugin.Permission);
+            }
             if (plugin.Contributions != null)
             {
                 sb.Append('|').Append(plugin.Contributions);

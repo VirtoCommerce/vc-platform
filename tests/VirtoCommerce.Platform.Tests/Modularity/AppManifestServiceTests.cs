@@ -361,6 +361,26 @@ public class AppManifestServiceTests : IDisposable
     }
 
     [Fact]
+    public void GetManifest_DescriptorHash_ChangesWhenOnlyPermissionChanges()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        var pluginJson = WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """{ "permission": "a" }""");
+        var service = NewService(host, plugin);
+
+        var before = service.GetManifest("vc-frontend").Hash;
+
+        File.WriteAllText(pluginJson, """{ "permission": "b" }""");
+        AppManifestCacheRegion.ExpireRegion();
+        var after = service.GetManifest("vc-frontend").Hash;
+
+        Assert.NotEqual(before, after);
+    }
+
+    [Fact]
     public void GetManifest_ModernApp_MalformedPluginJson_FallsBackToConvention()
     {
         var host = NewModule("VirtoCommerce.MarketplaceVendor");

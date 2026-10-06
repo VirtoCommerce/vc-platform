@@ -63,7 +63,7 @@ public class AppManifestController : ControllerBase
 
         // The service computed `descriptor.Hash` during build (covers AppId,
         // Version, the ordered Plugins list with per-file mtime hashes,
-        // federation remote coordinates, and declared contributions) — wrap it
+        // federation remote coordinates, permission, and declared contributions) — wrap it
         // in quotes per RFC 7232 strong-ETag syntax and let HTTP do the
         // conditional GET.
         var etag = $"\"{descriptor.Hash}\"";
