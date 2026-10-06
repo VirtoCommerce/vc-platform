@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Modularity;
@@ -24,20 +25,20 @@ public class AppManifestControllerTests
 
         var json = Serialize(controller.GetManifest("vc-frontend"));
 
-        var contributions = json["Plugins"]![0]!["Contributions"];
+        var contributions = json["plugins"]![0]!["contributions"];
         Assert.Equal(JTokenType.Object, contributions!.Type);
         Assert.Equal(1, contributions["format"]!.Value<int>());
         Assert.Equal("SalesRep.Enabled", contributions["when"]!["setting"]!.Value<string>());
     }
 
     [Fact]
-    public void GetManifest_WritesNullContributions_WhenThePluginDeclaresNone()
+    public void GetManifest_OmitsContributions_WhenThePluginDeclaresNone()
     {
         var controller = NewController(new PluginDescriptor { Id = "sales-rep" });
 
         var json = Serialize(controller.GetManifest("vc-frontend"));
 
-        Assert.Equal(JTokenType.Null, json["Plugins"]![0]!["Contributions"]!.Type);
+        Assert.Null(json["plugins"]![0]!["contributions"]);
     }
 
     private static AppManifestController NewController(PluginDescriptor plugin)
@@ -59,9 +60,16 @@ public class AppManifestControllerTests
         };
     }
 
+    // The parts of Startup's AddNewtonsoftJson settings that shape this response.
+    private static readonly JsonSerializerSettings s_mvcSettings = new()
+    {
+        ContractResolver = new PolymorphJsonContractResolver(),
+        NullValueHandling = NullValueHandling.Ignore,
+    };
+
     private static JObject Serialize(ActionResult<AppManifestResponse> result)
     {
         var ok = Assert.IsType<OkObjectResult>(result.Result);
-        return JObject.Parse(JsonConvert.SerializeObject(ok.Value));
+        return JObject.Parse(JsonConvert.SerializeObject(ok.Value, s_mvcSettings));
     }
 }

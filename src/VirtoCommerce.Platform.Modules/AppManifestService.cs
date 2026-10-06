@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
@@ -52,6 +53,13 @@ public class AppManifestService : IAppManifestService
         PropertyNameCaseInsensitive = true,
         ReadCommentHandling = JsonCommentHandling.Skip,
         AllowTrailingCommas = true,
+    };
+
+    // Contributions only travel inside JSON responses, never into HTML, so text stays as written
+    // instead of every non-ASCII character becoming a \uXXXX escape.
+    private static readonly JsonSerializerOptions s_contributionsJsonOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
     private readonly IModuleService _moduleService;
@@ -312,7 +320,7 @@ public class AppManifestService : IAppManifestService
 
         try
         {
-            return JsonSerializer.Serialize(contributions);
+            return JsonSerializer.Serialize(contributions, s_contributionsJsonOptions);
         }
         catch (JsonException ex)
         {

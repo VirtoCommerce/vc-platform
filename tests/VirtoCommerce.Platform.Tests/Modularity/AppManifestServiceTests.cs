@@ -265,6 +265,24 @@ public class AppManifestServiceTests : IDisposable
     }
 
     [Fact]
+    public void GetManifest_ModernApp_Contributions_KeepNonAsciiTextUnescaped()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "contributions": { "format": 1, "menu": [ { "title": "Документы & <b>" } ] } }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var p = Assert.Single(service.GetManifest("vc-frontend").Plugins);
+        Assert.Equal("""{"format":1,"menu":[{"title":"Документы & <b>"}]}""", p.Contributions);
+    }
+
+    [Fact]
     public void GetManifest_ModernApp_NoContributions_LeavesThemNull()
     {
         var host = NewModule("VirtoCommerce.XFrontend");

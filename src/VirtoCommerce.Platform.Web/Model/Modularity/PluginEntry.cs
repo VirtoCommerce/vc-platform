@@ -39,7 +39,7 @@ public class PluginEntry
     public PluginRemote Remote { get; set; }
 
     /// <summary>
-    /// The <c>contributions</c> object of <c>plugin.json</c>, verbatim; <c>null</c> when absent.
+    /// The <c>contributions</c> object of <c>plugin.json</c>; <c>null</c>, and so omitted from the response, when absent.
     /// </summary>
     public object Contributions { get; set; }
 }

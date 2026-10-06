@@ -234,8 +234,7 @@ GET /api/apps/{appId}/manifest
         "hash": "8DBA4F3C"
       },
       "contentFiles": [],
-      "remote": { "name": "VirtoCommerce.MarketplaceReviews", "exposed": "./Module" },
-      "contributions": null
+      "remote": { "name": "VirtoCommerce.MarketplaceReviews", "exposed": "./Module" }
     }
   ]
 }
@@ -267,14 +266,14 @@ interface PluginManifest {
   contentFiles?: string[];                     // optional CSS / extra assets
   remote?: { name: string; exposed: string };  // defaults to {name: <id>, exposed: "./Module"}
   permission?: string;                         // gates the whole plugin server-side
-  contributions?: object;                      // host-app-defined; served verbatim, see below
+  contributions?: object;                      // host-app-defined; served as declared, see below
 }
 ```
 
 `contributions` is for what a host app needs to know about a plugin **before** it fetches any of the
 plugin's code — which routes it adds, which menu entries, which extension points it fills, and
 under what conditions. The platform does not interpret it: it takes the object as it is in
-`plugin.json`, serves it in the manifest (`plugins[].contributions`, `null` when absent), and
+`plugin.json`, serves it in the manifest (`plugins[].contributions`, omitted when absent), and
 covers it in the manifest hash, so a changed declaration is never answered with a stale `304`.
 Anything but an object is ignored with a warning and the plugin still loads. The shape belongs to
 each host app — the storefront's is documented in
