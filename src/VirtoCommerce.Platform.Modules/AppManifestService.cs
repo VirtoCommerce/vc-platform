@@ -310,7 +310,18 @@ public class AppManifestService : IAppManifestService
             return null;
         }
 
-        return JsonSerializer.Serialize(contributions);
+        try
+        {
+            return JsonSerializer.Serialize(contributions);
+        }
+        catch (JsonException ex)
+        {
+            // E.g. an unpaired surrogate escape: the document parses but cannot be written back.
+            _logger.LogWarning(ex,
+                "Plugin manifest at {ManifestPath} declares 'contributions' that cannot be serialized; ignoring it.",
+                Path.Combine(pluginFolder, PluginManifestFileName));
+            return null;
+        }
     }
 
     private PluginManifestFile TryReadPluginManifest(string pluginFolder)

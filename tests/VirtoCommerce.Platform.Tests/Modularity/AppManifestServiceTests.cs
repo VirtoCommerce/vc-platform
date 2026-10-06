@@ -302,6 +302,25 @@ public class AppManifestServiceTests : IDisposable
     }
 
     [Fact]
+    public void GetManifest_ModernApp_UnserializableContributions_AreIgnored_PluginStillLoads()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "id": "sales-rep", "permission": "sales-rep:access", "contributions": { "format": 1, "title": "\uDEAD" } }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var p = Assert.Single(service.GetManifest("vc-frontend").Plugins);
+        Assert.Equal("sales-rep:access", p.Permission);
+        Assert.Null(p.Contributions);
+    }
+
+    [Fact]
     public void GetManifest_DescriptorHash_ChangesWhenOnlyContributionsChange()
     {
         var host = NewModule("VirtoCommerce.XFrontend");
