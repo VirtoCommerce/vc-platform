@@ -40,8 +40,8 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
 using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Logger;
@@ -50,7 +50,6 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Data.DeveloperTools;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.MySql;
@@ -63,9 +62,7 @@ using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.SqlServer;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.HealthCheck;
-using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.DistributedLock;
-using VirtoCommerce.Platform.Web.Jobs;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.Local;
 using VirtoCommerce.Platform.Security;
@@ -77,6 +74,7 @@ using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure.ExportImport;
 using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
+using VirtoCommerce.Platform.Web.Jobs;
 using VirtoCommerce.Platform.Web.Json;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
@@ -87,8 +85,8 @@ using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
-using VirtoCommerce.Platform.Web.Swagger;
 using VirtoCommerce.Platform.Web.Security.SignInLog;
+using VirtoCommerce.Platform.Web.Swagger;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using MsTokens = Microsoft.IdentityModel.Tokens;
 
@@ -238,15 +236,6 @@ namespace VirtoCommerce.Platform.Web
                         options.UseSqlServerDatabase(connectionString, typeof(SqlServerDataAssemblyMarker), Configuration);
                         break;
                 }
-
-                // Register the entity sets needed by OpenIddict.
-                // Note: use the generic overload if you need
-                // to replace the default OpenIddict entities.
-                options.UseOpenIddict<VirtoOpenIddictEntityFrameworkCoreApplication,
-                                      VirtoOpenIddictEntityFrameworkCoreAuthorization,
-                                      VirtoOpenIddictEntityFrameworkCoreScope,
-                                      VirtoOpenIddictEntityFrameworkCoreToken,
-                                      string>();
             });
 
             if (platformOptions.UseResponseCompression)
@@ -328,7 +317,7 @@ namespace VirtoCommerce.Platform.Web
             {
             });
 
-            services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
+            services.AddIdentity<ApplicationUser, Role>(SecurityDbContext.ConfigureIdentityOptions)
                 .AddEntityFrameworkStores<SecurityDbContext>()
                 .AddDefaultTokenProviders()
                 .AddUserValidator<CustomUserValidator>();
