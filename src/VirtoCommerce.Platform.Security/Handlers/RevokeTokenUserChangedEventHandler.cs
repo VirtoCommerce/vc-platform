@@ -9,9 +9,25 @@ using VirtoCommerce.Platform.Core.Security.Events;
 
 namespace VirtoCommerce.Platform.Security.Handlers;
 
-public class RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionService, IServiceScope Scope)> userSessionsServiceFactory) :
-    IEventHandler<UserChangedEvent>
+public class RevokeUserTokenEventHandler : IEventHandler<UserChangedEvent>
 {
+    private readonly IScopedFactory<IUserSessionsService> _userSessionsServiceFactory;
+
+    public RevokeUserTokenEventHandler(IScopedFactory<IUserSessionsService> userSessionsServiceFactory)
+    {
+        _userSessionsServiceFactory = userSessionsServiceFactory;
+    }
+
+    [Obsolete("Use the constructor that takes IScopedFactory<IUserSessionsService> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    protected RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionService, IServiceScope Scope)> userSessionsServiceFactory)
+        : this(new DelegateScopedFactory<IUserSessionsService>(() =>
+        {
+            var (sessionService, scope) = userSessionsServiceFactory();
+            return new ScopedService<IUserSessionsService>(sessionService, scope);
+        }))
+    {
+    }
+
     public virtual async Task Handle(UserChangedEvent message)
     {
         foreach (var changedEntry in message.ChangedEntries)
@@ -32,9 +48,8 @@ public class RevokeUserTokenEventHandler(Func<(IUserSessionsService SessionServi
 
     protected virtual async Task RevokeUserTokensAsync(string userId)
     {
-        var (SessionService, Scope) = userSessionsServiceFactory();
-        using var scope = Scope;
-        await SessionService.TerminateAllUserSessions(userId);
+        using var scopedSessionService = _userSessionsServiceFactory.Create();
+        await scopedSessionService.Service.TerminateAllUserSessions(userId);
     }
 
     [Obsolete("Use RevokeUserTokensAsync(string userId) class instead.", DiagnosticId = "VC0014", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]

@@ -11,10 +11,16 @@ namespace VirtoCommerce.Platform.Security.Services
 {
     public class UserSearchService : IUserSearchService
     {
-        private readonly Func<UserManager<ApplicationUser>> _userManagerFactory;
-        private readonly Func<RoleManager<Role>> _roleManagerFactory;
+        private readonly IScopedFactory<UserManager<ApplicationUser>> _userManagerFactory;
+        private readonly IScopedFactory<RoleManager<Role>> _roleManagerFactory;
 
-        public UserSearchService(Func<UserManager<ApplicationUser>> userManager, Func<RoleManager<Role>> roleManagerFactory)
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        protected UserSearchService(Func<UserManager<ApplicationUser>> userManager, Func<RoleManager<Role>> roleManagerFactory)
+            : this(new DelegateScopedFactory<UserManager<ApplicationUser>>(userManager), new DelegateScopedFactory<RoleManager<Role>>(roleManagerFactory))
+        {
+        }
+
+        public UserSearchService(IScopedFactory<UserManager<ApplicationUser>> userManager, IScopedFactory<RoleManager<Role>> roleManagerFactory)
         {
             _userManagerFactory = userManager;
             _roleManagerFactory = roleManagerFactory;
@@ -22,8 +28,10 @@ namespace VirtoCommerce.Platform.Security.Services
 
         public async Task<UserSearchResult> SearchUsersAsync(UserSearchCriteria criteria)
         {
-            using var userManager = _userManagerFactory();
-            using var roleManager = _roleManagerFactory();
+            using var scopedUserManager = _userManagerFactory.Create();
+            var userManager = scopedUserManager.Service;
+            using var scopedRoleManager = _roleManagerFactory.Create();
+            var roleManager = scopedRoleManager.Service;
 
             if (criteria == null)
             {
