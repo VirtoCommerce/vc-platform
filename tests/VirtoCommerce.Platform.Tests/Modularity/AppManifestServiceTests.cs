@@ -248,8 +248,8 @@ public class AppManifestServiceTests : IDisposable
           "id": "sales-rep",
           "contributions": {
             "format": 1,
-            "when": { "setting": "SalesRep.Enabled" },
-            "routes": [ { "path": "documents", "parent": "Company", "name": "SalesRepDocuments" } ]
+            "anything": { "nested": true },
+            "list": [ { "a": 1, "b": "x" } ]
           }
         }
         """);
@@ -260,7 +260,7 @@ public class AppManifestServiceTests : IDisposable
 
         var p = Assert.Single(result.Plugins);
         Assert.Equal(
-            """{"format":1,"when":{"setting":"SalesRep.Enabled"},"routes":[{"path":"documents","parent":"Company","name":"SalesRepDocuments"}]}""",
+            """{"format":1,"anything":{"nested":true},"list":[{"a":1,"b":"x"}]}""",
             p.Contributions);
     }
 

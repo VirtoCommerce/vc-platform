@@ -20,7 +20,7 @@ public class AppManifestControllerTests
         var controller = NewController(new PluginDescriptor
         {
             Id = "sales-rep",
-            Contributions = """{"format":1,"when":{"setting":"SalesRep.Enabled"}}""",
+            Contributions = """{"format":1,"anything":{"nested":true}}""",
         });
 
         var json = Serialize(controller.GetManifest("vc-frontend"));
@@ -28,7 +28,7 @@ public class AppManifestControllerTests
         var contributions = json["plugins"]![0]!["contributions"];
         Assert.Equal(JTokenType.Object, contributions!.Type);
         Assert.Equal(1, contributions["format"]!.Value<int>());
-        Assert.Equal("SalesRep.Enabled", contributions["when"]!["setting"]!.Value<string>());
+        Assert.True(contributions["anything"]!["nested"]!.Value<bool>());
     }
 
     [Fact]
