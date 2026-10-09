@@ -325,7 +325,7 @@ jobs:
       installModules: 'true'
       installCustomModule: 'false'
       platformDockerTag: ${{ needs.ci.outputs.tag }}
-      vctestingRepoBranch: 'dev'
+      vctestingRepoBranch: 'vcst-6033'
       frontendZipUrl: 'latest'
       testSuites: 'graphql,restapi,e2e'
     secrets:
