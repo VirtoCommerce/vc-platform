@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.MySql
             {
                 return ServerVersion.Parse(serverVersion);
             }
-            return new MySqlServerVersion(new Version(5, 7));
+            return new MySqlServerVersion(new Version(8, 4));
         }
     }
 }
