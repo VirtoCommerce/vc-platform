@@ -276,9 +276,7 @@ under what conditions. The platform does not interpret it: it takes the object a
 `plugin.json`, serves it in the manifest (`plugins[].contributions`, omitted when absent), and
 covers it in the manifest hash, so a changed declaration is never answered with a stale `304`.
 Anything but an object is ignored with a warning and the plugin still loads. The shape belongs to
-each host app — the storefront's is documented in
-[vc-frontend](https://github.com/VirtoCommerce/vc-frontend) (`client-app/modules/federated/HOWTO.md`,
-"Declaring contributions").
+each host app.
 
 ### Two loaders
 
