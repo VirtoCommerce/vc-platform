@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
@@ -52,6 +53,13 @@ public class AppManifestService : IAppManifestService
         PropertyNameCaseInsensitive = true,
         ReadCommentHandling = JsonCommentHandling.Skip,
         AllowTrailingCommas = true,
+    };
+
+    // Contributions only travel inside JSON responses, never into HTML, so text stays as written
+    // instead of every non-ASCII character becoming a \uXXXX escape.
+    private static readonly JsonSerializerOptions s_contributionsJsonOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
     private readonly IModuleService _moduleService;
@@ -275,6 +283,7 @@ public class AppManifestService : IAppManifestService
                 Name = remoteName,
                 Exposed = remoteExposed,
             },
+            Contributions = ReadContributions(manifest, pluginFolder),
         };
 
         if (manifest?.ContentFiles != null)
@@ -291,6 +300,36 @@ public class AppManifestService : IAppManifestService
         }
 
         return plugin;
+    }
+
+    private string ReadContributions(PluginManifestFile manifest, string pluginFolder)
+    {
+        if (manifest?.Contributions is not { } contributions ||
+            contributions.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+        {
+            return null;
+        }
+
+        if (contributions.ValueKind != JsonValueKind.Object)
+        {
+            _logger.LogWarning(
+                "Plugin manifest at {ManifestPath} declares 'contributions' as {ValueKind}, not an object; ignoring it.",
+                Path.Combine(pluginFolder, PluginManifestFileName), contributions.ValueKind);
+            return null;
+        }
+
+        try
+        {
+            return JsonSerializer.Serialize(contributions, s_contributionsJsonOptions);
+        }
+        catch (JsonException ex)
+        {
+            // E.g. an unpaired surrogate escape: the document parses but cannot be written back.
+            _logger.LogWarning(ex,
+                "Plugin manifest at {ManifestPath} declares 'contributions' that cannot be serialized; ignoring it.",
+                Path.Combine(pluginFolder, PluginManifestFileName));
+            return null;
+        }
     }
 
     private PluginManifestFile TryReadPluginManifest(string pluginFolder)
@@ -368,7 +407,8 @@ public class AppManifestService : IAppManifestService
     /// Computes a strong content fingerprint covering every field of the
     /// resulting response body that can change between requests: appId +
     /// the ordered list of plugins + each plugin's id, version, entry hash,
-    /// content-file hashes, and federation remote coordinates.
+    /// content-file hashes, federation remote coordinates, permission, and
+    /// declared contributions.
     /// </summary>
     /// <remarks>
     /// The hash MUST include the per-file cache-busting hashes (file mtimes
@@ -417,6 +457,15 @@ public class AppManifestService : IAppManifestService
                   .Append('/')
                   .Append(plugin.Remote.Exposed ?? string.Empty);
             }
+            // Both skipped when null so existing fingerprints stay unchanged.
+            if (plugin.Permission != null)
+            {
+                sb.Append("|permission:").Append(plugin.Permission);
+            }
+            if (plugin.Contributions != null)
+            {
+                sb.Append('|').Append(plugin.Contributions);
+            }
             sb.Append(';');
         }
 
@@ -453,7 +502,8 @@ public class AppManifestService : IAppManifestService
         string Entry,
         List<string> ContentFiles,
         PluginManifestRemote Remote,
-        string Permission);
+        string Permission,
+        JsonElement? Contributions);
 
     private sealed record PluginManifestRemote(string Name, string Exposed);
 }
