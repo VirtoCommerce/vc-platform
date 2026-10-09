@@ -72,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             await _eventPublisher.Publish(new BeforeUserLoginEvent(platformUser, externalLoginInfo));
 
-            var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, isPersistent: false);
+            var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, isPersistent: false, bypassTwoFactor: true);
 
             if (externalLoginResult == SignInResult.Failed)
             {
@@ -84,12 +84,6 @@ namespace VirtoCommerce.Platform.Web.Security
             {
                 await PublishSignInAttempt(userName, platformUser, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.LockedOut);
                 return ExternalSignInResult.Fail();
-            }
-
-            if (externalLoginResult == SignInResult.TwoFactorRequired)
-            {
-                await PublishSignInAttempt(userName, platformUser, externalLoginInfo.LoginProvider, succeeded: false, SignInFailureReason.RequiresTwoFactor);
-                throw new NotImplementedException();
             }
 
             await SetLastLoginDate(platformUser);

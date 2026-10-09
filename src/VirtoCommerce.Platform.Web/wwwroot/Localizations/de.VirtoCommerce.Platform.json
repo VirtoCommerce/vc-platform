@@ -532,6 +532,7 @@
         "errors": {
           "login-failed": "Anmeldeversuch fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.",
           "account-locked": "Ihr Konto wurde gesperrt. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator.",
+          "two-factor-unavailable": "Für dieses Konto ist ein zweiter Anmeldeschritt erforderlich, der jedoch nicht verfügbar ist. Wenden Sie sich an Ihren Administrator.",
           "technical-error": "Authentifizierungsfehler. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator. (Code: {{code}})",
           "unknown-error": "Authentifizierungsfehler. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator."
         }

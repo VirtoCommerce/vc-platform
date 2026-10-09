@@ -57,6 +57,11 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                 return AuthenticateResult.Fail("Invalid user name or password.");
             }
 
+            if (await _signInManager.IsTwoFactorEnabledAsync(user))
+            {
+                return AuthenticateResult.Fail("Two-factor authentication is required for this user. Use an API key instead of the password.");
+            }
+
             var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
             var ticket = new AuthenticationTicket(claimsPrincipal, Options.Scheme);
 

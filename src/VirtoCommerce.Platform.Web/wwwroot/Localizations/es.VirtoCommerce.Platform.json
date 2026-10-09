@@ -530,6 +530,7 @@
         "errors": {
           "login-failed": "Error en el intento de inicio de sesión. Compruebe sus credenciales.",
           "account-locked": "Su cuenta ha sido bloqueada. Inténtelo de nuevo más tarde o póngase en contacto con el administrador.",
+          "two-factor-unavailable": "Esta cuenta requiere un segundo paso de inicio de sesión, pero no está disponible. Póngase en contacto con su administrador.",
           "technical-error": "Error de autenticación. Inténtelo de nuevo más tarde o póngase en contacto con el administrador. (Código: {{code}})",
           "unknown-error": "Error de autenticación. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."
         }

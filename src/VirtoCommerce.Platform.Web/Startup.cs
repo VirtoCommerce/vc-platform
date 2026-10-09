@@ -331,6 +331,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
                 .AddEntityFrameworkStores<SecurityDbContext>()
                 .AddDefaultTokenProviders()
+                .AddSignInManager<CustomSignInManager>()
                 .AddUserValidator<CustomUserValidator>();
 
             // AddIdentity rewrites default scheme to Cookie, so we need to set it to Mixed scheme again

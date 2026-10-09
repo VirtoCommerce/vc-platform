@@ -531,6 +531,7 @@
         "errors": {
           "login-failed": "Inloggningsförsöket misslyckades. Kontrollera dina inloggningsuppgifter.",
           "account-locked": "Ditt konto har låsts. Försök igen senare eller kontakta administratören.",
+          "two-factor-unavailable": "Det här kontot kräver ett andra inloggningssteg, men det är inte tillgängligt. Kontakta administratören.",
           "technical-error": "Autentiseringsfel. Försök igen senare eller kontakta administratören. (Kod: {{code}})",
           "unknown-error": "Autentiseringsfel. Försök igen senare eller kontakta administratören."
         }

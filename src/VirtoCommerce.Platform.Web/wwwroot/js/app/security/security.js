@@ -1,4 +1,5 @@
 angular.module('platformWebApp')
+    .constant('platformWebApp.twoFactorState', 'twoFactorDialog')
     .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
         $stateProvider.state('loginDialog',
             {
@@ -6,8 +7,8 @@ angular.module('platformWebApp')
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 data: { allowAnonymous: true },
                 controller: [
-                    '$scope', '$window', '$translate', '$log', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
-                    function ($scope, $window, $translate, $log, authService, externalSignInService, loginResources, externalSignInStorage) {
+                    '$scope', '$state', '$window', '$translate', '$log', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage', 'platformWebApp.twoFactorState',
+                    function ($scope, $state, $window, $translate, $log, authService, externalSignInService, loginResources, externalSignInStorage, twoFactorState) {
                         $scope.loginProviders = [];
                         $scope.showPassword = false;
                         $scope.showPlainLogin = true;
@@ -56,7 +57,9 @@ angular.module('platformWebApp')
                             authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
                                 function (result) {
                                     $scope.loginProgress = false;
-                                    if (!result || !result.succeeded) {
+                                    if (result && result.requiresTwoFactor && $state.get(twoFactorState)) {
+                                        $state.go(twoFactorState, { rememberMe: $scope.user.remember });
+                                    } else if (!result || !result.succeeded) {
                                         $scope.authError = resolveSignInError(result);
                                     }
                                 },
@@ -69,6 +72,9 @@ angular.module('platformWebApp')
                         function resolveSignInError(result) {
                             if (result && result.isLockedOut) {
                                 return $translate.instant('platform.blades.login.errors.account-locked');
+                            }
+                            if (result && result.requiresTwoFactor) {
+                                return $translate.instant('platform.blades.login.errors.two-factor-unavailable');
                             }
                             return $translate.instant('platform.blades.login.errors.login-failed');
                         }

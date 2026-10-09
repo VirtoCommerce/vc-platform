@@ -530,6 +530,7 @@
         "errors": {
           "login-failed": "Tentativo di accesso non riuscito. Verifica le tue credenziali.",
           "account-locked": "Il tuo account è stato bloccato. Riprova più tardi o contatta l'amministratore.",
+          "two-factor-unavailable": "Questo account richiede un secondo passaggio di accesso, ma non è disponibile. Contatta l'amministratore.",
           "technical-error": "Errore di autenticazione. Riprova più tardi o contatta l'amministratore. (Codice: {{code}})",
           "unknown-error": "Errore di autenticazione. Riprova più tardi o contatta l'amministratore."
         }
