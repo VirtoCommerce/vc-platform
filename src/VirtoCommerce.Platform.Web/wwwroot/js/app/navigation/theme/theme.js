@@ -2,7 +2,8 @@ angular.module('platformWebApp')
     .factory('platformWebApp.themeService', ['$rootScope', 'platformWebApp.themeAdapter', function ($rootScope, themeAdapter) {
         // classic: the original look; light/dark: the modern look; system: modern, following the OS color scheme
         var themes = ['light', 'dark', 'system', 'classic'];
-        var defaultTheme = 'light';
+        // follow the OS light/dark preference until the user picks a theme
+        var defaultTheme = 'system';
         var storageKey = 'VirtoCommerce.Platform.UI.Theme';
         var fontsLinkId = 'vc-modern-fonts';
         var fontsHref = 'https://fonts.googleapis.com/css2?family=Geologica:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap';
