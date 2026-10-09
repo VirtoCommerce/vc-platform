@@ -51,6 +51,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             _repositoryFactory = repositoryFactory;
             _crudService = crudService;
             _crudOptions = crudOptions.Value;
+            CacheKey.RegisterCacheName(GetType(), typeof(TModel));
         }
 
         /// <summary>

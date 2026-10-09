@@ -35,6 +35,7 @@ using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using Serilog;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
@@ -755,6 +756,9 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            // Wrap module middleware and error handling so all downstream cache lookups belong to this request.
+            app.UseMiddleware<CacheMetricsMiddleware>();
+
             // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
             ModuleBootstrapper.Instance.RunConfigure(app, Configuration);
 
