@@ -531,6 +531,7 @@
         "errors": {
           "login-failed": "Påloggingsforsøket mislyktes. Kontroller legitimasjonen din.",
           "account-locked": "Kontoen din er låst. Prøv igjen senere eller kontakt administrator.",
+          "two-factor-unavailable": "Denne kontoen krever et ekstra påloggingstrinn, men det er ikke tilgjengelig. Kontakt administratoren.",
           "technical-error": "Autentiseringsfeil. Prøv igjen senere eller kontakt administrator. (Kode: {{code}})",
           "unknown-error": "Autentiseringsfeil. Prøv igjen senere eller kontakt administrator."
         }

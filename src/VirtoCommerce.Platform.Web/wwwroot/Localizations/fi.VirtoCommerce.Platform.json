@@ -531,6 +531,7 @@
         "errors": {
           "login-failed": "Kirjautumisyritys epäonnistui. Tarkista käyttäjätunnuksesi.",
           "account-locked": "Tilisi on lukittu. Yritä myöhemmin uudelleen tai ota yhteyttä järjestelmänvalvojaan.",
+          "two-factor-unavailable": "Tämä tili vaatii toisen kirjautumisvaiheen, mutta se ei ole käytettävissä. Ota yhteyttä järjestelmänvalvojaan.",
           "technical-error": "Todennusvirhe. Yritä myöhemmin uudelleen tai ota yhteyttä järjestelmänvalvojaan. (Koodi: {{code}})",
           "unknown-error": "Todennusvirhe. Yritä myöhemmin uudelleen tai ota yhteyttä järjestelmänvalvojaan."
         }

@@ -530,6 +530,7 @@
         "errors": {
           "login-failed": "登录尝试失败。请检查您的凭据。",
           "account-locked": "您的账户已被锁定。请稍后再试或联系管理员。",
+          "two-factor-unavailable": "此账户需要第二步登录验证，但该功能不可用。请联系管理员。",
           "technical-error": "认证错误。请稍后再试或联系管理员。（代码: {{code}}）",
           "unknown-error": "认证错误。请稍后再试或联系管理员。"
         }

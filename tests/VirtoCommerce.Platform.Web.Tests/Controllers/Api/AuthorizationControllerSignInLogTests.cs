@@ -363,6 +363,114 @@ public class AuthorizationControllerSignInLogTests
     }
 
     [Fact]
+    public async Task Exchange_PasswordGrant_TwoFactorRequired_ReturnsChallengeInsteadOfTokens()
+    {
+        var user = SetupPasswordUser(twoFactorRequired: true);
+        var challengeResult = new BadRequestObjectResult("challenge");
+        var handler = CreateTwoFactorSignInHandler(challengeResult);
+
+        var controller = BuildController(PasswordRequest(), twoFactorSignInHandlers: [handler.Object]);
+
+        var actionResult = await controller.Exchange();
+
+        actionResult.Should().BeSameAs(challengeResult);
+        handler.Verify(x => x.ChallengeAsync(It.Is<TokenRequestContext>(c => c.User.Id == user.Id && c.SignInResult.Succeeded)), Times.Once);
+        _userManager.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
+
+        var attempt = _published.Should().ContainSingle().Subject;
+        attempt.Succeeded.Should().BeFalse();
+        attempt.UserId.Should().Be("user-1");
+        attempt.FailureReason.Should().Be(SignInFailureReason.RequiresTwoFactor);
+        attempt.SignInType.Should().Be(SignInType.Password);
+    }
+
+    [Fact]
+    public async Task Exchange_PasswordGrant_TwoFactorChallengeSetsFailureReason_PublishesThatReason()
+    {
+        SetupPasswordUser(twoFactorRequired: true);
+        var handler = CreateTwoFactorSignInHandler(new BadRequestResult(), failureReason: "CustomReason");
+
+        var controller = BuildController(PasswordRequest(), twoFactorSignInHandlers: [handler.Object]);
+
+        await controller.Exchange();
+
+        _published.Should().ContainSingle().Which.FailureReason.Should().Be("CustomReason");
+    }
+
+    [Fact]
+    public async Task Exchange_PasswordGrant_TwoFactorNotRequired_IssuesTokens()
+    {
+        SetupPasswordUser(twoFactorRequired: false);
+        var handler = CreateTwoFactorSignInHandler(new BadRequestResult());
+
+        var controller = BuildController(PasswordRequest(), twoFactorSignInHandlers: [handler.Object]);
+
+        var actionResult = await controller.Exchange();
+
+        actionResult.Should().BeOfType<Microsoft.AspNetCore.Mvc.SignInResult>();
+        handler.Verify(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()), Times.Never);
+        _published.Should().ContainSingle().Which.Succeeded.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Exchange_PasswordGrant_TwoFactorRequiredWithoutHandler_IssuesTokens()
+    {
+        SetupPasswordUser(twoFactorRequired: true);
+
+        var controller = BuildController(PasswordRequest());
+
+        var actionResult = await controller.Exchange();
+
+        actionResult.Should().BeOfType<Microsoft.AspNetCore.Mvc.SignInResult>();
+        _signInManager.Verify(x => x.IsTwoFactorEnabledAsync(It.IsAny<ApplicationUser>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task Exchange_PasswordGrant_ValidatorRejects_DoesNotStartTwoFactor()
+    {
+        SetupPasswordUser(twoFactorRequired: true);
+        var handler = CreateTwoFactorSignInHandler(new BadRequestResult());
+
+        var controller = BuildController(PasswordRequest(), validators: [RejectingValidator("Password expired")], twoFactorSignInHandlers: [handler.Object]);
+
+        await controller.Exchange();
+
+        handler.Verify(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()), Times.Never);
+        _published.Should().ContainSingle().Which.FailureReason.Should().Be(SignInFailureReason.NotAllowed);
+    }
+
+    [Fact]
+    public async Task Exchange_PasswordGrant_WrongPassword_DoesNotStartTwoFactor()
+    {
+        SetupPasswordUser(twoFactorRequired: true);
+        _signInManager
+            .Setup(x => x.CheckPasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
+        var handler = CreateTwoFactorSignInHandler(new BadRequestResult());
+
+        var controller = BuildController(PasswordRequest(), twoFactorSignInHandlers: [handler.Object]);
+
+        await controller.Exchange();
+
+        handler.Verify(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task Exchange_PasswordGrant_SeveralTwoFactorHandlers_UsesTheLastRegistered()
+    {
+        SetupPasswordUser(twoFactorRequired: true);
+        var firstHandler = CreateTwoFactorSignInHandler(new BadRequestObjectResult("first"));
+        var lastHandler = CreateTwoFactorSignInHandler(new BadRequestObjectResult("last"));
+
+        var controller = BuildController(PasswordRequest(), twoFactorSignInHandlers: [firstHandler.Object, lastHandler.Object]);
+
+        var actionResult = await controller.Exchange();
+
+        actionResult.Should().BeOfType<BadRequestObjectResult>().Which.Value.Should().Be("last");
+        firstHandler.Verify(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()), Times.Never);
+    }
+
+    [Fact]
     public async Task Exchange_RefreshToken_WithOperatorClaims_PublishesImpersonation()
     {
         var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
@@ -387,6 +495,41 @@ public class AuthorizationControllerSignInLogTests
 
         // Ordinary token rotation is high volume and low value - deliberately not audited.
         _published.Should().BeEmpty();
+    }
+
+    private ApplicationUser SetupPasswordUser(bool twoFactorRequired)
+    {
+        var user = new ApplicationUser { Id = "user-1", UserName = "buyer@test.com", StoreId = "B2B-store" };
+
+        _userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userManager.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+        _signInManager
+            .Setup(x => x.CheckPasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+        _signInManager.Setup(x => x.IsTwoFactorEnabledAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(twoFactorRequired);
+
+        return user;
+    }
+
+    private static OpenIddictRequest PasswordRequest()
+    {
+        return new OpenIddictRequest
+        {
+            GrantType = OpenIddictConstants.GrantTypes.Password,
+            Username = "buyer@test.com",
+            Password = "secret",
+            ClientId = "frontend",
+        };
+    }
+
+    private static Mock<ITwoFactorSignInHandler> CreateTwoFactorSignInHandler(ActionResult challengeResult, string failureReason = null)
+    {
+        var handler = new Mock<ITwoFactorSignInHandler>();
+        handler.Setup(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()))
+            .Callback<TokenRequestContext>(context => context.FailureReason = failureReason)
+            .ReturnsAsync(challengeResult);
+
+        return handler;
     }
 
     private AuthorizationController BuildRefreshController(ApplicationUser user, string operatorUserId, string operatorUserName)
@@ -472,7 +615,8 @@ public class AuthorizationControllerSignInLogTests
     private AuthorizationController BuildController(
         OpenIddictRequest request,
         IEnumerable<Claim> principalClaims = null,
-        IEnumerable<ITokenRequestValidator> validators = null)
+        IEnumerable<ITokenRequestValidator> validators = null,
+        IEnumerable<ITwoFactorSignInHandler> twoFactorSignInHandlers = null)
     {
         var controller = new AuthorizationController(
             applicationManager: _applicationManager.Object,
@@ -484,6 +628,7 @@ public class AuthorizationControllerSignInLogTests
             claimProviders: [],
             requestHandlers: [],
             grantTypeHandlers: [],
+            twoFactorSignInHandlers: twoFactorSignInHandlers ?? [],
             // The audited branches never touch the token manager, and the constructor only assigns
             // fields. Passing null keeps this harness off OpenIddict's internal store plumbing.
             tokenManager: null,
