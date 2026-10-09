@@ -18,7 +18,14 @@
       "assets": "Ressourcen",
       "toggle-favorites": "Umschalt + Leertaste zum Umschalten der Favoriten",
       "developer-tools": "Entwicklerwerkzeuge",
-      "help": "Hilfe"
+      "help": "Hilfe",
+      "collapse-menu": "Menü einklappen",
+      "expand-menu": "Menü ausklappen",
+      "theme": "Design",
+      "theme-light": "Hell",
+      "theme-dark": "Dunkel",
+      "theme-system": "Systemeinstellung",
+      "theme-classic": "Klassisch"
     },
     "navigation": {
       "back": "Zurück"

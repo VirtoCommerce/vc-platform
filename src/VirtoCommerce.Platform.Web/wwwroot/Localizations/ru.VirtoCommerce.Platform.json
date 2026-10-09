@@ -18,7 +18,14 @@
       "assets": "Ресурсы",
       "toggle-favorites": "Shift + Пробел для переключения избранного",
       "developer-tools": "Инструменты разработчика",
-      "help": "Помощь"
+      "help": "Помощь",
+      "collapse-menu": "Свернуть меню",
+      "expand-menu": "Развернуть меню",
+      "theme": "Тема",
+      "theme-light": "Светлая",
+      "theme-dark": "Тёмная",
+      "theme-system": "Как в системе",
+      "theme-classic": "Классическая"
     },
     "navigation": {
       "back": "Назад"

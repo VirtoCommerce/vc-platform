@@ -18,7 +18,14 @@
       "assets": "Ressurser",
       "toggle-favorites": "Shift + Mellomrom for å veksle favoritter",
       "developer-tools": "Utviklerverktøy",
-      "help": "Hjelp"
+      "help": "Hjelp",
+      "collapse-menu": "Skjul meny",
+      "expand-menu": "Vis meny",
+      "theme": "Tema",
+      "theme-light": "Lyst",
+      "theme-dark": "Mørkt",
+      "theme-system": "Følg systemet",
+      "theme-classic": "Klassisk"
     },
     "navigation": {
       "back": "Tilbake"

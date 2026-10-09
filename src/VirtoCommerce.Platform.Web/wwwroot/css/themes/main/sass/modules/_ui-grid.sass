@@ -8,7 +8,7 @@
 .ui-grid-top-panel
   background: rgba(0,0,0,.024)
 .ui-grid-header-cell
-  color: #333
+  color: var(--vc-fg-333333, #333)
   font-size: 14px
   font-weight: 400
   vertical-align: middle
@@ -18,7 +18,7 @@
   font-size: 14px
   cursor: pointer
   .table-descr
-    color: #999
+    color: var(--vc-fg-999999, #999)
     font-size: 12px
 .ui-grid-pinned-container.ui-grid-pinned-container-left
   .ui-grid-cell:last-child
@@ -31,9 +31,9 @@
 .ui-grid-row:nth-child(2n) .ui-grid-cell
   transition: background-color .35s ease-in-out
 .ui-grid-row:nth-child(2n) .ui-grid-cell
-  background: #F9F9F9
+  background: var(--vc-bg-f9f9f9, #F9F9F9)
 .ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected
-  background: #d9effa !important
+  background: var(--vc-bg-d9effa, #d9effa) !important
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
   background: none
 .ui-grid-row:hover .ui-grid-cell,
@@ -42,15 +42,15 @@
 .ui-grid-row .ui-grid-cell.__hovered,
 .ui-grid-row:nth-child(2n):hover .image,
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__hovered
-  background-color: #ecf7fc !important
+  background-color: var(--vc-bg-ecf7fc, #ecf7fc) !important
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__selected .image,
 .ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected .image
-  background-color: #d9effa !important
+  background-color: var(--vc-bg-d9effa, #d9effa) !important
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row:hover .ui-grid-cell,
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row:nth-child(2n):hover .ui-grid-cell
   background: none !important
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell.__selected
-  background: #d9effa !important
+  background: var(--vc-bg-d9effa, #d9effa) !important
 .ui-grid-header-cell,
 .ui-grid-cell,
 .ui-grid-header-cell:last-child .ui-grid-column-resizer.right
@@ -92,7 +92,7 @@
   font-size: 14px
   height: 100%
   padding: 4px 0 0 10px
-  text-shadow: 1px 1px #fff
+  text-shadow: 1px 1px var(--vc-sh-ffffff, #fff)
   vertical-align: middle
   max-width: 100%
 .ui-grid-cell-contents.ui-grid-cell-contents-hidden
@@ -107,12 +107,12 @@
     box-sizing: border-box
     padding: 5px 10px
 .ui-grid-cell-focus
-  background: #d9effa
+  background: var(--vc-bg-d9effa, #d9effa)
 .ui-grid-focuser
   &:focus
     box-shadow: none
 .ui-grid-cell.__filters .ui-grid-cell-contents
-  background: #f6f6f6
+  background: var(--vc-bg-f6f6f6, #f6f6f6)
 .ui-grid-cell-contents .inner-t
   font-size: 16px
   font-weight: 400
@@ -140,7 +140,7 @@
   overflow: auto
 .ui-grid-menu
   .ui-grid-menu-inner
-    background: #fff
+    background: var(--vc-bg-ffffff, #fff)
     border: none
     box-shadow: none
     ul li button
@@ -148,10 +148,10 @@
       font-family: inherit
       &:hover,
       &:focus
-        background: #ecf7fc
+        background: var(--vc-bg-ecf7fc, #ecf7fc)
         box-shadow: none
 .ui-grid-selection-row-header-buttons
-  color: #a1c0d4
+  color: var(--vc-fg-a1c0d4, #a1c0d4)
   height: 100%
   opacity: 1
   margin-left: -3px
@@ -173,7 +173,7 @@
     content: ''
     margin: 0 0 0 1px
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__selected
-  background: #d9effa !important
+  background: var(--vc-bg-d9effa, #d9effa) !important
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell.__selected,
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected
   background: none !important
@@ -215,15 +215,15 @@ input.ui-grid-filter-input[type="text"]
   line-height: 40px
   vertical-align: middle
   .pr-ico
-    color: #a6a6a6
+    color: var(--vc-fg-a6a6a6, #a6a6a6)
     display: inline-block
     font-size: 28px
     margin: -4px 0 0
-    text-shadow: 1px 1px #fff
+    text-shadow: 1px 1px var(--vc-sh-ffffff, #fff)
     vertical-align: middle
 .ui-grid-row:hover .ui-grid-cell .pr-ico,
 .ui-grid-row-selected .ui-grid-cell .pr-ico
-  color: #a1c0d4
+  color: var(--vc-fg-a1c0d4, #a1c0d4)
 .ui-grid-row > :first-child
   height: 100%
   overflow: visible
@@ -244,7 +244,7 @@ input.ui-grid-filter-input[type="text"]
   width: 26px
   border: 1px solid $textEditBrdOver
   border-radius: 2px
-  background: $noteNotifyBg !important
+  background: var(--vc-bg-f9f9f9, #{$noteNotifyBg}) !important
 .ui-grid-sort-priority-number
   color: $baseColor
 .ui-grid-menu-button .ui-grid-icon-container
@@ -324,7 +324,7 @@ input.ui-grid-filter-input[type="text"]
     position: absolute
     left: 0
     width: 100%
-    border-bottom: 1px dashed #808080
+    border-bottom: 1px dashed var(--vc-bd-808080, #808080)
 .ui-grid-draggable-row-over--above:before
   top: 0
 .ui-grid-draggable-row-over--below:before

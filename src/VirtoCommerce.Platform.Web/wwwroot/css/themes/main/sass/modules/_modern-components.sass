@@ -1,0 +1,930 @@
+/* Modern theme: shared components used by platform and module blades.
+   Imported inside the .vc-modern scope of _modern.sass. Colors come from the semantic palette, so every
+   rule here works in both light and dark mode. */
+
+// Indeterminate loading bar used in blade heads
+@keyframes vc-indeterminate
+  from
+    background-position: -40% 0
+  to
+    background-position: 140% 0
+
+::selection
+  background: var(--vc-primary-soft)
+  color: var(--vc-ink)
+
+input[type=checkbox],
+input[type=radio]
+  accent-color: var(--vc-primary)
+
+// Thin themed scrollbars
+*
+  scrollbar-color: var(--vc-scroll-thumb) transparent
+  scrollbar-width: thin
+::-webkit-scrollbar
+  height: 10px
+  width: 10px
+::-webkit-scrollbar-track
+  background: transparent
+::-webkit-scrollbar-thumb
+  background: var(--vc-scroll-thumb)
+  background-clip: padding-box
+  border: 2px solid transparent
+  border-radius: 9999px
+
+a
+  color: var(--vc-link)
+  &:hover
+    color: var(--vc-link-hover)
+
+/* Blade loading states */
+.blade .blade-head .blade-status
+  height: 3px
+  .progress-bar
+    animation: vc-indeterminate 1.1s ease-in-out infinite
+    background-color: var(--vc-primary-soft)
+    background-image: linear-gradient(90deg, transparent, var(--vc-primary), transparent)
+    background-repeat: no-repeat
+    background-size: 40% 100%
+  &.__error
+    height: auto
+  .status-message
+    background: var(--vc-danger-soft)
+    color: var(--vc-danger-ink)
+    height: 34px
+    .link-error-details
+      color: var(--vc-danger-ink)
+      &:hover
+        color: var(--vc-danger)
+.blade .loader span
+  background: var(--vc-primary)
+  border-radius: 9999px
+.progress-bar
+  background-color: var(--vc-primary)
+  border-radius: 9999px
+
+/* Text and form fields */
+.blade-content,
+.blade-container
+  color: var(--vc-ink)
+.form-label,
+.form-control .form-label
+  color: var(--vc-ink-2)
+  font-weight: 600
+.form-group .form-hint,
+.comment-text
+  color: var(--vc-faint)
+fieldset legend
+  border-bottom-color: var(--vc-line-soft)
+  color: var(--vc-ink)
+  font-family: var(--vc-font-display)
+  font-size: 18px
+  font-weight: 600
+
+.form-input input,
+.form-input textarea,
+.form-input select,
+input.ui-grid-filter-input[type="text"],
+.ta-scroll-window.form-control,
+.CodeMirror
+  background-color: var(--vc-plate)
+  border: 1px solid var(--vc-line)
+  border-radius: 10px
+  color: var(--vc-ink)
+  transition: border-color .15s ease, box-shadow .15s ease
+.form-input input,
+.form-input textarea,
+.form-input select
+  &:hover
+    border-color: var(--vc-faint)
+  &:focus
+    border-color: var(--vc-focus)
+    box-shadow: 0 0 0 3px var(--vc-focus-ring)
+    outline: none
+  &:disabled,
+  &[readonly]
+    background-color: var(--vc-sunken)
+    color: var(--vc-muted)
+  &::placeholder
+    color: var(--vc-faint)
+.form-input input.ng-invalid,
+.form-input textarea.ng-invalid,
+.form-input input.ng-invalid:focus,
+.form-input textarea.ng-invalid:focus
+  background: var(--vc-danger-soft)
+  border-color: var(--vc-danger-line)
+  color: var(--vc-danger-ink)
+.form-input .btn,
+.form-input .btn:hover
+  background: none
+  border-radius: 10px
+  color: var(--vc-muted)
+.form-input .btn-ico
+  color: var(--vc-muted)
+.form-input.__number .down,
+.form-input.__number .up
+  background: var(--vc-sunken)
+  border-color: var(--vc-line)
+.form-input.__langs label.lang-code,
+.form-input.__currency .currency
+  color: var(--vc-faint)
+
+// Custom checkbox / radio
+.form-control .check
+  background: var(--vc-plate)
+  border-color: var(--vc-line)
+  border-radius: 4px
+.form-control.__radio .check
+  border-radius: 50%
+.form-control :checked ~ .check
+  background: var(--vc-primary)
+  border-color: var(--vc-primary)
+.form-control.__checkbox :checked ~ .check:after
+  color: var(--vc-on-primary)
+  left: 1px
+.form-control.__radio :checked ~ .check:after
+  background: var(--vc-on-primary)
+.form-control .name
+  color: var(--vc-ink)
+
+// On/off switch
+.__switch
+  .switch
+    background: var(--vc-line)
+    border-radius: 9999px
+    box-shadow: none
+    &::after
+      background: #ffffff
+      border-radius: 9999px
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .25)
+      color: transparent
+      height: 18px
+      width: 18px
+    &::before
+      color: #ffffff
+  :checked ~ .switch
+    background: var(--vc-primary)
+  :checked ~ .switch::after
+    margin-left: 41px
+
+// Badges, chips and breadcrumbs
+.vc-badge
+  background: var(--vc-chip)
+  border-radius: 9999px
+  color: var(--vc-ink-2)
+.breadcrumbs
+  .menu-link
+    background-color: var(--vc-plate)
+    border-color: var(--vc-line)
+    color: var(--vc-ink-2)
+    &:hover
+      background-color: var(--vc-sunken)
+  .menu-item:last-child .menu-link
+    background-color: var(--vc-chip)
+    border-color: var(--vc-chip)
+    color: var(--vc-ink)
+  .arrow-color
+    color: var(--vc-faint)
+
+/* Pagination */
+.pagination
+  background: var(--vc-plate)
+  border-color: var(--vc-line-soft)
+  .menu-link
+    background: transparent
+    border: 0
+    border-radius: 9999px
+    color: var(--vc-ink-2)
+    font-size: 13px
+    font-weight: 500
+    height: 32px
+    line-height: 32px
+    width: 32px
+    &:hover
+      background: var(--vc-sunken)
+  .menu-item.__selected .menu-link
+    background: var(--vc-ink)
+    color: var(--vc-plate)
+
+/* ui-grid */
+.ui-grid,
+.ui-grid-header,
+.ui-grid-header-cell,
+.ui-grid-cell,
+.ui-grid-header-cell:last-child .ui-grid-column-resizer.right
+  border-color: var(--vc-line-soft)
+.ui-grid
+  background: var(--vc-plate)
+.ui-grid-top-panel,
+.ui-grid-header-viewport,
+.ui-grid-header-canvas,
+.ui-grid-header-cell
+  background: var(--vc-plate)
+.ui-grid-header-cell
+  color: var(--vc-muted)
+  font-size: 12.5px
+  font-weight: 600
+.ui-grid-viewport,
+.ui-grid-canvas,
+.ui-grid-cell,
+.ui-grid-row:nth-child(2n) .ui-grid-cell,
+.ui-grid-row:nth-child(2n+1) .ui-grid-cell
+  background-color: var(--vc-plate)
+.ui-grid-cell-contents
+  color: var(--vc-ink)
+  text-shadow: none
+  .table-descr
+    color: var(--vc-faint)
+.ui-grid-row:hover .ui-grid-cell,
+.ui-grid-row:nth-child(2n):hover .ui-grid-cell,
+.ui-grid-row .ui-grid-cell.__hovered,
+.ui-grid-row:nth-child(2n) .ui-grid-cell.__hovered,
+.ui-grid-row:nth-child(2n):hover .image
+  background-color: var(--vc-hover) !important
+.ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected,
+.ui-grid-row:nth-child(2n) .ui-grid-cell.__selected,
+.ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell.__selected,
+.ui-grid-row:nth-child(2n) .ui-grid-cell.__selected .image,
+.ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected .image,
+.ui-grid-cell-focus
+  background-color: var(--vc-select) !important
+.ui-grid-actions .fa
+  color: var(--vc-faint)
+.ui-grid-row:hover .ui-grid-actions .fa
+  color: var(--vc-ink-2)
+.ui-grid-actions ~ .menu
+  background: var(--vc-sunken)
+.ui-grid-selection-row-header-buttons
+  color: var(--vc-faint)
+  &.ui-grid-row-selected,
+  &.ui-grid-all-selected
+    color: var(--vc-primary)
+.ui-grid-menu-button
+  background: var(--vc-sunken) !important
+  border: 0
+  border-radius: 8px
+  .ui-grid-icon-menu
+    color: var(--vc-ink-2)
+.ui-grid-menu .ui-grid-menu-inner
+  background: var(--vc-plate)
+  border: 1px solid var(--vc-line-soft)
+  border-radius: 12px
+  box-shadow: var(--vc-shadow-lift)
+  color: var(--vc-ink)
+  ul li button
+    background: none
+    border-radius: 8px
+    color: var(--vc-ink)
+    &:hover,
+    &:focus
+      background: var(--vc-sunken)
+    &.ui-grid-menu-item-active
+      background: var(--vc-select)
+.ui-grid-sort-priority-number
+  color: var(--vc-link)
+.ui-grid-cell .product-img .pr-ico
+  color: var(--vc-faint)
+  text-shadow: none
+.ui-grid-cell .form-editor .form-input
+  border-color: var(--vc-line)
+.ui-grid-no-row-overlay > *
+  background: var(--vc-sunken)
+  border: 0
+  border-radius: 12px
+  color: var(--vc-muted)
+.ui-grid-cell.__filters .ui-grid-cell-contents
+  background: var(--vc-sunken)
+
+/* Plain tables and lists inside blades */
+.table
+  border-color: var(--vc-line-soft)
+  th,
+  .table-head
+    color: var(--vc-muted)
+  td,
+  th,
+  .table-item
+    border-color: var(--vc-line-soft)
+.list .list-item
+  border-color: var(--vc-line-soft)
+
+/* Tooltips, popovers and dropdown pickers */
+.tooltip .tooltip-inner
+  background: var(--vc-espresso)
+  border-radius: 8px
+  color: var(--vc-on-espresso)
+  font-family: var(--vc-font-body)
+  padding: 6px 10px
+.tooltip.top .tooltip-arrow
+  border-top-color: var(--vc-espresso)
+.tooltip.bottom .tooltip-arrow
+  border-bottom-color: var(--vc-espresso)
+.tooltip.left .tooltip-arrow
+  border-left-color: var(--vc-espresso)
+.tooltip.right .tooltip-arrow
+  border-right-color: var(--vc-espresso)
+.popover
+  background: var(--vc-plate)
+  border-color: var(--vc-line-soft)
+  border-radius: 12px
+  box-shadow: var(--vc-shadow-lift)
+  color: var(--vc-ink)
+
+// ui-select (select2 skin)
+.ui-select-container
+  .select2-choice,
+  .select2-choices
+    background: var(--vc-plate)
+    background-image: none
+    border-color: var(--vc-line)
+    border-radius: 10px
+    box-shadow: none
+    color: var(--vc-ink)
+  .select2-choice .select2-arrow
+    background: transparent
+    background-image: none
+    border-left: 0
+  .select2-search-choice
+    background: var(--vc-chip)
+    background-image: none
+    border: 0
+    border-radius: 9999px
+    box-shadow: none
+    color: var(--vc-ink-2)
+.select2-container-active .select2-choice,
+.select2-container-active .select2-choices,
+.select2-dropdown-open .select2-choice
+  border-color: var(--vc-focus)
+  box-shadow: 0 0 0 3px var(--vc-focus-ring)
+.select2-drop,
+.ui-select-dropdown
+  background: var(--vc-plate)
+  border-color: var(--vc-line) !important
+  box-shadow: var(--vc-shadow-lift)
+  color: var(--vc-ink)
+.select2-search input
+  background: var(--vc-plate)
+  border-color: var(--vc-line)
+  color: var(--vc-ink)
+.select2-results
+  .select2-highlighted
+    background: var(--vc-select)
+    color: var(--vc-ink)
+  .select2-result-label
+    color: var(--vc-ink)
+.ui-select-bootstrap .ui-select-choices-row.active > span,
+.ui-select-bootstrap .ui-select-choices-row > span:hover
+  background: var(--vc-select)
+  color: var(--vc-ink)
+
+// Date picker (angular-ui-bootstrap)
+.uib-datepicker-popup,
+.dropdown-menu.uib-datepicker-popup
+  background: var(--vc-plate)
+  border: 1px solid var(--vc-line-soft)
+  border-radius: 14px
+  box-shadow: var(--vc-shadow-lift)
+  color: var(--vc-ink)
+  .btn
+    background: transparent
+    border-radius: 8px
+    color: var(--vc-ink)
+    &:hover
+      background: var(--vc-sunken)
+    &.active
+      background: var(--vc-primary)
+      color: var(--vc-on-primary)
+  .text-muted
+    color: var(--vc-faint)
+
+// Context menu
+.dropdown-menu
+  background: var(--vc-plate)
+  border-color: var(--vc-line-soft)
+  color: var(--vc-ink)
+.context-menu,
+[ng-context-menu] + .dropdown-menu
+  border-radius: 12px
+  box-shadow: var(--vc-shadow-lift)
+
+/* Dashboard and blade widgets (gridster) */
+.dashboard
+  color: var(--vc-ink)
+  .dashboard-head
+    border-color: transparent
+  .dashboard-title__text h1
+    color: var(--vc-ink)
+    font-family: var(--vc-font-display)
+    font-weight: 600
+  .dashboard-subtitle
+    color: var(--vc-muted)
+.gridster
+  // widget tiles only: rows inside a widget (e.g. order totals) are plain .list-item elements too
+  gridster-item,
+  .gridster-item
+    background: var(--vc-plate)
+    border-radius: 18px
+    box-shadow: var(--vc-shadow)
+    &:hover
+      box-shadow: 0 0 0 1px var(--vc-line), var(--vc-shadow-lift)
+  // lists placed straight in a widget tile clear the color marker
+  .gridster-item [ng-model="widget"] > .list
+    padding-top: 14px
+  .gridster-item .list,
+  .gridster-item .list:hover,
+  .gridster-item .list-item,
+  .gridster-item .list-item:hover
+    background: transparent
+    border-radius: 0
+    box-shadow: none
+  // The per-widget color marker stays (it is a setting), as a short pill instead of a full-height bar
+  &.__widget-markers > .list > .list-item::before
+    border-radius: 9999px
+    bottom: auto
+    height: 4px
+    left: 12px
+    top: 7px
+    width: 18px
+  // Widget content: use the whole tile, never show an inner scrollbar (content still scrolls)
+  .gridster-cnt
+    bottom: 12px
+    left: 6px
+    right: 6px
+    scrollbar-width: none
+    top: 12px
+    &::-webkit-scrollbar
+      display: none
+  .list-t
+    font-size: 10.5px
+    letter-spacing: .02em
+    line-height: 1.3
+    overflow-wrap: anywhere
+  .list-count + .list-t
+    font-size: 10.5px
+  .list-ico,
+  .gallery-ico,
+  .comment-ico
+    color: var(--vc-muted)
+  .list-item:hover .list-ico,
+  .list-item:hover .gallery-ico,
+  .list-item:hover .comment-ico
+    color: var(--vc-primary)
+  .list-count
+    color: var(--vc-ink)
+    font-family: var(--vc-font-display)
+    font-weight: 600
+  .list-t
+    color: var(--vc-muted)
+  .list-descr
+    color: var(--vc-faint)
+.gridster-preview-holder
+  background: var(--vc-sunken)
+  border-color: var(--vc-line)
+  border-radius: 18px
+
+// Google charts: let the widget surface show through and follow the text colors
+[google-chart] svg
+  > rect,
+  rect[fill="#ffffff"]
+    fill: transparent
+  text
+    fill: var(--vc-muted)
+  rect[fill="#cccccc"],
+  rect[fill="#ebebeb"]
+    fill: var(--vc-line-soft)
+  rect[fill="#333333"]
+    fill: var(--vc-line)
+
+/* Secondary button variants keep a quiet look; only plain .btn is the primary action */
+.btn.__other,
+.btn.__ico,
+.btn.__file,
+.btn-outline,
+.btn.btn-outline
+  background: var(--vc-sunken)
+  color: var(--vc-ink)
+  &:hover
+    background: var(--vc-sunken-hover)
+    color: var(--vc-ink)
+.btn.__va-filter
+  background: var(--vc-plate)
+  border: 1px solid var(--vc-line)
+  border-radius: 10px
+  color: var(--vc-muted)
+  &:hover
+    background: var(--vc-sunken)
+    border-color: var(--vc-faint)
+    color: var(--vc-ink)
+  &.__active
+    background: var(--vc-select)
+    border-color: var(--vc-primary)
+    color: var(--vc-primary)
+.va-filter-badge
+  background: var(--vc-primary)
+.va-filter-panel
+  background: var(--vc-plate)
+  border-color: var(--vc-line-soft)
+  border-radius: 14px
+  box-shadow: var(--vc-shadow-lift)
+  color: var(--vc-ink)
+
+/* Tiles (content, store and other tile launchers) */
+.tile
+  background: var(--vc-plate)
+  border-radius: 16px
+  box-shadow: inset 0 0 0 1px var(--vc-line)
+  color: var(--vc-ink)
+  transition: box-shadow .15s ease, background-color .15s ease
+  .tile-ico
+    color: var(--vc-muted)
+  .tile-count
+    color: var(--vc-faint)
+  .tile-descr
+    color: var(--vc-ink-2)
+  .tile-action
+    background: var(--vc-sunken)
+    border-radius: 8px
+  &:hover .tile-action
+    background-color: var(--vc-primary)
+.tile:hover,
+.tile.__selected
+  background: var(--vc-hover)
+  box-shadow: inset 0 0 0 1px var(--vc-primary)
+  .tile-ico
+    color: var(--vc-primary)
+.tile.__info:hover,
+.tile.__selected.__info
+  background: var(--vc-plate)
+  box-shadow: inset 0 0 0 1px var(--vc-line)
+
+/* Order document status: a soft status panel instead of a full-bleed colored bar */
+.vc-order .order-status
+  background: var(--vc-info-soft)
+  border: 0
+  border-radius: 12px
+  color: var(--vc-info-ink)
+  margin: 14px 0 0
+  padding: 10px 16px
+
+// Note widgets (comments) take the widget surface instead of a pale yellow fill
+.gridster .gridster-cnt.__note
+  background: transparent
+
+/* Dialogs */
+.modal-backdrop,
+.modal-backdrop.in
+  background: rgba(30, 24, 20, .45)
+  opacity: 1
+.modal-window
+  background: var(--vc-plate)
+  border-radius: 18px
+  box-shadow: var(--vc-shadow-lift)
+  color: var(--vc-ink)
+  overflow: hidden
+  &__header
+    align-items: center
+    height: 52px
+    padding-left: 20px
+  // status dialogs: a light header with the title in the status color instead of a solid colored bar
+  &__header--warning,
+  &__header--success,
+  &__header--error
+    background-color: var(--vc-plate)
+    box-shadow: inset 0 -1px 0 var(--vc-line-soft)
+  &__header--error .modal-window__title
+    color: var(--vc-danger-ink)
+  &__header--warning .modal-window__title
+    color: var(--vc-warning-ink)
+  &__header--success .modal-window__title
+    color: var(--vc-success-ink)
+  &__title
+    font-size: 16px
+  &__header-button
+    border-radius: 9999px
+    color: var(--vc-muted)
+    height: 36px
+    margin-right: 8px
+    width: 36px
+    &:hover
+      background-color: var(--vc-sunken)
+      color: var(--vc-ink)
+  &__body
+    color: var(--vc-ink-2)
+    font-size: 14px
+    line-height: 1.55
+    margin: 22px 20px
+  &__footer
+    gap: 8px
+    padding: 0 20px 20px
+  &__footer-button
+    border-radius: 9999px
+    font-family: var(--vc-font-body)
+    font-size: 13px
+    font-weight: 600
+    margin-left: 0
+    min-height: 36px
+    padding: 0 18px
+    transition: background-color .15s ease, color .15s ease
+    &--primary
+      background-color: var(--vc-primary)
+      color: var(--vc-on-primary)
+      &:hover
+        background-color: var(--vc-primary-hover)
+    &--primary-outline
+      background-color: var(--vc-sunken)
+      border: 0
+      color: var(--vc-ink)
+      &:hover
+        background-color: var(--vc-sunken-hover)
+        color: var(--vc-ink)
+
+/* Main menu: drag handle of reorderable items, kept clear of the icon */
+.nav-bar .bar .__items .list-item.__draggable
+  &:before
+    filter: grayscale(1) opacity(.55)
+    left: -1px
+    width: 10px
+  &:hover .list-ico
+    color: var(--vc-ink-2)
+
+// Reset/clear buttons inside search fields: a small round icon button
+.form-input .btn.__other,
+.form-input .btn.__other:hover
+  align-items: center
+  background: none
+  border-radius: 9999px
+  color: var(--vc-faint)
+  display: inline-flex
+  height: 28px
+  justify-content: center
+  margin: 3px 0 0
+  min-width: 28px
+  padding: 0
+  width: 28px
+  .btn-ico
+    color: inherit
+    font-size: 13px
+    height: auto
+    padding: 0
+.form-input .btn.__other:hover
+  background: var(--vc-sunken)
+  color: var(--vc-ink)
+
+/* Sign-in, forgot and reset password screens */
+.auth
+  &__container
+    background: var(--vc-plate)
+    border-radius: 24px
+    box-shadow: var(--vc-shadow-lift)
+    overflow: hidden
+  &__head
+    border-color: var(--vc-line-soft)
+  &__title
+    color: var(--vc-ink)
+    font-family: var(--vc-font-display)
+    font-weight: 600
+.vc-input
+  &__label
+    color: var(--vc-ink-2)
+    font-weight: 600
+  &__field
+    background: var(--vc-plate)
+    border-color: var(--vc-line)
+    border-radius: 10px
+    color: var(--vc-ink)
+    &::placeholder
+      color: var(--vc-faint)
+    &:focus
+      border-color: var(--vc-focus)
+      box-shadow: 0 0 0 3px var(--vc-focus-ring)
+  &__password-switcher
+    color: var(--vc-muted)
+.vc-checkbox__label
+  color: var(--vc-ink-2)
+.vc-link
+  color: var(--vc-link)
+  &:hover
+    color: var(--vc-link-hover)
+.vc-alert--error
+  background: var(--vc-danger-soft)
+  border-color: var(--vc-danger-line)
+  color: var(--vc-danger-ink)
+
+/* Code editors (CodeMirror) */
+.CodeMirror
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace
+  font-size: 12.5px
+.CodeMirror-gutters
+  background: var(--vc-panel)
+  border-right-color: var(--vc-line-soft)
+.CodeMirror-linenumber
+  color: var(--vc-faint)
+.CodeMirror-cursor
+  border-left-color: var(--vc-ink)
+.CodeMirror-selected,
+.CodeMirror-focused .CodeMirror-selected
+  background: var(--vc-select)
+.CodeMirror-activeline-background
+  background: var(--vc-hover)
+// JSON editor toolbar buttons are styled inline by their directive
+.json-btn
+  border-radius: 9999px !important
+  font-weight: 600
+.json-btn.format-btn
+  background-color: var(--vc-sunken) !important
+  color: var(--vc-ink) !important
+  &:hover
+    background-color: var(--vc-sunken-hover) !important
+
+/* Context menus (row "more" menus, saved filter pickers) */
+.menu.__context
+  background: var(--vc-plate)
+  border: 1px solid var(--vc-line-soft)
+  border-radius: 14px
+  box-shadow: var(--vc-shadow-lift)
+  padding: 6px
+  .menu-item
+    border-radius: 10px
+    color: var(--vc-ink)
+    font-family: var(--vc-font-body)
+    font-size: 13px
+    padding: 8px 12px
+    &:hover
+      background: var(--vc-sunken)
+      color: var(--vc-ink)
+  .menu-item.__right
+    padding: 8px 36px 8px 12px
+  .menu-ico
+    color: var(--vc-muted)
+  .right-alignment
+    color: var(--vc-faint)
+    &:hover
+      color: var(--vc-ink)
+  .menu.__sub
+    background: var(--vc-plate)
+    border: 1px solid var(--vc-line-soft)
+    border-radius: 14px
+    box-shadow: var(--vc-shadow-lift)
+    padding: 6px
+.menu.__context .splited-element:last-child
+  border-top-color: var(--vc-line-soft)
+  border-radius: 0 0 10px 10px
+  margin-top: 6px
+  padding-top: 10px !important
+
+/* Date and time picker */
+.datetime-picker-dropdown,
+.form-input.__calendar .datetime-picker-dropdown,
+.uib-datepicker-popup
+  background: var(--vc-plate)
+  border: 1px solid var(--vc-line-soft)
+  border-radius: 16px
+  box-shadow: var(--vc-shadow-lift)
+  color: var(--vc-ink)
+  padding: 8px 6px 6px
+  table
+    border-collapse: separate
+    border-spacing: 2px
+  table td,
+  table th
+    background: transparent
+    border: 0
+  th
+    color: var(--vc-faint)
+    font-size: 11px
+    font-weight: 600
+  .btn,
+  .btn-default,
+  .btn-info
+    background: transparent
+    border: 0
+    border-radius: 9999px
+    box-shadow: none
+    color: var(--vc-ink)
+    font-family: var(--vc-font-body)
+    font-size: 12.5px
+    font-weight: 500
+    height: 32px
+    line-height: 32px
+    min-width: 32px
+    padding: 0 6px
+    text-shadow: none
+    &:hover
+      background: var(--vc-sunken)
+      color: var(--vc-ink)
+      opacity: 1
+  thead .btn
+    border-radius: 10px
+    font-family: var(--vc-font-display)
+    font-size: 14px
+  .btn.active,
+  .btn-info.active
+    background: var(--vc-primary)
+    color: var(--vc-on-primary)
+    .text-info,
+    .text-muted
+      color: var(--vc-on-primary)
+  .text-muted
+    color: var(--vc-faint)
+  .text-info
+    color: var(--vc-primary-ink)
+    font-weight: 700
+  // footer actions: Today / Clear / Time / Close, on one row
+  > li:last-child
+    align-items: center
+    background: transparent
+    display: flex !important
+    gap: 4px
+    justify-content: space-between
+    padding: 6px 2px 0 !important
+    // an inherited empty ::before would become a flex item and push the groups apart
+    &::before,
+    &::after
+      display: none
+    .pull-left,
+    .pull-right
+      float: none
+    flex-wrap: wrap
+    .btn
+      background: var(--vc-sunken)
+      font-size: 12px
+      font-weight: 600
+      height: 30px
+      line-height: 30px
+      min-width: 0
+      padding: 0 10px
+      &:hover
+        background: var(--vc-sunken-hover)
+    .btn-danger
+      background: var(--vc-danger-soft)
+      color: var(--vc-danger-ink)
+    .btn-success
+      background: var(--vc-primary)
+      color: var(--vc-on-primary)
+      &:hover
+        background: var(--vc-primary-hover)
+    .btn-group
+      display: inline-flex
+      gap: 4px
+
+/* Select dropdown panels: detached from the field, rounded, with inner spacing */
+.select2-drop.select2-drop-active,
+.ui-select-dropdown.select2-drop
+  border: 1px solid var(--vc-line) !important
+  border-radius: 12px
+  margin-top: 4px
+  overflow: hidden
+  padding: 6px 0
+  &.select2-drop-above
+    margin-top: -4px
+  .select2-search
+    padding: 0 6px 6px
+    input
+      border-radius: 8px
+      min-height: 32px
+  .select2-results
+    margin: 0
+    padding: 0 6px
+    .select2-result-label
+      border-radius: 8px
+      padding: 7px 10px
+// the field keeps its rounded corners while its dropdown is open
+.select2-dropdown-open .select2-choice,
+.select2-dropdown-open.select2-drop-above .select2-choice
+  border-radius: 10px !important
+
+/* Destructive confirmation (error dialogs, e.g. "type yes to delete"):
+   Confirm is the red destructive action, Cancel the quiet default */
+.modal-window__header--error ~ .modal-window__footer
+  .modal-window__footer-button--primary-outline
+    background-color: var(--vc-danger)
+    color: #ffffff
+    &:hover
+      background-color: var(--vc-danger-ink)
+      color: #ffffff
+    &:disabled,
+    &.__disabled
+      background-color: var(--vc-danger-soft)
+      color: var(--vc-danger)
+      cursor: not-allowed
+      opacity: .75
+  .modal-window__footer-button--primary
+    background-color: var(--vc-sunken)
+    color: var(--vc-ink)
+    &:hover
+      background-color: var(--vc-sunken-hover)
+.modal-window .form-input.__mini
+  margin-top: 8px
+  width: 160px
+.modal-window__message-container
+  color: var(--vc-ink-2)
+
+// header close button (some dialogs color its icon white for the old dark headers)
+.modal-window__header-button,
+.modal-window__header-button i,
+.modal-window__header-button span
+  color: var(--vc-muted)
+.modal-window__header-button:hover,
+.modal-window__header-button:hover i,
+.modal-window__header-button:hover span
+  color: var(--vc-ink)

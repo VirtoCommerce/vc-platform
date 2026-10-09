@@ -12,13 +12,13 @@
   &__info
     border-left: 1px solid $headerBrd
     border-right: 1px solid $headerBrd
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     @include blaseSizes()
       $width: getBladeContentSize($bladeSizeName)
       min-width: $width
       width: $width
   &__info2
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     @include blaseSizes()
       min-width: 340px
       width: 340px
@@ -34,7 +34,7 @@
       &:hover
         background-color: $headerBgOver
       &--opened
-        background-color: $noticeIconColor !important
+        background-color: var(--vc-bg-ffffff, #{$noticeIconColor}) !important
       &--opened
         .account-user__carret
           transform: rotate(180deg)
@@ -102,12 +102,12 @@
       height: 34px
     &__name,
     &__role
-      color: $whiteColor
+      color: var(--vc-fg-ffffff, #{$whiteColor})
       display: block
       font-size: 14px
     &__name,
     &__role
-      color: #838d9a
+      color: var(--vc-fg-838d9a, #838d9a)
     &__carret
       background: url('../../../../images/chevron.svg') no-repeat
       height: 7px
@@ -117,7 +117,7 @@
 
   // Dropdowns
   .dropdown-menu
-    background: $whiteColor
+    background: var(--vc-bg-ffffff, #{$whiteColor})
     border-bottom-left-radius: 4px
     border-bottom-right-radius: 4px
     box-shadow: 0 12px 18px rgba(0, 0, 0, 0.12)
@@ -164,7 +164,7 @@
       overflow-y: auto
       max-height: 600px
       &__item
-        border-bottom: 1px solid $noticeBrd
+        border-bottom: 1px solid var(--vc-bd-dfe3e8, #{$noticeBrd})
         font-size: 14px
         padding: 10px 15px
         position: relative
@@ -176,7 +176,7 @@
         &:hover
           background-color: darken($whiteColor, 2%)
       &__ico
-        background-color: $noticeIconBgColor
+        background-color: var(--vc-bg-87b563, #{$noticeIconBgColor})
         border-radius: 50%
         width: 24px
         height: 24px
@@ -184,17 +184,17 @@
         display: flex
         justify-content: center
         &.error
-          background-color: $noticeIconErrorBgColor
+          background-color: var(--vc-bg-f14e4e, #{$noticeIconErrorBgColor})
         &.progress
-          background-color: $noticeIconProgressBgColor
+          background-color: var(--vc-bg-a9bccd, #{$noticeIconProgressBgColor})
         i
           font-size: 1.4rem
-          color: $noticeIconColor
+          color: var(--vc-fg-ffffff, #{$noticeIconColor})
           margin-top: 2px
       &__content
         max-width: 309px
       &__date
-        color: $noticeDateColor
+        color: var(--vc-fg-959da6, #{$noticeDateColor})
         font-size: 11px
         position: absolute
         right: 15px
@@ -210,7 +210,7 @@
         width: 285px
         white-space: normal
       &__errors
-        color: $genericErrorColor
+        color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
       .btn
         float: right
         margin: 20px 10px 0 0
@@ -221,7 +221,7 @@
 
   .dropdown-menu.notifications .bottom-buttons
     box-shadow: inset 0px 2px 7px rgba(46, 61, 78, 0.1)
-    background-color: #FBFDFE
+    background-color: var(--vc-bg-fbfdfe, #FBFDFE)
     padding: 13px 12px 12px 12px
     text-align: right
     .btn-outline

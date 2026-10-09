@@ -18,7 +18,14 @@
       "assets": "Tillgångar",
       "toggle-favorites": "Skift + Mellanslag för att växla favoriter",
       "developer-tools": "Utvecklarverktyg",
-      "help": "Hjälp"
+      "help": "Hjälp",
+      "collapse-menu": "Fäll ihop menyn",
+      "expand-menu": "Fäll ut menyn",
+      "theme": "Tema",
+      "theme-light": "Ljust",
+      "theme-dark": "Mörkt",
+      "theme-system": "Följ systemet",
+      "theme-classic": "Klassiskt"
     },
     "navigation": {
       "back": "Tillbaka"

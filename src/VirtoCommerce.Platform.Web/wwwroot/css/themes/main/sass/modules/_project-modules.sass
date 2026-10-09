@@ -1,7 +1,7 @@
 /* Drag and drop */
 .drag-area
   background: $baseBrd
-  border: 2px dashed #a1c0d4
+  border: 2px dashed var(--vc-bd-a1c0d4, #a1c0d4)
   height: 100px
   margin: 0 0 20px
   padding: 0 20px
@@ -12,12 +12,12 @@
     height: 100%
     vertical-align: middle
 .drag-area.bd-blue
-  background: #d2e0e8
+  background: var(--vc-bg-d2e0e8, #d2e0e8)
 .drag-content
-  color: #a1c0d4
+  color: var(--vc-fg-a1c0d4, #a1c0d4)
   display: inline-block
   font-size: 18px
-  text-shadow: 1px 1px 1px $whiteColor
+  text-shadow: 1px 1px 1px var(--vc-sh-ffffff, #{$whiteColor})
   vertical-align: middle
 
 /* Dashboard */
@@ -74,7 +74,7 @@ $dashboardHeadHeight: 60px
     .dashboard-subtitle
       margin-top: 1px
       font-size: 12px
-      color: $listInfoListTColor
+      color: var(--vc-fg-4c4c4c, #{$listInfoListTColor})
     .__logo
       max-height: 36px
       vertical-align: top
@@ -94,9 +94,9 @@ $dashboardHeadHeight: 60px
 .log .__warning
   color: $genericWarningColor
 .log .__debug
-  color: #a6a6a6
+  color: var(--vc-fg-a6a6a6, #a6a6a6)
 .log .__error
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
   font-weight: 500
 
 /* Module progress timeline */
@@ -113,13 +113,13 @@ $dashboardHeadHeight: 60px
   margin-bottom: 4px
 
 .module-progress-icon--success
-  color: $genericSuccessColor
+  color: var(--vc-fg-87b563, #{$genericSuccessColor})
 
 .module-progress-icon--error
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 
 .module-progress-time
-  color: #999
+  color: var(--vc-fg-999999, #999)
   font-size: 12px
 
 .module-progress-bar-container
@@ -132,7 +132,7 @@ $dashboardHeadHeight: 60px
 .module-progress-current-step
   margin: -6px 0 12px
   font-size: 12px
-  color: #666
+  color: var(--vc-fg-666666, #666)
   font-style: italic
   white-space: nowrap
   overflow: hidden
@@ -154,7 +154,7 @@ $dashboardHeadHeight: 60px
   font-weight: 500
   text-decoration: none
   &:hover, &:focus
-    color: darken($baseColor, 10%)
+    color: var(--vc-base-color-dark, #{darken($baseColorRaw, 10%)})
     text-decoration: underline
 
 .module-progress-download-icon
@@ -190,12 +190,12 @@ $dashboardHeadHeight: 60px
   background: $lightBg
 
 .module-progress-item--error
-  background: $errorNotifyBg
-  border-color: $errorNotifyBrd
+  background: var(--vc-bg-f2dede, #{$errorNotifyBg})
+  border-color: var(--vc-bd-ebccd1, #{$errorNotifyBrd})
 
 .module-progress-item--active
-  background: $infoNotifyBg
-  border-color: $infoNotifyBrd
+  background: var(--vc-bg-d9edf7, #{$infoNotifyBg})
+  border-color: var(--vc-bd-bce8f1, #{$infoNotifyBrd})
 
 .module-progress-item-header
   display: flex
@@ -210,7 +210,7 @@ $dashboardHeadHeight: 60px
 .module-progress-item-chevron
   margin-left: auto
   font-size: 10px
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 
 .module-progress-item-messages
   position: relative
@@ -274,22 +274,22 @@ $dashboardHeadHeight: 60px
 
 .drag-area-secondary
   font-size: 12px
-  color: #999
+  color: var(--vc-fg-999999, #999)
 
 .module-progress-item-icon
   font-size: 14px
 
 .module-progress-item--done .module-progress-item-icon
-  color: $genericSuccessColor
+  color: var(--vc-fg-87b563, #{$genericSuccessColor})
 
 .module-progress-item--error .module-progress-item-icon
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 
 .module-progress-item--active .module-progress-item-icon
   color: $baseColor
 
 .module-progress-item--pending .module-progress-item-icon
-  color: #a6a6a6
+  color: var(--vc-fg-a6a6a6, #a6a6a6)
 
 .module-progress-item-name
   font-weight: 500
@@ -297,7 +297,7 @@ $dashboardHeadHeight: 60px
 .module-progress-item-messages
   margin: 6px 0 0 22px
   font-size: 11px
-  color: #666
+  color: var(--vc-fg-666666, #666)
   line-height: 1.5
   overflow-wrap: break-word
   word-break: break-all
@@ -306,7 +306,7 @@ $dashboardHeadHeight: 60px
   padding-right: 6px
 
 .module-progress-item-msg--error
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 
 .module-progress-item-msg--warning
   color: $genericWarningColor
@@ -324,18 +324,18 @@ $dashboardHeadHeight: 60px
   font-weight: 500
 
 .module-progress-summary--success
-  background: $successNotifyBg
-  border: 1px solid $successNotifyBrd
-  color: $successNotifyColor
+  background: var(--vc-bg-dff0d8, #{$successNotifyBg})
+  border: 1px solid var(--vc-bd-d6e9c6, #{$successNotifyBrd})
+  color: var(--vc-fg-3c763d, #{$successNotifyColor})
 
 .module-progress-summary--error
-  background: $errorNotifyBg
-  border: 1px solid $errorNotifyBrd
-  color: $errorNotifyColor
+  background: var(--vc-bg-f2dede, #{$errorNotifyBg})
+  border: 1px solid var(--vc-bd-ebccd1, #{$errorNotifyBrd})
+  color: var(--vc-fg-a94442, #{$errorNotifyColor})
 
 .module-progress-restart-hint
   font-size: 12px
-  color: #999
+  color: var(--vc-fg-999999, #999)
   margin: 8px 0 0
 
 .module-progress-log-toggle
@@ -463,10 +463,10 @@ $dashboardHeadHeight: 60px
    choice gets a visually distinct treatment. */
 .security-warning-banner.security-warning-banner__danger
   background: lighten($genericErrorColor, 38%)
-  border-left-color: $genericErrorColor
+  border-left-color: var(--vc-bd-ff4a4a, #{$genericErrorColor})
 
   .security-warning-banner__icon
-    color: $genericErrorColor
+    color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 
   .security-warning-banner__title
     color: darken($genericErrorColor, 10%)
@@ -518,7 +518,7 @@ $dashboardHeadHeight: 60px
   font: inherit
   // re-apply the platform's standard input styling that font: inherit just clobbered
   font-size: 13px
-  color: #4c4c4c
+  color: var(--vc-fg-4c4c4c, #4c4c4c)
   &::placeholder
     font: inherit
     font-size: 13px
@@ -555,7 +555,7 @@ $dashboardHeadHeight: 60px
     display: inline-block
     padding: 2px 8px
     background: $genericWarningColor
-    color: #fff
+    color: var(--vc-fg-ffffff, #fff)
     font-size: 11px
     font-weight: 600
     text-transform: uppercase
@@ -568,7 +568,7 @@ $dashboardHeadHeight: 60px
     font-size: 15px
     font-weight: 600
     letter-spacing: 1px
-    background: #fff
+    background: var(--vc-bg-ffffff, #fff)
 
 /* Matches the spacing the platform's standard `.form-input ~ .form-hint` rule gives —
    re-applied here because our help-icon-toggleable description sits inside an

@@ -18,7 +18,14 @@
       "assets": "Risorse",
       "toggle-favorites": "Shift + Spazio per attivare/disattivare i preferiti",
       "developer-tools": "Strumenti per sviluppatori",
-      "help": "Aiuto"
+      "help": "Aiuto",
+      "collapse-menu": "Comprimi menu",
+      "expand-menu": "Espandi menu",
+      "theme": "Tema",
+      "theme-light": "Chiaro",
+      "theme-dark": "Scuro",
+      "theme-system": "Come il sistema",
+      "theme-classic": "Classico"
     },
     "navigation": {
       "back": "Indietro"

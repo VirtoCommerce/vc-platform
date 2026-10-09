@@ -18,7 +18,14 @@
       "assets": "リソース",
       "toggle-favorites": "Shift + スペースでお気に入りを切り替え",
       "developer-tools": "開発者ツール",
-      "help": "ヘルプ"
+      "help": "ヘルプ",
+      "collapse-menu": "メニューを折りたたむ",
+      "expand-menu": "メニューを展開",
+      "theme": "テーマ",
+      "theme-light": "ライト",
+      "theme-dark": "ダーク",
+      "theme-system": "システム設定に合わせる",
+      "theme-classic": "クラシック"
     },
     "navigation": {
       "back": "戻る"

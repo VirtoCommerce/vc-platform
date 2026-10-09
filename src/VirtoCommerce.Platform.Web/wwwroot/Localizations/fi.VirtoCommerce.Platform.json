@@ -18,7 +18,14 @@
       "assets": "Resurssit",
       "toggle-favorites": "Shift + Välilyönti vaihtaaksesi suosikkeja",
       "developer-tools": "Kehittäjätyökalut",
-      "help": "Apua"
+      "help": "Apua",
+      "collapse-menu": "Pienennä valikko",
+      "expand-menu": "Laajenna valikko",
+      "theme": "Teema",
+      "theme-light": "Vaalea",
+      "theme-dark": "Tumma",
+      "theme-system": "Järjestelmän mukaan",
+      "theme-classic": "Klassinen"
     },
     "navigation": {
       "back": "Takaisin"

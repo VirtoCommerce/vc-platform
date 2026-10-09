@@ -16,7 +16,7 @@ input::-ms-reveal
   border: none
   background: none
   cursor: pointer
-  color: #319ED4
+  color: var(--vc-fg-319ed4, #319ED4)
   input:disabled ~ &
     color: darkgray
     cursor: not-allowed
@@ -25,7 +25,7 @@ input::-ms-reveal
   width: 18px
   height: 18px
 .__error
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 .form-input input.ng-invalid,
 .form-input input.ng-invalid.form-input,
 .form-input textarea.ng-invalid,
@@ -33,9 +33,9 @@ input::-ms-reveal
 .ui-select-container.ng-invalid .select2-choices,
 .form-input input.ng-invalid:focus,
 .form-input textarea.ng-invalid:focus
-  background: #fef8f7
-  border-color: #fce7e6
-  color: $genericErrorColor
+  background: var(--vc-bg-fef8f7, #fef8f7)
+  border-color: var(--vc-bd-fce7e6, #fce7e6)
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 fieldset
   border: none
   margin-bottom: 10px
@@ -70,10 +70,10 @@ fieldset + fieldset
 .__inline .form-group + .form-group
   margin-left: 15px
 .form-group .form-hint
-  color: #999
+  color: var(--vc-fg-999999, #999)
   font-size: 12px
 .form-error
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
   font-size: 12px
   line-height: 1.4
   padding: 5px 0
@@ -116,7 +116,7 @@ fieldset + fieldset
 .form-input textarea,
 .form-input select
   box-sizing: border-box
-  color: #4c4c4c
+  color: var(--vc-fg-4c4c4c, #4c4c4c)
   font-family: inherit
   font-size: 13px
   vertical-align: top
@@ -170,7 +170,7 @@ fieldset + fieldset
   line-height: 34px
   padding-right: 15px
   font-size: 13px
-  color: #999
+  color: var(--vc-fg-999999, #999)
 .form-input.__currency input,
 .form-input.__currency textarea,
 .form-input.__currency select
@@ -188,7 +188,7 @@ fieldset + fieldset
 .form-input textarea,
 .form-input select
   &:focus
-    border-color: #a1c0d4
+    border-color: var(--vc-bd-a1c0d4, #a1c0d4)
 .form-input input[type=file]
   height: 0
   position: absolute
@@ -265,7 +265,7 @@ fieldset + fieldset
 .form-input .btn
   background: none
   bottom: 0
-  color: #4c4c4c
+  color: var(--vc-fg-4c4c4c, #4c4c4c)
   height: 34px
   line-height: 1
   min-width: 45px
@@ -284,7 +284,7 @@ fieldset + fieldset
   height: 26px
   padding: 0 10px
 .form-input.__info .btn-ico
-  color: $whiteColor
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   font-size: 16px
   height: auto
   text-shadow: none
@@ -355,7 +355,7 @@ label.form-control
   padding-top: 3px
 .window .__required:after
   content: " *"
-  color: #F14E4E
+  color: var(--vc-fg-f14e4e, #F14E4E)
 .window .form-group .btn
   margin-top: -3px
   padding: 0 42px
@@ -364,8 +364,8 @@ label.form-control
     position: absolute
     visibility: hidden
   .check
-    background: $whiteColor
-    border: 1px solid #a1c0d4
+    background: var(--vc-bg-ffffff, #{$whiteColor})
+    border: 1px solid var(--vc-bd-a1c0d4, #a1c0d4)
     box-sizing: border-box
     height: 13px
     left: 0
@@ -376,13 +376,13 @@ label.form-control
   border-radius: 50%
 .form-control .form-label:hover .check,
 .form-control :checked ~ .check
-  border-color: #80a0b5
+  border-color: var(--vc-bd-80a0b5, #80a0b5)
 .form-control :checked ~ .check:after
   content: ''
   position: absolute
 .form-control.__checkbox :checked ~ .check:after
   bottom: 0
-  color: #43b0e6
+  color: var(--vc-fg-43b0e6, #43b0e6)
   content: ''
   font-family: $fontAw
   font-size: 11px
@@ -405,7 +405,7 @@ label.form-control
   vertical-align: 2px
 
 .comment-text
-  color: $textCommentColor
+  color: var(--vc-fg-838d9a, #{$textCommentColor})
   display: flex
   font-size: 11px
   margin-top: 3px
@@ -423,7 +423,7 @@ img.comment-icon
   input
     display: none
   .switch
-    background: #555
+    background: var(--vc-bg-555555, #555)
     border-radius: 3px
     box-shadow: 0 0 3px rgba(0,0,0,.15)
     display: block
@@ -432,9 +432,9 @@ img.comment-icon
 
     transition: background .15s ease
     &::after
-      background: $whiteColor
+      background: var(--vc-bg-ffffff, #{$whiteColor})
       border-radius: 3px
-      color: #ccc
+      color: var(--vc-fg-cccccc, #ccc)
       content: '|||'
       font-size: 11px
       height: 18px
@@ -448,7 +448,7 @@ img.comment-icon
 
       transition: margin-left .15s ease
     &::before
-      color: $whiteColor
+      color: var(--vc-fg-ffffff, #{$whiteColor})
       content: ''
       font-family: $fontAw
       font-size: 12px
@@ -466,12 +466,12 @@ img.comment-icon
     position: absolute
     top: 6px
   &::after
-    background: #999
+    background: var(--vc-bg-999999, #999)
     height: 10px
     right: -7px
     width: 1px
   &::before
-    border: 1px solid #999
+    border: 1px solid var(--vc-bd-999999, #999)
     border-radius: 50%
     box-sizing: border-box
     height: 8px
@@ -496,11 +496,11 @@ img.comment-icon
   .ta-scroll-window.form-control
     border: 1px solid $baseBrd
 .ta-root.focussed > .ta-scroll-window.form-control
-  border-color: #a1c0d4
+  border-color: var(--vc-bd-a1c0d4, #a1c0d4)
   box-shadow: none
 .ta-editor.ta-html,
 .ta-scroll-window.form-control
-  border: 1px solid #a1c0d4
+  border: 1px solid var(--vc-bd-a1c0d4, #a1c0d4)
   box-sizing: border-box
   max-width: 100%
   min-width: 100%
@@ -511,7 +511,7 @@ img.comment-icon
 .btn
   background: $baseColor
   border: none
-  color: $whiteColor
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   cursor: pointer
   display: inline-block
   font-family: inherit
@@ -522,7 +522,7 @@ img.comment-icon
   text-shadow: 1px 1px rgba(0, 0, 0, .1)
   vertical-align: top
   &:hover
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     opacity: .8
     filter: alpha(opacity=80)
 button.btn
@@ -548,9 +548,9 @@ button.btn
     filter: alpha(opacity=80)
     animation: linear 2s infinite progress
 .btn.__cancel
-  background-color: #a6a6a6
+  background-color: var(--vc-bg-a6a6a6, #a6a6a6)
   &:hover
-    background-color: #a0a0a0
+    background-color: var(--vc-bg-a0a0a0, #a0a0a0)
 
 /* Editors */
 .md-editor
@@ -561,7 +561,7 @@ button.btn
     background: none
     border: none
     box-sizing: border-box
-    color: #333
+    color: var(--vc-fg-333333, #333)
     height: 300px
     padding: 10px
     width: 100%
@@ -583,7 +583,7 @@ button.btn
       float: right
       margin: 3px 10px 0 0
 .md-editor.md-fullscreen-mode
-  background: #ffffff !important
+  background: var(--vc-bg-ffffff, #ffffff) !important
   border: 0 none !important
   box-sizing: border-box
   height: 100%
@@ -595,7 +595,7 @@ button.btn
   width: 100%
   z-index: 99999
 .md-editor.active
-  border-color: #66afe9
+  border-color: var(--vc-bd-66afe9, #66afe9)
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6)
   outline: 0 none
 .md-fullscreen-controls
@@ -618,7 +618,7 @@ button.btn
     z-index: 1002
     a
       clear: right
-      color: #b3b3b3
+      color: var(--vc-fg-b3b3b3, #b3b3b3)
       height: 30px
       margin: 10px
       text-align: center
@@ -635,16 +635,16 @@ i.fa-password
   position: relative
   z-index: 1
   float: right
-  color: #319ED4
+  color: var(--vc-fg-319ed4, #319ED4)
   padding-left: 26px
 
 /* Tags input */
 tags-input
   &.ng-invalid
     .tags
-      border-color: #fce7e6
-      background: #fef8f7
+      border-color: var(--vc-bd-fce7e6, #fce7e6)
+      background: var(--vc-bg-fef8f7, #fef8f7)
       box-shadow: none
 
       input
-        background: #fef8f7
+        background: var(--vc-bg-fef8f7, #fef8f7)

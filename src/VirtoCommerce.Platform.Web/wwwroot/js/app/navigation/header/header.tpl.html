@@ -3,6 +3,22 @@
     <va-header-password-widget></va-header-password-widget>
 
     <div class="header__nav">
+        <div class="header__nav-item header__nav-item--theme" ng-class="{'header__nav-item--opened': themeMenuOpen}">
+            <button type="button" class="header__nav-ico header__nav-ico--theme" ng-click="toggleThemeMenu($event)"
+                    title="{{'platform.menu.theme' | translate}}" aria-label="{{'platform.menu.theme' | translate}}" aria-haspopup="true" aria-expanded="{{themeMenuOpen}}">
+                <i class="fas fa-adjust" aria-hidden="true"></i>
+            </button>
+            <ul class="dropdown-menu theme-menu" role="menu">
+                <li ng-repeat="theme in themeOptions" role="none">
+                    <button type="button" role="menuitemradio" aria-checked="{{themeService.current === theme.id}}" class="dropdown-menu__item theme-menu__item"
+                            ng-class="{'theme-menu__item--active': themeService.current === theme.id}" ng-click="selectTheme(theme)">
+                        <i class="theme-menu__icon" ng-class="theme.icon" aria-hidden="true"></i>
+                        <span>{{theme.title | translate}}</span>
+                        <i class="theme-menu__check fas fa-check" ng-if="themeService.current === theme.id" aria-hidden="true"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
         <div class="header__nav-item" va-tooltip tooltip="{{'platform.menu.settings' | translate}}"
              tooltip-placement="bottom" tooltip-animation="false" tooltip-popup-delay="{{tooltipPopupDelay}}">
             <span class="header__nav-ico header__nav-ico--settings" ng-click="manageSettings()"></span>

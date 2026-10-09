@@ -18,7 +18,14 @@
       "assets": "Recursos",
       "toggle-favorites": "Shift + Espaço para alternar favoritos",
       "developer-tools": "Ferramentas de desenvolvedor",
-      "help": "Ajuda"
+      "help": "Ajuda",
+      "collapse-menu": "Recolher menu",
+      "expand-menu": "Expandir menu",
+      "theme": "Tema",
+      "theme-light": "Claro",
+      "theme-dark": "Escuro",
+      "theme-system": "Igual ao sistema",
+      "theme-classic": "Clássico"
     },
     "navigation": {
       "back": "Voltar"

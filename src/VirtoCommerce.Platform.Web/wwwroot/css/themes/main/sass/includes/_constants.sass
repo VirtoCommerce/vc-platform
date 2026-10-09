@@ -44,11 +44,16 @@ $mainMenuDropdownWidth: 360px
 /* Colors */
 
 /* General */
-$baseColor: #43b0e6
-$baseBg: #f5f6f9
-$baseBrd: #eaedf3
-$colorText: #161d25
-$lightBg: #fbfdfe
+$baseColorRaw: #43b0e6
+$baseColor: var(--vc-base-color, #{$baseColorRaw})
+$baseBgRaw: #f5f6f9
+$baseBg: var(--vc-base-bg, #{$baseBgRaw})
+$baseBrdRaw: #eaedf3
+$baseBrd: var(--vc-base-brd, #{$baseBrdRaw})
+$colorTextRaw: #161d25
+$colorText: var(--vc-text-color, #{$colorTextRaw})
+$lightBgRaw: #fbfdfe
+$lightBg: var(--vc-light-bg, #{$lightBgRaw})
 $whiteColor: #fff
 $borderColor: #ddd
 $orangeBg: #FFBB0D
@@ -64,7 +69,8 @@ $scrollHeight: 9px
 $genericErrorColor: #FF4A4A
 $genericWarningColor: $orangeBg
 $genericSuccessColor: #87B563
-$genericInfoColor: #43b0e6
+$genericInfoColorRaw: #43b0e6
+$genericInfoColor: var(--vc-info-color, #{$genericInfoColorRaw})
 
 /* Notify */
 $errorNotifyBg: #f2dede
@@ -91,8 +97,10 @@ $infoNotifyColor: #31708f
 $tableColor: #999
 $tableStatusBg: #a6a6a6
 $tableIcoColor: #a6a6a6
-$productImgOver: #ecf7fc
-$productImgSel: #d9effa
+$productImgOverRaw: #ecf7fc
+$productImgOver: var(--vc-product-img-over, #{$productImgOverRaw})
+$productImgSelRaw: #d9effa
+$productImgSel: var(--vc-product-img-sel, #{$productImgSelRaw})
 
 /* List */
 $listNoticeItemColor: #4c4c4c
@@ -106,10 +114,13 @@ $listNumberItemColor: #a6a6a6
 $listGroupBg: #fbfdf
 
 /* Header */
-$headerBg: #161d25
-$headerBgOver: #2e3d4e
+$headerBgRaw: #161d25
+$headerBg: var(--vc-header-bg, #{$headerBgRaw})
+$headerBgOverRaw: #2e3d4e
+$headerBgOver: var(--vc-header-bg-over, #{$headerBgOverRaw})
 $headerHeight: 60px
-$headerBrd: #2e3d4e
+$headerBrdRaw: #2e3d4e
+$headerBrd: var(--vc-header-brd, #{$headerBrdRaw})
 
 /* Notice */
 $noticeBrd: #dfe3e8
@@ -122,26 +133,35 @@ $noticeIconProgressBgColor: #a9bccd
 /* Menu */
 $mainMenuBg: #333
 $menuContextBg: #333
-$menuContextMenuItemColorOver: #43b0e6
+$menuContextMenuItemColorOverRaw: #43b0e6
+$menuContextMenuItemColorOver: var(--vc-menu-item-color-over, #{$menuContextMenuItemColorOverRaw})
 $menuIconFavoriteColor: #f89406
 
 /* Navbar */
-$navbarBg: #f5f6f9
-$navbarItemBg: #f5f6f9
-$navbarItemOver: #ecf7fc
+$navbarBgRaw: #f5f6f9
+$navbarBg: var(--vc-navbar-bg, #{$navbarBgRaw})
+$navbarItemBgRaw: #f5f6f9
+$navbarItemBg: var(--vc-navbar-item-bg, #{$navbarItemBgRaw})
+$navbarItemOverRaw: #ecf7fc
+$navbarItemOver: var(--vc-navbar-item-over, #{$navbarItemOverRaw})
 $navbarListGroupBg: #fbfdf
 
 /* Blade */
-$bladeHeadBg: #465769
-$bladeHeadBrd: #2e3d4e
-$bladeContentBg: #fff
+$bladeHeadBgRaw: #465769
+$bladeHeadBg: var(--vc-blade-head-bg, #{$bladeHeadBgRaw})
+$bladeHeadBrdRaw: #2e3d4e
+$bladeHeadBrd: var(--vc-blade-head-brd, #{$bladeHeadBrdRaw})
+$bladeContentBgRaw: #fff
+$bladeContentBg: var(--vc-blade-content-bg, #{$bladeContentBgRaw})
 $bladeBrd: #161d25
 
 /* Text */
 $textDebugColor: #a6a6a6
 $textNoteBrd: #eee
-$textEditBgOver: #ecf7fc
-$textEditBrdOver: #a1c0d4
+$textEditBgOverRaw: #ecf7fc
+$textEditBgOver: var(--vc-text-edit-bg-over, #{$textEditBgOverRaw})
+$textEditBrdOverRaw: #a1c0d4
+$textEditBrdOver: var(--vc-text-edit-brd-over, #{$textEditBrdOverRaw})
 $textCommentColor: #838D9A
 
 /* Font Awesome */

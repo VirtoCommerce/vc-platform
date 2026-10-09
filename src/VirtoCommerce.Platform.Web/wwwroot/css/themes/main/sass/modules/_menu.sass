@@ -42,7 +42,7 @@
       width: 100%
   .logo-version
     margin-left: 13px
-    color: #838d9a
+    color: var(--vc-fg-838d9a, #838d9a)
     font-size: 10px
     text-overflow: ellipsis
   .bar
@@ -96,7 +96,7 @@
         &.__hovered
           background: $navbarItemBg
         &.__selected
-          background: #d9effa !important
+          background: var(--vc-bg-d9effa, #d9effa) !important
         &.__animated
           animation: notify ease 1 1.5s
           .list-ico,
@@ -106,11 +106,11 @@
           .list-t,
           &:hover .list-name,
           &:hover .list-t
-            color: #fff
+            color: var(--vc-fg-ffffff, #fff)
             text-shadow: none
         &.__draggable
           &:before
-            color: #a6a6a6
+            color: var(--vc-fg-a6a6a6, #a6a6a6)
             background-image: url('../../../../images/navbar/3_dot_icon.svg')
             background-repeat: no-repeat
             background-position-x: center
@@ -150,7 +150,7 @@
           height: 100%
           width: 100%
       .list-ico.list-toggle
-        color: #319ED4
+        color: var(--vc-fg-319ed4, #319ED4)
         // &::before
         //   content: ' '
         //   display: block
@@ -163,7 +163,7 @@
         // &.fa-folder::before
         //   background: url('..../../../../images/navbar/catalog.svg') no-repeat scroll
       .list-count
-        background: $whiteColor
+        background: var(--vc-bg-ffffff, #{$whiteColor})
         height: 14px
         font-size: 10px
         line-height: 14px
@@ -190,7 +190,7 @@
   .menu-item
     text-align: center
   .menu-link
-    color: #c2c2c2
+    color: var(--vc-fg-c2c2c2, #c2c2c2)
     display: block
     font-size: 13px
     padding: 15px 0
@@ -202,13 +202,13 @@
     top: 0
   .menu-item.__done .menu-link
     background: $baseColor
-    color: #fff
+    color: var(--vc-fg-ffffff, #fff)
     cursor: pointer
   .menu-link
     &:hover
       color: $baseColor
   .__selected .menu-link
-    background-color: #383838
+    background-color: var(--vc-bg-383838, #383838)
     color: $baseColor
   .menu-ico
     display: block
@@ -218,7 +218,7 @@
 
   /* Dropdown - dropdown menu navigation */
   .dropdown
-    background: $whiteColor
+    background: var(--vc-bg-ffffff, #{$whiteColor})
     bottom: 0
     box-shadow: 1px 0 0 0 $baseBrd
     margin-top: $headerHeight
@@ -229,12 +229,12 @@
 
     transform: translateX(-$mainMenuDropdownWidth)
     &.__more
-      background: $whiteColor
+      background: var(--vc-bg-ffffff, #{$whiteColor})
     &.__opened
       transform: translateX($mainMenuWidth)
 .dropdown
   .dropdown-close
-    color: #c2c2c2
+    color: var(--vc-fg-c2c2c2, #c2c2c2)
     cursor: pointer
     font-family: caption
     font-size: 22px
@@ -244,13 +244,13 @@
     right: 15px
     top: 30px
     &:hover
-      color: $whiteColor
+      color: var(--vc-fg-ffffff, #{$whiteColor})
   &.__more .dropdown-close
-    color: #a6a6a6
+    color: var(--vc-fg-a6a6a6, #a6a6a6)
     top: 10px
     right: 10px
     &:hover
-      color: #333
+      color: var(--vc-fg-333333, #333)
   .dropdown-head
     padding: 85px 20px 14px
     text-align: right
@@ -279,7 +279,7 @@
     cursor: pointer
     font-size: 14px
     &:hover
-      color: #fff
+      color: var(--vc-fg-ffffff, #fff)
   .menu-ico
     display: inline-block
     font-size: 18px
@@ -305,7 +305,7 @@
     .list-item:after
       display: none
     .list-ico
-      color: #dfe3e8
+      color: var(--vc-fg-dfe3e8, #dfe3e8)
       font-size: 20px
       height: 20px
       line-height: 1
@@ -331,7 +331,7 @@
         top: 0
         width: $fontSize
         &.favorite
-          color: $menuIconFavoriteColor
+          color: var(--vc-fg-f89406, #{$menuIconFavoriteColor})
   &:not(.__more) .dropdown-content
     -ms-scrollbar-arrow-color: #545454
     -ms-scrollbar-face-color: #434343
@@ -340,9 +340,9 @@
     .list
       width: 315px
     .list-item
-      border-top: 1px solid #606060
+      border-top: 1px solid var(--vc-bd-606060, #606060)
     .list-link
-      color: #c2c2c2
+      color: var(--vc-fg-c2c2c2, #c2c2c2)
       display: block
       font-size: 16px
       font-weight: 300
@@ -351,7 +351,7 @@
       text-transform: uppercase
       &:hover
         background: rgba(0,0,0,.2)
-        color: $whiteColor
+        color: var(--vc-fg-ffffff, #{$whiteColor})
     .__selected .list-link
       background: none
       color: $baseColor
@@ -367,7 +367,7 @@
         color: $baseColor
     .error
       .list-ico
-        color: $genericErrorColor
+        color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
     .warning
       .list-ico
         color: $genericWarningColor
@@ -375,7 +375,7 @@
     .warning
       .list-ico
         &::after
-          background: $whiteColor
+          background: var(--vc-bg-ffffff, #{$whiteColor})
           content: ''
           height: 12px
           left: 11px
@@ -386,7 +386,7 @@
   .list-t,
   .list-date,
   .list-descr
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     text-transform: none
   .list-date,
   .list-descr
@@ -398,12 +398,12 @@
     display: block
     margin: 0 0 0 55px
   .list-date
-    color: #c2c2c2
+    color: var(--vc-fg-c2c2c2, #c2c2c2)
     margin: 5px 0 0 55px
     padding: 0 0 0 25px
     position: relative
     &::after
-      color: #c2c2c2
+      color: var(--vc-fg-c2c2c2, #c2c2c2)
       content: ''
       font-family: $fontAw
       font-size: 14px
