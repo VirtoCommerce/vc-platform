@@ -236,6 +236,151 @@ public class AppManifestServiceTests : IDisposable
     }
 
     [Fact]
+    public void GetManifest_ModernApp_Contributions_FlowToDescriptorAsCompactJson()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        {
+          "id": "sales-rep",
+          "contributions": {
+            "format": 1,
+            "anything": { "nested": true },
+            "list": [ { "a": 1, "b": "x" } ]
+          }
+        }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var result = service.GetManifest("vc-frontend");
+
+        var p = Assert.Single(result.Plugins);
+        Assert.Equal(
+            """{"format":1,"anything":{"nested":true},"list":[{"a":1,"b":"x"}]}""",
+            p.Contributions);
+    }
+
+    [Fact]
+    public void GetManifest_ModernApp_Contributions_KeepNonAsciiTextUnescaped()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "contributions": { "format": 1, "menu": [ { "title": "Документы & <b>" } ] } }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var p = Assert.Single(service.GetManifest("vc-frontend").Plugins);
+        Assert.Equal("""{"format":1,"menu":[{"title":"Документы & <b>"}]}""", p.Contributions);
+    }
+
+    [Fact]
+    public void GetManifest_ModernApp_NoContributions_LeavesThemNull()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "id": "sales-rep", "contributions": null }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var p = Assert.Single(service.GetManifest("vc-frontend").Plugins);
+        Assert.Null(p.Contributions);
+    }
+
+    [Fact]
+    public void GetManifest_ModernApp_NonObjectContributions_AreIgnored_PluginStillLoads()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "id": "sales-rep", "contributions": [ "not", "an", "object" ] }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var p = Assert.Single(service.GetManifest("vc-frontend").Plugins);
+        Assert.Equal("sales-rep", p.Id);
+        Assert.Null(p.Contributions);
+    }
+
+    [Fact]
+    public void GetManifest_ModernApp_UnserializableContributions_AreIgnored_PluginStillLoads()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "id": "sales-rep", "permission": "sales-rep:access", "contributions": { "format": 1, "title": "\uDEAD" } }
+        """);
+
+        var service = NewService(host, plugin);
+
+        var p = Assert.Single(service.GetManifest("vc-frontend").Plugins);
+        Assert.Equal("sales-rep:access", p.Permission);
+        Assert.Null(p.Contributions);
+    }
+
+    [Fact]
+    public void GetManifest_DescriptorHash_ChangesWhenOnlyContributionsChange()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        var pluginJson = WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """
+        { "contributions": { "format": 1, "when": { "setting": "A" } } }
+        """);
+        var service = NewService(host, plugin);
+
+        var before = service.GetManifest("vc-frontend").Hash;
+
+        File.WriteAllText(pluginJson, """{ "contributions": { "format": 1, "when": { "setting": "B" } } }""");
+        AppManifestCacheRegion.ExpireRegion();
+        var after = service.GetManifest("vc-frontend").Hash;
+
+        Assert.NotEqual(before, after);
+    }
+
+    [Fact]
+    public void GetManifest_DescriptorHash_ChangesWhenOnlyPermissionChanges()
+    {
+        var host = NewModule("VirtoCommerce.XFrontend");
+        host.Apps.Add(new ManifestAppInfo { Id = "vc-frontend" });
+
+        var plugin = NewModule("VirtoCommerce.SalesRep");
+        WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/remoteEntry.js", "// MF");
+        var pluginJson = WriteFile(plugin.FullPhysicalPath, "plugins/vc-frontend/plugin.json", """{ "permission": "a" }""");
+        var service = NewService(host, plugin);
+
+        var before = service.GetManifest("vc-frontend").Hash;
+
+        File.WriteAllText(pluginJson, """{ "permission": "b" }""");
+        AppManifestCacheRegion.ExpireRegion();
+        var after = service.GetManifest("vc-frontend").Hash;
+
+        Assert.NotEqual(before, after);
+    }
+
+    [Fact]
     public void GetManifest_ModernApp_MalformedPluginJson_FallsBackToConvention()
     {
         var host = NewModule("VirtoCommerce.MarketplaceVendor");
