@@ -262,9 +262,10 @@ body:has(.header) > .vc-env-badge
       transform: translateX(-50%)
       width: min(460px, calc(100vw - 16px))
 
-// Classic look below ~1100px: the license button stays (its tooltip carries the full notice), the label goes
+// Classic look below ~1100px: when the notice has a button (community, expired) the button stays, with the
+// full notice as its tooltip, and the label goes; an active license keeps its label (it has no button)
 @media (max-width: 1099px)
-  html:not(.vc-modern) .header .license__text
+  html:not(.vc-modern) .header .license:not(.active) .license__text
     display: none
 
 // Modern look on tablets and narrow desktop windows (phones: _modern-mobile.sass): the search collapses
