@@ -10,7 +10,7 @@
         <input class="global-search__input" type="search" autocomplete="off" spellcheck="false"
                role="combobox" aria-autocomplete="list" aria-controls="global-search-results" aria-expanded="{{!!(state.open && state.query)}}"
                placeholder="{{'platform.search.placeholder' | translate}}" aria-label="{{'platform.search.placeholder' | translate}}"
-               ng-model="state.query" ng-change="onChange()" ng-focus="onFocus()" ng-keydown="onKeydown($event)" />
+               ng-model="state.query" ng-change="onChange()" ng-focus="onFocus()" ng-click="onFocus()" ng-keydown="onKeydown($event)" />
         <button type="button" class="global-search__clear" ng-if="state.query" ng-click="clear()" aria-label="{{'platform.search.clear' | translate}}">
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
