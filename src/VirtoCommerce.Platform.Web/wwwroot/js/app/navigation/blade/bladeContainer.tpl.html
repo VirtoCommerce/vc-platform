@@ -1,4 +1,4 @@
-<div class="blade" ng-class="[moduleName, {'__animated': blade.animated, '__expanded': blade.isExpanded, '__maximized': blade.isMaximized, '__closing': blade.closing, '__spine': blade.isSpine}]" ng-repeat="blade in blades">
+<div class="blade" ng-class="[moduleName, {'__animated': blade.animated, '__expanded': blade.isExpanded, '__maximized': blade.isMaximized, '__closing': blade.closing, '__spine': blade.isSpine, '__hidden-spine': blade.isHiddenSpine}]" ng-repeat="blade in blades">
     <button type="button" class="blade-spine" ng-if="blade.isSpine" ng-click="openSpine(blade)" title="{{ blade.title | translate: blade.titleValues }}">
         <span ng-if="!blade.iconUrl && !blade.currentEntity.iconUrl" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'" class="blade-spine__icon"></span>
         <img ng-if="blade.iconUrl || blade.currentEntity.iconUrl" ng-src="{{ blade.iconUrl || blade.currentEntity.iconUrl }}" class="blade-spine__img" />

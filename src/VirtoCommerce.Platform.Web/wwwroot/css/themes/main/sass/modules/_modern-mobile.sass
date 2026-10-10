@@ -1,0 +1,265 @@
+/* Modern theme on small screens (phones, narrow windows).
+   The main menu becomes a drawer opened from the header, the header keeps only icons, and the blade
+   stack shows one blade at a time with its neighbours as spines (see doLayoutBook in bladeNavigation.js).
+   Classic keeps its desktop layout. */
+
+// Keep in sync with bookMobileBreakpoint in bladeNavigation.js
+$mobileBreakpoint: 768px
+$mobileDrawerWidth: 280px
+$mobileSpineWidth: 44px
+
+// Hidden on larger screens and in the classic look
+.header__menu-toggle,
+.header__mobile-logo
+  display: none
+
+@media (max-width: $mobileBreakpoint - 1px)
+  .vc-modern
+    /* Header */
+    .header,
+    .nav-bar.__collapsed ~ .cnt .header
+      gap: 2px
+      padding-left: 10px
+    .header::before
+      left: 6px
+      right: 6px
+    .header__menu-toggle
+      align-items: center
+      background: none
+      border: 0
+      border-radius: 9999px
+      color: var(--vc-ink-2)
+      cursor: pointer
+      display: flex
+      flex: none
+      font-size: 18px
+      height: 40px
+      justify-content: center
+      width: 40px
+      &:hover
+        background: var(--vc-sunken)
+    .header__mobile-logo
+      display: block
+      flex: none
+      height: 24px
+      margin: 0 auto 0 4px
+      max-width: 40px
+    .header__info,
+    .header .license__text
+      display: none
+    .header__nav
+      gap: 0
+      margin-left: 0
+      padding-right: 6px
+      &-item
+        min-width: 36px
+      &-ico
+        width: 36px
+    .header .account-user
+      padding: 0 2px
+      &__info,
+      &__carret
+        display: none
+    .header .dropdown-menu.notifications
+      max-width: calc(100vw - 24px)
+      position: fixed
+      right: 12px
+      top: 62px
+      width: auto
+    .vc-env-badge
+      font-size: 10px
+      height: 18px
+      padding: 0 8px
+      top: 1px
+
+    /* Main menu drawer */
+    .nav-bar,
+    .nav-bar.__collapsed
+      background: var(--vc-plate)
+      box-shadow: none
+      transform: translateX(-105%)
+      transition: transform .22s ease, box-shadow .22s ease
+      width: $mobileDrawerWidth
+      z-index: 520
+      .logo
+        background: var(--vc-plate)
+      // the floating menu panel fills the drawer
+      .bar
+        border-radius: 0
+        box-shadow: none
+        height: calc(100% - #{$headerHeight})
+        margin: 0
+        width: 100%
+      .bar__footer
+        display: none
+      .bar .__items .list-item,
+      .bar .__items .list-item.__more
+        width: auto
+      .bar .__items .list-name
+        display: inline
+      .bar .__items .list-ico
+        margin: 0 6px 0 0
+        width: 20px
+      .logo-version
+        display: block
+      // sub-menus ("More", favourites) cover the drawer
+      .dropdown
+        margin-top: 0
+        top: 0
+        transform: translateX(-105%)
+        width: $mobileDrawerWidth
+        &.__opened
+          transform: translateX(0)
+          z-index: 60
+    &.vc-menu-open
+      .nav-bar
+        box-shadow: var(--vc-shadow-lift)
+        transform: none
+      .cnt::after
+        background: rgba(30, 24, 20, .4)
+        content: ''
+        inset: 0
+        position: fixed
+        z-index: 505
+
+    /* Workspace: one blade at a time */
+    .cnt,
+    .nav-bar.__collapsed ~ .cnt
+      left: 0
+    .cnt
+      overflow-x: hidden
+      .cnt-inner
+        display: flex
+        gap: 8px
+        padding: 10px 8px 8px
+        // blades are rendered inside the state's ui-view: that is the row that must fit the screen
+        > ui-view,
+        > [ui-view]
+          display: flex
+          flex: 1 1 auto
+          gap: 8px
+          height: 100%
+          min-width: 0
+        .blade,
+        .blade:not(:first-child):last-child
+          margin-right: 0
+        .blade.__spine
+          flex: none
+    .cnt .cnt-inner .blade:not(.__spine)
+      flex: 1 1 auto
+      min-width: 0 !important
+      width: auto !important
+    .blade.__spine
+      min-width: $mobileSpineWidth !important
+      width: $mobileSpineWidth !important
+    .blade.__hidden-spine
+      display: none
+    .blade-spine
+      gap: 10px
+      padding: 10px 4px 12px 0
+      &__icon,
+      &__img
+        height: 30px
+        width: 30px
+      &__title
+        font-size: 13px
+    // fixed desktop blade widths become fluid
+    .blade .blade-content,
+    .blade-content .inner-block,
+    .blade-content .table
+      min-width: 0 !important
+      width: 100% !important
+    // content that still needs more room than a phone has scrolls inside the blade instead of being cut off
+    .blade .blade-inner
+      overflow: auto
+    .blade .blade-header
+      padding: 0 92px 0 14px
+      &__title
+        font-size: 17px
+    .blade .blade-head .blade-toolbar
+      padding: 0 10px
+
+    /* Dashboard */
+    // the dashboard and its widget grid have fixed desktop widths; on phones they fill the screen
+    .cnt .cnt-inner .dashboard
+      flex: 1 1 auto
+      min-width: 0
+      width: auto
+      .dashboard-area,
+      .dashboard-inner,
+      .gridster,
+      .gridster-loaded
+        margin: 0
+        padding: 0
+        width: auto !important
+    // on the dashboard the (empty) state view next to it takes no room
+    .cnt .cnt-inner:has(> .dashboard)
+      gap: 0
+      > ui-view
+        flex: 0 0 0
+
+    /* Dialogs and popups fit the screen */
+    .modal-window
+      max-width: calc(100vw - 24px)
+    .modal-dialog
+      box-sizing: border-box
+      padding: 0 12px
+      width: 100%
+
+    /* Widgets (dashboard and blade widgets) stack in one column */
+    .gridster
+      height: auto !important
+      > .list,
+      > ul
+        display: flex
+        flex-direction: column
+        gap: 10px
+        height: auto !important
+      .gridster-item
+        left: auto !important
+        margin: 0 !important
+        position: relative !important
+        top: auto !important
+        width: auto !important
+
+    /* Settings: the tree sits above the properties */
+    .blade .blade-content.__settings-unified
+      min-width: 0
+      width: 100%
+    .settings-unified-layout
+      flex-direction: column
+    .settings-tree-panel
+      border-right: 0
+      flex: none
+      height: 38%
+      min-width: 0
+      width: auto
+    .settings-properties-panel
+      flex: 1 1 auto
+      min-height: 0
+      min-width: 0
+
+
+    /* Grids with several columns keep readable columns and scroll sideways inside the blade */
+    .blade .ui-grid:has(.ui-grid-render-container-body .ui-grid-header-cell:nth-child(3))
+      min-width: 520px
+
+    /* Tile launchers (Content, stores) wrap to the screen instead of keeping their desktop width */
+    .tile-group
+      display: flex
+      flex-wrap: wrap
+      margin-right: 0
+      min-width: 0
+      width: auto !important
+      .tile-group
+        float: none
+
+    /* Notifications: a full-width sheet under the header instead of a popup anchored to the bell */
+    .header .dropdown-menu.notifications
+      left: 8px
+      max-width: none
+      min-width: 0
+      position: fixed
+      right: 8px
+      top: 66px
+      width: auto

@@ -279,8 +279,26 @@ angular.module('platformWebApp')
                     }
                 };
 
+                // Re-fit the toolbar whenever the blade changes width (folded/unfolded in book mode, small screens)
+                var bladeResizeObserver;
+                if (typeof ResizeObserver !== 'undefined') {
+                    var lastBladeWidth = 0;
+                    bladeResizeObserver = new ResizeObserver(function (entries) {
+                        var width = Math.round(entries[0].contentRect.width);
+                        if (width !== lastBladeWidth) {
+                            lastBladeWidth = width;
+                            // inside a digest, so all commands are rendered again before they are measured
+                            scope.$applyAsync(setVisibleToolsLimit);
+                        }
+                    });
+                    bladeResizeObserver.observe(currentBlade[0]);
+                }
+
                 scope.$on('$destroy', function () {
                     $document.unbind('click', handleClickEvent);
+                    if (bladeResizeObserver) {
+                        bladeResizeObserver.disconnect();
+                    }
                 });
 
                 scope.showErrorDetails = function () {
@@ -360,7 +378,9 @@ angular.module('platformWebApp')
         // one fold to a narrow spine instead of being scrolled out of view. A folded blade keeps its DOM,
         // scope and state (it is only clipped), so module blades and grids behave exactly as before.
         // Keep in sync with $bladeSpineWidth + $bladeGap in _modern.sass.
-        var bookBladeGap = 12;        var bookSpineOuterWidth = 56 + bookBladeGap;
+        var bookBladeGap = 12;
+        // Keep in sync with $mobileBreakpoint in _modern-mobile.sass
+        var bookMobileBreakpoint = 768;        var bookSpineOuterWidth = 56 + bookBladeGap;
         var bookLayoutPromise;
         var bookResizeObserver;
 
@@ -404,6 +424,20 @@ angular.module('platformWebApp')
                 focusIndex = blades.length - 1;
             }
             var focusBlade = blades[focusIndex];
+
+            _.each(blades, function (blade) {
+                blade.isHiddenSpine = false;
+            });
+
+            if (service.bookMode && blades.length > 1 && window.innerWidth < bookMobileBreakpoint) {
+                // Small screens: only the focused blade is open; its direct neighbours stay reachable as spines
+                observeWorkspaceResize();
+                _.each(blades, function (blade, index) {
+                    blade.isSpine = index !== focusIndex;
+                    blade.isHiddenSpine = Math.abs(index - focusIndex) > 1;
+                });
+                return;
+            }
 
             if (!service.bookMode || blades.length < 2 || isFullWidth(focusBlade)) {
                 _.each(blades, function (blade) {

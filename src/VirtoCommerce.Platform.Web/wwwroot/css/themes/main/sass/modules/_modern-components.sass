@@ -410,14 +410,15 @@ input.ui-grid-filter-input[type="text"],
 /* Dashboard and blade widgets (gridster) */
 .dashboard
   color: var(--vc-ink)
+  // the header panel already shows the logo: no title block, widgets start at the top like the blades
   .dashboard-head
-    border-color: transparent
-  .dashboard-title__text h1
-    color: var(--vc-ink)
-    font-family: var(--vc-font-display)
-    font-weight: 600
-  .dashboard-subtitle
-    color: var(--vc-muted)
+    display: none
+  .dashboard-area
+    height: 100%
+  // same offsets as blades: the workspace gap only, no extra side padding
+  .dashboard-inner
+    height: 100%
+    padding: 0
 .gridster
   // widget tiles only: rows inside a widget (e.g. order totals) are plain .list-item elements too
   gridster-item,
@@ -446,12 +447,15 @@ input.ui-grid-filter-input[type="text"],
     top: 7px
     width: 18px
   // Widget content: use the whole tile, never show an inner scrollbar (content still scrolls)
+  // the content (which carries the widget's click) covers the whole tile, so a tap anywhere on the card works
   .gridster-cnt
-    bottom: 12px
-    left: 6px
-    right: 6px
+    bottom: 0
+    box-sizing: border-box
+    left: 0
+    padding: 12px 6px
+    right: 0
     scrollbar-width: none
-    top: 12px
+    top: 0
     &::-webkit-scrollbar
       display: none
   .list-t
@@ -638,14 +642,75 @@ input.ui-grid-filter-input[type="text"],
         background-color: var(--vc-sunken-hover)
         color: var(--vc-ink)
 
-/* Main menu: drag handle of reorderable items, kept clear of the icon */
-.nav-bar .bar .__items .list-item.__draggable
-  &:before
-    filter: grayscale(1) opacity(.55)
-    left: -1px
-    width: 10px
+/* Main menu items: hover highlight and the drag grip of reorderable items */
+.nav-bar .bar .__items .list-item
+  position: relative
+  // icon and label centred on one line, equal space above and below
+  &:not(.__more)
+    box-sizing: border-box
+    height: 38px
+    padding-bottom: 0
+    padding-top: 0
+  .list-link
+    align-items: center
+    display: flex
+    gap: 10px
+    height: 100%
+    > span:first-child:not(.list-name)
+      display: flex
+  .list-ico
+    align-items: center
+    display: inline-flex
+    flex: none
+    height: 20px
+    justify-content: center
+    line-height: 1
+    margin: 0
+    width: 20px
+    &::before
+      height: auto
+      width: auto
+  img.list-ico
+    object-fit: contain
+  .list-name
+    line-height: 20px
   &:hover .list-ico
     color: var(--vc-ink-2)
+  &.__selected:hover .list-ico
+    color: var(--vc-primary)
+// a 2x3 dot grip inside the pill on the right, shown on hover (replaces the bluish dots image on the left edge)
+.nav-bar .bar .__items .list-item.__draggable
+  &:before
+    background-image: radial-gradient(circle, var(--vc-faint) 1.1px, transparent 1.5px)
+    background-position: 0 0
+    background-repeat: repeat
+    background-size: 5px 5px
+    border-radius: 2px
+    cursor: grab
+    display: block
+    filter: none
+    height: 15px
+    left: auto
+    opacity: 0
+    right: 10px
+    transition: opacity .15s ease
+    width: 10px
+  &:hover:before
+    display: block
+    opacity: 1
+  &.__selected:before
+    background-image: radial-gradient(circle, var(--vc-primary-ink) 1.1px, transparent 1.5px)
+.nav-bar.__collapsed .bar .__items .list-item.__draggable:before
+  display: none !important
+// while dragging (jQuery UI sortable): a lifted pill and a placeholder slot
+.nav-bar .bar .__items .list-item.ui-sortable-helper
+  background: var(--vc-plate) !important
+  box-shadow: var(--vc-shadow-lift)
+  cursor: grabbing
+.nav-bar .bar .__items .ui-sortable-placeholder
+  background: var(--vc-sunken) !important
+  border-radius: 12px
+  visibility: visible !important
 
 // Reset/clear buttons inside search fields: a small round icon button
 .form-input .btn.__other,
@@ -776,6 +841,9 @@ input.ui-grid-filter-input[type="text"],
 .datetime-picker-dropdown,
 .form-input.__calendar .datetime-picker-dropdown,
 .uib-datepicker-popup
+  // above the neighbouring form fields, and as wide as the calendar (not the narrow field it opens from)
+  z-index: 1000
+  min-width: max-content
   background: var(--vc-plate)
   border: 1px solid var(--vc-line-soft)
   border-radius: 16px
@@ -928,3 +996,143 @@ input.ui-grid-filter-input[type="text"],
 .modal-window__header-button:hover i,
 .modal-window__header-button:hover span
   color: var(--vc-ink)
+
+/* Header notifications popup */
+.header .dropdown-menu.notifications
+  box-sizing: border-box
+  max-height: min(70vh, 560px)
+  max-width: calc(100vw - 24px)
+  overflow: hidden
+  padding: 0
+  width: 400px
+  // empty state: a soft bell instead of the illustration (whose white box clashed with the panel)
+  .notice
+    padding: 28px 24px 20px
+    text-align: center
+    > div
+      align-items: center
+      flex-direction: column
+      gap: 12px
+    > div > div:last-child
+      margin-top: 0 !important
+    &__bg
+      align-items: center
+      background: var(--vc-sunken)
+      border-radius: 9999px
+      display: flex
+      float: none
+      height: 56px
+      justify-content: center
+      margin: 0
+      width: 56px
+      &::before
+        color: var(--vc-faint)
+        content: "\f1f6"
+        font-family: $fontAw
+        font-size: 22px
+    &__t
+      color: var(--vc-ink)
+      font-family: var(--vc-font-display)
+      font-size: 15px
+      font-weight: 600
+      margin-bottom: 4px
+    &__descr
+      color: var(--vc-muted)
+      font-size: 13px
+  .notice-list
+    max-height: calc(min(70vh, 560px) - 60px)
+    overflow-y: auto
+    padding: 6px
+    &__item
+      align-items: start
+      border: 0
+      border-radius: 12px
+      column-gap: 12px
+      display: grid
+      grid-template-columns: 36px minmax(0, 1fr)
+      padding: 10px
+      position: relative
+      &:hover
+        background: var(--vc-hover)
+      & + .notice-list__item
+        margin-top: 2px
+    &__ico
+      align-items: center
+      background: var(--vc-success-soft)
+      border-radius: 10px
+      box-sizing: border-box
+      display: flex
+      grid-row: span 2
+      height: 36px
+      justify-content: center
+      padding: 0
+      width: 36px
+      i
+        color: var(--vc-success)
+        font-size: 15px
+        margin: 0
+      &.progress
+        background: var(--vc-info-soft)
+        i
+          color: var(--vc-info)
+      &.error
+        background: var(--vc-danger-soft)
+        i
+          color: var(--vc-danger)
+    &__content
+      max-width: none
+      min-width: 0
+    &__date
+      color: var(--vc-faint)
+      font-size: 11px
+      line-height: 1.3
+      margin: 0 0 2px
+      position: static
+      text-align: left
+    &__name
+      color: var(--vc-ink)
+      font-size: 13.5px
+      font-weight: 600
+      line-height: 1.35
+      padding: 0
+    &__descr,
+    &__errors
+      color: var(--vc-muted)
+      font-size: 12.5px
+      line-height: 1.4
+      padding: 0
+      width: auto
+    &__errors
+      color: var(--vc-danger)
+    &__bar
+      animation: vc-indeterminate 1.1s ease-in-out infinite
+      background-color: var(--vc-primary-soft)
+      background-image: linear-gradient(90deg, transparent, var(--vc-primary), transparent)
+      background-repeat: no-repeat
+      background-size: 40% 100%
+      border-radius: 9999px
+      grid-column: 2
+      height: 4px
+      margin: 8px 0 2px
+  .bottom-buttons
+    background: var(--vc-plate)
+    border-top: 1px solid var(--vc-line-soft)
+    box-shadow: none
+    display: flex
+    gap: 8px
+    justify-content: flex-end
+    padding: 10px 12px
+    .btn,
+    .btn-outline
+      background: var(--vc-sunken)
+      border: 0
+      border-radius: 9999px
+      color: var(--vc-ink)
+      font-size: 12.5px
+      font-weight: 600
+      height: 32px
+      line-height: 32px
+      margin: 0
+      padding: 0 14px
+      &:hover
+        background: var(--vc-sunken-hover)

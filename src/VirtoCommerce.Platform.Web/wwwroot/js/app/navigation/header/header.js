@@ -43,6 +43,11 @@ angular.module('platformWebApp').directive('vaHeader', ["$state", '$document', '
                 scope.selectTheme = function (theme) {
                     themeService.setTheme(theme.id);
                 };
+
+                scope.toggleMobileMenu = function (event) {
+                    event.stopPropagation();
+                    themeService.toggleMobileMenu();
+                };
                 scope.$on('$destroy', function () {
                     $document.off('click', closeThemeMenu);
                 });

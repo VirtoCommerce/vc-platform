@@ -723,6 +723,14 @@ $plateRadius: 20px
     z-index: 600
     li
       list-style: none
+    // same row style for every option (a generic ".dropdown-menu li:last-child" rule tinted the last one);
+    // Classic is set apart by a divider
+    li:last-child
+      background: none
+      border-top: 1px solid var(--vc-line-soft, #{$baseBrd})
+      margin-top: 4px
+      // a vendor ".dropdown-menu li:last-child" rule sets padding with !important
+      padding: 4px 0 0 !important
   .theme-menu__item
     align-items: center
     background: none
@@ -771,3 +779,5 @@ $plateRadius: 20px
     color: #f36b68
   .CodeMirror-matchingbracket
     color: #9dceb2 !important
+
+@import "_modern-mobile.sass"

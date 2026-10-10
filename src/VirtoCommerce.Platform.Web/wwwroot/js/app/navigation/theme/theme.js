@@ -77,6 +77,11 @@ angular.module('platformWebApp')
                     themeAdapter.apply();
                 }
             },
+            // Small screens: the main menu is a drawer
+            toggleMobileMenu: function (open) {
+                var root = document.documentElement;
+                root.classList.toggle('vc-menu-open', open === undefined ? !root.classList.contains('vc-menu-open') : !!open);
+            },
             setTheme: function (theme) {
                 service.current = themes.indexOf(theme) >= 0 ? theme : defaultTheme;
                 writeTheme(service.current);
@@ -110,6 +115,27 @@ angular.module('platformWebApp')
         if (document.readyState !== 'complete') {
             window.addEventListener('load', themeService.refreshAdapter);
         }
+
+        // Close the menu drawer after navigating, picking a menu entry, or tapping outside of it
+        $rootScope.$on('$locationChangeSuccess', function () {
+            themeService.toggleMobileMenu(false);
+        });
+        document.addEventListener('click', function (event) {
+            if (!document.documentElement.classList.contains('vc-menu-open') || event.target.closest('.header__menu-toggle')) {
+                return;
+            }
+            var menuItem = event.target.closest('.nav-bar .list-item');
+            if (menuItem) {
+                // entries that open a sub-menu (e.g. "More") keep the drawer open
+                if (!menuItem.classList.contains('__has-dropdown') && !event.target.closest('.list-fav')) {
+                    themeService.toggleMobileMenu(false);
+                }
+                return;
+            }
+            if (!event.target.closest('.nav-bar')) {
+                themeService.toggleMobileMenu(false);
+            }
+        }, true);
         $rootScope.$on('platformWebApp.themeChanged', function () {
             bladeNavigationService.setBookMode(themeService.isModern());
         });

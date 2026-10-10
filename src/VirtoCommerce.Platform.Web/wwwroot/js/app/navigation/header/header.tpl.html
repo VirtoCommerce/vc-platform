@@ -1,4 +1,10 @@
 <header class="header">
+    <!-- Small screens (modern look): the main menu becomes a drawer opened from here -->
+    <button type="button" class="header__menu-toggle" ng-click="toggleMobileMenu($event)"
+            title="{{'platform.menu.main-menu' | translate}}" aria-label="{{'platform.menu.main-menu' | translate}}">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </button>
+    <img class="header__mobile-logo" alt="" ng-src="{{ uiCustomization.topPanelLogo_mini_custom.url || uiCustomization.topPanelLogo_mini_default.url }}" />
     <va-header-license-widget></va-header-license-widget>
     <va-header-password-widget></va-header-password-widget>
 
