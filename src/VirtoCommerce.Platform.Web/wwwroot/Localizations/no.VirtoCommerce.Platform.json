@@ -33,6 +33,8 @@
       "searching": "Søker…",
       "no-results": "Ingen treff for «{{query}}»",
       "clear": "Tøm",
+      "error": "Søket mislyktes",
+      "show-all": "Vis alle {{count}}",
       "hint-navigate": "for å flytte",
       "hint-open": "for å åpne",
       "hint-close": "for å lukke",

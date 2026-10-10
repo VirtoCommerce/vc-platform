@@ -33,6 +33,8 @@
       "searching": "Wyszukiwanie…",
       "no-results": "Brak wyników dla „{{query}}”",
       "clear": "Wyczyść",
+      "error": "Wyszukiwanie nie powiodło się",
+      "show-all": "Pokaż wszystkie ({{count}})",
       "hint-navigate": "aby przejść",
       "hint-open": "aby otworzyć",
       "hint-close": "aby zamknąć",

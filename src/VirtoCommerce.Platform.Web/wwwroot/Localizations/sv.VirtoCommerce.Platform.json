@@ -33,6 +33,8 @@
       "searching": "Söker…",
       "no-results": "Inga träffar för \"{{query}}\"",
       "clear": "Rensa",
+      "error": "Sökningen misslyckades",
+      "show-all": "Visa alla {{count}}",
       "hint-navigate": "för att flytta",
       "hint-open": "för att öppna",
       "hint-close": "för att stänga",

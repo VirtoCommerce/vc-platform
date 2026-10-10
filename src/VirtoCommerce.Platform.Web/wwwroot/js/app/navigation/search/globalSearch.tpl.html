@@ -27,8 +27,15 @@
         <div class="global-search__status" ng-if="!state.loading && !state.groups.length">
             {{'platform.search.no-results' | translate: { query: state.query } }}
         </div>
-        <div class="global-search__group" ng-repeat="group in state.groups">
+        <div class="global-search__group" ng-repeat="group in state.groups" ng-class="'global-search__group--' + group.status">
             <div class="global-search__group-title">{{group.title}}</div>
+            <!-- a provider still answering, or one that failed: its group keeps its place -->
+            <div class="global-search__group-status" ng-if="group.status === 'pending'">
+                <span class="global-search__spinner" aria-hidden="true"></span>{{'platform.search.searching' | translate}}
+            </div>
+            <div class="global-search__group-status global-search__group-status--error" ng-if="group.status === 'error'">
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>{{'platform.search.error' | translate}}
+            </div>
             <button type="button" class="global-search__item" role="option" ng-repeat="item in group.items"
                     ng-class="{'global-search__item--active': item.$index === state.active}" aria-selected="{{item.$index === state.active}}"
                     ng-mouseenter="setActive(item)" ng-click="select(item)">
@@ -37,10 +44,18 @@
                     <i ng-if="!item.iconUrl" ng-class="item.icon || 'fa fa-circle-o'" aria-hidden="true"></i>
                 </span>
                 <span class="global-search__item-text">
-                    <span class="global-search__item-title" ng-bind-html="item.title | vaHighlight: state.query"></span>
-                    <span class="global-search__item-descr" ng-if="item.description" ng-bind-html="item.description | vaHighlight: state.query"></span>
+                    <span class="global-search__item-title" ng-bind-html="item.title | vaHighlight: state.text"></span>
+                    <span class="global-search__item-descr" ng-if="item.description" ng-bind-html="item.description | vaHighlight: state.text"></span>
                 </span>
+                <span class="global-search__item-badge" ng-if="item.badge">{{item.badge}}</span>
+                <span class="global-search__item-meta" ng-if="item.meta">{{item.meta}}</span>
                 <i class="global-search__item-external fa fa-external-link" ng-if="item.external" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="global-search__item global-search__show-all" role="option" ng-if="group.showAllEntry"
+                    ng-class="{'global-search__item--active': group.showAllEntry.$index === state.active}" aria-selected="{{group.showAllEntry.$index === state.active}}"
+                    ng-mouseenter="setActive(group.showAllEntry)" ng-click="select(group.showAllEntry)">
+                {{'platform.search.show-all' | translate: { count: group.total } }}
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
             </button>
         </div>
         <div class="global-search__footer" ng-if="state.groups.length">

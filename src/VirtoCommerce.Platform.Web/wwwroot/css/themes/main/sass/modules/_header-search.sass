@@ -162,6 +162,41 @@
   &__item-external
     color: #aeb7c2
     font-size: 11px
+  // per-item status pill and right-aligned value (e.g. order status and total)
+  &__item-badge
+    background: #eef1f5
+    border-radius: 9999px
+    color: #4c4c4c
+    flex: none
+    font-size: 11px
+    font-weight: 600
+    line-height: 18px
+    padding: 0 8px
+    white-space: nowrap
+  &__item-meta
+    color: #838d9a
+    flex: none
+    font-size: 12px
+    white-space: nowrap
+  // a group whose provider is still answering, or failed
+  &__group-status
+    align-items: center
+    color: #838d9a
+    display: flex
+    font-size: 12.5px
+    gap: 8px
+    padding: 6px 10px 8px
+    &--error
+      color: #c0392b
+  // "Show all 245" at the end of a group
+  &__show-all
+    color: $baseColorRaw
+    font-size: 12.5px
+    font-weight: 600
+    gap: 6px
+    padding: 6px 10px
+    .fa
+      font-size: 11px
   &__footer
     border-top: 1px solid #eaedf3
     color: #838d9a

@@ -33,6 +33,8 @@
       "searching": "Pesquisando…",
       "no-results": "Nada encontrado para \"{{query}}\"",
       "clear": "Limpar",
+      "error": "A pesquisa falhou",
+      "show-all": "Mostrar todos ({{count}})",
       "hint-navigate": "para navegar",
       "hint-open": "para abrir",
       "hint-close": "para fechar",

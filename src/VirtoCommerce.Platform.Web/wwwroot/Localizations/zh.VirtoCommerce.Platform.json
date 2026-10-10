@@ -33,6 +33,8 @@
       "searching": "正在搜索…",
       "no-results": "未找到与“{{query}}”相关的结果",
       "clear": "清除",
+      "error": "搜索失败",
+      "show-all": "显示全部 {{count}} 项",
       "hint-navigate": "移动",
       "hint-open": "打开",
       "hint-close": "关闭",

@@ -33,6 +33,8 @@
       "searching": "Haetaan…",
       "no-results": "Ei tuloksia haulle \"{{query}}\"",
       "clear": "Tyhjennä",
+      "error": "Haku epäonnistui",
+      "show-all": "Näytä kaikki {{count}}",
       "hint-navigate": "siirtyäksesi",
       "hint-open": "avataksesi",
       "hint-close": "sulkeaksesi",

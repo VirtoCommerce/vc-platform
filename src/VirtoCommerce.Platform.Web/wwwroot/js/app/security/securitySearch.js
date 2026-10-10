@@ -1,35 +1,27 @@
 angular.module('platformWebApp')
     // Global search providers for security: users and roles found through the security API.
     // A result opens Security > Users (or Roles) > the user (role), as if the user had clicked through.
-    .run(['$q', '$http', '$state', '$timeout', 'platformWebApp.globalSearchService', 'platformWebApp.bladeNavigationService',
-        function ($q, $http, $state, $timeout, globalSearchService, bladeNavigationService) {
+    .run(['$http', 'platformWebApp.globalSearchService', 'platformWebApp.bladeNavigationService', function ($http, globalSearchService, bladeNavigationService) {
 
-            // Resolves with the open blade that has the given id once it is ready (has the given method)
-            function waitForBlade(id, method) {
-                var deferred = $q.defer();
-                var attempts = 0;
-                (function poll() {
-                    var blade = _.find(bladeNavigationService.stateBlades(), function (b) { return b.id === id; });
-                    if (blade && (!method || angular.isFunction(blade[method]))) {
-                        deferred.resolve(blade);
-                    } else if (++attempts > 40) {
-                        deferred.reject();
-                    } else {
-                        $timeout(poll, 100);
-                    }
-                })();
-                return deferred.promise;
-            }
-
-            // Security workspace > list of the given entity ('account' or 'role') > selectNode(node)
+            // Security workspace > list of the given entity ('account' or 'role') > selectNode(node).
+            // The detail blades refresh their parent list after a save, so they are opened under it.
+            // The users and roles lists share the blade id 'securityDetails': the list is recognised by its
+            // controller, an open list of the right kind is reused, and otherwise only the newly opened list
+            // (not the one being replaced) is used.
             function openInSecurity(entityName, node) {
-                var transition = $state.current.name === 'workspace.securityModule' ? $q.resolve() : $state.go('workspace.securityModule');
-                return $q.when(transition)
-                    .then(function () { return waitForBlade('security', 'openBlade'); })
+                var controller = 'platformWebApp.' + entityName + 'ListController';
+                function isList(b) {
+                    return b.id === 'securityDetails' && b.controller === controller;
+                }
+                return globalSearchService.goToWorkspace('workspace.securityModule')
+                    .then(function () { return globalSearchService.waitForBlade('security', 'openBlade'); })
                     .then(function (mainBlade) {
-                        var entity = _.findWhere(mainBlade.currentEntities, { entityName: entityName });
-                        mainBlade.openBlade(entity);
-                        return waitForBlade('securityDetails', 'selectNode');
+                        var current = _.find(bladeNavigationService.stateBlades(), isList);
+                        if (current && angular.isFunction(current.selectNode)) {
+                            return current;
+                        }
+                        mainBlade.openBlade(_.findWhere(mainBlade.currentEntities, { entityName: entityName }));
+                        return globalSearchService.waitForBlade(function (b) { return isList(b) && b !== current; }, 'selectNode');
                     })
                     .then(function (listBlade) {
                         listBlade.selectNode(node);
@@ -52,6 +44,8 @@ angular.module('platformWebApp')
                 title: 'platform.blades.account-list.title',
                 order: 40,
                 minLength: 2,
+                delay: 200,
+                aliases: ['user', 'users'],
                 permission: 'platform:security:read',
                 // the security workspace itself needs its own permission
                 isAvailable: function () {
@@ -81,6 +75,8 @@ angular.module('platformWebApp')
                 title: 'platform.blades.role-list.title',
                 order: 50,
                 minLength: 2,
+                delay: 200,
+                aliases: ['role', 'roles'],
                 permission: 'platform:security:read',
                 isAvailable: function () {
                     return globalSearchService.hasPermission('platform:security:access');

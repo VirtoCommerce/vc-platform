@@ -33,6 +33,8 @@
       "searching": "Suche läuft…",
       "no-results": "Keine Treffer für „{{query}}“",
       "clear": "Löschen",
+      "error": "Suche fehlgeschlagen",
+      "show-all": "Alle {{count}} anzeigen",
       "hint-navigate": "zum Wechseln",
       "hint-open": "zum Öffnen",
       "hint-close": "zum Schließen",

@@ -30,6 +30,8 @@
       "searching": "Searching…",
       "no-results": "Nothing found for \"{{query}}\"",
       "clear": "Clear",
+      "error": "Search failed",
+      "show-all": "Show all {{count}}",
       "hint-navigate": "to move",
       "hint-open": "to open",
       "hint-close": "to close",

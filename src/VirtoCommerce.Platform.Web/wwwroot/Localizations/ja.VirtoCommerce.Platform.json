@@ -33,6 +33,8 @@
       "searching": "検索中…",
       "no-results": "「{{query}}」に一致する項目はありません",
       "clear": "クリア",
+      "error": "検索に失敗しました",
+      "show-all": "すべて表示（{{count}}）",
       "hint-navigate": "で移動",
       "hint-open": "で開く",
       "hint-close": "で閉じる",
