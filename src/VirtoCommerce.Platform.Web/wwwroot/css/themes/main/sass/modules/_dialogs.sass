@@ -11,7 +11,7 @@
         user-select: none
         height: $dialogHeaderHeight
         padding-left: 16px
-        color: $whiteColor
+        color: var(--vc-fg-ffffff, #{$whiteColor})
         display: flex
         justify-content: space-between
         align-items: baseline
@@ -32,7 +32,7 @@
         height: $dialogHeaderHeight
         cursor: pointer
         &:hover
-            background-color: $redBg
+            background-color: var(--vc-bg-f15100, #{$redBg})
         &--no-bg
             &:hover
                 background: none
@@ -64,7 +64,7 @@
             &::-webkit-scrollbar
                 background-color: $scrollTrackColor
             &::-webkit-scrollbar-thumb
-                background-color: $scrollThumbColor
+                background-color: var(--vc-bg-a6a6a6, #{$scrollThumbColor})
     &__footer
         display: flex
         justify-content: end
@@ -85,15 +85,15 @@
         cursor: pointer
         &--primary
             background-color: $baseColor
-            color: $whiteColor
+            color: var(--vc-fg-ffffff, #{$whiteColor})
             border: none
             &:hover
-                background-color: $dialogFooterBtnBgColor--primary--hover
+                background-color: var(--vc-bg-319ed4, #{$dialogFooterBtnBgColor--primary--hover})
         &--primary-outline
-            background-color: $whiteColor
+            background-color: var(--vc-bg-ffffff, #{$whiteColor})
             color: $baseColor
             border: 1px solid $baseColor
             &:hover
-                color: $dialogFooterBtnTextColor--primary-outline--hover
-                background-color: $dialogFooterBtnBgColor--primary-outline--hover
+                color: var(--vc-fg-319ed4, #{$dialogFooterBtnTextColor--primary-outline--hover})
+                background-color: var(--vc-bg-f2f8fd, #{$dialogFooterBtnBgColor--primary-outline--hover})
 

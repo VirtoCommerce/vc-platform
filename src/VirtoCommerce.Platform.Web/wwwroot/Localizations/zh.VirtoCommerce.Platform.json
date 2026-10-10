@@ -18,7 +18,31 @@
       "assets": "资源",
       "toggle-favorites": "按 Shift + 空格键切换收藏夹",
       "developer-tools": "开发者工具",
-      "help": "帮助"
+      "help": "帮助",
+      "main-menu": "主菜单",
+      "collapse-menu": "折叠菜单",
+      "expand-menu": "展开菜单",
+      "theme": "主题",
+      "theme-light": "浅色",
+      "theme-dark": "深色",
+      "theme-system": "跟随系统",
+      "theme-classic": "经典"
+    },
+    "search": {
+      "placeholder": "搜索菜单、应用、设置",
+      "searching": "正在搜索…",
+      "no-results": "未找到与“{{query}}”相关的结果",
+      "clear": "清除",
+      "error": "搜索失败",
+      "show-all": "显示全部 {{count}} 项",
+      "hint-navigate": "移动",
+      "hint-open": "打开",
+      "hint-close": "关闭",
+      "groups": {
+        "menu": "菜单",
+        "apps": "应用",
+        "settings": "设置"
+      }
     },
     "navigation": {
       "back": "返回"
@@ -842,8 +866,10 @@
       "licensing": {
         "license-absent": "社区许可证",
         "license-present": "{{type}} 许可证，过期时间 {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}} 许可证",
         "community": "正在运行社区版，点击申请商业许可证",
         "expired": "您的许可证已于 {{expirationDate | amParse | date}} 过期，请续订",
+        "expired-short": "许可证已过期",
         "purchase": "购买",
         "renew": "续订",
         "expiration-date": "过期日期"

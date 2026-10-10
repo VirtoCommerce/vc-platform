@@ -46,6 +46,11 @@ angular.module('platformWebApp')
             templateUrl: '$(Platform)/Scripts/app/navigation/blade/bladeContainer.tpl.html',
             link: function (scope) {
                 scope.blades = bladeNavigationService.stateBlades();
+
+                // Book mode: a parent blade folded to its spine opens again on click
+                scope.openSpine = function (blade) {
+                    bladeNavigationService.focusBlade(blade);
+                };
             }
         }
     }])
@@ -64,6 +69,8 @@ angular.module('platformWebApp')
                 var mainContent = $('.cnt');
                 var currentBlade = $(element).parent();
                 var parentBlade = currentBlade.prev();
+                // book mode measures blades through this element
+                scope.blade.$bladeElement = currentBlade;
 
                 if (!scope.blade.disableOpenAnimation) {
                     scope.blade.animated = true;
@@ -73,6 +80,11 @@ angular.module('platformWebApp')
                 }
 
                 function scrollContent(scrollToBlade, scrollToElement) {
+                    if (bladeNavigationService.bookMode) {
+                        // book mode folds parent blades instead of scrolling them out of view
+                        bladeNavigationService.layoutBook();
+                        return;
+                    }
                     if (!scrollToBlade) {
                         scrollToBlade = scope.blade;
                     }
@@ -123,7 +135,13 @@ angular.module('platformWebApp')
                     // we must recalculate position only at next digest cycle,
                     // because at this time blade UI is not fully (re)initialized
                     // for example, ng-class set classes after this watch called
-                    $timeout(updateSize, 0, false);
+                    $timeout(function () {
+                        updateSize();
+                        if (bladeNavigationService.bookMode) {
+                            // the blade has its natural width again
+                            bladeNavigationService.layoutBook();
+                        }
+                    }, 0, false);
                 });
 
                 scope.$on('$includeContentLoaded', function (event, src) {
@@ -145,6 +163,9 @@ angular.module('platformWebApp')
                 scope.bladeMinimize = function () {
                     scope.blade.isMaximized = false;
                     updateSize();
+                    if (bladeNavigationService.bookMode) {
+                        bladeNavigationService.layoutBook();
+                    }
                 };
 
                 scope.bladeClose = function (onAfterClose) {
@@ -161,6 +182,12 @@ angular.module('platformWebApp')
 
                 scope.moreToolsOpen = false;
                 scope.overflowCommands = [];
+
+                // The modern look drops the empty toolbar row of blades without commands (the classic look keeps it)
+                scope.hasNoToolbar = function () {
+                    return scope.blade.hideToolbar ||
+                        (bladeNavigationService.bookMode && !(scope.resolvedToolbarCommands && scope.resolvedToolbarCommands.length));
+                };
 
                 scope.$watch('blade.toolbarCommands', function (toolbarCommands) {
 
@@ -185,10 +212,19 @@ angular.module('platformWebApp')
                         var toolbar = currentBlade.find(".blade-toolbar .menu.__inline");
                         var lis = toolbar.find("li");
 
+                        // Width a toolbar item takes, including the horizontal margins between items (hidden items take none)
+                        var itemWidth = function (li) {
+                            if (!li.getClientRects().length) {
+                                return 0;
+                            }
+                            var style = window.getComputedStyle(li);
+                            return li.getBoundingClientRect().width + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+                        };
+
                         if (lis.length > 1) {
                             var totalToolsWidth = 0;
                             for (var j = 0; j < lis.length; j++) {
-                                totalToolsWidth += lis[j].clientWidth;
+                                totalToolsWidth += itemWidth(lis[j]);
                             }
                             var availableWidth = toolbar.width();
 
@@ -196,8 +232,8 @@ angular.module('platformWebApp')
                                 var maxToolbarWidth = availableWidth - 46; // the 'more' button is 46px wide
                                 var toolsWidth = 0;
                                 var i = 0;
-                                while (i < lis.length && toolsWidth + lis[i].clientWidth <= maxToolbarWidth) {
-                                    toolsWidth += lis[i].clientWidth;
+                                while (i < lis.length && toolsWidth + itemWidth(lis[i]) <= maxToolbarWidth) {
+                                    toolsWidth += itemWidth(lis[i]);
                                     i++;
                                 }
                                 scope.toolsPerLineCount = Math.max(i, 1);
@@ -243,8 +279,26 @@ angular.module('platformWebApp')
                     }
                 };
 
+                // Re-fit the toolbar whenever the blade changes width (folded/unfolded in book mode, small screens)
+                var bladeResizeObserver;
+                if (typeof ResizeObserver !== 'undefined') {
+                    var lastBladeWidth = 0;
+                    bladeResizeObserver = new ResizeObserver(function (entries) {
+                        var width = Math.round(entries[0].contentRect.width);
+                        if (width !== lastBladeWidth) {
+                            lastBladeWidth = width;
+                            // inside a digest, so all commands are rendered again before they are measured
+                            scope.$applyAsync(setVisibleToolsLimit);
+                        }
+                    });
+                    bladeResizeObserver.observe(currentBlade[0]);
+                }
+
                 scope.$on('$destroy', function () {
                     $document.unbind('click', handleClickEvent);
+                    if (bladeResizeObserver) {
+                        bladeResizeObserver.disconnect();
+                    }
                 });
 
                 scope.showErrorDetails = function () {
@@ -320,9 +374,149 @@ angular.module('platformWebApp')
             }
         }
 
+        // Book mode: when the open blades do not fit the workspace, the blades farthest from the focused
+        // one fold to a narrow spine instead of being scrolled out of view. A folded blade keeps its DOM,
+        // scope and state (it is only clipped), so module blades and grids behave exactly as before.
+        // Keep in sync with $bladeSpineWidth + $bladeGap in _modern.sass.
+        var bookBladeGap = 12;
+        // Keep in sync with $mobileBreakpoint in _modern-mobile.sass
+        var bookMobileBreakpoint = 768;        var bookSpineOuterWidth = 56 + bookBladeGap;
+        var bookLayoutPromise;
+        var bookResizeObserver;
+
+        function isFullWidth(blade) {
+            return blade.isMaximized || (blade.isExpandable && blade.isExpanded);
+        }
+
+        function scrollToBookBlade(blade) {
+            var mainContent = $('.cnt');
+            var bladeElement = blade && blade.$bladeElement;
+            if (!mainContent.length || !bladeElement || !bladeElement.length) {
+                return;
+            }
+
+            var previousWidth = 0;
+            bladeElement.prevAll('.blade').each(function () {
+                previousWidth += $(this).outerWidth(true);
+            });
+            var scrollLeft = previousWidth + bladeElement.outerWidth(true) - mainContent.width();
+            mainContent.stop(true).animate({ scrollLeft: Math.max(scrollLeft, 0) }, 300);
+        }
+
+        function observeWorkspaceResize() {
+            if (bookResizeObserver || typeof ResizeObserver === 'undefined') {
+                return;
+            }
+
+            var workspace = document.querySelector('.cnt');
+            if (workspace) {
+                bookResizeObserver = new ResizeObserver(function () {
+                    service.layoutBook();
+                });
+                bookResizeObserver.observe(workspace);
+            }
+        }
+
+        function doLayoutBook() {
+            var blades = service.stateBlades();
+            var focusIndex = blades.indexOf(service.focusedBlade);
+            if (focusIndex < 0) {
+                focusIndex = blades.length - 1;
+            }
+            var focusBlade = blades[focusIndex];
+
+            _.each(blades, function (blade) {
+                blade.isHiddenSpine = false;
+            });
+
+            if (service.bookMode && blades.length > 1 && window.innerWidth < bookMobileBreakpoint) {
+                // Small screens: only the focused blade is open; its direct neighbours stay reachable as spines
+                observeWorkspaceResize();
+                _.each(blades, function (blade, index) {
+                    blade.isSpine = index !== focusIndex;
+                    blade.isHiddenSpine = Math.abs(index - focusIndex) > 1;
+                });
+                return;
+            }
+
+            if (!service.bookMode || blades.length < 2 || isFullWidth(focusBlade)) {
+                _.each(blades, function (blade) {
+                    blade.isSpine = false;
+                });
+                return;
+            }
+
+            observeWorkspaceResize();
+
+            var workspaceInner = $('.cnt-inner');
+            // widths include each blade's right margin; the last one may run past the edge
+            var available = workspaceInner.width() + bookBladeGap;
+
+            // Measure the natural width of each blade. Expanded/maximized blades stretch to the workspace, so
+            // their size-class minimum (min-width of .blade-content) is used instead; a folded blade keeps the
+            // width it had when it was last measured.
+            var widths = _.map(blades, function (blade) {
+                var element = blade.$bladeElement;
+                if (!blade.isSpine && element && element.length) {
+                    var margin = element.outerWidth(true) - element.outerWidth();
+                    var content = element.find('.blade-content').first();
+                    var minWidth = content.length ? parseFloat(content.css('min-width')) : 0;
+                    var stretched = blade.isMaximized || blade.isExpanded || element.hasClass('__expanded') || element.hasClass('__maximized');
+                    blade.$bookWidth = stretched && minWidth > 0 ? minWidth + margin : element.outerWidth(true);
+                }
+                return blade.$bookWidth || 0;
+            });
+
+            var isOpen = {};
+            isOpen[focusIndex] = true;
+            var used = widths[focusIndex] + (blades.length - 1) * bookSpineOuterWidth;
+
+            var tryOpen = function (index) {
+                var width = used - bookSpineOuterWidth + widths[index];
+                if (width <= available) {
+                    isOpen[index] = true;
+                    used = width;
+                    return true;
+                }
+                return false;
+            };
+
+            // Children of the focused blade first, then its parents, as long as they fit
+            for (var i = focusIndex + 1; i < blades.length && tryOpen(i); i++) { }
+            for (var j = focusIndex - 1; j >= 0 && tryOpen(j); j--) { }
+
+            _.each(blades, function (blade, index) {
+                blade.isSpine = !isOpen[index];
+            });
+
+            // scroll after the digest has applied the folded widths
+            $timeout(function () {
+                scrollToBookBlade(focusBlade);
+            }, 0, false);
+        }
+
         var service = {
             blades: [],
             currentBlade: undefined,
+            bookMode: false,
+            focusedBlade: undefined,
+            setBookMode: function (enabled) {
+                service.bookMode = !!enabled;
+                service.layoutBook();
+            },
+            focusBlade: function (blade) {
+                service.focusedBlade = blade;
+                service.layoutBook();
+            },
+            layoutBook: function () {
+                if (bookLayoutPromise) {
+                    $timeout.cancel(bookLayoutPromise);
+                }
+                bookLayoutPromise = $timeout(function () {
+                    bookLayoutPromise = null;
+                    doLayoutBook();
+                }, 0);
+            },
             showConfirmationIfNeeded: showConfirmationIfNeeded,
             closeBlade: function (blade, callback, onBeforeClosing) {
                 //Need in case a copy was passed
@@ -350,6 +544,10 @@ angular.module('platformWebApp')
                             }
                             service.currentBlade = blade.parentBlade;
                         }
+                        if (service.focusedBlade === blade) {
+                            service.focusedBlade = blade.parentBlade;
+                        }
+                        service.layoutBook();
                         if (angular.isFunction(callback)) {
                             callback();
                         }
@@ -453,6 +651,7 @@ angular.module('platformWebApp')
                     //show blade in same place where it was
                     service.stateBlades().splice(Math.min(blade.xindex, service.stateBlades().length), 0, blade);
                     service.currentBlade = blade;
+                    service.focusedBlade = blade;
                 };
 
                 if (angular.isDefined(parentBlade) && parentBlade.childrenBlades.length > 0) {

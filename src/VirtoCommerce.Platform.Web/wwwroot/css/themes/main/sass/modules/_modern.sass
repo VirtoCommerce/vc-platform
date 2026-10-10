@@ -1,0 +1,955 @@
+/* Modern theme
+   The storefront look (warm neutrals, Virto orange, Geologica + Inter, rounded panels) applied as an
+   opt-in layer. Everything here is scoped under html.vc-modern (set by platformWebApp.themeService),
+   so the classic theme is untouched when it is off. Only colors, spacing and shapes change: blade
+   geometry that module templates depend on (blade head 127/80px, container offsets) is kept. */
+
+// Keep in sync with bookSpineOuterWidth in bladeNavigation.js
+$bladeSpineWidth: 56px
+$bladeGap: 12px
+$plateRadius: 20px
+
+@import "_modern-tokens.sass"
+
+.vc-modern
+  color-scheme: light
+  // Palette, taken from the storefront theme (light)
+  --vc-bg: #f5f1ea
+  --vc-plate: #fffcf7
+  --vc-panel: #faf5ee
+  --vc-sunken: #f1eae0
+  --vc-sunken-hover: #e9dfd0
+  --vc-hover: #f8f2e9
+  --vc-select: #fbebe2
+  --vc-line: #e2d6c4
+  --vc-line-soft: #efe6d8
+  --vc-ink: #312720
+  --vc-ink-2: #3d332b
+  --vc-muted: #6b5f55
+  --vc-faint: #8c7e6c
+  --vc-primary: #e5451c
+  --vc-primary-hover: #c93a14
+  --vc-on-primary: #ffffff
+  --vc-primary-soft: #f9e6dc
+  --vc-primary-ink: #8d270d
+  --vc-eyebrow: #b6380f
+  --vc-link: #2a6ba3
+  --vc-link-hover: #1d4060
+  --vc-focus: #2a6ba3
+  --vc-focus-ring: rgba(42, 107, 163, .22)
+  --vc-chip: #f3e8e0
+  --vc-espresso: #291c11
+  --vc-on-espresso: #f0e2d8
+  --vc-danger: #de3131
+  --vc-danger-ink: #a01313
+  --vc-danger-soft: #fff2f1
+  --vc-danger-line: #f5adad
+  --vc-warning: #db8b00
+  --vc-warning-ink: #8c4f00
+  --vc-warning-soft: #fff8e5
+  --vc-warning-line: #ffd166
+  --vc-success: #3e845b
+  --vc-success-ink: #316144
+  --vc-success-soft: #ebf5ef
+  --vc-success-line: #add6be
+  --vc-info: #2b7ea8
+  --vc-info-ink: #325c76
+  --vc-info-soft: #ecf6fc
+  --vc-scroll-thumb: rgba(49, 39, 32, .22)
+  --vc-shadow: 0 1px 2px rgba(49, 39, 32, .06), 0 6px 20px rgba(49, 39, 32, .07)
+  --vc-shadow-lift: 0 2px 4px rgba(49, 39, 32, .08), 0 18px 44px rgba(49, 39, 32, .16)
+  --vc-font-display: Geologica, Inter, system-ui, sans-serif
+  --vc-font-body: Inter, Roboto, system-ui, sans-serif
+
+  // Classic tokens (see includes/_constants.sass) re-pointed to the palette
+  --vc-base-color: var(--vc-link)
+  --vc-base-color-dark: var(--vc-link-hover)
+  --vc-info-color: var(--vc-link)
+  --vc-base-bg: var(--vc-bg)
+  --vc-base-brd: var(--vc-line)
+  --vc-text-color: var(--vc-ink)
+  --vc-light-bg: var(--vc-plate)
+  --vc-header-bg: var(--vc-bg)
+  --vc-header-bg-over: var(--vc-sunken)
+  --vc-header-brd: transparent
+  --vc-navbar-bg: var(--vc-bg)
+  --vc-navbar-item-bg: transparent
+  --vc-navbar-item-over: var(--vc-sunken)
+  --vc-menu-item-color-over: var(--vc-primary)
+  --vc-blade-head-bg: var(--vc-plate)
+  --vc-blade-head-brd: var(--vc-line-soft)
+  --vc-blade-content-bg: var(--vc-plate)
+  --vc-text-edit-bg-over: var(--vc-hover)
+  --vc-text-edit-brd-over: var(--vc-line)
+  --vc-product-img-over: var(--vc-hover)
+  --vc-product-img-sel: var(--vc-select)
+
+.vc-modern.vc-dark
+  color-scheme: dark
+  // Palette, taken from the storefront theme (dark)
+  --vc-bg: #1e1814
+  --vc-plate: #29201b
+  --vc-panel: #2e241f
+  --vc-sunken: #332923
+  --vc-sunken-hover: #3d322b
+  --vc-hover: #30261f
+  --vc-select: #3e2a20
+  --vc-line: #463a32
+  --vc-line-soft: #382e27
+  --vc-ink: #f4efea
+  --vc-ink-2: #e3ddd7
+  --vc-muted: #b4aba3
+  --vc-faint: #948a83
+  --vc-primary: #e17853
+  --vc-primary-hover: #e98f6b
+  --vc-on-primary: #1e1814
+  --vc-primary-soft: #44281d
+  --vc-primary-ink: #f7bca1
+  --vc-eyebrow: #f1a686
+  --vc-link: #8ebeec
+  --vc-link-hover: #b3d2ee
+  --vc-focus: #74aee0
+  --vc-focus-ring: rgba(116, 174, 224, .28)
+  --vc-chip: #3d3127
+  --vc-espresso: #120d0a
+  --vc-on-espresso: #f0e2d8
+  --vc-danger: #f36b68
+  --vc-danger-ink: #f49d9d
+  --vc-danger-soft: #3a1c19
+  --vc-danger-line: #782a26
+  --vc-warning: #fda723
+  --vc-warning-ink: #fdca73
+  --vc-warning-soft: #3c2a0d
+  --vc-warning-line: #6f490e
+  --vc-success: #6eb289
+  --vc-success-ink: #9dceb2
+  --vc-success-soft: #1d2a20
+  --vc-success-line: #2d4533
+  --vc-info: #71b2d4
+  --vc-info-ink: #a4cce0
+  --vc-info-soft: #1a2a31
+  --vc-scroll-thumb: rgba(244, 239, 234, .2)
+  --vc-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px rgba(0, 0, 0, .28)
+  --vc-shadow-lift: 0 2px 4px rgba(0, 0, 0, .4), 0 18px 44px rgba(0, 0, 0, .5)
+
+.vc-modern
+  body
+    background: var(--vc-bg)
+    color: var(--vc-ink)
+
+  body,
+  .nav-bar,
+  .header,
+  .blade .blade-head,
+  .blade .blade-container,
+  .modal-window
+    font-family: var(--vc-font-body)
+
+  /* Header */
+  .header
+    align-items: center
+    background: transparent
+    box-sizing: border-box
+    color: var(--vc-ink)
+    padding-top: 8px
+    // One floating panel across the whole header (logo, notices, tools, user)
+    &::before
+      background: var(--vc-plate)
+      border-radius: 20px
+      bottom: 0
+      box-shadow: var(--vc-shadow)
+      content: ''
+      left: 8px
+      position: absolute
+      right: 8px
+      top: 8px
+      z-index: -1
+    &__info
+      align-items: center
+      border: 0
+      display: flex
+      min-width: 0
+      width: auto
+    &__nav
+      align-items: center
+      gap: 2px
+      padding-right: 12px
+      &-item
+        border-left: 0
+        border-radius: 9999px
+        height: 40px
+        justify-content: center
+        min-width: 40px
+        transition: background-color .15s ease
+        &:hover
+          background-color: var(--vc-sunken)
+        &--opened
+          background-color: var(--vc-plate) !important
+          box-shadow: var(--vc-shadow)
+      &-ico
+        background-size: 19px
+        box-sizing: border-box
+        filter: brightness(0) opacity(.62)
+        height: 40px
+        padding: 0
+        width: 40px
+        &--theme
+          color: var(--vc-ink-2)
+          filter: none
+          font-size: 17px
+          opacity: .72
+    // License notice: an outlined pill (wording and actions unchanged), the call to action in orange text
+    .header__info
+      align-self: center
+      flex: none
+      margin-right: 8px
+    .license
+      border: 1px solid var(--vc-line)
+      border-radius: 9999px
+      box-sizing: border-box
+      gap: 8px
+      height: auto
+      min-height: 34px
+      padding: 3px 4px 3px 14px
+      &__text
+        color: var(--vc-ink-2)
+        font-size: 12.5px
+        font-weight: 500
+        line-height: 1.25
+        margin-right: 0
+        max-width: 230px
+        min-width: 0
+        overflow: hidden
+        text-overflow: ellipsis
+      &__expired
+        color: var(--vc-danger-ink)
+      .btn
+        background: transparent
+        border-radius: 9999px
+        color: var(--vc-eyebrow)
+        flex: none
+        font-size: 12px
+        font-weight: 600
+        height: 26px
+        line-height: 26px
+        padding: 0 10px
+        &:hover
+          background: var(--vc-primary-soft)
+          color: var(--vc-primary-ink)
+      &.active
+        padding-right: 14px
+        &:hover
+          background: var(--vc-sunken)
+    .password-expiry
+      color: var(--vc-ink-2)
+    // Signed-in user
+    .account-user
+      gap: 10px
+      height: 40px
+      padding: 0 12px 0 4px
+      width: auto
+      &__img
+        align-items: center
+        background: var(--vc-sunken)
+        border-radius: 9999px
+        display: flex
+        flex: none
+        height: 32px
+        justify-content: center
+        margin: 0
+        width: 32px
+        img
+          height: 32px
+          width: 32px
+        // the default picture is replaced by a themed user glyph
+        img[src$="userpic.svg"]
+          display: none
+        &:has(img[src$="userpic.svg"])::before
+          color: var(--vc-muted)
+          content: "\f007"
+          font-family: $fontAw
+          font-size: 16px
+      &__name
+        color: var(--vc-ink)
+        font-size: 13px
+        font-weight: 600
+      &__role
+        color: var(--vc-muted)
+        font-size: 11.5px
+      &__carret
+        filter: brightness(0) opacity(.5)
+        margin-left: 4px
+    .dropdown-menu
+      background: var(--vc-plate)
+      border-radius: 16px
+      box-shadow: var(--vc-shadow-lift)
+      padding: 6px
+      top: calc(100% + 8px)
+      &__item
+        border-radius: 10px
+        color: var(--vc-ink)
+        &:hover
+          background-color: var(--vc-sunken)
+  .header__nav-item--theme .theme-menu__item--active
+    color: var(--vc-primary-ink)
+    font-weight: 600
+
+  // Environment label: a soft tinted pill with a status dot (in the header and on the sign-in page)
+  .header .vc-env-badge,
+  body > .vc-env-badge
+    background: var(--vc-sunken)
+    border-radius: 9999px
+    color: var(--vc-ink-2)
+    font-size: 12px
+    font-weight: 600
+    gap: 7px
+    height: 30px
+    padding: 0 12px
+    &::before
+      background: currentColor
+      border-radius: 9999px
+      content: ''
+      flex: none
+      height: 7px
+      width: 7px
+    .vc-env-badge__dot
+      display: none
+    &--dev
+      background: var(--vc-success-soft)
+      color: var(--vc-success-ink)
+    &--prod
+      background: var(--vc-danger-soft)
+      color: var(--vc-danger-ink)
+      &::before
+        animation: vc-env-pulse 1.4s infinite
+    &--test
+      background: var(--vc-warning-soft)
+      color: var(--vc-warning-ink)
+    &--staging,
+    &--demo
+      background: var(--vc-info-soft)
+      color: var(--vc-info-ink)
+  // the floating banner on screens without a header (sign-in) sits over a photo: lift it a little
+  body > .vc-env-badge
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .12)
+    height: 28px
+    top: 12px
+
+  // Global search: a pill with the shortcut hint and an orange search button
+  .global-search
+    flex: 0 1 440px
+    margin: 0 12px 0 0
+    &__box
+      background: var(--vc-sunken)
+      border: 1px solid transparent
+      border-radius: 9999px
+      height: 42px
+      padding: 0 5px 0 18px
+      &:focus-within
+        background: var(--vc-plate)
+        border-color: var(--vc-focus)
+        box-shadow: 0 0 0 3px var(--vc-focus-ring)
+    &__lead
+      display: none
+    &__input
+      color: var(--vc-ink)
+      font-size: 14px
+      &::placeholder
+        color: var(--vc-muted)
+    &__kbd,
+    &__footer kbd
+      background: var(--vc-plate)
+      border-radius: 6px
+      color: var(--vc-ink-2)
+      font-size: 11px
+      padding: 4px 7px
+    &__clear
+      color: var(--vc-faint)
+      &:hover
+        color: var(--vc-ink)
+    &__go
+      align-items: center
+      background: var(--vc-primary)
+      border: 0
+      border-radius: 9999px
+      color: var(--vc-on-primary)
+      cursor: pointer
+      display: flex
+      flex: none
+      font-size: 14px
+      height: 32px
+      justify-content: center
+      width: 32px
+      &:hover
+        background: var(--vc-primary-hover)
+    &__panel
+      background: var(--vc-plate)
+      border: 1px solid var(--vc-line-soft)
+      border-radius: 16px
+      box-shadow: var(--vc-shadow-lift)
+      color: var(--vc-ink)
+      top: calc(100% + 8px)
+      width: 460px
+    &__status
+      color: var(--vc-muted)
+    &__spinner
+      border-color: var(--vc-line)
+      border-top-color: var(--vc-primary)
+    &__group + &__group
+      border-top-color: var(--vc-line-soft)
+    &__group-title
+      color: var(--vc-faint)
+      font-size: 10.5px
+      letter-spacing: .1em
+    &__item
+      border-radius: 10px
+      padding: 7px 8px
+      &--active
+        background: var(--vc-sunken)
+    &__item-icon
+      background: var(--vc-hover)
+      border-radius: 8px
+      color: var(--vc-muted)
+      font-size: 13px
+      height: 32px
+      width: 32px
+    &__item--active &__item-icon
+      background: var(--vc-plate)
+      color: var(--vc-primary)
+    &__item-title
+      color: var(--vc-ink)
+      font-weight: 600
+    &__item-descr
+      color: var(--vc-muted)
+    &__item mark
+      background: var(--vc-primary-soft)
+      color: var(--vc-primary-ink)
+    &__item-external
+      color: var(--vc-faint)
+    &__item-badge
+      background: var(--vc-sunken)
+      color: var(--vc-ink-2)
+    &__item--active &__item-badge
+      background: var(--vc-plate)
+    &__item-meta
+      color: var(--vc-muted)
+    &__group-status
+      color: var(--vc-muted)
+      &--error
+        color: var(--vc-danger-ink)
+    &__show-all
+      color: var(--vc-primary-ink)
+    &__footer
+      border-top-color: var(--vc-line-soft)
+      color: var(--vc-faint)
+      kbd
+        background: var(--vc-sunken)
+        color: var(--vc-ink-2)
+
+  /* Main menu */
+  .nav-bar
+    // The menu sits above the header so its logo shows on the header panel
+    z-index: 510
+    .logo
+      background: transparent
+      box-sizing: border-box
+      gap: 6px
+      padding: 8px 14px 0 18px
+      &__img
+        width: 100px
+    .links-menu-button
+      color: var(--vc-muted)
+      flex: none
+      height: 36px
+      justify-content: center
+      padding: 0
+      width: 36px
+    .logo-version
+      align-items: flex-end
+      color: var(--vc-faint)
+      flex: 0 1 auto
+      font-size: 10px
+      margin-left: auto
+      &__pre
+        align-self: flex-end
+        background: var(--vc-sunken)
+        border: 0
+        border-radius: 9999px
+        color: var(--vc-muted)
+        font-weight: 600
+        padding: 0 6px
+    // The menu is its own floating panel under the header, with the collapse toggle at its bottom
+    .bar
+      background: var(--vc-plate)
+      border-radius: 24px
+      box-shadow: var(--vc-shadow)
+      box-sizing: border-box
+      display: flex
+      flex-direction: column
+      height: calc(100% - #{$headerHeight} - 24px)
+      margin: 12px 0 0 12px
+      padding: 10px 0 8px
+      width: calc(100% - 12px)
+      .wrapper
+        display: block
+        flex: 1 1 auto
+        min-height: 0
+      .list.__items
+        display: flex
+        flex-direction: column
+        height: 100%
+        // the classic top toggle; the modern look uses the footer button
+        > .list-item:first-child
+          display: none
+        > ul
+          flex: none
+        .outer-wrapper
+          display: block
+          flex: 1 1 auto
+          min-height: 0
+        .inner-wrapper
+          height: 100%
+          overflow-y: auto
+      .__items
+        .list-item
+          border-bottom: 0
+          border-radius: 12px
+          margin: 1px 8px
+          transition: background-color .15s ease
+          &:not(.__more)
+            padding: 8px 12px
+          &:hover
+            background: var(--vc-sunken)
+          &.__selected
+            background: var(--vc-primary-soft) !important
+            .list-name
+              color: var(--vc-primary-ink)
+              font-weight: 600
+            .list-ico
+              color: var(--vc-primary)
+        .list-name
+          color: var(--vc-ink-2)
+          font-size: 14px
+        .list-ico
+          color: var(--vc-faint)
+          font-size: 17px
+      .divider
+        border-top: 1px solid var(--vc-line-soft)
+        margin: 6px 16px
+    .bar__footer
+      border-top: 1px solid var(--vc-line-soft)
+      display: block
+      flex: none
+      margin: 6px 10px 0
+      padding-top: 6px
+    .bar__collapse
+      align-items: center
+      background: none
+      border: 0
+      border-radius: 12px
+      color: var(--vc-muted)
+      cursor: pointer
+      display: flex
+      font-family: inherit
+      font-size: 13px
+      font-weight: 500
+      gap: 12px
+      height: 38px
+      padding: 0 12px
+      width: 100%
+      &:hover
+        background: var(--vc-sunken)
+        color: var(--vc-ink)
+    .bar__collapse-ico
+      font-size: 16px
+      text-align: center
+      width: 20px
+    &.__collapsed
+      .bar .__items .list-item
+        margin: 1px 6px
+        &:not(.__more)
+          padding: 8px 6px
+      .bar__footer
+        margin: 6px 6px 0
+      .bar__collapse
+        justify-content: center
+        padding: 0
+      .bar__collapse-text
+        display: none
+    // sub-menu panels ("More", module sub-menus) open beside the menu panel
+    .dropdown
+      background: var(--vc-plate)
+      border-radius: 24px
+      bottom: 12px
+      box-shadow: var(--vc-shadow-lift)
+      top: 12px
+      &.__opened
+        transform: translateX($mainMenuWidth + 12px)
+    &.__collapsed .dropdown.__opened
+      transform: translateX($mainMenuCollapsedWidth + 12px)
+
+  /* Workspace */
+  .cnt
+    background: var(--vc-bg)
+    .cnt-inner
+      box-sizing: border-box
+      padding: $bladeGap 0 $bladeGap $bladeGap
+      .blade:not(:first-child):last-child
+        margin-right: $bladeGap
+
+  /* Blades */
+  .blade
+    background: var(--vc-plate)
+    border-radius: $plateRadius
+    box-shadow: var(--vc-shadow)
+    margin-right: $bladeGap
+    .blade-head
+      background: transparent
+      box-shadow: inset 0 -1px 0 var(--vc-line-soft)
+      color: var(--vc-ink)
+      .blade-nav
+        left: auto
+        right: 10px
+        top: 10px
+        .menu
+          background: none
+        .menu-item
+          border-radius: 9999px
+          &:hover
+            background: var(--vc-sunken)
+          &.__close:hover
+            background: var(--vc-danger-soft)
+          &.__disabled:hover
+            background: none
+          i
+            color: var(--vc-muted)
+            font-size: 13px
+            line-height: 30px
+      .blade-toolbar
+        background: transparent
+        border-top: 0
+        padding: 0 14px
+        top: 70px
+        .menu
+          margin: 0
+        .menu-item
+          margin: 6px 6px 6px 0
+          &.separator
+            border-right: 0
+            margin-right: 16px
+          &.__disabled .menu-btn
+            background: transparent
+            color: var(--vc-faint)
+        .menu-btn
+          align-items: center
+          background: var(--vc-sunken)
+          border-radius: 9999px
+          color: var(--vc-ink)
+          display: inline-flex
+          font-size: 12.5px
+          font-weight: 600
+          gap: 6px
+          height: 32px
+          padding: 0 12px
+          transition: background-color .15s ease
+          &:hover
+            background: var(--vc-sunken-hover)
+            color: var(--vc-ink)
+          &:disabled
+            background: transparent
+            color: var(--vc-faint)
+        .menu-ico
+          display: inline-block
+          font-size: 13px
+          margin: 0
+        // icon-only: no gap around the hidden "More" label so the dots stay centred
+        .menu-item.__more .menu-btn
+          font-size: 0
+          gap: 0
+          justify-content: center
+          padding: 0
+          width: 32px
+          .menu-ico
+            font-size: 14px
+            // the ellipsis glyph sits high in its em box
+            transform: translateY(1px)
+        .toolbar-dropdown
+          background: var(--vc-plate)
+          border: 1px solid var(--vc-line-soft)
+          border-radius: 14px
+          box-shadow: var(--vc-shadow-lift)
+          padding: 6px
+          .menu-item
+            margin: 0
+            &.separator
+              border-bottom: 1px solid var(--vc-line-soft)
+          .menu-btn
+            background: none
+            border-radius: 10px
+            color: var(--vc-ink)
+            font-size: 13px
+            font-weight: 500
+            height: auto
+            padding: 8px 12px
+            &:hover
+              background: var(--vc-sunken)
+              color: var(--vc-ink)
+            &:disabled
+              background: none
+              color: var(--vc-faint)
+          .menu-ico
+            margin: 0 8px 0 0
+    .blade-header
+      color: var(--vc-ink)
+      height: 52px
+      padding: 0 112px 0 18px
+      top: 10px
+      &__icon
+        background: var(--vc-sunken)
+        border-radius: 12px
+        color: var(--vc-primary)
+        font-size: 16px
+        height: 38px
+        width: 38px
+      &__img
+        border-radius: 12px
+        height: 38px
+        width: 38px
+      &__title
+        font-family: var(--vc-font-display)
+        font-size: 19px
+        font-weight: 600
+      .vc-badge
+        background: var(--vc-chip)
+        border-radius: 9999px
+        color: var(--vc-ink-2)
+        font-size: 11.5px
+        font-weight: 600
+    .blade-container
+      .blade-static
+        background: var(--vc-plate)
+        border-color: var(--vc-line-soft)
+        border-width: 0 0 1px
+      .blade-static.__bottom
+        border-width: 1px 0 0
+  .blade.__active
+    .blade-head
+      background: transparent
+    .blade-content
+      background: var(--vc-plate)
+  .blade-content__tabs-list
+    background-color: var(--vc-plate)
+    border-bottom: 1px solid var(--vc-line-soft)
+    border-top: 0
+    padding: 0 18px
+    a
+      color: var(--vc-muted)
+      padding: 8px 0
+      &.active
+        border-bottom-color: var(--vc-primary)
+        color: var(--vc-ink)
+
+  /* Book mode: a blade folded to its spine */
+  .blade.__spine
+    cursor: pointer
+    min-width: $bladeSpineWidth !important
+    width: $bladeSpineWidth !important
+    .blade-wrapper
+      pointer-events: none
+      visibility: hidden
+  .blade-spine
+    align-items: center
+    background: var(--vc-plate)
+    border: 0
+    bottom: 0
+    // stacked page edges on the right, like the fore-edge of a closed book
+    box-shadow: inset -3px 0 0 var(--vc-sunken), inset -4px 0 0 var(--vc-line-soft), inset -7px 0 0 var(--vc-sunken), inset -8px 0 0 var(--vc-line-soft)
+    box-sizing: border-box
+    color: var(--vc-ink-2)
+    cursor: pointer
+    display: flex
+    flex-direction: column
+    font-family: var(--vc-font-body)
+    gap: 14px
+    left: 0
+    margin: 0
+    padding: 12px 8px 16px 0
+    position: absolute
+    top: 0
+    width: 100%
+    z-index: 300
+    &:hover
+      background: var(--vc-hover)
+      .blade-spine__open
+        color: var(--vc-primary)
+    &:focus-visible
+      outline: 2px solid var(--vc-link)
+      outline-offset: -4px
+    &__icon,
+    &__img
+      border-radius: 10px
+      flex: none
+      height: 34px
+      width: 34px
+    &__icon
+      align-items: center
+      background: var(--vc-sunken)
+      color: var(--vc-primary)
+      display: flex
+      font-size: 14px
+      justify-content: center
+    &__img
+      object-fit: contain
+    &__title
+      flex: 0 1 auto
+      font-family: var(--vc-font-display)
+      font-size: 14px
+      font-weight: 600
+      min-height: 0
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+      writing-mode: vertical-rl
+    &__open
+      color: var(--vc-faint)
+      font-size: 15px
+      margin-top: auto
+
+  /* Buttons */
+  .btn-default,
+  .btn
+    background: var(--vc-primary)
+    border-radius: 9999px
+    color: var(--vc-on-primary)
+    font-weight: 600
+    text-shadow: none
+    &:hover
+      background: var(--vc-primary-hover)
+      opacity: 1
+  .btn.__cancel
+    background-color: var(--vc-sunken)
+    color: var(--vc-ink)
+    &:hover
+      background-color: var(--vc-sunken-hover)
+  .vc-button
+    background-color: var(--vc-primary)
+    border-radius: 9999px
+    font-family: var(--vc-font-body)
+    font-weight: 600
+    &:hover
+      background-color: var(--vc-primary-hover)
+    &:disabled
+      background-color: var(--vc-sunken)
+      color: var(--vc-muted)
+      opacity: 1
+    &--outlined
+      background-color: transparent
+      border-color: var(--vc-line)
+      color: var(--vc-ink)
+      &:hover
+        background-color: var(--vc-sunken)
+        color: var(--vc-ink)
+
+  /* Dialogs: the confirm header used the dark blade head color */
+  .modal-window
+    border-radius: 18px
+    overflow: hidden
+    &__header--confirm
+      background-color: var(--vc-plate)
+      box-shadow: inset 0 -1px 0 var(--vc-line-soft)
+      color: var(--vc-ink)
+    &__title
+      font-family: var(--vc-font-display)
+      font-weight: 600
+
+  @import "_modern-components.sass"
+
+// Dark mode: the header icons are dark SVG backgrounds
+.vc-modern.vc-dark
+  .header__nav-ico:not(.header__nav-ico--theme),
+  .header .account-user__carret
+    filter: brightness(0) invert(1) opacity(.72)
+
+/* Theme switch in the header (both themes) */
+.header__nav-ico--theme
+  align-items: center
+  background: none
+  border: 0
+  box-sizing: content-box
+  color: $whiteColor
+  cursor: pointer
+  display: flex
+  font-size: 18px
+  justify-content: center
+
+/* Main menu footer toggle: only the modern look shows it */
+.bar__footer
+  display: none
+
+/* Theme picker in the header (both looks) */
+.header__nav-item--theme
+  .theme-menu
+    left: auto
+    min-width: 200px
+    right: 0
+    z-index: 600
+    li
+      list-style: none
+    // same row style for every option (a generic ".dropdown-menu li:last-child" rule tinted the last one);
+    // Classic is set apart by a divider
+    li:last-child
+      background: none
+      border-top: 1px solid var(--vc-line-soft, #{$baseBrd})
+      margin-top: 4px
+      // a vendor ".dropdown-menu li:last-child" rule sets padding with !important
+      padding: 4px 0 0 !important
+  .theme-menu__item
+    align-items: center
+    background: none
+    border: 0
+    cursor: pointer
+    display: flex
+    font-family: inherit
+    gap: 10px
+    text-align: left
+    width: 100%
+  .theme-menu__icon
+    text-align: center
+    width: 16px
+  .theme-menu__check
+    margin-left: auto
+
+// Dark mode syntax colors for code editors
+.vc-modern.vc-dark .CodeMirror
+  .cm-string,
+  .cm-string-2
+    color: #e9b87a
+  .cm-number
+    color: #9dceb2
+  .cm-atom,
+  .cm-keyword,
+  .cm-builtin
+    color: #c9a7f5
+  .cm-property,
+  .cm-attribute,
+  .cm-qualifier
+    color: #8ebeec
+  .cm-tag,
+  .cm-header
+    color: #f1a686
+  .cm-comment,
+  .cm-meta
+    color: #948a83
+  .cm-def,
+  .cm-variable,
+  .cm-variable-2,
+  .cm-variable-3,
+  .cm-bracket,
+  .cm-operator
+    color: #e3ddd7
+  .cm-error
+    color: #f36b68
+  .CodeMirror-matchingbracket
+    color: #9dceb2 !important
+
+@import "_modern-mobile.sass"

@@ -18,7 +18,31 @@
       "assets": "Tillgångar",
       "toggle-favorites": "Skift + Mellanslag för att växla favoriter",
       "developer-tools": "Utvecklarverktyg",
-      "help": "Hjälp"
+      "help": "Hjälp",
+      "main-menu": "Huvudmeny",
+      "collapse-menu": "Fäll ihop menyn",
+      "expand-menu": "Fäll ut menyn",
+      "theme": "Tema",
+      "theme-light": "Ljust",
+      "theme-dark": "Mörkt",
+      "theme-system": "Följ systemet",
+      "theme-classic": "Klassiskt"
+    },
+    "search": {
+      "placeholder": "Sök i meny, appar, inställningar",
+      "searching": "Söker…",
+      "no-results": "Inga träffar för \"{{query}}\"",
+      "clear": "Rensa",
+      "error": "Sökningen misslyckades",
+      "show-all": "Visa alla {{count}}",
+      "hint-navigate": "för att flytta",
+      "hint-open": "för att öppna",
+      "hint-close": "för att stänga",
+      "groups": {
+        "menu": "Meny",
+        "apps": "Appar",
+        "settings": "Inställningar"
+      }
     },
     "navigation": {
       "back": "Tillbaka"
@@ -843,8 +867,10 @@
       "licensing": {
         "license-absent": "Community-licens",
         "license-present": "{{type}}-licens, går ut {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}}-licens",
         "community": "Kör community-utgåva, klicka för att begära en kommersiell licens",
         "expired": "Din licens har gått ut {{expirationDate | amParse | date}}, vänligen förnya",
+        "expired-short": "Licensen har gått ut",
         "purchase": "Köp",
         "renew": "Förnya",
         "expiration-date": "Utgångsdatum"

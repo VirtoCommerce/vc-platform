@@ -18,7 +18,31 @@
       "assets": "Recursos",
       "toggle-favorites": "Shift + Espacio para alternar favoritos",
       "developer-tools": "Herramientas para desarrolladores",
-      "help": "Ayuda"
+      "help": "Ayuda",
+      "main-menu": "Menú principal",
+      "collapse-menu": "Contraer menú",
+      "expand-menu": "Expandir menú",
+      "theme": "Tema",
+      "theme-light": "Claro",
+      "theme-dark": "Oscuro",
+      "theme-system": "Según el sistema",
+      "theme-classic": "Clásico"
+    },
+    "search": {
+      "placeholder": "Buscar en menú, aplicaciones, ajustes",
+      "searching": "Buscando…",
+      "no-results": "No se encontró nada para \"{{query}}\"",
+      "clear": "Borrar",
+      "error": "La búsqueda falló",
+      "show-all": "Mostrar los {{count}}",
+      "hint-navigate": "para moverse",
+      "hint-open": "para abrir",
+      "hint-close": "para cerrar",
+      "groups": {
+        "menu": "Menú",
+        "apps": "Aplicaciones",
+        "settings": "Ajustes"
+      }
     },
     "navigation": {
       "back": "Atrás"
@@ -842,8 +866,10 @@
       "licensing": {
         "license-absent": "Licencia comunitaria",
         "license-present": "Licencia {{type}}, vence el {{expirationDate | amParse | date}}",
+        "license-present-short": "Licencia {{type}}",
         "community": "Ejecutando edición comunitaria, haz clic para solicitar una licencia comercial",
         "expired": "Tu licencia ha vencido el {{expirationDate | amParse | date}}, por favor renuévala",
+        "expired-short": "Licencia caducada",
         "purchase": "Comprar",
         "renew": "Renovar",
         "expiration-date": "Fecha de vencimiento"

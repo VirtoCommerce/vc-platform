@@ -18,7 +18,31 @@
       "assets": "Ressourcen",
       "toggle-favorites": "Umschalt + Leertaste zum Umschalten der Favoriten",
       "developer-tools": "Entwicklerwerkzeuge",
-      "help": "Hilfe"
+      "help": "Hilfe",
+      "main-menu": "Hauptmenü",
+      "collapse-menu": "Menü einklappen",
+      "expand-menu": "Menü ausklappen",
+      "theme": "Design",
+      "theme-light": "Hell",
+      "theme-dark": "Dunkel",
+      "theme-system": "Systemeinstellung",
+      "theme-classic": "Klassisch"
+    },
+    "search": {
+      "placeholder": "Menü, Apps, Einstellungen durchsuchen",
+      "searching": "Suche läuft…",
+      "no-results": "Keine Treffer für „{{query}}“",
+      "clear": "Löschen",
+      "error": "Suche fehlgeschlagen",
+      "show-all": "Alle {{count}} anzeigen",
+      "hint-navigate": "zum Wechseln",
+      "hint-open": "zum Öffnen",
+      "hint-close": "zum Schließen",
+      "groups": {
+        "menu": "Menü",
+        "apps": "Apps",
+        "settings": "Einstellungen"
+      }
     },
     "navigation": {
       "back": "Zurück"
@@ -844,8 +868,10 @@
       "licensing": {
         "license-absent": "Community-Lizenz",
         "license-present": "{{type}}-Lizenz, läuft am {{expirationDate | amParse | date}} ab",
+        "license-present-short": "{{type}}-Lizenz",
         "community": "Community-Edition wird ausgeführt, klicken Sie hier, um eine kommerzielle Lizenz anzufordern",
         "expired": "Ihre Lizenz ist am {{expirationDate | amParse | date}} abgelaufen, bitte erneuern Sie sie",
+        "expired-short": "Lizenz abgelaufen",
         "purchase": "Kaufen",
         "renew": "Erneuern",
         "expiration-date": "Ablaufdatum"

@@ -18,7 +18,31 @@
       "assets": "Ressources",
       "toggle-favorites": "Maj + Espace pour basculer les favoris",
       "developer-tools": "Outils développeur",
-      "help": "Aide"
+      "help": "Aide",
+      "main-menu": "Menu principal",
+      "collapse-menu": "Réduire le menu",
+      "expand-menu": "Développer le menu",
+      "theme": "Thème",
+      "theme-light": "Clair",
+      "theme-dark": "Sombre",
+      "theme-system": "Selon le système",
+      "theme-classic": "Classique"
+    },
+    "search": {
+      "placeholder": "Rechercher menu, applications, paramètres",
+      "searching": "Recherche…",
+      "no-results": "Aucun résultat pour « {{query}} »",
+      "clear": "Effacer",
+      "error": "La recherche a échoué",
+      "show-all": "Afficher les {{count}}",
+      "hint-navigate": "pour naviguer",
+      "hint-open": "pour ouvrir",
+      "hint-close": "pour fermer",
+      "groups": {
+        "menu": "Menu",
+        "apps": "Applications",
+        "settings": "Paramètres"
+      }
     },
     "navigation": {
       "back": "Retour"
@@ -842,8 +866,10 @@
       "licensing": {
         "license-absent": "Licence communautaire",
         "license-present": "Licence {{type}}, expire le {{expirationDate | amParse | date}}",
+        "license-present-short": "Licence {{type}}",
         "community": "Édition communautaire en cours d'exécution, cliquez pour demander une licence commerciale",
         "expired": "Votre licence a expiré le {{expirationDate | amParse | date}}, veuillez la renouveler",
+        "expired-short": "Licence expirée",
         "purchase": "Acheter",
         "renew": "Renouveler",
         "expiration-date": "Date d'expiration"

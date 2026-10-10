@@ -1,0 +1,350 @@
+/* Header: global search, environment label and license pill.
+   Base (classic) styling for the dark classic header; the modern look restyles them in _modern.sass
+   and _modern-mobile.sass. */
+
+// Global search
+.global-search
+  align-self: center
+  flex: 0 1 380px
+  margin: 0 16px
+  min-width: 220px
+  position: relative
+  // icons follow their button (the header styles its own icons larger and white)
+  .fa
+    color: inherit
+    font-size: inherit
+  &__toggle
+    display: none
+  &__box
+    align-items: center
+    background: rgba(255, 255, 255, .08)
+    border: 1px solid rgba(255, 255, 255, .14)
+    border-radius: 4px
+    box-sizing: border-box
+    display: flex
+    gap: 8px
+    height: 36px
+    padding: 0 8px 0 12px
+    transition: border-color .15s ease, background-color .15s ease
+    &:focus-within
+      background: rgba(255, 255, 255, .14)
+      border-color: $baseColorRaw
+  &__lead
+    color: #838d9a
+    font-size: 13px
+  &__input
+    background: transparent
+    border: 0
+    color: $whiteColor
+    flex: 1 1 auto
+    font-family: inherit
+    font-size: 13px
+    height: 100%
+    min-width: 0
+    outline: none
+    padding: 0
+    &::placeholder
+      color: #838d9a
+    &::-webkit-search-cancel-button
+      display: none
+  &__kbd,
+  &__footer kbd
+    background: rgba(255, 255, 255, .1)
+    border-radius: 4px
+    color: #aeb7c2
+    font-family: inherit
+    font-size: 11px
+    font-weight: 600
+    line-height: 1
+    padding: 3px 6px
+    white-space: nowrap
+  &__clear
+    background: none
+    border: 0
+    color: #838d9a
+    cursor: pointer
+    font-size: 13px
+    padding: 4px
+    &:hover
+      color: $whiteColor
+  &__go
+    display: none
+  // results
+  &__panel
+    background: $whiteColor
+    border-radius: 6px
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .18)
+    box-sizing: border-box
+    color: $colorTextRaw
+    left: 0
+    max-height: min(70vh, 560px)
+    min-width: 100%
+    overflow-y: auto
+    padding: 6px
+    position: absolute
+    top: calc(100% + 6px)
+    width: 440px
+    z-index: 650
+  &__status
+    align-items: center
+    color: #838d9a
+    display: flex
+    font-size: 13px
+    gap: 8px
+    padding: 14px 12px
+  &__spinner
+    animation: global-search-spin .8s linear infinite
+    border: 2px solid #dfe3e8
+    border-radius: 50%
+    border-top-color: $baseColorRaw
+    height: 14px
+    width: 14px
+  &__group + &__group
+    border-top: 1px solid #eaedf3
+    margin-top: 4px
+    padding-top: 4px
+  &__group-title
+    color: #838d9a
+    font-size: 11px
+    font-weight: 700
+    letter-spacing: .06em
+    padding: 8px 10px 4px
+    text-transform: uppercase
+  &__item
+    align-items: center
+    background: none
+    border: 0
+    border-radius: 4px
+    color: inherit
+    cursor: pointer
+    display: flex
+    font-family: inherit
+    gap: 10px
+    padding: 7px 10px
+    text-align: left
+    width: 100%
+    &--active
+      background: #ecf7fc
+  &__item-icon
+    align-items: center
+    color: #838d9a
+    display: flex
+    flex: none
+    font-size: 14px
+    height: 28px
+    justify-content: center
+    width: 28px
+    img
+      height: 22px
+      object-fit: contain
+      width: 22px
+  &__item-text
+    display: flex
+    flex: 1 1 auto
+    flex-direction: column
+    min-width: 0
+  &__item-title,
+  &__item-descr
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+  &__item-title
+    font-size: 13.5px
+    font-weight: 500
+  &__item-descr
+    color: #838d9a
+    font-size: 12px
+  &__item mark
+    background: #fff1c4
+    border-radius: 2px
+    color: inherit
+    padding: 0
+  &__item-external
+    color: #aeb7c2
+    font-size: 11px
+  // per-item status pill and right-aligned value (e.g. order status and total)
+  &__item-badge
+    background: #eef1f5
+    border-radius: 9999px
+    color: #4c4c4c
+    flex: none
+    font-size: 11px
+    font-weight: 600
+    line-height: 18px
+    padding: 0 8px
+    white-space: nowrap
+  &__item-meta
+    color: #838d9a
+    flex: none
+    font-size: 12px
+    white-space: nowrap
+  // a group whose provider is still answering, or failed
+  &__group-status
+    align-items: center
+    color: #838d9a
+    display: flex
+    font-size: 12.5px
+    gap: 8px
+    padding: 6px 10px 8px
+    &--error
+      color: #c0392b
+  // "Show all 245" at the end of a group
+  &__show-all
+    color: $baseColorRaw
+    font-size: 12.5px
+    font-weight: 600
+    gap: 6px
+    padding: 6px 10px
+    .fa
+      font-size: 11px
+  &__footer
+    border-top: 1px solid #eaedf3
+    color: #838d9a
+    display: flex
+    font-size: 11.5px
+    gap: 14px
+    margin-top: 4px
+    padding: 8px 10px 4px
+    kbd
+      background: #f1f4f7
+      color: #4c4c4c
+      margin-right: 3px
+
+@keyframes global-search-spin
+  to
+    transform: rotate(360deg)
+
+// Environment label: inline in the header (the floating page banner stays for screens without a header, e.g. sign-in)
+.header .vc-env-badge
+  align-self: center
+  box-shadow: none
+  flex: none
+  height: 24px
+  left: auto
+  margin: 0 8px 0 0
+  padding: 0 12px
+  position: static
+  top: auto
+  transform: none
+  z-index: auto
+body:has(.header) > .vc-env-badge
+  display: none
+
+// License: the header shows a short label, the full notice is the tooltip (title) and the drawer text.
+// The classic header reserved a blade-wide box for the long sentence; the label needs only its own width.
+.header .header__info
+  flex: none
+  min-width: 0
+  width: auto
+.license
+  &__text
+    white-space: nowrap
+  &__full
+    display: none
+
+// The license notice in the menu drawer is for small screens only
+.bar__license
+  display: none
+
+// Classic look on narrower screens (the classic header has no responsive layout; the modern look
+// handles phones in _modern-mobile.sass): the search box collapses into an icon that opens a bar under the header
+@media (max-width: 1365px)
+  // the header lives in .cnt, which stacks below the classic main menu: lift it while the search is open
+  html:not(.vc-modern) .cnt:has(.global-search--expanded)
+    z-index: 530
+  // the user block keeps its content width instead of a fixed 325px
+  html:not(.vc-modern) .header .account-user
+    width: auto
+    .account-user__carret
+      margin-left: 14px
+  html:not(.vc-modern) .global-search
+    min-width: 0
+    flex: none
+    margin: 0 4px
+    position: static
+    &__toggle
+      align-items: center
+      background: none
+      border: 0
+      color: #aeb7c2
+      cursor: pointer
+      display: flex
+      font-size: 16px
+      height: 36px
+      justify-content: center
+      width: 36px
+    &__box
+      display: none
+    &--expanded .global-search__box
+      background-color: $headerBg
+      display: flex
+      height: 44px
+      left: 50%
+      position: fixed
+      top: 64px
+      transform: translateX(-50%)
+      width: min(460px, calc(100vw - 16px))
+      z-index: 620
+    &__kbd,
+    &__footer
+      display: none
+    &__panel
+      left: 50%
+      max-height: calc(100vh - 130px)
+      min-width: 0
+      position: fixed
+      top: 114px
+      transform: translateX(-50%)
+      width: min(460px, calc(100vw - 16px))
+
+// Classic look below ~1100px: when the notice has a button (community, expired) the button stays, with the
+// full notice as its tooltip, and the label goes; an active license keeps its label (it has no button)
+@media (max-width: 1099px)
+  html:not(.vc-modern) .header .license:not(.active) .license__text
+    display: none
+
+// Modern look on tablets and narrow desktop windows (phones: _modern-mobile.sass): the search collapses
+// into an icon that opens a centred bar under the header, so the license and environment pills keep their room
+@media (min-width: 768px) and (max-width: 1199px)
+  html.vc-modern .cnt:has(.global-search--expanded)
+    z-index: 530
+  html.vc-modern .global-search
+    flex: none
+    margin: 0 8px 0 0
+    min-width: 0
+    position: static
+    &__toggle
+      align-items: center
+      background: none
+      border: 0
+      border-radius: 9999px
+      color: var(--vc-ink-2)
+      cursor: pointer
+      display: flex
+      font-size: 16px
+      height: 38px
+      justify-content: center
+      width: 38px
+      &:hover
+        background: var(--vc-sunken)
+    &__box
+      display: none
+    &--expanded .global-search__box
+      background: var(--vc-plate)
+      box-shadow: var(--vc-shadow-lift)
+      display: flex
+      height: 46px
+      left: 50%
+      position: fixed
+      top: 70px
+      transform: translateX(-50%)
+      width: min(480px, calc(100vw - 16px))
+      z-index: 620
+    &__panel
+      left: 50%
+      max-height: calc(100vh - 140px)
+      min-width: 0
+      position: fixed
+      top: 124px
+      transform: translateX(-50%)
+      width: min(480px, calc(100vw - 16px))

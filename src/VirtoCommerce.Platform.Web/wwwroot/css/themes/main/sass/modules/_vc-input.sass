@@ -21,7 +21,7 @@
     font-family: 'Roboto', sans-serif
 
   &__asterisk
-    color: #FF4A4A
+    color: var(--vc-fg-ff4a4a, #FF4A4A)
 
   &__container
     z-index: 0
@@ -34,8 +34,8 @@
     height: 38px
     min-width: 0
     width: 100%
-    background: #FFFFFF
-    border: 1px solid #D3DAE9
+    background: var(--vc-bg-ffffff, #FFFFFF)
+    border: 1px solid var(--vc-bd-d3dae9, #D3DAE9)
     border-radius: 3px
     font-weight: 500
     font-size: 13px
@@ -49,16 +49,16 @@
       background: lightgray
 
     #{$error} &
-      background: #FEF8F7
-      border-color: #FCE7E6
-      color: #FF4A4A
+      background: var(--vc-bg-fef8f7, #FEF8F7)
+      border-color: var(--vc-bd-fce7e6, #FCE7E6)
+      color: var(--vc-fg-ff4a4a, #FF4A4A)
 
     &:autofill
       &:disabled
-        box-shadow: 0 0 0px 1000px #f9fafb inset
+        box-shadow: 0 0 0px 1000px var(--vc-sh-f9fafb, #f9fafb) inset
 
       &:not(:disabled)
-        box-shadow: 0 0 0px 1000px #fff inset
+        box-shadow: 0 0 0px 1000px var(--vc-sh-ffffff, #fff) inset
 
     &:disabled
       color: darkgray
@@ -68,7 +68,7 @@
       color: darkgray
       #{$error} &
         opacity: 0.8
-        color: #FF4A4A
+        color: var(--vc-fg-ff4a4a, #FF4A4A)
 
   &__password-switcher
     position: absolute
@@ -82,7 +82,7 @@
     border: none
     background: none
     cursor: pointer
-    color: #319ED4
+    color: var(--vc-fg-319ed4, #319ED4)
 
     input:disabled ~ &
       color: darkgray
@@ -97,9 +97,9 @@
 
   &__message
     margin-top: 2px
-    color: #A5A5A5
+    color: var(--vc-fg-a5a5a5, #A5A5A5)
     font-family: 'Roboto', sans-serif
     font-size: 11px
     line-height: 14px
     #{$error} &
-      color: #FF4A4A
+      color: var(--vc-fg-ff4a4a, #FF4A4A)

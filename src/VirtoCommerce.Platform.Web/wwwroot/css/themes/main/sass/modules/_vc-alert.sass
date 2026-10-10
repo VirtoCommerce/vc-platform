@@ -11,31 +11,31 @@
 
   &--error
     $error: &
-    background-color: #FFEDED
-    color: #983636
+    background-color: var(--vc-bg-ffeded, #FFEDED)
+    color: var(--vc-fg-983636, #983636)
 
   &--warning
     $warning: &
-    background-color: #FFF6E9
-    color: #706343
+    background-color: var(--vc-bg-fff6e9, #FFF6E9)
+    color: var(--vc-fg-706343, #706343)
 
   &--success
     $success: &
-    background-color: #EDF9F0
-    color: #2F6B41
+    background-color: var(--vc-bg-edf9f0, #EDF9F0)
+    color: var(--vc-fg-2f6b41, #2F6B41)
 
   &__icon
     width: 20px
     height: 20px
 
     #{$error} & 
-      color: #FF4A4A
+      color: var(--vc-fg-ff4a4a, #FF4A4A)
 
     #{$warning} &
-      color: #FFBB0D
+      color: var(--vc-fg-ffbb0d, #FFBB0D)
 
     #{$success} &
-      color: #2FB35A
+      color: var(--vc-fg-2fb35a, #2FB35A)
 
   &__text
     font-size: 11px

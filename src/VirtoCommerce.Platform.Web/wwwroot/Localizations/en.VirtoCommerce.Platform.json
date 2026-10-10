@@ -15,7 +15,31 @@
       "assets": "Assets",
       "toggle-favorites": "Shift + Space to toggle favorites",
       "developer-tools": "Developer tools",
-      "help": "Help"
+      "help": "Help",
+      "main-menu": "Main menu",
+      "collapse-menu": "Collapse menu",
+      "expand-menu": "Expand menu",
+      "theme": "Theme",
+      "theme-light": "Light",
+      "theme-dark": "Dark",
+      "theme-system": "Match system",
+      "theme-classic": "Classic"
+    },
+    "search": {
+      "placeholder": "Search menu, apps, settings",
+      "searching": "Searching…",
+      "no-results": "Nothing found for \"{{query}}\"",
+      "clear": "Clear",
+      "error": "Search failed",
+      "show-all": "Show all {{count}}",
+      "hint-navigate": "to move",
+      "hint-open": "to open",
+      "hint-close": "to close",
+      "groups": {
+        "menu": "Menu",
+        "apps": "Apps",
+        "settings": "Settings"
+      }
     },
     "navigation": {
       "back": "Back"
@@ -844,8 +868,10 @@
       "licensing": {
         "license-absent": "Community license",
         "license-present": "{{type}} license, expires on {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}} license",
         "community": "Running community edition, click to request a commercial license",
         "expired": "Your license has expired on {{expirationDate | amParse | date}}, please renew",
+        "expired-short": "License expired",
         "purchase": "Purchase",
         "renew": "Renew",
         "expiration-date": "Expiration date"

@@ -30,23 +30,23 @@ va-filter-panel
     height: 34px
     margin-top: -2px
     font-size: 16px
-    border: 1px solid #ddd
+    border: 1px solid var(--vc-bd-dddddd, #ddd)
     border-radius: 3px
     display: flex
     align-items: center
     justify-content: center
     background: transparent
-    color: #999
+    color: var(--vc-fg-999999, #999)
     position: relative
     padding: 0 11px
     cursor: pointer
     &:hover
-        color: #555
-        border-color: #bbb
+        color: var(--vc-fg-555555, #555)
+        border-color: var(--vc-bd-bbbbbb, #bbb)
     &.__active
-        background: #e8f0fe
-        color: #1a73e8
-        border-color: #1a73e8
+        background: var(--vc-bg-e8f0fe, #e8f0fe)
+        color: var(--vc-fg-1a73e8, #1a73e8)
+        border-color: var(--vc-bd-1a73e8, #1a73e8)
 
 .va-filter-badge
     position: absolute
@@ -55,7 +55,7 @@ va-filter-panel
     width: 7px
     height: 7px
     border-radius: 50%
-    background: #1a73e8
+    background: var(--vc-bg-1a73e8, #1a73e8)
 
 .va-filter-panel
     position: absolute
@@ -63,8 +63,8 @@ va-filter-panel
     left: 0
     margin-top: 4px
     min-width: 260px
-    background: #fff
-    border: 1px solid #ddd
+    background: var(--vc-bg-ffffff, #fff)
+    border: 1px solid var(--vc-bd-dddddd, #ddd)
     border-radius: 4px
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)
     padding: 12px 16px
@@ -76,12 +76,12 @@ va-filter-panel
     justify-content: space-between
     padding: 8px 0
     &:not(:last-child)
-        border-bottom: 1px solid #f0f0f0
+        border-bottom: 1px solid var(--vc-bd-f0f0f0, #f0f0f0)
     &.__clear
         justify-content: flex-start
         padding-top: 12px
         a
-            color: #1a73e8
+            color: var(--vc-fg-1a73e8, #1a73e8)
             font-size: 13px
             text-decoration: none
             &:hover
@@ -89,28 +89,28 @@ va-filter-panel
 
 .va-filter-panel__label
     font-size: 13px
-    color: #333
+    color: var(--vc-fg-333333, #333)
     min-width: 60px
 
 .va-filter-panel__select
     width: 160px
     padding: 4px 8px
-    border: 1px solid #ddd
+    border: 1px solid var(--vc-bd-dddddd, #ddd)
     border-radius: 3px
     font-size: 13px
-    color: #333
-    background: #fff
+    color: var(--vc-fg-333333, #333)
+    background: var(--vc-bg-ffffff, #fff)
     &:focus
-        border-color: #1a73e8
+        border-color: var(--vc-bd-1a73e8, #1a73e8)
         outline: none
 
 .va-filter-panel__date-input
     width: 140px
     padding: 4px 8px
-    border: 1px solid #ddd
+    border: 1px solid var(--vc-bd-dddddd, #ddd)
     border-radius: 3px
     font-size: 13px
-    color: #333
+    color: var(--vc-fg-333333, #333)
     &:focus
-        border-color: #1a73e8
+        border-color: var(--vc-bd-1a73e8, #1a73e8)
         outline: none

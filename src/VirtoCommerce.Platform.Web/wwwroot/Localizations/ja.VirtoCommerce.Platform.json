@@ -18,7 +18,31 @@
       "assets": "リソース",
       "toggle-favorites": "Shift + スペースでお気に入りを切り替え",
       "developer-tools": "開発者ツール",
-      "help": "ヘルプ"
+      "help": "ヘルプ",
+      "main-menu": "メインメニュー",
+      "collapse-menu": "メニューを折りたたむ",
+      "expand-menu": "メニューを展開",
+      "theme": "テーマ",
+      "theme-light": "ライト",
+      "theme-dark": "ダーク",
+      "theme-system": "システム設定に合わせる",
+      "theme-classic": "クラシック"
+    },
+    "search": {
+      "placeholder": "メニュー、アプリ、設定を検索",
+      "searching": "検索中…",
+      "no-results": "「{{query}}」に一致する項目はありません",
+      "clear": "クリア",
+      "error": "検索に失敗しました",
+      "show-all": "すべて表示（{{count}}）",
+      "hint-navigate": "で移動",
+      "hint-open": "で開く",
+      "hint-close": "で閉じる",
+      "groups": {
+        "menu": "メニュー",
+        "apps": "アプリ",
+        "settings": "設定"
+      }
     },
     "navigation": {
       "back": "戻る"
@@ -842,8 +866,10 @@
       "licensing": {
         "license-absent": "コミュニティライセンス",
         "license-present": "{{type}}ライセンス、{{expirationDate | amParse | date}}に期限切れ",
+        "license-present-short": "{{type}} ライセンス",
         "community": "コミュニティエディションを実行中、商用ライセンスをリクエストするにはクリック",
         "expired": "ライセンスは{{expirationDate | amParse | date}}に期限切れました。更新してください",
+        "expired-short": "ライセンスの有効期限切れ",
         "purchase": "購入",
         "renew": "更新",
         "expiration-date": "有効期限"

@@ -18,7 +18,31 @@
       "assets": "Zasoby",
       "toggle-favorites": "Shift + Spacja, aby przełączyć ulubione",
       "developer-tools": "Narzędzia deweloperskie",
-      "help": "Pomoc"
+      "help": "Pomoc",
+      "main-menu": "Menu główne",
+      "collapse-menu": "Zwiń menu",
+      "expand-menu": "Rozwiń menu",
+      "theme": "Motyw",
+      "theme-light": "Jasny",
+      "theme-dark": "Ciemny",
+      "theme-system": "Zgodnie z systemem",
+      "theme-classic": "Klasyczny"
+    },
+    "search": {
+      "placeholder": "Szukaj w menu, aplikacjach, ustawieniach",
+      "searching": "Wyszukiwanie…",
+      "no-results": "Brak wyników dla „{{query}}”",
+      "clear": "Wyczyść",
+      "error": "Wyszukiwanie nie powiodło się",
+      "show-all": "Pokaż wszystkie ({{count}})",
+      "hint-navigate": "aby przejść",
+      "hint-open": "aby otworzyć",
+      "hint-close": "aby zamknąć",
+      "groups": {
+        "menu": "Menu",
+        "apps": "Aplikacje",
+        "settings": "Ustawienia"
+      }
     },
     "navigation": {
       "back": "Wstecz"
@@ -842,8 +866,10 @@
       "licensing": {
         "license-absent": "Licencja społecznościowa",
         "license-present": "Licencja {{type}}, wygasa {{expirationDate | amParse | date}}",
+        "license-present-short": "Licencja {{type}}",
         "community": "Używasz edycji społecznościowej, kliknij aby poprosić o licencję komercyjną",
         "expired": "Twoja licencja wygasła {{expirationDate | amParse | date}}, proszę odnowić",
+        "expired-short": "Licencja wygasła",
         "purchase": "Kup",
         "renew": "Odnów",
         "expiration-date": "Data wygaśnięcia"

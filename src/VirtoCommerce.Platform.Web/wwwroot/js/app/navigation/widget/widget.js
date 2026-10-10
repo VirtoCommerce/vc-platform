@@ -137,6 +137,47 @@ angular.module('platformWebApp')
             scope.$watch('gridsterOpts', refreshWidgets, true);
             scope.$on('loginStatusChanged', refreshWidgets);
 
+            // Gridster starts a drag on every touchstart inside a widget and cancels the event, so on touch
+            // screens a tap on a widget's icon or text never becomes a click. Rearranging widgets is a mouse
+            // feature: switch dragging off when touch is the primary input, and in the modern small-screen
+            // layout, where widgets are stacked in one column.
+            var touchQuery = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null;
+            var narrowQuery = window.matchMedia ? window.matchMedia('(max-width: 767px)') : null;
+            // gridster gets its own options object: gridsterOpts is usually a template literal that Angular
+            // re-creates on each digest, so a setting added to it directly would be thrown away
+            scope.gridsterOptions = {};
+            function updateDragging() {
+                var touchPrimary = !!(touchQuery && touchQuery.matches);
+                var stackedLayout = !!(narrowQuery && narrowQuery.matches) && document.documentElement.classList.contains('vc-modern');
+                var draggable = angular.extend({}, scope.gridsterOpts && scope.gridsterOpts.draggable);
+                if (touchPrimary || stackedLayout) {
+                    draggable.enabled = false;
+                }
+                var options = angular.extend({}, scope.gridsterOpts, { draggable: draggable });
+                if (!angular.equals(options, scope.gridsterOptions)) {
+                    scope.gridsterOptions = options;
+                }
+            }
+            scope.$watch('gridsterOpts', updateDragging, true);
+            function onMediaChange() {
+                scope.$applyAsync(updateDragging);
+            }
+            updateDragging();
+            angular.forEach([touchQuery, narrowQuery], function (query) {
+                if (query && query.addEventListener) {
+                    query.addEventListener('change', onMediaChange);
+                }
+            });
+            var offThemeChanged = scope.$on('platformWebApp.themeChanged', updateDragging);
+            scope.$on('$destroy', function () {
+                offThemeChanged();
+                angular.forEach([touchQuery, narrowQuery], function (query) {
+                    if (query && query.removeEventListener) {
+                        query.removeEventListener('change', onMediaChange);
+                    }
+                });
+            });
+
             // Deterministic color marker grouped by MODULE, so all widgets from the same
             // module share one color. The module is the controller prefix up to the
             // "*Module" segment, e.g.
