@@ -465,10 +465,19 @@ $plateRadius: 20px
       padding: 0
       width: 36px
     .logo-version
+      align-items: flex-end
       color: var(--vc-faint)
-      flex: none
+      flex: 0 1 auto
       font-size: 10px
       margin-left: auto
+      &__pre
+        align-self: flex-end
+        background: var(--vc-sunken)
+        border: 0
+        border-radius: 9999px
+        color: var(--vc-muted)
+        font-weight: 600
+        padding: 0 6px
     // The menu is its own floating panel under the header, with the collapse toggle at its bottom
     .bar
       background: var(--vc-plate)

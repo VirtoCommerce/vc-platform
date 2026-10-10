@@ -44,7 +44,26 @@
     margin-left: 13px
     color: var(--vc-fg-838d9a, #838d9a)
     font-size: 10px
-    text-overflow: ellipsis
+    // a long pre-release version must not run into the header
+    display: inline-flex
+    flex-direction: column
+    line-height: 1.25
+    min-width: 0
+    overflow: hidden
+    &__number,
+    &__pre
+      max-width: 100%
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+    &__pre
+      align-self: flex-start
+      border: 1px solid currentColor
+      border-radius: 3px
+      font-size: 9px
+      line-height: 12px
+      margin-top: 2px
+      padding: 0 4px
   .bar
     background: $navbarBg
     box-shadow: 1px 0 0 0 $baseBrd
