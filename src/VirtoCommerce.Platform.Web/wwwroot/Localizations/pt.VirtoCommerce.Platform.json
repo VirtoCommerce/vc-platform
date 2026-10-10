@@ -28,6 +28,20 @@
       "theme-system": "Igual ao sistema",
       "theme-classic": "Clássico"
     },
+    "search": {
+      "placeholder": "Pesquisar menu, aplicativos, configurações",
+      "searching": "Pesquisando…",
+      "no-results": "Nada encontrado para \"{{query}}\"",
+      "clear": "Limpar",
+      "hint-navigate": "para navegar",
+      "hint-open": "para abrir",
+      "hint-close": "para fechar",
+      "groups": {
+        "menu": "Menu",
+        "apps": "Aplicativos",
+        "settings": "Configurações"
+      }
+    },
     "navigation": {
       "back": "Voltar"
     },
@@ -850,8 +864,10 @@
       "licensing": {
         "license-absent": "Licença comunitária",
         "license-present": "Licença {{type}}, expira em {{expirationDate | amParse | date}}",
+        "license-present-short": "Licença {{type}}",
         "community": "Executando a edição comunitária, clique para solicitar uma licença comercial",
         "expired": "Sua licença expirou em {{expirationDate | amParse | date}}, por favor renove",
+        "expired-short": "Licença expirada",
         "purchase": "Comprar",
         "renew": "Renovar",
         "expiration-date": "Data de Expiração"

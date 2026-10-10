@@ -28,6 +28,20 @@
       "theme-system": "Как в системе",
       "theme-classic": "Классическая"
     },
+    "search": {
+      "placeholder": "Поиск по меню, приложениям, настройкам",
+      "searching": "Поиск…",
+      "no-results": "По запросу «{{query}}» ничего не найдено",
+      "clear": "Очистить",
+      "hint-navigate": "перемещение",
+      "hint-open": "открыть",
+      "hint-close": "закрыть",
+      "groups": {
+        "menu": "Меню",
+        "apps": "Приложения",
+        "settings": "Настройки"
+      }
+    },
     "navigation": {
       "back": "Назад"
     },
@@ -852,8 +866,10 @@
       "licensing": {
         "license-absent": "Общественная лицензия",
         "license-present": "Лицензия {{type}}, истекает {{expirationDate | amParse | date}}",
+        "license-present-short": "Лицензия {{type}}",
         "community": "Работает общественная версия, нажмите для запроса коммерческой лицензии",
         "expired": "Ваша лицензия истекла {{expirationDate | amParse | date}}, пожалуйста, продлите ее",
+        "expired-short": "Лицензия истекла",
         "purchase": "Купить",
         "renew": "Продлить",
         "expiration-date": "Дата истечения"

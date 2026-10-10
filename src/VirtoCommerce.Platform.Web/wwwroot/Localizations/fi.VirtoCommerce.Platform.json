@@ -28,6 +28,20 @@
       "theme-system": "Järjestelmän mukaan",
       "theme-classic": "Klassinen"
     },
+    "search": {
+      "placeholder": "Hae valikosta, sovelluksista, asetuksista",
+      "searching": "Haetaan…",
+      "no-results": "Ei tuloksia haulle \"{{query}}\"",
+      "clear": "Tyhjennä",
+      "hint-navigate": "siirtyäksesi",
+      "hint-open": "avataksesi",
+      "hint-close": "sulkeaksesi",
+      "groups": {
+        "menu": "Valikko",
+        "apps": "Sovellukset",
+        "settings": "Asetukset"
+      }
+    },
     "navigation": {
       "back": "Takaisin"
     },
@@ -851,8 +865,10 @@
       "licensing": {
         "license-absent": "Community-lisenssi",
         "license-present": "{{type}}-lisenssi, vanhenee {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}}-lisenssi",
         "community": "Suorittaa community-versiota, napsauta pyytääksesi kaupallista lisenssiä",
         "expired": "Lisenssisi on vanhentunut {{expirationDate | amParse | date}}, ole hyvä ja uudista",
+        "expired-short": "Lisenssi vanhentunut",
         "purchase": "Osta",
         "renew": "Uudista",
         "expiration-date": "Vanhenemispäivämäärä"

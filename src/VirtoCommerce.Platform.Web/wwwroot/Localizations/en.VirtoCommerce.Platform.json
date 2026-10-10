@@ -25,6 +25,20 @@
       "theme-system": "Match system",
       "theme-classic": "Classic"
     },
+    "search": {
+      "placeholder": "Search menu, apps, settings",
+      "searching": "Searching…",
+      "no-results": "Nothing found for \"{{query}}\"",
+      "clear": "Clear",
+      "hint-navigate": "to move",
+      "hint-open": "to open",
+      "hint-close": "to close",
+      "groups": {
+        "menu": "Menu",
+        "apps": "Apps",
+        "settings": "Settings"
+      }
+    },
     "navigation": {
       "back": "Back"
     },
@@ -852,8 +866,10 @@
       "licensing": {
         "license-absent": "Community license",
         "license-present": "{{type}} license, expires on {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}} license",
         "community": "Running community edition, click to request a commercial license",
         "expired": "Your license has expired on {{expirationDate | amParse | date}}, please renew",
+        "expired-short": "License expired",
         "purchase": "Purchase",
         "renew": "Renew",
         "expiration-date": "Expiration date"

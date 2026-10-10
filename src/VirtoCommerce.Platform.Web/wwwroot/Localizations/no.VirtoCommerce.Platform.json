@@ -28,6 +28,20 @@
       "theme-system": "Følg systemet",
       "theme-classic": "Klassisk"
     },
+    "search": {
+      "placeholder": "Søk i meny, apper, innstillinger",
+      "searching": "Søker…",
+      "no-results": "Ingen treff for «{{query}}»",
+      "clear": "Tøm",
+      "hint-navigate": "for å flytte",
+      "hint-open": "for å åpne",
+      "hint-close": "for å lukke",
+      "groups": {
+        "menu": "Meny",
+        "apps": "Apper",
+        "settings": "Innstillinger"
+      }
+    },
     "navigation": {
       "back": "Tilbake"
     },
@@ -851,8 +865,10 @@
       "licensing": {
         "license-absent": "Community-lisens",
         "license-present": "{{type}}-lisens, utløper {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}}-lisens",
         "community": "Kjører community-utgave, klikk for å be om en kommersiell lisens",
         "expired": "Lisensen din har utløpt {{expirationDate | amParse | date}}, vennligst forny",
+        "expired-short": "Lisensen er utløpt",
         "purchase": "Kjøp",
         "renew": "Forny",
         "expiration-date": "Utløpsdato"

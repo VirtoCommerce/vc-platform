@@ -198,28 +198,48 @@ $plateRadius: 20px
           filter: none
           font-size: 17px
           opacity: .72
-    // License notice: one quiet line of text and a soft call to action
+    // License notice: an outlined pill (wording and actions unchanged), the call to action in orange text
+    .header__info
+      align-self: center
+      flex: none
+      margin-right: 8px
     .license
-      gap: 12px
-      padding: 0 16px
+      border: 1px solid var(--vc-line)
+      border-radius: 9999px
+      box-sizing: border-box
+      gap: 8px
+      height: auto
+      min-height: 34px
+      padding: 3px 4px 3px 14px
       &__text
-        color: var(--vc-muted)
-        font-size: 12px
-        line-height: 1.35
+        color: var(--vc-ink-2)
+        font-size: 12.5px
+        font-weight: 500
+        line-height: 1.25
         margin-right: 0
-        max-width: 240px
+        max-width: 230px
         min-width: 0
+        overflow: hidden
+        text-overflow: ellipsis
+      &__expired
+        color: var(--vc-danger-ink)
       .btn
-        background: var(--vc-primary-soft)
-        color: var(--vc-primary-ink)
+        background: transparent
+        border-radius: 9999px
+        color: var(--vc-eyebrow)
         flex: none
         font-size: 12px
-        height: 30px
-        line-height: 30px
-        padding: 0 14px
+        font-weight: 600
+        height: 26px
+        line-height: 26px
+        padding: 0 10px
         &:hover
-          background: var(--vc-primary)
-          color: var(--vc-on-primary)
+          background: var(--vc-primary-soft)
+          color: var(--vc-primary-ink)
+      &.active
+        padding-right: 14px
+        &:hover
+          background: var(--vc-sunken)
     .password-expiry
       color: var(--vc-ink-2)
     // Signed-in user
@@ -274,14 +294,144 @@ $plateRadius: 20px
     color: var(--vc-primary-ink)
     font-weight: 600
 
-  // Environment badge: a pill in the header instead of a tab hanging from the top edge
-  .vc-env-badge
+  // Environment label: a soft tinted pill with a status dot (in the header and on the sign-in page)
+  .header .vc-env-badge,
+  body > .vc-env-badge
+    background: var(--vc-sunken)
     border-radius: 9999px
-    box-shadow: none
+    color: var(--vc-ink-2)
     font-size: 12px
     font-weight: 600
-    height: 26px
-    top: 21px
+    gap: 7px
+    height: 30px
+    padding: 0 12px
+    &::before
+      background: currentColor
+      border-radius: 9999px
+      content: ''
+      flex: none
+      height: 7px
+      width: 7px
+    .vc-env-badge__dot
+      display: none
+    &--dev
+      background: var(--vc-success-soft)
+      color: var(--vc-success-ink)
+    &--prod
+      background: var(--vc-danger-soft)
+      color: var(--vc-danger-ink)
+      &::before
+        animation: vc-env-pulse 1.4s infinite
+    &--test
+      background: var(--vc-warning-soft)
+      color: var(--vc-warning-ink)
+    &--staging,
+    &--demo
+      background: var(--vc-info-soft)
+      color: var(--vc-info-ink)
+  // the floating banner on screens without a header (sign-in) sits over a photo: lift it a little
+  body > .vc-env-badge
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .12)
+    height: 28px
+    top: 12px
+
+  // Global search: a pill with the shortcut hint and an orange search button
+  .global-search
+    flex: 0 1 440px
+    margin: 0 12px 0 0
+    &__box
+      background: var(--vc-sunken)
+      border: 1px solid transparent
+      border-radius: 9999px
+      height: 42px
+      padding: 0 5px 0 18px
+      &:focus-within
+        background: var(--vc-plate)
+        border-color: var(--vc-focus)
+        box-shadow: 0 0 0 3px var(--vc-focus-ring)
+    &__lead
+      display: none
+    &__input
+      color: var(--vc-ink)
+      font-size: 14px
+      &::placeholder
+        color: var(--vc-muted)
+    &__kbd,
+    &__footer kbd
+      background: var(--vc-plate)
+      border-radius: 6px
+      color: var(--vc-ink-2)
+      font-size: 11px
+      padding: 4px 7px
+    &__clear
+      color: var(--vc-faint)
+      &:hover
+        color: var(--vc-ink)
+    &__go
+      align-items: center
+      background: var(--vc-primary)
+      border: 0
+      border-radius: 9999px
+      color: var(--vc-on-primary)
+      cursor: pointer
+      display: flex
+      flex: none
+      font-size: 14px
+      height: 32px
+      justify-content: center
+      width: 32px
+      &:hover
+        background: var(--vc-primary-hover)
+    &__panel
+      background: var(--vc-plate)
+      border: 1px solid var(--vc-line-soft)
+      border-radius: 16px
+      box-shadow: var(--vc-shadow-lift)
+      color: var(--vc-ink)
+      top: calc(100% + 8px)
+      width: 460px
+    &__status
+      color: var(--vc-muted)
+    &__spinner
+      border-color: var(--vc-line)
+      border-top-color: var(--vc-primary)
+    &__group + &__group
+      border-top-color: var(--vc-line-soft)
+    &__group-title
+      color: var(--vc-faint)
+      font-size: 10.5px
+      letter-spacing: .1em
+    &__item
+      border-radius: 10px
+      padding: 7px 8px
+      &--active
+        background: var(--vc-sunken)
+    &__item-icon
+      background: var(--vc-hover)
+      border-radius: 8px
+      color: var(--vc-muted)
+      font-size: 13px
+      height: 32px
+      width: 32px
+    &__item--active &__item-icon
+      background: var(--vc-plate)
+      color: var(--vc-primary)
+    &__item-title
+      color: var(--vc-ink)
+      font-weight: 600
+    &__item-descr
+      color: var(--vc-muted)
+    &__item mark
+      background: var(--vc-primary-soft)
+      color: var(--vc-primary-ink)
+    &__item-external
+      color: var(--vc-faint)
+    &__footer
+      border-top-color: var(--vc-line-soft)
+      color: var(--vc-faint)
+      kbd
+        background: var(--vc-sunken)
+        color: var(--vc-ink-2)
 
   /* Main menu */
   .nav-bar

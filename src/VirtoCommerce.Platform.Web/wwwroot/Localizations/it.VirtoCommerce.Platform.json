@@ -28,6 +28,20 @@
       "theme-system": "Come il sistema",
       "theme-classic": "Classico"
     },
+    "search": {
+      "placeholder": "Cerca menu, app, impostazioni",
+      "searching": "Ricerca…",
+      "no-results": "Nessun risultato per \"{{query}}\"",
+      "clear": "Cancella",
+      "hint-navigate": "per spostarti",
+      "hint-open": "per aprire",
+      "hint-close": "per chiudere",
+      "groups": {
+        "menu": "Menu",
+        "apps": "App",
+        "settings": "Impostazioni"
+      }
+    },
     "navigation": {
       "back": "Indietro"
     },
@@ -850,8 +864,10 @@
       "licensing": {
         "license-absent": "Licenza Community",
         "license-present": "Licenza {{type}}, scade il {{expirationDate | amParse | date}}",
+        "license-present-short": "Licenza {{type}}",
         "community": "Esecuzione dell'edizione community, clicca per richiedere una licenza commerciale",
         "expired": "La tua licenza è scaduta il {{expirationDate | amParse | date}}, per favore rinnovala",
+        "expired-short": "Licenza scaduta",
         "purchase": "Acquista",
         "renew": "Rinnova",
         "expiration-date": "Data di scadenza"
