@@ -150,9 +150,8 @@ angular.module('platformWebApp')
                 var touchPrimary = !!(touchQuery && touchQuery.matches);
                 var stackedLayout = !!(narrowQuery && narrowQuery.matches) && document.documentElement.classList.contains('vc-modern');
                 var draggable = angular.extend({}, scope.gridsterOpts && scope.gridsterOpts.draggable);
-                if (touchPrimary || stackedLayout) {
-                    draggable.enabled = false;
-                }
+                // always explicit: angular-gridster deep-merges the options, so a missing value would keep an earlier false
+                draggable.enabled = !(touchPrimary || stackedLayout) && draggable.enabled !== false;
                 var options = angular.extend({}, scope.gridsterOpts, { draggable: draggable });
                 if (!angular.equals(options, scope.gridsterOptions)) {
                     scope.gridsterOptions = options;

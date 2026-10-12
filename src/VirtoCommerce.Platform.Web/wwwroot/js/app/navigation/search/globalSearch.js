@@ -470,8 +470,14 @@ angular.module('platformWebApp')
                         return g.status !== 'done' || g.items.length;
                     });
                     angular.forEach(scope.state.groups, function (g) {
-                        g.showAllEntry = g.status === 'done' && g.showAll && g.total > g.items.length ?
-                            { isShowAll: true, total: g.total, execute: g.showAll } : null;
+                        if (g.status === 'done' && g.showAll && g.total > g.items.length) {
+                            // keep the same entry object across updates: the highlighted row is tracked by reference
+                            g.showAllEntry = g.showAllEntry || { isShowAll: true };
+                            g.showAllEntry.total = g.total;
+                            g.showAllEntry.execute = g.showAll;
+                        } else {
+                            g.showAllEntry = null;
+                        }
                     });
                     var list = entries();
                     angular.forEach(list, function (entry, index) { entry.$index = index; });

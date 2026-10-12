@@ -1136,3 +1136,12 @@ input.ui-grid-filter-input[type="text"],
       padding: 0 14px
       &:hover
         background: var(--vc-sunken-hover)
+
+// Classic filled accents (white text on the base color, which is the light link blue in dark mode):
+// the preset's soft tint with its ink color, readable in every preset, light and dark
+.list.__tags .list-item,
+.__chosen .list-name,
+.tree-el.__canceled,
+.table-status.__active
+  background: var(--vc-primary-soft)
+  color: var(--vc-primary-ink)

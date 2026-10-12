@@ -17,16 +17,24 @@ angular.module('platformWebApp')
                 loaded: false,
                 // the user has chosen (or skipped choosing) a look; until then the welcome dialog is offered
                 selected: false,
+                // the user picked a look in the theme menu while the profile was still loading
+                changedWhileLoading: false,
 
-                // Reads the user's look and applies it; resolves to whether the user has chosen one
+                // Reads the user's look and applies it; resolves to whether the user has chosen one.
+                // The profile always wins over the browser cache: for a user who has not chosen yet its values are the
+                // defaults, so a new user does not inherit the look of the previous user of this browser.
+                // A pick made in the theme menu while loading wins over the profile and is saved.
                 load: function () {
                     // only the platform's own user scope settings (as modules do with their moduleId)
                     return settingsV2.getMeValues({ moduleId: 'Platform', modifiedOnly: false }).$promise.then(function (values) {
                         service.loaded = true;
                         service.selected = values[names.selected] === true || values[names.selected] === 'true';
-                        if (service.selected) {
-                            themeService.setLook(values[names.theme], values[names.preset], { persist: false });
+                        if (service.changedWhileLoading) {
+                            service.changedWhileLoading = false;
+                            service.save();
+                            return true;
                         }
+                        themeService.setLook(values[names.theme], values[names.preset], { persist: false });
                         return service.selected;
                     }, function () {
                         // the settings are not known yet (older server) or the call failed: keep the browser's look
@@ -38,6 +46,8 @@ angular.module('platformWebApp')
                 // Stores the current look (debounced: picking presets in a row saves once)
                 save: function () {
                     if (!service.loaded) {
+                        // the profile is still loading: remember the pick, load() saves it
+                        service.changedWhileLoading = true;
                         return;
                     }
                     if (saveTimer) {
@@ -57,6 +67,7 @@ angular.module('platformWebApp')
                 reset: function () {
                     service.loaded = false;
                     service.selected = false;
+                    service.changedWhileLoading = false;
                     if (saveTimer) {
                         $timeout.cancel(saveTimer);
                         saveTimer = null;

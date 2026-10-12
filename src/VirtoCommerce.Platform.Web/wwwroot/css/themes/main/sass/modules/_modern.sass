@@ -900,11 +900,11 @@ $plateRadius: 20px
       background: none
       // a vendor ".dropdown-menu li:last-child" rule sets padding with !important
       padding: 0 !important
-    // Classic and the color presets are set apart by a divider
+    // Classic and the color presets are set apart by a divider (Classic is also the last child: keep its gap)
     li.theme-menu__group-start
       border-top: 1px solid var(--vc-line-soft, #{$baseBrd})
       margin-top: 4px
-      padding-top: 4px
+      padding-top: 4px !important
   .theme-menu__heading
     color: var(--vc-faint, #838d9a)
     font-size: 10.5px
