@@ -200,6 +200,61 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             savedEntries[0].Value.Should().BeNull();
         }
 
+        // --- tenant scope (e.g. the user's own "me" values, saved for tenant type UserProfile) ---
+
+        private const string ThemeSetting = "VirtoCommerce.Platform.UI.Theme";
+        private const string StoreSetting = "VirtoCommerce.ModuleA.StoreOnly";
+        private const string GlobalSetting = "VirtoCommerce.ModuleA.GlobalOnly";
+
+        private static readonly Dictionary<string, string[]> TenantAssignments = new(StringComparer.OrdinalIgnoreCase)
+        {
+            [ThemeSetting] = ["UserProfile"],
+            [StoreSetting] = ["Store"],
+        };
+
+        private static SettingDescriptor[] TenantDescriptors() =>
+        [
+            NewDescriptor(ThemeSetting, "Platform", "system"),
+            NewDescriptor(StoreSetting, ModuleA, "a"),
+            NewDescriptor(GlobalSetting, ModuleA, "g"),
+        ];
+
+        [Fact]
+        public async Task SaveValuesAsync_SettingRegisteredForTenantType_IsSavedForThatTenant()
+        {
+            List<ObjectSettingEntry> savedEntries = null;
+            var service = NewService(TenantDescriptors(), onSave: entries => savedEntries = entries.ToList(), typeAssignments: TenantAssignments);
+
+            await service.SaveValuesAsync(new Dictionary<string, object> { [ThemeSetting] = "dark" }, "UserProfile", "user-1");
+
+            savedEntries.Should().ContainSingle();
+            savedEntries[0].ObjectType.Should().Be("UserProfile");
+            savedEntries[0].ObjectId.Should().Be("user-1");
+            savedEntries[0].Value.Should().Be("dark");
+        }
+
+        [Fact]
+        public async Task SaveValuesAsync_SettingRegisteredOnlyForAnotherTenantType_IsRejected()
+        {
+            var saved = false;
+            var service = NewService(TenantDescriptors(), onSave: _ => saved = true, typeAssignments: TenantAssignments);
+
+            var act = () => service.SaveValuesAsync(new Dictionary<string, object> { [StoreSetting] = "b" }, "UserProfile", "user-1");
+
+            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage("*not registered for tenant type 'UserProfile'*");
+            saved.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task SaveValuesAsync_GlobalOnlySettingWithTenantScope_IsRejected()
+        {
+            var service = NewService(TenantDescriptors(), typeAssignments: TenantAssignments);
+
+            var act = () => service.SaveValuesAsync(new Dictionary<string, object> { [GlobalSetting] = "x" }, "UserProfile", "user-1");
+
+            await act.Should().ThrowAsync<InvalidOperationException>();
+        }
+
         // --- helpers ---
 
         private static SettingDescriptor NewDescriptor(string name, string moduleId, object defaultValue) => new()
@@ -239,17 +294,19 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         /// simulates a saved per-object override for a dictionary setting.
         /// </param>
         /// <param name="onSave">Captures the entries passed to SaveObjectSettingsAsync, if set.</param>
+        /// <param name="typeAssignments">Setting name to the tenant types it is registered for (none by default).</param>
         private static SettingsPropertyService NewService(
             IEnumerable<SettingDescriptor> descriptors,
             Dictionary<string, object[]> allowedValueOverrides = null,
-            Action<IEnumerable<ObjectSettingEntry>> onSave = null)
+            Action<IEnumerable<ObjectSettingEntry>> onSave = null,
+            Dictionary<string, string[]> typeAssignments = null)
         {
             var all = descriptors.ToList();
 
             var settingsManager = new Mock<ISettingsManager>();
             settingsManager.SetupGet(x => x.AllRegisteredSettings).Returns(all);
             settingsManager.Setup(x => x.GetSettingTypeAssignments())
-                .Returns(new Dictionary<string, string[]>());
+                .Returns(typeAssignments ?? new Dictionary<string, string[]>());
             settingsManager.Setup(x => x.GetSettingsForType(It.IsAny<string>()))
                 .Returns(Enumerable.Empty<SettingDescriptor>());
 
