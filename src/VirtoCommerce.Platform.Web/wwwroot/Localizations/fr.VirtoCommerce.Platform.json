@@ -759,6 +759,7 @@
           "outcome": "Résultat",
           "succeeded": "Réussite",
           "failed": "Échec",
+          "awaiting-second-factor": "En attente du second facteur",
           "failure-reason": "Motif",
           "sign-in-type": "Type",
           "ip-address": "Adresse IP",

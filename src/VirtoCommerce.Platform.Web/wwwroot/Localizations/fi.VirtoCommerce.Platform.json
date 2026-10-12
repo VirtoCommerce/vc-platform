@@ -760,6 +760,7 @@
           "outcome": "Tulos",
           "succeeded": "Onnistui",
           "failed": "Epäonnistui",
+          "awaiting-second-factor": "Odottaa toista vaihetta",
           "failure-reason": "Syy",
           "sign-in-type": "Tyyppi",
           "ip-address": "IP-osoite",

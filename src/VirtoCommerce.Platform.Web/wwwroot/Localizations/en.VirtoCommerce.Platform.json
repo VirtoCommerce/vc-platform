@@ -761,6 +761,7 @@
           "outcome": "Outcome",
           "succeeded": "Success",
           "failed": "Failed",
+          "awaiting-second-factor": "Awaiting second factor",
           "failure-reason": "Reason",
           "sign-in-type": "Type",
           "ip-address": "IP address",

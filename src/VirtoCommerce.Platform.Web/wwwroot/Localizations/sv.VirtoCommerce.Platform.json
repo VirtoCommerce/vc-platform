@@ -760,6 +760,7 @@
           "outcome": "Resultat",
           "succeeded": "Lyckades",
           "failed": "Misslyckades",
+          "awaiting-second-factor": "Väntar på andra faktorn",
           "failure-reason": "Orsak",
           "sign-in-type": "Typ",
           "ip-address": "IP-adress",

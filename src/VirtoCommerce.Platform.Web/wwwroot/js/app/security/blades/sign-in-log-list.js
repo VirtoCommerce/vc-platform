@@ -1,8 +1,9 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.signInLogListController',
-        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService',
-            function ($scope, accounts, bladeUtils, uiGridHelper, bladeNavigationService) {
+        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'platformWebApp.signInLogOutcome',
+            function ($scope, accounts, bladeUtils, uiGridHelper, bladeNavigationService, signInLogOutcome) {
                 $scope.uiGridConstants = uiGridHelper.uiGridConstants;
+                $scope.outcomeOf = signInLogOutcome.get;
                 var blade = $scope.blade;
 
                 blade.title = blade.title || 'platform.blades.sign-in-log.title';
