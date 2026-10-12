@@ -2,9 +2,10 @@ angular.module('platformWebApp')
     .factory('platformWebApp.themeService', ['$rootScope', 'platformWebApp.themeAdapter', function ($rootScope, themeAdapter) {
         // classic: the original look; light/dark: the modern look; system: modern, following the OS color scheme
         var themes = ['light', 'dark', 'system', 'classic'];
-        // follow the OS light/dark preference until the user picks a theme
-        var defaultTheme = 'system';
-        // Color presets of the modern look (light and dark variants in _modern-presets.sass); warm is the built-in palette.
+        // light until the user picks a theme (the same default as the VirtoCommerce.Platform.UI.Theme setting)
+        var defaultTheme = 'light';
+        // Color presets of the modern look (light and dark variants in _modern-presets.sass); warm is the built-in palette
+        // in _modern.sass, the others override it.
         // swatch: the preset's primary color and ground, shown in the theme menu and the welcome dialog
         var presets = [
             { id: 'warm', title: 'platform.theme.presets.warm', swatch: ['#e5451c', '#f5f1ea'] },
@@ -14,7 +15,9 @@ angular.module('platformWebApp')
             { id: 'indigo', title: 'platform.theme.presets.indigo', swatch: ['#4a63e0', '#eaeaeb'] }
         ];
         var presetIds = presets.map(function (p) { return p.id; });
-        var defaultPreset = 'warm';
+        // the same default as the VirtoCommerce.Platform.UI.ThemePreset setting
+        var defaultPreset = 'gray';
+        var basePreset = 'warm';
         // the same names as the user profile settings, so a value means the same in both places
         var storageKey = 'VirtoCommerce.Platform.UI.Theme';
         var presetStorageKey = 'VirtoCommerce.Platform.UI.ThemePreset';
@@ -105,7 +108,7 @@ angular.module('platformWebApp')
                 root.classList.toggle('vc-modern', isModern);
                 root.classList.toggle('vc-dark', isModern && service.isDark());
                 // the warm palette is the modern look's own; other presets override its colors
-                if (isModern && service.preset !== defaultPreset) {
+                if (isModern && service.preset !== basePreset) {
                     root.setAttribute('data-vc-preset', service.preset);
                 } else {
                     root.removeAttribute('data-vc-preset');

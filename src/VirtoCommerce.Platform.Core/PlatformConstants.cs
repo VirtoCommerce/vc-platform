@@ -506,19 +506,19 @@ namespace VirtoCommerce.Platform.Core
                     Name = "VirtoCommerce.Platform.UI.Theme",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.ShortText,
-                    DefaultValue = "system",
+                    DefaultValue = "light",
                     AllowedValues = new object[] { "light", "dark", "system", "classic" }
                 };
 
                 /// <summary>
-                /// Color preset of the modern look (light and dark): warm (default), blue, gray, green or indigo.
+                /// Color preset of the modern look (light and dark): warm, blue, gray (default), green or indigo.
                 /// </summary>
                 public static SettingDescriptor ThemePreset { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.ThemePreset",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.ShortText,
-                    DefaultValue = "warm",
+                    DefaultValue = "gray",
                     AllowedValues = new object[] { "warm", "blue", "gray", "green", "indigo" }
                 };
 
