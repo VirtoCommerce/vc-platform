@@ -28,6 +28,30 @@
       "theme-system": "Zgodnie z systemem",
       "theme-classic": "Klasyczny"
     },
+    "theme": {
+      "preset": "Kolor",
+      "presets": {
+        "warm": "Ciepły",
+        "blue": "Niebieski",
+        "gray": "Szary",
+        "green": "Zielony",
+        "indigo": "Indygo"
+      },
+      "welcome": {
+        "title": "Wybierz wygląd",
+        "intro": "Wybierz tryb i zestaw kolorów. Efekt zobaczysz od razu za tym oknem. Wybór zostanie zapisany w Twoim profilu i będzie działał w każdej przeglądarce.",
+        "mode": "Tryb",
+        "preset": "Zestaw kolorów",
+        "light-description": "Jasny i przejrzysty, do dobrze oświetlonych miejsc",
+        "dark-description": "Łagodny dla oczu przy słabym świetle",
+        "system-description": "Zgodny z trybem jasnym lub ciemnym urządzenia",
+        "classic-description": "Oryginalny wygląd Virto Commerce",
+        "classic-note": "Zestawy kolorów dotyczą trybu jasnego i ciemnego.",
+        "hint": "Możesz to zmienić w dowolnej chwili w menu motywu w nagłówku.",
+        "apply": "Zastosuj",
+        "not-now": "Nie teraz"
+      }
+    },
     "search": {
       "placeholder": "Szukaj w menu, aplikacjach, ustawieniach",
       "searching": "Wyszukiwanie…",
@@ -1219,6 +1243,18 @@
           "ShowMeridian": {
             "description": "Pokaż wskaźnik południka czasu (AM lub PM)",
             "title": "Pokaż południk czasu"
+          },
+          "Theme": {
+            "title": "Motyw",
+            "description": "Wygląd panelu: jasny, ciemny, zgodny z systemem lub klasyczny"
+          },
+          "ThemePreset": {
+            "title": "Zestaw kolorów",
+            "description": "Zestaw kolorów nowoczesnego wyglądu: ciepły, niebieski, szary, zielony lub indygo"
+          },
+          "ThemeSelected": {
+            "title": "Motyw wybrany",
+            "description": "Ustawiane, gdy użytkownik wybierze wygląd; do tego czasu wybór jest proponowany po zalogowaniu"
           }
         },
         "Cache": {

@@ -25,6 +25,30 @@
       "theme-system": "Match system",
       "theme-classic": "Classic"
     },
+    "theme": {
+      "preset": "Color",
+      "presets": {
+        "warm": "Warm",
+        "blue": "Blue",
+        "gray": "Gray",
+        "green": "Green",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Choose your look",
+        "intro": "Pick a mode and a color preset. You see the result right away behind this window. Your choice is saved to your profile and follows you to every browser.",
+        "mode": "Mode",
+        "preset": "Color preset",
+        "light-description": "Bright and clean, for well-lit rooms",
+        "dark-description": "Easy on the eyes in low light",
+        "system-description": "Follows your device's light or dark setting",
+        "classic-description": "The original Virto Commerce look",
+        "classic-note": "Color presets apply to the light and dark modes.",
+        "hint": "You can change this any time from the theme menu in the header.",
+        "apply": "Apply",
+        "not-now": "Not now"
+      }
+    },
     "search": {
       "placeholder": "Search menu, apps, settings",
       "searching": "Searching…",
@@ -1221,6 +1245,18 @@
           "ShowMeridian": {
             "description": "Show time meridian indicator (AM or PM)",
             "title": "Show time meridian"
+          },
+          "Theme": {
+            "title": "Theme",
+            "description": "Look of the back office: light, dark, follow the system, or classic"
+          },
+          "ThemePreset": {
+            "title": "Color preset",
+            "description": "Color preset of the modern look: warm, blue, gray, green or indigo"
+          },
+          "ThemeSelected": {
+            "title": "Theme chosen",
+            "description": "Set once the user has chosen a look; until then the back office offers the choice after sign-in"
           }
         },
         "Cache": {

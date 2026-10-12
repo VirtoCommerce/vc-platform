@@ -4,20 +4,45 @@ angular.module('platformWebApp')
         var themes = ['light', 'dark', 'system', 'classic'];
         // follow the OS light/dark preference until the user picks a theme
         var defaultTheme = 'system';
+        // Color presets of the modern look (light and dark variants in _modern-presets.sass); warm is the built-in palette.
+        // swatch: the preset's primary color and ground, shown in the theme menu and the welcome dialog
+        var presets = [
+            { id: 'warm', title: 'platform.theme.presets.warm', swatch: ['#e5451c', '#f5f1ea'] },
+            { id: 'blue', title: 'platform.theme.presets.blue', swatch: ['#237aa5', '#dbe4ec'] },
+            { id: 'gray', title: 'platform.theme.presets.gray', swatch: ['#465769', '#d9effa'] },
+            { id: 'green', title: 'platform.theme.presets.green', swatch: ['#0a7a2f', '#eef3ec'] },
+            { id: 'indigo', title: 'platform.theme.presets.indigo', swatch: ['#4a63e0', '#eaeaeb'] }
+        ];
+        var presetIds = presets.map(function (p) { return p.id; });
+        var defaultPreset = 'warm';
+        // the same names as the user profile settings, so a value means the same in both places
         var storageKey = 'VirtoCommerce.Platform.UI.Theme';
+        var presetStorageKey = 'VirtoCommerce.Platform.UI.ThemePreset';
         var fontsLinkId = 'vc-modern-fonts';
         var fontsHref = 'https://fonts.googleapis.com/css2?family=Geologica:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap';
         var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 
-        // The theme is a per-browser preference, so it is kept in localStorage rather than in the user profile.
-        // Storage can be unavailable (private mode, blocked site data); fall back to the default theme then.
-        function readTheme() {
-            var value;
+        // The theme and preset are kept in the user profile (see themeProfile.js) and cached in localStorage,
+        // so the sign-in page and the first paint use the last choice made in this browser.
+        // Storage can be unavailable (private mode, blocked site data); fall back to the defaults then.
+        function read(key) {
             try {
-                value = window.localStorage.getItem(storageKey);
+                return window.localStorage.getItem(key);
             } catch (e) {
-                value = null;
+                return null;
             }
+        }
+
+        function write(key, value) {
+            try {
+                window.localStorage.setItem(key, value);
+            } catch (e) {
+                // ignore: the choice still applies for this page load
+            }
+        }
+
+        function readTheme() {
+            var value = read(storageKey);
             // 'modern' was the value of the first preview build
             if (value === 'modern') {
                 value = 'light';
@@ -25,12 +50,9 @@ angular.module('platformWebApp')
             return themes.indexOf(value) >= 0 ? value : defaultTheme;
         }
 
-        function writeTheme(theme) {
-            try {
-                window.localStorage.setItem(storageKey, theme);
-            } catch (e) {
-                // ignore: the theme still applies for this page load
-            }
+        function readPreset() {
+            var value = read(presetStorageKey);
+            return presetIds.indexOf(value) >= 0 ? value : defaultPreset;
         }
 
         function ensureFonts() {
@@ -45,9 +67,22 @@ angular.module('platformWebApp')
             document.head.appendChild(link);
         }
 
+        // options.persist === false: the change comes from the user profile (or is a preview), don't save it back
+        function changed(options) {
+            $rootScope.$broadcast('platformWebApp.themeChanged', service.current, {
+                theme: service.current,
+                preset: service.preset,
+                persist: !options || options.persist !== false
+            });
+        }
+
         var service = {
             themes: themes,
+            presets: presets,
+            defaultTheme: defaultTheme,
+            defaultPreset: defaultPreset,
             current: readTheme(),
+            preset: readPreset(),
             isModern: function () {
                 return service.current !== 'classic';
             },
@@ -58,11 +93,23 @@ angular.module('platformWebApp')
             isLightModern: function () {
                 return service.isModern() && !service.isDark();
             },
+            isValidTheme: function (theme) {
+                return themes.indexOf(theme) >= 0;
+            },
+            isValidPreset: function (preset) {
+                return presetIds.indexOf(preset) >= 0;
+            },
             apply: function () {
                 var root = document.documentElement;
                 var isModern = service.isModern();
                 root.classList.toggle('vc-modern', isModern);
                 root.classList.toggle('vc-dark', isModern && service.isDark());
+                // the warm palette is the modern look's own; other presets override its colors
+                if (isModern && service.preset !== defaultPreset) {
+                    root.setAttribute('data-vc-preset', service.preset);
+                } else {
+                    root.removeAttribute('data-vc-preset');
+                }
                 if (isModern) {
                     ensureFonts();
                     themeAdapter.apply();
@@ -82,11 +129,26 @@ angular.module('platformWebApp')
                 var root = document.documentElement;
                 root.classList.toggle('vc-menu-open', open === undefined ? !root.classList.contains('vc-menu-open') : !!open);
             },
-            setTheme: function (theme) {
-                service.current = themes.indexOf(theme) >= 0 ? theme : defaultTheme;
-                writeTheme(service.current);
+            setTheme: function (theme, options) {
+                service.current = service.isValidTheme(theme) ? theme : defaultTheme;
+                write(storageKey, service.current);
                 service.apply();
-                $rootScope.$broadcast('platformWebApp.themeChanged', service.current);
+                changed(options);
+            },
+            setPreset: function (preset, options) {
+                service.preset = service.isValidPreset(preset) ? preset : defaultPreset;
+                write(presetStorageKey, service.preset);
+                service.apply();
+                changed(options);
+            },
+            // both at once (one change notification), e.g. when the user profile is loaded
+            setLook: function (theme, preset, options) {
+                service.current = service.isValidTheme(theme) ? theme : defaultTheme;
+                service.preset = service.isValidPreset(preset) ? preset : defaultPreset;
+                write(storageKey, service.current);
+                write(presetStorageKey, service.preset);
+                service.apply();
+                changed(options);
             }
         };
 

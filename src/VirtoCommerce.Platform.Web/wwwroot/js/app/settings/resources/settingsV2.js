@@ -6,6 +6,9 @@ angular.module('platformWebApp')
             saveGlobalValues: { url: 'api/platform/settings/v2/global/values', method: 'POST' },
             getTenantSchema: { url: 'api/platform/settings/v2/tenant/:tenantType/schema', method: 'GET', isArray: true },
             getTenantValues: { url: 'api/platform/settings/v2/tenant/:tenantType/:tenantId/values', method: 'GET' },
-            saveTenantValues: { url: 'api/platform/settings/v2/tenant/:tenantType/:tenantId/values', method: 'POST' }
+            saveTenantValues: { url: 'api/platform/settings/v2/tenant/:tenantType/:tenantId/values', method: 'POST' },
+            // the signed-in user's own (user profile) settings; no settings permission needed
+            getMeValues: { url: 'api/platform/settings/v2/me/values', method: 'GET' },
+            saveMeValues: { url: 'api/platform/settings/v2/me/values', method: 'POST' }
         });
     }]);

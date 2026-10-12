@@ -28,6 +28,30 @@
       "theme-system": "Følg systemet",
       "theme-classic": "Klassisk"
     },
+    "theme": {
+      "preset": "Farge",
+      "presets": {
+        "warm": "Varm",
+        "blue": "Blå",
+        "gray": "Grå",
+        "green": "Grønn",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Velg utseende",
+        "intro": "Velg en modus og en fargeforhåndsinnstilling. Du ser resultatet med en gang bak dette vinduet. Valget lagres i profilen din og følger deg til alle nettlesere.",
+        "mode": "Modus",
+        "preset": "Fargeforhåndsinnstilling",
+        "light-description": "Lyst og ryddig, for godt opplyste rom",
+        "dark-description": "Skånsomt for øynene i svakt lys",
+        "system-description": "Følger lys eller mørk innstilling på enheten",
+        "classic-description": "Det opprinnelige Virto Commerce-utseendet",
+        "classic-note": "Fargeforhåndsinnstillinger gjelder for lys og mørk modus.",
+        "hint": "Du kan endre dette når som helst fra temamenyen i toppfeltet.",
+        "apply": "Bruk",
+        "not-now": "Ikke nå"
+      }
+    },
     "search": {
       "placeholder": "Søk i meny, apper, innstillinger",
       "searching": "Søker…",
@@ -1220,6 +1244,18 @@
           "ShowMeridian": {
             "description": "Vis tidsmeridianindikator (AM eller PM)",
             "title": "Vis tidsmeridian"
+          },
+          "Theme": {
+            "title": "Tema",
+            "description": "Utseendet til back office: lys, mørk, som systemet eller klassisk"
+          },
+          "ThemePreset": {
+            "title": "Fargeforhåndsinnstilling",
+            "description": "Fargeforhåndsinnstilling for det moderne utseendet: varm, blå, grå, grønn eller indigo"
+          },
+          "ThemeSelected": {
+            "title": "Tema valgt",
+            "description": "Settes når brukeren har valgt et utseende; til da tilbys valget etter pålogging"
           }
         },
         "Cache": {

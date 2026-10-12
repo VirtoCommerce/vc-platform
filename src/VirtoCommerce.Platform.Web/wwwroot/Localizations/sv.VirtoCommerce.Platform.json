@@ -28,6 +28,30 @@
       "theme-system": "Följ systemet",
       "theme-classic": "Klassiskt"
     },
+    "theme": {
+      "preset": "Färg",
+      "presets": {
+        "warm": "Varm",
+        "blue": "Blå",
+        "gray": "Grå",
+        "green": "Grön",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Välj utseende",
+        "intro": "Välj ett läge och en färgförinställning. Du ser resultatet direkt bakom det här fönstret. Ditt val sparas i din profil och följer med dig till alla webbläsare.",
+        "mode": "Läge",
+        "preset": "Färgförinställning",
+        "light-description": "Ljust och rent, för väl upplysta rum",
+        "dark-description": "Skonsamt för ögonen i svagt ljus",
+        "system-description": "Följer enhetens ljusa eller mörka inställning",
+        "classic-description": "Det ursprungliga Virto Commerce-utseendet",
+        "classic-note": "Färgförinställningar gäller för ljust och mörkt läge.",
+        "hint": "Du kan ändra det när som helst i temamenyn i sidhuvudet.",
+        "apply": "Använd",
+        "not-now": "Inte nu"
+      }
+    },
     "search": {
       "placeholder": "Sök i meny, appar, inställningar",
       "searching": "Söker…",
@@ -1220,6 +1244,18 @@
           "ShowMeridian": {
             "description": "Visa tidsmeridianindikator (AM eller PM)",
             "title": "Visa tidsmeridian"
+          },
+          "Theme": {
+            "title": "Tema",
+            "description": "Back officens utseende: ljust, mörkt, som systemet eller klassiskt"
+          },
+          "ThemePreset": {
+            "title": "Färgförinställning",
+            "description": "Färgförinställning för det moderna utseendet: varm, blå, grå, grön eller indigo"
+          },
+          "ThemeSelected": {
+            "title": "Tema valt",
+            "description": "Sätts när användaren har valt ett utseende; tills dess erbjuds valet efter inloggning"
           }
         },
         "Cache": {

@@ -28,6 +28,30 @@
       "theme-system": "Systemeinstellung",
       "theme-classic": "Klassisch"
     },
+    "theme": {
+      "preset": "Farbe",
+      "presets": {
+        "warm": "Warm",
+        "blue": "Blau",
+        "gray": "Grau",
+        "green": "Grün",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Wählen Sie Ihr Design",
+        "intro": "Wählen Sie einen Modus und eine Farbvorlage. Das Ergebnis sehen Sie sofort hinter diesem Fenster. Ihre Wahl wird in Ihrem Profil gespeichert und gilt in jedem Browser.",
+        "mode": "Modus",
+        "preset": "Farbvorlage",
+        "light-description": "Hell und klar, für gut beleuchtete Räume",
+        "dark-description": "Schont die Augen bei wenig Licht",
+        "system-description": "Folgt der Hell- oder Dunkel-Einstellung Ihres Geräts",
+        "classic-description": "Das ursprüngliche Virto Commerce-Design",
+        "classic-note": "Farbvorlagen gelten für den hellen und den dunklen Modus.",
+        "hint": "Sie können das jederzeit über das Design-Menü in der Kopfzeile ändern.",
+        "apply": "Übernehmen",
+        "not-now": "Nicht jetzt"
+      }
+    },
     "search": {
       "placeholder": "Menü, Apps, Einstellungen durchsuchen",
       "searching": "Suche läuft…",
@@ -1221,6 +1245,18 @@
           "ShowMeridian": {
             "description": "Zeitmeridian-Anzeige (AM oder PM) anzeigen",
             "title": "Zeitmeridian anzeigen"
+          },
+          "Theme": {
+            "title": "Design",
+            "description": "Aussehen des Back Office: hell, dunkel, wie das System oder klassisch"
+          },
+          "ThemePreset": {
+            "title": "Farbvorlage",
+            "description": "Farbvorlage des modernen Designs: warm, blau, grau, grün oder indigo"
+          },
+          "ThemeSelected": {
+            "title": "Design gewählt",
+            "description": "Wird gesetzt, sobald der Benutzer ein Design gewählt hat; bis dahin bietet das Back Office die Auswahl nach der Anmeldung an"
           }
         },
         "Cache": {

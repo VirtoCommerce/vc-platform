@@ -21,6 +21,9 @@ angular.module('platformWebApp').directive('vaHeader', ["$state", '$document', '
                     { id: 'system', icon: 'fas fa-desktop', title: 'platform.menu.theme-system' },
                     { id: 'classic', icon: 'fas fa-history', title: 'platform.menu.theme-classic' }
                 ];
+                // the modern modes first, then the color presets, then the classic look at the bottom
+                scope.modernThemes = scope.themeOptions.filter(function (theme) { return theme.id !== 'classic'; });
+                scope.classicTheme = _.findWhere(scope.themeOptions, { id: 'classic' });
                 scope.themeMenuOpen = false;
 
                 function closeThemeMenu() {
@@ -42,6 +45,10 @@ angular.module('platformWebApp').directive('vaHeader', ["$state", '$document', '
 
                 scope.selectTheme = function (theme) {
                     themeService.setTheme(theme.id);
+                };
+
+                scope.selectPreset = function (preset) {
+                    themeService.setPreset(preset.id);
                 };
 
                 scope.toggleMobileMenu = function (event) {

@@ -28,6 +28,30 @@
       "theme-system": "跟随系统",
       "theme-classic": "经典"
     },
+    "theme": {
+      "preset": "颜色",
+      "presets": {
+        "warm": "暖色",
+        "blue": "蓝色",
+        "gray": "灰色",
+        "green": "绿色",
+        "indigo": "靛蓝"
+      },
+      "welcome": {
+        "title": "选择外观",
+        "intro": "请选择一种模式和配色方案。效果会立即显示在此窗口后方。您的选择将保存到个人资料中，并在所有浏览器中生效。",
+        "mode": "模式",
+        "preset": "配色方案",
+        "light-description": "明亮清爽，适合光线充足的环境",
+        "dark-description": "在弱光环境下更护眼",
+        "system-description": "跟随设备的浅色或深色设置",
+        "classic-description": "Virto Commerce 的经典外观",
+        "classic-note": "配色方案适用于浅色和深色模式。",
+        "hint": "您可以随时通过页眉中的主题菜单进行更改。",
+        "apply": "应用",
+        "not-now": "暂不"
+      }
+    },
     "search": {
       "placeholder": "搜索菜单、应用、设置",
       "searching": "正在搜索…",
@@ -1219,6 +1243,18 @@
           "ShowMeridian": {
             "description": "显示时间午线指示器（上午或下午）",
             "title": "显示时间午线"
+          },
+          "Theme": {
+            "title": "主题",
+            "description": "后台外观：浅色、深色、跟随系统或经典"
+          },
+          "ThemePreset": {
+            "title": "配色方案",
+            "description": "现代外观的配色方案：暖色、蓝色、灰色、绿色或靛蓝"
+          },
+          "ThemeSelected": {
+            "title": "已选择主题",
+            "description": "用户选择外观后设置；在此之前，登录后会提示用户进行选择"
           }
         },
         "Cache": {

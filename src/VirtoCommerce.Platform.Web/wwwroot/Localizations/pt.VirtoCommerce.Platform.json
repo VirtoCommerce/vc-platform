@@ -28,6 +28,30 @@
       "theme-system": "Igual ao sistema",
       "theme-classic": "Clássico"
     },
+    "theme": {
+      "preset": "Cor",
+      "presets": {
+        "warm": "Quente",
+        "blue": "Azul",
+        "gray": "Cinza",
+        "green": "Verde",
+        "indigo": "Índigo"
+      },
+      "welcome": {
+        "title": "Escolha sua aparência",
+        "intro": "Escolha um modo e uma predefinição de cor. Você vê o resultado na hora, atrás desta janela. Sua escolha é salva no seu perfil e acompanha você em qualquer navegador.",
+        "mode": "Modo",
+        "preset": "Predefinição de cor",
+        "light-description": "Claro e limpo, para ambientes bem iluminados",
+        "dark-description": "Confortável para os olhos com pouca luz",
+        "system-description": "Segue a configuração clara ou escura do seu dispositivo",
+        "classic-description": "A aparência original do Virto Commerce",
+        "classic-note": "As predefinições de cor valem para os modos claro e escuro.",
+        "hint": "Você pode mudar isso a qualquer momento no menu de tema do cabeçalho.",
+        "apply": "Aplicar",
+        "not-now": "Agora não"
+      }
+    },
     "search": {
       "placeholder": "Pesquisar menu, aplicativos, configurações",
       "searching": "Pesquisando…",
@@ -1219,6 +1243,18 @@
           "ShowMeridian": {
             "description": "Mostrar indicador de meridiano de tempo (AM ou PM)",
             "title": "Mostrar meridiano de tempo"
+          },
+          "Theme": {
+            "title": "Tema",
+            "description": "Aparência do back office: claro, escuro, conforme o sistema ou clássico"
+          },
+          "ThemePreset": {
+            "title": "Predefinição de cor",
+            "description": "Predefinição de cor da aparência moderna: quente, azul, cinza, verde ou índigo"
+          },
+          "ThemeSelected": {
+            "title": "Tema escolhido",
+            "description": "Definido quando o usuário escolhe uma aparência; até lá, o back office oferece a escolha após o login"
           }
         },
         "Cache": {

@@ -28,6 +28,30 @@
       "theme-system": "Come il sistema",
       "theme-classic": "Classico"
     },
+    "theme": {
+      "preset": "Colore",
+      "presets": {
+        "warm": "Caldo",
+        "blue": "Blu",
+        "gray": "Grigio",
+        "green": "Verde",
+        "indigo": "Indaco"
+      },
+      "welcome": {
+        "title": "Scegli l'aspetto",
+        "intro": "Scegli una modalità e una palette di colori. Vedi subito il risultato dietro questa finestra. La scelta viene salvata nel tuo profilo e ti segue in ogni browser.",
+        "mode": "Modalità",
+        "preset": "Palette di colori",
+        "light-description": "Chiaro e pulito, per ambienti luminosi",
+        "dark-description": "Riposante per gli occhi con poca luce",
+        "system-description": "Segue la modalità chiara o scura del dispositivo",
+        "classic-description": "L'aspetto originale di Virto Commerce",
+        "classic-note": "Le palette di colori valgono per le modalità chiara e scura.",
+        "hint": "Puoi cambiarlo in qualsiasi momento dal menu del tema nell'intestazione.",
+        "apply": "Applica",
+        "not-now": "Non ora"
+      }
+    },
     "search": {
       "placeholder": "Cerca menu, app, impostazioni",
       "searching": "Ricerca…",
@@ -1219,6 +1243,18 @@
           "ShowMeridian": {
             "description": "Mostra l'indicatore del meridiano del tempo (AM o PM)",
             "title": "Mostra meridiano del tempo"
+          },
+          "Theme": {
+            "title": "Tema",
+            "description": "Aspetto del back office: chiaro, scuro, come il sistema o classico"
+          },
+          "ThemePreset": {
+            "title": "Palette di colori",
+            "description": "Palette dell'aspetto moderno: caldo, blu, grigio, verde o indaco"
+          },
+          "ThemeSelected": {
+            "title": "Tema scelto",
+            "description": "Impostato quando l'utente ha scelto un aspetto; fino ad allora il back office propone la scelta dopo l'accesso"
           }
         },
         "Cache": {

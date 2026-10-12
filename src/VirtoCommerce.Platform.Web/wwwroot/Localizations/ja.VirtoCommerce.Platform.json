@@ -28,6 +28,30 @@
       "theme-system": "システム設定に合わせる",
       "theme-classic": "クラシック"
     },
+    "theme": {
+      "preset": "カラー",
+      "presets": {
+        "warm": "ウォーム",
+        "blue": "ブルー",
+        "gray": "グレー",
+        "green": "グリーン",
+        "indigo": "インディゴ"
+      },
+      "welcome": {
+        "title": "外観を選択",
+        "intro": "モードとカラープリセットを選んでください。結果はこのウィンドウの背後ですぐに確認できます。選択はプロファイルに保存され、どのブラウザーでも適用されます。",
+        "mode": "モード",
+        "preset": "カラープリセット",
+        "light-description": "明るい場所に適した、明るくすっきりした表示",
+        "dark-description": "暗い場所でも目にやさしい表示",
+        "system-description": "デバイスのライト/ダーク設定に従います",
+        "classic-description": "従来の Virto Commerce の外観",
+        "classic-note": "カラープリセットはライトとダークの両モードに適用されます。",
+        "hint": "ヘッダーのテーマメニューからいつでも変更できます。",
+        "apply": "適用",
+        "not-now": "後で"
+      }
+    },
     "search": {
       "placeholder": "メニュー、アプリ、設定を検索",
       "searching": "検索中…",
@@ -1219,6 +1243,18 @@
           "ShowMeridian": {
             "description": "時間の午前/午後表示を表示",
             "title": "時間の午前/午後表示"
+          },
+          "Theme": {
+            "title": "テーマ",
+            "description": "バックオフィスの外観: ライト、ダーク、システムに合わせる、クラシック"
+          },
+          "ThemePreset": {
+            "title": "カラープリセット",
+            "description": "モダンな外観のカラープリセット: ウォーム、ブルー、グレー、グリーン、インディゴ"
+          },
+          "ThemeSelected": {
+            "title": "テーマ選択済み",
+            "description": "ユーザーが外観を選ぶと設定されます。それまではサインイン後に選択画面が表示されます"
           }
         },
         "Cache": {

@@ -18,7 +18,30 @@
                 <i class="fas fa-adjust" aria-hidden="true"></i>
             </button>
             <ul class="dropdown-menu theme-menu" role="menu">
-                <li ng-repeat="theme in themeOptions" role="none">
+                <!-- modes of the modern look -->
+                <li ng-repeat="theme in modernThemes" role="none">
+                    <button type="button" role="menuitemradio" aria-checked="{{themeService.current === theme.id}}" class="dropdown-menu__item theme-menu__item"
+                            ng-class="{'theme-menu__item--active': themeService.current === theme.id}" ng-click="selectTheme(theme)">
+                        <i class="theme-menu__icon" ng-class="theme.icon" aria-hidden="true"></i>
+                        <span>{{theme.title | translate}}</span>
+                        <i class="theme-menu__check fas fa-check" ng-if="themeService.current === theme.id" aria-hidden="true"></i>
+                    </button>
+                </li>
+                <!-- color presets: the modern look only -->
+                <li class="theme-menu__group-start theme-menu__heading" role="presentation" ng-if="themeService.isModern()">{{'platform.theme.preset' | translate}}</li>
+                <li ng-repeat="preset in themeService.presets" role="none" ng-if="themeService.isModern()">
+                    <button type="button" role="menuitemradio" aria-checked="{{themeService.preset === preset.id}}" class="dropdown-menu__item theme-menu__item"
+                            ng-class="{'theme-menu__item--active': themeService.preset === preset.id}" ng-click="selectPreset(preset)">
+                        <span class="theme-swatch" aria-hidden="true">
+                            <span class="theme-swatch__a" ng-style="{ 'background-color': preset.swatch[0] }"></span>
+                            <span class="theme-swatch__b" ng-style="{ 'background-color': preset.swatch[1] }"></span>
+                        </span>
+                        <span>{{preset.title | translate}}</span>
+                        <i class="theme-menu__check fas fa-check" ng-if="themeService.preset === preset.id" aria-hidden="true"></i>
+                    </button>
+                </li>
+                <!-- the classic look, set apart at the bottom -->
+                <li class="theme-menu__group-start" role="none" ng-repeat="theme in [classicTheme]">
                     <button type="button" role="menuitemradio" aria-checked="{{themeService.current === theme.id}}" class="dropdown-menu__item theme-menu__item"
                             ng-class="{'theme-menu__item--active': themeService.current === theme.id}" ng-click="selectTheme(theme)">
                         <i class="theme-menu__icon" ng-class="theme.icon" aria-hidden="true"></i>

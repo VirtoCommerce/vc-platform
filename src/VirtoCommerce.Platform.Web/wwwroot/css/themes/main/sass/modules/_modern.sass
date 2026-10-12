@@ -895,14 +895,23 @@ $plateRadius: 20px
     z-index: 600
     li
       list-style: none
-    // same row style for every option (a generic ".dropdown-menu li:last-child" rule tinted the last one);
-    // Classic is set apart by a divider
+    // same row style for every option (a generic ".dropdown-menu li:last-child" rule tinted the last one)
     li:last-child
       background: none
+      // a vendor ".dropdown-menu li:last-child" rule sets padding with !important
+      padding: 0 !important
+    // Classic and the color presets are set apart by a divider
+    li.theme-menu__group-start
       border-top: 1px solid var(--vc-line-soft, #{$baseBrd})
       margin-top: 4px
-      // a vendor ".dropdown-menu li:last-child" rule sets padding with !important
-      padding: 4px 0 0 !important
+      padding-top: 4px
+  .theme-menu__heading
+    color: var(--vc-faint, #838d9a)
+    font-size: 10.5px
+    font-weight: 700
+    letter-spacing: .1em
+    padding: 8px 12px 4px !important
+    text-transform: uppercase
   .theme-menu__item
     align-items: center
     background: none
@@ -918,6 +927,25 @@ $plateRadius: 20px
     width: 16px
   .theme-menu__check
     margin-left: auto
+
+/* A color preset's swatch: its primary color over its ground (theme menu, welcome dialog) */
+.theme-swatch
+  border-radius: 9999px
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .12)
+  display: inline-flex
+  flex: none
+  height: 16px
+  overflow: hidden
+  transform: rotate(-45deg)
+  width: 16px
+  &__a,
+  &__b
+    display: block
+    height: 100%
+    width: 50%
+  &--large
+    height: 28px
+    width: 28px
 
 // Dark mode syntax colors for code editors
 .vc-modern.vc-dark .CodeMirror
