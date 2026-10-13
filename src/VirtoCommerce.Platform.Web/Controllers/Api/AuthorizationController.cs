@@ -220,9 +220,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
 
-                var twoFactorSignInHandler = _twoFactorSignInHandlers.LastOrDefault();
-                if (twoFactorSignInHandler != null && context.SignInResult.Succeeded && await _signInManager.IsTwoFactorEnabledAsync(user))
+                if (context.SignInResult.Succeeded && await _signInManager.IsTwoFactorEnabledAsync(user))
                 {
+                    var twoFactorSignInHandler = _twoFactorSignInHandlers.LastOrDefault();
+                    if (twoFactorSignInHandler == null)
+                    {
+                        await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                            SignInFailureReason.TwoFactorUnavailable, openIdConnectRequest.ClientId);
+                        await delayedResponse.FailAsync();
+                        return BadRequest(SecurityErrorDescriber.TwoFactorUnavailable());
+                    }
+
                     var challengeResult = await twoFactorSignInHandler.ChallengeAsync(context);
                     await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
                         context.FailureReason ?? SignInFailureReason.RequiresTwoFactor, openIdConnectRequest.ClientId);
