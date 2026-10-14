@@ -74,7 +74,7 @@
                           'fa-arrow-down': tile.delta.direction === 'down',
                           'fa-minus': tile.delta.direction === 'flat'}"></i>
             <span ng-if="tile.delta.percent !== undefined">{{ tile.delta.percent }}%</span>
-            <span ng-if="tile.delta.absolute !== undefined">+{{ tile.delta.absolute | number:0 }}</span>
+            <span ng-if="tile.delta.absolute !== undefined">{{ tile.delta.direction === 'down' ? '−' : '+' }}{{ tile.delta.absolute | number:0 }}</span>
           </div>
         </div>
       </div>
