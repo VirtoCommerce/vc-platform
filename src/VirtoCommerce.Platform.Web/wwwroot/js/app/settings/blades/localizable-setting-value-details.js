@@ -40,7 +40,7 @@ angular.module('platformWebApp')
             }
 
             blade.onClose = function (closeCallback) {
-                bladeNavigationService.showConfirmationIfNeeded(isDirty(), $scope.isValid, blade, $scope.saveChanges, closeCallback,
+                bladeNavigationService.showConfirmationIfNeeded(isDirty(), $scope.isValid, blade, saveChanges, closeCallback,
                     "platform.dialogs.localizable-setting-value-save.title",
                     "platform.dialogs.localizable-setting-value-save.message");
             };
