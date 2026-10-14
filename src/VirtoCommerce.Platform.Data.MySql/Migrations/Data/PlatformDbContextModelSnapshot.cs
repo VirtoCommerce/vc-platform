@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Data
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.9")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -288,6 +288,9 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Data
                         .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ObjectId", "CreatedDate")
+                        .HasDatabaseName("IX_OperationLog_ObjectId_CreatedDate");
 
                     b.HasIndex("ObjectType", "ObjectId")
                         .HasDatabaseName("IX_OperationLog_ObjectType_ObjectId");

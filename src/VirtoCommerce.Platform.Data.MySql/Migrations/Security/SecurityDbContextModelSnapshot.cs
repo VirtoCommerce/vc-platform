@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -286,7 +286,6 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ApplicationType")
@@ -352,11 +351,9 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ApplicationId")
-                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ConcurrencyToken")
@@ -396,7 +393,6 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ConcurrencyToken")
@@ -438,15 +434,12 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ApplicationId")
-                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("AuthorizationId")
-                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ConcurrencyToken")
