@@ -1,10 +1,12 @@
 angular.module('platformWebApp')
     .factory('platformWebApp.twoFactorSignInState', ['$state', ($state) => {
         var isTwoFactorSignInState = (state) => !!(state && state.data && state.data.twoFactorSignIn);
+        var get = () => _.find($state.get(), isTwoFactorSignInState);
 
         return {
-            get: () => _.find($state.get(), isTwoFactorSignInState),
-            is: isTwoFactorSignInState
+            get: get,
+            is: isTwoFactorSignInState,
+            go: (params) => $state.go(get().name, params)
         };
     }])
     .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
@@ -13,102 +15,7 @@ angular.module('platformWebApp')
                 url: '/login',
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 data: { allowAnonymous: true },
-                controller: [
-                    '$scope', '$state', '$window', '$translate', '$log', 'platformWebApp.authService',
-                    'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
-                    'platformWebApp.twoFactorSignInState',
-                    function ($scope, $state, $window, $translate, $log, authService, externalSignInService, loginResources,
-                        externalSignInStorage, twoFactorSignInState) {
-                        $scope.loginProviders = [];
-                        $scope.showPassword = false;
-                        $scope.showPlainLogin = true;
-
-                        loginResources.getLoginTypes({}, function (loginTypes) {
-                            var passwordLogin = _.find(loginTypes, function (loginTypeFilter) {
-                                return loginTypeFilter.authenticationType === 'Password';
-                            });
-                            $scope.showPlainLogin = !!passwordLogin && passwordLogin.enabled;
-
-                            externalSignInService.getProviders().then(
-                                function (response) {
-                                    // compare external providers with the lists of login types to determines which ones has a template (password, azureAD)
-                                    // and which ones can be activated by navigating the auth endpoing directly
-                                    _.each(response.data, function (provider) {
-                                        var type = _.find(loginTypes, function (enabledLoginType) {
-                                            return enabledLoginType.authenticationType === provider.authenticationType && enabledLoginType.hasLoginForm;
-                                        });
-                                        provider.hasTemplate = !!type;
-                                    });
-                                    $scope.loginProviders = response.data;
-                                });
-                        });
-
-                        $scope.user = {};
-                        $scope.authError = null;
-                        $scope.authReason = false;
-                        $scope.loginProgress = false;
-
-                        $scope.externalLogin = function (provider) {
-                            // set external signIn data
-                            var signInData = {
-                                providerType: provider.authenticationType
-                            };
-                            externalSignInStorage.set(signInData);
-
-                            var url = 'externalsignin?authenticationType=' + provider.authenticationType;
-                            $window.location.href = url;
-                        };
-
-                        $scope.ok = function () {
-                            // Clear any previous security errors
-                            $scope.authError = null;
-                            $scope.loginProgress = true;
-                            // Try to login
-                            authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
-                                function (result) {
-                                    $scope.loginProgress = false;
-                                    var twoFactorState = twoFactorSignInState.get();
-                                    if (result && result.requiresTwoFactor && twoFactorState) {
-                                        $state.go(twoFactorState.name, { rememberMe: $scope.user.remember });
-                                    } else if (!result || !result.succeeded) {
-                                        $scope.authError = resolveSignInError(result);
-                                    }
-                                },
-                                function (response) {
-                                    $scope.loginProgress = false;
-                                    $scope.authError = resolveTechnicalError(response);
-                                });
-                        };
-
-                        function resolveSignInError(result) {
-                            if (result && result.isLockedOut) {
-                                return $translate.instant('platform.blades.login.errors.account-locked');
-                            }
-                            if (result && result.requiresTwoFactor) {
-                                return $translate.instant('platform.blades.login.errors.two-factor-unavailable');
-                            }
-                            return $translate.instant('platform.blades.login.errors.login-failed');
-                        }
-
-                        function resolveTechnicalError(response) {
-                            // Do not expose raw exception details to the user — log them instead and show a generic, localized message.
-                            $log.error('Login request failed', response);
-
-                            var status = response && response.status;
-                            if (status === 401) {
-                                return $translate.instant('platform.blades.login.errors.login-failed');
-                            }
-                            if (status > 0) {
-                                return $translate.instant('platform.blades.login.errors.technical-error', { code: status });
-                            }
-                            return $translate.instant('platform.blades.login.errors.unknown-error');
-                        }
-
-                        $scope.togglePassword = function () {
-                            $scope.showPassword = !$scope.showPassword;
-                        };
-                    }
-                ]
+                controller: 'platformWebApp.loginController'
             });
 
         $stateProvider.state('forgotpasswordDialog',
@@ -239,6 +146,101 @@ angular.module('platformWebApp')
                 }]
             });
     }])
+
+    .controller('platformWebApp.loginController', [
+        '$scope', '$window', '$translate', '$log', 'platformWebApp.authService', 'platformWebApp.externalSignInService',
+        'platformWebApp.login', 'platformWebApp.externalSignInStorage', 'platformWebApp.twoFactorSignInState',
+        function ($scope, $window, $translate, $log, authService, externalSignInService, loginResources, externalSignInStorage,
+            twoFactorSignInState) {
+            $scope.loginProviders = [];
+            $scope.showPassword = false;
+            $scope.showPlainLogin = true;
+
+            loginResources.getLoginTypes({}, function (loginTypes) {
+                var passwordLogin = _.find(loginTypes, function (loginTypeFilter) {
+                    return loginTypeFilter.authenticationType === 'Password';
+                });
+                $scope.showPlainLogin = !!passwordLogin && passwordLogin.enabled;
+
+                externalSignInService.getProviders().then(
+                    function (response) {
+                        // compare external providers with the lists of login types to determines which ones has a template (password, azureAD)
+                        // and which ones can be activated by navigating the auth endpoing directly
+                        _.each(response.data, function (provider) {
+                            var type = _.find(loginTypes, function (enabledLoginType) {
+                                return enabledLoginType.authenticationType === provider.authenticationType && enabledLoginType.hasLoginForm;
+                            });
+                            provider.hasTemplate = !!type;
+                        });
+                        $scope.loginProviders = response.data;
+                    });
+            });
+
+            $scope.user = {};
+            $scope.authError = null;
+            $scope.authReason = false;
+            $scope.loginProgress = false;
+
+            $scope.externalLogin = function (provider) {
+                // set external signIn data
+                var signInData = {
+                    providerType: provider.authenticationType
+                };
+                externalSignInStorage.set(signInData);
+
+                var url = 'externalsignin?authenticationType=' + provider.authenticationType;
+                $window.location.href = url;
+            };
+
+            $scope.ok = function () {
+                // Clear any previous security errors
+                $scope.authError = null;
+                $scope.loginProgress = true;
+                // Try to login
+                authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
+                    function (result) {
+                        $scope.loginProgress = false;
+                        if (result && result.requiresTwoFactor && twoFactorSignInState.get()) {
+                            twoFactorSignInState.go({ rememberMe: $scope.user.remember });
+                        } else if (!result || !result.succeeded) {
+                            $scope.authError = resolveSignInError(result);
+                        }
+                    },
+                    function (response) {
+                        $scope.loginProgress = false;
+                        $scope.authError = resolveTechnicalError(response);
+                    });
+            };
+
+            function resolveSignInError(result) {
+                if (result && result.isLockedOut) {
+                    return $translate.instant('platform.blades.login.errors.account-locked');
+                }
+                if (result && result.requiresTwoFactor) {
+                    return $translate.instant('platform.blades.login.errors.two-factor-unavailable');
+                }
+                return $translate.instant('platform.blades.login.errors.login-failed');
+            }
+
+            function resolveTechnicalError(response) {
+                // Do not expose raw exception details to the user — log them instead and show a generic, localized message.
+                $log.error('Login request failed', response);
+
+                var status = response && response.status;
+                if (status === 401) {
+                    return $translate.instant('platform.blades.login.errors.login-failed');
+                }
+                if (status > 0) {
+                    return $translate.instant('platform.blades.login.errors.technical-error', { code: status });
+                }
+                return $translate.instant('platform.blades.login.errors.unknown-error');
+            }
+
+            $scope.togglePassword = function () {
+                $scope.showPassword = !$scope.showPassword;
+            };
+        }
+    ])
 
     .controller('platformWebApp.changePasswordDialog', ['$rootScope', '$state', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($rootScope, $state, $scope, $stateParams, accounts, authService, passwordValidationService) {
         if (!authService.isAuthenticated) {
