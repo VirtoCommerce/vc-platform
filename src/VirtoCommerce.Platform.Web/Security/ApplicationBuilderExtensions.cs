@@ -1,19 +1,18 @@
 using System.Linq;
-using System.Threading;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
-using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
-using VirtoCommerce.Platform.Security.Handlers;
-using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Web.Security
@@ -46,6 +45,20 @@ namespace VirtoCommerce.Platform.Web.Security
             appBuilder.RegisterEventHandler<UserSignInAttemptEvent, LogUserSignInEventHandler>();
 
             appBuilder.RegisterEventHandler<UserChangedEvent, RevokeUserTokenEventHandler>();
+
+            return appBuilder;
+        }
+
+        public static IApplicationBuilder UseTwoFactorSignInManagerCheck(this IApplicationBuilder appBuilder, ILogger logger)
+        {
+            using var scope = appBuilder.ApplicationServices.CreateScope();
+
+            var policyCount = scope.ServiceProvider.GetServices<ITwoFactorPolicy>().Count();
+            if (policyCount > 0 && scope.ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>() is not CustomSignInManager)
+            {
+                logger.LogError("Two-factor sign-in is not enforced: {PolicyCount} ITwoFactorPolicy implementation(s) are registered, but SignInManager<ApplicationUser> does not derive from CustomSignInManager.",
+                    policyCount);
+            }
 
             return appBuilder;
         }

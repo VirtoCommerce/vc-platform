@@ -374,6 +374,52 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
+    public async Task SearchAsync_AwaitingSecondFactor_FindsOrLeavesOutPendingAttempts()
+    {
+        var service = CreateService(
+            Row("pending", succeeded: false, failureReason: SignInFailureReason.RequiresTwoFactor),
+            Row("bad", succeeded: false, failureReason: SignInFailureReason.InvalidPassword),
+            Row("ok", succeeded: true));
+
+        var pending = await service.SearchAsync(new UserSignInLogSearchCriteria { AwaitingSecondFactor = true, Take = 20 });
+        var completed = await service.SearchAsync(new UserSignInLogSearchCriteria { AwaitingSecondFactor = false, Take = 20 });
+
+        pending.Results.Select(x => x.Id).Should().Equal("pending");
+        completed.Results.Select(x => x.Id).Should().BeEquivalentTo("bad", "ok");
+    }
+
+    [Fact]
+    public async Task GetStats_SignInsAndByStore_MatchWhatTheirDrillDownsReturn()
+    {
+        var at = new DateTime(2026, 9, 15, 11, 0, 0, DateTimeKind.Utc);
+        var service = CreateService(
+            Row("password-step", succeeded: false, failureReason: SignInFailureReason.RequiresTwoFactor, storeId: "store-1", createdDate: at.AddMinutes(1)),
+            Row("code-step", succeeded: true, storeId: "store-1", createdDate: at.AddMinutes(1)),
+            Row("wrong-password", succeeded: false, failureReason: SignInFailureReason.InvalidPassword, createdDate: at.AddMinutes(2)));
+        var window = new UserSignInLogSearchCriteria { StartDate = at, EndDate = at.AddMinutes(5) };
+
+        var stats = await service.GetStats(window);
+        var all = await service.SearchAsync(new UserSignInLogSearchCriteria
+        {
+            StartDate = window.StartDate,
+            EndDate = window.EndDate,
+            AwaitingSecondFactor = false,
+            Take = 0,
+        });
+        var byStore = await service.SearchAsync(new UserSignInLogSearchCriteria
+        {
+            StartDate = window.StartDate,
+            EndDate = window.EndDate,
+            StoreId = "store-1",
+            AwaitingSecondFactor = false,
+            Take = 0,
+        });
+
+        all.TotalCount.Should().Be(stats.TotalCount);
+        byStore.TotalCount.Should().Be(stats.SignInsByStore.Single(x => x.Key == "store-1").Count);
+    }
+
+    [Fact]
     public async Task GetStatsAsync_CountsTheSameLengthWindowImmediatelyBefore()
     {
         var service = CreateService(

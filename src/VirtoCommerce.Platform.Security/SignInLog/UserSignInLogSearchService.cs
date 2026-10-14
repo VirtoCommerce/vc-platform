@@ -29,11 +29,14 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     private static readonly Expression<Func<UserSignInLogEntity, bool>> ImpersonationSession =
         x => x.SignInType == SignInType.Impersonation && x.Succeeded;
 
-    private static readonly Expression<Func<UserSignInLogEntity, bool>> FailedAttempt =
-        x => !x.Succeeded && x.FailureReason != SignInFailureReason.RequiresTwoFactor;
+    private static readonly Expression<Func<UserSignInLogEntity, bool>> AwaitingSecondFactorAttempt =
+        x => !x.Succeeded && x.FailureReason == SignInFailureReason.RequiresTwoFactor;
 
     private static readonly Expression<Func<UserSignInLogEntity, bool>> CompletedAttempt =
         x => x.Succeeded || x.FailureReason != SignInFailureReason.RequiresTwoFactor;
+
+    private static readonly Expression<Func<UserSignInLogEntity, bool>> FailedAttempt =
+        x => !x.Succeeded && x.FailureReason != SignInFailureReason.RequiresTwoFactor;
 
     private readonly Func<ISecurityRepository> _repositoryFactory;
     private readonly ISettingsManager _settingsManager;
@@ -317,6 +320,15 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         else if (criteria.Succeeded == false)
         {
             query = query.Where(FailedAttempt);
+        }
+
+        if (criteria.AwaitingSecondFactor == true)
+        {
+            query = query.Where(AwaitingSecondFactorAttempt);
+        }
+        else if (criteria.AwaitingSecondFactor == false)
+        {
+            query = query.Where(CompletedAttempt);
         }
 
         if (!criteria.SignInTypes.IsNullOrEmpty())

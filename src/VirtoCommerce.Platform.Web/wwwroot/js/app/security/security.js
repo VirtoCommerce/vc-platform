@@ -1,5 +1,12 @@
 angular.module('platformWebApp')
-    .constant('platformWebApp.twoFactorState', 'twoFactorDialog')
+    .factory('platformWebApp.twoFactorSignInState', ['$state', ($state) => {
+        var isTwoFactorSignInState = (state) => !!(state && state.data && state.data.twoFactorSignIn);
+
+        return {
+            get: () => _.find($state.get(), isTwoFactorSignInState),
+            is: isTwoFactorSignInState
+        };
+    }])
     .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
         $stateProvider.state('loginDialog',
             {
@@ -9,9 +16,9 @@ angular.module('platformWebApp')
                 controller: [
                     '$scope', '$state', '$window', '$translate', '$log', 'platformWebApp.authService',
                     'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
-                    'platformWebApp.twoFactorState',
+                    'platformWebApp.twoFactorSignInState',
                     function ($scope, $state, $window, $translate, $log, authService, externalSignInService, loginResources,
-                        externalSignInStorage, twoFactorState) {
+                        externalSignInStorage, twoFactorSignInState) {
                         $scope.loginProviders = [];
                         $scope.showPassword = false;
                         $scope.showPlainLogin = true;
@@ -60,8 +67,9 @@ angular.module('platformWebApp')
                             authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
                                 function (result) {
                                     $scope.loginProgress = false;
-                                    if (result && result.requiresTwoFactor && $state.get(twoFactorState)) {
-                                        $state.go(twoFactorState, { rememberMe: $scope.user.remember });
+                                    var twoFactorState = twoFactorSignInState.get();
+                                    if (result && result.requiresTwoFactor && twoFactorState) {
+                                        $state.go(twoFactorState.name, { rememberMe: $scope.user.remember });
                                     } else if (!result || !result.succeeded) {
                                         $scope.authError = resolveSignInError(result);
                                     }

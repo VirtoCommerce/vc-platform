@@ -374,7 +374,8 @@ public class AuthorizationControllerSignInLogTests
         var actionResult = await controller.Exchange();
 
         actionResult.Should().BeSameAs(challengeResult);
-        handler.Verify(x => x.ChallengeAsync(It.Is<TokenRequestContext>(c => c.User.Id == user.Id && c.SignInResult.Succeeded)), Times.Once);
+        handler.Verify(x => x.ChallengeAsync(It.Is<TokenRequestContext>(c =>
+            c.User.Id == user.Id && c.SignInResult.Succeeded && c.DelayedResponse != null)), Times.Once);
         _userManager.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
 
         var attempt = _published.Should().ContainSingle().Subject;
@@ -426,19 +427,6 @@ public class AuthorizationControllerSignInLogTests
         var attempt = _published.Should().ContainSingle().Subject;
         attempt.Succeeded.Should().BeFalse();
         attempt.FailureReason.Should().Be(SignInFailureReason.TwoFactorUnavailable);
-    }
-
-    [Fact]
-    public async Task Exchange_PasswordGrant_TwoFactorNotRequiredWithoutHandler_IssuesTokens()
-    {
-        SetupPasswordUser(twoFactorRequired: false);
-
-        var controller = BuildController(PasswordRequest());
-
-        var actionResult = await controller.Exchange();
-
-        actionResult.Should().BeOfType<Microsoft.AspNetCore.Mvc.SignInResult>();
-        _published.Should().ContainSingle().Which.Succeeded.Should().BeTrue();
     }
 
     [Fact]

@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -331,7 +332,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
                 .AddEntityFrameworkStores<SecurityDbContext>()
                 .AddDefaultTokenProviders()
-                .AddSignInManager<CustomSignInManager>()
                 .AddUserValidator<CustomUserValidator>();
 
             // AddIdentity rewrites default scheme to Cookie, so we need to set it to Mixed scheme again
@@ -600,6 +600,9 @@ namespace VirtoCommerce.Platform.Web
                 options.Events.OnRedirectToAccessDenied = context => ApiCookieRedirectHandler.HandleAsync(context, StatusCodes.Status403Forbidden);
             });
 
+            services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorUserIdScheme, options =>
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+
             services.AddAuthorization(options =>
             {
                 // The good article is described the meaning DefaultPolicy and FallbackPolicy
@@ -822,6 +825,8 @@ namespace VirtoCommerce.Platform.Web
                     throw new DistributedLockLostException(startupLock.Resource, "migrations and module initialization may have overlapped with another instance");
                 }
             }
+
+            app.UseTwoFactorSignInManagerCheck(logger);
 
             app.UseEndpoints(SetupEndpoints);
 

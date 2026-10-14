@@ -231,6 +231,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         return BadRequest(SecurityErrorDescriber.TwoFactorUnavailable());
                     }
 
+                    context.DelayedResponse = delayedResponse;
                     var challengeResult = await twoFactorSignInHandler.ChallengeAsync(context);
                     await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
                         context.FailureReason ?? SignInFailureReason.RequiresTwoFactor, openIdConnectRequest.ClientId);
