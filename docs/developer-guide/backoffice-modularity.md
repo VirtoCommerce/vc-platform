@@ -10,7 +10,7 @@ Virto Commerce's backoffice has historically come in three flavours:
 
 | Host | Tech | Status |
 |---|---|---|
-| Platform admin (a.k.a. "Commerce Manager") | AngularJS 1.8 | Mature, in production for years |
+| Platform admin (a.k.a. "Commerce Manager") | AngularJS 1.8 | Mature, in production for years. Delivered by the `VirtoCommerce.AdminUI` module — see [Admin UI module](./admin-ui-module.md) |
 | VC-Shell | Vue 3 + Module Federation | Used by Marketplace and other vertical apps |
 | Custom standalone SPAs | Anything (System Operations is Vue 3) | One-off pages served via the platform `<apps>` mechanism |
 

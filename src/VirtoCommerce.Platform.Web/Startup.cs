@@ -26,7 +26,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -75,6 +74,7 @@ using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
+using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Infrastructure.ExportImport;
 using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
 using VirtoCommerce.Platform.Web.Json;
@@ -728,6 +728,9 @@ namespace VirtoCommerce.Platform.Web
             // Platform UI options
             services.AddOptions<PlatformUIOptions>().Bind(Configuration.GetSection("VirtoCommerce:PlatformUI"));
 
+            // Server-side values for the admin UI module that hosts the back office (the platform itself is API only).
+            services.TryAddSingleton<IAdminUIContextProvider, AdminUIContextProvider>();
+
             // Decides whether an authenticated user may enter the admin UI (VirtoCommerce:PlatformUI:Access).
             // TryAdd so a module can supply its own policy: module ConfigureServices runs before this,
             // and an unconditional AddSingleton here would always override it.
@@ -896,13 +899,6 @@ namespace VirtoCommerce.Platform.Web
             app.UseRouting();
             app.UseCookiePolicy();
 
-            //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(webHostEnvironment.MapPath("~/js")),
-                RequestPath = new PathString("/$(Platform)/Scripts")
-            });
-
             // Enables static file serving with the module and apps options
             app.UseModulesAndAppsFiles();
 
@@ -936,6 +932,9 @@ namespace VirtoCommerce.Platform.Web
         private static void SetupEndpoints(IEndpointRouteBuilder endpoints)
         {
             endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            // Answers "/" only when no admin UI module maps a page there
+            endpoints.MapPlatformLandingPage();
 
             //Setup SignalR hub
             endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
