@@ -36,7 +36,7 @@ angular.module('platformWebApp')
             }
 
             function canSave() {
-                return isDirty() && blade.formScope && blade.formScope.$valid;
+                return isDirty() && blade.formScope && blade.formScope.$valid && !blade.isLoading;
             }
 
             blade.onClose = function (closeCallback) {
@@ -46,6 +46,8 @@ angular.module('platformWebApp')
             };
 
             function saveChanges() {
+                blade.isLoading = true;
+
                 const items = [convertItem(blade.currentEntity)];
 
                 blade.allItems.forEach(function (item) {
@@ -61,6 +63,8 @@ angular.module('platformWebApp')
                     if (blade.onSaveChanges) {
                         blade.onSaveChanges();
                     }
+                }).finally(function () {
+                    blade.isLoading = false;
                 });
             }
 
