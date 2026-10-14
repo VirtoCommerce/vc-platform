@@ -16,7 +16,7 @@
     </PackageReference>
     <!--Don't update. FluentAssertions 8+ requires a paid license for commercial use.-->
     <PackageReference Include="FluentAssertions" Version="[7.2.2, 8.0.0)" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageReference Include="Moq" Version="4.21.0" />
     <PackageReference Include="MockQueryable.Moq" Version="10.0.12" />
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="22.3.0" />
