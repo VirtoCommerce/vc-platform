@@ -289,6 +289,9 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Data
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ObjectId", "CreatedDate")
+                        .HasDatabaseName("IX_OperationLog_ObjectId_CreatedDate");
+
                     b.HasIndex("ObjectType", "ObjectId")
                         .HasDatabaseName("IX_OperationLog_ObjectType_ObjectId");
 
