@@ -2,13 +2,13 @@
 
 ## Install CLI tools for Entity Framework Core
 ```cmd
-dotnet tool install --global dotnet-ef --version 10.0.12
+dotnet tool install --global dotnet-ef --version 10.0.13
 ```
 
 or update
 
 ```cmd
-dotnet tool update --global dotnet-ef --version 10.0.12
+dotnet tool update --global dotnet-ef --version 10.0.13
 ```
 
 ## Add Migration

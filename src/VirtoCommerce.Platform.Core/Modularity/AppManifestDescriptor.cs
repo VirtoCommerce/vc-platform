@@ -23,7 +23,8 @@ public class AppManifestDescriptor
     /// <summary>
     /// Strong content fingerprint of this descriptor. Covers <see cref="AppId"/>,
     /// <see cref="Version"/>, the ordered <see cref="Plugins"/> list (id, version,
-    /// entry hash, content-file hashes, federation remote coordinates), and —
+    /// entry hash, content-file hashes, federation remote coordinates, declared
+    /// contributions), and —
     /// implicitly — the user-permission filter that produced the current
     /// <see cref="Plugins"/> subset. Computed by <see cref="IAppManifestService"/>
     /// during build; the web layer uses this as the response ETag so a follow-up
