@@ -483,13 +483,15 @@ public class AuthorizationControllerSignInLogTests
             requestValidators: validators ?? [],
             claimProviders: [],
             requestHandlers: [],
+            grantTypeHandlers: [],
             // The audited branches never touch the token manager, and the constructor only assigns
             // fields. Passing null keeps this harness off OpenIddict's internal store plumbing.
             tokenManager: null,
             authorizationService: _authorizationService.Object,
             externalSignInService: Mock.Of<IExternalSignInService>(),
             authorizationManager: _authorizationManager.Object,
-            scopeManager: Mock.Of<IOpenIddictScopeManager>());
+            scopeManager: Mock.Of<IOpenIddictScopeManager>(),
+            authorizationOptions: Options.Create(new Core.Security.AuthorizationOptions()));
 
         var claims = new List<Claim> { new(ClaimTypes.Name, "operator") };
         claims.AddRange(principalClaims ?? []);

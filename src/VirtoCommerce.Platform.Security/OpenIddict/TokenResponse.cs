@@ -8,6 +8,8 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
     {
         public string UserId { get; set; }
 
+        public int? LockoutSecondsRemaining { get; set; }
+
         public IList<IdentityError> Errors
         {
             get

@@ -14,4 +14,5 @@ public static class SignInFailureReason
     public const string PasswordLoginDisabled = "PasswordLoginDisabled";
     public const string DuplicateEmail = "DuplicateEmail";
     public const string Forbidden = "Forbidden";
+    public const string Unknown = "Unknown";
 }

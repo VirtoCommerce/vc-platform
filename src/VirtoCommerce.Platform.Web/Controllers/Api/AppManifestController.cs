@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
@@ -61,9 +62,10 @@ public class AppManifestController : ControllerBase
         }
 
         // The service computed `descriptor.Hash` during build (covers AppId,
-        // Version, the ordered Plugins list with per-file mtime hashes, and
-        // federation remote coordinates) — wrap it in quotes per RFC 7232
-        // strong-ETag syntax and let HTTP do the conditional GET.
+        // Version, the ordered Plugins list with per-file mtime hashes,
+        // federation remote coordinates, permission, and declared contributions) — wrap it
+        // in quotes per RFC 7232 strong-ETag syntax and let HTTP do the
+        // conditional GET.
         var etag = $"\"{descriptor.Hash}\"";
         Response.Headers[HeaderNames.ETag] = etag;
 
@@ -128,6 +130,8 @@ public class AppManifestController : ControllerBase
                 Name = p.Remote.Name,
                 Exposed = p.Remote.Exposed,
             },
+            // JRaw writes the stored JSON as an object, not a string.
+            Contributions = p.Contributions == null ? null : new JRaw(p.Contributions),
         }).ToList(),
     };
 

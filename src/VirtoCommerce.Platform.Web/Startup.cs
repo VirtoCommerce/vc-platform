@@ -35,9 +35,11 @@ using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using Serilog;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DeveloperTools;
+using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -146,7 +148,8 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<ModuleSequenceBoostOptions>().Bind(Configuration.GetSection("VirtoCommerce"));
 #pragma warning restore VC0014 // Type or member is obsolete
 
-            services.AddOptions<DistributedLockOptions>().Bind(Configuration.GetSection("DistributedLock"));
+            services.AddOptions<DistributedLockOptions>().Bind(Configuration.GetSection("DistributedLock")).ValidateOnStart();
+            services.AddSingleton<IValidateOptions<DistributedLockOptions>, DistributedLockOptionsValidator>();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
@@ -486,6 +489,8 @@ namespace VirtoCommerce.Platform.Web
 
                     serverBuilder.DisableScopeValidation();
 
+                    serverBuilder.RegisterResources(authorizationOptions?.Resources ?? []);
+
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
                     serverBuilder.DisableAccessTokenEncryption();
@@ -751,6 +756,9 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            // Wrap module middleware and error handling so all downstream cache lookups belong to this request.
+            app.UseMiddleware<CacheMetricsMiddleware>();
+
             // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
             ModuleBootstrapper.Instance.RunConfigure(app, Configuration);
 
@@ -773,9 +781,14 @@ namespace VirtoCommerce.Platform.Web
 
             ConfigureRequestPipeline(app, Configuration, WebHostEnvironment);
 
-            app.ExecuteSynchronized(() =>
+            // Keyed lock with a longer Redis lease (DistributedLock:StartupExpiry): migrations can run for minutes.
+            var distributedLock = app.ApplicationServices.GetRequiredKeyedService<IDistributedLock>(Redis.ServiceCollectionExtensions.StartupLockServiceKey);
+            var startupLockTimeout = TimeSpan.FromSeconds(app.ApplicationServices.GetRequiredService<IOptions<DistributedLockOptions>>().Value.WaitTime);
+
+            // Configure is synchronous, so startup takes the lock with the blocking Acquire.
+            using (var startupLock = distributedLock.Acquire(nameof(Startup), startupLockTimeout))
             {
-                // This method contents will run inside critical section of instance distributed lock.
+                // This block runs inside the critical section of the instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
                 // This ensures only one active EF-migration ran simultaneously to avoid DB-related side effects.
 
@@ -803,7 +816,15 @@ namespace VirtoCommerce.Platform.Web
                 // Platform recurring maintenance jobs (token prune, auto account lockout) are registered as
                 // engine-agnostic message-based recurring jobs in ConfigureServices (AddRecurringJob); the active
                 // engine module's scheduler fires them after startup. Nothing to do here.
-            });
+
+                // A lost startup lock does not abort the work above: stopping a migration midway is riskier than finishing it.
+                // Fail startup instead, so the orchestrator restarts the instance and the log shows that migrations may have overlapped.
+                if (startupLock.HandleLostToken.IsCancellationRequested)
+                {
+                    logger.LogCritical("The platform startup lock was lost while migrations and module initialization ran; another instance may have run them concurrently. Stopping startup.");
+                    throw new DistributedLockLostException(startupLock.Resource, "migrations and module initialization may have overlapped with another instance");
+                }
+            }
 
             app.UseEndpoints(SetupEndpoints);
 

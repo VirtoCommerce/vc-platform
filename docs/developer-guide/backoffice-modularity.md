@@ -240,7 +240,7 @@ GET /api/apps/{appId}/manifest
 }
 ```
 
-**Top-level `hash`** is a strong fingerprint of the entire descriptor — covers `appId`, `version`, and the ordered `plugins[]` (id, version, entry hash, content-file hashes, federation remote coordinates). The platform surfaces it as the response ETag (`ETag: "8DBA4F3C9E2A..."`), so a client with a matching `If-None-Match` gets a `304 Not Modified` without re-sending the body. Per-file `hash` inside each entry is the cache-busting token for that single file (mtime-derived).
+**Top-level `hash`** is a strong fingerprint of the entire descriptor — covers `appId`, `version`, and the ordered `plugins[]` (id, version, entry hash, content-file hashes, federation remote coordinates, permission, declared contributions). The platform surfaces it as the response ETag (`ETag: "8DBA4F3C9E2A..."`), so a client with a matching `If-None-Match` gets a `304 Not Modified` without re-sending the body. Per-file `hash` inside each entry is the cache-busting token for that single file (mtime-derived).
 
 Each `entry` and `contentFiles` element shares the same `ContentFile` shape:
 
@@ -266,8 +266,17 @@ interface PluginManifest {
   contentFiles?: string[];                     // optional CSS / extra assets
   remote?: { name: string; exposed: string };  // defaults to {name: <id>, exposed: "./Module"}
   permission?: string;                         // gates the whole plugin server-side
+  contributions?: object;                      // host-app-defined; served as declared, see below
 }
 ```
+
+`contributions` is for what a host app needs to know about a plugin **before** it fetches any of the
+plugin's code — which routes it adds, which menu entries, which extension points it fills, and
+under what conditions. The platform does not interpret it: it takes the object as it is in
+`plugin.json`, serves it in the manifest (`plugins[].contributions`, omitted when absent), and
+covers it in the manifest hash, so a changed declaration is never answered with a stale `304`.
+Anything but an object is ignored with a warning and the plugin still loads. The shape belongs to
+each host app.
 
 ### Two loaders
 

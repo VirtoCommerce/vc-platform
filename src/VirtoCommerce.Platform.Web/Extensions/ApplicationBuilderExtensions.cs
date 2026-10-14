@@ -8,7 +8,6 @@ using Microsoft.Extensions.FileProviders;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.Licensing;
 using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
@@ -86,19 +85,6 @@ namespace VirtoCommerce.Platform.Web.Extensions
             }
 
             return appBuilder;
-        }
-
-        /// <summary>
-        /// Run specified payload in sync between several instances
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="payload"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder ExecuteSynchronized(this IApplicationBuilder app, Action payload)
-        {
-            var distributedLockProvider = app.ApplicationServices.GetRequiredService<IInternalDistributedLockService>();
-            distributedLockProvider.ExecuteSynchronized(nameof(Startup), _ => payload());
-            return app;
         }
 
         public static IApplicationBuilder UseModulesAndAppsFiles(this IApplicationBuilder app)
