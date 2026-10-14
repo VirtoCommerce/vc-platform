@@ -30,6 +30,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .HasIndex(x => new { x.ObjectType, x.ObjectId })
                         .IsUnique(false)
                         .HasDatabaseName("IX_OperationLog_ObjectType_ObjectId");
+            modelBuilder.Entity<OperationLogEntity>()
+                        .HasIndex(x => new { x.ObjectId, x.CreatedDate })
+                        .IsUnique(false)
+                        .HasDatabaseName("IX_OperationLog_ObjectId_CreatedDate");
             #endregion
 
             #region Settings

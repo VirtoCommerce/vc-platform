@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MockQueryable.Moq;
 using Moq;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Events;
@@ -30,6 +31,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
 
             // Assert
             Assert.Equal(testModels, getAsync);
+            Assert.Equal(nameof(TestModel), CacheKey.GetCacheName(CacheKey.With(service.GetType(), "GetAsync", "1")));
         }
 
         [Fact]
