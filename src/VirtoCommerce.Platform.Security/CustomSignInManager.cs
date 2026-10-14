@@ -28,7 +28,7 @@ public class CustomSignInManager : SignInManager<ApplicationUser>
 
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly List<ITwoFactorPolicy> _twoFactorPolicies;
-    private readonly Dictionary<string, bool> _twoFactorRequiredByUserId = [];
+    private readonly Dictionary<string, bool> _twoFactorRequiredByUserId = new(StringComparer.OrdinalIgnoreCase);
 
     public CustomSignInManager(
         UserManager<ApplicationUser> userManager,

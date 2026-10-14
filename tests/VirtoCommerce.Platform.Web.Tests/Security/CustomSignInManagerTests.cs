@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -65,21 +64,44 @@ public class CustomSignInManagerTests
     [Fact]
     public async Task IsTwoFactorEnabledAsync_TokenRequest_PassesGrantTypeAndParametersToPolicies()
     {
-        var request = new OpenIddictRequest { GrantType = "password", Username = "admin", Password = "secret", ClientSecret = "client-secret" };
+        var request = new OpenIddictRequest { GrantType = "password", Username = "admin" };
         request.SetParameter("storeId", "B2B-store");
-        _httpContext.Features.Set(new OpenIddictServerAspNetCoreFeature
-        {
-            Transaction = new OpenIddictServerTransaction { Request = request },
-        });
+        SetTokenRequest(request);
         var policy = CreatePolicy(isRequired: false);
 
         await CreateSignInManager(policy.Object).IsTwoFactorEnabledAsync(_user);
 
         policy.Verify(x => x.IsTwoFactorRequiredAsync(It.Is<TwoFactorPolicyContext>(c =>
             c.GrantType == "password" &&
-            c.Parameters["STOREID"] == "B2B-store" &&
-            !c.Parameters.ContainsKey(OpenIddictConstants.Parameters.Password) &&
-            !c.Parameters.ContainsKey(OpenIddictConstants.Parameters.ClientSecret))), Times.Once);
+            c.Parameters["STOREID"] == "B2B-store")), Times.Once);
+    }
+
+    [Fact]
+    public async Task IsTwoFactorEnabledAsync_NoPolicies_ReturnsFalse()
+    {
+        var isEnabled = await CreateSignInManager().IsTwoFactorEnabledAsync(_user);
+
+        isEnabled.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(OpenIddictConstants.Parameters.Password)]
+    [InlineData(OpenIddictConstants.Parameters.ClientSecret)]
+    [InlineData(OpenIddictConstants.Parameters.RefreshToken)]
+    [InlineData(OpenIddictConstants.Parameters.Code)]
+    [InlineData(OpenIddictConstants.Parameters.ClientAssertion)]
+    [InlineData(OpenIddictConstants.Parameters.Assertion)]
+    public async Task IsTwoFactorEnabledAsync_TokenRequest_ExcludesSecretsFromTheContext(string secretParameter)
+    {
+        var request = new OpenIddictRequest { GrantType = "password" };
+        request.SetParameter(secretParameter, "secret");
+        SetTokenRequest(request);
+        var policy = CreatePolicy(isRequired: false);
+
+        await CreateSignInManager(policy.Object).IsTwoFactorEnabledAsync(_user);
+
+        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.Is<TwoFactorPolicyContext>(c =>
+            c.GrantType == "password" && !c.Parameters.ContainsKey(secretParameter))), Times.Once);
     }
 
     [Fact]
@@ -126,6 +148,14 @@ public class CustomSignInManagerTests
         _userManager.Verify(x => x.ResetAccessFailedCountAsync(It.IsAny<ApplicationUser>()), Times.Never);
         authenticationService.Verify(x => x.SignInAsync(_httpContext, IdentityConstants.TwoFactorUserIdScheme,
             It.IsAny<ClaimsPrincipal>(), It.IsAny<AuthenticationProperties>()), Times.Once);
+    }
+
+    private void SetTokenRequest(OpenIddictRequest request)
+    {
+        _httpContext.Features.Set(new OpenIddictServerAspNetCoreFeature
+        {
+            Transaction = new OpenIddictServerTransaction { Request = request },
+        });
     }
 
     private static Mock<ITwoFactorPolicy> CreatePolicy(bool isRequired)

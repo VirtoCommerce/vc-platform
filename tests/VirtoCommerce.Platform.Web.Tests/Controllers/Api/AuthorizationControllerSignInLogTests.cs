@@ -367,15 +367,20 @@ public class AuthorizationControllerSignInLogTests
     {
         var user = SetupPasswordUser(twoFactorRequired: true);
         var challengeResult = new BadRequestObjectResult("challenge");
-        var handler = CreateTwoFactorSignInHandler(challengeResult);
+        var handler = new Mock<ITwoFactorSignInHandler>();
+        object delayedResponseAtChallenge = null;
+        handler.Setup(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()))
+            .Callback<TokenRequestContext>(context => delayedResponseAtChallenge = context.DelayedResponse)
+            .ReturnsAsync(challengeResult);
 
         var controller = BuildController(PasswordRequest(), twoFactorSignInHandlers: [handler.Object]);
 
         var actionResult = await controller.Exchange();
 
         actionResult.Should().BeSameAs(challengeResult);
+        delayedResponseAtChallenge.Should().NotBeNull();
         handler.Verify(x => x.ChallengeAsync(It.Is<TokenRequestContext>(c =>
-            c.User.Id == user.Id && c.SignInResult.Succeeded && c.DelayedResponse != null)), Times.Once);
+            c.User.Id == user.Id && c.SignInResult.Succeeded)), Times.Once);
         _userManager.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
 
         var attempt = _published.Should().ContainSingle().Subject;
