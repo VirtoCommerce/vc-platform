@@ -11,17 +11,24 @@ namespace VirtoCommerce.Platform.Security.Services
 {
     public class UserApiKeySearchService : IUserApiKeySearchService
     {
-        private readonly Func<ISecurityRepository> _repositoryFactory;
+        private readonly IScopedFactory<ISecurityRepository> _repositoryFactory;
 
-        public UserApiKeySearchService(Func<ISecurityRepository> repositoryFactory)
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        protected UserApiKeySearchService(Func<ISecurityRepository> repositoryFactory)
+            : this(new DelegateScopedFactory<ISecurityRepository>(repositoryFactory))
+        {
+        }
+
+        public UserApiKeySearchService(IScopedFactory<ISecurityRepository> repositoryFactory)
         {
             _repositoryFactory = repositoryFactory;
         }
 
         public async Task<UserApiKeySearchResult> SearchAsync(UserApiKeySearchCriteria criteria, bool clone = true)
         {
-            using (var repository = _repositoryFactory())
+            using (var scopedRepository = _repositoryFactory.Create())
             {
+                var repository = scopedRepository.Service;
                 if (criteria == null)
                 {
                     throw new ArgumentNullException(nameof(criteria));

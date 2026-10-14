@@ -27,7 +27,12 @@ namespace VirtoCommerce.Platform.Data.Extensions
         {
             services.AddOptions<CrudOptions>().Bind(configuration.GetSection("Crud"));
 
+            // One registration serves every T: consumers without a request scope inject IScopedFactory<T>
+            // and dispose the ScopedService<T> it creates, which releases the scope and everything in it.
+            services.AddSingleton(typeof(IScopedFactory<>), typeof(ScopedFactory<>));
+
             services.AddTransient<IPlatformRepository, PlatformRepository>();
+            // Legacy factory: nothing owns the scope it creates, so the scope lives until the repository is collected. Prefer IScopedFactory<IPlatformRepository>.
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 
             services.AddSettings();

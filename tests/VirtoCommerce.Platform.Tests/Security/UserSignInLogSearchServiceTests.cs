@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Testing;
 using Xunit;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.SignInLog;
@@ -305,7 +306,7 @@ public class UserSignInLogSearchServiceTests
                 PlatformConstants.Settings.Security.SignInLogEnabled.Name, null, null))
             .ReturnsAsync(new ObjectSettingEntry { Value = false });
 
-        var service = new UserSignInLogSearchService(() => repository.Object, settings.Object);
+        var service = new UserSignInLogSearchService(ScopedFactoryStub.Of(repository.Object), settings.Object);
 
         var stats = await service.GetStats(new UserSignInLogSearchCriteria());
 
@@ -513,6 +514,6 @@ public class UserSignInLogSearchServiceTests
                 PlatformConstants.Settings.Security.SignInLogEnabled.Name, null, null))
             .ReturnsAsync(new ObjectSettingEntry { Value = true });
 
-        return new UserSignInLogSearchService(() => repository.Object, settings.Object);
+        return new UserSignInLogSearchService(ScopedFactoryStub.Of(repository.Object), settings.Object);
     }
 }

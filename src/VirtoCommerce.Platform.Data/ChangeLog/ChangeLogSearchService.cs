@@ -15,10 +15,16 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 {
     public class ChangeLogSearchService : IChangeLogSearchService
     {
-        private readonly Func<IPlatformRepository> _repositoryFactory;
+        private readonly IScopedFactory<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        public ChangeLogSearchService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+        [Obsolete("Use the constructor that takes IScopedFactory<T> instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        protected ChangeLogSearchService(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+            : this(new DelegateScopedFactory<IPlatformRepository>(repositoryFactory), memoryCache)
+        {
+        }
+
+        public ChangeLogSearchService(IScopedFactory<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
@@ -32,8 +38,9 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                 cacheEntry.AddExpirationToken(ChangeLogCacheRegion.CreateChangeToken());
                 var searchResult = AbstractTypeFactory<ChangeLogSearchResult>.TryCreateInstance();
 
-                using (var repository = _repositoryFactory())
+                using (var scopedRepository = _repositoryFactory.Create())
                 {
+                    var repository = scopedRepository.Service;
                     repository.DisableChangesTracking();
 
                     var sortInfos = GetSortInfos(criteria);

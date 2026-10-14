@@ -8,6 +8,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
+using VirtoCommerce.Testing;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Web.Tests.Security
@@ -137,7 +138,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
 
             var securityRepositoryMock = new Mock<ISecurityRepository>();
             securityRepositoryMock.Setup(x => x.GetUserPasswordsHistoryAsync(It.IsAny<string>(), It.IsAny<int>())).ReturnsAsync(entities);
-            ISecurityRepository repositoryFactory() => securityRepositoryMock.Object;
+            var repositoryFactory = ScopedFactoryStub.Of(securityRepositoryMock.Object);
 
             var passwordHasher = new Mock<IPasswordHasher<VirtoCommerce.Platform.Core.Security.ApplicationUser>>();
             passwordHasher.Setup(x => x.HashPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
