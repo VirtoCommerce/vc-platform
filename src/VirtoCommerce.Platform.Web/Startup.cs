@@ -21,7 +21,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -904,7 +903,8 @@ namespace VirtoCommerce.Platform.Web
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(webHostEnvironment.MapPath("~/js")),
-                RequestPath = new PathString("/$(Platform)/Scripts")
+                RequestPath = new PathString("/$(Platform)/Scripts"),
+                OnPrepareResponse = context => context.SetCacheControlNoCache(),
             });
 
             // Enables static file serving with the module and apps options

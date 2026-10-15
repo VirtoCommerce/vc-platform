@@ -98,7 +98,8 @@ namespace VirtoCommerce.Platform.Web.Extensions
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(module.FullPhysicalPath) { UsePollingFileWatcher = true, UseActivePolling = false },
-                    RequestPath = new PathString($"/modules/$({module.ModuleName})")
+                    RequestPath = new PathString($"/modules/$({module.ModuleName})"),
+                    OnPrepareResponse = context => context.SetCacheControlNoCache(),
                 });
 
                 // Step 2. Enables static file serving for apps
