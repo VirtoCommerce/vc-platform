@@ -14,7 +14,7 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Security;
 
-public class CustomSignInManager : SignInManager<ApplicationUser>
+public class VirtoSignInManager : SignInManager<ApplicationUser>
 {
     private static readonly HashSet<string> SecretParameters = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -30,7 +30,7 @@ public class CustomSignInManager : SignInManager<ApplicationUser>
     private readonly List<ITwoFactorPolicy> _twoFactorPolicies;
     private readonly Dictionary<string, bool> _twoFactorRequiredByUserId = new(StringComparer.OrdinalIgnoreCase);
 
-    public CustomSignInManager(
+    public VirtoSignInManager(
         UserManager<ApplicationUser> userManager,
         IHttpContextAccessor contextAccessor,
         IUserClaimsPrincipalFactory<ApplicationUser> claimsFactory,

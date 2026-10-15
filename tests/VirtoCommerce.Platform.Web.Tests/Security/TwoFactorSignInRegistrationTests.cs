@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security;
 public class TwoFactorSignInRegistrationTests
 {
     [Fact]
-    public void AddSecurityServices_ThenAddIdentity_RegistersCustomSignInManager()
+    public void AddSecurityServices_ThenAddIdentity_RegistersVirtoSignInManager()
     {
         var services = new ServiceCollection();
 
@@ -26,7 +26,7 @@ public class TwoFactorSignInRegistrationTests
 
         services.Where(x => x.ServiceType == typeof(SignInManager<ApplicationUser>))
             .Should().ContainSingle()
-            .Which.ImplementationType.Should().Be<CustomSignInManager>();
+            .Which.ImplementationType.Should().Be<VirtoSignInManager>();
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class TwoFactorSignInRegistrationTests
     [InlineData(true, false, true)]
     [InlineData(true, true, false)]
     [InlineData(false, false, false)]
-    public void UseTwoFactorSignInManagerCheck_ReportsPoliciesTheSignInManagerIgnores(bool hasPolicy, bool isCustomSignInManager, bool reportsError)
+    public void UseTwoFactorSignInManagerCheck_ReportsPoliciesTheSignInManagerIgnores(bool hasPolicy, bool isVirtoSignInManager, bool reportsError)
     {
         var services = new ServiceCollection();
         if (hasPolicy)
@@ -55,7 +55,7 @@ public class TwoFactorSignInRegistrationTests
             services.AddSingleton(Mock.Of<ITwoFactorPolicy>());
         }
 
-        services.AddScoped(_ => CreateSignInManager(isCustomSignInManager));
+        services.AddScoped(_ => CreateSignInManager(isVirtoSignInManager));
         var logger = new Mock<ILogger>();
 
         new ApplicationBuilder(services.BuildServiceProvider()).UseTwoFactorSignInManagerCheck(logger.Object);
@@ -64,13 +64,13 @@ public class TwoFactorSignInRegistrationTests
             It.IsAny<Func<It.IsAnyType, Exception, string>>()), reportsError ? Times.Once : Times.Never);
     }
 
-    private static SignInManager<ApplicationUser> CreateSignInManager(bool isCustomSignInManager)
+    private static SignInManager<ApplicationUser> CreateSignInManager(bool isVirtoSignInManager)
     {
         var userManager = new Mock<UserManager<ApplicationUser>>(Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null).Object;
         var claimsFactory = Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>();
 
-        return isCustomSignInManager
-            ? new CustomSignInManager(userManager, new HttpContextAccessor(), claimsFactory, null, null, null, null, [])
+        return isVirtoSignInManager
+            ? new VirtoSignInManager(userManager, new HttpContextAccessor(), claimsFactory, null, null, null, null, [])
             : new SignInManager<ApplicationUser>(userManager, new HttpContextAccessor(), claimsFactory, null, null, null, null);
     }
 

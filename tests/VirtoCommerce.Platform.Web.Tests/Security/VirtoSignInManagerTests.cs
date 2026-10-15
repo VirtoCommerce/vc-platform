@@ -19,7 +19,7 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Web.Tests.Security;
 
-public class CustomSignInManagerTests
+public class VirtoSignInManagerTests
 {
     private readonly ApplicationUser _user = new() { Id = "user-1", UserName = "admin" };
     private readonly Mock<UserManager<ApplicationUser>> _userManager = new(Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null);
@@ -166,14 +166,14 @@ public class CustomSignInManagerTests
         return policy;
     }
 
-    private CustomSignInManager CreateSignInManager(params ITwoFactorPolicy[] policies)
+    private VirtoSignInManager CreateSignInManager(params ITwoFactorPolicy[] policies)
     {
         var schemes = new Mock<IAuthenticationSchemeProvider>();
         schemes
             .Setup(x => x.GetSchemeAsync(It.IsAny<string>()))
             .ReturnsAsync((string name) => new AuthenticationScheme(name, displayName: null, typeof(CookieAuthenticationHandler)));
 
-        return new CustomSignInManager(
+        return new VirtoSignInManager(
             _userManager.Object,
             new HttpContextAccessor { HttpContext = _httpContext },
             Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>(),

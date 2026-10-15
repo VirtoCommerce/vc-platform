@@ -54,9 +54,9 @@ namespace VirtoCommerce.Platform.Web.Security
             using var scope = appBuilder.ApplicationServices.CreateScope();
 
             var policyCount = scope.ServiceProvider.GetServices<ITwoFactorPolicy>().Count();
-            if (policyCount > 0 && scope.ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>() is not CustomSignInManager)
+            if (policyCount > 0 && scope.ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>() is not VirtoSignInManager)
             {
-                logger.LogError("Two-factor sign-in is not enforced: {PolicyCount} ITwoFactorPolicy implementation(s) are registered, but SignInManager<ApplicationUser> does not derive from CustomSignInManager.",
+                logger.LogError("Two-factor sign-in is not enforced: {PolicyCount} ITwoFactorPolicy implementation(s) are registered, but SignInManager<ApplicationUser> does not derive from VirtoSignInManager.",
                     policyCount);
             }
 
