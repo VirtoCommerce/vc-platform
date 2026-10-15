@@ -32,6 +32,7 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model;
 using VirtoCommerce.Platform.Web.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using MvcSignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -124,6 +125,45 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             return Ok();
+        }
+
+        /// <summary>
+        /// Sign in with a cookie
+        /// </summary>
+        /// <remarks>
+        /// Accepts the same parameters as the token endpoint, so every grant type registered for it also signs in with a cookie.
+        /// </remarks>
+        /// <param name="parameters">Token request parameters, including grant_type.</param>
+        [HttpPost("~/api/platform/security/sign-in")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> SignIn([FromBody] Dictionary<string, string> parameters)
+        {
+            var request = new OpenIddictRequest(parameters ?? []);
+
+            var grantTypeHandler = _grantTypeHandlers.LastOrDefault(x => x.GrantType == request.GrantType);
+            if (grantTypeHandler == null)
+            {
+                return BadRequest(SecurityErrorDescriber.UnsupportedGrantType());
+            }
+
+            var context = new TokenRequestContext
+            {
+                AuthenticationScheme = IdentityConstants.ApplicationScheme,
+                Request = request,
+                DetailedErrors = _passwordLoginOptions.DetailedErrors,
+            };
+
+            var result = await grantTypeHandler.HandleAsync(context);
+            if (result is not MvcSignInResult signInResult)
+            {
+                return result;
+            }
+
+            await HttpContext.SignInAsync(signInResult.AuthenticationScheme, signInResult.Principal, signInResult.Properties);
+
+            return NoContent();
         }
 
         #region Password, authorization code and refresh token flows

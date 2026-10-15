@@ -724,6 +724,17 @@
           "user-agent": "Brukeragent"
         }
       },
+      "sign-in-methods-list": {
+        "title": "Påloggingsmetoder",
+        "labels": {
+          "no-keys": "Ingen nøkler",
+          "unnamed-key": "Navnløs nøkkel",
+          "password-set": "Passord er angitt",
+          "password-not-set": "Passord er ikke angitt",
+          "linked-account": "Koblet konto",
+          "changed": "Endret"
+        }
+      },
       "sign-in-log": {
         "title": "Innloggingslogg",
         "subtitle": "Innloggingsforsøk og innlogging på vegne av",
@@ -888,6 +899,9 @@
       },
       "sign-in-log": {
         "title": "Innloggingslogg"
+      },
+      "sign-in-methods": {
+        "title": "Påloggingsmetoder"
       }
     },
     "dialogs": {
@@ -1022,6 +1036,13 @@
       "sessions-terminate-all": {
         "title": "Avslutt alle",
         "message": "Er du sikker på at du vil avslutte alle brukerøkter?"
+      },
+      "sign-in-key-delete": {
+        "title": "Slett nøkkel",
+        "message": "Er du sikker på at du vil slette denne nøkkelen?"
+      },
+      "set-password": {
+        "title": "Angi passord"
       },
       "delete-confirm": {
         "warning": "ADVARSEL: Denne endringen er permanent og kan ikke angres. Å bruke denne endringen kan føre til tap av data.",

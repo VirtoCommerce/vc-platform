@@ -723,6 +723,17 @@
           "user-agent": "用户代理"
         }
       },
+      "sign-in-methods-list": {
+        "title": "登录方式",
+        "labels": {
+          "no-keys": "没有密钥",
+          "unnamed-key": "未命名的密钥",
+          "password-set": "已设置密码",
+          "password-not-set": "未设置密码",
+          "linked-account": "已关联的账户",
+          "changed": "更改于"
+        }
+      },
       "sign-in-log": {
         "title": "登录日志",
         "subtitle": "登录尝试与代客登录",
@@ -887,6 +898,9 @@
       },
       "sign-in-log": {
         "title": "登录日志"
+      },
+      "sign-in-methods": {
+        "title": "登录方式"
       }
     },
     "dialogs": {
@@ -1021,6 +1035,13 @@
       "sessions-terminate-all": {
         "title": "终止所有",
         "message": "您确定要终止所有用户会话吗？"
+      },
+      "sign-in-key-delete": {
+        "title": "删除密钥",
+        "message": "确定要删除此密钥吗？"
+      },
+      "set-password": {
+        "title": "设置密码"
       },
       "delete-confirm": {
         "warning": "警告：此更改是永久性的，无法撤销。应用此更改可能会导致数据丢失。",

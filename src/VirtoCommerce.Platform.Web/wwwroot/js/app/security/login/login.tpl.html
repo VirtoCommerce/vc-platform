@@ -1,5 +1,5 @@
 <div class="auth" ng-style="{ 'background-image': 'url(' + uiCustomization.pattern.url + '), url(' + (uiCustomization.background.url || 'images/login.webp' ) +')' }">
-    <div class="auth__container" ng-class="{ 'auth__container--wide': showPlainLogin && loginProviders.length }">
+    <div class="auth__container" ng-class="{ 'auth__container--wide': showPlainLogin && signInMethods.length }">
         <div class="auth__head">
             <img class="auth__logo" ng-src="{{ uiCustomization.loginScreenLogo_custom.url || uiCustomization.loginScreenLogo_default.url }}" fallback-src="{{ uiCustomization.loginScreenLogo_default.url }}" alt="Login screen logo image">
             <h1 class="auth__title">{{ 'platform.blades.login.labels.sign-in' | translate: (uiCustomization.title ? uiCustomization : { title: 'Virto Commerce' }) }}</h1>
@@ -45,13 +45,13 @@
                 </div>
             </form>
             <!-- Divider -->
-            <div class="vc-divider" ng-if="showPlainLogin && loginProviders.length && !loginProgress">
+            <div class="vc-divider" ng-if="showPlainLogin && signInMethods.length && !loginProgress">
                 <div class="vc-divider__text">{{ 'platform.blades.login.labels.or' | translate }}</div>
             </div>
-            <div class="socials" ng-if="loginProviders.length && !loginProgress">
-                <a href="#" class="vc-button-social" ng-repeat="provider in loginProviders" ng-click="$event.preventDefault();externalLogin(provider);">
-                    <img class="vc-button-social__img" ng-src="{{provider.logoUrl}}" onerror="this.style.display = 'none';" ng-if="provider.logoUrl" alt="">
-                    <div class="vc-button-social__text">{{ provider.displayName }}</div>
+            <div class="socials" ng-if="signInMethods.length && !loginProgress">
+                <a href="#" class="vc-button-social" ng-repeat="signInMethod in signInMethods" ng-click="$event.preventDefault();signIn(signInMethod);">
+                    <img class="vc-button-social__img" ng-src="{{signInMethod.logoUrl}}" onerror="this.style.display = 'none';" ng-if="signInMethod.logoUrl" alt="">
+                    <div class="vc-button-social__text">{{ signInMethod.displayName }}</div>
                 </a>
             </div>
             <div class="vc-loader" ng-if="loginProgress">

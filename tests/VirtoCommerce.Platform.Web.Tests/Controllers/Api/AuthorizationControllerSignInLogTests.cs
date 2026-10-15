@@ -389,6 +389,20 @@ public class AuthorizationControllerSignInLogTests
         _published.Should().BeEmpty();
     }
 
+    [Fact]
+    public async Task SignIn_EmptyBody_ReturnsBadRequest()
+    {
+        // Arrange
+        var controller = BuildController(new OpenIddictRequest());
+
+        // Act
+        var result = await controller.SignIn(parameters: null);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
+        _published.Should().BeEmpty();
+    }
+
     private AuthorizationController BuildRefreshController(ApplicationUser user, string operatorUserId, string operatorUserName)
     {
         _userManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(user);

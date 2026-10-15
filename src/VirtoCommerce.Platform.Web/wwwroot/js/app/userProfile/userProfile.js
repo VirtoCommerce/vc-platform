@@ -76,7 +76,7 @@ angular.module('platformWebApp')
     }
     return result;
 }])
-.run(['platformWebApp.mainMenuService', '$state', function (mainMenuService, $state) {
+.run(['$state', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', function ($state, mainMenuService, widgetService) {
     var menuItem = {
         path: 'configuration/userProfile',
         icon: 'fa fa-user',
@@ -85,4 +85,9 @@ angular.module('platformWebApp')
         action: function () { $state.go('workspace.userProfile'); }
     };
     mainMenuService.addMenuItem(menuItem);
+
+    widgetService.registerWidget({
+        controller: 'platformWebApp.signInMethodsWidgetController',
+        template: '$(Platform)/Scripts/app/userProfile/widgets/signInMethodsWidget.html'
+    }, 'userProfileDetail');
 }]);

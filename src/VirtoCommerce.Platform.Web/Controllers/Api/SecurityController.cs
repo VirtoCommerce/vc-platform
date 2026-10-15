@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Core.Security.SignInMethods;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
@@ -52,6 +53,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserSessionsService _userSessionsService;
         private readonly IUserSignInLogSearchService _userSignInLogSearchService;
         private readonly IAdminUIAccessPolicy _adminUIAccessPolicy;
+        private readonly ISignInMethodService _signInMethodService;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -71,7 +73,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IUserSessionsSearchService userSessionsSearchService,
             IUserSessionsService userSessionsService,
             IAdminUIAccessPolicy adminUIAccessPolicy,
-            IUserSignInLogSearchService userSignInLogSearchService)
+            IUserSignInLogSearchService userSignInLogSearchService,
+            ISignInMethodService signInMethodService)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -91,6 +94,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userSessionsService = userSessionsService;
             _adminUIAccessPolicy = adminUIAccessPolicy;
             _userSignInLogSearchService = userSignInLogSearchService;
+            _signInMethodService = signInMethodService;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
@@ -566,11 +570,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize]
         public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
         {
-            if (HttpContext.User.IsExternalSignIn())
-            {
-                return BadRequest(new SecurityResult { Errors = [$"Could not change password for {HttpContext.User.GetAuthenticationMethod()} authentication method"] });
-            }
-
             return await ChangePassword(User.Identity.Name, changePassword);
         }
 
@@ -625,7 +624,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest(new SecurityResult { Errors = ["Your account is locked."] });
             }
 
-            var result = await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
+            var result = await UserManager.HasPasswordAsync(user)
+                ? await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword)
+                : await UserManager.AddPasswordAsync(user, changePassword.NewPassword);
+
             if (result.Succeeded && user.PasswordExpired)
             {
                 user.PasswordExpired = false;
@@ -1084,6 +1086,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("logintypes")]
         [AllowAnonymous]
+        [Obsolete("Use GET api/platform/security/sign-in-methods instead.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public ActionResult<List<LoginType>> GetLoginTypes()
         {
             var options = new List<LoginType>
@@ -1107,6 +1110,105 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             options.AddRange(externalLoginTypes);
 
             return Ok(options);
+        }
+
+        /// <summary>
+        /// Get available sign-in methods
+        /// </summary>
+        [HttpGet]
+        [Route("sign-in-methods")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IList<SignInMethod>>> GetSignInMethods()
+        {
+            var result = await _signInMethodService.GetSignInMethodsAsync();
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get available sign-in methods with the keys of the current user
+        /// </summary>
+        [HttpGet]
+        [Route("currentuser/sign-in-methods")]
+        [Authorize]
+        public async Task<ActionResult<IList<SignInMethod>>> GetCurrentUserSignInMethods()
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _signInMethodService.GetSignInMethodsAsync(user);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Rename a sign-in key
+        /// </summary>
+        /// <param name="name">Sign-in method name</param>
+        /// <param name="id">Sign-in key ID</param>
+        /// <param name="request">Contains the new key name.</param>
+        [HttpPut]
+        [Route("sign-in-methods/{name}/keys/{id}")]
+        [Authorize]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> RenameSignInKey([FromRoute] string name, [FromRoute] string id, [FromBody] SignInKeyRenameRequest request)
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            if (!IsUserEditable(user.UserName))
+            {
+                LogUserForbiddenToEdit(user.UserName);
+                return BadRequest(IdentityResultExtensions.CreateErrorResult(UserForbiddenToEdit));
+            }
+
+            var result = await _signInMethodService.RenameKeyAsync(user, name, id, request?.Name);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.ToSecurityResult());
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Delete a sign-in key
+        /// </summary>
+        /// <param name="name">Sign-in method name</param>
+        /// <param name="id">Sign-in key ID</param>
+        [HttpDelete]
+        [Route("sign-in-methods/{name}/keys/{id}")]
+        [Authorize]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteSignInKey([FromRoute] string name, [FromRoute] string id)
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            if (!IsUserEditable(user.UserName))
+            {
+                LogUserForbiddenToEdit(user.UserName);
+                return BadRequest(IdentityResultExtensions.CreateErrorResult(UserForbiddenToEdit));
+            }
+
+            var result = await _signInMethodService.DeleteKeyAsync(user, name, id);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.ToSecurityResult());
+            }
+
+            await TryTerminateUserSessions(user, user);
+
+            return NoContent();
         }
 
         /// <summary>

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using OpenIddict.Abstractions;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -64,6 +65,44 @@ public class GrantTypeHandlerBaseTests
         ((TokenResponse)badRequest.Value).Code.Should().Be("sign_in_not_allowed");
         context.SignInManager.Verify(x => x.CreateUserPrincipalAsync(It.IsAny<ApplicationUser>()), Times.Never);
         VerifySignInAttempt(context, succeeded: false, SignInFailureReason.NotAllowed);
+    }
+
+    [Fact]
+    public async Task HandleAsync_Should_ReturnBadRequest_When_ACustomerSignsInWithACookie()
+    {
+        // Arrange
+        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
+        context.RequestContext.AuthenticationScheme = IdentityConstants.ApplicationScheme;
+        context.SignInManager.Object.UserManager = context.UserManager.Object;
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
+        context.UserManager.Setup(x => x.IsInRoleAsync(It.Is<ApplicationUser>(u => u.Id == user.Id), PlatformConstants.Security.SystemRoles.Customer)).ReturnsAsync(true);
+
+        // Act
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
+
+        // Assert
+        var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
+        ((TokenResponse)badRequest.Value).Code.Should().Be("sign_in_not_allowed");
+        VerifySignInAttempt(context, succeeded: false, SignInFailureReason.NotAllowed);
+    }
+
+    [Fact]
+    public async Task HandleAsync_Should_NotCheckTheCustomerRole_When_IssuingAToken()
+    {
+        // Arrange
+        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
+        context.SignInManager.Object.UserManager = context.UserManager.Object;
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
+        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
+
+        // Act
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
+
+        // Assert
+        actionResult.Should().BeOfType<SignInResult>();
+        context.UserManager.Verify(x => x.IsInRoleAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
     }
 
     [Fact]

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -22,10 +21,7 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
 
                 if (context.DetailedErrors && context.SignInResult.IsLockedOut)
                 {
-                    var permanentLockOut = context.User.LockoutEnd == DateTime.MaxValue.ToUniversalTime();
-                    error = permanentLockOut
-                        ? SecurityErrorDescriber.UserIsLockedOut()
-                        : SecurityErrorDescriber.UserIsTemporaryLockedOut();
+                    error = SecurityErrorDescriber.GetLockoutError(context.User);
                 }
                 else
                 {
