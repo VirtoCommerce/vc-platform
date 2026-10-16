@@ -101,7 +101,7 @@
     "properties": {
       "short-text": {
         "title": "Krótki tekst",
-        "description": "Wartości tekstowe poniżej 1024 znaków"
+        "description": "Wartości tekstowe do 512 znaków"
       },
       "long-text": {
         "title": "Długi tekst",
