@@ -393,10 +393,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
     .run(['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService',
         'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache',
         'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService',
-        'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper',
+        'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper', 'platformWebApp.twoFactorSignInState',
         function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
             dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest,
-            $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper) {
+            $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper, twoFactorSignInState) {
 
             //Disable animation
             $animate.enabled(false);
@@ -509,14 +509,15 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             onClose: function () {
                                 if (!currentState.abstract
                                     && currentState.name !== 'loginDialog'
-                                    && currentState.name !== 'changePasswordDialog') {
+                                    && currentState.name !== 'changePasswordDialog'
+                                    && !twoFactorSignInState.is(currentState)) {
                                     $state.go(currentState);
                                 } else {
                                     $state.go('workspace');
                                 }
                             }
                         });
-                    } else if (!currentState.name || currentState.name === 'loginDialog') {
+                    } else if (!currentState.name || currentState.name === 'loginDialog' || twoFactorSignInState.is(currentState)) {
                         var returnUrl = urlHelper.getSafeReturnUrl();
                         if (returnUrl) {
                             window.location.href = returnUrl;

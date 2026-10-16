@@ -25,7 +25,7 @@ angular.module('platformWebApp')
 
                     accounts.searchSignInLog(
                         {},
-                        { userId: userId, take: 0 },
+                        { userId: userId, awaitingSecondFactor: false, take: 0 },
                         function (data) {
                             blade.signInLogCount = data.totalCount;
                         });

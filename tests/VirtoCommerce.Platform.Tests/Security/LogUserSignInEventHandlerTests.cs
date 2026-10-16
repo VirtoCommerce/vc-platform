@@ -54,6 +54,23 @@ public class LogUserSignInEventHandlerTests
     }
 
     [Fact]
+    public async Task Handle_LongFailureReason_TruncatesItToTheColumnLength()
+    {
+        var written = new List<UserSignInLog>();
+        var handler = CreateHandler(written, signInLogEnabled: true);
+
+        await handler.Handle(new UserSignInAttemptEvent
+        {
+            UserName = "a",
+            SignInType = SignInType.Password,
+            Succeeded = false,
+            FailureReason = new string('x', 100),
+        });
+
+        written.Should().ContainSingle().Which.FailureReason.Should().HaveLength(64);
+    }
+
+    [Fact]
     public async Task Handle_WhenDisabled_SuppressesOrdinarySignIn()
     {
         var written = new List<UserSignInLog>();

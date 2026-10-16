@@ -211,6 +211,24 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         }
 
         [Fact]
+        public async Task Login_TwoFactorRequired_PublishesRequiresTwoFactorAndDoesNotCompleteSignIn()
+        {
+            var attempts = CaptureSignInAttempts();
+            var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
+            _userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
+            _signInManagerMock
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.TwoFactorRequired);
+
+            var actual = await _controller.Login(new LoginRequest { UserName = "b2badmin@test.com", Password = "right" });
+
+            actual.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeOfType<SignInResult>().Which.RequiresTwoFactor.Should().BeTrue();
+            attempts.Should().ContainSingle().Which.FailureReason.Should().Be(SignInFailureReason.RequiresTwoFactor);
+            _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
+            _eventPublisherMock.Verify(x => x.Publish(It.IsAny<UserLoginEvent>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
         public async Task Login_Success_PublishesSucceededAttempt()
         {
             var attempts = CaptureSignInAttempts();

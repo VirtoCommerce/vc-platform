@@ -54,6 +54,13 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
             ErrorDescription = "The user is no longer allowed to sign in."
         };
 
+        public static TokenResponse TwoFactorUnavailable() => new()
+        {
+            Error = Errors.InvalidGrant,
+            Code = nameof(TwoFactorUnavailable).ToSnakeCase(),
+            ErrorDescription = "The user requires two-factor authentication, but no two-factor sign-in is available."
+        };
+
         public static TokenResponse InvalidClient() => new()
         {
             Error = Errors.InvalidClient,

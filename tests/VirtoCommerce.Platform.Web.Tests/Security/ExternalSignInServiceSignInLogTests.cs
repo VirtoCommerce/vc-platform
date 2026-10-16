@@ -10,12 +10,11 @@ using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
-using VirtoCommerce.Platform.Core.Security.SignInLog;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Tests.Security;
@@ -128,7 +127,7 @@ public class ExternalSignInServiceSignInLogTests
 
         _signInManager.Setup(x => x.GetExternalLoginInfoAsync(It.IsAny<string>())).ReturnsAsync(loginInfo);
         _signInManager
-            .Setup(x => x.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .Setup(x => x.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), true))
             .ReturnsAsync(signInResult);
 
         _userManager.Setup(x => x.FindByLoginAsync(It.IsAny<string>(), It.IsAny<string>()))
