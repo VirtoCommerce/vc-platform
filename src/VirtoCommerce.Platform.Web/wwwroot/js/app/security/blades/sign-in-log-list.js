@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.signInLogListController',
-        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService',
-            function ($scope, accounts, bladeUtils, uiGridHelper, bladeNavigationService) {
+        ['$scope', 'moment', 'platformWebApp.i18n', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService',
+            function ($scope, moment, i18n, accounts, bladeUtils, uiGridHelper, bladeNavigationService) {
                 $scope.uiGridConstants = uiGridHelper.uiGridConstants;
                 var blade = $scope.blade;
 
@@ -117,6 +117,12 @@ angular.module('platformWebApp')
                     }
                 });
 
+                // Start of the picked calendar day in the profile time zone. The input hands back a
+                // Date at browser-local midnight, so only its year/month/day are meaningful.
+                function profileDay(date) {
+                    return moment.tz([date.getFullYear(), date.getMonth(), date.getDate()], i18n.getTimeZone());
+                }
+
                 function buildCriteria() {
                     // null asks nothing about the store, true demands none, false demands one.
                     var withoutStore = filter.storeId === blade.noStoreValue ? true
@@ -147,16 +153,15 @@ angular.module('platformWebApp')
                     }
 
                     if (filter.period === 'custom') {
-                        // Date inputs give a local calendar day; widen "to" to the end of it so a
-                        // single-day range does not silently exclude everything after midnight.
+                        // Date inputs give a calendar day; read it in the profile time zone the grid
+                        // shows, not the browser's, and widen "to" to the end of it so a single-day
+                        // range does not silently exclude everything after midnight.
                         if (filter.dateFrom) {
-                            criteria.startDate = new Date(filter.dateFrom).toISOString();
+                            criteria.startDate = profileDay(filter.dateFrom).toISOString();
                         }
 
                         if (filter.dateTo) {
-                            var to = new Date(filter.dateTo);
-                            to.setHours(23, 59, 59, 999);
-                            criteria.endDate = to.toISOString();
+                            criteria.endDate = profileDay(filter.dateTo).endOf('day').toISOString();
                         }
                     } else {
                         var period = _.findWhere(blade.periods, { value: filter.period });
