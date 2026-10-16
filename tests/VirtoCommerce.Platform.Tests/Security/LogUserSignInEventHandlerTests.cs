@@ -89,6 +89,25 @@ public class LogUserSignInEventHandlerTests
         written.Should().ContainSingle().Which.OperatorUserName.Should().Be("support@virtocommerce.com");
     }
 
+    [Fact]
+    public async Task Handle_LongClientId_TruncatesToTheColumnLength()
+    {
+        // Arrange
+        var written = new List<UserSignInLog>();
+        var handler = CreateHandler(written, signInLogEnabled: true);
+
+        // Act
+        await handler.Handle(new UserSignInAttemptEvent
+        {
+            UserName = "buyer",
+            SignInType = SignInType.Password,
+            ClientId = new string('x', 200),
+        });
+
+        // Assert
+        written.Should().ContainSingle().Which.ClientId.Should().HaveLength(128);
+    }
+
     private static LogUserSignInEventHandler CreateHandler(
         List<UserSignInLog> written,
         bool signInLogEnabled,

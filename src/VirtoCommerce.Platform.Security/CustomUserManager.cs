@@ -154,6 +154,12 @@ namespace VirtoCommerce.Platform.Security
                 (userId, customPasswordHash) => new UserChangedPasswordEvent(userId, customPasswordHash));
         }
 
+        public override Task<IdentityResult> AddPasswordAsync(ApplicationUser user, string password)
+        {
+            return UpdatePasswordAsync(user, password, base.AddPasswordAsync,
+                (userId, customPasswordHash) => new UserChangedPasswordEvent(userId, customPasswordHash));
+        }
+
         protected virtual async Task<IdentityResult> UpdatePasswordAsync<TEvent>(
             ApplicationUser user,
             string newPassword,
