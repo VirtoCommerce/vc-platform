@@ -5,11 +5,14 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
     public abstract class DynamicPropertyObjectValueEntity : AuditableEntity
     {
+        public const int ShortTextValueMaxLength = 512;
+
         [StringLength(256)]
         public string ObjectType { get; set; }
 
@@ -23,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.Model
         [StringLength(64)]
         public string ValueType { get; set; }
 
-        [StringLength(512)]
+        [StringLength(ShortTextValueMaxLength)]
         public string ShortTextValue { get; set; }
         public string LongTextValue { get; set; }
         public decimal? DecimalValue { get; set; }
@@ -139,7 +142,13 @@ namespace VirtoCommerce.Platform.Data.Model
             switch (valueType)
             {
                 case DynamicPropertyValueType.ShortText:
-                    ShortTextValue = (string)value;
+                    var shortTextValue = (string)value;
+                    // Fail with a clear message instead of a provider-specific "data would be truncated" error on save
+                    if (shortTextValue?.Length > ShortTextValueMaxLength)
+                    {
+                        throw new PlatformException($"The value of the dynamic property '{PropertyName}' is {shortTextValue.Length} characters long. Short text values cannot exceed {ShortTextValueMaxLength} characters; use the Long text type for longer values.");
+                    }
+                    ShortTextValue = shortTextValue;
                     break;
                 case DynamicPropertyValueType.Decimal:
                     DecimalValue = value.ToNullable<decimal>();
