@@ -272,13 +272,14 @@ namespace VirtoCommerce.Platform.Data.Settings
                     ClearCache(forcedSettings);
                 }
 
-                var settingNames = settings.Select(x => x.Name).Distinct().ToArray();
-
-                var alreadyExistDbSettings = await repository.Settings
-                    .Include(s => s.SettingValues)
-                    .Where(x => settingNames.Contains(x.Name))
-                    .AsSplitQuery()
-                    .ToListAsync();
+                // Only the saved objects' rows, one object at a time: by name alone, a per-object setting (e.g. a user's) would load
+                // every object's row for that name. The match below compares Name, ObjectType and ObjectId, so those couldn't match anyway.
+                var alreadyExistDbSettings = new List<SettingEntity>();
+                foreach (var scope in settings.GroupBy(x => (x.ObjectType, x.ObjectId)))
+                {
+                    var names = scope.Select(x => x.Name).Distinct().ToArray();
+                    alreadyExistDbSettings.AddRange(await repository.GetObjectSettingsByNamesAsync(names, scope.Key.ObjectType, scope.Key.ObjectId));
+                }
 
                 var validator = new ObjectSettingEntryValidator();
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -348,6 +349,8 @@ namespace VirtoCommerce.Platform.Data.Settings
                 SettingValueType.Boolean => Convert.ToBoolean(value),
                 SettingValueType.Integer or SettingValueType.PositiveInteger => Convert.ToInt32(value),
                 SettingValueType.Decimal => Convert.ToDecimal(value),
+                // the v2 API keeps date-like text as sent (SettingValues), so a date setting is parsed here, to UTC as MVC would
+                SettingValueType.DateTime when value is string text => DateTime.Parse(text, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal),
                 _ => value.ToString()
             };
         }
