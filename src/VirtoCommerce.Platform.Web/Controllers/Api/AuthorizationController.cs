@@ -307,6 +307,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     return BadRequest(SecurityErrorDescriber.SignInNotAllowed());
                 }
 
+                if (await _userManager.IsLockedOutAsync(user))
+                {
+                    return BadRequest(SecurityErrorDescriber.GetLockoutError(user));
+                }
+
                 context.User = user;
                 context.Principal = info.Principal;
                 context.Properties = info.Properties;
@@ -507,6 +512,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         clientId: openIdConnectRequest.ClientId);
 
                     return BadRequest(SecurityErrorDescriber.TokenInvalid());
+                }
+
+                if (await _userManager.IsLockedOutAsync(impersonatedUser))
+                {
+                    await PublishImpersonationAttempt(
+                        userName: auditUser.UserName,
+                        attemptedUserId: auditUser.Id,
+                        impersonatedUser: auditUser,
+                        operatorUserId: auditOperatorUserId,
+                        operatorUserName: auditOperatorUserName,
+                        succeeded: false,
+                        failureReason: SignInFailureReason.LockedOut,
+                        signInType: auditSignInType,
+                        clientId: openIdConnectRequest.ClientId);
+
+                    return BadRequest(SecurityErrorDescriber.GetLockoutError(impersonatedUser));
                 }
 
                 context.User = impersonatedUser.CloneTyped();
