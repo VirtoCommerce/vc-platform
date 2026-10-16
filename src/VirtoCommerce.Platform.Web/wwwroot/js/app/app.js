@@ -454,6 +454,27 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             };
             mainMenuService.addMenuItem(moreMenuItem);
 
+            // Deep link (e.g. #!/workspace/catalog) kept across the login redirect, so it opens after signing in
+            var deepLinkStorageKey = 'platformWebApp.deepLink';
+            var signedInBefore = false;
+            function isWorkspaceHash() {
+                return ($window.location.hash || '').indexOf('#!/workspace/') === 0;
+            }
+            function rememberDeepLink() {
+                if (isWorkspaceHash()) {
+                    try { $window.sessionStorage.setItem(deepLinkStorageKey, $window.location.hash); } catch (e) { /* storage unavailable */ }
+                }
+            }
+            function takeDeepLink() {
+                try {
+                    var hash = $window.sessionStorage.getItem(deepLinkStorageKey);
+                    $window.sessionStorage.removeItem(deepLinkStorageKey);
+                    return hash;
+                } catch (e) {
+                    return null;
+                }
+            }
+
             $rootScope.$on('unauthorized', function (event, rejection) {
                 // A 401 from a background request must not eject an anonymous visitor from a state
                 // they are allowed to be on. Opening a password reset link, for example, 401s on
@@ -462,8 +483,13 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     return;
                 }
 
-                if (authService.isAuthenticated) {
+                var sessionExpired = authService.isAuthenticated;
+                if (sessionExpired) {
                     authService.logout();
+                }
+                // keep the page for an expired session or a cold load, not for a 401 that lands after a sign-out
+                if (sessionExpired || !signedInBefore) {
+                    rememberDeepLink();
                 }
                 $state.go('loginDialog');
             });
@@ -488,12 +514,21 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 //timeout need because $state not fully loading in run method and need to wait little time
                 $timeout(function () {
                     var currentState = $state.current;
+                    var pendingState = $state.transition && $state.transition.to();
+                    // taken on every sign-in, whichever way it goes on, so a saved link never outlives it
+                    var deepLink = authContext.isAuthenticated ? takeDeepLink() : null;
+                    signedInBefore = signedInBefore || authContext.isAuthenticated;
                     if (!authContext.isAuthenticated) {
                         // currentuser is [AllowAnonymous] and answers 200 with an empty body, so an
                         // anonymous visitor lands here on every bootstrap - including one who followed
                         // a password reset link. Redirecting them would make that flow unusable.
                         if (isAnonymousAllowedState()) {
                             return;
+                        }
+                        // only a cold load keeps its link: after a sign-out the next user starts on the dashboard
+                        // (an expired session saved its link in 'unauthorized')
+                        if (!signedInBefore) {
+                            rememberDeepLink();
                         }
                         $state.go('loginDialog');
                     } else if (!authContext.passwordExpired && urlHelper.getSafeAuthorizationReturnUrl()) {
@@ -516,10 +551,23 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                                 }
                             }
                         });
+                    } else if (!currentState.name && !urlHelper.getSafeReturnUrl()
+                        && (pendingState ? pendingState.name !== 'loginDialog' : isWorkspaceHash())) {
+                        // a cold deep link is still being resolved: let it land, but fall back to the dashboard if it
+                        // never does (e.g. an old bookmark to a module that isn't installed).
+                        // A ReturnUrl or a pending #!/login is handled below, as for a finished one.
+                        $timeout(function () {
+                            if (!$state.current.name) {
+                                $state.go('workspace');
+                            }
+                        }, 3000);
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
                         var returnUrl = urlHelper.getSafeReturnUrl();
                         if (returnUrl) {
                             window.location.href = returnUrl;
+                        }
+                        else if (deepLink) {
+                            $window.location.hash = deepLink;
                         }
                         else {
                             $state.go('workspace');
