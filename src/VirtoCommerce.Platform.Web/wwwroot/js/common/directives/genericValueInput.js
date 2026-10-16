@@ -19,6 +19,9 @@ angular.module('platformWebApp')
                     scope.context.allDictionaryValues = [];
                     var theEmptyValue = { value: null };
 
+                    // ShortText values are stored in 512-character columns (dynamic property and setting values)
+                    scope.shortTextMaxLength = 512;
+
                     scope.$watch('context.currentPropValues', function (newValue, oldValue) {
                         //reflect only real changes
                         if (newValue !== oldValue &&

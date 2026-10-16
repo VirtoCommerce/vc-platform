@@ -1,10 +1,16 @@
 <script type="text/ng-template" id="dShortText.html">
-    <div class="form-input">
-        <input ng-required="currentEntity.isRequired"
+    <div class="form-input" ng-form="shortTextForm">
+        <input name="value"
+               ng-required="currentEntity.isRequired"
                ng-readonly="currentEntity.isReadOnly"
                ng-disabled="currentEntity.disabled"
                ng-model="context.currentPropValues[0].value"
+               ng-maxlength="shortTextMaxLength"
+               ng-model-options="{ allowInvalid: true }"
                placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.short-text' | translate}}">
+        <div class="form-error" ng-if="shortTextForm.value.$error.maxlength">
+            {{ 'platform.short-text-input.maxLength' | translate: { number: shortTextMaxLength } }}
+        </div>
     </div>
 </script>
 <script type="text/ng-template" id="dEmail.html">
@@ -105,6 +111,7 @@
 <script type="text/ng-template" id="dShortText-multivalue.html">
     <tags-input ng-model="context.currentPropValues"
                 min-length="1"
+                max-length="{{shortTextMaxLength}}"
                 min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                 display-property="value"
                 placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.short-text-multivalue' | translate}}">
@@ -151,13 +158,19 @@
     </div>
 </script>
 <script type="text/ng-template" id="dShortText-multilang.html">
-    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'" ng-if="isLanguageVisible(propValue.locale)">
+    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'" ng-if="isLanguageVisible(propValue.locale)" ng-form="shortTextForm">
         <label class="lang-code">{{propValue.locale}}</label>
-        <input ng-required="currentEntity.isRequired"
+        <input name="value"
+               ng-required="currentEntity.isRequired"
                ng-readonly="currentEntity.isReadOnly"
                ng-disabled="currentEntity.disabled"
                ng-model="propValue.value"
+               ng-maxlength="shortTextMaxLength"
+               ng-model-options="{ allowInvalid: true }"
                placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
+        <div class="form-error" ng-if="shortTextForm.value.$error.maxlength">
+            {{ 'platform.short-text-input.maxLength' | translate: { number: shortTextMaxLength } }}
+        </div>
     </div>
 </script>
 <script type="text/ng-template" id="dLongText-multilang.html">
@@ -187,6 +200,7 @@
         <tags-input ng-model="propValue.values"
                     min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                     min-length="1"
+                    max-length="{{shortTextMaxLength}}"
                     display-property="value"
                     placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">
         </tags-input>

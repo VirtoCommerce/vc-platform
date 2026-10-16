@@ -101,7 +101,7 @@
     "properties": {
       "short-text": {
         "title": "Lyhyt teksti",
-        "description": "Tekstiarvot alle 1024 merkkiä"
+        "description": "Tekstiarvot enintään 512 merkkiä"
       },
       "long-text": {
         "title": "Pitkä teksti",
