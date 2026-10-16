@@ -36,16 +36,18 @@ angular.module('platformWebApp')
             }
 
             function canSave() {
-                return isDirty() && blade.formScope && blade.formScope.$valid;
+                return isDirty() && blade.formScope && blade.formScope.$valid && !blade.isLoading;
             }
 
             blade.onClose = function (closeCallback) {
-                bladeNavigationService.showConfirmationIfNeeded(isDirty(), $scope.isValid, blade, $scope.saveChanges, closeCallback,
+                bladeNavigationService.showConfirmationIfNeeded(isDirty(), $scope.isValid, blade, saveChanges, closeCallback,
                     "platform.dialogs.localizable-setting-value-save.title",
                     "platform.dialogs.localizable-setting-value-save.message");
             };
 
             function saveChanges() {
+                blade.isLoading = true;
+
                 const items = [convertItem(blade.currentEntity)];
 
                 blade.allItems.forEach(function (item) {
@@ -61,6 +63,8 @@ angular.module('platformWebApp')
                     if (blade.onSaveChanges) {
                         blade.onSaveChanges();
                     }
+                }).finally(function () {
+                    blade.isLoading = false;
                 });
             }
 

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Settings;
+using VirtoCommerce.Platform.Web.Model;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.UnitTests
@@ -255,7 +257,57 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             await act.Should().ThrowAsync<InvalidOperationException>();
         }
 
+        [Theory]
+        [InlineData("2026-10-13T04:50:13.1680059Z", 1680059)]
+        [InlineData("2026-10-13T06:50:13+02:00", 0)]
+        [InlineData("2026-10-13T04:50:13", 0)] // no zone: UTC, as MVC's DateTimeZoneHandling.Utc reads it
+        public async Task SaveValuesAsync_DateTimeSetting_KeepsTheInstant(string sent, long extraTicks)
+        {
+            List<ObjectSettingEntry> savedEntries = null;
+            var service = NewService([NewDescriptor("VirtoCommerce.ModuleA.Since", ModuleA, DateTime.MinValue)], onSave: entries => savedEntries = entries.ToList());
+
+            await service.SaveValuesAsync(BindBody($"{{\"VirtoCommerce.ModuleA.Since\":\"{sent}\"}}"));
+
+            savedEntries.Should().ContainSingle();
+            savedEntries[0].Value.Should().Be(new DateTime(2026, 10, 13, 4, 50, 13, DateTimeKind.Utc).AddTicks(extraTicks));
+            ((DateTime)savedEntries[0].Value).Kind.Should().Be(DateTimeKind.Utc);
+        }
+
+        [Theory]
+        [InlineData("2026-10-13T04:50:13Z")]
+        [InlineData("2026-10-13T06:50:13+02:00")]
+        [InlineData("2026-10-13T06:50:13")]
+        [InlineData("2026-10-13T04:50:13.100Z")]
+        [InlineData("2026-10-13T04:50:13.1680059-05:30")]
+        public async Task SaveValuesAsync_TextSettingThatLooksLikeADate_KeepsTheText(string sent)
+        {
+            List<ObjectSettingEntry> savedEntries = null;
+            var service = NewService([NewDescriptor("VirtoCommerce.ModuleA.Note", ModuleA, "")], onSave: entries => savedEntries = entries.ToList());
+
+            await service.SaveValuesAsync(BindBody($"{{\"VirtoCommerce.ModuleA.Note\":\"{sent}\"}}"));
+
+            savedEntries.Should().ContainSingle();
+            savedEntries[0].Value.Should().Be(sent);
+        }
+
+        [Fact]
+        public async Task SaveValuesAsync_OtherValues_BindAsBefore()
+        {
+            List<ObjectSettingEntry> savedEntries = null;
+            var service = NewService(
+                [NewDescriptor("VirtoCommerce.ModuleA.Count", ModuleA, 0), NewDescriptor("VirtoCommerce.ModuleA.Enabled", ModuleA, false)],
+                onSave: entries => savedEntries = entries.ToList());
+
+            await service.SaveValuesAsync(BindBody("{\"VirtoCommerce.ModuleA.Count\":5,\"VirtoCommerce.ModuleA.Enabled\":true}"));
+
+            savedEntries.Select(x => x.Value).Should().Equal(5, true);
+        }
+
         // --- helpers ---
+
+        // the body as the v2 save endpoints bind it: SettingValues through MVC's Newtonsoft settings (platform Startup)
+        private static SettingValues BindBody(string json) =>
+            JsonConvert.DeserializeObject<SettingValues>(json, new JsonSerializerSettings { DateTimeZoneHandling = DateTimeZoneHandling.Utc });
 
         private static SettingDescriptor NewDescriptor(string name, string moduleId, object defaultValue) => new()
         {
@@ -265,6 +317,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             {
                 int => SettingValueType.Integer,
                 bool => SettingValueType.Boolean,
+                DateTime => SettingValueType.DateTime,
                 _ => SettingValueType.ShortText,
             },
             DefaultValue = defaultValue,
