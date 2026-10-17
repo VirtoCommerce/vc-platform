@@ -1,0 +1,52 @@
+<div class="modal-window theme-welcome" role="dialog" aria-labelledby="theme-welcome-title" aria-describedby="theme-welcome-intro">
+    <div class="modal-window__header modal-window__header--confirm">
+        <div class="modal-window__title" id="theme-welcome-title">{{ 'platform.theme.welcome.title' | translate }}</div>
+        <button type="button" class="modal-window__header-button" ng-click="cancel()" title="{{ 'platform.theme.welcome.cancel' | translate }}" aria-label="{{ 'platform.theme.welcome.cancel' | translate }}">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <div class="modal-window__body theme-welcome__body">
+        <p class="theme-welcome__intro" id="theme-welcome-intro">{{ 'platform.theme.welcome.intro' | translate }}</p>
+
+        <div class="theme-welcome__section">
+            <div class="theme-welcome__label" id="theme-welcome-mode">{{ 'platform.theme.welcome.mode' | translate }}</div>
+            <div class="theme-welcome__modes" role="radiogroup" aria-labelledby="theme-welcome-mode"
+                 ng-keydown="onGroupKey($event, modes, themeService.current, pickMode)">
+                <button type="button" class="theme-welcome__mode" role="radio" ng-repeat="mode in modes"
+                        aria-checked="{{ themeService.current === mode.id }}" tabindex="{{ themeService.current === mode.id ? 0 : -1 }}"
+                        ng-class="{'theme-welcome__mode--active': themeService.current === mode.id}" ng-click="pickMode(mode)">
+                    <span class="theme-welcome__mode-icon"><i ng-class="mode.icon" aria-hidden="true"></i></span>
+                    <span class="theme-welcome__mode-title">{{ mode.title | translate }}</span>
+                    <span class="theme-welcome__mode-description">{{ mode.description | translate }}</span>
+                    <i class="theme-welcome__check fas fa-check-circle" ng-if="themeService.current === mode.id" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="theme-welcome__section" ng-class="{'theme-welcome__section--disabled': !themeService.isModern()}">
+            <div class="theme-welcome__label" id="theme-welcome-preset">{{ 'platform.theme.welcome.preset' | translate }}</div>
+            <div class="theme-welcome__presets" role="radiogroup" aria-labelledby="theme-welcome-preset" aria-disabled="{{ !themeService.isModern() }}"
+                 ng-keydown="onGroupKey($event, presets, themeService.preset, pickPreset)">
+                <button type="button" class="theme-welcome__preset" role="radio" ng-repeat="preset in presets"
+                        aria-checked="{{ themeService.preset === preset.id }}" tabindex="{{ themeService.preset === preset.id ? 0 : -1 }}"
+                        ng-disabled="!themeService.isModern()"
+                        ng-class="{'theme-welcome__preset--active': themeService.preset === preset.id}" ng-click="pickPreset(preset)">
+                    <span class="theme-swatch theme-swatch--large" aria-hidden="true">
+                        <span class="theme-swatch__a" ng-style="{ 'background-color': preset.swatch[0] }"></span>
+                        <span class="theme-swatch__b" ng-style="{ 'background-color': preset.swatch[1] }"></span>
+                    </span>
+                    <span class="theme-welcome__preset-title">{{ preset.title | translate }}</span>
+                </button>
+            </div>
+            <div class="theme-welcome__note" ng-if="!themeService.isModern()">{{ 'platform.theme.welcome.classic-note' | translate }}</div>
+        </div>
+
+        <p class="theme-welcome__hint"><i class="fas fa-adjust" aria-hidden="true"></i> {{ 'platform.theme.welcome.hint' | translate }}</p>
+    </div>
+
+    <div class="modal-window__footer">
+        <button type="button" class="modal-window__footer-button modal-window__footer-button--primary-outline" ng-click="cancel()">{{ 'platform.theme.welcome.cancel' | translate }}</button>
+        <button type="button" class="modal-window__footer-button modal-window__footer-button--primary" ng-click="apply()">{{ 'platform.theme.welcome.apply' | translate }}</button>
+    </div>
+</div>

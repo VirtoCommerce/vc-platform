@@ -35,6 +35,18 @@
                 </div>
             </div>
         </div>
+        <!-- Modern look: the collapse toggle sits at the bottom of the menu panel (the classic look keeps the top toggle) -->
+        <div class="bar__footer">
+            <!-- small screens: the header has no room for the license notice, so it is shown in the menu drawer -->
+            <div class="bar__license">
+                <va-header-license-widget></va-header-license-widget>
+            </div>
+            <button type="button" class="bar__collapse" ng-click="toggleCollapsed()"
+                    title="{{ (menu.isCollapsed ? 'platform.menu.expand-menu' : 'platform.menu.collapse-menu') | translate }}">
+                <i class="bar__collapse-ico fa" ng-class="menu.isCollapsed ? 'fa-angle-double-right' : 'fa-angle-double-left'" aria-hidden="true"></i>
+                <span class="bar__collapse-text">{{ 'platform.menu.collapse-menu' | translate }}</span>
+            </button>
+        </div>
     </div>
     <div class="dropdown" ng-class="{'__more': currentMenuItem.path == 'more', '__opened': showSubMenu}"
         ng-init="searchText = { value: '' }">

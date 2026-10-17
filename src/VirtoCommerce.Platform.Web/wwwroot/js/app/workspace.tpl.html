@@ -1,4 +1,4 @@
-<va-main-menu ng-model="mainMenu" on-menu-changed="onMainMenuChanged(mainMenu)">
+<va-main-menu ng-model="mainMenu" on-menu-changed="onMainMenuChanged(mainMenu)" license="license">
     <div class="logo" ng-if="!mainMenu.isCollapsed">
         <!-- Links menu button -->
         <button class="links-menu-button" ng-click="toggleAppsMenu()" ng-show="hasApps()">
@@ -15,8 +15,12 @@
           </svg>
         </button>
         <div style="width: 13px" ng-show="!hasApps()">&nbsp;</div>
-        <img class="logo__img" ng-src="{{ uiCustomization.topPanelLogo_full_custom.url || uiCustomization.topPanelLogo_full_default.url }}" fallback-src="{{ uiCustomization.topPanelLogo_full_default.url }}" />
-        <a class="logo-version" href="" ng-click="showVersionInfo()">{{platformVersion}}</a>
+        <img class="logo__img" ng-src="{{ uiCustomization.topPanelLogo_full_custom.url || ($root.themeService.isLightModern() ? '/images/logo-dark.svg' : uiCustomization.topPanelLogo_full_default.url) }}" fallback-src="{{ uiCustomization.topPanelLogo_full_default.url }}" />
+        <!-- release number; a pre-release suffix (e.g. 3.1079.0-pr-3134-51bd) becomes a small tag, the full version is the tooltip -->
+        <a class="logo-version" href="" ng-click="showVersionInfo()" title="{{platformVersion}}">
+            <span class="logo-version__number">{{ platformVersion.split('-')[0] }}</span>
+            <span class="logo-version__pre" ng-if="platformVersion.indexOf('-') > 0">{{ platformVersion.split('-').slice(1, 3).join('-') }}</span>
+        </a>
     </div>
     <div class="logo" ng-if="mainMenu.isCollapsed">
         <img ng-show="!hasApps()" class="logo__img logo__img--collapsed" ng-src="{{ uiCustomization.topPanelLogo_mini_custom.url || uiCustomization.topPanelLogo_mini_default.url }}" fallback-src="{{ uiCustomization.topPanelLogo_mini_default.url }}" />

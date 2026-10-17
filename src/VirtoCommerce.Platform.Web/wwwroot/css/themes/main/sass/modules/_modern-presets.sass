@@ -1,0 +1,248 @@
+/* Color presets of the modern look.
+   A preset is a set of palette overrides on the html element (themeService sets data-vc-preset; warm is the
+   built-in palette in _modern.sass and has no attribute). Each preset has a light and a dark variant.
+   The light rule also matches in dark mode, so every dark block sets every variable its light block sets.
+   Everything else (role tokens, the module theme adapter) reads these variables, so nothing else changes. */
+
+// ---------------------------------------------------------------------------------------------------------------
+// Blue: like vc-shell (button #237aa5, ground #dbe4ec, borders #cad8e4, hover #eff7fc)
+html.vc-modern[data-vc-preset="blue"]
+  --vc-bg: #dbe4ec
+  --vc-plate: #ffffff
+  --vc-panel: #f7fafc
+  --vc-sunken: #eff7fc
+  --vc-sunken-hover: #e1eef7
+  --vc-hover: #f3f9fd
+  --vc-select: #e1f0f9
+  --vc-line: #cad8e4
+  --vc-line-soft: #e3ebf2
+  --vc-ink: #262626
+  --vc-ink-2: #333a40
+  --vc-muted: #5f6b77
+  --vc-faint: #7e8a96
+  --vc-primary: #237aa5
+  --vc-primary-hover: #1d6589
+  --vc-on-primary: #ffffff
+  --vc-primary-soft: #e1f0f9
+  --vc-primary-ink: #1b5f81
+  --vc-eyebrow: #327393
+  // links a shade darker than the button blue, for 4.5:1 text on the #dbe4ec ground
+  --vc-link: #1b6890
+  --vc-link-hover: #154f6e
+  --vc-focus: #237aa5
+  --vc-focus-ring: rgba(35, 122, 165, .22)
+  --vc-chip: #e8eef3
+  --vc-scroll-thumb: rgba(38, 50, 64, .22)
+  --vc-shadow: 0 1px 2px rgba(25, 45, 65, .06), 0 6px 20px rgba(25, 45, 65, .08)
+  --vc-shadow-lift: 0 2px 4px rgba(25, 45, 65, .08), 0 18px 44px rgba(25, 45, 65, .18)
+
+html.vc-modern.vc-dark[data-vc-preset="blue"]
+  --vc-bg: #0f1720
+  --vc-plate: #16212c
+  --vc-panel: #1a2632
+  --vc-sunken: #1d2a37
+  --vc-sunken-hover: #243445
+  --vc-hover: #1a2733
+  --vc-select: #16364a
+  --vc-line: #2a3a4a
+  --vc-line-soft: #22303d
+  --vc-ink: #e6edf3
+  --vc-ink-2: #d2dbe3
+  --vc-muted: #9fb0c0
+  --vc-faint: #7d8e9e
+  --vc-primary: #5fb3e0
+  --vc-primary-hover: #7cc2e8
+  --vc-on-primary: #0f1720
+  --vc-primary-soft: #16364a
+  --vc-primary-ink: #8fcbee
+  --vc-eyebrow: #7fb8d8
+  --vc-link: #6cb8e4
+  --vc-link-hover: #9fd0ee
+  --vc-focus: #6cb8e4
+  --vc-focus-ring: rgba(108, 184, 228, .28)
+  --vc-chip: #22313f
+  --vc-scroll-thumb: rgba(230, 237, 243, .2)
+  --vc-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px rgba(0, 0, 0, .28)
+  --vc-shadow-lift: 0 2px 4px rgba(0, 0, 0, .4), 0 18px 44px rgba(0, 0, 0, .5)
+
+// ---------------------------------------------------------------------------------------------------------------
+// Gray: like the current admin (slate blade header #465769, light-blue selection #d9effa, blue accent #43b0e6)
+html.vc-modern[data-vc-preset="gray"]
+  --vc-bg: #f5f6f9
+  --vc-plate: #ffffff
+  --vc-panel: #fafbfc
+  --vc-sunken: #eef1f5
+  --vc-sunken-hover: #e3e8ee
+  --vc-hover: #f3f5f8
+  --vc-select: #d9effa
+  --vc-line: #e1e6ee
+  --vc-line-soft: #ebeef3
+  --vc-ink: #161d25
+  --vc-ink-2: #2a333d
+  --vc-muted: #55606d
+  --vc-faint: #7a8592
+  --vc-primary: #465769
+  --vc-primary-hover: #384757
+  --vc-on-primary: #ffffff
+  --vc-primary-soft: #d9effa
+  --vc-primary-ink: #161d25
+  --vc-eyebrow: #465769
+  // darker than the admin's #43b0e6 so link text keeps 4.5:1 on the gray ground
+  --vc-link: #1b72a8
+  --vc-link-hover: #155a85
+  --vc-focus: #43b0e6
+  --vc-focus-ring: rgba(67, 176, 230, .25)
+  --vc-chip: #eaedf3
+  --vc-scroll-thumb: rgba(22, 29, 37, .2)
+  --vc-shadow: 0 1px 2px rgba(22, 29, 37, .05), 0 6px 20px rgba(22, 29, 37, .07)
+  --vc-shadow-lift: 0 2px 4px rgba(22, 29, 37, .08), 0 18px 44px rgba(22, 29, 37, .16)
+
+html.vc-modern.vc-dark[data-vc-preset="gray"]
+  --vc-bg: #151a20
+  --vc-plate: #1d242c
+  --vc-panel: #212932
+  --vc-sunken: #252e38
+  --vc-sunken-hover: #2d3742
+  --vc-hover: #222a33
+  --vc-select: #1d3a4d
+  --vc-line: #333e4a
+  --vc-line-soft: #29323c
+  --vc-ink: #e6ebf0
+  --vc-ink-2: #d0d7de
+  --vc-muted: #9ba7b4
+  --vc-faint: #7a8592
+  --vc-primary: #9db0c4
+  --vc-primary-hover: #b3c3d3
+  --vc-on-primary: #151a20
+  --vc-primary-soft: #1d3a4d
+  --vc-primary-ink: #d3ecfa
+  --vc-eyebrow: #a9bccf
+  --vc-link: #5cbcec
+  --vc-link-hover: #8fd0f2
+  --vc-focus: #5cbcec
+  --vc-focus-ring: rgba(92, 188, 236, .28)
+  --vc-chip: #2a333d
+  --vc-scroll-thumb: rgba(230, 235, 240, .2)
+  --vc-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px rgba(0, 0, 0, .28)
+  --vc-shadow-lift: 0 2px 4px rgba(0, 0, 0, .4), 0 18px 44px rgba(0, 0, 0, .5)
+
+// ---------------------------------------------------------------------------------------------------------------
+// Green: Heineken-like green in light mode, GitHub-style dark (neutral near-black, green only for the main action)
+html.vc-modern[data-vc-preset="green"]
+  --vc-bg: #eef3ec
+  --vc-plate: #fbfdf9
+  --vc-panel: #f5f9f3
+  --vc-sunken: #e8f0e5
+  --vc-sunken-hover: #dbe7d7
+  --vc-hover: #f0f6ee
+  --vc-select: #dcefdc
+  --vc-line: #d2ddcd
+  --vc-line-soft: #e2eadf
+  --vc-ink: #17261a
+  --vc-ink-2: #243527
+  --vc-muted: #55654f
+  --vc-faint: #76866f
+  --vc-primary: #0a7a2f
+  --vc-primary-hover: #086526
+  --vc-on-primary: #ffffff
+  --vc-primary-soft: #dcefdc
+  --vc-primary-ink: #0b5a24
+  --vc-eyebrow: #c8102e
+  --vc-link: #1d6b52
+  --vc-link-hover: #155240
+  --vc-focus: #1d6b52
+  --vc-focus-ring: rgba(29, 107, 82, .22)
+  --vc-chip: #e3ebe0
+  --vc-scroll-thumb: rgba(23, 38, 26, .22)
+  --vc-shadow: 0 1px 2px rgba(23, 38, 26, .05), 0 6px 20px rgba(23, 38, 26, .07)
+  --vc-shadow-lift: 0 2px 4px rgba(23, 38, 26, .08), 0 18px 44px rgba(23, 38, 26, .16)
+
+html.vc-modern.vc-dark[data-vc-preset="green"]
+  --vc-bg: #0d1117
+  --vc-plate: #161b22
+  --vc-panel: #1a2029
+  --vc-sunken: #21262d
+  --vc-sunken-hover: #292f37
+  --vc-hover: #1c2128
+  --vc-select: #1a2f22
+  --vc-line: #30363d
+  --vc-line-soft: #262c33
+  --vc-ink: #e6edf3
+  --vc-ink-2: #d1d7de
+  --vc-muted: #9198a1
+  --vc-faint: #7a828c
+  --vc-primary: #238636
+  --vc-primary-hover: #2ea043
+  --vc-on-primary: #ffffff
+  --vc-primary-soft: #1a2f22
+  --vc-primary-ink: #7ee787
+  --vc-eyebrow: #3fb950
+  --vc-link: #4493f8
+  --vc-link-hover: #79b8ff
+  --vc-focus: #4493f8
+  --vc-focus-ring: rgba(68, 147, 248, .3)
+  --vc-chip: #262c33
+  --vc-scroll-thumb: rgba(230, 237, 243, .2)
+  --vc-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px rgba(0, 0, 0, .28)
+  --vc-shadow-lift: 0 2px 4px rgba(0, 0, 0, .4), 0 18px 44px rgba(0, 0, 0, .5)
+
+// ---------------------------------------------------------------------------------------------------------------
+// Indigo: inspired by One Light / One Dark Pro (editor and side bar colors, syntax purple for eyebrows)
+html.vc-modern[data-vc-preset="indigo"]
+  --vc-bg: #eaeaeb
+  --vc-plate: #fafafa
+  --vc-panel: #f4f4f5
+  --vc-sunken: #f0f0f1
+  --vc-sunken-hover: #e2e2e4
+  --vc-hover: #f2f2f3
+  --vc-select: #e4e8fd
+  --vc-line: #dbdbdc
+  --vc-line-soft: #e6e6e7
+  --vc-ink: #383a42
+  --vc-ink-2: #44464f
+  --vc-muted: #696c77
+  --vc-faint: #80838c
+  --vc-primary: #4a63e0
+  --vc-primary-hover: #3b52c4
+  --vc-on-primary: #ffffff
+  --vc-primary-soft: #e4e8fd
+  --vc-primary-ink: #2c3fa8
+  --vc-eyebrow: #a626a4
+  // a shade darker than One Light's #4078f2, for 4.5:1 text on the #eaeaeb ground
+  --vc-link: #2c59c4
+  --vc-link-hover: #2348a0
+  --vc-focus: #526fff
+  --vc-focus-ring: rgba(82, 111, 255, .22)
+  --vc-chip: #e6e6e7
+  --vc-scroll-thumb: rgba(56, 58, 66, .22)
+  --vc-shadow: 0 1px 2px rgba(56, 58, 66, .05), 0 6px 20px rgba(56, 58, 66, .07)
+  --vc-shadow-lift: 0 2px 4px rgba(56, 58, 66, .08), 0 18px 44px rgba(56, 58, 66, .16)
+
+html.vc-modern.vc-dark[data-vc-preset="indigo"]
+  --vc-bg: #21252b
+  --vc-plate: #282c34
+  --vc-panel: #2c313a
+  --vc-sunken: #2c313a
+  --vc-sunken-hover: #353b45
+  --vc-hover: #2c313a
+  --vc-select: #2c3a52
+  --vc-line: #3e4452
+  --vc-line-soft: #333842
+  --vc-ink: #d7dae0
+  --vc-ink-2: #c3c8d1
+  --vc-muted: #9198a4
+  --vc-faint: #7a808c
+  --vc-primary: #61afef
+  --vc-primary-hover: #7fbff3
+  --vc-on-primary: #21252b
+  --vc-primary-soft: #2c3a52
+  --vc-primary-ink: #8cc4f5
+  --vc-eyebrow: #c678dd
+  --vc-link: #61afef
+  --vc-link-hover: #8cc4f5
+  --vc-focus: #61afef
+  --vc-focus-ring: rgba(97, 175, 239, .3)
+  --vc-chip: #333842
+  --vc-scroll-thumb: rgba(215, 218, 224, .2)
+  --vc-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px rgba(0, 0, 0, .28)
+  --vc-shadow-lift: 0 2px 4px rgba(0, 0, 0, .4), 0 18px 44px rgba(0, 0, 0, .5)
