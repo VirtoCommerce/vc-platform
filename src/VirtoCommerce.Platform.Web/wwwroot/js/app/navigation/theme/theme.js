@@ -19,8 +19,6 @@ angular.module('platformWebApp')
         var basePreset = 'warm';
         var storageKey = 'VirtoCommerce.Platform.UI.Theme';
         var presetStorageKey = 'VirtoCommerce.Platform.UI.ThemePreset';
-        var fontsLinkId = 'vc-modern-fonts';
-        var fontsHref = 'https://fonts.googleapis.com/css2?family=Geologica:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap';
         var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 
         // The theme and preset are kept in this browser's localStorage.
@@ -53,18 +51,6 @@ angular.module('platformWebApp')
         function readPreset() {
             var value = read(presetStorageKey);
             return presetIds.indexOf(value) >= 0 ? value : defaultPreset;
-        }
-
-        function ensureFonts() {
-            if (document.getElementById(fontsLinkId)) {
-                return;
-            }
-
-            var link = document.createElement('link');
-            link.id = fontsLinkId;
-            link.rel = 'stylesheet';
-            link.href = fontsHref;
-            document.head.appendChild(link);
         }
 
         function changed() {
@@ -109,7 +95,6 @@ angular.module('platformWebApp')
                     root.removeAttribute('data-vc-preset');
                 }
                 if (isModern) {
-                    ensureFonts();
                     themeAdapter.apply();
                 } else {
                     themeAdapter.remove();

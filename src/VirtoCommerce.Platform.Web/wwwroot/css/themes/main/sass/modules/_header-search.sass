@@ -29,9 +29,13 @@
     &:focus-within
       background: rgba(255, 255, 255, .14)
       border-color: $baseColorRaw
-  &__lead
-    color: #838d9a
-    font-size: 13px
+      .fa.global-search__lead
+        color: $whiteColor
+  // the generic ".global-search .fa" rule above would make it inherit the dark header text color
+  .fa.global-search__lead
+    color: #aeb7c2
+    font-size: 14px
+    transition: color .15s ease
   &__input
     background: transparent
     border: 0
