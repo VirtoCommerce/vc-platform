@@ -2,8 +2,8 @@ angular.module('platformWebApp')
     .factory('platformWebApp.themeService', ['$rootScope', 'platformWebApp.themeAdapter', function ($rootScope, themeAdapter) {
         // classic: the original look; light/dark: the modern look; system: modern, following the OS color scheme
         var themes = ['light', 'dark', 'system', 'classic'];
-        // light until the user picks a theme (the same default as the VirtoCommerce.Platform.UI.Theme setting)
-        var defaultTheme = 'light';
+        // the classic look until the user picks another one in the look dialog (Ctrl+Alt+T, themeWelcome.js)
+        var defaultTheme = 'classic';
         // Color presets of the modern look (light and dark variants in _modern-presets.sass); warm is the built-in palette
         // in _modern.sass, the others override it.
         // swatch: the preset's primary color and ground, shown in the theme menu and the welcome dialog
@@ -15,18 +15,15 @@ angular.module('platformWebApp')
             { id: 'indigo', title: 'platform.theme.presets.indigo', swatch: ['#4a63e0', '#eaeaeb'] }
         ];
         var presetIds = presets.map(function (p) { return p.id; });
-        // the same default as the VirtoCommerce.Platform.UI.ThemePreset setting
         var defaultPreset = 'gray';
         var basePreset = 'warm';
-        // the same names as the user profile settings, so a value means the same in both places
         var storageKey = 'VirtoCommerce.Platform.UI.Theme';
         var presetStorageKey = 'VirtoCommerce.Platform.UI.ThemePreset';
         var fontsLinkId = 'vc-modern-fonts';
         var fontsHref = 'https://fonts.googleapis.com/css2?family=Geologica:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap';
         var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 
-        // The theme and preset are kept in the user profile (see themeProfile.js) and cached in localStorage,
-        // so the sign-in page and the first paint use the last choice made in this browser.
+        // The theme and preset are kept in this browser's localStorage.
         // Storage can be unavailable (private mode, blocked site data); fall back to the defaults then.
         function read(key) {
             try {
@@ -70,12 +67,10 @@ angular.module('platformWebApp')
             document.head.appendChild(link);
         }
 
-        // options.persist === false: the change comes from the user profile (or is a preview), don't save it back
-        function changed(options) {
+        function changed() {
             $rootScope.$broadcast('platformWebApp.themeChanged', service.current, {
                 theme: service.current,
-                preset: service.preset,
-                persist: !options || options.persist !== false
+                preset: service.preset
             });
         }
 
@@ -132,26 +127,26 @@ angular.module('platformWebApp')
                 var root = document.documentElement;
                 root.classList.toggle('vc-menu-open', open === undefined ? !root.classList.contains('vc-menu-open') : !!open);
             },
-            setTheme: function (theme, options) {
+            setTheme: function (theme) {
                 service.current = service.isValidTheme(theme) ? theme : defaultTheme;
                 write(storageKey, service.current);
                 service.apply();
-                changed(options);
+                changed();
             },
-            setPreset: function (preset, options) {
+            setPreset: function (preset) {
                 service.preset = service.isValidPreset(preset) ? preset : defaultPreset;
                 write(presetStorageKey, service.preset);
                 service.apply();
-                changed(options);
+                changed();
             },
-            // both at once (one change notification), e.g. when the user profile is loaded
-            setLook: function (theme, preset, options) {
+            // both at once (one change notification)
+            setLook: function (theme, preset) {
                 service.current = service.isValidTheme(theme) ? theme : defaultTheme;
                 service.preset = service.isValidPreset(preset) ? preset : defaultPreset;
                 write(storageKey, service.current);
                 write(presetStorageKey, service.preset);
                 service.apply();
-                changed(options);
+                changed();
             }
         };
 
@@ -176,7 +171,23 @@ angular.module('platformWebApp')
         // available to templates as $root.themeService
         $rootScope.themeService = themeService;
         themeService.apply();
-        bladeNavigationService.setBookMode(themeService.isModern());
+        // Book mode (blades fold to spines): always in the modern look; the classic look uses it on small screens
+        // only, where it shows one blade at a time. Keep the breakpoint in sync with $mobileBreakpoint in _modern-mobile.sass
+        var smallScreenQuery = window.matchMedia ? window.matchMedia('(max-width: 767px)') : null;
+        function updateBookMode() {
+            bladeNavigationService.setBookMode(themeService.isModern() || !!(smallScreenQuery && smallScreenQuery.matches));
+        }
+        updateBookMode();
+        if (smallScreenQuery) {
+            var onSmallScreenChange = function () {
+                $rootScope.$applyAsync(updateBookMode);
+            };
+            if (smallScreenQuery.addEventListener) {
+                smallScreenQuery.addEventListener('change', onSmallScreenChange);
+            } else if (smallScreenQuery.addListener) {
+                smallScreenQuery.addListener(onSmallScreenChange);
+            }
+        }
         if (document.readyState !== 'complete') {
             window.addEventListener('load', themeService.refreshAdapter);
         }
@@ -201,7 +212,5 @@ angular.module('platformWebApp')
                 themeService.toggleMobileMenu(false);
             }
         }, true);
-        $rootScope.$on('platformWebApp.themeChanged', function () {
-            bladeNavigationService.setBookMode(themeService.isModern());
-        });
+        $rootScope.$on('platformWebApp.themeChanged', updateBookMode);
     }]);

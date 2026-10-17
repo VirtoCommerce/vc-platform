@@ -12,7 +12,8 @@
     <va-header-password-widget></va-header-password-widget>
 
     <div class="header__nav">
-        <div class="header__nav-item header__nav-item--theme" ng-class="{'header__nav-item--opened': themeMenuOpen}">
+        <!-- hidden from users for now: the look dialog (Ctrl+Alt+T, themeWelcome.js) changes the look -->
+        <div class="header__nav-item header__nav-item--theme" ng-class="{'header__nav-item--opened': themeMenuOpen}" ng-if="showThemeMenu">
             <button type="button" class="header__nav-ico header__nav-ico--theme" ng-click="toggleThemeMenu($event)"
                     title="{{'platform.menu.theme' | translate}}" aria-label="{{'platform.menu.theme' | translate}}" aria-haspopup="true" aria-expanded="{{themeMenuOpen}}">
                 <i class="fas fa-adjust" aria-hidden="true"></i>

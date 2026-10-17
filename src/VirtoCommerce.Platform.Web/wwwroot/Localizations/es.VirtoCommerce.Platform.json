@@ -39,7 +39,7 @@
       },
       "welcome": {
         "title": "Elija su apariencia",
-        "intro": "Elija un modo y un ajuste de color. Verá el resultado al instante detrás de esta ventana. Su elección se guarda en su perfil y le acompaña en cualquier navegador.",
+        "intro": "Elija un modo y un ajuste de color. Verá el resultado al instante detrás de esta ventana. Su elección se guarda en este navegador.",
         "mode": "Modo",
         "preset": "Ajuste de color",
         "light-description": "Claro y limpio, para espacios bien iluminados",
@@ -47,9 +47,9 @@
         "system-description": "Sigue el modo claro u oscuro de su dispositivo",
         "classic-description": "La apariencia original de Virto Commerce",
         "classic-note": "Los ajustes de color se aplican a los modos claro y oscuro.",
-        "hint": "Puede cambiarlo cuando quiera desde el menú de tema del encabezado.",
+        "hint": "Pulse Ctrl+Alt+T para volver a abrir esta ventana.",
         "apply": "Aplicar",
-        "not-now": "Ahora no"
+        "cancel": "Cancelar"
       }
     },
     "search": {
@@ -1243,18 +1243,6 @@
           "ShowMeridian": {
             "description": "Mostrar indicador de meridiano de tiempo (AM o PM)",
             "title": "Mostrar meridiano de tiempo"
-          },
-          "Theme": {
-            "title": "Tema",
-            "description": "Apariencia del back office: claro, oscuro, según el sistema o clásico"
-          },
-          "ThemePreset": {
-            "title": "Ajuste de color",
-            "description": "Ajuste de color de la apariencia moderna: cálido, azul, gris, verde o índigo"
-          },
-          "ThemeSelected": {
-            "title": "Tema elegido",
-            "description": "Se marca cuando el usuario ha elegido una apariencia; hasta entonces el back office ofrece elegirla tras iniciar sesión"
           }
         },
         "Cache": {

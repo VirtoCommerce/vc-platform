@@ -1,7 +1,7 @@
 <div class="modal-window theme-welcome" role="dialog" aria-labelledby="theme-welcome-title" aria-describedby="theme-welcome-intro">
     <div class="modal-window__header modal-window__header--confirm">
         <div class="modal-window__title" id="theme-welcome-title">{{ 'platform.theme.welcome.title' | translate }}</div>
-        <button type="button" class="modal-window__header-button" ng-click="notNow()" title="{{ 'platform.theme.welcome.not-now' | translate }}" aria-label="{{ 'platform.theme.welcome.not-now' | translate }}">
+        <button type="button" class="modal-window__header-button" ng-click="cancel()" title="{{ 'platform.theme.welcome.cancel' | translate }}" aria-label="{{ 'platform.theme.welcome.cancel' | translate }}">
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
     </div>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="modal-window__footer">
-        <button type="button" class="modal-window__footer-button modal-window__footer-button--primary-outline" ng-click="notNow()">{{ 'platform.theme.welcome.not-now' | translate }}</button>
+        <button type="button" class="modal-window__footer-button modal-window__footer-button--primary-outline" ng-click="cancel()">{{ 'platform.theme.welcome.cancel' | translate }}</button>
         <button type="button" class="modal-window__footer-button modal-window__footer-button--primary" ng-click="apply()">{{ 'platform.theme.welcome.apply' | translate }}</button>
     </div>
 </div>

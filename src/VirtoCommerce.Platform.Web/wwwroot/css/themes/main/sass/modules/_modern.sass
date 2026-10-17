@@ -882,9 +882,46 @@ $plateRadius: 20px
   font-size: 18px
   justify-content: center
 
-/* Main menu footer toggle: only the modern look shows it */
-.bar__footer
-  display: none
+/* Main menu footer: the collapse toggle at the bottom of the menu in both looks (the modern look styles it above) */
+html:not(.vc-modern) .nav-bar
+  // the menu sits under the logo: end it at the bottom of the window so the footer stays visible
+  .bar
+    height: calc(100% - #{$headerHeight})
+    // the scrolling list reaches down to the footer
+    .list .inner-wrapper
+      height: 100%
+  // the footer button replaces the classic top toggle
+  .bar .list.__items > .list-item:first-child
+    display: none
+  .bar__footer
+    border-top: 1px solid $baseBrd
+    display: block
+  .bar__collapse
+    align-items: center
+    background: $navbarItemBg
+    border: 0
+    color: $colorText
+    cursor: pointer
+    display: flex
+    font-family: $font
+    font-size: 13px
+    gap: 6px
+    height: 42px
+    padding: 0 $listItemHorizontalPadding
+    width: 100%
+    &:hover
+      background: var(--vc-bg-f2f6f9, #f2f6f9)
+  .bar__collapse-ico
+    color: var(--vc-fg-319ed4, #319ED4)
+    font-size: 20px
+    text-align: center
+    width: 20px
+  &.__collapsed
+    .bar__collapse
+      justify-content: center
+      padding: 0
+    .bar__collapse-text
+      display: none
 
 /* Theme picker in the header (both looks) */
 .header__nav-item--theme

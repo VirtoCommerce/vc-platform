@@ -497,42 +497,6 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = true
                 };
 
-                /// <summary>
-                /// Look of the back office: light, dark, follow the operating system, or the classic look.
-                /// Kept in the user profile so the choice follows the user to every browser and device.
-                /// </summary>
-                public static SettingDescriptor Theme { get; } = new SettingDescriptor
-                {
-                    Name = "VirtoCommerce.Platform.UI.Theme",
-                    GroupName = "Platform|User Profile",
-                    ValueType = SettingValueType.ShortText,
-                    DefaultValue = "light",
-                    AllowedValues = new object[] { "light", "dark", "system", "classic" }
-                };
-
-                /// <summary>
-                /// Color preset of the modern look (light and dark): warm, blue, gray (default), green or indigo.
-                /// </summary>
-                public static SettingDescriptor ThemePreset { get; } = new SettingDescriptor
-                {
-                    Name = "VirtoCommerce.Platform.UI.ThemePreset",
-                    GroupName = "Platform|User Profile",
-                    ValueType = SettingValueType.ShortText,
-                    DefaultValue = "gray",
-                    AllowedValues = new object[] { "warm", "blue", "gray", "green", "indigo" }
-                };
-
-                /// <summary>
-                /// Set once the user has chosen (or skipped choosing) a look; until then the back office offers the choice after sign-in.
-                /// </summary>
-                public static SettingDescriptor ThemeSelected { get; } = new SettingDescriptor
-                {
-                    Name = "VirtoCommerce.Platform.UI.ThemeSelected",
-                    GroupName = "Platform|User Profile",
-                    ValueType = SettingValueType.Boolean,
-                    DefaultValue = false
-                };
-
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
@@ -545,9 +509,6 @@ namespace VirtoCommerce.Platform.Core
                         yield return FullDateThreshold;
                         yield return FullDateThresholdUnit;
                         yield return ShowMeridian;
-                        yield return Theme;
-                        yield return ThemePreset;
-                        yield return ThemeSelected;
                     }
                 }
             }

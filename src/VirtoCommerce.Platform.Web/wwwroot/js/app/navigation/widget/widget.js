@@ -139,8 +139,8 @@ angular.module('platformWebApp')
 
             // Gridster starts a drag on every touchstart inside a widget and cancels the event, so on touch
             // screens a tap on a widget's icon or text never becomes a click. Rearranging widgets is a mouse
-            // feature: switch dragging off when touch is the primary input, and in the modern small-screen
-            // layout, where widgets are stacked in one column.
+            // feature: switch dragging off when touch is the primary input, and in the small-screen layout,
+            // where widgets are stacked in one column.
             var touchQuery = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null;
             var narrowQuery = window.matchMedia ? window.matchMedia('(max-width: 767px)') : null;
             // gridster gets its own options object: gridsterOpts is usually a template literal that Angular
@@ -148,7 +148,7 @@ angular.module('platformWebApp')
             scope.gridsterOptions = {};
             function updateDragging() {
                 var touchPrimary = !!(touchQuery && touchQuery.matches);
-                var stackedLayout = !!(narrowQuery && narrowQuery.matches) && document.documentElement.classList.contains('vc-modern');
+                var stackedLayout = !!(narrowQuery && narrowQuery.matches);
                 var draggable = angular.extend({}, scope.gridsterOpts && scope.gridsterOpts.draggable);
                 // always explicit: angular-gridster deep-merges the options, so a missing value would keep an earlier false
                 draggable.enabled = !(touchPrimary || stackedLayout) && draggable.enabled !== false;

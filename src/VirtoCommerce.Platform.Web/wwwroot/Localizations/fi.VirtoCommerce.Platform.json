@@ -39,7 +39,7 @@
       },
       "welcome": {
         "title": "Valitse ulkoasu",
-        "intro": "Valitse tila ja värimalli. Näet tuloksen heti tämän ikkunan takana. Valintasi tallennetaan profiiliisi ja seuraa sinua jokaiseen selaimeen.",
+        "intro": "Valitse tila ja värimalli. Näet tuloksen heti tämän ikkunan takana. Valintasi tallennetaan tähän selaimeen.",
         "mode": "Tila",
         "preset": "Värimalli",
         "light-description": "Kirkas ja selkeä, valoisiin tiloihin",
@@ -47,9 +47,9 @@
         "system-description": "Seuraa laitteesi vaalean tai tumman tilan asetusta",
         "classic-description": "Alkuperäinen Virto Commerce -ulkoasu",
         "classic-note": "Värimallit koskevat vaaleaa ja tummaa tilaa.",
-        "hint": "Voit muuttaa tätä milloin tahansa yläpalkin teemavalikosta.",
+        "hint": "Avaa tämä ikkuna uudelleen painamalla Ctrl+Alt+T.",
         "apply": "Käytä",
-        "not-now": "Ei nyt"
+        "cancel": "Peruuta"
       }
     },
     "search": {
@@ -1244,18 +1244,6 @@
           "ShowMeridian": {
             "description": "Näytä ajan meridiaani-indikaattori (AM tai PM)",
             "title": "Näytä ajan meridiaani"
-          },
-          "Theme": {
-            "title": "Teema",
-            "description": "Taustajärjestelmän ulkoasu: vaalea, tumma, järjestelmän mukaan tai klassinen"
-          },
-          "ThemePreset": {
-            "title": "Värimalli",
-            "description": "Modernin ulkoasun värimalli: lämmin, sininen, harmaa, vihreä tai indigo"
-          },
-          "ThemeSelected": {
-            "title": "Teema valittu",
-            "description": "Asetetaan, kun käyttäjä on valinnut ulkoasun; siihen asti valintaa tarjotaan kirjautumisen jälkeen"
           }
         },
         "Cache": {

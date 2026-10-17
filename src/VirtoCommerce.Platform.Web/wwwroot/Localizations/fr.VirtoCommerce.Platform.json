@@ -39,7 +39,7 @@
       },
       "welcome": {
         "title": "Choisissez votre apparence",
-        "intro": "Choisissez un mode et une palette de couleurs. Le résultat s’affiche aussitôt derrière cette fenêtre. Votre choix est enregistré dans votre profil et vous suit dans tous les navigateurs.",
+        "intro": "Choisissez un mode et une palette de couleurs. Le résultat s’affiche aussitôt derrière cette fenêtre. Votre choix est enregistré dans ce navigateur.",
         "mode": "Mode",
         "preset": "Palette de couleurs",
         "light-description": "Clair et net, pour les pièces lumineuses",
@@ -47,9 +47,9 @@
         "system-description": "Suit le réglage clair ou sombre de votre appareil",
         "classic-description": "L’apparence d’origine de Virto Commerce",
         "classic-note": "Les palettes de couleurs s’appliquent aux modes clair et sombre.",
-        "hint": "Vous pouvez la modifier à tout moment depuis le menu du thème dans l’en-tête.",
+        "hint": "Appuyez sur Ctrl+Alt+T pour rouvrir cette fenêtre.",
         "apply": "Appliquer",
-        "not-now": "Plus tard"
+        "cancel": "Annuler"
       }
     },
     "search": {
@@ -1243,18 +1243,6 @@
           "ShowMeridian": {
             "description": "Afficher l'indicateur de l'heure de méridien (AM ou PM)",
             "title": "Afficher le méridien"
-          },
-          "Theme": {
-            "title": "Thème",
-            "description": "Apparence du back-office : clair, sombre, selon le système ou classique"
-          },
-          "ThemePreset": {
-            "title": "Palette de couleurs",
-            "description": "Palette de l’apparence moderne : chaud, bleu, gris, vert ou indigo"
-          },
-          "ThemeSelected": {
-            "title": "Thème choisi",
-            "description": "Activé une fois que l’utilisateur a choisi une apparence ; jusque-là, le back-office propose ce choix après la connexion"
           }
         },
         "Cache": {

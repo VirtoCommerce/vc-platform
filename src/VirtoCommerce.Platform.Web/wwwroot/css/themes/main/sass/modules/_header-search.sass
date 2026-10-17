@@ -227,6 +227,17 @@
   top: auto
   transform: none
   z-index: auto
+// The classic look keeps the original tab hanging from the top edge, centered in the free space between the
+// search and the license / header icons, so it never covers them (small screens use the pill of _modern-mobile.sass)
+@media (min-width: 768px)
+  html:not(.vc-modern) .header
+    .vc-env-badge
+      align-self: flex-start
+      height: 28px
+      margin: 0 auto
+    // the tab takes the free space on both sides; the license and icons follow it on the right
+    &:has(.vc-env-badge) .header__nav
+      margin-left: 0
 body:has(.header) > .vc-env-badge
   display: none
 

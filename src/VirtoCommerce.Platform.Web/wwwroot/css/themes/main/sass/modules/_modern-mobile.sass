@@ -1,20 +1,20 @@
-/* Modern theme on small screens (phones, narrow windows).
+/* Small screens (phones, narrow windows), in the modern and the classic look.
    The main menu becomes a drawer opened from the header, the header keeps only icons, and the blade
    stack shows one blade at a time with its neighbours as spines (see doLayoutBook in bladeNavigation.js).
-   Classic keeps its desktop layout. */
+   Colors come from the modern palette; the classic look, which has no palette, uses the fallbacks. */
 
 // Keep in sync with bookMobileBreakpoint in bladeNavigation.js
 $mobileBreakpoint: 768px
 $mobileDrawerWidth: 280px
 $mobileSpineWidth: 44px
 
-// Hidden on larger screens and in the classic look
+// Hidden on larger screens
 .header__menu-toggle,
 .header__mobile-logo
   display: none
 
 @media (max-width: $mobileBreakpoint - 1px)
-  .vc-modern
+  html
     /* Header */
     .header,
     .nav-bar.__collapsed ~ .cnt .header
@@ -28,7 +28,7 @@ $mobileSpineWidth: 44px
       background: none
       border: 0
       border-radius: 9999px
-      color: var(--vc-ink-2)
+      color: var(--vc-ink-2, #{$whiteColor})
       cursor: pointer
       display: flex
       flex: none
@@ -37,7 +37,7 @@ $mobileSpineWidth: 44px
       justify-content: center
       width: 40px
       &:hover
-        background: var(--vc-sunken)
+        background: var(--vc-sunken, rgba(255, 255, 255, .12))
     .header__mobile-logo
       display: block
       flex: none
@@ -96,7 +96,7 @@ $mobileSpineWidth: 44px
         background: none
         border: 0
         border-radius: 9999px
-        color: var(--vc-ink-2)
+        color: var(--vc-ink-2, #{$whiteColor})
         cursor: pointer
         display: flex
         font-size: 16px
@@ -105,7 +105,7 @@ $mobileSpineWidth: 44px
         opacity: .8
         width: 36px
         &:hover
-          background: var(--vc-sunken)
+          background: var(--vc-sunken, rgba(255, 255, 255, .12))
       &__box
         display: none
       // a dim backdrop behind the open search; tapping it closes the search
@@ -116,7 +116,7 @@ $mobileSpineWidth: 44px
         position: fixed
         z-index: 610
       &--expanded .global-search__box
-        box-shadow: var(--vc-shadow-lift)
+        box-shadow: var(--vc-shadow-lift, 0 8px 24px rgba(0, 0, 0, .25))
         display: flex
         height: 46px
         left: 8px
@@ -142,22 +142,26 @@ $mobileSpineWidth: 44px
       display: block
       margin: 0 0 6px
       .header__info
+        // the classic header gives it a blade-sized width
+        border: 0
         display: block
+        min-width: 0
+        width: auto
       .license
         align-items: flex-start
-        border: 1px solid var(--vc-line)
+        border: 1px solid var(--vc-line, #{$baseBrd})
         border-radius: 14px
         flex-direction: column
         gap: 6px
         padding: 10px 12px
       .license__text
-        color: var(--vc-muted)
+        color: var(--vc-muted, #6b7785)
         font-size: 12px
         line-height: 1.35
         max-width: none
         white-space: normal
       .license__short
-        color: var(--vc-ink)
+        color: var(--vc-ink, #{$colorText})
         display: block
         font-size: 13px
         font-weight: 600
@@ -165,9 +169,9 @@ $mobileSpineWidth: 44px
       .license__full
         display: block
       .btn
-        background: var(--vc-primary-soft)
+        background: var(--vc-primary-soft, #d9effa)
         border-radius: 9999px
-        color: var(--vc-primary-ink)
+        color: var(--vc-primary-ink, #1f6f99)
         font-size: 12px
         font-weight: 600
         height: 28px
@@ -177,14 +181,14 @@ $mobileSpineWidth: 44px
     /* Main menu drawer */
     .nav-bar,
     .nav-bar.__collapsed
-      background: var(--vc-plate)
+      background: var(--vc-plate, #{$navbarBg})
       box-shadow: none
       transform: translateX(-105%)
       transition: transform .22s ease, box-shadow .22s ease
       width: $mobileDrawerWidth
       z-index: 520
       .logo
-        background: var(--vc-plate)
+        background: var(--vc-plate, #{$headerBg})
       // the floating menu panel fills the drawer
       .bar
         border-radius: 0
@@ -216,7 +220,7 @@ $mobileSpineWidth: 44px
           z-index: 60
     &.vc-menu-open
       .nav-bar
-        box-shadow: var(--vc-shadow-lift)
+        box-shadow: var(--vc-shadow-lift, 0 8px 24px rgba(0, 0, 0, .25))
         transform: none
       .cnt::after
         background: rgba(30, 24, 20, .4)
@@ -232,6 +236,8 @@ $mobileSpineWidth: 44px
     .cnt
       overflow-x: hidden
       .cnt-inner
+        // the classic workspace is 100% wide plus its padding
+        box-sizing: border-box
         display: flex
         gap: 8px
         padding: 10px 8px 8px
@@ -281,6 +287,87 @@ $mobileSpineWidth: 44px
         font-size: 17px
     .blade .blade-head .blade-toolbar
       padding: 0 10px
+
+    &:not(.vc-modern)
+      // classic look: the header does not center its items; the icon cells on the right fill its height
+      .header__menu-toggle,
+      .header__mobile-logo,
+      .global-search
+        align-self: center
+      // classic look: the header icons keep their 20px desktop padding; on phones they are 36px buttons
+      .header__nav-ico
+        box-sizing: border-box
+        height: 36px
+        padding: 8px
+        width: 36px
+      // classic look: the menu is laid out as a table that grows with its widest entry; in the drawer it is a
+      // column like the modern menu, with the entries scrolling above the footer
+      .nav-bar .bar
+        display: flex
+        flex-direction: column
+        .wrapper
+          display: block
+          flex: 1 1 auto
+          min-height: 0
+        .list.__items
+          display: flex
+          flex-direction: column
+          height: 100%
+          > ul
+            flex: none
+        .outer-wrapper
+          display: block
+          flex: 1 1 auto
+          min-height: 0
+        .inner-wrapper
+          height: 100%
+          overflow-y: auto
+      // classic look: the spine of a folded blade
+      .blade.__spine
+        cursor: pointer
+        .blade-wrapper
+          pointer-events: none
+          visibility: hidden
+      .blade-spine
+        align-items: center
+        background: $whiteColor
+        border: 0
+        bottom: 0
+        box-shadow: inset -1px 0 0 $baseBrd
+        box-sizing: border-box
+        color: $colorText
+        cursor: pointer
+        display: flex
+        flex-direction: column
+        left: 0
+        margin: 0
+        position: absolute
+        top: 0
+        width: 100%
+        z-index: 300
+        &__icon,
+        &__img
+          flex: none
+        &__icon
+          align-items: center
+          color: $baseColor
+          display: flex
+          font-size: 14px
+          justify-content: center
+        &__img
+          object-fit: contain
+        &__title
+          flex: 0 1 auto
+          font-weight: 600
+          min-height: 0
+          overflow: hidden
+          text-overflow: ellipsis
+          white-space: nowrap
+          writing-mode: vertical-rl
+        &__open
+          color: #a1a9b3
+          font-size: 15px
+          margin-top: auto
 
     /* Dashboard */
     // the dashboard and its widget grid have fixed desktop widths; on phones they fill the screen

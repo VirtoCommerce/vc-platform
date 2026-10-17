@@ -79,6 +79,25 @@ $dashboardHeadHeight: 60px
       max-height: 36px
       vertical-align: top
 
+// The classic look lays the dashboard out like the modern one: the header already shows the logo, so no
+// title block; widgets start one workspace gap from the menu and the header
+html:not(.vc-modern) .dashboard
+  .dashboard-head
+    display: none
+  .dashboard-area
+    height: 100%
+  .dashboard-inner
+    height: calc(100% - 12px)
+    padding: 12px 12px 0
+// the per-widget color marker as a short pill, as in the modern look
+html:not(.vc-modern) .gridster.__widget-markers > .list > .list-item::before
+  border-radius: 9999px
+  bottom: auto
+  height: 4px
+  left: 12px
+  top: 7px
+  width: 18px
+
 /* Log */
 .log
   border: 1px solid $baseBrd

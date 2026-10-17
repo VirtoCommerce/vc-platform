@@ -25,6 +25,8 @@ angular.module('platformWebApp').directive('vaHeader', ["$state", '$document', '
                 scope.modernThemes = scope.themeOptions.filter(function (theme) { return theme.id !== 'classic'; });
                 scope.classicTheme = _.findWhere(scope.themeOptions, { id: 'classic' });
                 scope.themeMenuOpen = false;
+                // hidden from users for now: the look dialog (Ctrl+Alt+T) changes the look; true shows the menu again
+                scope.showThemeMenu = false;
 
                 function closeThemeMenu() {
                     scope.$apply(function () {
