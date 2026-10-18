@@ -14,9 +14,8 @@ namespace VirtoCommerce.Platform.Data.Extensions
         {
             Triggers<IAuditable>.Inserting += entry =>
             {
-                var currentUserNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService<IUserNameResolver>();
                 var currentTime = DateTime.UtcNow;
-                var userName = currentUserNameResolver.GetCurrentUserName();
+                var userName = GetCurrentUserName(appBuilder);
 
                 entry.Entity.CreatedDate = currentTime;
                 entry.Entity.ModifiedDate = entry.Entity.CreatedDate;
@@ -26,9 +25,8 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             Triggers<IAuditable>.Updating += entry =>
             {
-                var currentUserNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService<IUserNameResolver>();
                 var currentTime = DateTime.UtcNow;
-                var userName = currentUserNameResolver.GetCurrentUserName();
+                var userName = GetCurrentUserName(appBuilder);
 
                 entry.Entity.CreatedDate = entry.Original.CreatedDate;
                 entry.Entity.CreatedBy = entry.Original.CreatedBy;
@@ -50,6 +48,14 @@ namespace VirtoCommerce.Platform.Data.Extensions
             };
 
             return appBuilder;
+        }
+
+        // IUserNameResolver is scoped; the trigger runs per saved row outside any request scope, so the scope must be released here.
+        private static string GetCurrentUserName(IApplicationBuilder appBuilder)
+        {
+            using var scope = appBuilder.ApplicationServices.CreateScope();
+
+            return scope.ServiceProvider.GetRequiredService<IUserNameResolver>().GetCurrentUserName();
         }
     }
 }

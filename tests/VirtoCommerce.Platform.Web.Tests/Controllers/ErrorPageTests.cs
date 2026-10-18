@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Moq;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Web.Controllers;
@@ -73,7 +74,7 @@ public class ErrorPageTests
         // HomeController is activated through DI, so every constructor dependency has to resolve even
         // though the Error action touches none of them.
         services.AddOptions();
-        services.AddSingleton<Func<IPlatformRepository>>(() => throw new NotSupportedException());
+        services.AddSingleton(Mock.Of<IScopedFactory<IPlatformRepository>>());
         services.AddSingleton<LicenseProvider>();
         services.AddSingleton(new Mock<ISettingsManager>().Object);
     }

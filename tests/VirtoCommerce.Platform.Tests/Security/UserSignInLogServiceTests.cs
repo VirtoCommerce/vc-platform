@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Testing;
 using Xunit;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.SignInLog;
@@ -31,7 +32,7 @@ public class UserSignInLogServiceTests
         repository.Setup(x => x.Add(It.IsAny<UserSignInLogEntity>()))
             .Callback<UserSignInLogEntity>(added.Add);
 
-        var service = new UserSignInLogService(() => repository.Object);
+        var service = new UserSignInLogService(ScopedFactoryStub.Of(repository.Object));
 
         await service.SaveChanges(
         [
@@ -48,7 +49,7 @@ public class UserSignInLogServiceTests
     public async Task SaveChangesAsync_EmptyBatch_DoesNotTouchTheRepository()
     {
         var repository = new Mock<ISecurityRepository>();
-        var service = new UserSignInLogService(() => repository.Object);
+        var service = new UserSignInLogService(ScopedFactoryStub.Of(repository.Object));
 
         await service.SaveChanges([], TestContext.Current.CancellationToken);
 
@@ -104,7 +105,7 @@ public class UserSignInLogServiceTests
         private readonly ISecurityRepository _repository;
 
         public TestableUserSignInLogService(ISecurityRepository repository)
-            : base(() => repository)
+            : base(ScopedFactoryStub.Of(repository))
         {
             _repository = repository;
         }
