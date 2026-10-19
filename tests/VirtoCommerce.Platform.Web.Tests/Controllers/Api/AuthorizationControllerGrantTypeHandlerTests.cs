@@ -64,7 +64,7 @@ public class AuthorizationControllerGrantTypeHandlerTests
             claimProviders: [],
             requestHandlers: [],
             grantTypeHandlers: grantTypeHandlers,
-            twoFactorSignInHandlers: [],
+            twoFactorSignInService: null,
             tokenManager: null,
             authorizationService: null,
             externalSignInService: null,

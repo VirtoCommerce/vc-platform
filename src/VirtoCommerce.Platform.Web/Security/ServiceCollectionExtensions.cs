@@ -70,6 +70,7 @@ namespace VirtoCommerce.Platform.Web.Security
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
             services.AddTransient<ITokenRequestValidator, BaseUserSignInValidator>();
+            services.AddTransient<ITwoFactorSignInService, TwoFactorSignInService>();
 
             if (setupAction != null)
             {

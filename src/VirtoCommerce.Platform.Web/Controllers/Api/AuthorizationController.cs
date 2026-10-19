@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
         private readonly IEnumerable<IGrantTypeHandler> _grantTypeHandlers;
-        private readonly IEnumerable<ITwoFactorSignInHandler> _twoFactorSignInHandlers;
+        private readonly ITwoFactorSignInService _twoFactorSignInService;
         private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IExternalSignInService _externalSignInService;
@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ITokenClaimProvider> claimProviders,
             IEnumerable<ITokenRequestHandler> requestHandlers,
             IEnumerable<IGrantTypeHandler> grantTypeHandlers,
-            IEnumerable<ITwoFactorSignInHandler> twoFactorSignInHandlers,
+            ITwoFactorSignInService twoFactorSignInService,
             OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> tokenManager,
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
@@ -83,7 +83,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _claimProviders = claimProviders;
             _requestHandlers = requestHandlers;
             _grantTypeHandlers = grantTypeHandlers;
-            _twoFactorSignInHandlers = twoFactorSignInHandlers;
+            _twoFactorSignInService = twoFactorSignInService;
             _tokenManager = tokenManager;
             _authorizationService = authorizationService;
             _externalSignInService = externalSignInService;
@@ -222,19 +222,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (context.SignInResult.Succeeded && await _signInManager.IsTwoFactorEnabledAsync(user))
                 {
-                    var twoFactorSignInHandler = _twoFactorSignInHandlers.LastOrDefault();
-                    if (twoFactorSignInHandler == null)
-                    {
-                        await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
-                            SignInFailureReason.TwoFactorUnavailable, openIdConnectRequest.ClientId);
-                        await delayedResponse.FailAsync();
-                        return BadRequest(SecurityErrorDescriber.TwoFactorUnavailable());
-                    }
-
                     context.DelayedResponse = delayedResponse;
-                    var challengeResult = await twoFactorSignInHandler.ChallengeAsync(context);
+                    var challengeResult = await _twoFactorSignInService.ChallengeAsync(context);
                     await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
-                        context.FailureReason ?? SignInFailureReason.RequiresTwoFactor, openIdConnectRequest.ClientId);
+                        context.FailureReason, openIdConnectRequest.ClientId);
                     await delayedResponse.FailAsync();
                     return challengeResult;
                 }

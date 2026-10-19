@@ -4,5 +4,5 @@ namespace VirtoCommerce.Platform.Core.Security;
 
 public interface ITwoFactorPolicy
 {
-    Task<bool> IsTwoFactorRequiredAsync(TwoFactorPolicyContext context);
+    Task<bool> IsTwoFactorRequiredAsync(ApplicationUser user);
 }

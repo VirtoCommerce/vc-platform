@@ -1,10 +1,10 @@
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -49,15 +49,14 @@ namespace VirtoCommerce.Platform.Web.Security
             return appBuilder;
         }
 
-        public static IApplicationBuilder UseTwoFactorSignInManagerCheck(this IApplicationBuilder appBuilder, ILogger logger)
+        public static IApplicationBuilder UseTwoFactorSignInManagerCheck(this IApplicationBuilder appBuilder)
         {
             using var scope = appBuilder.ApplicationServices.CreateScope();
 
             var policyCount = scope.ServiceProvider.GetServices<ITwoFactorPolicy>().Count();
             if (policyCount > 0 && scope.ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>() is not VirtoSignInManager)
             {
-                logger.LogError("Two-factor sign-in is not enforced: {PolicyCount} ITwoFactorPolicy implementation(s) are registered, but SignInManager<ApplicationUser> does not derive from VirtoSignInManager.",
-                    policyCount);
+                throw new InvalidOperationException($"Two-factor sign-in cannot be enforced: {policyCount} ITwoFactorPolicy implementation(s) are registered, but SignInManager<ApplicationUser> does not derive from VirtoSignInManager.");
             }
 
             return appBuilder;

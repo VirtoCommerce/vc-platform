@@ -10,9 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
-using OpenIddict.Abstractions;
-using OpenIddict.Server;
-using OpenIddict.Server.AspNetCore;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security;
 using Xunit;
@@ -44,11 +41,11 @@ public class VirtoSignInManagerTests
         var isEnabled = await CreateSignInManager(notRequiring.Object, requiring.Object).IsTwoFactorEnabledAsync(_user);
 
         isEnabled.Should().BeTrue();
-        requiring.Verify(x => x.IsTwoFactorRequiredAsync(It.Is<TwoFactorPolicyContext>(c => c.User == _user)), Times.Once);
+        requiring.Verify(x => x.IsTwoFactorRequiredAsync(_user), Times.Once);
     }
 
     [Fact]
-    public async Task IsTwoFactorEnabledAsync_UserEnabledTwoFactor_ReturnsTrueWithoutPolicies()
+    public async Task IsTwoFactorEnabledAsync_UserEnabledTwoFactor_SkipsPolicies()
     {
         _userManager.SetupGet(x => x.SupportsUserTwoFactor).Returns(true);
         _userManager.Setup(x => x.GetTwoFactorEnabledAsync(_user)).ReturnsAsync(true);
@@ -58,22 +55,7 @@ public class VirtoSignInManagerTests
         var isEnabled = await CreateSignInManager(policy.Object).IsTwoFactorEnabledAsync(_user);
 
         isEnabled.Should().BeTrue();
-        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.IsAny<TwoFactorPolicyContext>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task IsTwoFactorEnabledAsync_TokenRequest_PassesGrantTypeAndParametersToPolicies()
-    {
-        var request = new OpenIddictRequest { GrantType = "password", Username = "admin" };
-        request.SetParameter("storeId", "B2B-store");
-        SetTokenRequest(request);
-        var policy = CreatePolicy(isRequired: false);
-
-        await CreateSignInManager(policy.Object).IsTwoFactorEnabledAsync(_user);
-
-        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.Is<TwoFactorPolicyContext>(c =>
-            c.GrantType == "password" &&
-            c.Parameters["STOREID"] == "B2B-store")), Times.Once);
+        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>()), Times.Never);
     }
 
     [Fact]
@@ -82,37 +64,6 @@ public class VirtoSignInManagerTests
         var isEnabled = await CreateSignInManager().IsTwoFactorEnabledAsync(_user);
 
         isEnabled.Should().BeFalse();
-    }
-
-    [Theory]
-    [InlineData(OpenIddictConstants.Parameters.Password)]
-    [InlineData(OpenIddictConstants.Parameters.ClientSecret)]
-    [InlineData(OpenIddictConstants.Parameters.RefreshToken)]
-    [InlineData(OpenIddictConstants.Parameters.Code)]
-    [InlineData(OpenIddictConstants.Parameters.ClientAssertion)]
-    [InlineData(OpenIddictConstants.Parameters.Assertion)]
-    public async Task IsTwoFactorEnabledAsync_TokenRequest_ExcludesSecretsFromTheContext(string secretParameter)
-    {
-        var request = new OpenIddictRequest { GrantType = "password" };
-        request.SetParameter(secretParameter, "secret");
-        SetTokenRequest(request);
-        var policy = CreatePolicy(isRequired: false);
-
-        await CreateSignInManager(policy.Object).IsTwoFactorEnabledAsync(_user);
-
-        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.Is<TwoFactorPolicyContext>(c =>
-            c.GrantType == "password" && !c.Parameters.ContainsKey(secretParameter))), Times.Once);
-    }
-
-    [Fact]
-    public async Task IsTwoFactorEnabledAsync_NotATokenRequest_PassesNoGrantType()
-    {
-        var policy = CreatePolicy(isRequired: false);
-
-        await CreateSignInManager(policy.Object).IsTwoFactorEnabledAsync(_user);
-
-        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.Is<TwoFactorPolicyContext>(c =>
-            c.GrantType == null && c.Parameters.Count == 0)), Times.Once);
     }
 
     [Fact]
@@ -124,7 +75,7 @@ public class VirtoSignInManagerTests
         (await signInManager.IsTwoFactorEnabledAsync(_user)).Should().BeTrue();
         (await signInManager.IsTwoFactorEnabledAsync(_user)).Should().BeTrue();
 
-        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.IsAny<TwoFactorPolicyContext>()), Times.Once);
+        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>()), Times.Once);
     }
 
     [Fact]
@@ -150,18 +101,10 @@ public class VirtoSignInManagerTests
             It.IsAny<ClaimsPrincipal>(), It.IsAny<AuthenticationProperties>()), Times.Once);
     }
 
-    private void SetTokenRequest(OpenIddictRequest request)
-    {
-        _httpContext.Features.Set(new OpenIddictServerAspNetCoreFeature
-        {
-            Transaction = new OpenIddictServerTransaction { Request = request },
-        });
-    }
-
     private static Mock<ITwoFactorPolicy> CreatePolicy(bool isRequired)
     {
         var policy = new Mock<ITwoFactorPolicy>();
-        policy.Setup(x => x.IsTwoFactorRequiredAsync(It.IsAny<TwoFactorPolicyContext>())).ReturnsAsync(isRequired);
+        policy.Setup(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(isRequired);
 
         return policy;
     }

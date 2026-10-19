@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security;
@@ -47,7 +46,7 @@ public class TwoFactorSignInRegistrationTests
     [InlineData(true, false, true)]
     [InlineData(true, true, false)]
     [InlineData(false, false, false)]
-    public void UseTwoFactorSignInManagerCheck_ReportsPoliciesTheSignInManagerIgnores(bool hasPolicy, bool isVirtoSignInManager, bool reportsError)
+    public void UseTwoFactorSignInManagerCheck_FailsWhenTheSignInManagerIgnoresPolicies(bool hasPolicy, bool isVirtoSignInManager, bool throws)
     {
         var services = new ServiceCollection();
         if (hasPolicy)
@@ -56,12 +55,17 @@ public class TwoFactorSignInRegistrationTests
         }
 
         services.AddScoped(_ => CreateSignInManager(isVirtoSignInManager));
-        var logger = new Mock<ILogger>();
 
-        new ApplicationBuilder(services.BuildServiceProvider()).UseTwoFactorSignInManagerCheck(logger.Object);
+        var act = () => new ApplicationBuilder(services.BuildServiceProvider()).UseTwoFactorSignInManagerCheck();
 
-        logger.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(),
-            It.IsAny<Func<It.IsAnyType, Exception, string>>()), reportsError ? Times.Once : Times.Never);
+        if (throws)
+        {
+            act.Should().Throw<InvalidOperationException>().WithMessage("*VirtoSignInManager*");
+        }
+        else
+        {
+            act.Should().NotThrow();
+        }
     }
 
     private static SignInManager<ApplicationUser> CreateSignInManager(bool isVirtoSignInManager)

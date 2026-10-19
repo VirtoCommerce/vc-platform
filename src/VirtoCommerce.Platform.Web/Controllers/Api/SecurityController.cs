@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +24,7 @@ using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -52,6 +54,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserSessionsService _userSessionsService;
         private readonly IUserSignInLogSearchService _userSignInLogSearchService;
         private readonly IAdminUIAccessPolicy _adminUIAccessPolicy;
+        private readonly ITwoFactorSignInService _twoFactorSignInService;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -71,7 +74,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IUserSessionsSearchService userSessionsSearchService,
             IUserSessionsService userSessionsService,
             IAdminUIAccessPolicy adminUIAccessPolicy,
-            IUserSignInLogSearchService userSignInLogSearchService)
+            IUserSignInLogSearchService userSignInLogSearchService,
+            ITwoFactorSignInService twoFactorSignInService)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -91,6 +95,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userSessionsService = userSessionsService;
             _adminUIAccessPolicy = adminUIAccessPolicy;
             _userSignInLogSearchService = userSignInLogSearchService;
+            _twoFactorSignInService = twoFactorSignInService;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
@@ -208,7 +213,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!loginResult.Succeeded)
             {
-                await PublishSignInAttempt(request.UserName, user, succeeded: false, ToFailureReason(loginResult));
+                var failureReason = ToFailureReason(loginResult);
+
+                if (loginResult.RequiresTwoFactor && !_twoFactorSignInService.IsAvailable)
+                {
+                    await HttpContext.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
+                    failureReason = SignInFailureReason.TwoFactorUnavailable;
+                }
+
+                await PublishSignInAttempt(request.UserName, user, succeeded: false, failureReason);
                 await delayedResponse.FailAsync();
                 return Ok(loginResult);
             }

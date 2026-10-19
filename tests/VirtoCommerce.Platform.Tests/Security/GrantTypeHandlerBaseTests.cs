@@ -173,6 +173,58 @@ public class GrantTypeHandlerBaseTests
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<UserLoginEvent>()), Times.Never);
     }
 
+    [Fact]
+    public async Task HandleAsync_Should_ReturnTheTwoFactorChallenge_When_TwoFactorIsRequired()
+    {
+        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        var challengeResult = new BadRequestObjectResult("challenge");
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
+        context.SignInManager.Setup(x => x.IsTwoFactorEnabledAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
+        context.TwoFactorSignInService.Setup(x => x.ChallengeAsync(context.RequestContext))
+            .Callback<TokenRequestContext>(x => x.FailureReason = SignInFailureReason.RequiresTwoFactor)
+            .ReturnsAsync(challengeResult);
+
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
+
+        actionResult.Should().BeSameAs(challengeResult);
+        context.SignInManager.Verify(x => x.CreateUserPrincipalAsync(It.IsAny<ApplicationUser>()), Times.Never);
+        context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Never);
+        VerifySignInAttempt(context, succeeded: false, SignInFailureReason.RequiresTwoFactor);
+    }
+
+    [Fact]
+    public async Task HandleAsync_Should_NotStartTwoFactor_When_ARequestValidatorRejects()
+    {
+        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        var context = CreateContext(
+            validationResult: GrantValidationResult.Succeed(user),
+            requestValidators: [CreateRejectingValidator(1, new TokenResponse { Code = "custom_error" })]);
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
+        context.SignInManager.Setup(x => x.IsTwoFactorEnabledAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(true);
+
+        await context.Handler.HandleAsync(context.RequestContext);
+
+        context.TwoFactorSignInService.Verify(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task HandleAsync_Should_SignIn_When_TheGrantDoesNotRequireTwoFactor()
+    {
+        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user), twoFactorRequired: false);
+        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
+        context.SignInManager.Setup(x => x.IsTwoFactorEnabledAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(true);
+        context.SignInManager.Object.UserManager = context.UserManager.Object;
+        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
+
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
+
+        actionResult.Should().BeOfType<SignInResult>();
+        context.TwoFactorSignInService.Verify(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()), Times.Never);
+        VerifySignInAttempt(context, succeeded: true, failureReason: null);
+    }
+
     private static void VerifySignInAttempt(TestContext context, bool succeeded, string failureReason)
     {
         context.EventPublisher.Verify(x => x.Publish(It.Is<UserSignInAttemptEvent>(e =>
@@ -196,7 +248,8 @@ public class GrantTypeHandlerBaseTests
         IEnumerable<ITokenClaimProvider> claimProviders = null,
         IEnumerable<ITokenRequestHandler> requestHandlers = null,
         bool skipOptionalSteps = false,
-        string failureReason = null)
+        string failureReason = null,
+        bool? twoFactorRequired = null)
     {
         var userStore = new Mock<IUserStore<ApplicationUser>>();
         var userManager = new Mock<UserManager<ApplicationUser>>(userStore.Object, null, null, null, null, null, null, null, null);
@@ -212,17 +265,20 @@ public class GrantTypeHandlerBaseTests
             userManager.Object, contextAccessor.Object, claimsFactory.Object, identityOptions, logger.Object, schemes.Object, confirmation.Object);
 
         var eventPublisher = new Mock<IEventPublisher>();
+        var twoFactorSignInService = new Mock<ITwoFactorSignInService>();
 
         var handler = new TestGrantHandler(
             validationResult,
             failureReason,
             skipOptionalSteps,
+            twoFactorRequired,
             signInManager.Object,
             identityOptions,
             requestValidators ?? [],
             claimProviders ?? [],
             requestHandlers ?? [],
-            eventPublisher.Object);
+            eventPublisher.Object,
+            twoFactorSignInService.Object);
 
         var requestContext = new TokenRequestContext
         {
@@ -231,7 +287,7 @@ public class GrantTypeHandlerBaseTests
             Properties = new AuthenticationProperties(),
         };
 
-        return new TestContext(handler, requestContext, signInManager, userManager, eventPublisher);
+        return new TestContext(handler, requestContext, signInManager, userManager, eventPublisher, twoFactorSignInService);
     }
 
     private sealed record TestContext(
@@ -239,29 +295,34 @@ public class GrantTypeHandlerBaseTests
         TokenRequestContext RequestContext,
         Mock<SignInManager<ApplicationUser>> SignInManager,
         Mock<UserManager<ApplicationUser>> UserManager,
-        Mock<IEventPublisher> EventPublisher);
+        Mock<IEventPublisher> EventPublisher,
+        Mock<ITwoFactorSignInService> TwoFactorSignInService);
 
     private sealed class TestGrantHandler : GrantTypeHandlerBase
     {
         private readonly GrantValidationResult _validationResult;
         private readonly string _failureReason;
         private readonly bool _skipOptionalSteps;
+        private readonly bool? _twoFactorRequired;
 
         public TestGrantHandler(
             GrantValidationResult validationResult,
             string failureReason,
             bool skipOptionalSteps,
+            bool? twoFactorRequired,
             SignInManager<ApplicationUser> signInManager,
             IOptions<IdentityOptions> identityOptions,
             IEnumerable<ITokenRequestValidator> requestValidators,
             IEnumerable<ITokenClaimProvider> claimProviders,
             IEnumerable<ITokenRequestHandler> requestHandlers,
-            IEventPublisher eventPublisher)
-            : base(signInManager, identityOptions, requestValidators, claimProviders, requestHandlers, eventPublisher)
+            IEventPublisher eventPublisher,
+            ITwoFactorSignInService twoFactorSignInService)
+            : base(signInManager, identityOptions, requestValidators, claimProviders, requestHandlers, eventPublisher, twoFactorSignInService)
         {
             _validationResult = validationResult;
             _failureReason = failureReason;
             _skipOptionalSteps = skipOptionalSteps;
+            _twoFactorRequired = twoFactorRequired;
         }
 
         public override string GrantType => _grantType;
@@ -284,6 +345,12 @@ public class GrantTypeHandlerBaseTests
         protected override Task<TokenResponse> UpdateLastLoginAsync(TokenRequestContext context)
         {
             return _skipOptionalSteps ? Task.FromResult<TokenResponse>(null) : base.UpdateLastLoginAsync(context);
+        }
+
+        // Simulates a grant (e.g. OTP) whose credential is strong enough on its own.
+        protected override Task<bool> IsTwoFactorRequiredAsync(TokenRequestContext context)
+        {
+            return _twoFactorRequired.HasValue ? Task.FromResult(_twoFactorRequired.Value) : base.IsTwoFactorRequiredAsync(context);
         }
 
         protected override Task BeforeSignInAsync(TokenRequestContext context)

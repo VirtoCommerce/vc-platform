@@ -128,9 +128,7 @@ angular.module('platformWebApp')
 
                     if (filter.succeeded === 'awaiting') {
                         criteria.awaitingSecondFactor = true;
-                    } else if (filter.succeeded === '') {
-                        criteria.awaitingSecondFactor = false;
-                    } else {
+                    } else if (filter.succeeded !== '') {
                         criteria.succeeded = filter.succeeded === 'true';
                     }
 

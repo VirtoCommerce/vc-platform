@@ -830,7 +830,7 @@ namespace VirtoCommerce.Platform.Web
                 }
             }
 
-            app.UseTwoFactorSignInManagerCheck(logger);
+            app.UseTwoFactorSignInManagerCheck();
 
             app.UseEndpoints(SetupEndpoints);
 

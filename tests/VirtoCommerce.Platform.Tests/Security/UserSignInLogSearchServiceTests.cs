@@ -329,7 +329,7 @@ public class UserSignInLogSearchServiceTests
     }
 
     [Fact]
-    public async Task GetStatsAsync_TwoFactorPendingAttempts_AreLeftOutOfTheStats()
+    public async Task GetStatsAsync_TwoFactorPendingAttempts_CountInTheTotalButNotAsFailures()
     {
         var at = new DateTime(2026, 9, 15, 11, 0, 0, DateTimeKind.Utc);
 
@@ -345,11 +345,11 @@ public class UserSignInLogSearchServiceTests
             EndDate = at.AddMinutes(5),
         });
 
-        stats.TotalCount.Should().Be(2);
+        stats.TotalCount.Should().Be(3);
         stats.FailedCount.Should().Be(1);
-        stats.PreviousTotalCount.Should().Be(0);
+        stats.PreviousTotalCount.Should().Be(1);
         stats.PreviousFailedCount.Should().Be(0);
-        stats.SignInsByStore.Should().ContainSingle().Which.Count.Should().Be(1);
+        stats.SignInsByStore.Should().ContainSingle().Which.Count.Should().Be(2);
         stats.FailureReasonBreakdown.Should().ContainSingle().Which.Key.Should().Be(SignInFailureReason.InvalidPassword);
         stats.TopFailedUserNames.Should().ContainSingle().Which.Key.Should().Be("intruder");
 
@@ -403,7 +403,6 @@ public class UserSignInLogSearchServiceTests
         {
             StartDate = window.StartDate,
             EndDate = window.EndDate,
-            AwaitingSecondFactor = false,
             Take = 0,
         });
         var byStore = await service.SearchAsync(new UserSignInLogSearchCriteria
@@ -411,7 +410,6 @@ public class UserSignInLogSearchServiceTests
             StartDate = window.StartDate,
             EndDate = window.EndDate,
             StoreId = "store-1",
-            AwaitingSecondFactor = false,
             Take = 0,
         });
 

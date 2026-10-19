@@ -77,7 +77,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     {
         using var repository = _repositoryFactory();
 
-        var unwindowed = BuildFilterQuery(repository, criteria).Where(CompletedAttempt);
+        var unwindowed = BuildFilterQuery(repository, criteria);
         var query = ApplyWindow(unwindowed, criteria.StartDate, criteria.EndDate);
         var failed = query.Where(FailedAttempt);
 
@@ -97,7 +97,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         };
 
         await AddPreviousPeriod(result, unwindowed, criteria);
-        await AddTimeline(result, query, criteria);
+        await AddTimeline(result, query.Where(CompletedAttempt), criteria);
 
         return result;
     }

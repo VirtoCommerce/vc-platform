@@ -637,7 +637,7 @@ public class AuthorizationControllerSignInLogTests
             claimProviders: [],
             requestHandlers: [],
             grantTypeHandlers: [],
-            twoFactorSignInHandlers: twoFactorSignInHandlers ?? [],
+            twoFactorSignInService: new TwoFactorSignInService(twoFactorSignInHandlers ?? []),
             // The audited branches never touch the token manager, and the constructor only assigns
             // fields. Passing null keeps this harness off OpenIddict's internal store plumbing.
             tokenManager: null,
