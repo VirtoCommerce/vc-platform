@@ -213,15 +213,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!loginResult.Succeeded)
             {
-                var failureReason = ToFailureReason(loginResult);
-
-                if (loginResult.RequiresTwoFactor && !_twoFactorSignInService.IsAvailable)
-                {
-                    await HttpContext.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
-                    failureReason = SignInFailureReason.TwoFactorUnavailable;
-                }
-
-                await PublishSignInAttempt(request.UserName, user, succeeded: false, failureReason);
+                await PublishSignInAttempt(request.UserName, user, succeeded: false, await GetFailureReasonAsync(loginResult));
                 await delayedResponse.FailAsync();
                 return Ok(loginResult);
             }
@@ -1332,8 +1324,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 SignInType = signInType,
                 StoreId = user?.StoreId,
                 MemberId = user?.MemberId,
-                SessionId = User.FindFirstValue(OpenIddictConstants.Claims.Private.AuthorizationId),
+                SessionId = User.FindFirstValue(Claims.Private.AuthorizationId),
             });
+        }
+
+        private async Task<string> GetFailureReasonAsync(SignInResult result)
+        {
+            if (result.RequiresTwoFactor && !_twoFactorSignInService.IsAvailable)
+            {
+                await HttpContext.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
+                return SignInFailureReason.TwoFactorUnavailable;
+            }
+
+            return ToFailureReason(result);
         }
 
         private static string ToFailureReason(SignInResult result)
