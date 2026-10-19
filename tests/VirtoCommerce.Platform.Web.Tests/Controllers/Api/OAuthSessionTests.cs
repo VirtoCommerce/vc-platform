@@ -52,7 +52,7 @@ public class OAuthSessionTests : IDisposable
         httpContext.Request.Host = new HostString("shop.example");
         httpContext.Request.Headers.Origin = "https://shop.example";
         _controller = new AuthorizationController(null, Options.Create(new IdentityOptions()), _signInManager.Object,
-            Options.Create(new PasswordLoginOptions()), null, [], [], [], null, null, null, null, null, Options.Create(_options))
+            Options.Create(new PasswordLoginOptions()), null, [], [], [], [], null, null, null, null, null, Options.Create(_options))
         {
             ControllerContext = new ControllerContext { HttpContext = httpContext },
             Url = new UrlHelper(new ActionContext(httpContext, new RouteData(), new ActionDescriptor())),

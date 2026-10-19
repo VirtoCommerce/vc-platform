@@ -1,4 +1,7 @@
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Model;
@@ -38,6 +41,30 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         [InlineData("* * * * * * *")]    // too many fields (7)
         public void Validator_Rejects_Invalid_Cron(string cron)
         {
+            var result = new ObjectSettingEntryValidator().Validate(CronSetting(cron));
+
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Validator_Cron_Check_Does_Not_Depend_On_Wall_Clock()
+        {
+            // A match timeout is measured in wall-clock time, so a GC pause or CPU starvation (typical right after
+            // platform start) made a valid value time out and be rejected as invalid (VCST-6315). The cron regex must
+            // be linear-time (NonBacktracking) and run without a timeout instead.
+            var cronRegex = (Regex)typeof(ObjectSettingEntryValidator)
+                .GetField("_cronRegex", BindingFlags.NonPublic | BindingFlags.Static)!
+                .GetValue(null)!;
+
+            cronRegex.Options.Should().HaveFlag(RegexOptions.NonBacktracking);
+            cronRegex.MatchTimeout.Should().Be(Regex.InfiniteMatchTimeout);
+        }
+
+        [Fact]
+        public void Validator_Rejects_Long_Pathological_Cron()
+        {
+            var cron = string.Join(",", Enumerable.Repeat("1-2/3", 20_000)) + " * * * * x";
+
             var result = new ObjectSettingEntryValidator().Validate(CronSetting(cron));
 
             result.IsValid.Should().BeFalse();

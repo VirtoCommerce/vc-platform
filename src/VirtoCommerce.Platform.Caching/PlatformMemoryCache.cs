@@ -36,7 +36,9 @@ namespace VirtoCommerce.Platform.Caching
 
         public virtual bool TryGetValue(object key, out object value)
         {
-            return _memoryCache.TryGetValue(CacheKey.Normalize(key), out value);
+            var hit = _memoryCache.TryGetValue(CacheKey.Normalize(key), out value);
+            CacheMetrics.RecordLookup(hit, key);
+            return hit;
         }
 
         public virtual void Remove(object key)

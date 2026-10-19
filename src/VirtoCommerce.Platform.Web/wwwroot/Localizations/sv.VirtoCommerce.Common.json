@@ -101,7 +101,7 @@
     "properties": {
       "short-text": {
         "title": "Kort text",
-        "description": "Textvärden under 1024 tecken"
+        "description": "Textvärden på upp till 512 tecken"
       },
       "long-text": {
         "title": "Lång text",
