@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Web.Model;
 using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -85,7 +86,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformConstants.Security.Permissions.SettingUpdate)]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SaveGlobalValues(
-            [FromBody] Dictionary<string, object> values,
+            [FromBody] SettingValues values,
             [FromQuery] bool replaceAll = false)
         {
             if (values == null)
@@ -156,7 +157,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult> SaveTenantValues(
             string tenantType,
             string tenantId,
-            [FromBody] Dictionary<string, object> values,
+            [FromBody] SettingValues values,
             [FromQuery] bool replaceAll = false)
         {
             if (values == null)
@@ -240,7 +241,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost("me/values")]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SaveMeValues(
-            [FromBody] Dictionary<string, object> values,
+            [FromBody] SettingValues values,
             [FromQuery] bool replaceAll = false)
         {
             if (values == null)

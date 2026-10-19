@@ -101,7 +101,7 @@
     "properties": {
       "short-text": {
         "title": "短文本",
-        "description": "1024个字符以内的文本值"
+        "description": "512个字符以内的文本值"
       },
       "long-text": {
         "title": "长文本",
