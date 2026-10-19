@@ -243,6 +243,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     return BadRequest(SecurityErrorDescriber.DuplicateEmailLoginAttempt());
                 }
 
+                if (!context.SignInResult.Succeeded)
+                {
+                    await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                        ToFailureReason(context.SignInResult), openIdConnectRequest.ClientId);
+
+                    await delayedResponse.FailAsync();
+
+                    return BadRequest(context.DetailedErrors && context.SignInResult.IsLockedOut
+                        ? SecurityErrorDescriber.GetLockoutError(user)
+                        : SecurityErrorDescriber.LoginFailed());
+                }
+
                 context.User = user.CloneTyped();
 
                 foreach (var requestValidator in _requestValidators)

@@ -1086,7 +1086,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("logintypes")]
         [AllowAnonymous]
-        [Obsolete("Use GET api/platform/security/sign-in-methods instead.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use GET api/platform/security/sign-in-methods instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public ActionResult<List<LoginType>> GetLoginTypes()
         {
             var options = new List<LoginType>

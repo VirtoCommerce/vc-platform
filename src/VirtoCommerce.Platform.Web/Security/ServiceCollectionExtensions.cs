@@ -16,7 +16,6 @@ using VirtoCommerce.Platform.Core.Security.SignInMethods;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Handlers;
-using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Security.SignInLog;
@@ -70,7 +69,6 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
-            services.AddTransient<ITokenRequestValidator, BaseUserSignInValidator>();
 
             services.AddScoped<ISignInMethodService, SignInMethodService>();
             services.AddScoped<ISignInMethodProvider, PasswordSignInMethodProvider>();
