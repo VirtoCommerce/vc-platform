@@ -104,6 +104,19 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             scope2.Should().NotBeOfType<PermissionScope>();
             scope2.Should().NotBeOfType<PermissionScopeExt1>();
         }
+
+        /// <summary>
+        /// Test PolymorphJsonConverter reads a null token as null instead of throwing
+        /// </summary>
+        [Fact]
+        public void DeserializeObject_DeserializeNull()
+        {
+            AbstractTypeFactory<PermissionScope>.OverrideType<PermissionScope, PermissionScopeOverridden>();
+
+            var scope = JsonConvert.DeserializeObject<PermissionScope>("null", new PolymorphJsonConverter());
+
+            scope.Should().BeNull();
+        }
     }
 }
 

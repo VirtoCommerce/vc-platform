@@ -142,12 +142,22 @@ public class LocalizableSettingService : ILocalizableSettingService
                         _ignoreCase),
                 _ignoreCase);
 
-        var localizedItemsByAlias = (await GetLocalizedItems(settingName))
-            .GroupBy(x => x.Alias, _ignoreCase)
-            .ToDictionary(
-                g => g.Key,
-                g => g.ToDictionary(x => x.LanguageCode),
-                _ignoreCase);
+        var localizedItemsByAlias = new Dictionary<string, Dictionary<string, LocalizedItem>>(_ignoreCase);
+
+        foreach (var localizedItem in await GetLocalizedItems(settingName))
+        {
+            if (!localizedItemsByAlias.TryGetValue(localizedItem.Alias, out var localizedItemsByLanguage))
+            {
+                localizedItemsByLanguage = new Dictionary<string, LocalizedItem>();
+                localizedItemsByAlias.Add(localizedItem.Alias, localizedItemsByLanguage);
+            }
+
+            // Concurrent saves can store the same translation twice: keep the first row and delete the rest
+            if (!localizedItemsByLanguage.TryAdd(localizedItem.LanguageCode, localizedItem))
+            {
+                itemIdsToDelete.Add(localizedItem.Id);
+            }
+        }
 
         // Delete
         foreach (var (alias, localizedItemsByLanguage) in localizedItemsByAlias)
