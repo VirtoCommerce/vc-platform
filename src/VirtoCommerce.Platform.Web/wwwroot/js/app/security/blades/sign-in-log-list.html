@@ -114,7 +114,9 @@
 </div>
 
 <script type="text/ng-template" id="sign-in-log-date.cell.html">
-  <div class="ui-grid-cell-contents">{{ row.entity.createdDate | date:'short' }}</div>
+  <!-- amParse first: the date filter only shifts into the profile time zone for a moment, so a
+       raw ISO string rendered in the browser zone and disagreed with the record card. -->
+  <div class="ui-grid-cell-contents">{{ row.entity.createdDate | amParse | date:'short' }}</div>
 </script>
 
 <script type="text/ng-template" id="sign-in-log-user.cell.html">
