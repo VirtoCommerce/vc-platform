@@ -55,7 +55,7 @@ public class OAuthLoginPathTests : IDisposable
         _httpContext = new DefaultHttpContext { RequestServices = _services };
         _httpContext.Request.Scheme = "https";
         _controller = new AuthorizationController(null, Options.Create(new IdentityOptions()), _signInManager.Object,
-            Options.Create(new PasswordLoginOptions()), null, [], [], [], null, null, null, null, null, Options.Create(_options))
+            Options.Create(new PasswordLoginOptions()), null, [], [], [], [], null, null, null, null, null, Options.Create(_options))
         {
             ControllerContext = new ControllerContext { HttpContext = _httpContext },
             Url = new UrlHelper(new ActionContext(_httpContext, new RouteData(), new ActionDescriptor())),
