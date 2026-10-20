@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.signInLogDashboardController',
-        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService',
-            function ($scope, accounts, bladeNavigationService) {
+        ['$scope', '$filter', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService',
+            function ($scope, $filter, accounts, bladeNavigationService) {
                 var blade = $scope.blade;
 
                 blade.title = blade.title || 'platform.blades.sign-in-log-dashboard.title';
@@ -45,6 +45,12 @@ angular.module('platformWebApp')
                     });
                 };
 
+                // Below this many records in the previous window a percentage says more about the
+                // tiny baseline than about the movement (885 vs 1 read "88400%"), so the tile shows
+                // the absolute change instead. The cap catches large jumps from a larger baseline.
+                var MIN_PERCENT_BASELINE = 10;
+                var MAX_PERCENT = 999;
+
                 /**
                  * Movement against the same-length window immediately before this one.
                  * Returns null when there is nothing to compare against ("all time", or both
@@ -57,19 +63,18 @@ angular.module('platformWebApp')
 
                     var change = current - previous;
 
-                    if (previous === 0) {
-                        // No baseline: a percentage would be infinite, so report the absolute move.
-                        return change === 0 ? null : { absolute: change, direction: 'up' };
-                    }
-
                     if (change === 0) {
-                        return { percent: 0, direction: 'flat' };
+                        return previous === 0 ? null : { percent: 0, direction: 'flat' };
                     }
 
-                    return {
-                        percent: Math.round(Math.abs(change) / previous * 100),
-                        direction: change > 0 ? 'up' : 'down'
-                    };
+                    var direction = change > 0 ? 'up' : 'down';
+                    var percent = previous ? Math.round(Math.abs(change) / previous * 100) : Infinity;
+
+                    if (previous < MIN_PERCENT_BASELINE || percent > MAX_PERCENT) {
+                        return { absolute: Math.abs(change), direction: direction };
+                    }
+
+                    return { percent: percent, direction: direction };
                 }
 
                 /**
@@ -143,14 +148,16 @@ angular.module('platformWebApp')
                     };
                 }
 
+                // Through the date filter, like every other timestamp in the admin, so labels follow
+                // the profile time zone and regional format rather than the browser's.
                 function formatBucket(timestamp, granularity) {
-                    var d = new Date(timestamp);
-
                     if (granularity === 'Day') {
-                        return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                        // Day buckets are UTC calendar days on the server. Labelling one in a zone
+                        // west of UTC would name the day before, so the bucket keeps its own date.
+                        return $filter('date')(timestamp, 'MMM d', 'UTC');
                     }
 
-                    return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+                    return $filter('date')($filter('amParse')(timestamp), 'shortTime');
                 }
 
                 // At most six labels, whatever the bucket count, so they never collide.
