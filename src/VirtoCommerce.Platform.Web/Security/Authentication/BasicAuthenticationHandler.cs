@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Security;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
 {
@@ -15,17 +16,20 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ITwoFactorSignInService _twoFactorSignInService;
 
         public BasicAuthenticationHandler(
             IOptionsMonitor<BasicAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            ITwoFactorSignInService twoFactorSignInService)
             : base(options, logger, encoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _twoFactorSignInService = twoFactorSignInService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -57,7 +61,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                 return AuthenticateResult.Fail("Invalid user name or password.");
             }
 
-            if (await _signInManager.IsTwoFactorEnabledAsync(user))
+            if (await _twoFactorSignInService.IsTwoFactorRequiredAsync(user))
             {
                 return AuthenticateResult.Fail("Two-factor authentication is required for this user. Use an API key instead of the password.");
             }

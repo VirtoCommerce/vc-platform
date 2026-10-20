@@ -20,8 +20,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
-using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Security;
 using Xunit;
@@ -47,6 +47,12 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IUserSignInLogSearchService> _userSignInLogSearchServiceMock;
         private readonly Mock<ITwoFactorSignInService> _twoFactorSignInServiceMock;
 
+        private const string Password = "right";
+        private const string TwoFactorStoreId = "mfa-store";
+        private readonly ApplicationUser _twoFactorAdmin = new() { Id = "user-1", UserName = "b2badmin@test.com", StoreId = TwoFactorStoreId };
+        private bool _isTwoFactorAvailable = true;
+        private readonly HashSet<string> _rememberedTwoFactorClientUserIds = [];
+
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
         // Controller
@@ -63,7 +69,12 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _userSessionsServiceMock = new Mock<IUserSessionsService>();
             _userSignInLogSearchServiceMock = new Mock<IUserSignInLogSearchService>();
             _twoFactorSignInServiceMock = new Mock<ITwoFactorSignInService>();
-            _twoFactorSignInServiceMock.SetupGet(x => x.IsAvailable).Returns(true);
+            _twoFactorSignInServiceMock
+                .Setup(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync((ApplicationUser user) => user.StoreId == TwoFactorStoreId);
+            _twoFactorSignInServiceMock
+                .SetupGet(x => x.IsTwoFactorAvailable)
+                .Returns(() => _isTwoFactorAvailable);
             _logger = new Mock<ILogger<SecurityController>>();
 
             _adminUIAccessPolicyMock = new Mock<IAdminUIAccessPolicy>();
@@ -96,7 +107,34 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             _externalSigninProviderConfigs = new List<ExternalSignInProviderConfiguration>();
 
+            // Backoffice password sign-ins of the test users are answered the way VirtoSignInManager answers them.
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync((string userName) => new[] { _twoFactorAdmin }.FirstOrDefault(x => x.UserName == userName));
+            _signInManagerMock
+                .Setup(x => x.IsTwoFactorClientRememberedAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync((ApplicationUser user) => _rememberedTwoFactorClientUserIds.Contains(user.Id));
+            _signInManagerMock
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .Returns((ApplicationUser user, string password, bool _, bool _) => PasswordSignInAsync(user, password));
+
             _controller = CreateSecurityController();
+        }
+
+        private async Task<SignInResult> PasswordSignInAsync(ApplicationUser user, string password)
+        {
+            if (password != Password)
+            {
+                return SignInResult.Failed;
+            }
+
+            if (await _twoFactorSignInServiceMock.Object.IsTwoFactorRequiredAsync(user) &&
+                !await _signInManagerMock.Object.IsTwoFactorClientRememberedAsync(user))
+            {
+                return SignInResult.TwoFactorRequired;
+            }
+
+            return SignInResult.Success;
         }
 
         private SecurityController CreateSecurityController(
@@ -220,15 +258,14 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         [Fact]
         public async Task Login_TwoFactorRequired_PublishesRequiresTwoFactorAndDoesNotCompleteSignIn()
         {
+            // Arrange
             var attempts = CaptureSignInAttempts();
-            var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
-            _userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
-            _signInManagerMock
-                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .ReturnsAsync(SignInResult.TwoFactorRequired);
+            var request = new LoginRequest { UserName = _twoFactorAdmin.UserName, Password = Password };
 
-            var actual = await _controller.Login(new LoginRequest { UserName = "b2badmin@test.com", Password = "right" });
+            // Act
+            var actual = await _controller.Login(request);
 
+            // Assert
             actual.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeOfType<SignInResult>().Which.RequiresTwoFactor.Should().BeTrue();
             attempts.Should().ContainSingle().Which.FailureReason.Should().Be(SignInFailureReason.RequiresTwoFactor);
             _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
@@ -238,20 +275,19 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         [Fact]
         public async Task Login_TwoFactorRequiredWithoutTwoFactorSignIn_PublishesTwoFactorUnavailable()
         {
+            // Arrange
             var attempts = CaptureSignInAttempts();
-            var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
-            _userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
-            _signInManagerMock
-                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .ReturnsAsync(SignInResult.TwoFactorRequired);
-            _twoFactorSignInServiceMock.SetupGet(x => x.IsAvailable).Returns(false);
+            _isTwoFactorAvailable = false;
             var authenticationService = new Mock<IAuthenticationService>();
             _controller.ControllerContext.HttpContext.RequestServices = new ServiceCollection()
                 .AddSingleton(authenticationService.Object)
                 .BuildServiceProvider();
+            var request = new LoginRequest { UserName = _twoFactorAdmin.UserName, Password = Password };
 
-            var actual = await _controller.Login(new LoginRequest { UserName = "b2badmin@test.com", Password = "right" });
+            // Act
+            var actual = await _controller.Login(request);
 
+            // Assert
             actual.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeOfType<SignInResult>().Which.RequiresTwoFactor.Should().BeTrue();
             attempts.Should().ContainSingle().Which.FailureReason.Should().Be(SignInFailureReason.TwoFactorUnavailable);
             authenticationService.Verify(x => x.SignOutAsync(It.IsAny<HttpContext>(), IdentityConstants.TwoFactorUserIdScheme, It.IsAny<AuthenticationProperties>()), Times.Once);
@@ -273,6 +309,45 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             attempt.Succeeded.Should().BeTrue();
             attempt.FailureReason.Should().BeNull();
             attempt.SignInType.Should().Be(SignInType.Password);
+        }
+
+        [Fact]
+        public async Task Login_SignedInWithoutRequiredSecondFactor_RefusesAndPublishesTwoFactorUnavailable()
+        {
+            // Arrange
+            var attempts = CaptureSignInAttempts();
+            // A SignInManager that doesn't ask ITwoFactorSignInService lets the password through.
+            _signInManagerMock
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Success);
+            var request = new LoginRequest { UserName = _twoFactorAdmin.UserName, Password = Password };
+
+            // Act
+            var actual = await _controller.Login(request);
+
+            // Assert
+            actual.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().Be(SignInResult.Failed);
+            _signInManagerMock.Verify(x => x.SignOutAsync(), Times.Once);
+            attempts.Should().ContainSingle().Which.FailureReason.Should().Be(SignInFailureReason.TwoFactorUnavailable);
+            _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
+            _eventPublisherMock.Verify(x => x.Publish(It.IsAny<UserLoginEvent>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Login_TwoFactorClientRemembered_SignsIn()
+        {
+            // Arrange
+            var attempts = CaptureSignInAttempts();
+            _rememberedTwoFactorClientUserIds.Add(_twoFactorAdmin.Id);
+            var request = new LoginRequest { UserName = _twoFactorAdmin.UserName, Password = Password };
+
+            // Act
+            var actual = await _controller.Login(request);
+
+            // Assert
+            actual.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeOfType<SignInResult>().Which.Succeeded.Should().BeTrue();
+            _signInManagerMock.Verify(x => x.SignOutAsync(), Times.Never);
+            attempts.Should().ContainSingle().Which.Succeeded.Should().BeTrue();
         }
 
         [Fact]

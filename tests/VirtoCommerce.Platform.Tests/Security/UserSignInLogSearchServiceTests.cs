@@ -5,16 +5,12 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MockQueryable;
 using Moq;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Security.Search;
-using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Security.Model;
-using VirtoCommerce.Platform.Security.Repositories;
-using VirtoCommerce.Platform.Security.Services;
-using Xunit;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.SignInLog;
+using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Security;
 
@@ -331,20 +327,19 @@ public class UserSignInLogSearchServiceTests
     [Fact]
     public async Task GetStatsAsync_TwoFactorPendingAttempts_CountInTheTotalButNotAsFailures()
     {
+        // Arrange
         var at = new DateTime(2026, 9, 15, 11, 0, 0, DateTimeKind.Utc);
-
         var service = CreateService(
             Row("password-step", succeeded: false, userName: "buyer", failureReason: SignInFailureReason.RequiresTwoFactor, storeId: "store-1", createdDate: at.AddMinutes(1)),
             Row("code-step", succeeded: true, userName: "buyer", storeId: "store-1", createdDate: at.AddMinutes(1)),
             Row("wrong-password", succeeded: false, userName: "intruder", failureReason: SignInFailureReason.InvalidPassword, createdDate: at.AddMinutes(1)),
             Row("previous-password-step", succeeded: false, failureReason: SignInFailureReason.RequiresTwoFactor, createdDate: at.AddMinutes(-3)));
+        var criteria = new UserSignInLogSearchCriteria { StartDate = at, EndDate = at.AddMinutes(5) };
 
-        var stats = await service.GetStats(new UserSignInLogSearchCriteria
-        {
-            StartDate = at,
-            EndDate = at.AddMinutes(5),
-        });
+        // Act
+        var stats = await service.GetStats(criteria);
 
+        // Assert
         stats.TotalCount.Should().Be(3);
         stats.FailedCount.Should().Be(1);
         stats.PreviousTotalCount.Should().Be(1);
@@ -352,7 +347,6 @@ public class UserSignInLogSearchServiceTests
         stats.SignInsByStore.Should().ContainSingle().Which.Count.Should().Be(2);
         stats.FailureReasonBreakdown.Should().ContainSingle().Which.Key.Should().Be(SignInFailureReason.InvalidPassword);
         stats.TopFailedUserNames.Should().ContainSingle().Which.Key.Should().Be("intruder");
-
         var bucket = stats.Timeline.Single(x => x.Timestamp == at.AddMinutes(1));
         bucket.SucceededCount.Should().Be(1);
         bucket.FailedCount.Should().Be(1);
@@ -361,14 +355,17 @@ public class UserSignInLogSearchServiceTests
     [Fact]
     public async Task SearchAsync_FailedFilter_LeavesOutTwoFactorPendingAttempts()
     {
+        // Arrange
         var service = CreateService(
             Row("pending", succeeded: false, failureReason: SignInFailureReason.RequiresTwoFactor),
             Row("bad", succeeded: false, failureReason: SignInFailureReason.InvalidPassword),
             Row("ok", succeeded: true));
 
+        // Act
         var failed = await service.SearchAsync(new UserSignInLogSearchCriteria { Succeeded = false, Take = 20 });
         var all = await service.SearchAsync(new UserSignInLogSearchCriteria { Take = 20 });
 
+        // Assert
         failed.Results.Should().ContainSingle().Which.Id.Should().Be("bad");
         all.TotalCount.Should().Be(3);
     }
@@ -376,14 +373,17 @@ public class UserSignInLogSearchServiceTests
     [Fact]
     public async Task SearchAsync_AwaitingSecondFactor_FindsOrLeavesOutPendingAttempts()
     {
+        // Arrange
         var service = CreateService(
             Row("pending", succeeded: false, failureReason: SignInFailureReason.RequiresTwoFactor),
             Row("bad", succeeded: false, failureReason: SignInFailureReason.InvalidPassword),
             Row("ok", succeeded: true));
 
+        // Act
         var pending = await service.SearchAsync(new UserSignInLogSearchCriteria { AwaitingSecondFactor = true, Take = 20 });
         var completed = await service.SearchAsync(new UserSignInLogSearchCriteria { AwaitingSecondFactor = false, Take = 20 });
 
+        // Assert
         pending.Results.Select(x => x.Id).Should().Equal("pending");
         completed.Results.Select(x => x.Id).Should().BeEquivalentTo("bad", "ok");
     }
@@ -391,6 +391,7 @@ public class UserSignInLogSearchServiceTests
     [Fact]
     public async Task GetStats_SignInsAndByStore_MatchWhatTheirDrillDownsReturn()
     {
+        // Arrange
         var at = new DateTime(2026, 9, 15, 11, 0, 0, DateTimeKind.Utc);
         var service = CreateService(
             Row("password-step", succeeded: false, failureReason: SignInFailureReason.RequiresTwoFactor, storeId: "store-1", createdDate: at.AddMinutes(1)),
@@ -398,6 +399,7 @@ public class UserSignInLogSearchServiceTests
             Row("wrong-password", succeeded: false, failureReason: SignInFailureReason.InvalidPassword, createdDate: at.AddMinutes(2)));
         var window = new UserSignInLogSearchCriteria { StartDate = at, EndDate = at.AddMinutes(5) };
 
+        // Act
         var stats = await service.GetStats(window);
         var all = await service.SearchAsync(new UserSignInLogSearchCriteria
         {
@@ -413,8 +415,10 @@ public class UserSignInLogSearchServiceTests
             Take = 0,
         });
 
+        // Assert
+        stats.TotalCount.Should().Be(3);
         all.TotalCount.Should().Be(stats.TotalCount);
-        byStore.TotalCount.Should().Be(stats.SignInsByStore.Single(x => x.Key == "store-1").Count);
+        byStore.TotalCount.Should().Be(stats.SignInsByStore.Single(x => x.Key == "store-1").Count).And.Be(2);
     }
 
     [Fact]

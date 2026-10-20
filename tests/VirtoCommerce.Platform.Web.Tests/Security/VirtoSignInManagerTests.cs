@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -18,98 +17,74 @@ namespace VirtoCommerce.Platform.Web.Tests.Security;
 
 public class VirtoSignInManagerTests
 {
-    private readonly ApplicationUser _user = new() { Id = "user-1", UserName = "admin" };
+    private const string Password = "secret";
+
     private readonly Mock<UserManager<ApplicationUser>> _userManager = new(Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null);
+    private readonly Mock<ITwoFactorSignInService> _twoFactorSignInService = new();
+    private readonly Mock<IAuthenticationService> _authenticationService = new();
     private readonly DefaultHttpContext _httpContext = new();
 
-    [Fact]
-    public async Task IsTwoFactorEnabledAsync_NothingRequiresIt_ReturnsFalse()
+    public VirtoSignInManagerTests()
     {
-        var policy = CreatePolicy(isRequired: false);
-
-        var isEnabled = await CreateSignInManager(policy.Object).IsTwoFactorEnabledAsync(_user);
-
-        isEnabled.Should().BeFalse();
-    }
-
-    [Fact]
-    public async Task IsTwoFactorEnabledAsync_AnyPolicyRequiresIt_ReturnsTrue()
-    {
-        var notRequiring = CreatePolicy(isRequired: false);
-        var requiring = CreatePolicy(isRequired: true);
-
-        var isEnabled = await CreateSignInManager(notRequiring.Object, requiring.Object).IsTwoFactorEnabledAsync(_user);
-
-        isEnabled.Should().BeTrue();
-        requiring.Verify(x => x.IsTwoFactorRequiredAsync(_user), Times.Once);
-    }
-
-    [Fact]
-    public async Task IsTwoFactorEnabledAsync_UserEnabledTwoFactor_SkipsPolicies()
-    {
-        _userManager.SetupGet(x => x.SupportsUserTwoFactor).Returns(true);
-        _userManager.Setup(x => x.GetTwoFactorEnabledAsync(_user)).ReturnsAsync(true);
-        _userManager.Setup(x => x.GetValidTwoFactorProvidersAsync(_user)).ReturnsAsync(["Email"]);
-        var policy = CreatePolicy(isRequired: false);
-
-        var isEnabled = await CreateSignInManager(policy.Object).IsTwoFactorEnabledAsync(_user);
-
-        isEnabled.Should().BeTrue();
-        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task IsTwoFactorEnabledAsync_NoPolicies_ReturnsFalse()
-    {
-        var isEnabled = await CreateSignInManager().IsTwoFactorEnabledAsync(_user);
-
-        isEnabled.Should().BeFalse();
-    }
-
-    [Fact]
-    public async Task IsTwoFactorEnabledAsync_CalledTwiceForOneUser_EvaluatesPoliciesOnce()
-    {
-        var policy = CreatePolicy(isRequired: true);
-        var signInManager = CreateSignInManager(policy.Object);
-
-        (await signInManager.IsTwoFactorEnabledAsync(_user)).Should().BeTrue();
-        (await signInManager.IsTwoFactorEnabledAsync(_user)).Should().BeTrue();
-
-        policy.Verify(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>()), Times.Once);
-    }
-
-    [Fact]
-    public async Task PasswordSignInAsync_PolicyRequiresTwoFactor_RequiresTwoFactorAndKeepsFailedCount()
-    {
-        _userManager.SetupGet(x => x.SupportsUserLockout).Returns(true);
-        _userManager.Setup(x => x.IsLockedOutAsync(_user)).ReturnsAsync(false);
-        _userManager.Setup(x => x.CheckPasswordAsync(_user, "secret")).ReturnsAsync(true);
-        _userManager.Setup(x => x.GetValidTwoFactorProvidersAsync(_user)).ReturnsAsync(["Email"]);
-        _userManager.Setup(x => x.GetUserIdAsync(_user)).ReturnsAsync(_user.Id);
-        var authenticationService = new Mock<IAuthenticationService>();
-        authenticationService
+        // Answers come from the user: the password, and their own two-factor flag for the two-factor sign-in service.
+        _userManager
+            .SetupGet(x => x.SupportsUserLockout)
+            .Returns(true);
+        _userManager
+            .Setup(x => x.IsLockedOutAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync(false);
+        _userManager
+            .Setup(x => x.CheckPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+            .ReturnsAsync((ApplicationUser _, string password) => password == Password);
+        _userManager
+            .Setup(x => x.GetUserIdAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync((ApplicationUser user) => user.Id);
+        _twoFactorSignInService
+            .Setup(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync((ApplicationUser user) => user.TwoFactorEnabled);
+        _authenticationService
             .Setup(x => x.AuthenticateAsync(It.IsAny<HttpContext>(), It.IsAny<string>()))
             .ReturnsAsync(AuthenticateResult.NoResult());
-        _httpContext.RequestServices = new ServiceCollection().AddSingleton(authenticationService.Object).BuildServiceProvider();
+        _httpContext.RequestServices = new ServiceCollection()
+            .AddSingleton(_authenticationService.Object)
+            .BuildServiceProvider();
+    }
 
-        var result = await CreateSignInManager(CreatePolicy(isRequired: true).Object)
-            .PasswordSignInAsync(_user, "secret", isPersistent: false, lockoutOnFailure: true);
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task IsTwoFactorEnabledAsync_ReturnsWhatTheTwoFactorSignInServiceDecides(bool twoFactorRequired)
+    {
+        // Arrange
+        var user = new ApplicationUser { Id = "user-1", UserName = "admin", TwoFactorEnabled = twoFactorRequired };
+        var signInManager = CreateSignInManager();
 
+        // Act
+        var isEnabled = await signInManager.IsTwoFactorEnabledAsync(user);
+
+        // Assert
+        isEnabled.Should().Be(twoFactorRequired);
+        _twoFactorSignInService.Verify(x => x.IsTwoFactorRequiredAsync(user), Times.Once);
+    }
+
+    [Fact]
+    public async Task PasswordSignInAsync_TwoFactorRequired_RequiresTwoFactorAndKeepsFailedCount()
+    {
+        // Arrange
+        var user = new ApplicationUser { Id = "user-1", UserName = "admin", TwoFactorEnabled = true };
+        var signInManager = CreateSignInManager();
+
+        // Act
+        var result = await signInManager.PasswordSignInAsync(user, Password, isPersistent: false, lockoutOnFailure: true);
+
+        // Assert
         result.RequiresTwoFactor.Should().BeTrue();
         _userManager.Verify(x => x.ResetAccessFailedCountAsync(It.IsAny<ApplicationUser>()), Times.Never);
-        authenticationService.Verify(x => x.SignInAsync(_httpContext, IdentityConstants.TwoFactorUserIdScheme,
+        _authenticationService.Verify(x => x.SignInAsync(_httpContext, IdentityConstants.TwoFactorUserIdScheme,
             It.IsAny<ClaimsPrincipal>(), It.IsAny<AuthenticationProperties>()), Times.Once);
     }
 
-    private static Mock<ITwoFactorPolicy> CreatePolicy(bool isRequired)
-    {
-        var policy = new Mock<ITwoFactorPolicy>();
-        policy.Setup(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(isRequired);
-
-        return policy;
-    }
-
-    private VirtoSignInManager CreateSignInManager(params ITwoFactorPolicy[] policies)
+    private VirtoSignInManager CreateSignInManager()
     {
         var schemes = new Mock<IAuthenticationSchemeProvider>();
         schemes
@@ -124,6 +99,6 @@ public class VirtoSignInManagerTests
             NullLogger<SignInManager<ApplicationUser>>.Instance,
             schemes.Object,
             Mock.Of<IUserConfirmation<ApplicationUser>>(),
-            new List<ITwoFactorPolicy>(policies));
+            _twoFactorSignInService.Object);
     }
 }

@@ -601,8 +601,7 @@ namespace VirtoCommerce.Platform.Web
                 options.Events.OnRedirectToAccessDenied = context => ApiCookieRedirectHandler.HandleAsync(context, StatusCodes.Status403Forbidden);
             });
 
-            services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorUserIdScheme, options =>
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+            services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorUserIdScheme, options => options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
 
             services.AddAuthorization(options =>
             {
@@ -829,8 +828,6 @@ namespace VirtoCommerce.Platform.Web
                     throw new DistributedLockLostException(startupLock.Resource, "migrations and module initialization may have overlapped with another instance");
                 }
             }
-
-            app.UseTwoFactorSignInManagerCheck();
 
             app.UseEndpoints(SetupEndpoints);
 

@@ -1,11 +1,8 @@
-using System;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Web.Security;
@@ -18,11 +15,14 @@ public class TwoFactorSignInRegistrationTests
     [Fact]
     public void AddSecurityServices_ThenAddIdentity_RegistersVirtoSignInManager()
     {
+        // Arrange
         var services = new ServiceCollection();
 
+        // Act
         services.AddSecurityServices();
         services.AddIdentity<ApplicationUser, Role>();
 
+        // Assert
         services.Where(x => x.ServiceType == typeof(SignInManager<ApplicationUser>))
             .Should().ContainSingle()
             .Which.ImplementationType.Should().Be<VirtoSignInManager>();
@@ -31,51 +31,18 @@ public class TwoFactorSignInRegistrationTests
     [Fact]
     public void AddSecurityServices_SignInManagerRegisteredEarlier_KeepsIt()
     {
+        // Arrange
         var services = new ServiceCollection();
         services.AddScoped<SignInManager<ApplicationUser>, DerivedSignInManager>();
 
+        // Act
         services.AddSecurityServices();
         services.AddIdentity<ApplicationUser, Role>();
 
+        // Assert
         services.Where(x => x.ServiceType == typeof(SignInManager<ApplicationUser>))
             .Should().ContainSingle()
             .Which.ImplementationType.Should().Be<DerivedSignInManager>();
-    }
-
-    [Theory]
-    [InlineData(true, false, true)]
-    [InlineData(true, true, false)]
-    [InlineData(false, false, false)]
-    public void UseTwoFactorSignInManagerCheck_FailsWhenTheSignInManagerIgnoresPolicies(bool hasPolicy, bool isVirtoSignInManager, bool throws)
-    {
-        var services = new ServiceCollection();
-        if (hasPolicy)
-        {
-            services.AddSingleton(Mock.Of<ITwoFactorPolicy>());
-        }
-
-        services.AddScoped(_ => CreateSignInManager(isVirtoSignInManager));
-
-        var act = () => new ApplicationBuilder(services.BuildServiceProvider()).UseTwoFactorSignInManagerCheck();
-
-        if (throws)
-        {
-            act.Should().Throw<InvalidOperationException>().WithMessage("*VirtoSignInManager*");
-        }
-        else
-        {
-            act.Should().NotThrow();
-        }
-    }
-
-    private static SignInManager<ApplicationUser> CreateSignInManager(bool isVirtoSignInManager)
-    {
-        var userManager = new Mock<UserManager<ApplicationUser>>(Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null).Object;
-        var claimsFactory = Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>();
-
-        return isVirtoSignInManager
-            ? new VirtoSignInManager(userManager, new HttpContextAccessor(), claimsFactory, null, null, null, null, [])
-            : new SignInManager<ApplicationUser>(userManager, new HttpContextAccessor(), claimsFactory, null, null, null, null);
     }
 
     private sealed class DerivedSignInManager(

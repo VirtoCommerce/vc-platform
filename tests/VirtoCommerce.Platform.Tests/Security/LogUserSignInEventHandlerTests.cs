@@ -4,17 +4,13 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Security.Events;
-using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Security.Handlers;
-using Xunit;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.SignInLog;
+using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Security;
 
@@ -56,17 +52,21 @@ public class LogUserSignInEventHandlerTests
     [Fact]
     public async Task Handle_LongFailureReason_TruncatesItToTheColumnLength()
     {
+        // Arrange
         var written = new List<UserSignInLog>();
         var handler = CreateHandler(written, signInLogEnabled: true);
-
-        await handler.Handle(new UserSignInAttemptEvent
+        var attempt = new UserSignInAttemptEvent
         {
             UserName = "a",
             SignInType = SignInType.Password,
             Succeeded = false,
             FailureReason = new string('x', 100),
-        });
+        };
 
+        // Act
+        await handler.Handle(attempt);
+
+        // Assert
         written.Should().ContainSingle().Which.FailureReason.Should().HaveLength(64);
     }
 

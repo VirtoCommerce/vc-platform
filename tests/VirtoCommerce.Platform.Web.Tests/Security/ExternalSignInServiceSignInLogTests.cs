@@ -68,12 +68,14 @@ public class ExternalSignInServiceSignInLogTests
     [Fact]
     public async Task SignInAsync_UserRequiresTwoFactor_BypassesTheSecondFactor()
     {
-        var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com" };
-        _signInManager.Setup(x => x.IsTwoFactorEnabledAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(true);
+        // Arrange
+        var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com", TwoFactorEnabled = true };
         var service = CreateService(user, SignInResult.Success);
 
+        // Act
         var result = await service.SignInAsync();
 
+        // Assert
         result.Success.Should().BeTrue();
         _signInManager.Verify(x => x.ExternalLoginSignInAsync("AzureAD", "external-key", false, true), Times.Once);
     }

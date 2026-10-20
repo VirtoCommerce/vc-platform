@@ -71,15 +71,15 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
             return await FailAsync(context, SecurityErrorDescriber.SignInNotAllowed());
         }
 
+        if (await IsTwoFactorRequiredAsync(context))
+        {
+            return await FailAsync(context, errorResult: await _twoFactorSignInService.ChallengeAsync(context));
+        }
+
         var validationError = await ValidateRequestAsync(context);
         if (validationError != null)
         {
             return await FailAsync(context, validationError);
-        }
-
-        if (await IsTwoFactorRequiredAsync(context))
-        {
-            return await FailAsync(context, errorResult: await _twoFactorSignInService.ChallengeAsync(context));
         }
 
         await BeforeSignInAsync(context);
@@ -115,6 +115,11 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         return canSignIn;
     }
 
+    protected virtual Task<bool> IsTwoFactorRequiredAsync(TokenRequestContext context)
+    {
+        return _twoFactorSignInService.IsTwoFactorRequiredAsync(context.User);
+    }
+
     protected virtual async Task<TokenResponse> ValidateRequestAsync(TokenRequestContext context)
     {
         foreach (var requestValidator in _requestValidators)
@@ -127,11 +132,6 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         }
 
         return null;
-    }
-
-    protected virtual Task<bool> IsTwoFactorRequiredAsync(TokenRequestContext context)
-    {
-        return _signInManager.IsTwoFactorEnabledAsync(context.User);
     }
 
     protected virtual Task BeforeSignInAsync(TokenRequestContext context)

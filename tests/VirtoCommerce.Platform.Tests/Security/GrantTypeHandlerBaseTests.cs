@@ -14,6 +14,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using Xunit;
@@ -176,50 +177,47 @@ public class GrantTypeHandlerBaseTests
     [Fact]
     public async Task HandleAsync_Should_ReturnTheTwoFactorChallenge_When_TwoFactorIsRequired()
     {
-        var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var challengeResult = new BadRequestObjectResult("challenge");
+        // Arrange
+        var user = new ApplicationUser { Email = "buyer@acme.com", EmailConfirmed = true, TwoFactorEnabled = true };
         var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
-        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
-        context.SignInManager.Setup(x => x.IsTwoFactorEnabledAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
-        context.TwoFactorSignInService.Setup(x => x.ChallengeAsync(context.RequestContext))
-            .Callback<TokenRequestContext>(x => x.FailureReason = SignInFailureReason.RequiresTwoFactor)
-            .ReturnsAsync(challengeResult);
 
+        // Act
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
-        actionResult.Should().BeSameAs(challengeResult);
+        // Assert
+        actionResult.Should().BeSameAs(context.ChallengeResult);
         context.SignInManager.Verify(x => x.CreateUserPrincipalAsync(It.IsAny<ApplicationUser>()), Times.Never);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Never);
         VerifySignInAttempt(context, succeeded: false, SignInFailureReason.RequiresTwoFactor);
     }
 
     [Fact]
-    public async Task HandleAsync_Should_NotStartTwoFactor_When_ARequestValidatorRejects()
+    public async Task HandleAsync_Should_ChallengeBeforeTheRequestValidators_When_TwoFactorIsRequired()
     {
-        var user = new ApplicationUser { Email = "buyer@acme.com" };
-        var context = CreateContext(
-            validationResult: GrantValidationResult.Succeed(user),
-            requestValidators: [CreateRejectingValidator(1, new TokenResponse { Code = "custom_error" })]);
-        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
-        context.SignInManager.Setup(x => x.IsTwoFactorEnabledAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(true);
+        // Arrange
+        var user = new ApplicationUser { Email = "buyer@acme.com", EmailConfirmed = true, TwoFactorEnabled = true };
+        var validator = new Mock<ITokenRequestValidator>();
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user), requestValidators: [validator.Object]);
 
-        await context.Handler.HandleAsync(context.RequestContext);
+        // Act
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
-        context.TwoFactorSignInService.Verify(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()), Times.Never);
+        // Assert
+        actionResult.Should().BeSameAs(context.ChallengeResult);
+        validator.Verify(x => x.ValidateAsync(It.IsAny<TokenRequestContext>()), Times.Never);
     }
 
     [Fact]
     public async Task HandleAsync_Should_SignIn_When_TheGrantDoesNotRequireTwoFactor()
     {
-        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        // Arrange
+        var user = new ApplicationUser { Email = "buyer@acme.com", EmailConfirmed = true, TwoFactorEnabled = true };
         var context = CreateContext(validationResult: GrantValidationResult.Succeed(user), twoFactorRequired: false);
-        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(true);
-        context.SignInManager.Setup(x => x.IsTwoFactorEnabledAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(true);
-        context.SignInManager.Object.UserManager = context.UserManager.Object;
-        context.SignInManager.Setup(x => x.CreateUserPrincipalAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
 
+        // Act
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
+        // Assert
         actionResult.Should().BeOfType<SignInResult>();
         context.TwoFactorSignInService.Verify(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()), Times.Never);
         VerifySignInAttempt(context, succeeded: true, failureReason: null);
@@ -263,9 +261,30 @@ public class GrantTypeHandlerBaseTests
 
         var signInManager = new Mock<SignInManager<ApplicationUser>>(
             userManager.Object, contextAccessor.Object, claimsFactory.Object, identityOptions, logger.Object, schemes.Object, confirmation.Object);
+        signInManager.Object.UserManager = userManager.Object;
+
+        // Answers come from the user: a confirmed email lets them sign in, as with SignInOptions.RequireConfirmedEmail.
+        signInManager
+            .Setup(x => x.CanSignInAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync((ApplicationUser user) => user.EmailConfirmed);
+        signInManager
+            .Setup(x => x.CreateUserPrincipalAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
+        userManager
+            .Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync(IdentityResult.Success);
 
         var eventPublisher = new Mock<IEventPublisher>();
+
+        var challengeResult = new BadRequestObjectResult("challenge");
         var twoFactorSignInService = new Mock<ITwoFactorSignInService>();
+        twoFactorSignInService
+            .Setup(x => x.IsTwoFactorRequiredAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync((ApplicationUser user) => user.TwoFactorEnabled);
+        twoFactorSignInService
+            .Setup(x => x.ChallengeAsync(It.IsAny<TokenRequestContext>()))
+            .Callback<TokenRequestContext>(x => x.FailureReason = SignInFailureReason.RequiresTwoFactor)
+            .ReturnsAsync(challengeResult);
 
         var handler = new TestGrantHandler(
             validationResult,
@@ -287,7 +306,7 @@ public class GrantTypeHandlerBaseTests
             Properties = new AuthenticationProperties(),
         };
 
-        return new TestContext(handler, requestContext, signInManager, userManager, eventPublisher, twoFactorSignInService);
+        return new TestContext(handler, requestContext, signInManager, userManager, eventPublisher, twoFactorSignInService, challengeResult);
     }
 
     private sealed record TestContext(
@@ -296,7 +315,8 @@ public class GrantTypeHandlerBaseTests
         Mock<SignInManager<ApplicationUser>> SignInManager,
         Mock<UserManager<ApplicationUser>> UserManager,
         Mock<IEventPublisher> EventPublisher,
-        Mock<ITwoFactorSignInService> TwoFactorSignInService);
+        Mock<ITwoFactorSignInService> TwoFactorSignInService,
+        ActionResult ChallengeResult);
 
     private sealed class TestGrantHandler : GrantTypeHandlerBase
     {

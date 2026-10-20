@@ -545,7 +545,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                                 if (!currentState.abstract
                                     && currentState.name !== 'loginDialog'
                                     && currentState.name !== 'changePasswordDialog'
-                                    && !twoFactorSignInState.is(currentState)) {
+                                    && currentState.name !== twoFactorSignInState.getName()) {
                                     $state.go(currentState);
                                 } else {
                                     $state.go('workspace');
@@ -553,7 +553,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             }
                         });
                     } else if (!currentState.name && !urlHelper.getSafeReturnUrl()
-                        && (pendingState ? pendingState.name !== 'loginDialog' && !twoFactorSignInState.is(pendingState) : isWorkspaceHash())) {
+                        && (pendingState ? pendingState.name !== 'loginDialog' && pendingState.name !== twoFactorSignInState.getName() : isWorkspaceHash())) {
                         // a cold deep link is still being resolved: let it land, but fall back to the dashboard if it
                         // never does (e.g. an old bookmark to a module that isn't installed).
                         // A ReturnUrl or a pending #!/login or two-factor sign-in screen is handled below, as for a finished one.
@@ -562,7 +562,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                                 $state.go('workspace');
                             }
                         }, 3000);
-                    } else if (!currentState.name || currentState.name === 'loginDialog' || twoFactorSignInState.is(currentState)) {
+                    } else if (!currentState.name || currentState.name === 'loginDialog' || currentState.name === twoFactorSignInState.getName()) {
                         var returnUrl = urlHelper.getSafeReturnUrl();
                         if (returnUrl) {
                             window.location.href = returnUrl;

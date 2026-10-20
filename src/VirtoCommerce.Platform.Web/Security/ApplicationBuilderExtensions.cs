@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +10,6 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
-using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.SignInLog;
 
@@ -45,19 +43,6 @@ namespace VirtoCommerce.Platform.Web.Security
             appBuilder.RegisterEventHandler<UserSignInAttemptEvent, LogUserSignInEventHandler>();
 
             appBuilder.RegisterEventHandler<UserChangedEvent, RevokeUserTokenEventHandler>();
-
-            return appBuilder;
-        }
-
-        public static IApplicationBuilder UseTwoFactorSignInManagerCheck(this IApplicationBuilder appBuilder)
-        {
-            using var scope = appBuilder.ApplicationServices.CreateScope();
-
-            var policyCount = scope.ServiceProvider.GetServices<ITwoFactorPolicy>().Count();
-            if (policyCount > 0 && scope.ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>() is not VirtoSignInManager)
-            {
-                throw new InvalidOperationException($"Two-factor sign-in cannot be enforced: {policyCount} ITwoFactorPolicy implementation(s) are registered, but SignInManager<ApplicationUser> does not derive from VirtoSignInManager.");
-            }
 
             return appBuilder;
         }

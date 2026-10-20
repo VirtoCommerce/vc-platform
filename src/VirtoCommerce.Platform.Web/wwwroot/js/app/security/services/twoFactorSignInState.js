@@ -4,8 +4,11 @@ angular.module('platformWebApp')
         var get = () => _.find($state.get(), isTwoFactorSignInState);
 
         return {
-            get: get,
-            is: isTwoFactorSignInState,
+            exists: () => !!get(),
+            getName: () => {
+                var state = get();
+                return state ? state.name : undefined;
+            },
             go: (params) => $state.go(get().name, params)
         };
     }]);
