@@ -27,6 +27,8 @@ public class TwoFactorSignInService : ITwoFactorSignInService
         _twoFactorSignInHandlers = twoFactorSignInHandlers.ToList();
     }
 
+    public virtual bool IsTwoFactorAvailable => _twoFactorSignInHandlers.Count > 0;
+
     public virtual async Task<bool> IsTwoFactorRequiredAsync(ApplicationUser user)
     {
         return await IsTwoFactorEnabledForUserAsync(user) || await IsTwoFactorRequiredByPoliciesAsync(user);
@@ -67,8 +69,6 @@ public class TwoFactorSignInService : ITwoFactorSignInService
 
         return false;
     }
-
-    public virtual bool IsTwoFactorAvailable => _twoFactorSignInHandlers.Count > 0;
 
     public virtual async Task<ActionResult> ChallengeAsync(TokenRequestContext context)
     {

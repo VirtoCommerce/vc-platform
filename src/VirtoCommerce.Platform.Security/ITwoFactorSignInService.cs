@@ -7,9 +7,9 @@ namespace VirtoCommerce.Platform.Security;
 
 public interface ITwoFactorSignInService
 {
-    Task<bool> IsTwoFactorRequiredAsync(ApplicationUser user);
-
     bool IsTwoFactorAvailable { get; }
+
+    Task<bool> IsTwoFactorRequiredAsync(ApplicationUser user);
 
     Task<ActionResult> ChallengeAsync(TokenRequestContext context);
 }
