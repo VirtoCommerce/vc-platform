@@ -101,7 +101,7 @@
     "properties": {
       "short-text": {
         "title": "短いテキスト",
-        "description": "1024文字以下のテキスト値"
+        "description": "512文字以下のテキスト値"
       },
       "long-text": {
         "title": "長いテキスト",

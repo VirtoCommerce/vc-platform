@@ -189,7 +189,19 @@ angular.module('platformWebApp')
                     }
                     return setting.value;
                 }
-                return (setting.values && setting.values[0]) ? setting.values[0].value : setting.value;
+                var value = (setting.values && setting.values[0]) ? setting.values[0].value : setting.value;
+                // the code editor turns CRLF into LF on load; compare and save Json text with LF line endings,
+                // otherwise a CRLF default makes the blade dirty before the user touches anything
+                if (setting.valueType === 'Json' && angular.isString(value)) {
+                    value = value.replace(/\r\n/g, '\n');
+                    // after Reset to default save the default itself: an override that differs from it only in
+                    // line endings would otherwise normalize to the same text and never be replaced
+                    if (setting.isResetToDefault && angular.isString(setting.defaultValue)
+                        && value === setting.defaultValue.replace(/\r\n/g, '\n')) {
+                        value = setting.defaultValue;
+                    }
+                }
+                return value;
             }
 
             function mergeSchemaAndValues(schemas, values) {
@@ -552,6 +564,11 @@ angular.module('platformWebApp')
                         }
                     });
                 });
+
+                var resetSetting = _.find(blade.mergedSettings, function (m) { return m.name === setting.name; });
+                if (resetSetting) {
+                    resetSetting.isResetToDefault = true;
+                }
 
                 updateModifiedCount();
             };
