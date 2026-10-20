@@ -31,10 +31,10 @@ public class TwoFactorSignInService : ITwoFactorSignInService
 
     public virtual async Task<bool> IsTwoFactorRequiredAsync(ApplicationUser user)
     {
-        return await IsTwoFactorEnabledForUserAsync(user) || await IsTwoFactorRequiredByPoliciesAsync(user);
+        return await IsTwoFactorRequiredByUserAsync(user) || await IsTwoFactorRequiredByPoliciesAsync(user);
     }
 
-    protected virtual async Task<bool> IsTwoFactorEnabledForUserAsync(ApplicationUser user)
+    protected virtual async Task<bool> IsTwoFactorRequiredByUserAsync(ApplicationUser user)
     {
         return _userManager.SupportsUserTwoFactor &&
             await _userManager.GetTwoFactorEnabledAsync(user) &&
