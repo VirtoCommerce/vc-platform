@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.59.0" />
+    <PackageReference Include="Azure.Core" Version="1.63.0" />
     <PackageReference Include="Azure.Identity" Version="1.21.0" />
   </ItemGroup>
 
@@ -33,7 +33,7 @@
     <PackageReference Include="Microsoft.Bcl.TimeProvider" Version="10.0.13" />
     <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="3.1.32" />
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.13" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.84.2" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.91.1" />
     <PackageReference Include="Microsoft.OpenApi" Version="[2.9.0, 3.0.0)" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageReference Include="Microsoft.Win32.SystemEvents" Version="10.0.13" />
