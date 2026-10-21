@@ -411,6 +411,10 @@ $mobileSpineWidth: 44px
         position: relative !important
         top: auto !important
         width: auto !important
+    // a widget's own .cnt-inner keeps the desktop layout (value above its label), not the workspace row above
+    .cnt .gridster-cnt .cnt-inner
+      display: block
+      padding: 0
 
     /* Settings: the tree sits above the properties */
     .blade .blade-content.__settings-unified
