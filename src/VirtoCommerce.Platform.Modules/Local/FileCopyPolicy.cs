@@ -116,9 +116,11 @@ public class FileCopyPolicy : IFileCopyPolicy
         var sourceArchitecture = GetArchitecture(sourceFilePath);
         var targetArchitecture = GetArchitecture(targetFilePath);
 
+        // Managed AnyCPU assemblies carry the X86 machine type (0x14C) in the PE header on every platform,
+        // so an X86 source is compatible with any 64-bit environment, not just X64.
         result.CompatibleArchitecture = sourceArchitecture == targetArchitecture ||
                                         sourceArchitecture == environmentArchitecture ||
-                                        sourceArchitecture == Architecture.X86 && environmentArchitecture == Architecture.X64;
+                                        sourceArchitecture == Architecture.X86 && environmentArchitecture is Architecture.X64 or Architecture.Arm64;
 
         if (result.CompatibleArchitecture)
         {
