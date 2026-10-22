@@ -46,7 +46,7 @@ public class SignInMethodService(IEnumerable<ISignInMethodProvider> providers) :
 
         if (signInMethods.Sum(x => x.Method.Keys?.Count ?? 0) == 1)
         {
-            return IdentityResult.Failed(new IdentityError { Description = "The last sign-in method cannot be removed." });
+            return IdentityResult.Failed(SignInMethodErrorDescriber.LastSignInKey());
         }
 
         return await provider.DeleteKeyAsync(user, method.Name, keyId);
@@ -82,7 +82,7 @@ public class SignInMethodService(IEnumerable<ISignInMethodProvider> providers) :
 
     protected virtual IdentityResult KeyNotFound()
     {
-        return IdentityResult.Failed(new IdentityError { Description = "The sign-in key was not found." });
+        return IdentityResult.Failed(SignInMethodErrorDescriber.SignInKeyNotFound());
     }
 
     protected sealed record ProviderSignInMethod(ISignInMethodProvider Provider, SignInMethod Method);

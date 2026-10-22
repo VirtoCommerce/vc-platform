@@ -50,7 +50,7 @@ public class PasswordSignInMethodProvider(
 
     public virtual Task<IdentityResult> RenameKeyAsync(ApplicationUser user, string signInMethodName, string keyId, string name)
     {
-        return Task.FromResult(IdentityResult.Failed(new IdentityError { Description = "A password cannot be renamed." }));
+        return Task.FromResult(IdentityResult.Failed(CommonErrorDescriber.OperationNotSupported()));
     }
 
     public virtual Task<IdentityResult> DeleteKeyAsync(ApplicationUser user, string signInMethodName, string keyId)
