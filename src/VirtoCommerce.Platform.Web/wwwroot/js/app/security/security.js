@@ -279,7 +279,8 @@ angular.module('platformWebApp')
     }])
 
     .run(['$transitions', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
-        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService) {
+        '$window', 'platformWebApp.signInMethodService', 'platformWebApp.dialogService', 'platformWebApp.externalSignInStorage',
+        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService, $window, signInMethodService, dialogService, externalSignInStorage) {
             //Register module in main menu
             var menuItem = {
                 path: 'configuration/security',
@@ -375,6 +376,40 @@ angular.module('platformWebApp')
                 template: '$(Platform)/Scripts/app/security/widgets/accountSignInLogWidget.html',
                 permission: 'platform:security:sign_in_log:read'
             }, 'accountDetail');
+
+            signInMethodService.onSignInMethodsLoaded(function (signInMethods) {
+                _.each(signInMethods, function (signInMethod) {
+                    switch (signInMethod.kind) {
+                        case 'External':
+                            signInMethodService.extendSignInMethod(signInMethod.name, {
+                                keyTemplateUrl: '$(Platform)/Scripts/app/userProfile/templates/external-sign-in-key.html',
+                                signIn: function () {
+                                    externalSignInStorage.set({ providerType: signInMethod.name });
+                                    $window.location.href = 'externalsignin?authenticationType=' + signInMethod.name;
+                                }
+                            });
+
+                            break;
+                        case 'Password':
+                            signInMethodService.extendSignInMethod(signInMethod.name, {
+                                keyTemplateUrl: '$(Platform)/Scripts/app/userProfile/templates/password-sign-in-key.html',
+                                noKeysTitle: 'platform.blades.sign-in-methods-list.labels.password-not-set',
+                                createKey: function () {
+                                    const dialog = {
+                                        id: 'changePasswordDialog',
+                                        requireCurrentPassword: false
+                                    };
+
+                                    dialogService.showDialog(dialog, '$(Platform)/Scripts/app/security/dialogs/changePasswordDialog.tpl.html', 'platformWebApp.changePasswordDialog');
+
+                                    return dialog.instance.result;
+                                }
+                            });
+
+                            break;
+                    }
+                });
+            });
 
 
             $transitions.onBefore({ to: 'workspace.**' }, function (transition) {
