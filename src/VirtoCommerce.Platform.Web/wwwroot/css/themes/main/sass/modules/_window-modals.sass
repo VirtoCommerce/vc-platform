@@ -7,12 +7,12 @@
   right: 0
   top: 0
 .modal-backdrop.fade
-  background: #000
+  background: var(--vc-bg-000000, #000)
   opacity: .5
   filter: alpha(opacity=50)
 .window,
 .modal-content
-  background: $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15)
   border-radius: 2px
   font-family: $font
@@ -20,21 +20,21 @@
   min-height: 316px
   width: 516px
   .modal-header-error
-    background: #7a1c13
+    background: var(--vc-bg-7a1c13, #7a1c13)
     height: auto
     line-height: 1
     position: relative
     z-index: 50
     .modal-title
-      color: #fff
+      color: var(--vc-fg-ffffff, #fff)
       font-size: 20px
       font-weight: 400
       padding: 10px 20px
 .window
   position: relative
 .__gallery .modal-dialog
-  background-color: $whiteColor
-  border: 5px solid #a1c0d4
+  background-color: var(--vc-bg-ffffff, #{$whiteColor})
+  border: 5px solid var(--vc-bd-a1c0d4, #a1c0d4)
   bottom: 40px
   left: 80px
   margin: 0
@@ -67,7 +67,7 @@
     margin: 0
 .window .window-head,
 .modal-content .modal-header
-  background: #465769
+  background: var(--vc-bg-465769, #465769)
   border-radius: 2px 2px 0px 0px
   height: 50px
   line-height: 38px
@@ -82,7 +82,7 @@
   background-color: transparent
 .window-head .window-t,
 .modal-header .modal-title
-  color: $whiteColor
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   font-size: 16px
   line-height: 50px
   padding: 0 28px

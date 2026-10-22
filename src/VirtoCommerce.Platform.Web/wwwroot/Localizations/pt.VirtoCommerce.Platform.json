@@ -18,7 +18,55 @@
       "assets": "Recursos",
       "toggle-favorites": "Shift + Espaço para alternar favoritos",
       "developer-tools": "Ferramentas de desenvolvedor",
-      "help": "Ajuda"
+      "help": "Ajuda",
+      "main-menu": "Menu principal",
+      "collapse-menu": "Recolher menu",
+      "expand-menu": "Expandir menu",
+      "theme": "Tema",
+      "theme-light": "Claro",
+      "theme-dark": "Escuro",
+      "theme-system": "Igual ao sistema",
+      "theme-classic": "Clássico"
+    },
+    "theme": {
+      "preset": "Cor",
+      "presets": {
+        "warm": "Quente",
+        "blue": "Azul",
+        "gray": "Cinza",
+        "green": "Verde",
+        "indigo": "Índigo"
+      },
+      "welcome": {
+        "title": "Escolha sua aparência",
+        "intro": "Escolha um modo e uma predefinição de cor. Você vê o resultado na hora, atrás desta janela. Sua escolha é salva neste navegador.",
+        "mode": "Modo",
+        "preset": "Predefinição de cor",
+        "light-description": "Claro e limpo, para ambientes bem iluminados",
+        "dark-description": "Confortável para os olhos com pouca luz",
+        "system-description": "Segue a configuração clara ou escura do seu dispositivo",
+        "classic-description": "A aparência original do Virto Commerce",
+        "classic-note": "As predefinições de cor valem para os modos claro e escuro.",
+        "hint": "Pressione Ctrl+Alt+T para abrir esta janela novamente.",
+        "apply": "Aplicar",
+        "cancel": "Cancelar"
+      }
+    },
+    "search": {
+      "placeholder": "Pesquisar menu, aplicativos, configurações",
+      "searching": "Pesquisando…",
+      "no-results": "Nada encontrado para \"{{query}}\"",
+      "clear": "Limpar",
+      "error": "A pesquisa falhou",
+      "show-all": "Mostrar todos ({{count}})",
+      "hint-navigate": "para navegar",
+      "hint-open": "para abrir",
+      "hint-close": "para fechar",
+      "groups": {
+        "menu": "Menu",
+        "apps": "Aplicativos",
+        "settings": "Configurações"
+      }
     },
     "navigation": {
       "back": "Voltar"
@@ -844,8 +892,10 @@
       "licensing": {
         "license-absent": "Licença comunitária",
         "license-present": "Licença {{type}}, expira em {{expirationDate | amParse | date}}",
+        "license-present-short": "Licença {{type}}",
         "community": "Executando a edição comunitária, clique para solicitar uma licença comercial",
         "expired": "Sua licença expirou em {{expirationDate | amParse | date}}, por favor renove",
+        "expired-short": "Licença expirada",
         "purchase": "Comprar",
         "renew": "Renovar",
         "expiration-date": "Data de Expiração"

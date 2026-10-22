@@ -1,0 +1,152 @@
+/* "Choose your look" dialog, opened with Ctrl+Alt+T (themeWelcome.js).
+   Works in every look: the modern palette variables with the classic colors as fallbacks. */
+
+// the classic modal content has a fixed width; this dialog sizes itself
+.theme-welcome-window .modal-content
+  max-width: calc(100vw - 24px)
+  width: auto
+
+.theme-welcome
+  box-sizing: border-box
+  max-width: calc(100vw - 24px)
+  width: 660px
+  &__body
+    // the shared modal body does not stretch its children
+    align-items: stretch
+    display: flex
+    flex-direction: column
+    gap: 18px
+    padding: 20px 24px 8px
+    > *
+      align-self: stretch
+  &__intro
+    color: var(--vc-muted, #6b7785)
+    font-size: 14px
+    line-height: 1.5
+    margin: 0
+  &__section
+    display: flex
+    flex-direction: column
+    gap: 10px
+    &--disabled .theme-welcome__presets
+      opacity: .45
+  &__label
+    color: var(--vc-faint, #838d9a)
+    font-size: 11px
+    font-weight: 700
+    letter-spacing: .1em
+    text-transform: uppercase
+  &__modes
+    display: grid
+    gap: 10px
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+  &__mode
+    align-items: flex-start
+    background: var(--vc-plate, #ffffff)
+    border: 1.5px solid var(--vc-line, #dee3eb)
+    border-radius: 14px
+    color: var(--vc-ink, #161d25)
+    cursor: pointer
+    display: flex
+    flex-direction: column
+    font-family: inherit
+    gap: 6px
+    min-height: 118px
+    padding: 14px
+    position: relative
+    text-align: left
+    transition: border-color .15s ease, background-color .15s ease
+    &:hover
+      border-color: var(--vc-faint, #a1c0d4)
+    &:focus-visible
+      box-shadow: 0 0 0 3px var(--vc-focus-ring, rgba(67, 176, 230, .3))
+      outline: none
+    &--active,
+    &--active:hover
+      background: var(--vc-select, #ecf7fc)
+      border-color: var(--vc-primary, #43b0e6)
+  &__mode-icon
+    align-items: center
+    background: var(--vc-sunken, #f1f4f7)
+    border-radius: 10px
+    color: var(--vc-ink-2, #333)
+    display: flex
+    font-size: 15px
+    height: 32px
+    justify-content: center
+    width: 32px
+  &__mode--active &__mode-icon
+    background: var(--vc-primary, #43b0e6)
+    color: var(--vc-on-primary, #ffffff)
+  &__mode-title
+    font-size: 14px
+    font-weight: 600
+  &__mode-description
+    color: var(--vc-muted, #6b7785)
+    font-size: 12px
+    line-height: 1.4
+  &__check
+    color: var(--vc-primary, #43b0e6)
+    font-size: 16px
+    position: absolute
+    right: 12px
+    top: 12px
+  &__presets
+    display: grid
+    gap: 10px
+    grid-template-columns: repeat(5, minmax(0, 1fr))
+  &__preset
+    align-items: center
+    background: var(--vc-plate, #ffffff)
+    border: 1.5px solid var(--vc-line, #dee3eb)
+    border-radius: 14px
+    color: var(--vc-ink, #161d25)
+    cursor: pointer
+    display: flex
+    flex-direction: column
+    font-family: inherit
+    gap: 8px
+    padding: 14px 8px 12px
+    transition: border-color .15s ease, background-color .15s ease
+    &:hover:not([disabled])
+      border-color: var(--vc-faint, #a1c0d4)
+    &:focus-visible
+      box-shadow: 0 0 0 3px var(--vc-focus-ring, rgba(67, 176, 230, .3))
+      outline: none
+    &[disabled]
+      // a vendor style greys disabled buttons; the section is dimmed instead
+      background: var(--vc-plate, #ffffff)
+      cursor: not-allowed
+    &--active,
+    &--active:hover
+      background: var(--vc-select, #ecf7fc)
+      border-color: var(--vc-primary, #43b0e6)
+  &__preset-title
+    font-size: 13px
+    font-weight: 600
+  &__note
+    color: var(--vc-muted, #6b7785)
+    font-size: 12.5px
+  &__hint
+    align-items: center
+    border-top: 1px solid var(--vc-line-soft, #eaedf3)
+    color: var(--vc-muted, #6b7785)
+    display: flex
+    font-size: 12.5px
+    gap: 8px
+    margin: 4px 0 0
+    padding-top: 14px
+
+// Phones: modes in two columns, presets in a row that wraps
+@media (max-width: 600px)
+  .theme-welcome
+    &__body
+      padding: 16px 16px 6px
+    &__modes
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+    &__mode
+      min-height: 0
+    &__mode-description
+      display: none
+    &__presets
+      grid-template-columns: repeat(3, minmax(0, 1fr))
