@@ -239,17 +239,19 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         /// simulates a saved per-object override for a dictionary setting.
         /// </param>
         /// <param name="onSave">Captures the entries passed to SaveObjectSettingsAsync, if set.</param>
+        /// <param name="typeAssignments">Setting name to the tenant types it is registered for (none by default).</param>
         private static SettingsPropertyService NewService(
             IEnumerable<SettingDescriptor> descriptors,
             Dictionary<string, object[]> allowedValueOverrides = null,
-            Action<IEnumerable<ObjectSettingEntry>> onSave = null)
+            Action<IEnumerable<ObjectSettingEntry>> onSave = null,
+            Dictionary<string, string[]> typeAssignments = null)
         {
             var all = descriptors.ToList();
 
             var settingsManager = new Mock<ISettingsManager>();
             settingsManager.SetupGet(x => x.AllRegisteredSettings).Returns(all);
             settingsManager.Setup(x => x.GetSettingTypeAssignments())
-                .Returns(new Dictionary<string, string[]>());
+                .Returns(typeAssignments ?? new Dictionary<string, string[]>());
             settingsManager.Setup(x => x.GetSettingsForType(It.IsAny<string>()))
                 .Returns(Enumerable.Empty<SettingDescriptor>());
 
