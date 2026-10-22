@@ -152,6 +152,23 @@ public class ModuleCopierTests
     [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X86, true, false)]
     [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, true, true)]
     [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, true, true)]
+    [InlineData(Architecture.Arm64, null, false, null, null, true)]
+    [InlineData(Architecture.Arm64, null, true, null, true, true)]
+    [InlineData(Architecture.Arm64, null, true, null, false, false)]
+    [InlineData(Architecture.Arm64, null, true, Architecture.Arm64, true, false)]
+    [InlineData(Architecture.Arm64, null, true, Architecture.X86, true, false)]
+    [InlineData(Architecture.Arm64, Architecture.Arm64, false, null, null, true)]
+    [InlineData(Architecture.Arm64, Architecture.X86, false, null, null, false)]
+    [InlineData(Architecture.Arm64, Architecture.X64, false, null, null, false)]
+    [InlineData(Architecture.Arm64, Architecture.Arm64, true, null, true, true)]
+    [InlineData(Architecture.Arm64, Architecture.Arm64, true, Architecture.Arm64, false, false)]
+    [InlineData(Architecture.Arm64, Architecture.Arm64, true, Architecture.X86, false, true)]
+    [InlineData(Architecture.Arm64, Architecture.X86, true, Architecture.Arm64, false, false)]
+    [InlineData(Architecture.Arm64, Architecture.X86, true, Architecture.X86, false, false)]
+    [InlineData(Architecture.Arm64, Architecture.Arm64, true, Architecture.Arm64, true, true)]
+    [InlineData(Architecture.Arm64, Architecture.Arm64, true, Architecture.X86, true, true)]
+    [InlineData(Architecture.Arm64, Architecture.X86, true, Architecture.Arm64, true, false)]
+    [InlineData(Architecture.Arm64, Architecture.X86, true, Architecture.X86, true, true)]
     public void ExecutableFilesWithDifferentArchitectureCopyTest(
         Architecture environmentArchitecture,
         Architecture? sourceArchitecture,
@@ -178,6 +195,28 @@ public class ModuleCopierTests
 
         // Assert
         Assert.Equal(expectedCopyRequired, actualCopyRequired);
+    }
+
+    [Theory]
+    [InlineData(Architecture.X86)]
+    [InlineData(Architecture.X64)]
+    [InlineData(Architecture.Arm64)]
+    public void AnyCpuAssemblyIsCopiedToEmptyProbingFolder(Architecture environmentArchitecture)
+    {
+        // Arrange
+        // Every module assembly is AnyCPU, so this has to work off the real PE headers rather than a mock:
+        // reading the machine type alone reported such an assembly as X86 and skipped the copy on ARM64.
+        var options = Options.Create(new LocalStorageModuleCatalogOptions());
+        var fileCopyPolicy = new FileCopyPolicy(new FileMetadataProvider(), options);
+
+        var sourcePath = typeof(FileCopyPolicy).Assembly.Location;
+        var targetPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".dll");
+
+        // Act
+        var actualCopyRequired = fileCopyPolicy.IsCopyRequired(sourcePath, targetPath, environmentArchitecture, out _);
+
+        // Assert
+        Assert.True(actualCopyRequired);
     }
 
     private void AddFile(string path, DateTime date, string version = null, Architecture? architecture = null)

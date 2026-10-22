@@ -15,7 +15,55 @@
       "assets": "Assets",
       "toggle-favorites": "Shift + Space to toggle favorites",
       "developer-tools": "Developer tools",
-      "help": "Help"
+      "help": "Help",
+      "main-menu": "Main menu",
+      "collapse-menu": "Collapse menu",
+      "expand-menu": "Expand menu",
+      "theme": "Theme",
+      "theme-light": "Light",
+      "theme-dark": "Dark",
+      "theme-system": "Match system",
+      "theme-classic": "Classic"
+    },
+    "theme": {
+      "preset": "Color",
+      "presets": {
+        "warm": "Warm",
+        "blue": "Blue",
+        "gray": "Gray",
+        "green": "Green",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Choose your look",
+        "intro": "Pick a mode and a color preset. You see the result right away behind this window. Your choice is saved in this browser.",
+        "mode": "Mode",
+        "preset": "Color preset",
+        "light-description": "Bright and clean, for well-lit rooms",
+        "dark-description": "Easy on the eyes in low light",
+        "system-description": "Follows your device's light or dark setting",
+        "classic-description": "The original Virto Commerce look",
+        "classic-note": "Color presets apply to the light and dark modes.",
+        "hint": "Press Ctrl+Alt+T to open this window again.",
+        "apply": "Apply",
+        "cancel": "Cancel"
+      }
+    },
+    "search": {
+      "placeholder": "Search menu, apps, settings",
+      "searching": "Searching…",
+      "no-results": "Nothing found for \"{{query}}\"",
+      "clear": "Clear",
+      "error": "Search failed",
+      "show-all": "Show all {{count}}",
+      "hint-navigate": "to move",
+      "hint-open": "to open",
+      "hint-close": "to close",
+      "groups": {
+        "menu": "Menu",
+        "apps": "Apps",
+        "settings": "Settings"
+      }
     },
     "navigation": {
       "back": "Back"
@@ -855,8 +903,10 @@
       "licensing": {
         "license-absent": "Community license",
         "license-present": "{{type}} license, expires on {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}} license",
         "community": "Running community edition, click to request a commercial license",
         "expired": "Your license has expired on {{expirationDate | amParse | date}}, please renew",
+        "expired-short": "License expired",
         "purchase": "Purchase",
         "renew": "Renew",
         "expiration-date": "Expiration date"

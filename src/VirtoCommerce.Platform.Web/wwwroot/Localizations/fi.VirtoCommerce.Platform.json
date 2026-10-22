@@ -18,7 +18,55 @@
       "assets": "Resurssit",
       "toggle-favorites": "Shift + Välilyönti vaihtaaksesi suosikkeja",
       "developer-tools": "Kehittäjätyökalut",
-      "help": "Apua"
+      "help": "Apua",
+      "main-menu": "Päävalikko",
+      "collapse-menu": "Pienennä valikko",
+      "expand-menu": "Laajenna valikko",
+      "theme": "Teema",
+      "theme-light": "Vaalea",
+      "theme-dark": "Tumma",
+      "theme-system": "Järjestelmän mukaan",
+      "theme-classic": "Klassinen"
+    },
+    "theme": {
+      "preset": "Väri",
+      "presets": {
+        "warm": "Lämmin",
+        "blue": "Sininen",
+        "gray": "Harmaa",
+        "green": "Vihreä",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Valitse ulkoasu",
+        "intro": "Valitse tila ja värimalli. Näet tuloksen heti tämän ikkunan takana. Valintasi tallennetaan tähän selaimeen.",
+        "mode": "Tila",
+        "preset": "Värimalli",
+        "light-description": "Kirkas ja selkeä, valoisiin tiloihin",
+        "dark-description": "Silmäystävällinen hämärässä",
+        "system-description": "Seuraa laitteesi vaalean tai tumman tilan asetusta",
+        "classic-description": "Alkuperäinen Virto Commerce -ulkoasu",
+        "classic-note": "Värimallit koskevat vaaleaa ja tummaa tilaa.",
+        "hint": "Avaa tämä ikkuna uudelleen painamalla Ctrl+Alt+T.",
+        "apply": "Käytä",
+        "cancel": "Peruuta"
+      }
+    },
+    "search": {
+      "placeholder": "Hae valikosta, sovelluksista, asetuksista",
+      "searching": "Haetaan…",
+      "no-results": "Ei tuloksia haulle \"{{query}}\"",
+      "clear": "Tyhjennä",
+      "error": "Haku epäonnistui",
+      "show-all": "Näytä kaikki {{count}}",
+      "hint-navigate": "siirtyäksesi",
+      "hint-open": "avataksesi",
+      "hint-close": "sulkeaksesi",
+      "groups": {
+        "menu": "Valikko",
+        "apps": "Sovellukset",
+        "settings": "Asetukset"
+      }
     },
     "navigation": {
       "back": "Takaisin"
@@ -854,8 +902,10 @@
       "licensing": {
         "license-absent": "Community-lisenssi",
         "license-present": "{{type}}-lisenssi, vanhenee {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}}-lisenssi",
         "community": "Suorittaa community-versiota, napsauta pyytääksesi kaupallista lisenssiä",
         "expired": "Lisenssisi on vanhentunut {{expirationDate | amParse | date}}, ole hyvä ja uudista",
+        "expired-short": "Lisenssi vanhentunut",
         "purchase": "Osta",
         "renew": "Uudista",
         "expiration-date": "Vanhenemispäivämäärä"

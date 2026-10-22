@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -52,46 +53,59 @@ public class FileMetadataProvider : IFileMetadataProvider
             fileVersionInfo.FilePrivatePart);
     }
 
+    /// <summary>
+    /// Returns the processor architecture the file is bound to, or <c>null</c> when it is not bound to any:
+    /// either because the file is not a portable executable, or because it is a processor-architecture-neutral
+    /// (AnyCPU) managed assembly.
+    /// </summary>
     public Architecture? GetArchitecture(string filePath)
     {
-        const int startPosition = 0x3C;
-        const int peSignature = 0x00004550;
-
-        var fileInfo = new FileInfo(filePath);
-        if (!fileInfo.Exists || fileInfo.Length < startPosition + sizeof(uint))
+        if (!File.Exists(filePath))
         {
             return null;
         }
 
-        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-        using var reader = new BinaryReader(stream);
+        try
+        {
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            using var peReader = new PEReader(stream);
 
-        stream.Seek(startPosition, SeekOrigin.Begin);
-        var peOffset = reader.ReadUInt32();
+            var headers = peReader.PEHeaders;
 
-        if (fileInfo.Length < peOffset + sizeof(uint) + sizeof(ushort))
+            if (IsArchitectureNeutral(headers.CorHeader))
+            {
+                return null;
+            }
+
+            return headers.CoffHeader.Machine switch
+            {
+                Machine.Amd64 => Architecture.X64,
+                Machine.Arm64 => Architecture.Arm64,
+                Machine.Arm or Machine.ArmThumb2 => Architecture.Arm,
+                Machine.I386 => Architecture.X86,
+                _ => null,
+            };
+        }
+        catch (BadImageFormatException)
         {
             return null;
         }
+    }
 
-        stream.Seek(peOffset, SeekOrigin.Begin);
-        var peHead = reader.ReadUInt32();
-
-        if (peHead != peSignature)
+    /// <summary>
+    /// A managed assembly declares the X86 machine type unless it is compiled for a specific architecture,
+    /// so the machine type alone would report every AnyCPU assembly as X86. The CLI header tells them apart:
+    /// IL-only assemblies are architecture-neutral unless they require a 32-bit process, and even then
+    /// "32-bit preferred" only expresses a preference and still runs anywhere.
+    /// </summary>
+    private static bool IsArchitectureNeutral(CorHeader corHeader)
+    {
+        if (corHeader is null)
         {
-            return null;
+            return false;
         }
 
-        var machineType = reader.ReadUInt16();
-
-        // https://stackoverflow.com/questions/480696/how-to-find-if-a-native-dll-file-is-compiled-as-x64-or-x86
-        return machineType switch
-        {
-            0x8664 => Architecture.X64,
-            0xAA64 => Architecture.Arm64,
-            0x1C0 => Architecture.Arm,
-            0x14C => Architecture.X86,
-            _ => null
-        };
+        return corHeader.Flags.HasFlag(CorFlags.ILOnly) &&
+               (!corHeader.Flags.HasFlag(CorFlags.Requires32Bit) || corHeader.Flags.HasFlag(CorFlags.Prefers32Bit));
     }
 }

@@ -1,21 +1,21 @@
 /* General classes for text */
 .text-error
-  color: $errorNotifyColor
+  color: var(--vc-fg-a94442, #{$errorNotifyColor})
 .text-success
-  color: $successNotifyColor
+  color: var(--vc-fg-3c763d, #{$successNotifyColor})
 .text-warning
-  color: $warningNotifyColor
+  color: var(--vc-fg-8a6d3b, #{$warningNotifyColor})
 .text-info
-  color: $infoNotifyColor
+  color: var(--vc-fg-31708f, #{$infoNotifyColor})
 .text-notify
-  color: $noteNotifyColor
+  color: var(--vc-fg-999999, #{$noteNotifyColor})
 
 form label.required:after
-  color: #F14E4E
+  color: var(--vc-fg-f14e4e, #F14E4E)
   content: " *"
 
 form label.label-error
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 
 /* Lists */
 ul,
@@ -37,7 +37,7 @@ ol
     padding-top: 2px
     text-indent: -15px
     &::before
-      color: #a6a6a6
+      color: var(--vc-fg-a6a6a6, #a6a6a6)
       content: '\2014\a0 '
 
 .list .list-item,
@@ -75,19 +75,19 @@ ol
     &:hover
       box-shadow: none
   .list-link
-    color: $listNoticeItemColor
+    color: var(--vc-fg-4c4c4c, #{$listNoticeItemColor})
     display: block
     font-size: 14px
     padding: 0 10px
     &:hover
-      background: $listNoticeLinkColor
+      background: var(--vc-bg-ececec, #{$listNoticeLinkColor})
   .list-ico
     font-size: 18px
     margin: 0 2px 0 0
     width: 25px
   .list-item.__error
     .list-ico
-      color: $genericErrorColor
+      color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
   .list-item.__warning
     .list-ico
       color: $genericWarningColor
@@ -129,13 +129,13 @@ ol
     margin: 0 0 5px
 
 .menu.__context
-  background: $menuContextBg
+  background: var(--vc-bg-333333, #{$menuContextBg})
   display: none
   position: fixed
   padding: 10px 0
   z-index: 100
   .menu-item
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     cursor: pointer
     font-family: $font
     font-size: 13px
@@ -158,7 +158,7 @@ ol
     font-size: 18px
     width: 25px
   .menu.__sub
-    background: $menuContextBg
+    background: var(--vc-bg-333333, #{$menuContextBg})
     display: none
     left: 100%
     padding: 10px 0
@@ -187,11 +187,11 @@ ol
   > .list-item
     padding: 5px 0
   .list-t
-    color: $listInfoListTColor
+    color: var(--vc-fg-4c4c4c, #{$listInfoListTColor})
     display: block
     font-size: 14px
   .list-descr
-    color: $listInfoListDescrColor
+    color: var(--vc-fg-999999, #{$listInfoListDescrColor})
     font-size: 12px
     margin: 5px 0 0
     word-wrap: break-word
@@ -200,7 +200,7 @@ ol
   .list-descr-white-space
     white-space: pre-wrap
   .alert
-    color: $genericErrorColor
+    color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
   .list-link
     font-size: 12px
 
@@ -210,7 +210,7 @@ ol
   word-spacing: -4px
   .list-item
     background: $baseColor
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     display: inline-block
     line-height: 1.1
     margin: 0 5px 0 0
@@ -231,7 +231,7 @@ ol
     padding: 0 0 0 20px
     position: relative
     &::before
-      color: $listNumberItemColor
+      color: var(--vc-fg-a6a6a6, #{$listNumberItemColor})
       content: counter(num) '. '
       counter-increment: num
       left: 0
@@ -301,16 +301,16 @@ h3
   margin: 5px 0
 
 .text.__debug
-  color: $textDebugColor
+  color: var(--vc-fg-a6a6a6, #{$textDebugColor})
   font-size: 11px
   word-wrap: break-word
 
 .text.__note
-  border: 1px solid $textNoteBrd
+  border: 1px solid var(--vc-bd-eeeeee, #{$textNoteBrd})
   margin: 10px 0
   padding: 10px
   span:first-child
-    color: $genericErrorColor
+    color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
 
 .text.__editable
   background: $lightBg
@@ -346,29 +346,29 @@ h3
   padding: 10px
 
 .note
-  background: $noteNotifyBg
-  border-color: $noteNotifyBrd
-  color: $noteNotifyColor
+  background: var(--vc-bg-f9f9f9, #{$noteNotifyBg})
+  border-color: var(--vc-bd-eeeeee, #{$noteNotifyBrd})
+  color: var(--vc-fg-999999, #{$noteNotifyColor})
 
 .error
-  background: $errorNotifyBg
-  border-color: $errorNotifyBrd
-  color: $errorNotifyColor
+  background: var(--vc-bg-f2dede, #{$errorNotifyBg})
+  border-color: var(--vc-bd-ebccd1, #{$errorNotifyBrd})
+  color: var(--vc-fg-a94442, #{$errorNotifyColor})
 
 .success
-  background: $successNotifyBg
-  border-color: $successNotifyBrd
-  color: $successNotifyColor
+  background: var(--vc-bg-dff0d8, #{$successNotifyBg})
+  border-color: var(--vc-bd-d6e9c6, #{$successNotifyBrd})
+  color: var(--vc-fg-3c763d, #{$successNotifyColor})
 
 .warning
-  background: $warningNotifyBg
-  border-color: $warningNotifyBrd
-  color: $warningNotifyColor
+  background: var(--vc-bg-fcf8e3, #{$warningNotifyBg})
+  border-color: var(--vc-bd-faebcc, #{$warningNotifyBrd})
+  color: var(--vc-fg-8a6d3b, #{$warningNotifyColor})
 
 .info
-  background: $infoNotifyBg
-  border-color: $infoNotifyBrd
-  color: $infoNotifyColor
+  background: var(--vc-bg-d9edf7, #{$infoNotifyBg})
+  border-color: var(--vc-bd-bce8f1, #{$infoNotifyBrd})
+  color: var(--vc-fg-31708f, #{$infoNotifyColor})
 
 /* Tables */
 .table-wrapper
@@ -413,7 +413,7 @@ h3
     cursor: pointer
     &:hover
       .table-ico
-        color: #161d25
+        color: var(--vc-fg-161d25, #161d25)
         transition: color .25s ease-in-out
   .table-ico
     .sort
@@ -442,13 +442,13 @@ h3
   .table-descr
     display: inline
 .table-descr
-  color: $tableColor
+  color: var(--vc-fg-999999, #{$tableColor})
 .table-progress
   margin: 10px 0 0
   position: relative
 .table-status
-  background: $tableStatusBg
-  color: $whiteColor
+  background: var(--vc-bg-a6a6a6, #{$tableStatusBg})
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   display: block
   font-size: 12px
   height: 20px
@@ -467,13 +467,13 @@ h3
   max-width: 40px
   vertical-align: middle
 .table-ico
-  color: $tableIcoColor
+  color: var(--vc-fg-a6a6a6, #{$tableIcoColor})
   font-size: 28px
   margin: 0 10px 0 6px
   vertical-align: middle
 .table-item
   &.__error .table-ico
-    color: $genericErrorColor
+    color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
   &.__warning .table-ico
     color: $genericWarningColor
   &.__info .table-ico
@@ -505,7 +505,7 @@ h3
 .table-item.__selected .product-img .image
   background-color: $productImgSel
 .product .table-ico
-  color: $tableIcoColor
+  color: var(--vc-fg-a6a6a6, #{$tableIcoColor})
   font-size: 28px
   margin: 0 10px
   vertical-align: middle
@@ -585,7 +585,7 @@ $names: "", ".double", ".triple", ".quadro"
     max-height: 78px
     overflow: hidden
   .tile-count
-    color: #999
+    color: var(--vc-fg-999999, #999)
     font-size: 30px
     line-height: 1
     margin: 0 0 10px
@@ -611,12 +611,12 @@ $names: "", ".double", ".triple", ".quadro"
     transition: opacity .25s ease-in-out
   &:hover
     .tile-action
-      background-color: #a1c0d4
+      background-color: var(--vc-bg-a1c0d4, #a1c0d4)
       opacity: 1
 
       filter: alpha(opacity=100)
       *
-        color: $whiteColor
+        color: var(--vc-fg-ffffff, #{$whiteColor})
         font-size: 17px
   .tile-action:nth-child(2)
     left: auto
@@ -642,16 +642,16 @@ $names: "", ".double", ".triple", ".quadro"
     line-height: 1
 .tile:hover,
 .tile.__selected
-  box-shadow: 0 0 0 2px #a1c0d4 inset
+  box-shadow: 0 0 0 2px var(--vc-sh-a1c0d4, #a1c0d4) inset
 .tile.__info:hover,
 .tile.__selected.__info
   cursor: default
   box-shadow: none
 .__note
-  background-color: #fffff5
+  background-color: var(--vc-bg-fffff5, #fffff5)
 .tile.__selected
   &::after
-    border-color: #a1c0d4 #a1c0d4 transparent transparent
+    border-color: var(--vc-bd-a1c0d4, #a1c0d4) var(--vc-bd-a1c0d4, #a1c0d4) transparent transparent
     border-style: solid
     border-width: 15px
     content: ''
@@ -661,7 +661,7 @@ $names: "", ".double", ".triple", ".quadro"
     right: 0
     top: 0
   &::before
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     content: ""
     font-family: $fontAw
     font-size: 10px
@@ -730,14 +730,14 @@ $names: "", ".double", ".triple", ".quadro"
 .list.__files
   margin: 15px -20px
 .__items .list-group
-  background: $listGroupBg
+  background: var(--vc-bg-fbfdf, #{$listGroupBg})
   border-bottom: 1px solid $baseBrd
   cursor: pointer
   font-size: 14px
   padding: 10px $listItemHorizontalPadding
   position: relative
   &::after
-    color: #a6a6a6
+    color: var(--vc-fg-a6a6a6, #a6a6a6)
     content: ''
     font-family: $fontAw
     font-size: 16px
@@ -749,26 +749,26 @@ $names: "", ".double", ".triple", ".quadro"
 .__items .list-group.__opened::after
   content: ''
 .__items .list-item
-  background: $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
   border-bottom: 1px solid $baseBrd
   cursor: pointer
   display: block
   padding: 10px $listItemHorizontalPadding
   position: relative
 .__items .list-item.__hovered
-  background: #ecf7fc
+  background: var(--vc-bg-ecf7fc, #ecf7fc)
 .__items .list-group + .list.__sub
   display: none
   margin: -1px 0 0
 .__items .list-group.__opened + .list.__sub
   display: block
 .__items .list-item.__error
-  background: #fef8f7
-  border-color: #fce7e6
+  background: var(--vc-bg-fef8f7, #fef8f7)
+  border-color: var(--vc-bd-fce7e6, #fce7e6)
 .__items .list-item.__default
-  background: #ecf7fc
+  background: var(--vc-bg-ecf7fc, #ecf7fc)
   &::after
-    border-color: #a1c0d4 #a1c0d4 transparent transparent
+    border-color: var(--vc-bd-a1c0d4, #a1c0d4) var(--vc-bd-a1c0d4, #a1c0d4) transparent transparent
     border-style: solid
     border-width: 15px
     content: ""
@@ -780,7 +780,7 @@ $names: "", ".double", ".triple", ".quadro"
 
     transform: none
   &::before
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     content: ""
     font-family: $fontAw
     font-size: 10px
@@ -879,7 +879,7 @@ $names: "", ".double", ".triple", ".quadro"
   overflow: hidden
   text-overflow: ellipsis
 .__items .list-descr
-  color: #999
+  color: var(--vc-fg-999999, #999)
   display: block
   font-size: 12px
 .__items .list-action
@@ -921,10 +921,10 @@ $names: "", ".double", ".triple", ".quadro"
   top: 0
 .__items label.list-item :checked ~ .switch,
 .__items label.list-item.__selected .switch
-  background: #ecf7fc
-  box-shadow: 0 0 0 1px #a1c0d4
+  background: var(--vc-bg-ecf7fc, #ecf7fc)
+  box-shadow: 0 0 0 1px var(--vc-sh-a1c0d4, #a1c0d4)
   &::after
-    border-color: #a1c0d4 #a1c0d4 transparent transparent
+    border-color: var(--vc-bd-a1c0d4, #a1c0d4) var(--vc-bd-a1c0d4, #a1c0d4) transparent transparent
     border-style: solid
     border-width: 15px
     content: ''
@@ -934,7 +934,7 @@ $names: "", ".double", ".triple", ".quadro"
     right: 0
     top: 0
   &::before
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     content: ""
     font-family: $fontAw
     font-size: 10px
@@ -944,9 +944,9 @@ $names: "", ".double", ".triple", ".quadro"
     top: 9px
     z-index: 25
 .__items .list-item.__selected .switch:after
-  border-color: #dee9f0 #dee9f0 transparent transparent
+  border-color: var(--vc-bd-dee9f0, #dee9f0) var(--vc-bd-dee9f0, #dee9f0) transparent transparent
 .__items label.list-item.__selected .list-name
-  color: #a6a6a6
+  color: var(--vc-fg-a6a6a6, #a6a6a6)
 .list.__chosen
   margin: 10px 0
 .__chosen .list-item
@@ -954,7 +954,7 @@ $names: "", ".double", ".triple", ".quadro"
   position: relative
 .__chosen .list-name
   background: $baseColor
-  color: $whiteColor
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   float: right
   font-size: 11px
   max-width: 345px
@@ -966,7 +966,7 @@ $names: "", ".double", ".triple", ".quadro"
   vertical-align: top
   white-space: nowrap
 .__chosen .list-remove
-  color: #a1c0d4
+  color: var(--vc-fg-a1c0d4, #a1c0d4)
   cursor: pointer
   float: left
   font-family: caption
@@ -1017,7 +1017,7 @@ $names: "", ".double", ".triple", ".quadro"
   .menu-item + .menu-item
     margin: 0 0 0 5px
   .menu-link
-    background: $whiteColor
+    background: var(--vc-bg-ffffff, #{$whiteColor})
     border: 1px solid $baseBrd
     box-sizing: border-box
     color: $colorText
@@ -1029,11 +1029,11 @@ $names: "", ".double", ".triple", ".quadro"
     line-height: 26px
     width: 30px
     &:hover
-      background: #e8f5fb
+      background: var(--vc-bg-e8f5fb, #e8f5fb)
   .menu-item.__selected
     .menu-link
       background: $baseColor
-      color: $whiteColor
+      color: var(--vc-fg-ffffff, #{$whiteColor})
   .menu-ico
     font-size: 14px
 
@@ -1041,7 +1041,7 @@ $names: "", ".double", ".triple", ".quadro"
 /* Breadcrumbs */
 .breadcrumbs
   .arrow-color
-    color: #A1C0D4
+    color: var(--vc-fg-a1c0d4, #A1C0D4)
   padding: 15px 0
   .menu
     display: flex
@@ -1054,20 +1054,20 @@ $names: "", ".double", ".triple", ".quadro"
     margin: 0 6px 8px 0
   .menu-link
     padding: 4px 12px 4px 12px
-    border: 1px solid #A1C0D4
+    border: 1px solid var(--vc-bd-a1c0d4, #A1C0D4)
     border-radius: 15px
     background-color: white
     max-width: 123px
     display: block
     text-overflow: ellipsis
     overflow: hidden
-    color: #43b0e6
+    color: var(--vc-fg-43b0e6, #43b0e6)
     font-size: 14px
     &:hover
-      color: #52a2ca
+      color: var(--vc-fg-52a2ca, #52a2ca)
     &.last-item
-      border: 1px solid #838d9a
-      color: #838d9a
+      border: 1px solid var(--vc-bd-838d9a, #838d9a)
+      color: var(--vc-fg-838d9a, #838d9a)
 
 /* Tree */
 .tree
@@ -1094,7 +1094,7 @@ $names: "", ".double", ".triple", ".quadro"
     display: block
     &:first-child
       &::before
-        background: $whiteColor
+        background: var(--vc-bg-ffffff, #{$whiteColor})
         content: ""
         height: 50%
         left: -1px
@@ -1104,7 +1104,7 @@ $names: "", ".double", ".triple", ".quadro"
         z-index: 5
     &:last-child
       &::after
-        background: $whiteColor
+        background: var(--vc-bg-ffffff, #{$whiteColor})
         content: ""
         height: 50%
         left: -1px
@@ -1115,7 +1115,7 @@ $names: "", ".double", ".triple", ".quadro"
     .tree-block
       vertical-align: middle
       &::before
-        background: #a1c0d4
+        background: var(--vc-bg-a1c0d4, #a1c0d4)
         content: ""
         height: 2px
         left: -14px
@@ -1127,7 +1127,7 @@ $names: "", ".double", ".triple", ".quadro"
 .tree-item
   &:first-child
     &::before
-      background: $whiteColor
+      background: var(--vc-bg-ffffff, #{$whiteColor})
       content: ''
       height: 2px
       left: -1px
@@ -1138,7 +1138,7 @@ $names: "", ".double", ".triple", ".quadro"
 .tree-item
   &:last-child
     &::before
-      background: $whiteColor
+      background: var(--vc-bg-ffffff, #{$whiteColor})
       content: ''
       height: 2px
       right: -1px
@@ -1147,7 +1147,7 @@ $names: "", ".double", ".triple", ".quadro"
       width: 50%
       z-index: 5
 .tree-block
-  border: 2px solid #a1c0d4
+  border: 2px solid var(--vc-bd-a1c0d4, #a1c0d4)
   box-sizing: border-box
   cursor: pointer
   display: inline-block
@@ -1157,9 +1157,9 @@ $names: "", ".double", ".triple", ".quadro"
   vertical-align: top
   width: 160px
   &:hover
-    background: #ecf7fc
+    background: var(--vc-bg-ecf7fc, #ecf7fc)
   &::before
-    background: #a1c0d4
+    background: var(--vc-bg-a1c0d4, #a1c0d4)
     content: ''
     height: 10px
     left: 50%
@@ -1170,10 +1170,10 @@ $names: "", ".double", ".triple", ".quadro"
     transform: translateX(-50%)
 .tree-block.__canceled
   &:hover
-    background: #faf1f1
+    background: var(--vc-bg-faf1f1, #faf1f1)
 .tree-block.__selected
-  background: #d9effa
-  border-color: #a1c0d4
+  background: var(--vc-bg-d9effa, #d9effa)
+  border-color: var(--vc-bd-a1c0d4, #a1c0d4)
 .tree-block
   .inner
     height: 100%
@@ -1181,7 +1181,7 @@ $names: "", ".double", ".triple", ".quadro"
     text-align: left
 .tree-item.last .tree-block .inner
   &::after
-    background: $whiteColor
+    background: var(--vc-bg-ffffff, #{$whiteColor})
     content: ''
     height: 2px
     left: -1px
@@ -1190,7 +1190,7 @@ $names: "", ".double", ".triple", ".quadro"
     width: 50%
     z-index: 5
   &::before
-    background: $whiteColor
+    background: var(--vc-bg-ffffff, #{$whiteColor})
     content: ''
     height: 2px
     position: absolute
@@ -1205,7 +1205,7 @@ $names: "", ".double", ".triple", ".quadro"
 .tree-node
   position: relative
   &::after
-    background: #a1c0d4
+    background: var(--vc-bg-a1c0d4, #a1c0d4)
     content: ''
     height: 2px
     left: 0
@@ -1213,7 +1213,7 @@ $names: "", ".double", ".triple", ".quadro"
     right: 7px
     top: 0
   &::before
-    background: #a1c0d4
+    background: var(--vc-bg-a1c0d4, #a1c0d4)
     content: ''
     height: 12px
     left: 50%
@@ -1236,7 +1236,7 @@ $names: "", ".double", ".triple", ".quadro"
     .tree-item
       text-align: left
     &::after
-      background: #a1c0d4
+      background: var(--vc-bg-a1c0d4, #a1c0d4)
       bottom: 0
       content: ""
       height: auto
@@ -1245,7 +1245,7 @@ $names: "", ".double", ".triple", ".quadro"
       top: 1px
       width: 2px
     &::before
-      background: #a1c0d4
+      background: var(--vc-bg-a1c0d4, #a1c0d4)
       content: ""
       height: 2px
       left: -12px
@@ -1274,7 +1274,7 @@ $names: "", ".double", ".triple", ".quadro"
     width: 20px
 .tree-el.__canceled
   background: $baseColor
-  color: $whiteColor
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   margin: 5px -10px -5px
   padding: 5px 0
   text-align: center
@@ -1310,7 +1310,7 @@ $names: "", ".double", ".triple", ".quadro"
 
 /* Calendar */
 .form-input.__calendar .dropdown-menu
-  background: $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
   border: 1px solid $baseBrd
   margin: -1px 0 0
   max-width: 400px
@@ -1328,7 +1328,7 @@ $names: "", ".double", ".triple", ".quadro"
       &:hover
         background: $lightBg
     &:hover
-      background: #ecf7fc
+      background: var(--vc-bg-ecf7fc, #ecf7fc)
   table
     .btn
       width: 100%
@@ -1340,21 +1340,21 @@ $names: "", ".double", ".triple", ".quadro"
   .btn-group ~ .btn,
   .btn-success
     background: $baseColor
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     display: inline-block
     padding: 0 10px
   .btn-info,
   .btn.active
     background: $baseColor
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
 .text-muted
-  color: #999
+  color: var(--vc-fg-999999, #999)
 .dropdown-menu
   li
     padding: 0
     text-indent: 0
     &:last-child
-      background: #e8f5fb
+      background: var(--vc-bg-e8f5fb, #e8f5fb)
       overflow: hidden
       padding: 5px !important
     &::before
@@ -1367,7 +1367,7 @@ $names: "", ".double", ".triple", ".quadro"
     th,
     td
       background: $baseBrd
-      border-color: $whiteColor
+      border-color: var(--vc-bd-ffffff, #{$whiteColor})
       border-style: solid
       border-width: 2px
       font-size: 14px
@@ -1403,7 +1403,7 @@ $names: "", ".double", ".triple", ".quadro"
     height: auto
 .select2-container .select2-choice,
 .select2-container-multi .select2-choices
-  background: $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
   border-color: $baseBrd
   color: $colorText
   font-size: 14px
@@ -1421,7 +1421,7 @@ $names: "", ".double", ".triple", ".quadro"
 .select2-container-active .select2-choices,
 .select2-drop-active,
 .select2-container-multi.select2-container-active .select2-choices
-  border-color: #a1c0d4
+  border-color: var(--vc-bd-a1c0d4, #a1c0d4)
   box-shadow: none
 .form-input.__langs .select2-choice,
 .form-input.__langs .select2-choices
@@ -1447,7 +1447,7 @@ $names: "", ".double", ".triple", ".quadro"
     margin: -10px 0 0
 .select2-search
   input
-    background: $whiteColor
+    background: var(--vc-bg-ffffff, #{$whiteColor})
 .select2-results .select2-highlighted
   background: $baseColor
 .select2-container
@@ -1463,7 +1463,7 @@ $names: "", ".double", ".triple", ".quadro"
   left: 36px
 .select2-container-multi .select2-choices .select2-search-choice
   background: $lightBg
-  border: 1px solid #a1c0d4
+  border: 1px solid var(--vc-bd-a1c0d4, #a1c0d4)
   border-radius: 0
   box-shadow: none
   font-size: 13px
@@ -1476,7 +1476,7 @@ $names: "", ".double", ".triple", ".quadro"
     background-size: 10px
     background-position-x: 35px
     border-radius: 2px
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     height: 19px
     padding: 6px 20px 0 7px
 .select2-container-multi .select2-choices .select2-search-field
@@ -1513,7 +1513,7 @@ $names: "", ".double", ".triple", ".quadro"
   background: none !important
 .select2-container-multi .select2-search-choice-close::after,
 .select2-container-multi .select2-search-choice-close:hover::after
-  color: #a1c0d4
+  color: var(--vc-fg-a1c0d4, #a1c0d4)
 
 .select2-container .select2-search
   margin-top: 4px
@@ -1548,7 +1548,7 @@ tags-input
       background: $baseColor
       border: none
       border-radius: 0
-      color: $whiteColor
+      color: var(--vc-fg-ffffff, #{$whiteColor})
       font-family: $font
       font-size: 13px
       height: 24px
@@ -1556,7 +1556,7 @@ tags-input
       padding: 0 30px 0 6px
       position: relative
     .tag-item.selected
-      background: #e51400
+      background: var(--vc-bg-e51400, #e51400)
     .tag-item
       .remove-button
         font-family: caption
@@ -1567,7 +1567,7 @@ tags-input
         right: 6px
         top: 5px
   .tags.focused
-    border-color: #a1c0d4
+    border-color: var(--vc-bd-a1c0d4, #a1c0d4)
     box-shadow: none
 
 /* Main */
@@ -1614,7 +1614,7 @@ tags-input
 
 /* Blades */
 .blade
-  background: $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
   box-shadow: 1px 0 0 0 $baseBrd
   font-family: serif
   margin-right: 1px
@@ -1652,8 +1652,8 @@ tags-input
       left: 0
       .status-message
         height: 30px
-        background: #7a1c13
-        color: $whiteColor
+        background: var(--vc-bg-7a1c13, #7a1c13)
+        color: var(--vc-fg-ffffff, #{$whiteColor})
         font-size: 14px
         filter: alpha(opacity=50)
         display: flex
@@ -1672,11 +1672,11 @@ tags-input
         padding-right: 15px
       .link-error-details
         font-size: 14px
-        color: #999
+        color: var(--vc-fg-999999, #999)
         margin-right: 15px
         text-decoration: underline
         &:hover
-          color: $whiteColor
+          color: var(--vc-fg-ffffff, #{$whiteColor})
       .progress-bar
         bottom: 0
         height: auto
@@ -1714,7 +1714,7 @@ tags-input
           height: 100%
           width: 100%
         .btn-ico
-          color: $whiteColor
+          color: var(--vc-fg-ffffff, #{$whiteColor})
           font-size: 13px
           line-height: 0
           margin: 12px 0 0
@@ -1722,7 +1722,7 @@ tags-input
         cursor: not-allowed
       .menu-item
         &::after
-          color: $whiteColor
+          color: var(--vc-fg-ffffff, #{$whiteColor})
           content: ''
           left: 50%
           margin: 0 0 0 -6px
@@ -1731,7 +1731,7 @@ tags-input
           background: $baseColor
       .menu-item.__close
         &:hover
-          background: $genericErrorColor
+          background: var(--vc-bg-ff4a4a, #{$genericErrorColor})
       .menu-item.__disabled
         &:hover
           background: none
@@ -1739,7 +1739,7 @@ tags-input
         > *:disabled
           cursor: not-allowed
     .blade-t
-      color: $whiteColor
+      color: var(--vc-fg-ffffff, #{$whiteColor})
       left: 0
       margin: 8px 15px
       min-height: 34px
@@ -1764,7 +1764,7 @@ tags-input
       text-overflow: ellipsis
       white-space: nowrap
     .blade-t_subhead
-      color: #bbb
+      color: var(--vc-fg-bbbbbb, #bbb)
       font-size: 11px
     .blade-t.__secondary
       .blade-t_head
@@ -1792,7 +1792,7 @@ tags-input
         pointer-events: none
         position: relative
         &::after
-          background-color: #333
+          background-color: var(--vc-bg-333333, #333)
           background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0))
           background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0))
           background-size: 30px 30px
@@ -1809,7 +1809,7 @@ tags-input
       .menu-btn
         background: none
         border: none
-        color: $whiteColor
+        color: var(--vc-fg-ffffff, #{$whiteColor})
         cursor: pointer
         font-size: 11px
         font-weight: 300
@@ -1820,7 +1820,7 @@ tags-input
         &:hover
           color: $baseColor
         &:disabled
-          color: $whiteColor
+          color: var(--vc-fg-ffffff, #{$whiteColor})
           cursor: not-allowed
       .menu-ico
         display: block
@@ -1847,7 +1847,7 @@ tags-input
         .menu-btn
           background: none
           border: none
-          color: $whiteColor
+          color: var(--vc-fg-ffffff, #{$whiteColor})
           cursor: pointer
           font-size: 11px
           font-weight: 300
@@ -1874,7 +1874,7 @@ tags-input
       text-align: center
       z-index: 100
       .switch-t
-        color: $whiteColor
+        color: var(--vc-fg-ffffff, #{$whiteColor})
         display: block
         font-size: 11px
         font-weight: 300
@@ -1888,7 +1888,7 @@ tags-input
 .blade.__active
   margin: 0 0 0 40px
   .blade-head
-    background: #34454c
+    background: var(--vc-bg-34454c, #34454c)
 .menu.__more .menu-item
   margin: 5px 0
 .menu.__more .blade-switch
@@ -2027,12 +2027,12 @@ tags-input
   white-space: normal
 .blade.__active
   .blade-content
-    background: #f1fbfe
+    background: var(--vc-bg-f1fbfe, #f1fbfe)
 .blade
   .blade-content.__gray
     background: $lightBg
 .__canceled
-  background-color: #eff7fc
+  background-color: var(--vc-bg-eff7fc, #eff7fc)
 
 .blade-content
   .blade &
@@ -2080,7 +2080,7 @@ tags-input
     padding: 0 10px 2px
     background-color: $bladeHeadBg
     & a
-      color: $whiteColor
+      color: var(--vc-fg-ffffff, #{$whiteColor})
       &.active
         color: $menuContextMenuItemColorOver
         border-bottom: 2px solid $menuContextMenuItemColorOver
@@ -2111,8 +2111,8 @@ tags-input
 
 /* Image preview */
 .image-preview
-  background: $whiteColor
-  border: 2px solid #a1c0d4
+  background: var(--vc-bg-ffffff, #{$whiteColor})
+  border: 2px solid var(--vc-bd-a1c0d4, #a1c0d4)
   height: 300px
   line-height: 298px
   overflow: hidden
@@ -2124,8 +2124,8 @@ tags-input
     max-width: 100%
     vertical-align: middle
 .image-preview-small
-  background: $whiteColor
-  border: 2px solid #a1c0d4
+  background: var(--vc-bg-ffffff, #{$whiteColor})
+  border: 2px solid var(--vc-bd-a1c0d4, #a1c0d4)
   height: 108px
   width: 108px
   line-height: 100px
@@ -2138,7 +2138,7 @@ tags-input
 .image-preview-no-image
   text-align: center
   font-size: 48px
-  color: #dee9f0
+  color: var(--vc-fg-dee9f0, #dee9f0)
 
 /* Gridster */
 .gridster
@@ -2151,10 +2151,10 @@ tags-input
   // (--card-radius 8px, --color-border #E1E8ED, --card-shadow, --vc-base hover)
   gridster-item,
   .list-item
-    background: $whiteColor
+    background: var(--vc-bg-ffffff, #{$whiteColor})
     box-sizing: border-box
     border-radius: 8px
-    box-shadow: 0 0 0 1px #e1e8ed, 0 2px 8px rgba(0, 0, 0, .08)
+    box-shadow: 0 0 0 1px var(--vc-sh-e1e8ed, #e1e8ed), 0 2px 8px rgba(0, 0, 0, .08)
     padding: 2px
     position: absolute
     text-align: center
@@ -2181,21 +2181,21 @@ tags-input
     &:has([google-chart])
       padding-left: 12px
   .list-item.error
-    background: #f2dede
-    box-shadow: 0 0 0 1px #ebccd1 inset
-    color: #e0a9a9
+    background: var(--vc-bg-f2dede, #f2dede)
+    box-shadow: 0 0 0 1px var(--vc-sh-ebccd1, #ebccd1) inset
+    color: var(--vc-fg-e0a9a9, #e0a9a9)
   .list-item.success
-    background: #dff0d8
-    box-shadow: 0 0 0 1px #d6e9c6 inset
-    color: #b2e0a9
+    background: var(--vc-bg-dff0d8, #dff0d8)
+    box-shadow: 0 0 0 1px var(--vc-sh-d6e9c6, #d6e9c6) inset
+    color: var(--vc-fg-b2e0a9, #b2e0a9)
   .list-item.warning
-    background: #fcf8e3
-    box-shadow: 0 0 0 1px #faebcc inset
-    color: #e0d8a9
+    background: var(--vc-bg-fcf8e3, #fcf8e3)
+    box-shadow: 0 0 0 1px var(--vc-sh-faebcc, #faebcc) inset
+    color: var(--vc-fg-e0d8a9, #e0d8a9)
   .list-item.info
-    background: #d9edf7
-    box-shadow: 0 0 0 1px #bce8f1 inset
-    color: #a9d1e0
+    background: var(--vc-bg-d9edf7, #d9edf7)
+    box-shadow: 0 0 0 1px var(--vc-sh-bce8f1, #bce8f1) inset
+    color: var(--vc-fg-a9d1e0, #a9d1e0)
   .gridster-item-moving
     opacity: .7
 
@@ -2203,8 +2203,8 @@ tags-input
   .list:not(.__editing)
     .list-item
       .customize
-        background: #a1c0d4
-        color: $whiteColor
+        background: var(--vc-bg-a1c0d4, #a1c0d4)
+        color: var(--vc-fg-ffffff, #{$whiteColor})
         font-size: 12px
         font-weight: 500
         left: 0
@@ -2215,11 +2215,11 @@ tags-input
         z-index: 50
 .customize
   .custom-ico
-    color: #fff
+    color: var(--vc-fg-ffffff, #fff)
     font-size: 12px
 .gridster-preview-holder
   background: $baseBrd
-  border-color: #a1c0d4
+  border-color: var(--vc-bd-a1c0d4, #a1c0d4)
   border-style: dashed
   border-width: 1px
 .gridster .gridster-cnt,
@@ -2241,7 +2241,7 @@ tags-input
   &::-webkit-scrollbar
     width: 6px
   &::-webkit-scrollbar-thumb
-    background: #c3d3df
+    background: var(--vc-bg-c3d3df, #c3d3df)
     border-radius: 3px
 .gridster [ng-model="widget"]
   cursor: move
@@ -2286,7 +2286,7 @@ tags-input
     max-height: 100%
     max-width: 100%
 .gridster .list-t
-  color: #333
+  color: var(--vc-fg-333333, #333)
   font-size: 11px
   font-weight: 500
   letter-spacing: .07em
@@ -2321,7 +2321,7 @@ tags-input
 .gridster .list-item:hover .list-ico,
 .gridster .list-item:hover .gallery-ico,
 .gridster .list-item:hover .comment-ico
-  color: #a1c0d4
+  color: var(--vc-fg-a1c0d4, #a1c0d4)
 .gridster .list-img
   border: 1px solid $baseBrd
   display: inline-block
@@ -2382,15 +2382,15 @@ tags-input
       top: 0
   .tooltip-inner
     background: $baseColor
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     padding: 10px
     max-width: 600px
 
 /* Informer */
 .__informer
-  background: #ecf7fc
-  box-shadow: 0 0 0 2px #dee9f0 inset
-  color: #a1c0d4
+  background: var(--vc-bg-ecf7fc, #ecf7fc)
+  box-shadow: 0 0 0 2px var(--vc-sh-dee9f0, #dee9f0) inset
+  color: var(--vc-fg-a1c0d4, #a1c0d4)
   font-size: 22px
   padding: 10px
   &::after
@@ -2409,7 +2409,7 @@ tags-input
   right: 280px
   top: 20px
 .lookbook
-  background: $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
   bottom: 20px
   position: absolute
   right: 28px
@@ -2437,10 +2437,10 @@ tags-input
   top: 2px
   text-align: center
 .tabs .tab-item + .tab-item
-  border-left: 1px solid $whiteColor
+  border-left: 1px solid var(--vc-bd-ffffff, #{$whiteColor})
 .tabs .tab-item.__selected
-  background: $whiteColor
-  border-bottom: 2px solid $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
+  border-bottom: 2px solid var(--vc-bd-ffffff, #{$whiteColor})
   line-height: 30px
   top: 0
 .tabs .tab-item:nth-last-child(2),
@@ -2499,8 +2499,8 @@ tags-input
     height: 100%
     vertical-align: middle
 .overlay .popup
-  background: $whiteColor
-  border: 5px solid #a1c0d4
+  background: var(--vc-bg-ffffff, #{$whiteColor})
+  border: 5px solid var(--vc-bd-a1c0d4, #a1c0d4)
   bottom: 40px
   font-family: $font
   left: 80px
@@ -2521,7 +2521,7 @@ tags-input
   text-align: center
 .modal-body
   .popup-close
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     cursor: pointer
     font-size: 18px
     line-height: 1
@@ -2544,8 +2544,8 @@ tags-input
   position: relative
   text-align: center
 .gallery .image-link
-  background: #a1c0d4
-  color: $whiteColor
+  background: var(--vc-bg-a1c0d4, #a1c0d4)
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   left: 0
   height: 45px
   line-height: 40px
@@ -2559,7 +2559,7 @@ tags-input
   height: 100%
   width: 100%
 .gallery .control
-  color: #a1c0d4
+  color: var(--vc-fg-a1c0d4, #a1c0d4)
   font-size: 30px
   left: -50px
   position: absolute
@@ -2608,7 +2608,7 @@ tags-input
 .gallery:hover .__navs
   bottom: 20px
 .__navs .list-item
-  background: $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
   border: 1px solid $baseBrd
   box-sizing: border-box
   cursor: pointer
@@ -2621,7 +2621,7 @@ tags-input
   width: 50px
 .__navs .list-item:hover,
 .__navs .list-item.__selected
-  border-color: #a1c0d4
+  border-color: var(--vc-bd-a1c0d4, #a1c0d4)
   filter: alpha(opacity=100)
   opacity: 1
 .__navs .list-item::after
@@ -2646,17 +2646,17 @@ tags-input
   &:hover
     opacity: 1
   &--orange
-    background-color: $orangeBg
+    background-color: var(--vc-bg-ffbb0d, #{$orangeBg})
     &:hover
       background-color: darken($orangeBg, 5%)
   &--blue
-    background-color: $blueBg
+    background-color: var(--vc-bg-3a9aff, #{$blueBg})
     &:hover
       background-color: darken($blueBg, 5%)
 
 // Font awesome
 .fa-gray
-  color: $iconGray
+  color: var(--vc-fg-a5a5a5, #{$iconGray})
   margin: 0 0 10px 0
 
 .fa-window-maximize,
@@ -2665,7 +2665,7 @@ tags-input
   display: flex
   align-items: center
   justify-content: center
-  color: $whiteColor
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   font-size: 14px !important
 
 .fa-times

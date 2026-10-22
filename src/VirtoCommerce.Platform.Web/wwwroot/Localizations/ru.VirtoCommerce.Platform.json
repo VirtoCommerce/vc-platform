@@ -18,7 +18,55 @@
       "assets": "Ресурсы",
       "toggle-favorites": "Shift + Пробел для переключения избранного",
       "developer-tools": "Инструменты разработчика",
-      "help": "Помощь"
+      "help": "Помощь",
+      "main-menu": "Главное меню",
+      "collapse-menu": "Свернуть меню",
+      "expand-menu": "Развернуть меню",
+      "theme": "Тема",
+      "theme-light": "Светлая",
+      "theme-dark": "Тёмная",
+      "theme-system": "Как в системе",
+      "theme-classic": "Классическая"
+    },
+    "theme": {
+      "preset": "Цвет",
+      "presets": {
+        "warm": "Тёплая",
+        "blue": "Синяя",
+        "gray": "Серая",
+        "green": "Зелёная",
+        "indigo": "Индиго"
+      },
+      "welcome": {
+        "title": "Выберите оформление",
+        "intro": "Выберите режим и цветовую схему. Результат сразу виден за этим окном. Выбор сохраняется в этом браузере.",
+        "mode": "Режим",
+        "preset": "Цветовая схема",
+        "light-description": "Светлое и чистое, для хорошо освещённых помещений",
+        "dark-description": "Бережёт глаза при слабом освещении",
+        "system-description": "Следует светлой или тёмной теме устройства",
+        "classic-description": "Исходное оформление Virto Commerce",
+        "classic-note": "Цветовые схемы действуют в светлом и тёмном режимах.",
+        "hint": "Нажмите Ctrl+Alt+T, чтобы снова открыть это окно.",
+        "apply": "Применить",
+        "cancel": "Отмена"
+      }
+    },
+    "search": {
+      "placeholder": "Поиск по меню, приложениям, настройкам",
+      "searching": "Поиск…",
+      "no-results": "По запросу «{{query}}» ничего не найдено",
+      "clear": "Очистить",
+      "error": "Не удалось выполнить поиск",
+      "show-all": "Показать все ({{count}})",
+      "hint-navigate": "перемещение",
+      "hint-open": "открыть",
+      "hint-close": "закрыть",
+      "groups": {
+        "menu": "Меню",
+        "apps": "Приложения",
+        "settings": "Настройки"
+      }
     },
     "navigation": {
       "back": "Назад"
@@ -855,8 +903,10 @@
       "licensing": {
         "license-absent": "Общественная лицензия",
         "license-present": "Лицензия {{type}}, истекает {{expirationDate | amParse | date}}",
+        "license-present-short": "Лицензия {{type}}",
         "community": "Работает общественная версия, нажмите для запроса коммерческой лицензии",
         "expired": "Ваша лицензия истекла {{expirationDate | amParse | date}}, пожалуйста, продлите ее",
+        "expired-short": "Лицензия истекла",
         "purchase": "Купить",
         "renew": "Продлить",
         "expiration-date": "Дата истечения"
