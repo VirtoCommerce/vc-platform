@@ -18,7 +18,55 @@
       "assets": "Ressurser",
       "toggle-favorites": "Shift + Mellomrom for å veksle favoritter",
       "developer-tools": "Utviklerverktøy",
-      "help": "Hjelp"
+      "help": "Hjelp",
+      "main-menu": "Hovedmeny",
+      "collapse-menu": "Skjul meny",
+      "expand-menu": "Vis meny",
+      "theme": "Tema",
+      "theme-light": "Lyst",
+      "theme-dark": "Mørkt",
+      "theme-system": "Følg systemet",
+      "theme-classic": "Klassisk"
+    },
+    "theme": {
+      "preset": "Farge",
+      "presets": {
+        "warm": "Varm",
+        "blue": "Blå",
+        "gray": "Grå",
+        "green": "Grønn",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Velg utseende",
+        "intro": "Velg en modus og en fargeforhåndsinnstilling. Du ser resultatet med en gang bak dette vinduet. Valget lagres i denne nettleseren.",
+        "mode": "Modus",
+        "preset": "Fargeforhåndsinnstilling",
+        "light-description": "Lyst og ryddig, for godt opplyste rom",
+        "dark-description": "Skånsomt for øynene i svakt lys",
+        "system-description": "Følger lys eller mørk innstilling på enheten",
+        "classic-description": "Det opprinnelige Virto Commerce-utseendet",
+        "classic-note": "Fargeforhåndsinnstillinger gjelder for lys og mørk modus.",
+        "hint": "Trykk Ctrl+Alt+T for å åpne dette vinduet igjen.",
+        "apply": "Bruk",
+        "cancel": "Avbryt"
+      }
+    },
+    "search": {
+      "placeholder": "Søk i meny, apper, innstillinger",
+      "searching": "Søker…",
+      "no-results": "Ingen treff for «{{query}}»",
+      "clear": "Tøm",
+      "error": "Søket mislyktes",
+      "show-all": "Vis alle {{count}}",
+      "hint-navigate": "for å flytte",
+      "hint-open": "for å åpne",
+      "hint-close": "for å lukke",
+      "groups": {
+        "menu": "Meny",
+        "apps": "Apper",
+        "settings": "Innstillinger"
+      }
     },
     "navigation": {
       "back": "Tilbake"
@@ -843,8 +891,10 @@
       "licensing": {
         "license-absent": "Community-lisens",
         "license-present": "{{type}}-lisens, utløper {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}}-lisens",
         "community": "Kjører community-utgave, klikk for å be om en kommersiell lisens",
         "expired": "Lisensen din har utløpt {{expirationDate | amParse | date}}, vennligst forny",
+        "expired-short": "Lisensen er utløpt",
         "purchase": "Kjøp",
         "renew": "Forny",
         "expiration-date": "Utløpsdato"

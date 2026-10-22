@@ -12,7 +12,7 @@
   font-size: 13px
   line-height: 1
   font-weight: 700
-  color: #ffffff
+  color: var(--vc-fg-ffffff, #ffffff)
   z-index: 2000
   box-shadow: 0 2px 6px rgba(0, 0, 0, .15)
   pointer-events: none
@@ -27,25 +27,25 @@
 
 // Themes
 .vc-env-badge--prod
-  background-color: #EC5B5B
+  background-color: var(--vc-bg-ec5b5b, #EC5B5B)
   .vc-env-badge__dot
     display: inline-block
     animation: vc-env-pulse 1.4s infinite
 
 .vc-env-badge--staging
-  background-color: #7A5C9F
+  background-color: var(--vc-bg-7a5c9f, #7A5C9F)
 
 .vc-env-badge--demo
-  background-color: #2B7EA8
+  background-color: var(--vc-bg-2b7ea8, #2B7EA8)
 
 .vc-env-badge--test
-  background-color: #FC7E00
+  background-color: var(--vc-bg-fc7e00, #FC7E00)
 
 .vc-env-badge--dev
-  background-color: #3E845B
+  background-color: var(--vc-bg-3e845b, #3E845B)
 
 .vc-env-badge--default
-  background-color: #688198
+  background-color: var(--vc-bg-688198, #688198)
 
 @keyframes vc-env-pulse
   0%
