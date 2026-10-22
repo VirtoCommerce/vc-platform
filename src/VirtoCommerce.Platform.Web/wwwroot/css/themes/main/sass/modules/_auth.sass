@@ -14,7 +14,7 @@
     box-sizing: border-box
 
   &__container
-    background: #FFFFFF
+    background: var(--vc-bg-ffffff, #FFFFFF)
     border-radius: 6px
     box-shadow: 4px 6px 25px rgba(64, 102, 166, 0.14)
     @media (min-width: 768px)
@@ -33,7 +33,7 @@
       flex-direction: row
       justify-content: space-between
       padding: 27px 50px 20px
-      border-bottom: 1px solid #E5F1EF
+      border-bottom: 1px solid var(--vc-bd-e5f1ef, #E5F1EF)
 
   &__logo
     max-height: 40px
@@ -41,7 +41,7 @@
       max-width: 40%
 
   &__title
-    color: #334C58
+    color: var(--vc-fg-334c58, #334C58)
     font-weight: 700
     font-size: 18px
     line-height: 23px

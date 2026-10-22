@@ -9,17 +9,17 @@
 /* Other */
 .no-data,
 .__gray
-  color: #999
+  color: var(--vc-fg-999999, #999)
 .__lightblue
-  color: #B8D0DF
+  color: var(--vc-fg-b8d0df, #B8D0DF)
 .block
   margin: 0 0 20px
 .alt-description
-  color: #43b0e6 !important
+  color: var(--vc-fg-43b0e6, #43b0e6) !important
 .demo-warning
   align-items: center
-  background: $redBg
-  color: $whiteColor
+  background: var(--vc-bg-f15100, #{$redBg})
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   display: flex
   font-family: $font
   font-size: 13px
@@ -46,7 +46,7 @@
   height: $scrollHeight
 
 *::-webkit-scrollbar-thumb
-  background-color: $scrollThumbColor
+  background-color: var(--vc-bg-a6a6a6, #{$scrollThumbColor})
   border-radius: 4px
 
 /* Scrollbar Firefox*/
@@ -63,8 +63,8 @@
 
 /* Platform error bar */
 .platform-error-bar
-  background: $genericErrorColor
-  color: $whiteColor
+  background: var(--vc-bg-ff4a4a, #{$genericErrorColor})
+  color: var(--vc-fg-ffffff, #{$whiteColor})
   font-family: $font
   font-size: 13px
   left: 0
@@ -74,7 +74,7 @@
   text-align: center
   z-index: 9000
   a
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
   .close
     cursor: pointer
     position: absolute
@@ -91,7 +91,7 @@
     //@include display(flex)
     //@include justify-content(center)
   .more
-    color: $whiteColor
+    color: var(--vc-fg-ffffff, #{$whiteColor})
     font-size: 12px
     position: absolute
     right: 40px
@@ -109,7 +109,7 @@
 @import "../includes/_flags.sass"
 
 .error
-  color: $genericErrorColor
+  color: var(--vc-fg-ff4a4a, #{$genericErrorColor})
   display: block
   font-size: 12px
   line-height: 1.4
@@ -135,21 +135,21 @@ input:read-only
   &:hover
     background: $navbarItemOver
   &.__animated
-    background: #43b0e6
+    background: var(--vc-bg-43b0e6, #43b0e6)
 .table .table-item.__selected,
 .__items .list-item:focus,
 .__items .list-item.__selected,
 .__files .list-item.__selected > .list-block
-  background: #d9effa
+  background: var(--vc-bg-d9effa, #d9effa)
 .__items label.list-item.__selected
-  background: $whiteColor
+  background: var(--vc-bg-ffffff, #{$whiteColor})
 
 /* Icons */
 .tile-ico,
 .__items .menu-ico,
 .__items .list-ico,
 .__files .list-ico
-  color: #a6a6a6
+  color: var(--vc-fg-a6a6a6, #a6a6a6)
 .tile:hover .tile-ico,
 .__items .list-item:hover .list-ico,
 .__items .list-item.__selected .list-ico,
@@ -163,10 +163,10 @@ input:read-only
     text-shadow: none
   &.__animated .list-ico,
   &.__animated:hover .list-ico
-    color: #fff
+    color: var(--vc-fg-ffffff, #fff)
     text-shadow: none
 .dropdown.__more .dropdown-content  .list-item .list-fav:hover .list-ico
-    color: $orangeBg
+    color: var(--vc-fg-ffbb0d, #{$orangeBg})
 %icon
     margin-bottom: 7px
 img.list-icon
@@ -192,7 +192,7 @@ a
   text-decoration: underline
 a:hover,
 .link:hover
-  color: #52a2ca
+  color: var(--vc-fg-52a2ca, #52a2ca)
 .__link
   cursor: pointer
 .__blue
@@ -248,7 +248,7 @@ a:hover,
   transition: opacity .25s ease-in-out 0s
 /* Progress bar */
 .progress-bar
-  background-color: #444
+  background-color: var(--vc-bg-444444, #444)
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0))
   background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0))
   background-size: 30px 30px

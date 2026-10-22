@@ -261,6 +261,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         }
 
         httpErrorInterceptor.responseError = function (rejection) {
+            // a request the caller cancelled on purpose (e.g. a superseded global search query) is not an error
+            if (rejection.xhrStatus === 'abort') {
+                return $q.reject(rejection);
+            }
             if (rejection.status === 401) {
                 $rootScope.$broadcast('unauthorized', rejection);
             }

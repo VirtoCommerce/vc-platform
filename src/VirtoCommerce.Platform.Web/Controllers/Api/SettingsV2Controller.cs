@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -98,12 +99,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest("Request body must be a non-empty JSON object");
             }
 
-            using (await AsyncLock.GetLockByKey("settings").LockAsync())
-            {
-                await _settingsPropertyService.SaveValuesAsync(values, replaceAll: replaceAll);
-            }
-
-            return NoContent();
+            return await SaveValuesAsync(values, null, null, replaceAll);
         }
 
         #endregion
@@ -169,12 +165,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest("Request body must be a non-empty JSON object");
             }
 
-            using (await AsyncLock.GetLockByKey("settings").LockAsync())
-            {
-                await _settingsPropertyService.SaveValuesAsync(values, tenantType, tenantId, replaceAll);
-            }
-
-            return NoContent();
+            return await SaveValuesAsync(values, tenantType, tenantId, replaceAll);
         }
 
         #endregion
@@ -259,9 +250,24 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Unauthorized();
             }
 
-            using (await AsyncLock.GetLockByKey("settings").LockAsync())
+            return await SaveValuesAsync(values, nameof(UserProfile), userId, replaceAll);
+        }
+
+        /// <summary>
+        /// Saves the values; an unknown setting, or one not registered for the tenant type, is a bad request (400), not a server error.
+        /// </summary>
+        private async Task<ActionResult> SaveValuesAsync(Dictionary<string, object> values, string tenantType, string tenantId, bool replaceAll)
+        {
+            try
             {
-                await _settingsPropertyService.SaveValuesAsync(values, nameof(UserProfile), userId, replaceAll);
+                using (await AsyncLock.GetLockByKey("settings").LockAsync())
+                {
+                    await _settingsPropertyService.SaveValuesAsync(values, tenantType, tenantId, replaceAll);
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
             }
 
             return NoContent();
