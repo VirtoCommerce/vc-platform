@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.signInLogDetailController',
-        ['$scope', 'platformWebApp.metaFormsService', function ($scope, metaFormsService) {
+        ['$scope', 'platformWebApp.metaFormsService', 'platformWebApp.signInLogOutcome', function ($scope, metaFormsService, signInLogOutcome) {
             var blade = $scope.blade;
             var record = blade.record || {};
 
@@ -10,6 +10,8 @@ angular.module('platformWebApp')
             blade.isLoading = false;
 
             blade.currentEntity = record;
+
+            $scope.outcome = signInLogOutcome.get(record);
 
             $scope.isImpersonation = record.signInType === 'Impersonation' ||
                                      record.signInType === 'ImpersonationRevert';
