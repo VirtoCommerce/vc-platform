@@ -25,14 +25,7 @@ angular.module('platformWebApp')
             $scope.createKey = function (signInMethod) {
                 blade.isLoading = true;
 
-                signInMethodService.createKey(signInMethod).then(blade.refresh, function (error) {
-                    // Closing the dialog or the browser prompt rejects without an HTTP status and is not an error
-                    if (error && error.status) {
-                        setError(error);
-                    } else {
-                        blade.refresh();
-                    }
-                });
+                signInMethodService.createKey(signInMethod).then(blade.refresh, setError);
             };
 
             $scope.getKeyTemplateUrl = function (signInMethod) {
