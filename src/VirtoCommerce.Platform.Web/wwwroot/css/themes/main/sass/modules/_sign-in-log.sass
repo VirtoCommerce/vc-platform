@@ -19,34 +19,34 @@
         box-sizing: border-box
         min-width: 0
         padding: 9px 10px
-        border: 1px solid #ddd
+        border: 1px solid var(--vc-bd-dddddd, #ddd)
         border-radius: 3px
-        background: #fff
+        background: var(--vc-bg-ffffff, #fff)
 
         &.__clickable
             cursor: pointer
 
             &:hover
-                border-color: #43b0e6
+                border-color: var(--vc-bd-43b0e6, #43b0e6)
 
         &.__alert .stat-tile-value
-            color: #f4614c
+            color: var(--vc-fg-f4614c, #f4614c)
 
         &.__impersonation .stat-tile-value
-            color: #e08b00
+            color: var(--vc-fg-e08b00, #e08b00)
 
     .stat-tile-value
         font-size: 21px
         line-height: 25px
         font-weight: 600
-        color: #333
+        color: var(--vc-fg-333333, #333)
         font-variant-numeric: tabular-nums
 
     .stat-tile-label
         margin-top: 1px
         font-size: 10px
         line-height: 13px
-        color: #999
+        color: var(--vc-fg-999999, #999)
         text-transform: uppercase
         letter-spacing: .02em
 
@@ -60,27 +60,27 @@
         flex: 1 1 200px
         min-width: 180px
         padding: 10px 12px
-        border: 1px solid #ddd
+        border: 1px solid var(--vc-bd-dddddd, #ddd)
         border-radius: 3px
-        background: #fff
+        background: var(--vc-bg-ffffff, #fff)
 
         h4
             margin: 0 0 6px
             font-size: 11px
             font-weight: 600
-            color: #999
+            color: var(--vc-fg-999999, #999)
             text-transform: uppercase
             letter-spacing: .02em
 
         .breakdown-empty
             font-size: 12px
-            color: #bbb
+            color: var(--vc-fg-bbbbbb, #bbb)
             padding: 2px 0
 
         .hint
             margin-top: 6px
             font-size: 11px
-            color: #bbb
+            color: var(--vc-fg-bbbbbb, #bbb)
 
     .breakdown-row
         display: flex
@@ -89,7 +89,7 @@
         gap: 8px
         padding: 3px 0
         font-size: 14px
-        border-bottom: 1px solid #f2f2f2
+        border-bottom: 1px solid var(--vc-bd-f2f2f2, #f2f2f2)
 
         &:last-of-type
             border-bottom: none
@@ -98,11 +98,11 @@
             cursor: pointer
 
             &:hover .breakdown-key
-                color: #43b0e6
+                color: var(--vc-fg-43b0e6, #43b0e6)
                 text-decoration: underline
 
     .breakdown-key
-        color: #333
+        color: var(--vc-fg-333333, #333)
         overflow: hidden
         text-overflow: ellipsis
         white-space: nowrap
@@ -110,7 +110,7 @@
     .breakdown-count
         flex-shrink: 0
         font-weight: 600
-        color: #666
+        color: var(--vc-fg-666666, #666)
 
 // Row badges in the grid.
 .sign-in-log-badge
@@ -122,23 +122,23 @@
     white-space: nowrap
 
     &.__success
-        background: #e8f5e9
-        color: #2e7d32
+        background: var(--vc-bg-e8f5e9, #e8f5e9)
+        color: var(--vc-fg-2e7d32, #2e7d32)
 
     &.__failed
-        background: #fdecea
-        color: #c62828
+        background: var(--vc-bg-fdecea, #fdecea)
+        color: var(--vc-fg-c62828, #c62828)
 
     &.__impersonation
         margin-left: 6px
-        background: #fff4e0
-        color: #b06d00
+        background: var(--vc-bg-fff4e0, #fff4e0)
+        color: var(--vc-fg-b06d00, #b06d00)
 
 // Failure reason travels with the Outcome badge so it keeps its triage value without a column.
 .sign-in-log-reason
     margin-left: 6px
     font-size: 11px
-    color: #999
+    color: var(--vc-fg-999999, #999)
 
 // Dashboard: period switcher and the explicit "all records" entry point.
 .sign-in-log-period-row
@@ -154,7 +154,7 @@
 .sign-in-log-period-label
     flex: 0 0 auto
     font-size: 13px
-    color: #999
+    color: var(--vc-fg-999999, #999)
 
 .sign-in-log-period
     display: grid
@@ -165,20 +165,20 @@
     a
         text-align: center
         padding: 3px 6px
-        border: 1px solid #ddd
+        border: 1px solid var(--vc-bd-dddddd, #ddd)
         border-radius: 3px
         font-size: 12px
-        color: #666
+        color: var(--vc-fg-666666, #666)
         text-decoration: none
 
         &:hover
-            border-color: #43b0e6
-            color: #43b0e6
+            border-color: var(--vc-bd-43b0e6, #43b0e6)
+            color: var(--vc-fg-43b0e6, #43b0e6)
 
         &.__active
-            border-color: #43b0e6
-            background: #43b0e6
-            color: #fff
+            border-color: var(--vc-bd-43b0e6, #43b0e6)
+            background: var(--vc-bg-43b0e6, #43b0e6)
+            color: var(--vc-fg-ffffff, #fff)
 
 
 .sign-in-log-all
@@ -186,7 +186,7 @@
 
     a
         font-size: 13px
-        color: #43b0e6
+        color: var(--vc-fg-43b0e6, #43b0e6)
         text-decoration: none
 
         i
@@ -209,24 +209,24 @@
         font-size: 9px
 
     &.__worse
-        color: #c62828
+        color: var(--vc-fg-c62828, #c62828)
 
     &.__better
-        color: #2e7d32
+        color: var(--vc-fg-2e7d32, #2e7d32)
 
     &.__neutral
-        color: #777
+        color: var(--vc-fg-777777, #777)
 
     &.__flat
-        color: #bbb
+        color: var(--vc-fg-bbbbbb, #bbb)
 
 // Timeline chart. Marks are plain SVG rects, so the colours live here with the rest of the module.
 .sign-in-log-chart
     margin-bottom: 16px
     padding: 10px 12px 6px
-    border: 1px solid #ddd
+    border: 1px solid var(--vc-bd-dddddd, #ddd)
     border-radius: 3px
-    background: #fff
+    background: var(--vc-bg-ffffff, #fff)
 
     .chart-head
         display: flex
@@ -242,13 +242,13 @@
             font-weight: 600
             letter-spacing: .02em
             text-transform: uppercase
-            color: #999
+            color: var(--vc-fg-999999, #999)
 
     .chart-legend
         display: flex
         gap: 12px
         font-size: 11px
-        color: #666
+        color: var(--vc-fg-666666, #666)
 
         i
             display: inline-block
@@ -259,10 +259,10 @@
             vertical-align: -1px
 
             &.__ok
-                background: #5a9ec9
+                background: var(--vc-bg-5a9ec9, #5a9ec9)
 
             &.__bad
-                background: #c0392f
+                background: var(--vc-bg-c0392f, #c0392f)
 
 .timeline-svg
     display: block
@@ -271,22 +271,22 @@
     max-width: 100%
 
     .gridlines line
-        stroke: #eee
+        stroke: var(--vc-fg-eeeeee, #eee)
         stroke-width: 1
 
     .axis-y text
-        fill: #aaa
+        fill: var(--vc-fg-aaaaaa, #aaa)
         font-size: 12px
 
     .axis-x text
-        fill: #aaa
+        fill: var(--vc-fg-aaaaaa, #aaa)
         font-size: 14px
 
     rect.__ok
-        fill: #5a9ec9
+        fill: var(--vc-fg-5a9ec9, #5a9ec9)
 
     rect.__bad
-        fill: #c0392f
+        fill: var(--vc-fg-c0392f, #c0392f)
 
     g.bars g:hover rect
         opacity: .75
@@ -300,14 +300,14 @@
     box-sizing: border-box
     width: 160px
     padding: 4px 8px
-    border: 1px solid #ddd
+    border: 1px solid var(--vc-bd-dddddd, #ddd)
     border-radius: 3px
     font-size: 13px
-    color: #333
-    background: #fff
+    color: var(--vc-fg-333333, #333)
+    background: var(--vc-bg-ffffff, #fff)
 
     &:focus
-        border-color: #1a73e8
+        border-color: var(--vc-bd-1a73e8, #1a73e8)
         outline: none
 
 // Period presets as a 4-column grid inside the filter panel, with Custom revealing dates.
@@ -325,25 +325,25 @@
 
     a
         padding: 4px 2px
-        border: 1px solid #ddd
+        border: 1px solid var(--vc-bd-dddddd, #ddd)
         border-radius: 3px
         font-size: 11px
         line-height: 14px
         text-align: center
-        color: #666
+        color: var(--vc-fg-666666, #666)
         text-decoration: none
         overflow: hidden
         text-overflow: ellipsis
         white-space: nowrap
 
         &:hover
-            border-color: #43b0e6
-            color: #43b0e6
+            border-color: var(--vc-bd-43b0e6, #43b0e6)
+            color: var(--vc-fg-43b0e6, #43b0e6)
 
         &.__active
-            border-color: #43b0e6
-            background: #43b0e6
-            color: #fff
+            border-color: var(--vc-bd-43b0e6, #43b0e6)
+            background: var(--vc-bg-43b0e6, #43b0e6)
+            color: var(--vc-fg-ffffff, #fff)
 
 // Read-only record view. Markup matches the account blade (form.form > va-metaform), but a
 // record has 18 fields where an account form has five, so the row rhythm is tightened here
@@ -374,16 +374,16 @@
     gap: 10px
     margin-bottom: 14px
     padding: 10px 12px
-    border: 1px solid #f0d8a8
+    border: 1px solid var(--vc-bd-f0d8a8, #f0d8a8)
     border-radius: 3px
-    background: #fdf6e7
+    background: var(--vc-bg-fdf6e7, #fdf6e7)
     font-size: 13px
     line-height: 1.45
-    color: #7a5a12
+    color: var(--vc-fg-7a5a12, #7a5a12)
 
     i
         margin-top: 2px
-        color: #d9a441
+        color: var(--vc-fg-d9a441, #d9a441)
 
     strong
         display: block

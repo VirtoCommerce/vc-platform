@@ -194,9 +194,12 @@ namespace VirtoCommerce.Platform.Data.Settings
                 throw new InvalidOperationException($"Unknown setting: '{name}'");
             }
 
-            // Validate scope: tenant-assigned settings should only be saved with a tenant scope,
+            // Validate scope: a tenant-scoped value is accepted only for a setting registered for that tenant type
+            // (e.g. the user's own "me" values accept user profile settings, not store settings),
             // and global-only settings should not be saved with a tenant scope
-            if (!string.IsNullOrEmpty(tenantType) && !typeAssignments.ContainsKey(name))
+            if (!string.IsNullOrEmpty(tenantType) &&
+                (!typeAssignments.TryGetValue(name, out var assignedTypes) ||
+                 !assignedTypes.Contains(tenantType, StringComparer.OrdinalIgnoreCase)))
             {
                 throw new InvalidOperationException($"Setting '{name}' is not registered for tenant type '{tenantType}'");
             }
