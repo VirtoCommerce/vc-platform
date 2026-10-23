@@ -1,7 +1,9 @@
 .vc-button-social
-  display: flex
+  grid-column: 1 / -1
+  display: grid
+  grid-template-columns: subgrid
   align-items: center
-  justify-content: center
+  column-gap: 12px
   padding: 8px 12px
   width: 100%
   min-height: 43px
@@ -14,14 +16,13 @@
     background-color: var(--vc-bg-fafafa, #FAFAFA)
 
   &__img
-    flex: none
+    grid-column: 2
     width: 27px
     height: 27px
 
   &__text
-    flex-grow: 1
+    grid-column: 3
     color: var(--vc-fg-4f5358, #4F5358)
     font-weight: 700
     font-size: 15px
     line-height: 20px
-    text-align: center

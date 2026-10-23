@@ -1,0 +1,63 @@
+.sign-in-key
+  display: flex
+  align-items: center
+  gap: 15px
+  padding: 10px 0
+
+  &__template
+    flex: 1
+    min-width: 0
+
+  &__content
+    display: flex
+    align-items: center
+    gap: 15px
+
+  &__icon
+    width: 24px
+    font-size: 22px
+    color: #4c4c4c
+    text-align: center
+
+  &__info
+    flex: 1
+    min-width: 0
+
+  &__name
+    display: flex
+    align-items: center
+    gap: 10px
+    min-height: 32px
+
+  &__name-text
+    line-height: 32px
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  &__name-input
+    position: relative
+    flex: 1
+    max-width: 300px
+
+    &.form-input input
+      width: calc(100% + 6px)
+      height: 32px
+      margin-left: -6px
+      line-height: 32px
+      padding: 0 50px 0 6px
+      border: 0
+      box-shadow: inset 0 0 0 1px #eaedf3
+      font-size: 14px
+
+      &:focus
+        box-shadow: inset 0 0 0 1px #a1c0d4
+
+  &__name-actions
+    position: absolute
+    top: 0
+    right: 8px
+    bottom: 0
+    display: flex
+    align-items: center
+    gap: 10px

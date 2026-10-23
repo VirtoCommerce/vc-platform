@@ -771,6 +771,17 @@
           "user-agent": "Agent utilisateur"
         }
       },
+      "sign-in-methods-list": {
+        "title": "Méthodes de connexion",
+        "labels": {
+          "no-keys": "Aucune clé",
+          "unnamed-key": "Clé sans nom",
+          "password-set": "Le mot de passe est défini",
+          "password-not-set": "Le mot de passe n'est pas défini",
+          "linked-account": "Compte lié",
+          "changed": "Modifié le"
+        }
+      },
       "sign-in-log": {
         "title": "Journal de connexion",
         "subtitle": "Tentatives de connexion et connexion au nom de",
@@ -937,6 +948,9 @@
       },
       "sign-in-log": {
         "title": "Journal de connexion"
+      },
+      "sign-in-methods": {
+        "title": "Méthodes de connexion"
       }
     },
     "dialogs": {
@@ -1071,6 +1085,13 @@
       "sessions-terminate-all": {
         "title": "Terminer tout",
         "message": "Êtes-vous sûr de vouloir terminer toutes les sessions utilisateur ?"
+      },
+      "sign-in-key-delete": {
+        "title": "Supprimer la clé",
+        "message": "Voulez-vous vraiment supprimer cette clé ?"
+      },
+      "set-password": {
+        "title": "Définir le mot de passe"
       },
       "delete-confirm": {
         "warning": "AVERTISSEMENT : Cette modification est permanente et ne peut pas être annulée. L'application de cette modification peut entraîner une perte de données.",

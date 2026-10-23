@@ -773,6 +773,17 @@
           "user-agent": "Benutzeragent"
         }
       },
+      "sign-in-methods-list": {
+        "title": "Anmeldemethoden",
+        "labels": {
+          "no-keys": "Keine Schlüssel",
+          "unnamed-key": "Unbenannter Schlüssel",
+          "password-set": "Passwort ist festgelegt",
+          "password-not-set": "Passwort ist nicht festgelegt",
+          "linked-account": "Verknüpftes Konto",
+          "changed": "Geändert"
+        }
+      },
       "sign-in-log": {
         "title": "Anmeldeprotokoll",
         "subtitle": "Anmeldeversuche und Anmeldung im Namen",
@@ -939,6 +950,9 @@
       },
       "sign-in-log": {
         "title": "Anmeldeprotokoll"
+      },
+      "sign-in-methods": {
+        "title": "Anmeldemethoden"
       }
     },
     "dialogs": {
@@ -1073,6 +1087,13 @@
       "sessions-terminate-all": {
         "title": "Alle beenden",
         "message": "Sind Sie sicher, dass Sie alle Benutzersitzungen beenden möchten?"
+      },
+      "sign-in-key-delete": {
+        "title": "Schlüssel löschen",
+        "message": "Möchten Sie diesen Schlüssel wirklich löschen?"
+      },
+      "set-password": {
+        "title": "Passwort festlegen"
       },
       "delete-confirm": {
         "warning": "WARNUNG: Diese Änderung ist dauerhaft und kann nicht rückgängig gemacht werden. Das Anwenden dieser Änderung kann zu Datenverlust führen.",

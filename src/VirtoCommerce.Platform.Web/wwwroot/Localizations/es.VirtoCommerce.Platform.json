@@ -771,6 +771,17 @@
           "user-agent": "Agente de usuario"
         }
       },
+      "sign-in-methods-list": {
+        "title": "Métodos de inicio de sesión",
+        "labels": {
+          "no-keys": "Sin claves",
+          "unnamed-key": "Clave sin nombre",
+          "password-set": "La contraseña está establecida",
+          "password-not-set": "La contraseña no está establecida",
+          "linked-account": "Cuenta vinculada",
+          "changed": "Modificado"
+        }
+      },
       "sign-in-log": {
         "title": "Registro de inicios de sesión",
         "subtitle": "Intentos de inicio de sesión e inicio en nombre de",
@@ -937,6 +948,9 @@
       },
       "sign-in-log": {
         "title": "Registro de inicios de sesión"
+      },
+      "sign-in-methods": {
+        "title": "Métodos de inicio de sesión"
       }
     },
     "dialogs": {
@@ -1071,6 +1085,13 @@
       "sessions-terminate-all": {
         "title": "Terminar todas",
         "message": "¿Está seguro de que desea terminar todas las sesiones de usuario?"
+      },
+      "sign-in-key-delete": {
+        "title": "Eliminar clave",
+        "message": "¿Está seguro de que desea eliminar esta clave?"
+      },
+      "set-password": {
+        "title": "Establecer contraseña"
       },
       "delete-confirm": {
         "warning": "ADVERTENCIA: Este cambio es permanente y no se puede deshacer. Aplicar este cambio puede provocar la pérdida de datos.",

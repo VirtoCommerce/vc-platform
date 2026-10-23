@@ -15,6 +15,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Exceptions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using static VirtoCommerce.Platform.Core.PlatformConstants.Security.SystemRoles;
 using MvcSignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
 
 namespace VirtoCommerce.Platform.Security.OpenIddict;
@@ -96,9 +97,34 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
     /// </summary>
     protected abstract Task<GrantValidationResult> ValidateGrantAsync(TokenRequestContext context);
 
+    protected virtual string GetRequiredParameter(OpenIddictRequest request, string name, List<string> missingParameters)
+    {
+        var value = (string)request.GetParameter(name);
+        if (string.IsNullOrEmpty(value))
+        {
+            missingParameters.Add(name);
+        }
+
+        return value;
+    }
+
+    protected virtual TokenResponse BuildErrorResponse(TokenRequestContext context, List<string> missingParameters)
+    {
+        context.FailureReason = SignInFailureReason.MissingParameter;
+
+        return SecurityErrorDescriber.MissingParameters(missingParameters);
+    }
+
     protected virtual async Task<bool> CanSignInAsync(TokenRequestContext context)
     {
         var canSignIn = await _signInManager.CanSignInAsync(context.User);
+
+        // Customers are not allowed into the back office
+        if (canSignIn && context.AuthenticationScheme == IdentityConstants.ApplicationScheme)
+        {
+            canSignIn = !await _signInManager.UserManager.IsInRoleAsync(context.User, Customer);
+        }
+
         if (!canSignIn)
         {
             context.FailureReason = SignInFailureReason.NotAllowed;
