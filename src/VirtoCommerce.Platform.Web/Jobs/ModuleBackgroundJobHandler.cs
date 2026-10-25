@@ -83,10 +83,15 @@ namespace VirtoCommerce.Platform.Web.Jobs
 
                 if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
                 {
-                    var reportProgress = new Progress<ProgressMessage>(x =>
+                    // Synchronous reporting (Progress<T> posts to the thread pool): every message is in the log
+                    // before the terminal state is decided, so an error reported by the management service fails
+                    // the job instead of being followed by a "finished." success message.
+                    var hasErrors = false;
+                    var reportProgress = new SynchronousProgress(x =>
                     {
                         lock (_lockObject)
                         {
+                            hasErrors |= x.Level == ProgressMessageLevel.Error;
                             notification.Description = x.Message;
                             notification.ProgressLog.Add(x);
                             _pushNotifier.Send(notification);
@@ -104,7 +109,16 @@ namespace VirtoCommerce.Platform.Web.Jobs
                             break;
                     }
 
-                    completedSuccessfully = true;
+                    // The management service reports validation failures (missing dependency, incompatible
+                    // platform, ...) as errors and returns without changing anything
+                    if (hasErrors)
+                    {
+                        notification.Description = GetFailedMessage(options.Action);
+                    }
+                    else
+                    {
+                        completedSuccessfully = true;
+                    }
                 }
                 else
                 {
@@ -123,12 +137,7 @@ namespace VirtoCommerce.Platform.Web.Jobs
                 // Record the failure as the terminal state. The finally block must NOT overwrite this with a
                 // "finished." success message, so the description is set here and the success branch is gated on
                 // completedSuccessfully.
-                notification.Description = options.Action switch
-                {
-                    ModuleAction.Install => "Installation failed.",
-                    ModuleAction.Update => "Update failed.",
-                    _ => "Uninstall failed."
-                };
+                notification.Description = GetFailedMessage(options.Action);
                 notification.ProgressLog.Add(new ProgressMessage
                 {
                     Level = ProgressMessageLevel.Error,
@@ -141,8 +150,8 @@ namespace VirtoCommerce.Platform.Web.Jobs
 
                 notification.Finished = DateTime.UtcNow;
 
-                // Only report success when the work actually completed. On failure (catch) or when module
-                // management is disabled, the description/error already recorded above is preserved.
+                // Only report success when the work actually completed. On failure (catch or reported errors) or
+                // when module management is disabled, the description/error already recorded above is preserved.
                 if (completedSuccessfully)
                 {
                     notification.Description = options.Action switch
@@ -163,6 +172,24 @@ namespace VirtoCommerce.Platform.Web.Jobs
             }
 
             return Task.CompletedTask;
+        }
+
+        private static string GetFailedMessage(ModuleAction action)
+        {
+            return action switch
+            {
+                ModuleAction.Install => "Installation failed.",
+                ModuleAction.Update => "Update failed.",
+                _ => "Uninstall failed."
+            };
+        }
+
+        private sealed class SynchronousProgress(Action<ProgressMessage> handler) : IProgress<ProgressMessage>
+        {
+            public void Report(ProgressMessage value)
+            {
+                handler(value);
+            }
         }
     }
 }

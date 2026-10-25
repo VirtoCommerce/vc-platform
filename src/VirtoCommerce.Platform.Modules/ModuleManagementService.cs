@@ -56,6 +56,18 @@ public class ModuleManagementService(
         return ModuleBootstrapper.Instance.GetDependencies(modules, _mergedModules);
     }
 
+    public IList<ManifestModuleInfo> GetMissingDependencies(IList<ModuleInstallRequest> requests)
+    {
+        EnsureInitialized();
+
+        var requestedIds = requests.Select(x => x.Id).ToList();
+        var modules = ResolveModulesByRequest(requests);
+
+        return ModuleBootstrapper.Instance.GetDependencies(modules, _mergedModules)
+            .Where(x => !x.IsInstalled && !requestedIds.ContainsIgnoreCase(x.Id))
+            .ToList();
+    }
+
     public ManifestModuleInfo AddUploadedModule(ManifestModuleInfo module)
     {
         EnsureInitialized();
@@ -139,9 +151,26 @@ public class ModuleManagementService(
 
         foreach (var id in moduleIds)
         {
-            // Prefer installed version; fall back to latest available
-            var module = _mergedModules.FirstOrDefault(x => x.IsInstalled && x.Id.EqualsIgnoreCase(id)) ??
-                         _mergedModules.Where(x => x.Id.EqualsIgnoreCase(id)).OrderByDescending(x => x.Version).FirstOrDefault();
+            var module = ResolveModuleById(id);
+            if (module != null)
+            {
+                result.Add(module);
+            }
+        }
+
+        return result;
+    }
+
+    private List<ManifestModuleInfo> ResolveModulesByRequest(IList<ModuleInstallRequest> requests)
+    {
+        var result = new List<ManifestModuleInfo>();
+
+        foreach (var request in requests)
+        {
+            // Exact version when requested (e.g. the target version of an update), otherwise resolve by ID
+            var module = string.IsNullOrEmpty(request.Version)
+                ? ResolveModuleById(request.Id)
+                : _mergedModules.FirstOrDefault(x => x.Identity.Equals(new ModuleIdentity(request.Id, SemanticVersion.Parse(request.Version))));
 
             if (module != null)
             {
@@ -150,6 +179,13 @@ public class ModuleManagementService(
         }
 
         return result;
+    }
+
+    private ManifestModuleInfo ResolveModuleById(string id)
+    {
+        // Prefer installed version; fall back to latest available
+        return _mergedModules.FirstOrDefault(x => x.IsInstalled && x.Id.EqualsIgnoreCase(id)) ??
+               _mergedModules.Where(x => x.Id.EqualsIgnoreCase(id)).OrderByDescending(x => x.Version).FirstOrDefault();
     }
 
     private ManifestModuleInfo ResolveModuleForInstall(string moduleId, string version)
@@ -451,10 +487,17 @@ public class ModuleManagementService(
 
         try
         {
-            hasMissingDependencies = ModuleBootstrapper.Instance.GetDependencies([module], allModules)
+            var missingDependencies = ModuleBootstrapper.Instance.GetDependencies([module], allModules)
                 .Where(x => !x.IsInstalled)
                 .Except(dependenciesToIgnore)
-                .Any();
+                .ToList();
+
+            foreach (var missingDependency in missingDependencies)
+            {
+                Report(progress, ProgressMessageLevel.Error, "Module '{0}' requires '{1}', which is not installed. Install it together with '{0}'.", module, missingDependency);
+            }
+
+            hasMissingDependencies = missingDependencies.Count > 0;
         }
         catch (MissedModuleException ex)
         {

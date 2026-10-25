@@ -148,11 +148,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(ModuleDescriptor[]), StatusCodes.Status200OK)]
         public ActionResult<ModuleDescriptor[]> GetMissingDependencies([FromBody] ModuleDescriptor[] moduleDescriptors)
         {
-            var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
+            // Keep the requested version: for an update it is the target version, whose dependencies may differ
+            // from the installed one
+            var requests = moduleDescriptors.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToList();
 
-            var result = _moduleManagementService.GetDependencies(moduleIds)
-                .Where(x => !x.IsInstalled)
-                .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
+            var result = _moduleManagementService.GetMissingDependencies(requests)
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
 

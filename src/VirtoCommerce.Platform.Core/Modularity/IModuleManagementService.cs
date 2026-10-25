@@ -28,6 +28,14 @@ public interface IModuleManagementService
     IList<ManifestModuleInfo> GetDependencies(IList<string> moduleIds);
 
     /// <summary>
+    /// Returns not installed transitive dependencies that must be installed together with the requested modules,
+    /// excluding the requested modules themselves.
+    /// Resolves each request to the exact requested version (e.g. the target version of an update);
+    /// a request without a version resolves to the installed version, then the latest available.
+    /// </summary>
+    IList<ManifestModuleInfo> GetMissingDependencies(IList<ModuleInstallRequest> requests);
+
+    /// <summary>
     /// Returns installed modules that depend ON the given modules (reverse dependencies).
     /// Walks UP the dependency graph: "what will break if these modules are removed?"
     /// Resolves module IDs to installed ManifestModuleInfo internally.
