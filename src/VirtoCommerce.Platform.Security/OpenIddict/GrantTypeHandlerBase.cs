@@ -69,6 +69,12 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
             return await FailAsync(context, SecurityErrorDescriber.SignInNotAllowed());
         }
 
+        var lockoutError = await ValidateLockoutAsync(context);
+        if (lockoutError != null)
+        {
+            return await FailAsync(context, lockoutError);
+        }
+
         var validationError = await ValidateRequestAsync(context);
         if (validationError != null)
         {
@@ -131,6 +137,20 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         }
 
         return canSignIn;
+    }
+
+    protected virtual async Task<TokenResponse> ValidateLockoutAsync(TokenRequestContext context)
+    {
+        if (!await _signInManager.UserManager.IsLockedOutAsync(context.User))
+        {
+            return null;
+        }
+
+        context.FailureReason = SignInFailureReason.LockedOut;
+
+        return context.DetailedErrors
+            ? SecurityErrorDescriber.GetLockoutError(context.User)
+            : SecurityErrorDescriber.LoginFailed();
     }
 
     protected virtual async Task<TokenResponse> ValidateRequestAsync(TokenRequestContext context)

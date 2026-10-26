@@ -34,7 +34,7 @@ public class SignInMethodServiceTests
     }
 
     [Fact]
-    public async Task DeleteKeyAsync_Should_Fail_When_TheKeyIsTheLastOne()
+    public async Task DeleteKeyAsync_Should_Fail_When_KeyIsLastOne()
     {
         // Arrange
         var provider = CreateProvider(CreateMethod("Password", keyIds: ["password"]), CreateMethod("Google"));
@@ -49,12 +49,15 @@ public class SignInMethodServiceTests
     }
 
     [Fact]
-    public async Task DeleteKeyAsync_Should_CountTheKeysOfAllProviders()
+    public async Task DeleteKeyAsync_Should_CountKeysOfAllProviders()
     {
         // Arrange
         var passwordProvider = CreateProvider(CreateMethod("Password", keyIds: ["password"]));
         var passkeyProvider = CreateProvider(CreateMethod("Passkey", keyIds: ["passkey-1"]));
-        passwordProvider.Setup(x => x.DeleteKeyAsync(_user, "Password", "password")).ReturnsAsync(IdentityResult.Success);
+
+        passwordProvider
+            .Setup(x => x.DeleteKeyAsync(_user, "Password", "password"))
+            .ReturnsAsync(IdentityResult.Success);
 
         var service = new SignInMethodService([passwordProvider.Object, passkeyProvider.Object]);
 
@@ -68,11 +71,14 @@ public class SignInMethodServiceTests
     }
 
     [Fact]
-    public async Task DeleteKeyAsync_Should_PassTheRegisteredMethodName_When_TheRequestedNameDiffersInCase()
+    public async Task DeleteKeyAsync_Should_PassRegisteredMethodName_When_RequestedNameDiffersInCase()
     {
         // Arrange
         var provider = CreateProvider(CreateMethod("Password", keyIds: ["password"]), CreateMethod("Google", keyIds: ["google-key"]));
-        provider.Setup(x => x.DeleteKeyAsync(_user, "Google", "google-key")).ReturnsAsync(IdentityResult.Success);
+
+        provider
+            .Setup(x => x.DeleteKeyAsync(_user, "Google", "google-key"))
+            .ReturnsAsync(IdentityResult.Success);
 
         var service = new SignInMethodService([provider.Object]);
 
@@ -85,7 +91,7 @@ public class SignInMethodServiceTests
     }
 
     [Fact]
-    public async Task DeleteKeyAsync_Should_Fail_When_TheKeyBelongsToAnotherMethod()
+    public async Task DeleteKeyAsync_Should_Fail_When_KeyBelongsToAnotherMethod()
     {
         // Arrange
         var provider = CreateProvider(CreateMethod("Password", keyIds: ["password"]), CreateMethod("Google", keyIds: ["google-key"]));
@@ -100,12 +106,15 @@ public class SignInMethodServiceTests
     }
 
     [Fact]
-    public async Task RenameKeyAsync_Should_CallTheProviderThatOwnsTheKey()
+    public async Task RenameKeyAsync_Should_CallProviderThatOwnsKey()
     {
         // Arrange
         var passwordProvider = CreateProvider(CreateMethod("Password", keyIds: ["password"]));
         var passkeyProvider = CreateProvider(CreateMethod("Passkey", keyIds: ["passkey-1"]));
-        passkeyProvider.Setup(x => x.RenameKeyAsync(_user, "Passkey", "passkey-1", "Laptop")).ReturnsAsync(IdentityResult.Success);
+
+        passkeyProvider
+            .Setup(x => x.RenameKeyAsync(_user, "Passkey", "passkey-1", "Laptop"))
+            .ReturnsAsync(IdentityResult.Success);
 
         var service = new SignInMethodService([passwordProvider.Object, passkeyProvider.Object]);
 
@@ -121,7 +130,10 @@ public class SignInMethodServiceTests
     private static Mock<ISignInMethodProvider> CreateProvider(params SignInMethod[] signInMethods)
     {
         var provider = new Mock<ISignInMethodProvider>();
-        provider.Setup(x => x.GetSignInMethodsAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(signInMethods);
+
+        provider
+            .Setup(x => x.GetSignInMethodsAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync(signInMethods);
 
         return provider;
     }

@@ -90,7 +90,7 @@ public class LogUserSignInEventHandlerTests
     }
 
     [Fact]
-    public async Task Handle_LongClientId_TruncatesToTheColumnLength()
+    public async Task Handle_LongClientId_TruncatesToColumnLength()
     {
         // Arrange
         var written = new List<UserSignInLog>();

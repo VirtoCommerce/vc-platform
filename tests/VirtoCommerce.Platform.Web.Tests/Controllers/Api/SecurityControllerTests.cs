@@ -874,9 +874,18 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         {
             // Arrange
             var user = new ApplicationUser { Id = "user-id", UserName = "sso-user" };
-            _userManagerMock.Setup(x => x.FindByNameAsync(user.UserName)).ReturnsAsync(user);
-            _userManagerMock.Setup(x => x.HasPasswordAsync(user)).ReturnsAsync(false);
-            _userManagerMock.Setup(x => x.AddPasswordAsync(user, "new")).ReturnsAsync(IdentityResult.Success);
+
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(user.UserName))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.HasPasswordAsync(user))
+                .ReturnsAsync(false);
+
+            _userManagerMock
+                .Setup(x => x.AddPasswordAsync(user, "new"))
+                .ReturnsAsync(IdentityResult.Success);
 
             _controller = CreateSecurityController(securityOptions: CreateSecurityOptions());
 
@@ -897,7 +906,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         #region SignInKeys
 
         [Fact]
-        public async Task GetCurrentUserSignInMethods_ReturnsMethodsWithTheKeysOfTheCurrentUser()
+        public async Task GetCurrentUserSignInMethods_ReturnsMethodsWithKeysOfCurrentUser()
         {
             // Arrange
             var user = SetCurrentUser(new ApplicationUser { Id = "user-id", UserName = "operator" });
@@ -967,7 +976,10 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private static Mock<IOptions<AuthorizationOptions>> CreateSecurityOptions(params string[] nonEditableUsers)
         {
             var options = new Mock<IOptions<AuthorizationOptions>>();
-            options.SetupGet(x => x.Value).Returns(new AuthorizationOptions { NonEditableUsers = nonEditableUsers });
+
+            options
+                .SetupGet(x => x.Value)
+                .Returns(new AuthorizationOptions { NonEditableUsers = nonEditableUsers });
 
             return options;
         }
