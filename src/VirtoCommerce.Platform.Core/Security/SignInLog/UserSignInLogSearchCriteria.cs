@@ -11,6 +11,8 @@ public class UserSignInLogSearchCriteria : SearchCriteriaBase
 
     public bool? Succeeded { get; set; }
 
+    public bool? AwaitingSecondFactor { get; set; }
+
     public string[] SignInTypes { get; set; }
 
     public string[] FailureReasons { get; set; }

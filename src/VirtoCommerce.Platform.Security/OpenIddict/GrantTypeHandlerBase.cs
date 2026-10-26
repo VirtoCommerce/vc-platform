@@ -27,6 +27,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
     private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
     private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
     private readonly IEventPublisher _eventPublisher;
+    private readonly ITwoFactorSignInService _twoFactorSignInService;
 
     protected GrantTypeHandlerBase(
         SignInManager<ApplicationUser> signInManager,
@@ -34,7 +35,8 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         IEnumerable<ITokenRequestValidator> requestValidators,
         IEnumerable<ITokenClaimProvider> claimProviders,
         IEnumerable<ITokenRequestHandler> requestHandlers,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        ITwoFactorSignInService twoFactorSignInService)
     {
         _signInManager = signInManager;
         _identityOptions = identityOptions.Value;
@@ -42,6 +44,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         _claimProviders = claimProviders;
         _requestHandlers = requestHandlers;
         _eventPublisher = eventPublisher;
+        _twoFactorSignInService = twoFactorSignInService;
     }
 
     public abstract string GrantType { get; }
@@ -66,6 +69,11 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         if (!await CanSignInAsync(context))
         {
             return await FailAsync(context, SecurityErrorDescriber.SignInNotAllowed());
+        }
+
+        if (await IsTwoFactorRequiredAsync(context))
+        {
+            return await FailAsync(context, errorResult: await _twoFactorSignInService.ChallengeAsync(context));
         }
 
         var validationError = await ValidateRequestAsync(context);
@@ -105,6 +113,11 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         }
 
         return canSignIn;
+    }
+
+    protected virtual Task<bool> IsTwoFactorRequiredAsync(TokenRequestContext context)
+    {
+        return _twoFactorSignInService.IsTwoFactorRequiredAsync(context.User);
     }
 
     protected virtual async Task<TokenResponse> ValidateRequestAsync(TokenRequestContext context)
