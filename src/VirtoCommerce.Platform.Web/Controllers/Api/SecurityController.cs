@@ -1164,7 +1164,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="id">Sign-in key ID</param>
         /// <param name="request">Contains the new key name.</param>
         [HttpPut]
-        [Route("sign-in-methods/{name}/keys/{id}")]
+        [Route("currentuser/sign-in-methods/{name}/keys/{id}")]
         [Authorize]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> RenameSignInKey([FromRoute] string name, [FromRoute] string id, [FromBody] SignInKeyRenameRequest request)
@@ -1201,7 +1201,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="name">Sign-in method name</param>
         /// <param name="id">Sign-in key ID</param>
         [HttpDelete]
-        [Route("sign-in-methods/{name}/keys/{id}")]
+        [Route("currentuser/sign-in-methods/{name}/keys/{id}")]
         [Authorize]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteSignInKey([FromRoute] string name, [FromRoute] string id)

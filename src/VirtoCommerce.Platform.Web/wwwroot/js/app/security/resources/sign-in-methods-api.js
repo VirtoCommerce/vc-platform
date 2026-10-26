@@ -4,7 +4,7 @@ angular.module('platformWebApp')
             getSignInMethods: { method: 'GET', isArray: true },
             getCurrentUserSignInMethods: { method: 'GET', url: 'api/platform/security/currentuser/sign-in-methods', isArray: true },
             signIn: { method: 'POST', url: 'api/platform/security/sign-in' },
-            renameKey: { method: 'PUT', url: 'api/platform/security/sign-in-methods/:name/keys/:id' },
-            deleteKey: { method: 'DELETE', url: 'api/platform/security/sign-in-methods/:name/keys/:id' }
+            renameKey: { method: 'PUT', url: 'api/platform/security/currentuser/sign-in-methods/:name/keys/:id' },
+            deleteKey: { method: 'DELETE', url: 'api/platform/security/currentuser/sign-in-methods/:name/keys/:id' }
         });
     }]);
