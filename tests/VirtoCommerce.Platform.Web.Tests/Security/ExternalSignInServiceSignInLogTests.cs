@@ -10,12 +10,11 @@ using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
-using VirtoCommerce.Platform.Core.Security.SignInLog;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Tests.Security;
@@ -64,6 +63,21 @@ public class ExternalSignInServiceSignInLogTests
         attempt.Succeeded.Should().BeTrue();
         attempt.UserId.Should().Be("user-1");
         attempt.StoreId.Should().Be("B2B-store");
+    }
+
+    [Fact]
+    public async Task SignInAsync_UserRequiresTwoFactor_BypassesTheSecondFactor()
+    {
+        // Arrange
+        var user = new ApplicationUser { Id = "user-1", UserName = "b2badmin@test.com", TwoFactorEnabled = true };
+        var service = CreateService(user, SignInResult.Success);
+
+        // Act
+        var result = await service.SignInAsync();
+
+        // Assert
+        result.Success.Should().BeTrue();
+        _signInManager.Verify(x => x.ExternalLoginSignInAsync("AzureAD", "external-key", false, true), Times.Once);
     }
 
     [Fact]
@@ -128,7 +142,7 @@ public class ExternalSignInServiceSignInLogTests
 
         _signInManager.Setup(x => x.GetExternalLoginInfoAsync(It.IsAny<string>())).ReturnsAsync(loginInfo);
         _signInManager
-            .Setup(x => x.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .Setup(x => x.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), true))
             .ReturnsAsync(signInResult);
 
         _userManager.Setup(x => x.FindByLoginAsync(It.IsAny<string>(), It.IsAny<string>()))
