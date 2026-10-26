@@ -1139,6 +1139,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var result = await _signInMethodService.GetSignInMethodsAsync(user);
 
+            if (User.IsImpersonated())
+            {
+                foreach (var signInMethod in result)
+                {
+                    signInMethod.CanCreateKey = false;
+                    signInMethod.CanRenameKey = false;
+                    signInMethod.CanDeleteKey = false;
+                }
+            }
+
             return Ok(result);
         }
 
@@ -1154,6 +1164,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> RenameSignInKey([FromRoute] string name, [FromRoute] string id, [FromBody] SignInKeyRenameRequest request)
         {
+            if (User.IsImpersonated())
+            {
+                return Forbid();
+            }
+
             var user = await GetCurrentUserAsync();
             if (user == null)
             {
@@ -1186,6 +1201,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteSignInKey([FromRoute] string name, [FromRoute] string id)
         {
+            if (User.IsImpersonated())
+            {
+                return Forbid();
+            }
+
             var user = await GetCurrentUserAsync();
             if (user == null)
             {
