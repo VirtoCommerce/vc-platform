@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +21,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
@@ -52,6 +54,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserSessionsService _userSessionsService;
         private readonly IUserSignInLogSearchService _userSignInLogSearchService;
         private readonly IAdminUIAccessPolicy _adminUIAccessPolicy;
+        private readonly ITwoFactorSignInService _twoFactorSignInService;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -71,7 +74,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IUserSessionsSearchService userSessionsSearchService,
             IUserSessionsService userSessionsService,
             IAdminUIAccessPolicy adminUIAccessPolicy,
-            IUserSignInLogSearchService userSignInLogSearchService)
+            IUserSignInLogSearchService userSignInLogSearchService,
+            ITwoFactorSignInService twoFactorSignInService)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -91,6 +95,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userSessionsService = userSessionsService;
             _adminUIAccessPolicy = adminUIAccessPolicy;
             _userSignInLogSearchService = userSignInLogSearchService;
+            _twoFactorSignInService = twoFactorSignInService;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
@@ -208,9 +213,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!loginResult.Succeeded)
             {
-                await PublishSignInAttempt(request.UserName, user, succeeded: false, ToFailureReason(loginResult));
+                await PublishSignInAttempt(request.UserName, user, succeeded: false, await GetFailureReasonAsync(loginResult));
                 await delayedResponse.FailAsync();
                 return Ok(loginResult);
+            }
+
+            if (await RefuseSignInWithoutSecondFactorAsync(user))
+            {
+                await PublishSignInAttempt(request.UserName, user, succeeded: false, SignInFailureReason.TwoFactorUnavailable);
+                await delayedResponse.FailAsync();
+                return Ok(SignInResult.Failed);
             }
 
             await SetLastLoginDate(user);
@@ -1319,8 +1331,32 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 SignInType = signInType,
                 StoreId = user?.StoreId,
                 MemberId = user?.MemberId,
-                SessionId = User.FindFirstValue(OpenIddictConstants.Claims.Private.AuthorizationId),
+                SessionId = User.FindFirstValue(Claims.Private.AuthorizationId),
             });
+        }
+
+        private async Task<bool> RefuseSignInWithoutSecondFactorAsync(ApplicationUser user)
+        {
+            if (!await _twoFactorSignInService.IsTwoFactorRequiredAsync(user) ||
+                await _signInManager.IsTwoFactorClientRememberedAsync(user))
+            {
+                return false;
+            }
+
+            await _signInManager.SignOutAsync();
+
+            return true;
+        }
+
+        private async Task<string> GetFailureReasonAsync(SignInResult result)
+        {
+            if (result.RequiresTwoFactor && !_twoFactorSignInService.IsTwoFactorAvailable)
+            {
+                await HttpContext.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
+                return SignInFailureReason.TwoFactorUnavailable;
+            }
+
+            return ToFailureReason(result);
         }
 
         private static string ToFailureReason(SignInResult result)

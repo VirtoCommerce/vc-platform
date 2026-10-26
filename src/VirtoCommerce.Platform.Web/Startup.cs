@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -598,6 +599,8 @@ namespace VirtoCommerce.Platform.Web
                 options.Events.OnRedirectToLogin = context => ApiCookieRedirectHandler.HandleAsync(context, StatusCodes.Status401Unauthorized);
                 options.Events.OnRedirectToAccessDenied = context => ApiCookieRedirectHandler.HandleAsync(context, StatusCodes.Status403Forbidden);
             });
+
+            services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorUserIdScheme, options => options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
 
             services.AddAuthorization(options =>
             {

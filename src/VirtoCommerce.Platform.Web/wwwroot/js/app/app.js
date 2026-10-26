@@ -397,10 +397,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
     .run(['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService',
         'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache',
         'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService',
-        'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper',
+        'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper', 'platformWebApp.twoFactorSignInState',
         function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
             dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest,
-            $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper) {
+            $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper, twoFactorSignInState) {
 
             //Disable animation
             $animate.enabled(false);
@@ -513,14 +513,25 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             onClose: function () {
                                 if (!currentState.abstract
                                     && currentState.name !== 'loginDialog'
-                                    && currentState.name !== 'changePasswordDialog') {
+                                    && currentState.name !== 'changePasswordDialog'
+                                    && currentState.name !== twoFactorSignInState.getName()) {
                                     $state.go(currentState);
                                 } else {
                                     $state.go('workspace');
                                 }
                             }
                         });
-                    } else if (!currentState.name || currentState.name === 'loginDialog') {
+                    } else if (!currentState.name && !urlHelper.getSafeReturnUrl()
+                        && (pendingState ? pendingState.name !== 'loginDialog' && pendingState.name !== twoFactorSignInState.getName() : isWorkspaceHash())) {
+                        // a cold deep link is still being resolved: let it land, but fall back to the dashboard if it
+                        // never does (e.g. an old bookmark to a module that isn't installed).
+                        // A ReturnUrl or a pending #!/login or two-factor sign-in screen is handled below, as for a finished one.
+                        $timeout(function () {
+                            if (!$state.current.name) {
+                                $state.go('workspace');
+                            }
+                        }, 3000);
+                    } else if (!currentState.name || currentState.name === 'loginDialog' || currentState.name === twoFactorSignInState.getName()) {
                         var returnUrl = urlHelper.getSafeReturnUrl();
                         if (returnUrl) {
                             window.location.href = returnUrl;

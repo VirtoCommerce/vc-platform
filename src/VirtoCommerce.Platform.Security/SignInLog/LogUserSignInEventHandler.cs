@@ -26,6 +26,7 @@ namespace VirtoCommerce.Platform.Security.SignInLog
         private const int UserNameLength = 256;
         private const int UserAgentLength = 512;
         private const int HostLength = 256;
+        private const int FailureReasonLength = 64;
 
         private readonly IUserSignInLogWriter _writer;
         private readonly ISettingsManager _settingsManager;
@@ -74,7 +75,7 @@ namespace VirtoCommerce.Platform.Security.SignInLog
             record.UserName = Truncate(message.UserName, UserNameLength);
             record.UserId = message.UserId;
             record.Succeeded = message.Succeeded;
-            record.FailureReason = message.FailureReason;
+            record.FailureReason = Truncate(message.FailureReason, FailureReasonLength);
             record.SignInType = message.SignInType;
             record.Provider = message.Provider;
             record.OperatorUserId = message.OperatorUserId;
