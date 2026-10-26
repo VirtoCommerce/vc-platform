@@ -22,6 +22,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
@@ -48,6 +49,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly IEnumerable<ITokenRequestHandler> _requestHandlers;
         private readonly IEnumerable<IGrantTypeHandler> _grantTypeHandlers;
+        private readonly ITwoFactorSignInService _twoFactorSignInService;
         private readonly OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IExternalSignInService _externalSignInService;
@@ -65,6 +67,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEnumerable<ITokenClaimProvider> claimProviders,
             IEnumerable<ITokenRequestHandler> requestHandlers,
             IEnumerable<IGrantTypeHandler> grantTypeHandlers,
+            ITwoFactorSignInService twoFactorSignInService,
             OpenIddictTokenManager<VirtoOpenIddictEntityFrameworkCoreToken> tokenManager,
             IAuthorizationService authorizationService,
             IExternalSignInService externalSignInService,
@@ -82,6 +85,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _claimProviders = claimProviders;
             _requestHandlers = requestHandlers;
             _grantTypeHandlers = grantTypeHandlers;
+            _twoFactorSignInService = twoFactorSignInService;
             _tokenManager = tokenManager;
             _authorizationService = authorizationService;
             _externalSignInService = externalSignInService;
@@ -256,6 +260,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 context.User = user.CloneTyped();
+
+                if (context.SignInResult.Succeeded && await _twoFactorSignInService.IsTwoFactorRequiredAsync(user))
+                {
+                    context.DelayedResponse = delayedResponse;
+                    var challengeResult = await _twoFactorSignInService.ChallengeAsync(context);
+                    await PublishSignInAttempt(openIdConnectRequest.Username, user, succeeded: false,
+                        context.FailureReason, openIdConnectRequest.ClientId);
+                    await delayedResponse.FailAsync();
+                    return challengeResult;
+                }
 
                 foreach (var requestValidator in _requestValidators)
                 {

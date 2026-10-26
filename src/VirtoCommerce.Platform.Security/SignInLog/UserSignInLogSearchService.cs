@@ -29,6 +29,15 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
     private static readonly Expression<Func<UserSignInLogEntity, bool>> ImpersonationSession =
         x => x.SignInType == SignInType.Impersonation && x.Succeeded;
 
+    private static readonly Expression<Func<UserSignInLogEntity, bool>> AwaitingSecondFactorAttempt =
+        x => !x.Succeeded && x.FailureReason == SignInFailureReason.RequiresTwoFactor;
+
+    private static readonly Expression<Func<UserSignInLogEntity, bool>> CompletedAttempt =
+        x => x.Succeeded || x.FailureReason != SignInFailureReason.RequiresTwoFactor;
+
+    private static readonly Expression<Func<UserSignInLogEntity, bool>> FailedAttempt =
+        x => !x.Succeeded && x.FailureReason != SignInFailureReason.RequiresTwoFactor;
+
     private readonly Func<ISecurityRepository> _repositoryFactory;
     private readonly ISettingsManager _settingsManager;
 
@@ -70,7 +79,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
 
         var unwindowed = BuildFilterQuery(repository, criteria);
         var query = ApplyWindow(unwindowed, criteria.StartDate, criteria.EndDate);
-        var failed = query.Where(x => !x.Succeeded);
+        var failed = query.Where(FailedAttempt);
 
         var result = new UserSignInLogStats
         {
@@ -88,7 +97,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         };
 
         await AddPreviousPeriod(result, unwindowed, criteria);
-        await AddTimeline(result, query, criteria);
+        await AddTimeline(result, query.Where(CompletedAttempt), criteria);
 
         return result;
     }
@@ -243,7 +252,7 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
         var previous = ApplyWindow(unwindowed, start - duration, start);
 
         result.PreviousTotalCount = await previous.CountAsync();
-        result.PreviousFailedCount = await previous.CountAsync(x => !x.Succeeded);
+        result.PreviousFailedCount = await previous.CountAsync(FailedAttempt);
         result.PreviousDistinctUserCount = await DistinctSignedInUsers(previous);
         result.PreviousImpersonationCount = await previous.CountAsync(ImpersonationSession);
     }
@@ -304,9 +313,22 @@ public class UserSignInLogSearchService : IUserSignInLogSearchService
             query = query.Where(x => x.UserName == criteria.UserName);
         }
 
-        if (criteria.Succeeded != null)
+        if (criteria.Succeeded == true)
         {
-            query = query.Where(x => x.Succeeded == criteria.Succeeded);
+            query = query.Where(x => x.Succeeded);
+        }
+        else if (criteria.Succeeded == false)
+        {
+            query = query.Where(FailedAttempt);
+        }
+
+        if (criteria.AwaitingSecondFactor == true)
+        {
+            query = query.Where(AwaitingSecondFactorAttempt);
+        }
+        else if (criteria.AwaitingSecondFactor == false)
+        {
+            query = query.Where(CompletedAttempt);
         }
 
         if (!criteria.SignInTypes.IsNullOrEmpty())

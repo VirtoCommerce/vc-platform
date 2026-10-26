@@ -12,6 +12,7 @@ public static class SignInFailureReason
     public const string LockedOut = "LockedOut";
     public const string NotAllowed = "NotAllowed";
     public const string RequiresTwoFactor = "RequiresTwoFactor";
+    public const string TwoFactorUnavailable = "TwoFactorUnavailable";
     public const string PasswordLoginDisabled = "PasswordLoginDisabled";
     public const string DuplicateEmail = "DuplicateEmail";
     public const string Forbidden = "Forbidden";

@@ -578,6 +578,7 @@
         "errors": {
           "login-failed": "ログインに失敗しました。資格情報を確認してください。",
           "account-locked": "アカウントがロックされています。後でもう一度お試しになるか、管理者にお問い合わせください。",
+          "two-factor-unavailable": "このアカウントには 2 段階目のサインインが必要ですが、利用できません。管理者にお問い合わせください。",
           "technical-error": "認証エラーが発生しました。後でもう一度お試しになるか、管理者にお問い合わせください。 (コード: {{code}})",
           "unknown-error": "認証エラーが発生しました。後でもう一度お試しになるか、管理者にお問い合わせください。"
         }
@@ -817,6 +818,7 @@
           "outcome": "結果",
           "succeeded": "成功",
           "failed": "失敗",
+          "awaiting-second-factor": "2 要素目の確認待ち",
           "failure-reason": "理由",
           "sign-in-type": "種類",
           "ip-address": "IP アドレス",

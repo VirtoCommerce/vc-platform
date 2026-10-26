@@ -7,8 +7,8 @@ angular.module('platformWebApp')
                 data: { allowAnonymous: true },
                 controller: [
                     '$scope', '$translate', '$log',
-                    'platformWebApp.authService', 'platformWebApp.signInMethodService',
-                    function ($scope, $translate, $log, authService, signInMethodService) {
+                    'platformWebApp.authService', 'platformWebApp.twoFactorSignInState', 'platformWebApp.signInMethodService',
+                    function ($scope, $translate, $log, authService, twoFactorSignInState, signInMethodService) {
                         $scope.signInMethods = [];
                         $scope.showPassword = false;
                         $scope.showPlainLogin = true;
@@ -48,7 +48,9 @@ angular.module('platformWebApp')
                             authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
                                 function (result) {
                                     $scope.loginProgress = false;
-                                    if (!result || !result.succeeded) {
+                                    if (result && result.requiresTwoFactor && twoFactorSignInState.exists()) {
+                                        twoFactorSignInState.go({ rememberMe: $scope.user.remember });
+                                    } else if (!result || !result.succeeded) {
                                         $scope.authError = resolvePasswordSignInError(result);
                                     }
                                 },
@@ -61,6 +63,9 @@ angular.module('platformWebApp')
                         function resolvePasswordSignInError(result) {
                             if (result && result.isLockedOut) {
                                 return $translate.instant('platform.blades.login.errors.account-locked');
+                            }
+                            if (result && result.requiresTwoFactor) {
+                                return $translate.instant('platform.blades.login.errors.two-factor-unavailable');
                             }
                             return $translate.instant('platform.blades.login.errors.login-failed');
                         }
