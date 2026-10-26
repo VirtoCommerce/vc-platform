@@ -568,6 +568,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize]
         public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
         {
+            if (User.IsImpersonated())
+            {
+                return Forbid();
+            }
+
             return await ChangePassword(User.Identity.Name, changePassword);
         }
 
