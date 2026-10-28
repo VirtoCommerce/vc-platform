@@ -238,6 +238,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         {
                             auditableOriginalEntity.ModifiedDate = DateTime.UtcNow;
                         }
+                        if (originalEntity is AuditableEntity savedEntity)
+                        {
+                            pkMap.AddSavedPair(model, savedEntity);
+                        }
                         changedEntities.Add(originalEntity);
                     }
                     else
@@ -254,15 +258,6 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             }
 
             pkMap.ResolvePrimaryKeys();
-
-            // Not from the key map's pairs: for an update they hold the detached FromModel copy, which the triggers never stamp
-            for (var i = 0; i < models.Count; i++)
-            {
-                if (changedEntities[i] is AuditableEntity savedEntity)
-                {
-                    savedEntity.SyncGeneratedValues(models[i]);
-                }
-            }
 
             ClearCache(originalModels);
             ClearCache(models);

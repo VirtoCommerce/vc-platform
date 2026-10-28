@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -52,7 +51,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 throw new InvalidCollectionItemException("One or more items in the collection have a null or empty Name.");
             }
 
-            var savedEntities = new List<DynamicPropertyDictionaryItemEntity>();
+            var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _repositoryFactory())
             {
                 var dbExistItems = await repository.GetDynamicPropertyDictionaryItemByIdsAsync(items.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray());
@@ -63,20 +62,15 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                     if (originalEntity != null)
                     {
                         modifiedEntity.Patch(originalEntity);
-                        savedEntities.Add(originalEntity);
+                        pkMap.AddSavedPair(item, originalEntity);
                     }
                     else
                     {
                         repository.Add(modifiedEntity);
-                        savedEntities.Add(modifiedEntity);
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
-
-                for (var i = 0; i < items.Length; i++)
-                {
-                    savedEntities[i].SyncGeneratedValues(items[i]);
-                }
+                pkMap.ResolvePrimaryKeys();
 
                 DynamicPropertiesCacheRegion.ExpireRegion();
             }

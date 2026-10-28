@@ -68,7 +68,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 throw new ArgumentNullException(nameof(properties));
             }
             var pkMap = new PrimaryKeyResolvingMap();
-            var savedEntities = new List<DynamicPropertyEntity>();
             using (var repository = _repositoryFactory())
             {
                 var dbExistProperties = (await repository.GetDynamicPropertiesForTypesAsync(properties.Select(x => x.ObjectType).Distinct().ToArray())).ToList();
@@ -79,21 +78,15 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                     if (originalEntity != null)
                     {
                         modifiedEntity.Patch(originalEntity);
-                        savedEntities.Add(originalEntity);
+                        pkMap.AddSavedPair(property, originalEntity);
                     }
                     else
                     {
                         repository.Add(modifiedEntity);
-                        savedEntities.Add(modifiedEntity);
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
                 pkMap.ResolvePrimaryKeys();
-
-                for (var i = 0; i < properties.Length; i++)
-                {
-                    savedEntities[i].SyncGeneratedValues(properties[i]);
-                }
 
                 DynamicPropertiesCacheRegion.ExpireRegion();
             }
