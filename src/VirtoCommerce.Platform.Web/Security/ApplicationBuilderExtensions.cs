@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -8,11 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
-using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Handlers;
-using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -40,6 +39,8 @@ namespace VirtoCommerce.Platform.Web.Security
             appBuilder.RegisterEventHandler<UserLogoutEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserRoleAddedEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserRoleRemovedEvent, LogChangesUserChangedEventHandler>();
+
+            appBuilder.RegisterEventHandler<UserSignInAttemptEvent, LogUserSignInEventHandler>();
 
             appBuilder.RegisterEventHandler<UserChangedEvent, RevokeUserTokenEventHandler>();
 

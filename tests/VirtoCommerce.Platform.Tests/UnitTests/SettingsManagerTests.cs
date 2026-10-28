@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Model;
@@ -185,6 +186,87 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             Assert.Equal(0, WarningCount());
         }
 
+        [Fact]
+        public async Task SaveObjectSettingsAsync_PerObjectSetting_ReadsOnlyThatObjectsRows()
+        {
+            List<SettingEntity> rows = [Row("A", "User", "u2", "old-2"), Row("A", "User", "u1", "old-1")];
+            var (sut, added, scopes) = CreateSavingManager(rows);
+
+            await sut.SaveObjectSettingsAsync([Entry("A", "User", "u1", "new-1")]);
+
+            // by name alone, the save would load every user's row for "A"
+            Assert.Equal([("User", "u1")], scopes);
+            Assert.Equal("new-1", rows[1].SettingValues.Single().GetValue());
+            Assert.Equal("old-2", rows[0].SettingValues.Single().GetValue());
+            Assert.Empty(added);
+        }
+
+        [Fact]
+        public async Task SaveObjectSettingsAsync_ObjectWithoutRow_AddsOneAndLeavesOthersAlone()
+        {
+            List<SettingEntity> rows = [Row("A", "User", "u1", "old-1")];
+            var (sut, added, _) = CreateSavingManager(rows);
+
+            await sut.SaveObjectSettingsAsync([Entry("A", "User", "u3", "new-3")]);
+
+            var row = Assert.Single(added);
+            Assert.Equal("u3", row.ObjectId);
+            Assert.Equal("new-3", row.SettingValues.Single().GetValue());
+            Assert.Equal("old-1", rows[0].SettingValues.Single().GetValue());
+        }
+
+        [Fact]
+        public async Task SaveObjectSettingsAsync_GlobalSetting_UpdatesTheGlobalRow()
+        {
+            List<SettingEntity> rows = [Row("A", null, null, "old-global"), Row("A", "User", "u1", "old-1")];
+            var (sut, added, scopes) = CreateSavingManager(rows);
+
+            await sut.SaveObjectSettingsAsync([Entry("A", null, null, "new-global")]);
+
+            Assert.Equal([(null, null)], scopes);
+            Assert.Equal("new-global", rows[0].SettingValues.Single().GetValue());
+            Assert.Equal("old-1", rows[1].SettingValues.Single().GetValue());
+            Assert.Empty(added);
+        }
+
+        // a manager over a fixed set of setting rows; returns the rows it adds and the (ObjectType, ObjectId) scopes it read
+        private (SettingsManager, List<SettingEntity>, List<(string, string)>) CreateSavingManager(List<SettingEntity> rows)
+        {
+            var added = new List<SettingEntity>();
+            var scopes = new List<(string, string)>();
+            var repositoryMock = new Mock<IPlatformRepository>();
+            repositoryMock
+                .Setup(x => x.GetObjectSettingsByNamesAsync(It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns((string[] names, string objectType, string objectId) =>
+                {
+                    scopes.Add((objectType, objectId));
+                    return Task.FromResult(rows.Where(x => names.Contains(x.Name) && x.ObjectType == objectType && x.ObjectId == objectId).ToArray());
+                });
+            repositoryMock.Setup(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
+            repositoryMock.Setup(x => x.Add(It.IsAny<SettingEntity>())).Callback<SettingEntity>(added.Add);
+
+            var sut = NewManager(repositoryMock);
+            sut.RegisterSettings([Descriptor("A")]);
+            return (sut, added, scopes);
+        }
+
+        private static SettingEntity Row(string name, string objectType, string objectId, string value)
+        {
+            return new SettingEntity
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = name,
+                ObjectType = objectType,
+                ObjectId = objectId,
+                SettingValues = [new SettingValueEntity().SetValue(SettingValueType.ShortText, value)],
+            };
+        }
+
+        private static ObjectSettingEntry Entry(string name, string objectType, string objectId, string value)
+        {
+            return new ObjectSettingEntry(Descriptor(name)) { ObjectType = objectType, ObjectId = objectId, Value = value };
+        }
+
         private SettingsManager CreateManager(Func<string, SettingValueEntity> valueFactory = null, ObjectSettingEntry[] fixedSettings = null)
         {
             valueFactory ??= name => new SettingValueEntity().SetValue(SettingValueType.ShortText, $"val-{name}");
@@ -206,6 +288,11 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
                     return Task.FromResult(rows);
                 });
 
+            return NewManager(repositoryMock, fixedSettings);
+        }
+
+        private SettingsManager NewManager(Mock<IPlatformRepository> repositoryMock, ObjectSettingEntry[] fixedSettings = null)
+        {
             var overrideProvider = new Mock<ISettingsOverrideProvider>(); // no overrides (TryGet* default to false)
 
             return new SettingsManager(

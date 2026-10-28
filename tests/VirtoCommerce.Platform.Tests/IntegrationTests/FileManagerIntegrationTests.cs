@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Tests.IntegrationTests
         {
             //Arrange
             var testDir = Path.GetFullPath("TestWithSub");
-            var subDir = Path.GetFullPath("TestWithSub\\Sub");
+            var subDir = Path.Combine(testDir, "Sub");
 
             //Act
             _fileManager.CreateDirectory(testDir);

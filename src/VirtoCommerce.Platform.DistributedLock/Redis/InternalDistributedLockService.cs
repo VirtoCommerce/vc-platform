@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RedLockNet;
@@ -10,6 +11,8 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
     /// Distributed lock implemented thru Redis RedLock
     /// Used for synchronizing multiple platform instances
     /// </summary>
+    [Obsolete("Platform startup synchronization only. Use IDistributedLock from VirtoCommerce.Platform.Core.DistributedLock.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class InternalDistributedLockService : IInternalDistributedLockService
     {
         private readonly IDistributedLockFactory _distributedLockFactory;
@@ -61,7 +64,7 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
                     if (!redLock.IsAcquired)
                     {
                         // Lock not acquired even after migrationDistributedLockOptions.Wait
-                        throw new PlatformException($"Can't acquire distributed lock for resource {this}. It seems that another Platform instance still has the lock, consider increasing wait timeout.");
+                        throw new PlatformException($"Can't acquire distributed lock for resource {resourceId}. It seems that another Platform instance still has the lock, consider increasing wait timeout.");
                     }
                     _logger.LogInformation("Distributed lock: run payload for resource {resourceId} after awaiting for previous lock.", resourceId);
                     payload(DistributedLockCondition.Delayed);

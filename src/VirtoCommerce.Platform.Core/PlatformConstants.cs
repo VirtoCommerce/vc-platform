@@ -95,6 +95,7 @@ namespace VirtoCommerce.Platform.Core
                 public const string SecurityGenerateToken = "platform:security:generateToken";
                 public const string SecurityVerifyToken = "platform:security:verifyToken";
                 public const string SecurityRevokeToken = "platform:security:revokeToken";
+                public const string SecuritySignInLogRead = "platform:security:sign_in_log:read";
                 public const string SecurityOAuthApplicationsCreate = "platform:security:oauth_applications:create";
                 public const string SecurityOAuthApplicationsRead = "platform:security:oauth_applications:read";
                 public const string SecurityOAuthApplicationsUpdate = "platform:security:oauth_applications:update";
@@ -118,7 +119,7 @@ namespace VirtoCommerce.Platform.Core
                     DeveloperToolsAccess,
                     DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
                     SecurityQuery, SecurityCreate, SecurityAccess, SecurityUpdate, SecurityDelete,
-                    SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken, SecurityRevokeToken,
+                    SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken, SecurityRevokeToken, SecuritySignInLogRead,
                     SecurityOAuthApplicationsCreate, SecurityOAuthApplicationsRead, SecurityOAuthApplicationsUpdate, SecurityOAuthApplicationsDelete,
                     BackgroundJobsManage,
                     // platform:export / platform:import / platform:exportImport:access are now registered
@@ -160,6 +161,8 @@ namespace VirtoCommerce.Platform.Core
 
             public static class Security
             {
+                private const string SignInLogGroup = "Platform|Sign In Log";
+
                 public static SettingDescriptor SecurityAccountTypes { get; } = new()
                 {
                     Name = "VirtoCommerce.Platform.Security.AccountTypes",
@@ -221,6 +224,51 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.Cron,
                     DefaultValue = "0 0 */1 * *"
                 };
+
+                /// <summary>
+                /// Master switch for the sign-in audit log. Login-on-behalf rows ignore it and are
+                /// always written — it is the compliance anchor and must not be switchable off.
+                /// </summary>
+                public static SettingDescriptor SignInLogEnabled { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.SignInLogEnabled",
+                    GroupName = SignInLogGroup,
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
+                /// <summary>
+                /// How long audit rows are kept. Zero or less means keep forever: the cleanup job
+                /// deletes nothing rather than treating an unset value as "delete everything".
+                /// </summary>
+                public static SettingDescriptor SignInLogRetentionDays { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.SignInLogRetentionDays",
+                    GroupName = SignInLogGroup,
+                    ValueType = SettingValueType.Integer,
+                    DefaultValue = 30
+                };
+
+                public static SettingDescriptor EnableSignInLogCleanupJob { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.EnableSignInLogCleanupJob",
+                    GroupName = SignInLogGroup,
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
+                /// <summary>
+                /// Runs at 01:00 daily, off the hour so it does not contend with the other
+                /// midnight maintenance jobs.
+                /// </summary>
+                public static SettingDescriptor CronSignInLogCleanupJob { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.CronSignInLogCleanupJob",
+                    GroupName = SignInLogGroup,
+                    ValueType = SettingValueType.Cron,
+                    DefaultValue = "0 1 */1 * *"
+                };
+
                 public static SettingDescriptor FileExtensionsBlackList { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.FileExtensionsBlackList",
@@ -297,6 +345,10 @@ namespace VirtoCommerce.Platform.Core
                         yield return DefaultExternalAccountStatus;
                         yield return EnablePruneExpiredTokensJob;
                         yield return CronPruneExpiredTokensJob;
+                        yield return SignInLogEnabled;
+                        yield return SignInLogRetentionDays;
+                        yield return EnableSignInLogCleanupJob;
+                        yield return CronSignInLogCleanupJob;
                         yield return FileExtensionsBlackList;
                         yield return FileExtensionsWhiteList;
                     }

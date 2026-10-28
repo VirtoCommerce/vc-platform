@@ -17,6 +17,8 @@ using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -31,6 +33,16 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<ISecurityRepository>());
 
             services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
+            services.AddSingleton<IUserSignInLogService, UserSignInLogService>();
+            services.AddSingleton<IUserSignInLogSearchService, UserSignInLogSearchService>();
+
+            // Buffer sizing is tunable from the "SignInLog" configuration section rather than baked in.
+            services.AddOptions<SignInLogOptions>().BindConfiguration("SignInLog");
+
+            // One instance serving both roles: the hosted service drains the same channel the writer fills.
+            services.AddSingleton<BufferedUserSignInLogWriter>();
+            services.AddSingleton<IUserSignInLogWriter>(provider => provider.GetRequiredService<BufferedUserSignInLogWriter>());
+            services.AddHostedService(provider => provider.GetRequiredService<BufferedUserSignInLogWriter>());
             services.AddSingleton<IUserApiKeySearchService, UserApiKeySearchService>();
 
             services.AddScoped<IUserNameResolver, HttpContextUserResolver>();
@@ -48,6 +60,7 @@ namespace VirtoCommerce.Platform.Web.Security
             //Identity dependencies override
             services.TryAddScoped<RoleManager<Role>, CustomRoleManager>();
             services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
+            services.TryAddScoped<SignInManager<ApplicationUser>, VirtoSignInManager>();
             services.TryAddScoped<IPasswordValidator<ApplicationUser>, CustomPasswordValidator>();
             services.TryAddScoped<IdentityErrorDescriber, CustomIdentityErrorDescriber>();
             services.TryAddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
@@ -57,6 +70,7 @@ namespace VirtoCommerce.Platform.Web.Security
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
             services.AddTransient<ITokenRequestValidator, BaseUserSignInValidator>();
+            services.AddScoped<ITwoFactorSignInService, TwoFactorSignInService>();
 
             if (setupAction != null)
             {
@@ -64,6 +78,7 @@ namespace VirtoCommerce.Platform.Web.Security
             }
 
             services.AddSingleton<LogChangesUserChangedEventHandler>();
+            services.AddSingleton<LogUserSignInEventHandler>();
             services.AddSingleton<UserApiKeyActualizeEventHandler>();
             services.AddSingleton<RevokeUserTokenEventHandler>();
 

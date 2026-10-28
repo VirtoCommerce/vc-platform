@@ -298,3 +298,8 @@ BenchmarkDotNet.Artifacts/
 
 /.claude/settings.local.json
 /.serena
+/.claude/launch.json
+
+# Per-developer overrides for the modules-development Docker Compose stack
+/DockerCompose/ModulesDevelop/.env.local
+/DockerCompose/ModulesDevelop/compose.override.yaml

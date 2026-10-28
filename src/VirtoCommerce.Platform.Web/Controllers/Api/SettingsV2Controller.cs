@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,7 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Web.Model;
 using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -85,7 +87,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformConstants.Security.Permissions.SettingUpdate)]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SaveGlobalValues(
-            [FromBody] Dictionary<string, object> values,
+            [FromBody] SettingValues values,
             [FromQuery] bool replaceAll = false)
         {
             if (values == null)
@@ -98,12 +100,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest("Request body must be a non-empty JSON object");
             }
 
-            using (await AsyncLock.GetLockByKey("settings").LockAsync())
-            {
-                await _settingsPropertyService.SaveValuesAsync(values, replaceAll: replaceAll);
-            }
-
-            return NoContent();
+            return await SaveValuesAsync(values, null, null, replaceAll);
         }
 
         #endregion
@@ -156,7 +153,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult> SaveTenantValues(
             string tenantType,
             string tenantId,
-            [FromBody] Dictionary<string, object> values,
+            [FromBody] SettingValues values,
             [FromQuery] bool replaceAll = false)
         {
             if (values == null)
@@ -169,12 +166,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest("Request body must be a non-empty JSON object");
             }
 
-            using (await AsyncLock.GetLockByKey("settings").LockAsync())
-            {
-                await _settingsPropertyService.SaveValuesAsync(values, tenantType, tenantId, replaceAll);
-            }
-
-            return NoContent();
+            return await SaveValuesAsync(values, tenantType, tenantId, replaceAll);
         }
 
         #endregion
@@ -240,7 +232,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost("me/values")]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SaveMeValues(
-            [FromBody] Dictionary<string, object> values,
+            [FromBody] SettingValues values,
             [FromQuery] bool replaceAll = false)
         {
             if (values == null)
@@ -259,9 +251,24 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Unauthorized();
             }
 
-            using (await AsyncLock.GetLockByKey("settings").LockAsync())
+            return await SaveValuesAsync(values, nameof(UserProfile), userId, replaceAll);
+        }
+
+        /// <summary>
+        /// Saves the values; an unknown setting, or one not registered for the tenant type, is a bad request (400), not a server error.
+        /// </summary>
+        private async Task<ActionResult> SaveValuesAsync(Dictionary<string, object> values, string tenantType, string tenantId, bool replaceAll)
+        {
+            try
             {
-                await _settingsPropertyService.SaveValuesAsync(values, nameof(UserProfile), userId, replaceAll);
+                using (await AsyncLock.GetLockByKey("settings").LockAsync())
+                {
+                    await _settingsPropertyService.SaveValuesAsync(values, tenantType, tenantId, replaceAll);
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
             }
 
             return NoContent();

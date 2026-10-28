@@ -2,6 +2,7 @@
 
 [![Home](https://img.shields.io/badge/Website-virtocommerce.com-FF6B35?style=flat-square&logo=googlechrome&logoColor=white)](https://virtocommerce.com/)
 [![Interactive Demo](https://img.shields.io/badge/Live%20Demo-Try%20it%20now-22C55E?style=flat-square&logo=rocket&logoColor=white)](https://virtocommerce.com/interactive-demo)
+[![Release Decks](https://img.shields.io/badge/Releases-Interactive%20Presentations-0078D4?style=flat&logo=files&logoColor=white)](https://virtocommerce.github.io/vc-release-notes/)
 [![Documentation](https://img.shields.io/badge/Docs-docs.virtocommerce.org-0078D4?style=flat-square&logo=readthedocs&logoColor=white)](https://docs.virtocommerce.org/)
 [![Community](https://img.shields.io/badge/Community-virtocommerce.org-7B68EE?style=flat-square&logo=discourse&logoColor=white)](https://www.virtocommerce.org/)
 [![YouTube](https://img.shields.io/badge/YouTube-virtocommerce-FF0000?style=flat&logo=youtube&logoColor=white)](https://www.youtube.com/c/virtocommerce)
@@ -51,11 +52,12 @@ The following chart illustrates the high-level architecture and main areas of th
 **[Integration](https://virtocommerce.com/integrations/key-ecommerce-integrations) middleware**: Asynchronous integration middleware for declarative integration with non-real-time and legacy services.
 
 ## Introduction to Virto Commerce
-These Virto Commerce docs will help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise builds: 
+These Virto Commerce docs will help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise builds:
 
-* [Quick Start](https://docs.virtocommerce.org/platform/developer-guide/)
-* [User Guide](https://docs.virtocommerce.org/platform/user-guide/)
-* [News Digest](https://www.virtocommerce.org/c/news-digest/15)
+* [Release Strategy for Business Users](https://virtocommerce.github.io/vc-release-notes/presentations/release-strategy-for-business-users.html) - How Virto Commerce ships — modules, bundles, cadence, and what it means for your roadmap.
+* [Integration Capabilities of Virto Commerce](https://virtocommerce.github.io/vc-release-notes/presentations/integration-capabilities.html) - An integration path for every audience - buyers, your eCommerce team, and your suppliers - and how to choose between them.
+* [Atomic Architecture Map](https://virtocommerce.github.io/vc-release-notes/presentations/atomic-architecture-map/) - One-screen interactive map of the platform's building blocks - atoms, molecules, modules and the business capabilities they compose. Answers what exists, which one to reach for, and where it sits in the stack.
+* [Virto Cloud - Enterprise Commerce, Fully Managed](https://virtocommerce.github.io/vc-release-notes/presentations/virto-cloud.html) - Deliver faster, grow faster: Virto builds, runs, and operates the infrastructure with a 99.9% uptime SLA - budget goes to features, not servers.
 
 ## Technology Stack Used
 
@@ -102,6 +104,10 @@ The Extensibility Framework lets you add entities, override services, extend API
 
 📖 [Deploy on Virto Cloud](https://docs.virtocommerce.org/platform/deployment-on-cloud/3.0/deploy-on-virto-cloud/)
 
+## 🛠️ Run the Platform from Source in Visual Studio
+
+Working on the platform code itself? 📖 [Run the platform from source in Visual Studio](docs/developer-guide/run-platform-in-visual-studio.md) covers the prerequisites, where to keep your own connection strings and settings (user secrets and environment variables, never the shared `appsettings*.json`), and how to start the platform with F5 or `dotnet run`.
+
 ## Virto Commerce Release Strategy
 Virto Commerce ships as **modules** — independently versioned, independently deployable units. Modules combine into bundles you can pick from based on how you want to balance stability and speed.
 
@@ -112,16 +118,7 @@ Virto Commerce ships as **modules** — independently versioned, independently d
 | **Edge** | Latest features as they land — minimal risk, maximum freshness | Early access to new capabilities, prototyping |
 
 ## Release Notes
-> [!TIP]
-> Open any deck via the links above, or clone the repo and open the `index.html` files directly in your browser. Add a feature to your backlog, then navigate to the Backlog screen and click **Copy as Markdown**. 
-
-| Month | Live deck | Source notes |
-| --- | --- | --- |
-| **May 2026** | [📊 View deck](https://virtocommerce.github.io/vc-release-notes/2026-05/) | [Notes](https://www.virtocommerce.org/t/virto-s-release-notes-may-2026-comics-edition/849/) |
-| **April 2026** | [📊 View deck](https://virtocommerce.github.io/vc-release-notes/2026-04/) | [Notes](https://www.virtocommerce.org/t/virto-s-release-notes-april-2026/847) |
-| **March 2026** | [📊 View deck](https://virtocommerce.github.io/vc-release-notes/2026-03/) | [Notes](https://www.virtocommerce.org/t/virto-s-release-notes-march-2026/839) |
-
-[Previuos Releases](https://www.virtocommerce.org/c/news-digest/15) 
+Every monthly release, rendered as an [interactive Virto Commerce slide deck](https://virtocommerce.github.io/vc-release-notes/). Product, engineering, and business stakeholders review what shipped, mark features for their own backlog, then export a ready-to-paste Markdown table for Jira, Linear, or GitHub Issues.
 
 ## 🤝 Contributing
 

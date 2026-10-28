@@ -18,7 +18,55 @@
       "assets": "Ressurser",
       "toggle-favorites": "Shift + Mellomrom for å veksle favoritter",
       "developer-tools": "Utviklerverktøy",
-      "help": "Hjelp"
+      "help": "Hjelp",
+      "main-menu": "Hovedmeny",
+      "collapse-menu": "Skjul meny",
+      "expand-menu": "Vis meny",
+      "theme": "Tema",
+      "theme-light": "Lyst",
+      "theme-dark": "Mørkt",
+      "theme-system": "Følg systemet",
+      "theme-classic": "Klassisk"
+    },
+    "theme": {
+      "preset": "Farge",
+      "presets": {
+        "warm": "Varm",
+        "blue": "Blå",
+        "gray": "Grå",
+        "green": "Grønn",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Velg utseende",
+        "intro": "Velg en modus og en fargeforhåndsinnstilling. Du ser resultatet med en gang bak dette vinduet. Valget lagres i denne nettleseren.",
+        "mode": "Modus",
+        "preset": "Fargeforhåndsinnstilling",
+        "light-description": "Lyst og ryddig, for godt opplyste rom",
+        "dark-description": "Skånsomt for øynene i svakt lys",
+        "system-description": "Følger lys eller mørk innstilling på enheten",
+        "classic-description": "Det opprinnelige Virto Commerce-utseendet",
+        "classic-note": "Fargeforhåndsinnstillinger gjelder for lys og mørk modus.",
+        "hint": "Trykk Ctrl+Alt+T for å åpne dette vinduet igjen.",
+        "apply": "Bruk",
+        "cancel": "Avbryt"
+      }
+    },
+    "search": {
+      "placeholder": "Søk i meny, apper, innstillinger",
+      "searching": "Søker…",
+      "no-results": "Ingen treff for «{{query}}»",
+      "clear": "Tøm",
+      "error": "Søket mislyktes",
+      "show-all": "Vis alle {{count}}",
+      "hint-navigate": "for å flytte",
+      "hint-open": "for å åpne",
+      "hint-close": "for å lukke",
+      "groups": {
+        "menu": "Meny",
+        "apps": "Apper",
+        "settings": "Innstillinger"
+      }
     },
     "navigation": {
       "back": "Tilbake"
@@ -531,6 +579,7 @@
         "errors": {
           "login-failed": "Påloggingsforsøket mislyktes. Kontroller legitimasjonen din.",
           "account-locked": "Kontoen din er låst. Prøv igjen senere eller kontakt administrator.",
+          "two-factor-unavailable": "Denne kontoen krever et ekstra påloggingstrinn, men det er ikke tilgjengelig. Kontakt administratoren.",
           "technical-error": "Autentiseringsfeil. Prøv igjen senere eller kontakt administrator. (Kode: {{code}})",
           "unknown-error": "Autentiseringsfeil. Prøv igjen senere eller kontakt administrator."
         }
@@ -723,6 +772,105 @@
           "ip-address": "IP-adresse",
           "user-agent": "Brukeragent"
         }
+      },
+      "sign-in-log": {
+        "title": "Innloggingslogg",
+        "subtitle": "Innloggingsforsøk og innlogging på vegne av",
+        "filter": {
+          "title": "Filtre for innloggingsloggen",
+          "all": "Alle",
+          "period": "Siste",
+          "period-24h": "24 timer",
+          "period-7d": "7 dager",
+          "period-30d": "30 dager",
+          "period-all": "Hele perioden",
+          "outcome": "Resultat",
+          "sign-in-type": "Type",
+          "ip-address": "IP-adresse",
+          "type-password": "Passord",
+          "type-external": "Ekstern leverandør",
+          "type-impersonation": "På vegne av",
+          "type-impersonation-revert": "På vegne av (retur)",
+          "type-logout": "Utlogging",
+          "period-30m": "30 min",
+          "period-1h": "1 time",
+          "period-6h": "6 timer",
+          "store": "Butikk",
+          "any-store": "Hvilken som helst butikk",
+          "no-store": "Ingen butikk",
+          "period-custom": "Egendefinert",
+          "date-from": "Fra",
+          "date-to": "Til"
+        },
+        "labels": {
+          "date": "Dato",
+          "user-name": "Bruker",
+          "outcome": "Resultat",
+          "succeeded": "Vellykket",
+          "failed": "Mislyktes",
+          "awaiting-second-factor": "Venter på andre faktor",
+          "failure-reason": "Årsak",
+          "sign-in-type": "Type",
+          "ip-address": "IP-adresse",
+          "organization": "Organisasjon",
+          "impersonation": "På vegne av",
+          "on-behalf-of": "På vegne av"
+        },
+        "stats": {
+          "total": "Innlogginger",
+          "failed": "Mislykkede forsøk",
+          "users": "Innloggede brukere",
+          "impersonation": "På vegne av",
+          "top-failed-ips": "Vanligste IP-adresser etter mislykkede forsøk",
+          "top-failed-users": "Vanligste kontoer etter mislykkede forsøk",
+          "failure-reasons": "Feilårsaker",
+          "by-organization": "Innlogginger per organisasjon",
+          "none": "Ingen data",
+          "total-hint": "Alle innloggingsforsøk i perioden, både vellykkede og mislykkede. Klikk for å se dem.",
+          "failed-hint": "Forsøk som ikke logget inn noen. Klikk for å se bare de mislykkede.",
+          "users-hint": "Unike kontoer som logget inn, talt én gang hver uansett antall innlogginger. Klikk for å se vellykkede innlogginger.",
+          "impersonation-hint": "Økter der support logget inn på vegne av en kunde. Klikk for å se dem.",
+          "timeline": "Forsøk over tid",
+          "by-store": "Innlogginger per butikk"
+        },
+        "hints": {
+          "known-accounts-only": "Omfatter bare forsøk mot eksisterende kontoer."
+        },
+        "detail": {
+          "title": "Innloggingsoppføring",
+          "user-id": "Bruker-ID",
+          "operator-name": "Operatør",
+          "operator-id": "Operatør-ID",
+          "member-id": "Medlems-ID",
+          "user-agent": "Brukeragent",
+          "client-id": "Klient",
+          "host": "Vert",
+          "store-name": "Butikknavn",
+          "organization-id": "Organisasjons-ID",
+          "session-id": "Økt-ID",
+          "provider": "Identitetsleverandør"
+        },
+        "disabled": {
+          "title": "Registrering av innlogginger er slått av",
+          "message": "Nye innloggingsforsøk registreres ikke, så denne loggen forblir uendret. Be en administrator om å slå på «Registrer innloggingsforsøk» under Innstillinger › Plattform › Innloggingslogg. Innlogging på vegne av registreres alltid."
+        }
+      },
+      "sign-in-log-dashboard": {
+        "title": "Innloggingslogg",
+        "subtitle": "Innloggingsaktivitet og innlogging på vegne av",
+        "commands": {
+          "view-all": "Vis alle oppføringer"
+        },
+        "presets": {
+          "all": "Alle oppføringer",
+          "failed": "Mislykkede forsøk",
+          "impersonation": "Innlogging på vegne av",
+          "by-ip": "Mislykkede forsøk fra IP",
+          "by-user": "Mislykkede forsøk for konto",
+          "by-reason": "Mislykkede forsøk etter årsak",
+          "succeeded": "Vellykkede innlogginger",
+          "by-store": "Innlogginger for butikk"
+        }
       }
     },
     "templates": {
@@ -745,8 +893,10 @@
       "licensing": {
         "license-absent": "Community-lisens",
         "license-present": "{{type}}-lisens, utløper {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}}-lisens",
         "community": "Kjører community-utgave, klikk for å be om en kommersiell lisens",
         "expired": "Lisensen din har utløpt {{expirationDate | amParse | date}}, vennligst forny",
+        "expired-short": "Lisensen er utløpt",
         "purchase": "Kjøp",
         "renew": "Forny",
         "expiration-date": "Utløpsdato"
@@ -787,6 +937,9 @@
       },
       "sessions": {
         "title": "Aktive økter"
+      },
+      "sign-in-log": {
+        "title": "Innloggingslogg"
       }
     },
     "dialogs": {
@@ -1033,6 +1186,22 @@
           "FileExtensionsWhiteList": {
             "description": "Filutvidelser som er tillatt å laste opp av plattformen (i tillegg til 'FileExtensionsWhiteList' i appsettings.json)",
             "title": "Hvitliste"
+          },
+          "SignInLogEnabled": {
+            "title": "Registrer innloggingsforsøk",
+            "description": "Registrerer hvert innloggingsforsøk, både vellykkede og mislykkede, i innloggingsloggen. Innlogging på vegne av registreres alltid og påvirkes ikke av denne innstillingen."
+          },
+          "SignInLogRetentionDays": {
+            "title": "Behold oppføringer i (dager)",
+            "description": "Hvor lenge innloggingsoppføringer beholdes før oppryddingsjobben fjerner dem. Sett til 0 eller mindre for å beholde dem for alltid."
+          },
+          "EnableSignInLogCleanupJob": {
+            "title": "Rydd opp i gamle innloggingsoppføringer",
+            "description": "Kjører en planlagt jobb som sletter innloggingsoppføringer eldre enn oppbevaringsperioden."
+          },
+          "CronSignInLogCleanupJob": {
+            "title": "Cron for oppryddingsjobben for innloggingsloggen",
+            "description": "Cron-uttrykk for jobben som sletter innloggingsoppføringer eldre enn oppbevaringsperioden."
           }
         },
         "UI": {

@@ -1,4 +1,3 @@
-using System;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using VirtoCommerce.Platform.Core.Settings;
@@ -38,20 +37,8 @@ namespace VirtoCommerce.Platform.Data.Validators
         private static bool BeValidCron(object value)
         {
             var expression = value?.ToString()?.Trim();
-            if (string.IsNullOrEmpty(expression))
-            {
-                return false;
-            }
 
-            try
-            {
-                return _cronRegex.IsMatch(expression);
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                // Pathological input hit the ReDoS guard — treat as invalid rather than hang the save.
-                return false;
-            }
+            return !string.IsNullOrEmpty(expression) && _cronRegex.IsMatch(expression);
         }
 
         private static Regex BuildCronRegex()
@@ -75,10 +62,13 @@ namespace VirtoCommerce.Platform.Data.Validators
             // Optional leading seconds field makes it a 6-field expression; otherwise a standard 5-field one.
             var pattern = $@"^(?:{Field(minute)}\s+)?{fiveFields}$";
 
+            // NonBacktracking matches in linear time, so it guards against ReDoS without a match timeout. A timeout
+            // is measured in wall-clock time: a GC pause or CPU starvation (e.g. right after platform start) made a
+            // valid value time out and be rejected as invalid.
             return new Regex(
                 pattern,
-                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled,
-                TimeSpan.FromMilliseconds(200));
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.NonBacktracking,
+                Regex.InfiniteMatchTimeout);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Security.Model;
+using VirtoCommerce.Platform.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Security.Repositories
 {
@@ -13,6 +14,8 @@ namespace VirtoCommerce.Platform.Security.Repositories
         IQueryable<UserPasswordHistoryEntity> UserPasswordsHistory { get; }
 
         IQueryable<ServerCertificateEntity> ServerCertificates { get; }
+
+        IQueryable<UserSignInLogEntity> UserSignInLogs { get; }
 
         Task<IEnumerable<UserPasswordHistoryEntity>> GetUserPasswordsHistoryAsync(string userId, int passwordsCountToCheck);
     }

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.1071.0</VersionPrefix>
+    <VersionPrefix>3.1091.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <VersionSuffix Condition=" '$(VersionSuffix)' != '' AND '$(BuildNumber)' != '' ">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
     <NoWarn>$(NoWarn);S3875;S4457</NoWarn>
@@ -26,7 +26,7 @@
     <PackageVersion Condition=" '$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
     <PackageIconUrl>icon.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <Description>Virto Commerce is a flexible B2B ecommerce solution that offers powerful tools for enterprise business users. https://virtocommerce.com</Description>
+    <Description>Virto Commerce is a source-available .NET digital commerce platform for organizations running complex sales, procurement, and distribution operations online. https://virtocommerce.com</Description>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
