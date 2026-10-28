@@ -84,7 +84,9 @@ angular.module('platformWebApp')
                 transclude: true,
                 require: 'ngModel',
                 scope: {
-                    onMenuChanged: "&"
+                    onMenuChanged: "&",
+                    // for the license notice in the mobile menu drawer (the scope is isolated)
+                    license: "<?"
                 },
                 templateUrl: '$(Platform)/Scripts/app/navigation/menu/mainMenu.tpl.html',
                 link: function (scope, element, attr, ngModelController, linker) {

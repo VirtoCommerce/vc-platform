@@ -18,7 +18,55 @@
       "assets": "Tillgångar",
       "toggle-favorites": "Skift + Mellanslag för att växla favoriter",
       "developer-tools": "Utvecklarverktyg",
-      "help": "Hjälp"
+      "help": "Hjälp",
+      "main-menu": "Huvudmeny",
+      "collapse-menu": "Fäll ihop menyn",
+      "expand-menu": "Fäll ut menyn",
+      "theme": "Tema",
+      "theme-light": "Ljust",
+      "theme-dark": "Mörkt",
+      "theme-system": "Följ systemet",
+      "theme-classic": "Klassiskt"
+    },
+    "theme": {
+      "preset": "Färg",
+      "presets": {
+        "warm": "Varm",
+        "blue": "Blå",
+        "gray": "Grå",
+        "green": "Grön",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Välj utseende",
+        "intro": "Välj ett läge och en färgförinställning. Du ser resultatet direkt bakom det här fönstret. Ditt val sparas i den här webbläsaren.",
+        "mode": "Läge",
+        "preset": "Färgförinställning",
+        "light-description": "Ljust och rent, för väl upplysta rum",
+        "dark-description": "Skonsamt för ögonen i svagt ljus",
+        "system-description": "Följer enhetens ljusa eller mörka inställning",
+        "classic-description": "Det ursprungliga Virto Commerce-utseendet",
+        "classic-note": "Färgförinställningar gäller för ljust och mörkt läge.",
+        "hint": "Tryck på Ctrl+Alt+T för att öppna det här fönstret igen.",
+        "apply": "Använd",
+        "cancel": "Avbryt"
+      }
+    },
+    "search": {
+      "placeholder": "Sök i meny, appar, inställningar",
+      "searching": "Söker…",
+      "no-results": "Inga träffar för \"{{query}}\"",
+      "clear": "Rensa",
+      "error": "Sökningen misslyckades",
+      "show-all": "Visa alla {{count}}",
+      "hint-navigate": "för att flytta",
+      "hint-open": "för att öppna",
+      "hint-close": "för att stänga",
+      "groups": {
+        "menu": "Meny",
+        "apps": "Appar",
+        "settings": "Inställningar"
+      }
     },
     "navigation": {
       "back": "Tillbaka"
@@ -531,6 +579,7 @@
         "errors": {
           "login-failed": "Inloggningsförsöket misslyckades. Kontrollera dina inloggningsuppgifter.",
           "account-locked": "Ditt konto har låsts. Försök igen senare eller kontakta administratören.",
+          "two-factor-unavailable": "Det här kontot kräver ett andra inloggningssteg, men det är inte tillgängligt. Kontakta administratören.",
           "technical-error": "Autentiseringsfel. Försök igen senare eller kontakta administratören. (Kod: {{code}})",
           "unknown-error": "Autentiseringsfel. Försök igen senare eller kontakta administratören."
         }
@@ -759,6 +808,7 @@
           "outcome": "Resultat",
           "succeeded": "Lyckades",
           "failed": "Misslyckades",
+          "awaiting-second-factor": "Väntar på andra faktorn",
           "failure-reason": "Orsak",
           "sign-in-type": "Typ",
           "ip-address": "IP-adress",
@@ -843,8 +893,10 @@
       "licensing": {
         "license-absent": "Community-licens",
         "license-present": "{{type}}-licens, går ut {{expirationDate | amParse | date}}",
+        "license-present-short": "{{type}}-licens",
         "community": "Kör community-utgåva, klicka för att begära en kommersiell licens",
         "expired": "Din licens har gått ut {{expirationDate | amParse | date}}, vänligen förnya",
+        "expired-short": "Licensen har gått ut",
         "purchase": "Köp",
         "renew": "Förnya",
         "expiration-date": "Utgångsdatum"

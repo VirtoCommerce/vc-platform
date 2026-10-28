@@ -18,7 +18,55 @@
       "assets": "Risorse",
       "toggle-favorites": "Shift + Spazio per attivare/disattivare i preferiti",
       "developer-tools": "Strumenti per sviluppatori",
-      "help": "Aiuto"
+      "help": "Aiuto",
+      "main-menu": "Menu principale",
+      "collapse-menu": "Comprimi menu",
+      "expand-menu": "Espandi menu",
+      "theme": "Tema",
+      "theme-light": "Chiaro",
+      "theme-dark": "Scuro",
+      "theme-system": "Come il sistema",
+      "theme-classic": "Classico"
+    },
+    "theme": {
+      "preset": "Colore",
+      "presets": {
+        "warm": "Caldo",
+        "blue": "Blu",
+        "gray": "Grigio",
+        "green": "Verde",
+        "indigo": "Indaco"
+      },
+      "welcome": {
+        "title": "Scegli l'aspetto",
+        "intro": "Scegli una modalità e una palette di colori. Vedi subito il risultato dietro questa finestra. La scelta viene salvata in questo browser.",
+        "mode": "Modalità",
+        "preset": "Palette di colori",
+        "light-description": "Chiaro e pulito, per ambienti luminosi",
+        "dark-description": "Riposante per gli occhi con poca luce",
+        "system-description": "Segue la modalità chiara o scura del dispositivo",
+        "classic-description": "L'aspetto originale di Virto Commerce",
+        "classic-note": "Le palette di colori valgono per le modalità chiara e scura.",
+        "hint": "Premi Ctrl+Alt+T per riaprire questa finestra.",
+        "apply": "Applica",
+        "cancel": "Annulla"
+      }
+    },
+    "search": {
+      "placeholder": "Cerca menu, app, impostazioni",
+      "searching": "Ricerca…",
+      "no-results": "Nessun risultato per \"{{query}}\"",
+      "clear": "Cancella",
+      "error": "Ricerca non riuscita",
+      "show-all": "Mostra tutti ({{count}})",
+      "hint-navigate": "per spostarti",
+      "hint-open": "per aprire",
+      "hint-close": "per chiudere",
+      "groups": {
+        "menu": "Menu",
+        "apps": "App",
+        "settings": "Impostazioni"
+      }
     },
     "navigation": {
       "back": "Indietro"
@@ -530,6 +578,7 @@
         "errors": {
           "login-failed": "Tentativo di accesso non riuscito. Verifica le tue credenziali.",
           "account-locked": "Il tuo account è stato bloccato. Riprova più tardi o contatta l'amministratore.",
+          "two-factor-unavailable": "Questo account richiede un secondo passaggio di accesso, ma non è disponibile. Contatta l'amministratore.",
           "technical-error": "Errore di autenticazione. Riprova più tardi o contatta l'amministratore. (Codice: {{code}})",
           "unknown-error": "Errore di autenticazione. Riprova più tardi o contatta l'amministratore."
         }
@@ -758,6 +807,7 @@
           "outcome": "Esito",
           "succeeded": "Riuscito",
           "failed": "Non riuscito",
+          "awaiting-second-factor": "In attesa del secondo fattore",
           "failure-reason": "Motivo",
           "sign-in-type": "Tipo",
           "ip-address": "Indirizzo IP",
@@ -842,8 +892,10 @@
       "licensing": {
         "license-absent": "Licenza Community",
         "license-present": "Licenza {{type}}, scade il {{expirationDate | amParse | date}}",
+        "license-present-short": "Licenza {{type}}",
         "community": "Esecuzione dell'edizione community, clicca per richiedere una licenza commerciale",
         "expired": "La tua licenza è scaduta il {{expirationDate | amParse | date}}, per favore rinnovala",
+        "expired-short": "Licenza scaduta",
         "purchase": "Acquista",
         "renew": "Rinnova",
         "expiration-date": "Data di scadenza"

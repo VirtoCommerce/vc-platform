@@ -137,7 +137,8 @@ namespace VirtoCommerce.Platform.Core.Settings
         }
 
         /// <summary>
-        /// Takes default value from the setting descriptor
+        /// Returns the stored value; otherwise the loaded setting's default (which reflects a configured DefaultValue override);
+        /// otherwise the default value from the setting descriptor
         /// </summary>
         public static TValue GetValue<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
         {
@@ -145,7 +146,8 @@ namespace VirtoCommerce.Platform.Core.Settings
         }
 
         /// <summary>
-        /// Takes default value from the setting descriptor
+        /// Returns the stored value; otherwise the loaded setting's default (which reflects a configured DefaultValue override);
+        /// otherwise the default value from the setting descriptor
         /// </summary>
         public static Task<TValue> GetValueAsync<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
         {
@@ -171,6 +173,10 @@ namespace VirtoCommerce.Platform.Core.Settings
                 {
                     result = value;
                 }
+                else if (objectSetting.TryGetDefaultValue<T>(out var settingDefaultValue))
+                {
+                    result = settingDefaultValue;
+                }
             }
             catch (PlatformException)
             {
@@ -192,6 +198,10 @@ namespace VirtoCommerce.Platform.Core.Settings
             await manager.SaveObjectSettingsAsync([objectSetting]);
         }
 
+        /// <summary>
+        /// Returns the stored value; otherwise the loaded setting's default (which reflects a configured DefaultValue override);
+        /// otherwise the default value from the setting descriptor
+        /// </summary>
         public static TValue GetValue<TValue>(this IEnumerable<ObjectSettingEntry> objectSettings, SettingDescriptor descriptor)
         {
             var defaultValue = default(TValue);
@@ -212,7 +222,23 @@ namespace VirtoCommerce.Platform.Core.Settings
             {
                 retVal = (T)Convert.ChangeType(setting.Value, typeof(T), CultureInfo.InvariantCulture);
             }
+            else if (setting.TryGetDefaultValue<T>(out var settingDefaultValue))
+            {
+                retVal = settingDefaultValue;
+            }
             return retVal;
+        }
+
+        /// <summary>
+        /// The loaded setting's own default: the descriptor default, or a DefaultValue override from configuration
+        /// (see ISettingsOverrideProvider). Fails for a missing setting or a default that does not convert to <typeparamref name="T"/>
+        /// (e.g. a dictionary setting's override, which is an array), so the caller keeps the descriptor default.
+        /// </summary>
+        private static bool TryGetDefaultValue<T>(this ObjectSettingEntry setting, out T value)
+        {
+            value = default;
+
+            return setting != null && SettingValueConverter.TryConvert(setting.DefaultValue, out value);
         }
     }
 }

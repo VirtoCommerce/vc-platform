@@ -114,7 +114,9 @@
 </div>
 
 <script type="text/ng-template" id="sign-in-log-date.cell.html">
-  <div class="ui-grid-cell-contents">{{ row.entity.createdDate | date:'short' }}</div>
+  <!-- amParse first: the date filter only shifts into the profile time zone for a moment, so a
+       raw ISO string rendered in the browser zone and disagreed with the record card. -->
+  <div class="ui-grid-cell-contents">{{ row.entity.createdDate | amParse | date:'short' }}</div>
 </script>
 
 <script type="text/ng-template" id="sign-in-log-user.cell.html">
@@ -134,11 +136,11 @@
 
 <script type="text/ng-template" id="sign-in-log-outcome.cell.html">
   <div class="ui-grid-cell-contents">
-    <span class="sign-in-log-badge" ng-class="row.entity.succeeded ? '__success' : '__failed'"
+    <span class="sign-in-log-badge" ng-class="grid.appScope.outcomeOf(row.entity).cssClass"
           title="{{ row.entity.failureReason }}">
-      {{ (row.entity.succeeded ? 'platform.blades.sign-in-log.labels.succeeded' : 'platform.blades.sign-in-log.labels.failed') | translate }}
+      {{ grid.appScope.outcomeOf(row.entity).label | translate }}
     </span>
-    <span class="sign-in-log-reason" ng-if="!row.entity.succeeded">{{ row.entity.failureReason }}</span>
+    <span class="sign-in-log-reason" ng-if="grid.appScope.outcomeOf(row.entity).isFailure">{{ row.entity.failureReason }}</span>
   </div>
 </script>
 

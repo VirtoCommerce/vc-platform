@@ -1,8 +1,10 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.signInLogListController',
-        ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService',
-            function ($scope, accounts, bladeUtils, uiGridHelper, bladeNavigationService) {
+        ['$scope', 'moment', 'platformWebApp.i18n', 'platformWebApp.accounts', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService',
+            'platformWebApp.signInLogOutcome', 'platformWebApp.signInLogTypes',
+            function ($scope, moment, i18n, accounts, bladeUtils, uiGridHelper, bladeNavigationService, signInLogOutcome, signInLogTypes) {
                 $scope.uiGridConstants = uiGridHelper.uiGridConstants;
+                $scope.outcomeOf = signInLogOutcome.get;
                 var blade = $scope.blade;
 
                 blade.title = blade.title || 'platform.blades.sign-in-log.title';
@@ -22,22 +24,12 @@ angular.module('platformWebApp')
                 blade.outcomes = [
                     { label: 'platform.blades.sign-in-log.filter.all', value: '' },
                     { label: 'platform.blades.sign-in-log.labels.succeeded', value: 'true' },
-                    { label: 'platform.blades.sign-in-log.labels.failed', value: 'false' }
+                    { label: 'platform.blades.sign-in-log.labels.failed', value: 'false' },
+                    { label: 'platform.blades.sign-in-log.labels.awaiting-second-factor', value: 'awaiting' }
                 ];
 
-                // Grant and revert are separate options rather than one combined entry: they answer
-                // different questions - who is acting as a customer right now, versus who stopped -
-                // and lumping them together left the dashboard tile disagreeing with this list.
-                // A comma-joined value still expands into several signInTypes, so a caller seeding
-                // this blade can ask for both at once.
-                blade.signInTypeOptions = [
-                    { label: 'platform.blades.sign-in-log.filter.all', value: '' },
-                    { label: 'platform.blades.sign-in-log.filter.type-password', value: 'Password' },
-                    { label: 'platform.blades.sign-in-log.filter.type-external', value: 'External' },
-                    { label: 'platform.blades.sign-in-log.filter.type-impersonation', value: 'Impersonation' },
-                    { label: 'platform.blades.sign-in-log.filter.type-impersonation-revert', value: 'ImpersonationRevert' },
-                    { label: 'platform.blades.sign-in-log.filter.type-logout', value: 'Logout' }
-                ];
+                blade.signInTypeOptions = [{ label: 'platform.blades.sign-in-log.filter.all', value: '' }]
+                    .concat(signInLogTypes.getAll());
 
                 // Sentinels for the store select. "" already means "don't filter by store", so the two
                 // presence questions - belongs to some store, belongs to none - each need a value of
@@ -117,6 +109,12 @@ angular.module('platformWebApp')
                     }
                 });
 
+                // Start of the picked calendar day in the profile time zone. The input hands back a
+                // Date at browser-local midnight, so only its year/month/day are meaningful.
+                function profileDay(date) {
+                    return moment.tz([date.getFullYear(), date.getMonth(), date.getDate()], i18n.getTimeZone());
+                }
+
                 function buildCriteria() {
                     // null asks nothing about the store, true demands none, false demands one.
                     var withoutStore = filter.storeId === blade.noStoreValue ? true
@@ -134,7 +132,9 @@ angular.module('platformWebApp')
                         sort: uiGridHelper.getSortExpression($scope)
                     };
 
-                    if (filter.succeeded !== '') {
+                    if (filter.succeeded === 'awaiting') {
+                        criteria.awaitingSecondFactor = true;
+                    } else if (filter.succeeded !== '') {
                         criteria.succeeded = filter.succeeded === 'true';
                     }
 
@@ -147,16 +147,15 @@ angular.module('platformWebApp')
                     }
 
                     if (filter.period === 'custom') {
-                        // Date inputs give a local calendar day; widen "to" to the end of it so a
-                        // single-day range does not silently exclude everything after midnight.
+                        // Date inputs give a calendar day; read it in the profile time zone the grid
+                        // shows, not the browser's, and widen "to" to the end of it so a single-day
+                        // range does not silently exclude everything after midnight.
                         if (filter.dateFrom) {
-                            criteria.startDate = new Date(filter.dateFrom).toISOString();
+                            criteria.startDate = profileDay(filter.dateFrom).toISOString();
                         }
 
                         if (filter.dateTo) {
-                            var to = new Date(filter.dateTo);
-                            to.setHours(23, 59, 59, 999);
-                            criteria.endDate = to.toISOString();
+                            criteria.endDate = profileDay(filter.dateTo).endOf('day').toISOString();
                         }
                     } else {
                         var period = _.findWhere(blade.periods, { value: filter.period });

@@ -18,7 +18,55 @@
       "assets": "Recursos",
       "toggle-favorites": "Shift + Espacio para alternar favoritos",
       "developer-tools": "Herramientas para desarrolladores",
-      "help": "Ayuda"
+      "help": "Ayuda",
+      "main-menu": "Menú principal",
+      "collapse-menu": "Contraer menú",
+      "expand-menu": "Expandir menú",
+      "theme": "Tema",
+      "theme-light": "Claro",
+      "theme-dark": "Oscuro",
+      "theme-system": "Según el sistema",
+      "theme-classic": "Clásico"
+    },
+    "theme": {
+      "preset": "Color",
+      "presets": {
+        "warm": "Cálido",
+        "blue": "Azul",
+        "gray": "Gris",
+        "green": "Verde",
+        "indigo": "Índigo"
+      },
+      "welcome": {
+        "title": "Elija su apariencia",
+        "intro": "Elija un modo y un ajuste de color. Verá el resultado al instante detrás de esta ventana. Su elección se guarda en este navegador.",
+        "mode": "Modo",
+        "preset": "Ajuste de color",
+        "light-description": "Claro y limpio, para espacios bien iluminados",
+        "dark-description": "Descansa la vista con poca luz",
+        "system-description": "Sigue el modo claro u oscuro de su dispositivo",
+        "classic-description": "La apariencia original de Virto Commerce",
+        "classic-note": "Los ajustes de color se aplican a los modos claro y oscuro.",
+        "hint": "Pulse Ctrl+Alt+T para volver a abrir esta ventana.",
+        "apply": "Aplicar",
+        "cancel": "Cancelar"
+      }
+    },
+    "search": {
+      "placeholder": "Buscar en menú, aplicaciones, ajustes",
+      "searching": "Buscando…",
+      "no-results": "No se encontró nada para \"{{query}}\"",
+      "clear": "Borrar",
+      "error": "La búsqueda falló",
+      "show-all": "Mostrar los {{count}}",
+      "hint-navigate": "para moverse",
+      "hint-open": "para abrir",
+      "hint-close": "para cerrar",
+      "groups": {
+        "menu": "Menú",
+        "apps": "Aplicaciones",
+        "settings": "Ajustes"
+      }
     },
     "navigation": {
       "back": "Atrás"
@@ -530,6 +578,7 @@
         "errors": {
           "login-failed": "Error en el intento de inicio de sesión. Compruebe sus credenciales.",
           "account-locked": "Su cuenta ha sido bloqueada. Inténtelo de nuevo más tarde o póngase en contacto con el administrador.",
+          "two-factor-unavailable": "Esta cuenta requiere un segundo paso de inicio de sesión, pero no está disponible. Póngase en contacto con su administrador.",
           "technical-error": "Error de autenticación. Inténtelo de nuevo más tarde o póngase en contacto con el administrador. (Código: {{code}})",
           "unknown-error": "Error de autenticación. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."
         }
@@ -758,6 +807,7 @@
           "outcome": "Resultado",
           "succeeded": "Correcto",
           "failed": "Fallido",
+          "awaiting-second-factor": "Esperando el segundo factor",
           "failure-reason": "Motivo",
           "sign-in-type": "Tipo",
           "ip-address": "Dirección IP",
@@ -842,8 +892,10 @@
       "licensing": {
         "license-absent": "Licencia comunitaria",
         "license-present": "Licencia {{type}}, vence el {{expirationDate | amParse | date}}",
+        "license-present-short": "Licencia {{type}}",
         "community": "Ejecutando edición comunitaria, haz clic para solicitar una licencia comercial",
         "expired": "Tu licencia ha vencido el {{expirationDate | amParse | date}}, por favor renuévala",
+        "expired-short": "Licencia caducada",
         "purchase": "Comprar",
         "renew": "Renovar",
         "expiration-date": "Fecha de vencimiento"

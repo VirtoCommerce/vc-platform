@@ -68,7 +68,6 @@ jobs:
       tag: ${{ env.DOCKER_TAG }}
       matrix: ${{ steps.deployment-matrix.outputs.matrix }}
       run-e2e: ${{ steps.run-e2e.outputs.result }}
-      vulnSkipList: ${{ steps.vulnSkipList.outputs.vulnSkipList }}
 
     steps:
 
@@ -104,18 +103,18 @@ jobs:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.1
+      uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.6
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
 
     - name: Get Image Version
-      uses: VirtoCommerce/.github/actions/get-image-version@v3.1000.1
+      uses: VirtoCommerce/.github/actions/get-image-version@v3.1000.6
       id: image
 
     - name: Get changelog
       id: changelog
-      uses: VirtoCommerce/.github/actions/changelog-generator@v3.1000.1
+      uses: VirtoCommerce/.github/actions/changelog-generator@v3.1000.6
 
     - name: Set VERSION_SUFFIX variable
       run: |
@@ -133,33 +132,14 @@ jobs:
           echo "DOCKER_TAG=${{ steps.image.outputs.taggedVersion }}" >> $GITHUB_ENV
         fi;
 
-    - name: Extract vulnerabilities skip list
-      id: vulnSkipList
-      shell: pwsh
-      run: |
-        $vulnSkipList = @()
-        if (Test-Path ./cve-ignore.json) {
-          Write-Host "'cve-ignore.json' file found"
-          $skipList = (Get-Content ./cve-ignore.json | ConvertFrom-Json)
-          foreach ($vulnerability in $skipList.PSObject.Properties.Name){
-            echo "Adding '$vulnerability' with '$($skipList.$vulnerability.Severity)' severity entry to trivy scan ignore list"
-            $vulnSkipList += $($skipList.$vulnerability.VulnerabilityID)
-          }
-          $stringSkipList = $vulnSkipList -join ","
-          echo "vulnSkipList=$stringSkipList" >> $env:GITHUB_OUTPUT
-        }
-        else {
-          Write-Warning "'cve-ignore.json' file not found. Using empty skip list."
-          echo "vulnSkipList=$vulnSkipList" >> $env:GITHUB_OUTPUT
-        }
     - name: Add version suffix
       if: ${{ github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main' }}
-      uses: VirtoCommerce/.github/actions/add-version-suffix@v3.1000.1
+      uses: VirtoCommerce/.github/actions/add-version-suffix@v3.1000.6
       with:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
 
     - name: SonarCloud Begin
-      uses: VirtoCommerce/.github/actions/sonar-scanner-begin@v3.1000.1
+      uses: VirtoCommerce/.github/actions/sonar-scanner-begin@v3.1000.6
 
     - name: Build
       run: vc-build Compile
@@ -172,10 +152,10 @@ jobs:
       run: echo "BUILD_STATE=successful" >> $GITHUB_ENV
 
     - name: SonarCloud End
-      uses: VirtoCommerce/.github/actions/sonar-scanner-end@v3.1000.1
+      uses: VirtoCommerce/.github/actions/sonar-scanner-end@v3.1000.6
 
     - name: Quality Gate
-      uses: VirtoCommerce/.github/actions/sonar-quality-gate@v3.1000.1
+      uses: VirtoCommerce/.github/actions/sonar-quality-gate@v3.1000.6
       with:
         login: ${{secrets.SONAR_TOKEN}}
 
@@ -185,7 +165,7 @@ jobs:
     - name: Build Docker Image
       if: ${{ env.BUILD_DOCKER == 'true' }}
       id: dockerBuild
-      uses: VirtoCommerce/.github/actions/build-docker-image@v3.1000.1
+      uses: VirtoCommerce/.github/actions/build-docker-image@v3.1000.6
       with:
         tag: ${{ env.DOCKER_TAG }}
         imageName: 'platform'
@@ -210,14 +190,14 @@ jobs:
 
     - name: Publish Nuget
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
-      uses: VirtoCommerce/.github/actions/publish-nuget@v3.1000.1
+      uses: VirtoCommerce/.github/actions/publish-nuget@v3.1000.6
       env:
         NUGET_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
 
     - name: Publish to Blob
       if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && (github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main')) }}
       id: blobRelease
-      uses: VirtoCommerce/.github/actions/publish-blob-release@v3.1000.1
+      uses: VirtoCommerce/.github/actions/publish-blob-release@v3.1000.6
       with:
         blobSAS: ${{ secrets.BLOB_TOKEN }}
         blobUrl: ${{ vars.BLOB_URL }}
@@ -230,7 +210,7 @@ jobs:
 
     - name: Add Jira link
       if: ${{ github.event_name == 'pull_request' }}
-      uses: VirtoCommerce/.github/actions/publish-jira-link@v3.1000.1
+      uses: VirtoCommerce/.github/actions/publish-jira-link@v3.1000.6
       with:
         branchName: ${{ github.head_ref }}
         repoOrg: ${{ github.repository_owner }}
@@ -239,7 +219,7 @@ jobs:
 
     - name: Add link to PR
       if: ${{ github.event_name == 'pull_request' }}
-      uses: VirtoCommerce/.github/actions/publish-artifact-link@v3.1000.1
+      uses: VirtoCommerce/.github/actions/publish-artifact-link@v3.1000.6
       with:
         artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
         repoOrg: ${{ github.repository_owner }}
@@ -250,11 +230,11 @@ jobs:
       with:
         changelog: ${{ steps.changelog.outputs.changelog }}
         organization: ${{ github.repository_owner }}
-      uses: VirtoCommerce/.github/actions/publish-github-release@v3.1000.1
+      uses: VirtoCommerce/.github/actions/publish-github-release@v3.1000.6
 
     - name: Create deployment matrix
       if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
-      uses: VirtoCommerce/.github/actions/cloud-create-deploy-matrix@v3.1000.1
+      uses: VirtoCommerce/.github/actions/cloud-create-deploy-matrix@v3.1000.6
       id: deployment-matrix
       with:
         deployConfigPath: 'cloudDeploy.json'
@@ -274,7 +254,7 @@ jobs:
 
     - name: Publish Docker Image
       if: ${{ env.BUILD_DOCKER == 'true' }}
-      uses: VirtoCommerce/.github/actions/publish-docker-image@v3.1000.1
+      uses: VirtoCommerce/.github/actions/publish-docker-image@v3.1000.6
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
           tag: ${{ env.DOCKER_TAG }}
@@ -284,7 +264,7 @@ jobs:
           update_latest: ${{ env.UPDATE_LATEST_TAG }}
 
     - name: Parse Jira Keys from All Commits
-      uses: VirtoCommerce/.github/actions/get-jira-keys@v3.1000.1
+      uses: VirtoCommerce/.github/actions/get-jira-keys@v3.1000.6
       if: always()
       id: jira_keys
       with:
@@ -320,7 +300,7 @@ jobs:
     needs: ci
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch') || (github.base_ref == 'dev') && (github.event_name == 'pull_request') }}
-    uses: VirtoCommerce/.github/.github/workflows/pytest-tests.yml@v3.1000.1
+    uses: VirtoCommerce/.github/.github/workflows/playwright-tests.yml@v3.1000.6
     with:
       installModules: 'true'
       installCustomModule: 'false'
@@ -348,10 +328,10 @@ jobs:
       PACKAGE_SERVER: 'ghcr.io'
     steps:
       - name: Install VirtoCommerce.GlobalTool
-        uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.1
+        uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.6
 
       - name: Swagger validation
-        uses: VirtoCommerce/.github/actions/docker-env@v3.1000.1
+        uses: VirtoCommerce/.github/actions/docker-env@v3.1000.6
         with:
           appInsightsInstrumentationKey: ${{ secrets.E2E_APPINSIGHTSINSTRUMENTATIONKEY }}
           githubUser: ${{ github.actor }}
@@ -365,7 +345,7 @@ jobs:
     needs:
       - ci
       - swagger-validation
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.1000.1
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.1000.6
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
@@ -390,7 +370,7 @@ jobs:
   trivy-scan:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     needs: 'ci'
-    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.1000.1
+    uses: VirtoCommerce/.github/.github/workflows/docker-image-vulnerability-process.yml@v3.1000.6
     with:
       assigneeAccountId: '621c47c0302c6b006af0a1cd'
       assigneeEmailAddress: 'andrew.kubyshkin@virtoworks.com'
@@ -398,7 +378,6 @@ jobs:
       imageRef: "ghcr.io/virtocommerce/platform"
       imageTag: ${{ needs.ci.outputs.tag }}
       jiraProject: 'VCST'
-      vulnerabilitySkipList: ${{ needs.ci.outputs.vulnSkipList }}
     secrets:
       JIRA_USER: ${{ secrets.JIRA_USER }}
       JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}

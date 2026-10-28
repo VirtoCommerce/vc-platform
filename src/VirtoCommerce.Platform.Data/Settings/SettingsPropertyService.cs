@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -193,9 +194,12 @@ namespace VirtoCommerce.Platform.Data.Settings
                 throw new InvalidOperationException($"Unknown setting: '{name}'");
             }
 
-            // Validate scope: tenant-assigned settings should only be saved with a tenant scope,
+            // Validate scope: a tenant-scoped value is accepted only for a setting registered for that tenant type
+            // (e.g. the user's own "me" values accept user profile settings, not store settings),
             // and global-only settings should not be saved with a tenant scope
-            if (!string.IsNullOrEmpty(tenantType) && !typeAssignments.ContainsKey(name))
+            if (!string.IsNullOrEmpty(tenantType) &&
+                (!typeAssignments.TryGetValue(name, out var assignedTypes) ||
+                 !assignedTypes.Contains(tenantType, StringComparer.OrdinalIgnoreCase)))
             {
                 throw new InvalidOperationException($"Setting '{name}' is not registered for tenant type '{tenantType}'");
             }
@@ -348,6 +352,8 @@ namespace VirtoCommerce.Platform.Data.Settings
                 SettingValueType.Boolean => Convert.ToBoolean(value),
                 SettingValueType.Integer or SettingValueType.PositiveInteger => Convert.ToInt32(value),
                 SettingValueType.Decimal => Convert.ToDecimal(value),
+                // the v2 API keeps date-like text as sent (SettingValues), so a date setting is parsed here, to UTC as MVC would
+                SettingValueType.DateTime when value is string text => DateTime.Parse(text, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal),
                 _ => value.ToString()
             };
         }

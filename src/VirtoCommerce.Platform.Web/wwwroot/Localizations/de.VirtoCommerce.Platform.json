@@ -18,7 +18,55 @@
       "assets": "Ressourcen",
       "toggle-favorites": "Umschalt + Leertaste zum Umschalten der Favoriten",
       "developer-tools": "Entwicklerwerkzeuge",
-      "help": "Hilfe"
+      "help": "Hilfe",
+      "main-menu": "Hauptmenü",
+      "collapse-menu": "Menü einklappen",
+      "expand-menu": "Menü ausklappen",
+      "theme": "Design",
+      "theme-light": "Hell",
+      "theme-dark": "Dunkel",
+      "theme-system": "Systemeinstellung",
+      "theme-classic": "Klassisch"
+    },
+    "theme": {
+      "preset": "Farbe",
+      "presets": {
+        "warm": "Warm",
+        "blue": "Blau",
+        "gray": "Grau",
+        "green": "Grün",
+        "indigo": "Indigo"
+      },
+      "welcome": {
+        "title": "Wählen Sie Ihr Design",
+        "intro": "Wählen Sie einen Modus und eine Farbvorlage. Das Ergebnis sehen Sie sofort hinter diesem Fenster. Ihre Wahl wird in diesem Browser gespeichert.",
+        "mode": "Modus",
+        "preset": "Farbvorlage",
+        "light-description": "Hell und klar, für gut beleuchtete Räume",
+        "dark-description": "Schont die Augen bei wenig Licht",
+        "system-description": "Folgt der Hell- oder Dunkel-Einstellung Ihres Geräts",
+        "classic-description": "Das ursprüngliche Virto Commerce-Design",
+        "classic-note": "Farbvorlagen gelten für den hellen und den dunklen Modus.",
+        "hint": "Mit Strg+Alt+T öffnen Sie dieses Fenster erneut.",
+        "apply": "Übernehmen",
+        "cancel": "Abbrechen"
+      }
+    },
+    "search": {
+      "placeholder": "Menü, Apps, Einstellungen durchsuchen",
+      "searching": "Suche läuft…",
+      "no-results": "Keine Treffer für „{{query}}“",
+      "clear": "Löschen",
+      "error": "Suche fehlgeschlagen",
+      "show-all": "Alle {{count}} anzeigen",
+      "hint-navigate": "zum Wechseln",
+      "hint-open": "zum Öffnen",
+      "hint-close": "zum Schließen",
+      "groups": {
+        "menu": "Menü",
+        "apps": "Apps",
+        "settings": "Einstellungen"
+      }
     },
     "navigation": {
       "back": "Zurück"
@@ -532,6 +580,7 @@
         "errors": {
           "login-failed": "Anmeldeversuch fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.",
           "account-locked": "Ihr Konto wurde gesperrt. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator.",
+          "two-factor-unavailable": "Für dieses Konto ist ein zweiter Anmeldeschritt erforderlich, der jedoch nicht verfügbar ist. Wenden Sie sich an Ihren Administrator.",
           "technical-error": "Authentifizierungsfehler. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator. (Code: {{code}})",
           "unknown-error": "Authentifizierungsfehler. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator."
         }
@@ -760,6 +809,7 @@
           "outcome": "Ergebnis",
           "succeeded": "Erfolgreich",
           "failed": "Fehlgeschlagen",
+          "awaiting-second-factor": "Wartet auf zweiten Faktor",
           "failure-reason": "Grund",
           "sign-in-type": "Typ",
           "ip-address": "IP-Adresse",
@@ -844,8 +894,10 @@
       "licensing": {
         "license-absent": "Community-Lizenz",
         "license-present": "{{type}}-Lizenz, läuft am {{expirationDate | amParse | date}} ab",
+        "license-present-short": "{{type}}-Lizenz",
         "community": "Community-Edition wird ausgeführt, klicken Sie hier, um eine kommerzielle Lizenz anzufordern",
         "expired": "Ihre Lizenz ist am {{expirationDate | amParse | date}} abgelaufen, bitte erneuern Sie sie",
+        "expired-short": "Lizenz abgelaufen",
         "purchase": "Kaufen",
         "renew": "Erneuern",
         "expiration-date": "Ablaufdatum"
