@@ -51,6 +51,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 throw new InvalidCollectionItemException("One or more items in the collection have a null or empty Name.");
             }
 
+            var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _repositoryFactory())
             {
                 var dbExistItems = await repository.GetDynamicPropertyDictionaryItemByIdsAsync(items.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray());
@@ -61,6 +62,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                     if (originalEntity != null)
                     {
                         modifiedEntity.Patch(originalEntity);
+                        pkMap.AddSavedPair(item, originalEntity);
                     }
                     else
                     {
@@ -68,6 +70,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
+                pkMap.ResolvePrimaryKeys();
 
                 DynamicPropertiesCacheRegion.ExpireRegion();
             }
