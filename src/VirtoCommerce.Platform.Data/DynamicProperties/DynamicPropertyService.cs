@@ -68,6 +68,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 throw new ArgumentNullException(nameof(properties));
             }
             var pkMap = new PrimaryKeyResolvingMap();
+            var savedEntities = new List<DynamicPropertyEntity>();
             using (var repository = _repositoryFactory())
             {
                 var dbExistProperties = (await repository.GetDynamicPropertiesForTypesAsync(properties.Select(x => x.ObjectType).Distinct().ToArray())).ToList();
@@ -78,18 +79,33 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                     if (originalEntity != null)
                     {
                         modifiedEntity.Patch(originalEntity);
+                        savedEntities.Add(originalEntity);
                     }
                     else
                     {
                         repository.Add(modifiedEntity);
+                        savedEntities.Add(modifiedEntity);
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
                 pkMap.ResolvePrimaryKeys();
 
+                for (var i = 0; i < properties.Length; i++)
+                {
+                    SyncGeneratedValues(savedEntities[i], properties[i]);
+                }
+
                 DynamicPropertiesCacheRegion.ExpireRegion();
             }
             return properties;
+        }
+
+        protected virtual void SyncGeneratedValues(DynamicPropertyEntity entity, DynamicProperty model)
+        {
+            model.CreatedDate = entity.CreatedDate;
+            model.CreatedBy = entity.CreatedBy;
+            model.ModifiedDate = entity.ModifiedDate;
+            model.ModifiedBy = entity.ModifiedBy;
         }
 
         public virtual async Task DeleteDynamicPropertiesAsync(string[] propertyIds)
