@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -63,6 +64,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                 throw new ArgumentNullException(nameof(operationLogs));
             }
             var pkMap = new PrimaryKeyResolvingMap();
+            var savedEntities = new List<OperationLogEntity>();
 
             using (var repository = _repositoryFactory())
             {
@@ -75,13 +77,21 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     if (existsEntity != null)
                     {
                         modifiedEntity.Patch(existsEntity);
+                        savedEntities.Add(existsEntity);
                     }
                     else
                     {
                         repository.Add(modifiedEntity);
+                        savedEntities.Add(modifiedEntity);
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
+
+                for (var i = 0; i < operationLogs.Length; i++)
+                {
+                    savedEntities[i].SyncGeneratedValues(operationLogs[i]);
+                }
+
                 Reset();
             }
         }

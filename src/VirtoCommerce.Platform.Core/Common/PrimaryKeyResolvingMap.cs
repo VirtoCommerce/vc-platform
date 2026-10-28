@@ -23,12 +23,9 @@ namespace VirtoCommerce.Platform.Core.Common
                 {
                     pair.Key.Id = pair.Value.Id;
 
-                    if (pair.Key is IAuditable transientAuditable && pair.Value is IAuditable persistentAuditable)
+                    if (pair.Value is AuditableEntity persistentEntity)
                     {
-                        transientAuditable.CreatedBy = persistentAuditable.CreatedBy;
-                        transientAuditable.CreatedDate = persistentAuditable.CreatedDate;
-                        transientAuditable.ModifiedBy = persistentAuditable.ModifiedBy;
-                        transientAuditable.ModifiedDate = persistentAuditable.ModifiedDate;
+                        persistentEntity.SyncGeneratedValues(pair.Key);
                     }
                 }
             }
