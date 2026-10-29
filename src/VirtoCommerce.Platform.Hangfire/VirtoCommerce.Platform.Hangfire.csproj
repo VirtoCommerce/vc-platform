@@ -24,6 +24,8 @@
     <PackageReference Include="Hangfire.Console" Version="1.4.3" />
     <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
     <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
+    <!-- Transitive override: Hangfire.MySqlStorage 2.0.3 pulls MySqlConnector 1.0.0 (GHSA-473q-m89c-ghf8, fixed in 2.6.1). -->
+    <PackageReference Include="MySqlConnector" Version="2.6.2" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />
     <PackageReference Include="HangFire.SqlServer" Version="1.8.23" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.13" />
