@@ -36,12 +36,14 @@ public class AdminUIAppService : IAdminUIAppService
             .ToList());
     }
 
-    /// <summary>
-    /// The returned list is shared: read it, don't change it.
-    /// </summary>
-    public IList<AdminUIApp> GetAdminUIs() => GetSnapshot().AdminUIs;
+    // Copies: the snapshot is shared by every request, so a caller that changes what it gets must not change routing
+    public IList<AdminUIApp> GetAdminUIs() => GetSnapshot().AdminUIs.Select(Copy).ToList();
 
-    public AdminUIApp GetRootAdminUI() => GetSnapshot().Root;
+    public AdminUIApp GetRootAdminUI()
+    {
+        var root = GetSnapshot().Root;
+        return root == null ? null : Copy(root);
+    }
 
     private Snapshot GetSnapshot()
     {
@@ -122,5 +124,17 @@ public class AdminUIAppService : IAdminUIAppService
         };
     }
 
-    private sealed record Snapshot(bool Enable, string RootAppId, AdminUIApp[] AdminUIs, AdminUIApp Root);
+    private static AdminUIApp Copy(AdminUIApp app) => new()
+    {
+        Id = app.Id,
+        ModuleId = app.ModuleId,
+        Title = app.Title,
+        Path = app.Path,
+        Url = app.Url,
+        Hosting = app.Hosting,
+        Priority = app.Priority,
+        IsRoot = app.IsRoot,
+    };
+
+        private sealed record Snapshot(bool Enable, string RootAppId, AdminUIApp[] AdminUIs, AdminUIApp Root);
 }

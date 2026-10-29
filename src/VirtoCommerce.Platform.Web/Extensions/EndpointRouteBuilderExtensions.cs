@@ -14,8 +14,8 @@ public static class EndpointRouteBuilderExtensions
     /// The page at the site root when no admin UI owns it. The platform itself is API only: admin UI modules
     /// declare themselves in module.manifest (&lt;app&gt; with &lt;adminUI&gt;), and VirtoCommerce:PlatformUI:RootApp
     /// picks the one served at "/". <see cref="Infrastructure.AdminUI.AdminUIMatcherPolicy"/> chooses between this
-    /// page and the admin UI pages mapped at "/"; the lowest order also lets any other endpoint a module maps at "/"
-    /// win over it. HEAD is answered too: load balancers probe "/" with it.
+    /// page and the admin UI pages mapped at "/"; its order (int.MaxValue, the lowest precedence) lets any other
+    /// endpoint a module maps at "/" win over it. HEAD is answered too: load balancers probe "/" with it.
     /// </summary>
     public static IEndpointConventionBuilder MapPlatformLandingPage(this IEndpointRouteBuilder endpoints)
     {

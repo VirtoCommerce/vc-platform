@@ -5,8 +5,9 @@ namespace VirtoCommerce.Platform.Core
     public class PlatformUIOptions
     {
         /// <summary>
-        /// False turns the admin UI off: the site root shows the platform's own page instead of any admin UI, and admin UI
-        /// modules refuse their pages. The API is not affected.
+        /// False turns the admin UI off: the site root shows the platform's own page instead of any admin UI, and the
+        /// AngularJS admin refuses its page (also at /apps/platform/). Static admin UI apps such as Admin Shell stay
+        /// reachable at /apps/{appId}/. The API is not affected.
         /// </summary>
         public bool Enable { get; set; } = true;
 

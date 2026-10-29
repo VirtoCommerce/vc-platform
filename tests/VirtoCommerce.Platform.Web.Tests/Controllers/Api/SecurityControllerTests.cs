@@ -1201,7 +1201,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _userManagerMock.Setup(x => x.GeneratePasswordResetTokenAsync(user)).ReturnsAsync("token-1");
             _userManagerMock.Setup(x => x.UpdateAsync(user)).ReturnsAsync(IdentityResult.Success);
             _adminUIAppServiceMock.Setup(x => x.GetAdminUIs()).Returns(angularJsAdminUrl == null
-                ? [new AdminUIApp { Id = "admin-shell", Url = "/" }]
+                ? [new AdminUIApp { Id = "admin-shell", Url = "/", IsRoot = true }]
                 : [new AdminUIApp { Id = "platform", Url = angularJsAdminUrl }]);
 
             UserRequestPasswordResetEvent published = null;
@@ -1221,6 +1221,33 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             // Assert
             published.Should().NotBeNull();
             published.CallbackUrl.Should().Be(expectedLink);
+        }
+
+        [Fact]
+        public async Task RequestPasswordReset_NoAdminUIAtTheRoot_LinkOpensAnInstalledAdminUI()
+        {
+            // Arrange: RootApp = none, Admin Shell installed (not at the root), no AngularJS admin
+            var user = new ApplicationUser { Id = "user-reset", UserName = "reset@test.com", Email = "reset@test.com" };
+            _userManagerMock.Setup(x => x.FindByNameAsync("reset@test.com")).ReturnsAsync(user);
+            _userManagerMock.Setup(x => x.GeneratePasswordResetTokenAsync(user)).ReturnsAsync("token-1");
+            _userManagerMock.Setup(x => x.UpdateAsync(user)).ReturnsAsync(IdentityResult.Success);
+            _adminUIAppServiceMock.Setup(x => x.GetAdminUIs()).Returns([new AdminUIApp { Id = "admin-shell", Url = "/apps/admin-shell/" }]);
+
+            UserRequestPasswordResetEvent published = null;
+            _eventPublisherMock
+                .Setup(x => x.Publish(It.IsAny<UserRequestPasswordResetEvent>(), It.IsAny<CancellationToken>()))
+                .Callback((UserRequestPasswordResetEvent e, CancellationToken _) => published = e)
+                .Returns(Task.CompletedTask);
+
+            var controller = CreateSecurityController();
+            controller.ControllerContext.HttpContext.Request.Scheme = "https";
+            controller.ControllerContext.HttpContext.Request.Host = new HostString("admin.example.com");
+
+            // Act
+            await controller.RequestPasswordReset("reset@test.com");
+
+            // Assert
+            published.CallbackUrl.Should().Be("https://admin.example.com/apps/admin-shell/#!/resetpassword/user-reset/token-1");
         }
     }
 }

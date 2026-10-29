@@ -759,6 +759,10 @@ namespace VirtoCommerce.Platform.Web
             // Wrap module middleware and error handling so all downstream cache lookups belong to this request.
             app.UseMiddleware<CacheMetricsMiddleware>();
 
+            // Picks the admin UI for "/" and serves endpoint-hosted admin UIs at /apps/{appId}/ by rewriting the path. First, so
+            // everything after it - module hooks, no-cache for /api, error handling, static files, routing - sees the rewritten path.
+            app.UseMiddleware<AdminUIMiddleware>();
+
             // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
             ModuleBootstrapper.Instance.RunConfigure(app, Configuration);
 
@@ -891,9 +895,6 @@ namespace VirtoCommerce.Platform.Web
             {
                 app.UseResponseCompression();
             }
-
-            // Picks the admin UI for "/" and mounts endpoint-hosted admin UIs at /apps/{appId}/, ahead of static files and routing
-            app.UseMiddleware<AdminUIMiddleware>();
 
             app.UseStaticFiles(new StaticFileOptions
             {

@@ -1383,12 +1383,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         /// <summary>
         /// The reset link opens the AngularJS admin's reset page, wherever that admin is: the site root or /apps/platform/
-        /// (VirtoCommerce:PlatformUI:RootApp). Without the AngularJS admin, the site root: Admin Shell takes the same link.
+        /// (VirtoCommerce:PlatformUI:RootApp). Without the AngularJS admin, the admin UI at the site root, or else the first
+        /// installed one: Admin Shell takes the same link.
         /// </summary>
         private string GetPasswordResetPagePath()
         {
-            return _adminUIAppService.GetAdminUIs()
-                .FirstOrDefault(x => x.Id.EqualsIgnoreCase(AppManifestService.PlatformAppId))?.Url ?? "/";
+            var adminUIs = _adminUIAppService.GetAdminUIs();
+
+            var adminUI = adminUIs.FirstOrDefault(x => x.Id.EqualsIgnoreCase(AppManifestService.PlatformAppId))
+                ?? adminUIs.FirstOrDefault(x => x.IsRoot)
+                ?? adminUIs.FirstOrDefault();
+
+            return adminUI?.Url ?? "/";
         }
 
         private bool IsUserEditable(string userName)

@@ -62,7 +62,7 @@ An admin UI is an `<app>` in `module.manifest` with an `<adminUI>` element. Plat
 
 ## How the platform routes
 
-* `AdminUIMiddleware`, ahead of static files and routing:
+* `AdminUIMiddleware`, first in the request pipeline (so module hooks, the API no-cache headers, error handling, static files and routing all see the rewritten path):
     * a request under `/apps/{appId}/` of an `Endpoint` admin UI is handled as if it came to the site root (`/apps/platform/api/...` as `/api/...`); the path base is unchanged, so cookies, token issuers and generated URLs stay those of the site root, and `AdminUIRequestFeature` tells the page its mount path. `/apps/{appId}` without the slash redirects to it;
     * `/` goes to the root admin UI: for an `App` one the path becomes `/apps/{appId}/`; otherwise the choice is left to the next step.
 * `AdminUIMatcherPolicy`: several pages map `/` — each `Endpoint` admin UI's and the platform's own notice. The policy keeps the page of the admin UI chosen for the request, or the notice when that admin UI has none.

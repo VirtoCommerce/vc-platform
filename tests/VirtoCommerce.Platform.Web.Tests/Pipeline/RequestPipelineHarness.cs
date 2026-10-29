@@ -16,11 +16,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Moq;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
-using VirtoCommerce.Platform.Web.Infrastructure.AdminUI;
 using VirtoCommerce.Platform.Web.Security;
 
 namespace VirtoCommerce.Platform.Web.Tests.Pipeline;
@@ -92,10 +90,6 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
                     services.AddOptions();
                     services.Configure<PlatformOptions>(_ => { });
                     services.AddRouting();
-
-                    // No admin UI installed: "/" would be the platform's own page
-                    services.AddSingleton(Mock.Of<IModuleService>(x => x.GetInstalledModules() == new List<ManifestModuleInfo>()));
-                    services.AddSingleton<IAdminUIAppService, AdminUIAppService>();
 
                     // The platform's own call, not a copy of what it configures: it reads
                     // ASPNETCORE_FORWARDEDHEADERS_ENABLED eagerly, which PlatformPipelineCollection's

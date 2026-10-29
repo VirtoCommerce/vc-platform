@@ -7,6 +7,9 @@ namespace VirtoCommerce.Platform.Core;
 /// </summary>
 public interface IAdminUIAppService
 {
+    /// <summary>
+    /// The installed admin UIs; changing what is returned doesn't change the platform's routing.
+    /// </summary>
     IList<AdminUIApp> GetAdminUIs();
 
     /// <summary>
