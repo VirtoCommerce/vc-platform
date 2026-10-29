@@ -149,8 +149,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public ActionResult<ModuleDescriptor[]> GetMissingDependencies([FromBody] ModuleDescriptor[] moduleDescriptors)
         {
             var moduleIds = moduleDescriptors.Select(x => x.Id).DistinctIgnoreCase().ToList();
+            var requests = moduleDescriptors.Select(x => new ModuleInstallRequest(x.Id, x.Version)).ToList();
 
-            var result = _moduleManagementService.GetDependencies(moduleIds)
+            var result = _moduleManagementService.GetDependencies(requests)
                 .Where(x => !x.IsInstalled)
                 .Where(x => !moduleIds.ContainsIgnoreCase(x.Id))
                 .Select(x => new ModuleDescriptor(x))
@@ -386,12 +387,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(string[]), StatusCodes.Status200OK)]
         public ActionResult<string[]> GetModulesLoadingOrder()
         {
-            var moduleIds = _moduleManagementService.GetModules()
+            var requests = _moduleManagementService.GetModules()
                 .Where(x => x.IsInstalled)
-                .Select(x => x.Id)
+                .Select(x => new ModuleInstallRequest(x.Id, x.Version.ToString()))
                 .ToList();
 
-            var loadingOrder = _moduleManagementService.GetDependencies(moduleIds)
+            var loadingOrder = _moduleManagementService.GetDependencies(requests)
                 .Select(x => x.Id)
                 .ToArray();
 

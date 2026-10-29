@@ -23,9 +23,8 @@ public interface IModuleManagementService
     /// <summary>
     /// Returns the given modules plus all their transitive dependencies (prerequisites), sorted in dependency order.
     /// Walks DOWN the dependency graph: "what do these modules need to be installed?"
-    /// Resolves module IDs to ManifestModuleInfo internally (installed version preferred, then latest available).
     /// </summary>
-    IList<ManifestModuleInfo> GetDependencies(IList<string> moduleIds);
+    IList<ManifestModuleInfo> GetDependencies(IList<ModuleInstallRequest> requests);
 
     /// <summary>
     /// Returns installed modules that depend ON the given modules (reverse dependencies).
