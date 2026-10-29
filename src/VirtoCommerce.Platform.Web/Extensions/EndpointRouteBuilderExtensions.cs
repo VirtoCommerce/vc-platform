@@ -23,11 +23,7 @@ public static class EndpointRouteBuilderExtensions
             .MapMethods("/", [HttpMethods.Get, HttpMethods.Head], (HttpContext context, IOptions<PlatformUIOptions> options, IAdminUIAppService adminUIAppService) =>
             {
                 var pathBase = WebUtility.HtmlEncode(context.Request.PathBase.Value);
-                var reason = !options.Value.Enable
-                    ? "The admin UI is turned off on this instance."
-                    : adminUIAppService.GetAdminUIs().Any()
-                        ? "No admin UI is served at the site root of this instance."
-                        : "No admin UI is installed on this instance.";
+                var reason = GetNoAdminUIReason(options.Value, adminUIAppService);
 
                 return Results.Content($$"""
                     <!DOCTYPE html>
@@ -56,5 +52,17 @@ public static class EndpointRouteBuilderExtensions
             .WithOrder(int.MaxValue)
             .AllowAnonymous()
             .ExcludeFromDescription();
+    }
+
+    private static string GetNoAdminUIReason(PlatformUIOptions options, IAdminUIAppService adminUIAppService)
+    {
+        if (!options.Enable)
+        {
+            return "The admin UI is turned off on this instance.";
+        }
+
+        return adminUIAppService.GetAdminUIs().Any()
+            ? "No admin UI is served at the site root of this instance."
+            : "No admin UI is installed on this instance.";
     }
 }

@@ -34,24 +34,17 @@ public sealed class AdminUIMatcherPolicy(IAdminUIAppService adminUIAppService) :
 
         for (var i = 0; i < candidates.Count; i++)
         {
-            var page = candidates.IsValidCandidate(i) ? candidates[i].Endpoint.Metadata.GetMetadata<AdminUIPageAttribute>() : null;
-
-            if (page == null)
+            switch (Classify(candidates, i, appId))
             {
-                continue;
-            }
-
-            if (page.AppId == null)
-            {
-                platformPage = i;
-            }
-            else if (appId != null && page.AppId.EqualsIgnoreCase(appId))
-            {
-                found = true;
-            }
-            else
-            {
-                candidates.SetValidity(i, false);
+                case Candidate.PlatformPage:
+                    platformPage = i;
+                    break;
+                case Candidate.ChosenAdminUIPage:
+                    found = true;
+                    break;
+                case Candidate.OtherAdminUIPage:
+                    candidates.SetValidity(i, false);
+                    break;
             }
         }
 
@@ -61,5 +54,30 @@ public sealed class AdminUIMatcherPolicy(IAdminUIAppService adminUIAppService) :
         }
 
         return Task.CompletedTask;
+    }
+
+    private static Candidate Classify(CandidateSet candidates, int index, string appId)
+    {
+        var page = candidates.IsValidCandidate(index) ? candidates[index].Endpoint.Metadata.GetMetadata<AdminUIPageAttribute>() : null;
+
+        if (page == null)
+        {
+            return Candidate.NotAdminUIPage;
+        }
+
+        if (page.AppId == null)
+        {
+            return Candidate.PlatformPage;
+        }
+
+        return appId != null && page.AppId.EqualsIgnoreCase(appId) ? Candidate.ChosenAdminUIPage : Candidate.OtherAdminUIPage;
+    }
+
+    private enum Candidate
+    {
+        NotAdminUIPage,
+        PlatformPage,
+        ChosenAdminUIPage,
+        OtherAdminUIPage,
     }
 }

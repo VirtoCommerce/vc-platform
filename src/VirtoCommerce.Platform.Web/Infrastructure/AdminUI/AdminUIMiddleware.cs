@@ -31,13 +31,13 @@ public class AdminUIMiddleware(RequestDelegate next, IAdminUIAppService adminUIA
                 if (!remaining.HasValue)
                 {
                     // Relative URLs of the page resolve against /apps/{appId}/ only with the trailing slash.
-                    // A relative Location ("platform/") keeps whatever prefix the client sees, without echoing it.
-                    var lastSegment = matched.Value![(matched.Value.LastIndexOf('/') + 1)..];
-                    context.Response.Redirect($"{lastSegment}/{request.QueryString}");
+                    // The Location is relative ("platform/", resolved against /apps/platform) and built from the
+                    // manifest's app id only: nothing from the request (path casing, query, forwarded prefix) goes in it.
+                    context.Response.Redirect($"{adminUI.Id}/");
                     return Task.CompletedTask;
                 }
 
-                return InvokeMountedAsync(context, remaining, adminUI.Id, matched.Value);
+                return InvokeMountedAsync(context, remaining, adminUI.Id, adminUI.Path);
             }
         }
 

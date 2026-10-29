@@ -98,7 +98,20 @@ public class AdminUIRoutingTests
         using var response = await client.GetAsync("/apps/platform?EmbeddedMode=true", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-        response.Headers.Location!.OriginalString.Should().Be("platform/?EmbeddedMode=true");
+        response.Headers.Location!.OriginalString.Should().Be("platform/");
+    }
+
+    [Fact]
+    public async Task AppPath_DifferentCasing_UsesTheManifestPathAndAppIdOnly()
+    {
+        using var host = await CreateHostAsync([AngularJsModule]);
+        using var client = host.GetTestClient();
+
+        (await GetAsync(host, "/APPS/Platform/")).Should().Be("angularjs mount=/apps/platform base=");
+
+        using var response = await client.GetAsync("/APPS/Platform?returnUrl=//evil.example", TestContext.Current.CancellationToken);
+        response.StatusCode.Should().Be(HttpStatusCode.Redirect);
+        response.Headers.Location!.OriginalString.Should().Be("platform/");
     }
 
     [Fact]
