@@ -1,6 +1,6 @@
 angular.module('platformWebApp').controller('platformWebApp.accountDetailController', [
-    '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.login',
-    function ($scope, bladeNavigationService, metaFormsService, accounts, authService, loginResources) {
+    '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.signInMethodService',
+    function ($scope, bladeNavigationService, metaFormsService, accounts, authService, signInMethodService) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
         blade.isLinkSent = false;
@@ -31,17 +31,10 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
         }
 
         function initializeBlade(data) {
-            // Load login types
-            loginResources.getLoginTypes().$promise.then(function (loginTypes) {
-                loginTypes = _.filter(loginTypes, function (loginTypeFilter) {
-                    return loginTypeFilter.authenticationType === "Password";
+            signInMethodService.getSignInMethods().then(function (signInMethods) {
+                blade.isPasswordLoginEnabled = _.some(signInMethods, function (signInMethod) {
+                    return signInMethod.kind === 'Password';
                 });
-
-                let loginType = _.first(_.sortBy(loginTypes, function (loginTypeSort) {
-                    return loginTypeSort.priority;
-                }));
-
-                blade.isPasswordLoginEnabled = loginType.enabled;
             });
 
             blade.currentEntity = angular.copy(data);

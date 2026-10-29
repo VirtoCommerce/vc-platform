@@ -772,6 +772,17 @@
           "user-agent": "Agente utente"
         }
       },
+      "sign-in-methods-list": {
+        "title": "Metodi di accesso",
+        "labels": {
+          "no-keys": "Nessuna chiave",
+          "unnamed-key": "Chiave senza nome",
+          "password-set": "La password è impostata",
+          "password-not-set": "La password non è impostata",
+          "linked-account": "Account collegato",
+          "changed": "Modificato il"
+        }
+      },
       "sign-in-log": {
         "title": "Registro accessi",
         "subtitle": "Tentativi di accesso e accesso per conto di",
@@ -939,6 +950,9 @@
       },
       "sign-in-log": {
         "title": "Registro accessi"
+      },
+      "sign-in-methods": {
+        "title": "Metodi di accesso"
       }
     },
     "dialogs": {
@@ -1073,6 +1087,13 @@
       "sessions-terminate-all": {
         "title": "Termina tutte",
         "message": "Sei sicuro di voler terminare tutte le sessioni utente?"
+      },
+      "sign-in-key-delete": {
+        "title": "Elimina chiave",
+        "message": "Sei sicuro di voler eliminare questa chiave?"
+      },
+      "set-password": {
+        "title": "Imposta password"
       },
       "delete-confirm": {
         "warning": "AVVISO: Questa modifica è permanente e non può essere annullata. L'applicazione di questa modifica può comportare la perdita di dati.",

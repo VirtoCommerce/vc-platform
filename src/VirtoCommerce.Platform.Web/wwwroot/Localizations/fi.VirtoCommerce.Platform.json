@@ -773,6 +773,17 @@
           "user-agent": "Käyttäjäagentti"
         }
       },
+      "sign-in-methods-list": {
+        "title": "Kirjautumistavat",
+        "labels": {
+          "no-keys": "Ei avaimia",
+          "unnamed-key": "Nimetön avain",
+          "password-set": "Salasana on asetettu",
+          "password-not-set": "Salasanaa ei ole asetettu",
+          "linked-account": "Linkitetty tili",
+          "changed": "Muutettu"
+        }
+      },
       "sign-in-log": {
         "title": "Kirjautumisloki",
         "subtitle": "Kirjautumisyritykset ja kirjautuminen toisen puolesta",
@@ -940,6 +951,9 @@
       },
       "sign-in-log": {
         "title": "Kirjautumisloki"
+      },
+      "sign-in-methods": {
+        "title": "Kirjautumistavat"
       }
     },
     "dialogs": {
@@ -1074,6 +1088,13 @@
       "sessions-terminate-all": {
         "title": "Lopeta kaikki",
         "message": "Haluatko varmasti lopettaa kaikki käyttäjäistunnot?"
+      },
+      "sign-in-key-delete": {
+        "title": "Poista avain",
+        "message": "Haluatko varmasti poistaa tämän avaimen?"
+      },
+      "set-password": {
+        "title": "Aseta salasana"
       },
       "delete-confirm": {
         "warning": "VAROITUS: Tämä muutos on pysyvä eikä sitä voi perua. Muutoksen toteuttaminen voi johtaa tietojen menetykseen.",

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using OpenIddict.Abstractions;
+using OpenIddict.Server.AspNetCore;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -18,6 +20,7 @@ using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using Xunit;
+using static VirtoCommerce.Platform.Core.PlatformConstants.Security.SystemRoles;
 using SignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
 
 namespace VirtoCommerce.Platform.Tests.Security;
@@ -25,6 +28,9 @@ namespace VirtoCommerce.Platform.Tests.Security;
 public class GrantTypeHandlerBaseTests
 {
     private const string _grantType = "test_grant";
+    private const string _backOfficeScheme = "Identity.Application";
+    private const string _tokenScheme = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme;
+    private const string _noRole = null;
 
     [Fact]
     public async Task HandleAsync_Should_ReturnBadRequest_When_AuthenticationFails()
@@ -52,19 +58,90 @@ public class GrantTypeHandlerBaseTests
         VerifySignInAttempt(context, succeeded: false, SignInFailureReason.Forbidden);
     }
 
-    [Fact]
-    public async Task HandleAsync_Should_ReturnBadRequest_When_UserCannotSignIn()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task HandleAsync_Should_ReturnBadRequest_When_UserCannotSignIn(bool isLockedOut)
     {
+        // Arrange
         var user = new ApplicationUser { Email = "buyer@acme.com" };
         var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
-        context.SignInManager.Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id))).ReturnsAsync(false);
 
+        context.SignInManager
+            .Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id)))
+            .ReturnsAsync(false);
+
+        context.UserManager
+            .Setup(x => x.IsLockedOutAsync(It.Is<ApplicationUser>(u => u.Id == user.Id)))
+            .ReturnsAsync(isLockedOut);
+
+        // Act
         var actionResult = await context.Handler.HandleAsync(context.RequestContext);
 
+        // Assert
         var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
         ((TokenResponse)badRequest.Value).Code.Should().Be("sign_in_not_allowed");
-        context.SignInManager.Verify(x => x.CreateUserPrincipalAsync(It.IsAny<ApplicationUser>()), Times.Never);
         VerifySignInAttempt(context, succeeded: false, SignInFailureReason.NotAllowed);
+    }
+
+    [Theory]
+    [InlineData(true, "user_is_temporary_locked_out")]
+    [InlineData(false, "login_failed")]
+    public async Task HandleAsync_Should_ReturnBadRequest_When_UserIsLockedOut(bool detailedErrors, string expectedErrorCode)
+    {
+        // Arrange
+        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
+        context.RequestContext.DetailedErrors = detailedErrors;
+
+        context.SignInManager
+            .Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id)))
+            .ReturnsAsync(true);
+
+        context.UserManager
+            .Setup(x => x.IsLockedOutAsync(It.Is<ApplicationUser>(u => u.Id == user.Id)))
+            .ReturnsAsync(true);
+
+        // Act
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
+
+        // Assert
+        var badRequest = actionResult.Should().BeOfType<BadRequestObjectResult>().Subject;
+        ((TokenResponse)badRequest.Value).Code.Should().Be(expectedErrorCode);
+        VerifySignInAttempt(context, succeeded: false, SignInFailureReason.LockedOut);
+    }
+
+    [Theory]
+    [InlineData(_tokenScheme, Customer, typeof(SignInResult), null)]
+    [InlineData(_backOfficeScheme, Customer, typeof(BadRequestObjectResult), SignInFailureReason.NotAllowed)]
+    [InlineData(_backOfficeScheme, Manager, typeof(SignInResult), null)]
+    [InlineData(_backOfficeScheme, _noRole, typeof(SignInResult), null)]
+    public async Task HandleAsync_Should_DenyCustomer_When_SigningInToBackOffice(string authenticationScheme, string role, Type expectedResultType, string expectedFailureReason)
+    {
+        // Arrange
+        var user = new ApplicationUser { Email = "buyer@acme.com" };
+        var context = CreateContext(validationResult: GrantValidationResult.Succeed(user));
+        context.RequestContext.AuthenticationScheme = authenticationScheme;
+        context.SignInManager.Object.UserManager = context.UserManager.Object;
+
+        context.SignInManager
+            .Setup(x => x.CanSignInAsync(It.Is<ApplicationUser>(u => u.Id == user.Id)))
+            .ReturnsAsync(true);
+
+        context.SignInManager
+            .Setup(x => x.CreateUserPrincipalAsync(It.Is<ApplicationUser>(u => u.Id == user.Id)))
+            .ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity()));
+
+        context.UserManager
+            .Setup(x => x.IsInRoleAsync(It.Is<ApplicationUser>(u => u.Id == user.Id), It.IsAny<string>()))
+            .ReturnsAsync((ApplicationUser _, string checkedRole) => checkedRole == role);
+
+        // Act
+        var actionResult = await context.Handler.HandleAsync(context.RequestContext);
+
+        // Assert
+        actionResult.Should().BeOfType(expectedResultType);
+        VerifySignInAttempt(context, succeeded: expectedFailureReason is null, expectedFailureReason);
     }
 
     [Fact]

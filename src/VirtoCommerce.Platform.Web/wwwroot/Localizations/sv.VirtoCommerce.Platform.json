@@ -773,6 +773,17 @@
           "user-agent": "Användaragent"
         }
       },
+      "sign-in-methods-list": {
+        "title": "Inloggningsmetoder",
+        "labels": {
+          "no-keys": "Inga nycklar",
+          "unnamed-key": "Namnlös nyckel",
+          "password-set": "Lösenordet är angivet",
+          "password-not-set": "Lösenordet är inte angivet",
+          "linked-account": "Länkat konto",
+          "changed": "Ändrat"
+        }
+      },
       "sign-in-log": {
         "title": "Inloggningslogg",
         "subtitle": "Inloggningsförsök och inloggning å annans vägnar",
@@ -940,6 +951,9 @@
       },
       "sign-in-log": {
         "title": "Inloggningslogg"
+      },
+      "sign-in-methods": {
+        "title": "Inloggningsmetoder"
       }
     },
     "dialogs": {
@@ -1074,6 +1088,13 @@
       "sessions-terminate-all": {
         "title": "Avsluta alla",
         "message": "Är du säker på att du vill avsluta alla användarsessioner?"
+      },
+      "sign-in-key-delete": {
+        "title": "Ta bort nyckel",
+        "message": "Är du säker på att du vill ta bort den här nyckeln?"
+      },
+      "set-password": {
+        "title": "Ange lösenord"
       },
       "delete-confirm": {
         "warning": "VARNING: Denna ändring är permanent och kan inte ångras. Att tillämpa denna ändring kan leda till dataförlust.",
