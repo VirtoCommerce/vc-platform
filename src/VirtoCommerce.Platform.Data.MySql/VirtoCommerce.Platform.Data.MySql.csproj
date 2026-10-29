@@ -17,6 +17,8 @@
     <!-- Don't update. Breaking Change: After 10.0.5 Microting changed assembly name and C# namespaces from Pomelo.EntityFrameworkCore.MySql to Microting.EntityFrameworkCore.MySql. -->
     <!-- Modules compiled against Pomelo.EntityFrameworkCore.MySql fail at runtime with MissingMethodException (UseMySqlDatabase). -->
     <PackageReference Include="Microting.EntityFrameworkCore.MySql" Version="10.0.5" />
+    <!-- Transitive override: Microting.EntityFrameworkCore.MySql 10.0.5 pulls MySqlConnector 2.5.0 (GHSA-473q-m89c-ghf8, fixed in 2.6.1). -->
+    <PackageReference Include="MySqlConnector" Version="2.6.2" />
   </ItemGroup>
 
   <ItemGroup>
