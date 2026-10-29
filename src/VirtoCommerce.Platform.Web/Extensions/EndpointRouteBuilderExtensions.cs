@@ -38,13 +38,12 @@ public static class EndpointRouteBuilderExtensions
                         <title>Virto Commerce Platform</title>
                         <style>
                             body { font-family: system-ui, sans-serif; margin: 2rem; color: #262626; }
-                            code { background: #f2f2f2; padding: 0 .25rem; }
                         </style>
                     </head>
                     <body>
                         <h1>Virto Commerce Platform</h1>
                         <p>The platform is running. {{reason}}</p>
-                        <p>To use the back office, install an admin UI module: <code>VirtoCommerce.AdminAngularJs</code>, <code>VirtoCommerce.AdminShell</code> or another one.</p>
+                        <p>To use the back office, install an admin UI module.</p>
                         <ul>
                             <li><a href="{{pathBase}}/docs">API documentation</a></li>
                             <li><a href="{{pathBase}}/health">Health</a></li>
