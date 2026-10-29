@@ -49,10 +49,10 @@ public class ModuleManagementService(
         EnsureInitialized();
     }
 
-    public IList<ManifestModuleInfo> GetDependencies(IList<string> moduleIds)
+    public IList<ManifestModuleInfo> GetDependencies(IList<ModuleInstallRequest> requests)
     {
         EnsureInitialized();
-        var modules = ResolveModulesById(moduleIds);
+        var modules = ResolveModules(requests);
         return ModuleBootstrapper.Instance.GetDependencies(modules, _mergedModules);
     }
 
@@ -133,15 +133,23 @@ public class ModuleManagementService(
         }
     }
 
-    private List<ManifestModuleInfo> ResolveModulesById(IList<string> moduleIds)
+    private List<ManifestModuleInfo> ResolveModules(IList<ModuleInstallRequest> requests)
     {
         var result = new List<ManifestModuleInfo>();
 
-        foreach (var id in moduleIds)
+        foreach (var request in requests)
         {
+            ManifestModuleInfo module = null;
+
+            if (!string.IsNullOrEmpty(request.Version))
+            {
+                var requestedIdentity = new ModuleIdentity(request.Id, SemanticVersion.Parse(request.Version));
+                module = _mergedModules.FirstOrDefault(x => x.Identity.Equals(requestedIdentity));
+            }
+
             // Prefer installed version; fall back to latest available
-            var module = _mergedModules.FirstOrDefault(x => x.IsInstalled && x.Id.EqualsIgnoreCase(id)) ??
-                         _mergedModules.Where(x => x.Id.EqualsIgnoreCase(id)).OrderByDescending(x => x.Version).FirstOrDefault();
+            module ??= _mergedModules.FirstOrDefault(x => x.IsInstalled && x.Id.EqualsIgnoreCase(request.Id)) ??
+                       _mergedModules.Where(x => x.Id.EqualsIgnoreCase(request.Id)).OrderByDescending(x => x.Version).FirstOrDefault();
 
             if (module != null)
             {
@@ -451,10 +459,17 @@ public class ModuleManagementService(
 
         try
         {
-            hasMissingDependencies = ModuleBootstrapper.Instance.GetDependencies([module], allModules)
+            var missingDependencies = ModuleBootstrapper.Instance.GetDependencies([module], allModules)
                 .Where(x => !x.IsInstalled)
                 .Except(dependenciesToIgnore)
-                .Any();
+                .ToList();
+
+            hasMissingDependencies = missingDependencies.Count > 0;
+
+            if (hasMissingDependencies)
+            {
+                Report(progress, ProgressMessageLevel.Error, "Module '{0}' requires modules that are not installed: {1}", module, string.Join(", ", missingDependencies.Select(x => $"'{x}'")));
+            }
         }
         catch (MissedModuleException ex)
         {
