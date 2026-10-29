@@ -4,6 +4,10 @@ namespace VirtoCommerce.Platform.Core
 {
     public class PlatformUIOptions
     {
+        /// <summary>
+        /// False turns the admin UI off: the site root shows the platform's own page instead of any admin UI, and admin UI
+        /// modules refuse their pages. The API is not affected.
+        /// </summary>
         public bool Enable { get; set; } = true;
 
         public EnvironmentBannerOptions EnvironmentBanner { get; set; } = new EnvironmentBannerOptions();

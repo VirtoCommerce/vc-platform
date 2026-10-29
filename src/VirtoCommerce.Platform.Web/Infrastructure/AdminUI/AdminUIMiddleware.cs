@@ -8,8 +8,10 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.AdminUI;
 /// <summary>
 /// Decides which admin UI answers a request, before static files and routing:
 /// <list type="bullet">
-/// <item>A request under <c>/apps/{appId}/</c> of an <see cref="AdminUIHosting.Endpoint"/> admin UI runs with that path as
-/// its path base, so the UI's page and every URL relative to it work there as they do at the site root.</item>
+/// <item>A request under <c>/apps/{appId}/</c> of an <see cref="AdminUIHosting.Endpoint"/> admin UI is handled as if it came
+/// to the site root (<c>/apps/platform/api/...</c> as <c>/api/...</c>), so the UI's page and every URL relative to it work
+/// there too. The path base is left alone, so cookies, token issuers and generated URLs stay those of the site root;
+/// <see cref="AdminUIRequestFeature.MountPath"/> tells the page where it is.</item>
 /// <item><c>/</c> goes to the root admin UI: an <see cref="AdminUIHosting.App"/> one gets <c>/apps/{appId}/</c> (its index page,
 /// the address stays <c>/</c>); for an <see cref="AdminUIHosting.Endpoint"/> one, or none, <see cref="AdminUIMatcherPolicy"/>
 /// picks the page.</item>
@@ -28,12 +30,14 @@ public class AdminUIMiddleware(RequestDelegate next, IAdminUIAppService adminUIA
             {
                 if (!remaining.HasValue)
                 {
-                    // Relative URLs of the page resolve against /apps/{appId}/ only with the trailing slash
-                    context.Response.Redirect($"{request.PathBase}{matched}/{request.QueryString}");
+                    // Relative URLs of the page resolve against /apps/{appId}/ only with the trailing slash.
+                    // A relative Location ("platform/") keeps whatever prefix the client sees, without echoing it.
+                    var lastSegment = matched.Value![(matched.Value.LastIndexOf('/') + 1)..];
+                    context.Response.Redirect($"{lastSegment}/{request.QueryString}");
                     return Task.CompletedTask;
                 }
 
-                return InvokeWithPathBaseAsync(context, matched, remaining, adminUI.Id);
+                return InvokeMountedAsync(context, remaining, adminUI.Id, matched.Value);
             }
         }
 
@@ -47,22 +51,20 @@ public class AdminUIMiddleware(RequestDelegate next, IAdminUIAppService adminUIA
             }
             else
             {
-                context.Features.Set(new AdminUIFeature(root?.Id));
+                context.Features.Set(new AdminUIRequestFeature(root?.Id, mountPath: null));
             }
         }
 
         return next(context);
     }
 
-    private async Task InvokeWithPathBaseAsync(HttpContext context, PathString matched, PathString remaining, string appId)
+    private async Task InvokeMountedAsync(HttpContext context, PathString remaining, string appId, string mountPath)
     {
         var request = context.Request;
         var originalPath = request.Path;
-        var originalPathBase = request.PathBase;
 
-        request.PathBase = originalPathBase.Add(matched);
         request.Path = remaining;
-        context.Features.Set(new AdminUIFeature(appId));
+        context.Features.Set(new AdminUIRequestFeature(appId, mountPath));
 
         try
         {
@@ -70,16 +72,7 @@ public class AdminUIMiddleware(RequestDelegate next, IAdminUIAppService adminUIA
         }
         finally
         {
-            request.PathBase = originalPathBase;
             request.Path = originalPath;
         }
     }
-}
-
-/// <summary>
-/// The admin UI chosen for the request; a null <see cref="AppId"/> means the platform's own page.
-/// </summary>
-public sealed class AdminUIFeature(string appId)
-{
-    public string AppId { get; } = appId;
 }

@@ -7,10 +7,11 @@ namespace VirtoCommerce.Platform.Core;
 /// </summary>
 public interface IAdminUIAppService
 {
-    IReadOnlyList<AdminUIApp> GetAdminUIs();
+    IList<AdminUIApp> GetAdminUIs();
 
     /// <summary>
-    /// The admin UI served at <c>/</c>, or null when the platform answers <c>/</c> with its own page.
+    /// The admin UI served at <c>/</c>, or null when the platform answers <c>/</c> with its own page: no admin UI is
+    /// installed, <c>RootApp</c> is <c>none</c>, or <c>VirtoCommerce:PlatformUI:Enable</c> is <c>false</c>.
     /// </summary>
     AdminUIApp GetRootAdminUI();
 }

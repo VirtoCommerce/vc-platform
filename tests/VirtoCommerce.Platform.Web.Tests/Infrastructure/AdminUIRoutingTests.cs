@@ -70,15 +70,15 @@ public class AdminUIRoutingTests
     {
         using var host = await CreateHostAsync([AngularJsModule]);
 
-        (await GetAsync(host, "/")).Should().Be("angularjs base=");
+        (await GetAsync(host, "/")).Should().Be("angularjs mount= base=");
     }
 
     [Fact]
-    public async Task AppPath_AngularJs_ReturnsAngularJsAdminWithItsPathAsPathBase()
+    public async Task AppPath_AngularJs_ReturnsAngularJsAdminWithItsMountPathAndTheSitePathBase()
     {
         using var host = await CreateHostAsync([AngularJsModule]);
 
-        (await GetAsync(host, "/apps/platform/")).Should().Be("angularjs base=/apps/platform");
+        (await GetAsync(host, "/apps/platform/")).Should().Be("angularjs mount=/apps/platform base=");
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class AdminUIRoutingTests
     {
         using var host = await CreateHostAsync([AngularJsModule]);
 
-        (await GetAsync(host, "/apps/platform/api/ping")).Should().Be("pong base=/apps/platform");
+        (await GetAsync(host, "/apps/platform/api/ping")).Should().Be("pong path=/api/ping base=");
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class AdminUIRoutingTests
         using var response = await client.GetAsync("/apps/platform?EmbeddedMode=true", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-        response.Headers.Location!.OriginalString.Should().Be("/apps/platform/?EmbeddedMode=true");
+        response.Headers.Location!.OriginalString.Should().Be("platform/?EmbeddedMode=true");
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class AdminUIRoutingTests
     {
         using var host = await CreateHostAsync([AngularJsModule, AdminShellModule]);
 
-        (await GetAsync(host, "/")).Should().Be("angularjs base=");
+        (await GetAsync(host, "/")).Should().Be("angularjs mount= base=");
         (await GetAsync(host, "/apps/admin-shell/")).Should().Be("admin-shell index");
     }
 
@@ -124,7 +124,7 @@ public class AdminUIRoutingTests
         using var host = await CreateHostAsync([AngularJsModule, AdminShellModule], rootApp: "admin-shell");
 
         (await GetAsync(host, "/")).Should().Be("admin-shell index");
-        (await GetAsync(host, "/apps/platform/")).Should().Be("angularjs base=/apps/platform");
+        (await GetAsync(host, "/apps/platform/")).Should().Be("angularjs mount=/apps/platform base=");
     }
 
     [Fact]
@@ -140,8 +140,8 @@ public class AdminUIRoutingTests
     {
         using var host = await CreateHostAsync([AngularJsModule, AdminShellModule], rootApp: "none");
 
-        (await GetAsync(host, "/")).Should().Contain("No admin UI is installed");
-        (await GetAsync(host, "/apps/platform/")).Should().Be("angularjs base=/apps/platform");
+        (await GetAsync(host, "/")).Should().Contain("No admin UI is served at the site root");
+        (await GetAsync(host, "/apps/platform/")).Should().Be("angularjs mount=/apps/platform base=");
     }
 
     [Fact]
@@ -149,7 +149,7 @@ public class AdminUIRoutingTests
     {
         using var host = await CreateHostAsync([AdminShellModule, AngularJsModule], rootApp: "no-such-app");
 
-        (await GetAsync(host, "/")).Should().Be("angularjs base=");
+        (await GetAsync(host, "/")).Should().Be("angularjs mount= base=");
     }
 
     [Fact]
@@ -174,6 +174,61 @@ public class AdminUIRoutingTests
         adminUIs["platform"].Should().BeEquivalentTo(new { Url = "/apps/platform/", Path = "/apps/platform", IsRoot = false, Hosting = AdminUIHosting.Endpoint, Priority = 100, Title = "Commerce Manager" });
     }
 
+    [Fact]
+    public async Task Root_PlatformUIDisabled_ReturnsPlatformPageSayingTheUIIsOff()
+    {
+        using var host = await CreateHostAsync([AngularJsModule, AdminShellModule], enable: false);
+
+        (await GetAsync(host, "/")).Should().Contain("The admin UI is turned off");
+    }
+
+    [Fact]
+    public async Task Root_RootAppNoneWithAdminUIsInstalled_SaysNoAdminUIIsServedAtTheRoot()
+    {
+        using var host = await CreateHostAsync([AngularJsModule], rootApp: "none");
+
+        (await GetAsync(host, "/")).Should().Contain("No admin UI is served at the site root");
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Root_Head_IsAnsweredForLoadBalancerProbes(bool angularJsInstalled)
+    {
+        using var host = await CreateHostAsync([angularJsInstalled ? AngularJsModule : SystemOperationsModule]);
+        using var client = host.GetTestClient();
+
+        using var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, "/"), TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Root_AnotherModuleEndpointAtRootWithoutAdminUI_WinsOverThePlatformPage()
+    {
+        using var host = await CreateHostAsync([SystemOperationsModule], otherRootEndpoint: true);
+
+        (await GetAsync(host, "/")).Should().Be("other root page");
+    }
+
+    [Theory]
+    [InlineData("endpoint", AdminUIHosting.Endpoint)]
+    [InlineData("Endpoint", AdminUIHosting.Endpoint)]
+    [InlineData("App", AdminUIHosting.App)]
+    [InlineData("Remote", AdminUIHosting.App)]
+    public void ManifestReader_AdminUIHosting_IsReadLenientlySoTheManifestStillLoads(string hosting, AdminUIHosting expected)
+    {
+        var xml = $"""
+            <module><id>X</id><version>3.1000.0</version><platformVersion>3.1000.0</platformVersion>
+              <apps><app id="x"><adminUI priority="7" hosting="{hosting}" /></app></apps>
+            </module>
+            """;
+
+        var manifest = ManifestReader.Read(new MemoryStream(Encoding.UTF8.GetBytes(xml)));
+
+        manifest.Apps[0].AdminUI.Should().BeEquivalentTo(new { Priority = 7, Hosting = expected });
+    }
+
     private static async Task<string> GetAsync(IHost host, string url)
     {
         using var client = host.GetTestClient();
@@ -182,7 +237,7 @@ public class AdminUIRoutingTests
         return await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
     }
 
-    private static AdminUIAppService CreateService(IEnumerable<string> manifests, string rootApp = null)
+    private static AdminUIAppService CreateService(IEnumerable<string> manifests, string rootApp = null, bool enable = true)
     {
         var modules = manifests
             .Select(xml => new ManifestModuleInfo().LoadFromManifest(ManifestReader.Read(new MemoryStream(Encoding.UTF8.GetBytes(xml)))))
@@ -192,14 +247,14 @@ public class AdminUIRoutingTests
         moduleService.Setup(x => x.GetInstalledModules()).Returns(modules);
 
         var options = new Mock<IOptionsMonitor<PlatformUIOptions>>();
-        options.Setup(x => x.CurrentValue).Returns(new PlatformUIOptions { RootApp = rootApp });
+        options.Setup(x => x.CurrentValue).Returns(new PlatformUIOptions { RootApp = rootApp, Enable = enable });
 
         return new AdminUIAppService(moduleService.Object, options.Object, NullLogger<AdminUIAppService>.Instance);
     }
 
-    private static Task<IHost> CreateHostAsync(IEnumerable<string> manifests, string rootApp = null)
+    private static Task<IHost> CreateHostAsync(IEnumerable<string> manifests, string rootApp = null, bool enable = true, bool otherRootEndpoint = false)
     {
-        var service = CreateService(manifests, rootApp);
+        var service = CreateService(manifests, rootApp, enable);
 
         return new HostBuilder()
             .ConfigureWebHost(webBuilder => webBuilder
@@ -207,6 +262,7 @@ public class AdminUIRoutingTests
                 .ConfigureServices(services =>
                 {
                     services.AddSingleton<IAdminUIAppService>(service);
+                    services.Configure<PlatformUIOptions>(options => options.Enable = enable);
                     services.AddSingleton<MatcherPolicy, AdminUIMatcherPolicy>();
                     services.AddControllersWithViews()
                         .ConfigureApplicationPartManager(manager => manager.ApplicationParts.Clear())
@@ -224,7 +280,12 @@ public class AdminUIRoutingTests
                         // Stand-ins for the static index pages the platform serves for apps
                         endpoints.MapGet("/apps/admin-shell/", () => "admin-shell index");
                         endpoints.MapGet("/apps/system-operations/", () => "system-operations index");
-                        endpoints.MapGet("/api/ping", (HttpContext context) => $"pong base={context.Request.PathBase}");
+                        if (otherRootEndpoint)
+                        {
+                            // A module's own page at "/" that isn't an admin UI page
+                            endpoints.MapGet("/", () => "other root page");
+                        }
+                        endpoints.MapGet("/api/ping", (HttpContext context) => $"pong path={context.Request.Path} base={context.Request.PathBase}");
                     });
                 }))
             .StartAsync();
@@ -236,10 +297,11 @@ public class AdminUIRoutingTests
 /// </summary>
 public class FakeAngularJsAdminController : Controller
 {
-    [HttpGet("/")]
+    [AcceptVerbs("GET", "HEAD", Route = "/")]
     [AdminUIPage("platform")]
     public ActionResult Index()
     {
-        return Content($"angularjs base={Request.PathBase}", "text/plain");
+        var mount = HttpContext.Features.Get<AdminUIRequestFeature>()?.MountPath;
+        return Content($"angularjs mount={mount} base={Request.PathBase}", "text/plain");
     }
 }

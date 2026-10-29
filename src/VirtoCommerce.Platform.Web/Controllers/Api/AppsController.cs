@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.Model.Modularity;
@@ -40,7 +41,7 @@ public class AppsController(IModuleService moduleService, IAdminUIAppService adm
                 return app;
             })
             // "platform", the AngularJS admin (Commerce Manager), keeps its place at the top
-            .OrderBy(x => x.Id != AppManifestService.PlatformAppId)
+            .OrderBy(x => !x.Id.EqualsIgnoreCase(AppManifestService.PlatformAppId))
             .ThenBy(x => x.Title)
             .ToList();
     }

@@ -25,7 +25,7 @@ public sealed class AdminUIMatcherPolicy(IAdminUIAppService adminUIAppService) :
 
     public Task ApplyAsync(HttpContext httpContext, CandidateSet candidates)
     {
-        var appId = httpContext.Features.Get<AdminUIFeature>() is { } feature
+        var appId = httpContext.Features.Get<AdminUIRequestFeature>() is { } feature
             ? feature.AppId
             : adminUIAppService.GetRootAdminUI()?.Id;
 

@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace VirtoCommerce.Platform.Core.Modularity;
@@ -15,6 +17,21 @@ public class ManifestAppAdminUI
     [XmlAttribute("priority")]
     public int Priority { get; set; }
 
-    [XmlAttribute("hosting")]
+    [XmlIgnore]
     public AdminUIHosting Hosting { get; set; }
+
+    /// <summary>
+    /// The <c>hosting</c> attribute as written in the manifest. Read as text so that a value this platform doesn't know
+    /// (a misspelling, or a hosting added by a later platform) falls back to <see cref="AdminUIHosting.App"/> instead
+    /// of making the whole manifest unreadable.
+    /// </summary>
+    [XmlAttribute("hosting")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public string HostingValue
+    {
+        get => Hosting.ToString();
+        set => Hosting = Enum.TryParse<AdminUIHosting>(value, ignoreCase: true, out var hosting) && Enum.IsDefined(hosting)
+            ? hosting
+            : AdminUIHosting.App;
+    }
 }

@@ -58,15 +58,19 @@ An admin UI is an `<app>` in `module.manifest` with an `<adminUI>` element. Plat
 |---|---|
 | `priority` | When `RootApp` is empty, the installed admin UI with the highest priority owns the site root. AngularJS admin: 100, Admin Shell: 50 |
 | `hosting="App"` | A static single-page app in the app's content folder (`Content/{appId}` or `<contentPath>`), served at `/apps/{appId}/`. As the root admin UI, the platform answers `/` with the app's index page and the address stays `/`. The page must load its files by absolute URLs (`/apps/{appId}/...`, what Vite emits with `base: "/apps/{appId}/"`) and route with the URL hash. |
-| `hosting="Endpoint"` | The module maps the page itself: an action at `/` marked with `[AdminUIPage("{appId}")]`. The platform also mounts the UI at `/apps/{appId}/` as a path base, so the page and every URL relative to it (`api/...`, bundles, the SignalR hub) work there too. The AngularJS admin uses it. |
+| `hosting="Endpoint"` | The module maps the page itself: an action at `/` marked with `[AdminUIPage("{appId}")]`, answering GET and HEAD. The platform also serves the UI at `/apps/{appId}/`: requests under that path are handled as if they came to the site root, so the page and every URL relative to it (`api/...`, bundles) work there too. The page puts `PathBase + AdminUIRequestFeature.MountPath + "/"` into its `<base href>`. The AngularJS admin uses it. Unknown `hosting` values are read as `App`. |
 
 ## How the platform routes
 
 * `AdminUIMiddleware`, ahead of static files and routing:
-    * a request under `/apps/{appId}/` of an `Endpoint` admin UI runs with that path as its path base (`/apps/{appId}` without the slash redirects to it);
+    * a request under `/apps/{appId}/` of an `Endpoint` admin UI is handled as if it came to the site root (`/apps/platform/api/...` as `/api/...`); the path base is unchanged, so cookies, token issuers and generated URLs stay those of the site root, and `AdminUIRequestFeature` tells the page its mount path. `/apps/{appId}` without the slash redirects to it;
     * `/` goes to the root admin UI: for an `App` one the path becomes `/apps/{appId}/`; otherwise the choice is left to the next step.
 * `AdminUIMatcherPolicy`: several pages map `/` — each `Endpoint` admin UI's and the platform's own notice. The policy keeps the page of the admin UI chosen for the request, or the notice when that admin UI has none.
 * `GET api/platform/apps` reports each admin UI's link where it opens: `/` for the root one, `/apps/{appId}` for the others.
+* The notice page and the AngularJS admin answer `HEAD /`, as load balancers probe the site root with it. The notice ranks last, so any other endpoint a module maps at `/` wins over it.
+* `VirtoCommerce:PlatformUI:Enable = false` turns the admin UI off: `/` shows the notice whatever `RootApp` says, and the AngularJS admin refuses its page (also at `/apps/platform/`).
+
+> **Reverse proxies and WAFs:** under `/apps/{appId}/` of an `Endpoint` admin UI the whole platform is reachable (`/apps/platform/api/...`, `/apps/platform/docs`). Authorization is the same as at the root; rules that allow or block paths by prefix need to cover the `/apps/{appId}/` form too.
 
 ## What the platform provides to an admin UI
 
@@ -79,7 +83,7 @@ An admin UI is an `<app>` in `module.manifest` with an `<adminUI>` element. Plat
 
 * `IHasHostEnvironment`: in `Initialize` the module adds its `Content/wwwroot` folder to `IWebHostEnvironment.WebRootFileProvider`. The SPA files keep the URLs they had in the platform (`/dist/app.js`, `/images/...`, `/css/...`), `asp-append-version` works, and a file of the platform's own `wwwroot` (`favicon.ico`, `swagger/`) wins over a module file with the same path.
 * `IModule.PostInitialize`: maps the SPA sources to `/$(Platform)/Scripts`, where non-bundled templates are loaded from in development builds.
-* An MVC controller renders the page at `/` (`[AdminUIPage("platform")]`) with the values of `IAdminUIContextProvider`; `<base href="~/">` follows the path base, so the same page works at `/apps/platform/`.
+* An MVC controller renders the page at `/` (`[AdminUIPage("platform")]`, GET and HEAD) with the values of `IAdminUIContextProvider`; its `<base href>` adds `AdminUIRequestFeature.MountPath`, so the same page works at `/apps/platform/`.
 * Its `Localizations` folder (`platform.*` strings) is read by the platform translation service like any other module's.
 
 The webpack build writes the bundles to `Content/wwwroot/dist`, not to `dist`: the platform loads every module's `dist/app.js` as an AngularJS plugin, and the AngularJS admin itself must not be loaded twice.

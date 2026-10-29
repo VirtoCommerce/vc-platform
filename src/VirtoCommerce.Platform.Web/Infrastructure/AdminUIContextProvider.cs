@@ -27,7 +27,7 @@ public class AdminUIContextProvider(
     {
         var context = new AdminUIContext
         {
-            PlatformVersion = PlatformVersion.CurrentVersion.ToString(),
+            PlatformVersion = PlatformVersion.CurrentVersion?.ToString(),
             DemoCredentials = platformOptions.Value.DemoCredentials,
             DemoResetTime = GetNextDemoResetTime(platformOptions.Value.DemoResetTime),
             AllowInstallModules = localStorageModuleCatalogOptions.Value.RefreshProbingFolderOnStart,

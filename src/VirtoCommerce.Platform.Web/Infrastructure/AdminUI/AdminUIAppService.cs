@@ -11,7 +11,8 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.AdminUI;
 
 /// <summary>
 /// The admin UIs come from the installed modules' <c>&lt;app&gt;</c> elements with <c>&lt;adminUI&gt;</c>.
-/// Installed modules don't change while the platform runs, so they are read once; the root app follows the options.
+/// Installed modules don't change while the platform runs, so they are read once; the result is kept until
+/// <c>RootApp</c> or <c>Enable</c> changes, because <see cref="AdminUIMiddleware"/> asks on every request.
 /// </summary>
 public class AdminUIAppService : IAdminUIAppService
 {
@@ -23,7 +24,7 @@ public class AdminUIAppService : IAdminUIAppService
     private readonly IOptionsMonitor<PlatformUIOptions> _options;
     private readonly ILogger<AdminUIAppService> _logger;
     private readonly Lazy<IReadOnlyList<(ManifestAppInfo App, string ModuleId)>> _apps;
-    private string _reportedUnknownRootApp;
+    private volatile Snapshot _snapshot;
 
     public AdminUIAppService(IModuleService moduleService, IOptionsMonitor<PlatformUIOptions> options, ILogger<AdminUIAppService> logger)
     {
@@ -35,28 +36,48 @@ public class AdminUIAppService : IAdminUIAppService
             .ToList());
     }
 
-    public IReadOnlyList<AdminUIApp> GetAdminUIs()
-    {
-        var root = GetRootAdminUI();
+    /// <summary>
+    /// The returned list is shared: read it, don't change it.
+    /// </summary>
+    public IList<AdminUIApp> GetAdminUIs() => GetSnapshot().AdminUIs;
 
-        var result = _apps.Value
+    public AdminUIApp GetRootAdminUI() => GetSnapshot().Root;
+
+    private Snapshot GetSnapshot()
+    {
+        var options = _options.CurrentValue;
+        var rootAppId = options.RootApp?.Trim() ?? string.Empty;
+        var snapshot = _snapshot;
+
+        if (snapshot == null || snapshot.Enable != options.Enable || snapshot.RootAppId != rootAppId)
+        {
+            snapshot = CreateSnapshot(options.Enable, rootAppId);
+            _snapshot = snapshot;
+        }
+
+        return snapshot;
+    }
+
+    private Snapshot CreateSnapshot(bool enable, string rootAppId)
+    {
+        var root = enable ? SelectRoot(rootAppId) : null;
+
+        var adminUIs = _apps.Value
             .Where(x => x.App.AdminUI != null)
             .Select(x => CreateAdminUI(x.App, x.ModuleId, root?.Id))
             .ToList();
 
         // An app made the root by configuration without declaring <adminUI>
-        if (root != null && !result.Any(x => x.Id.EqualsIgnoreCase(root.Id)))
+        if (root != null && !adminUIs.Any(x => x.Id.EqualsIgnoreCase(root.Id)))
         {
-            result.Add(root);
+            adminUIs.Add(root);
         }
 
-        return result;
+        return new Snapshot(enable, rootAppId, adminUIs.ToArray(), root);
     }
 
-    public AdminUIApp GetRootAdminUI()
+    private AdminUIApp SelectRoot(string rootAppId)
     {
-        var rootAppId = _options.CurrentValue.RootApp?.Trim();
-
         if (rootAppId.EqualsIgnoreCase(NoRootApp))
         {
             return null;
@@ -71,7 +92,7 @@ public class AdminUIAppService : IAdminUIAppService
                 return CreateAdminUI(configured.App, configured.ModuleId, configured.App.Id);
             }
 
-            ReportUnknownRootApp(rootAppId);
+            _logger.LogWarning("VirtoCommerce:PlatformUI:RootApp names the app {RootApp}, which no installed module declares. The site root falls back to the admin UI with the highest priority.", rootAppId);
         }
 
         // The highest priority wins; on a tie, the module that comes first in dependency order
@@ -101,14 +122,5 @@ public class AdminUIAppService : IAdminUIAppService
         };
     }
 
-    private void ReportUnknownRootApp(string rootAppId)
-    {
-        if (_reportedUnknownRootApp == rootAppId)
-        {
-            return;
-        }
-
-        _reportedUnknownRootApp = rootAppId;
-        _logger.LogWarning("VirtoCommerce:PlatformUI:RootApp names the app {RootApp}, which no installed module declares. The site root falls back to the admin UI with the highest priority.", rootAppId);
-    }
+    private sealed record Snapshot(bool Enable, string RootAppId, AdminUIApp[] AdminUIs, AdminUIApp Root);
 }
