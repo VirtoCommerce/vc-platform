@@ -48,5 +48,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// </summary>
         [XmlElement("pluginsDiscoveryFolder")]
         public string PluginsDiscoveryFolder { get; set; } = "plugins";
+
+        /// <summary>
+        /// Declares the app as an admin UI that can own the site root. See <see cref="ManifestAppAdminUI"/>.
+        /// </summary>
+        [XmlElement("adminUI")]
+        public ManifestAppAdminUI AdminUI { get; set; }
     }
 }

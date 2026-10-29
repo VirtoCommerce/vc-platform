@@ -5,7 +5,6 @@ Use this setup when you work on the platform code itself. It follows the [ASP.NE
 ## Prerequisites
 
 * [Visual Studio 2026](https://visualstudio.microsoft.com/) with the **ASP.NET and web development** workload, which includes the .NET 10 SDK
-* [Node.js LTS](https://nodejs.org/) with npm. The first build runs `npm install` and webpack for the admin UI.
 * SQL Server. Any of these works:
     * **SQL Server Express LocalDB**: Visual Studio Installer → Individual components
     * SQL Server Developer edition
@@ -23,7 +22,9 @@ Use this setup when you work on the platform code itself. It follows the [ASP.NE
 git clone https://github.com/VirtoCommerce/vc-platform.git
 ```
 
-Open `VirtoCommerce.Platform.sln`, set **VirtoCommerce.Platform.Web** as the startup project and build the solution. The first build restores npm packages and builds the admin UI bundles into `wwwroot/dist`. After changing admin UI scripts, rebuild them with `npm run webpack:build`, or keep `npm run webpack:watch` running in `src/VirtoCommerce.Platform.Web`.
+Open `VirtoCommerce.Platform.sln`, set **VirtoCommerce.Platform.Web** as the startup project and build the solution.
+
+The platform is API only. To get the back office, put an admin UI module into your modules folder: [VirtoCommerce.AdminAngularJs](https://github.com/VirtoCommerce/vc-module-admin-angular-js) (the AngularJS admin) and/or [VirtoCommerce.AdminShell](https://github.com/VirtoCommerce/vc-module-admin-shell) (the Vue admin). Their scripts are built in those repositories. See [Admin UI](./admin-ui.md).
 
 ## 2. Configure your machine, not the repository
 

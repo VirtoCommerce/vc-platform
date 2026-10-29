@@ -10,11 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Moq;
-using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Web.Controllers;
-using VirtoCommerce.Platform.Web.Licensing;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Web.Tests.Controllers;
@@ -69,13 +65,6 @@ public class ErrorPageTests
     {
         services.AddControllersWithViews()
             .AddApplicationPart(typeof(HomeController).Assembly);
-
-        // HomeController is activated through DI, so every constructor dependency has to resolve even
-        // though the Error action touches none of them.
-        services.AddOptions();
-        services.AddSingleton<Func<IPlatformRepository>>(() => throw new NotSupportedException());
-        services.AddSingleton<LicenseProvider>();
-        services.AddSingleton(new Mock<ISettingsManager>().Object);
     }
 
     private static void Configure(IApplicationBuilder app)
