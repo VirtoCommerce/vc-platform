@@ -14,7 +14,7 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Modularity;
 
-[Collection("Modularity")]
+[Collection(ModularityCollection.Name)]
 public sealed class ModuleManagementServiceTests : IDisposable
 {
     private const string _externalManifestJson = """
