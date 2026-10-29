@@ -26,7 +26,7 @@ public class AdminUIMiddleware(RequestDelegate next, IAdminUIAppService adminUIA
         foreach (var adminUI in adminUIAppService.GetAdminUIs())
         {
             if (adminUI.Hosting == AdminUIHosting.Endpoint &&
-                request.Path.StartsWithSegments(adminUI.Path, out var matched, out var remaining))
+                request.Path.StartsWithSegments(adminUI.Path, out _, out var remaining))
             {
                 if (!remaining.HasValue)
                 {
