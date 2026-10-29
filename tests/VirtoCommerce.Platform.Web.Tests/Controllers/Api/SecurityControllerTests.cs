@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Core.Security.SignInMethods;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Controllers.Api;
@@ -46,6 +47,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IAdminUIAccessPolicy> _adminUIAccessPolicyMock;
         private readonly Mock<IUserSignInLogSearchService> _userSignInLogSearchServiceMock;
         private readonly Mock<ITwoFactorSignInService> _twoFactorSignInServiceMock;
+        private readonly Mock<ISignInMethodService> _signInMethodServiceMock;
 
         private const string Password = "right";
         private const string TwoFactorStoreId = "mfa-store";
@@ -75,6 +77,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _twoFactorSignInServiceMock
                 .SetupGet(x => x.IsTwoFactorAvailable)
                 .Returns(() => _isTwoFactorAvailable);
+            _signInMethodServiceMock = new Mock<ISignInMethodService>();
             _logger = new Mock<ILogger<SecurityController>>();
 
             _adminUIAccessPolicyMock = new Mock<IAdminUIAccessPolicy>();
@@ -171,7 +174,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 _userSessionsServiceMock.Object,
                 _adminUIAccessPolicyMock.Object,
                 _userSignInLogSearchServiceMock.Object,
-                _twoFactorSignInServiceMock.Object);
+                _twoFactorSignInServiceMock.Object,
+                _signInMethodServiceMock.Object);
 
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
             controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
@@ -985,6 +989,121 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             // Assert
             var result = actual.ExtractFromOkResult();
             result.Succeeded.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ChangePassword_UserWithoutPassword_AddsPassword()
+        {
+            // Arrange
+            var user = new ApplicationUser { Id = "user-id", UserName = "sso-user" };
+
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(user.UserName))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.HasPasswordAsync(user))
+                .ReturnsAsync(false);
+
+            _userManagerMock
+                .Setup(x => x.AddPasswordAsync(user, "new"))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _controller = CreateSecurityController(securityOptions: CreateSecurityOptions());
+
+            SetCurrentUser(new ApplicationUser { Id = "admin-id", UserName = "operator" });
+
+            // Act
+            var actual = await _controller.ChangePassword(user.UserName, new ChangePasswordRequest { NewPassword = "new" });
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeTrue();
+            _userManagerMock.Verify(x => x.AddPasswordAsync(user, "new"), Times.Once);
+            _userManagerMock.Verify(x => x.ChangePasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        #endregion
+
+        #region SignInKeys
+
+        [Fact]
+        public async Task GetCurrentUserSignInMethods_ReturnsMethodsWithKeysOfCurrentUser()
+        {
+            // Arrange
+            var user = SetCurrentUser(new ApplicationUser { Id = "user-id", UserName = "operator" });
+            var signInMethods = new List<SignInMethod> { new() { Name = "Password" } };
+
+            _signInMethodServiceMock
+                .Setup(x => x.GetSignInMethodsAsync(user))
+                .ReturnsAsync(signInMethods);
+
+            // Act
+            var actual = await _controller.GetCurrentUserSignInMethods();
+
+            // Assert
+            actual.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeSameAs(signInMethods);
+        }
+
+        [Fact]
+        public async Task DeleteSignInKey_CurrentUser_DeletesKeyAndTerminatesSessions()
+        {
+            // Arrange
+            _controller = CreateSecurityController(securityOptions: CreateSecurityOptions());
+            var user = SetCurrentUser(new ApplicationUser { Id = "user-id", UserName = "operator" });
+
+            _signInMethodServiceMock
+                .Setup(x => x.DeleteKeyAsync(user, "Passkey", "key-id"))
+                .ReturnsAsync(IdentityResult.Success);
+
+            // Act
+            var actual = await _controller.DeleteSignInKey("Passkey", "key-id");
+
+            // Assert
+            actual.Should().BeOfType<NoContentResult>();
+            _signInMethodServiceMock.Verify(x => x.DeleteKeyAsync(user, "Passkey", "key-id"), Times.Once);
+            _userSessionsServiceMock.Verify(x => x.TerminateUserSessions(It.Is<TerminateUserSessionsRequest>(r => r.UserId == user.Id)), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteSignInKey_UserNonEditable_ReturnsBadRequest()
+        {
+            // Arrange
+            _controller = CreateSecurityController(securityOptions: CreateSecurityOptions("admin"));
+            SetCurrentUser(new ApplicationUser { Id = "admin-id", UserName = "admin" });
+
+            // Act
+            var actual = await _controller.DeleteSignInKey("Password", "password");
+
+            // Assert
+            actual.Should().BeOfType<BadRequestObjectResult>();
+            _signInMethodServiceMock.Verify(x => x.DeleteKeyAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task RenameSignInKey_UserNonEditable_ReturnsBadRequest()
+        {
+            // Arrange
+            _controller = CreateSecurityController(securityOptions: CreateSecurityOptions("admin"));
+            SetCurrentUser(new ApplicationUser { Id = "admin-id", UserName = "admin" });
+
+            // Act
+            var actual = await _controller.RenameSignInKey("Passkey", "key-id", new SignInKeyRenameRequest { Name = "Laptop" });
+
+            // Assert
+            actual.Should().BeOfType<BadRequestObjectResult>();
+            _signInMethodServiceMock.Verify(x => x.RenameKeyAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        private static Mock<IOptions<AuthorizationOptions>> CreateSecurityOptions(params string[] nonEditableUsers)
+        {
+            var options = new Mock<IOptions<AuthorizationOptions>>();
+
+            options
+                .SetupGet(x => x.Value)
+                .Returns(new AuthorizationOptions { NonEditableUsers = nonEditableUsers });
+
+            return options;
         }
 
         #endregion

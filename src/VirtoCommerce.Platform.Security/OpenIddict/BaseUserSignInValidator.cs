@@ -6,6 +6,7 @@ using VirtoCommerce.Platform.Core.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Security.OpenIddict
 {
+    [Obsolete("The password grant and GrantTypeHandlerBase do not call token request validators after a failed sign-in.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class BaseUserSignInValidator : ITokenRequestValidator
     {
         public int Priority { get; set; }
@@ -22,10 +23,7 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
 
                 if (context.DetailedErrors && context.SignInResult.IsLockedOut)
                 {
-                    var permanentLockOut = context.User.LockoutEnd == DateTime.MaxValue.ToUniversalTime();
-                    error = permanentLockOut
-                        ? SecurityErrorDescriber.UserIsLockedOut()
-                        : SecurityErrorDescriber.UserIsTemporaryLockedOut();
+                    error = SecurityErrorDescriber.GetLockoutError(context.User);
                 }
                 else
                 {

@@ -11,14 +11,15 @@ using NetEscapades.AspNetCore.SecurityHeaders.Headers.ContentSecurityPolicy;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Core.Security.SignInMethods;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Handlers;
-using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
-using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.SignInLog;
+using VirtoCommerce.Platform.Security.SignInMethods;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -69,8 +70,11 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
-            services.AddTransient<ITokenRequestValidator, BaseUserSignInValidator>();
             services.AddScoped<ITwoFactorSignInService, TwoFactorSignInService>();
+
+            services.AddScoped<ISignInMethodService, SignInMethodService>();
+            services.AddScoped<ISignInMethodProvider, PasswordSignInMethodProvider>();
+            services.AddScoped<ISignInMethodProvider, ExternalSignInMethodProvider>();
 
             if (setupAction != null)
             {

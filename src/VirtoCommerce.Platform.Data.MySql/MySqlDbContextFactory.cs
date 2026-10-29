@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using VirtoCommerce.Platform.Data.Repositories;
-using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 
 namespace VirtoCommerce.Platform.Data.MySql
@@ -35,12 +34,6 @@ namespace VirtoCommerce.Platform.Data.MySql
                 ResolveServerVersion(serverVersion, connectionString),
                 db => db
                     .MigrationsAssembly(typeof(MySqlDataAssemblyMarker).Assembly.GetName().Name));
-
-            builder.UseOpenIddict<VirtoOpenIddictEntityFrameworkCoreApplication,
-                VirtoOpenIddictEntityFrameworkCoreAuthorization,
-                VirtoOpenIddictEntityFrameworkCoreScope,
-                VirtoOpenIddictEntityFrameworkCoreToken,
-                string>();
 
             return new SecurityDbContext(builder.Options);
         }

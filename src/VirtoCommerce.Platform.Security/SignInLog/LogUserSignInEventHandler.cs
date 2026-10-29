@@ -5,10 +5,8 @@ using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Security.Events;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Security.SignInLog
 {
@@ -20,13 +18,14 @@ namespace VirtoCommerce.Platform.Security.SignInLog
     /// </summary>
     public class LogUserSignInEventHandler : IEventHandler<UserSignInAttemptEvent>
     {
-        // Column lengths from SecurityDbContext. User agent and user name are unvalidated client
+        // Column lengths from SecurityDbContext. User agent, user name and client ID are unvalidated client
         // input, and an over-length value would fail the whole batched insert, discarding every
         // other record in it - including impersonation rows.
-        private const int UserNameLength = 256;
-        private const int UserAgentLength = 512;
-        private const int HostLength = 256;
-        private const int FailureReasonLength = 64;
+        private const int _userNameLength = 256;
+        private const int _userAgentLength = 512;
+        private const int _hostLength = 256;
+        private const int _failureReasonLength = 64;
+        private const int _clientIdLength = 128;
 
         private readonly IUserSignInLogWriter _writer;
         private readonly ISettingsManager _settingsManager;
@@ -72,15 +71,15 @@ namespace VirtoCommerce.Platform.Security.SignInLog
             var record = AbstractTypeFactory<UserSignInLog>.TryCreateInstance();
 
             record.CreatedDate = DateTime.UtcNow;
-            record.UserName = Truncate(message.UserName, UserNameLength);
+            record.UserName = Truncate(message.UserName, _userNameLength);
             record.UserId = message.UserId;
             record.Succeeded = message.Succeeded;
-            record.FailureReason = Truncate(message.FailureReason, FailureReasonLength);
+            record.FailureReason = Truncate(message.FailureReason, _failureReasonLength);
             record.SignInType = message.SignInType;
             record.Provider = message.Provider;
             record.OperatorUserId = message.OperatorUserId;
-            record.OperatorUserName = Truncate(message.OperatorUserName, UserNameLength);
-            record.ClientId = message.ClientId;
+            record.OperatorUserName = Truncate(message.OperatorUserName, _userNameLength);
+            record.ClientId = Truncate(message.ClientId, _clientIdLength);
             record.SessionId = message.SessionId;
             record.StoreId = message.StoreId;
             record.MemberId = message.MemberId;
@@ -89,13 +88,13 @@ namespace VirtoCommerce.Platform.Security.SignInLog
             if (httpContext != null)
             {
                 record.IpAddress = httpContext.Connection.RemoteIpAddress?.ToString();
-                record.UserAgent = Truncate(httpContext.Request.Headers.UserAgent.ToString().EmptyToNull(), UserAgentLength);
+                record.UserAgent = Truncate(httpContext.Request.Headers.UserAgent.ToString().EmptyToNull(), _userAgentLength);
 
                 // Which domain the attempt was aimed at. Several storefront hosts commonly resolve to
                 // one deployment, and the request is otherwise identical whichever one was used.
                 // Behind a proxy this is only the real host when forwarded-headers handling is on -
                 // like the user agent, it is unvalidated client input, hence the truncation.
-                record.Host = Truncate(httpContext.Request.Host.Value.EmptyToNull(), HostLength);
+                record.Host = Truncate(httpContext.Request.Host.Value.EmptyToNull(), _hostLength);
             }
 
             // Request context is captured here because only this thread has it; everything a module

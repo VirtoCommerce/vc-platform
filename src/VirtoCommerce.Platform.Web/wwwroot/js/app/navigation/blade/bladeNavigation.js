@@ -363,7 +363,16 @@ angular.module('platformWebApp')
                 return data.exceptionMessage || data.message;
             }
 
-            return angular.isArray(data.errors) ? data.errors.join('<br>') : undefined;
+            if (!angular.isArray(data.errors)) {
+                return undefined;
+            }
+
+            // Errors are strings or identity errors, e.g. [{ code: '...', description: '...' }]
+            var errors = _.filter(_.map(data.errors, function (error) {
+                return angular.isString(error) ? error : error && error.description;
+            }), function (error) { return !!error; });
+
+            return errors.length ? errors.join('<br>') : undefined;
         }
 
         function clearError(blade) {

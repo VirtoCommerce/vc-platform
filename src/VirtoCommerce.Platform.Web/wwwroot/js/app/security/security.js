@@ -6,32 +6,19 @@ angular.module('platformWebApp')
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 data: { allowAnonymous: true },
                 controller: [
-                    '$scope', '$window', '$translate', '$log', 'platformWebApp.authService', 'platformWebApp.externalSignInService',
-                    'platformWebApp.login', 'platformWebApp.externalSignInStorage', 'platformWebApp.twoFactorSignInState',
-                    function ($scope, $window, $translate, $log, authService, externalSignInService, loginResources, externalSignInStorage,
-                        twoFactorSignInState) {
-                        $scope.loginProviders = [];
+                    '$scope', '$translate', '$log',
+                    'platformWebApp.authService', 'platformWebApp.twoFactorSignInState', 'platformWebApp.signInMethodService',
+                    function ($scope, $translate, $log, authService, twoFactorSignInState, signInMethodService) {
+                        $scope.signInMethods = [];
                         $scope.showPassword = false;
                         $scope.showPlainLogin = true;
 
-                        loginResources.getLoginTypes({}, function (loginTypes) {
-                            var passwordLogin = _.find(loginTypes, function (loginTypeFilter) {
-                                return loginTypeFilter.authenticationType === 'Password';
+                        signInMethodService.getSignInMethods().then(function (signInMethods) {
+                            $scope.showPlainLogin = _.some(signInMethods, function (signInMethod) {
+                                return signInMethod.kind === 'Password';
                             });
-                            $scope.showPlainLogin = !!passwordLogin && passwordLogin.enabled;
 
-                            externalSignInService.getProviders().then(
-                                function (response) {
-                                    // compare external providers with the lists of login types to determines which ones has a template (password, azureAD)
-                                    // and which ones can be activated by navigating the auth endpoing directly
-                                    _.each(response.data, function (provider) {
-                                        var type = _.find(loginTypes, function (enabledLoginType) {
-                                            return enabledLoginType.authenticationType === provider.authenticationType && enabledLoginType.hasLoginForm;
-                                        });
-                                        provider.hasTemplate = !!type;
-                                    });
-                                    $scope.loginProviders = response.data;
-                                });
+                            $scope.signInMethods = _.where(signInMethods, { canSignIn: true });
                         });
 
                         $scope.user = {};
@@ -39,15 +26,18 @@ angular.module('platformWebApp')
                         $scope.authReason = false;
                         $scope.loginProgress = false;
 
-                        $scope.externalLogin = function (provider) {
-                            // set external signIn data
-                            var signInData = {
-                                providerType: provider.authenticationType
-                            };
-                            externalSignInStorage.set(signInData);
+                        $scope.signIn = function (signInMethod) {
+                            $scope.authError = null;
+                            $scope.loginProgress = true;
 
-                            var url = 'externalsignin?authenticationType=' + provider.authenticationType;
-                            $window.location.href = url;
+                            signInMethodService.signIn(signInMethod).then(
+                                function () {
+                                    $scope.loginProgress = false;
+                                },
+                                function (response) {
+                                    $scope.loginProgress = false;
+                                    $scope.authError = resolveSignInError(response);
+                                });
                         };
 
                         $scope.ok = function () {
@@ -61,16 +51,16 @@ angular.module('platformWebApp')
                                     if (result && result.requiresTwoFactor && twoFactorSignInState.exists()) {
                                         twoFactorSignInState.go({ rememberMe: $scope.user.remember });
                                     } else if (!result || !result.succeeded) {
-                                        $scope.authError = resolveSignInError(result);
+                                        $scope.authError = resolvePasswordSignInError(result);
                                     }
                                 },
                                 function (response) {
                                     $scope.loginProgress = false;
-                                    $scope.authError = resolveTechnicalError(response);
+                                    $scope.authError = resolveSignInError(response);
                                 });
                         };
 
-                        function resolveSignInError(result) {
+                        function resolvePasswordSignInError(result) {
                             if (result && result.isLockedOut) {
                                 return $translate.instant('platform.blades.login.errors.account-locked');
                             }
@@ -80,11 +70,20 @@ angular.module('platformWebApp')
                             return $translate.instant('platform.blades.login.errors.login-failed');
                         }
 
-                        function resolveTechnicalError(response) {
+                        function resolveSignInError(response) {
+                            const status = response && response.status;
+
+                            if (status === 400) {
+                                const code = response.data && response.data.code;
+
+                                return code === 'user_is_locked_out' || code === 'user_is_temporary_locked_out'
+                                    ? $translate.instant('platform.blades.login.errors.account-locked')
+                                    : $translate.instant('platform.blades.login.errors.login-failed');
+                            }
+
                             // Do not expose raw exception details to the user — log them instead and show a generic, localized message.
                             $log.error('Login request failed', response);
 
-                            var status = response && response.status;
                             if (status === 401) {
                                 return $translate.instant('platform.blades.login.errors.login-failed');
                             }
@@ -218,6 +217,11 @@ angular.module('platformWebApp')
                 params: {
                     onClose: null
                 },
+                resolve: {
+                    dialog: function () {
+                        return {};
+                    }
+                },
                 controller: 'platformWebApp.changePasswordDialog'
             })
 
@@ -230,11 +234,12 @@ angular.module('platformWebApp')
             });
     }])
 
-    .controller('platformWebApp.changePasswordDialog', ['$rootScope', '$state', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($rootScope, $state, $scope, $stateParams, accounts, authService, passwordValidationService) {
+    .controller('platformWebApp.changePasswordDialog', ['$rootScope', '$state', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', 'dialog', function ($rootScope, $state, $scope, $stateParams, accounts, authService, passwordValidationService, dialog) {
         if (!authService.isAuthenticated) {
             $state.go('loginDialog');
         }
 
+        $scope.requireCurrentPassword = dialog.requireCurrentPassword !== false;
         $scope.userName = authService.userName;
         $scope.canCancel = !authService.passwordExpired;
 
@@ -279,7 +284,8 @@ angular.module('platformWebApp')
     }])
 
     .run(['$transitions', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
-        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService) {
+        '$window', 'platformWebApp.signInMethodService', 'platformWebApp.dialogService', 'platformWebApp.externalSignInStorage',
+        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService, $window, signInMethodService, dialogService, externalSignInStorage) {
             //Register module in main menu
             var menuItem = {
                 path: 'configuration/security',
@@ -375,6 +381,40 @@ angular.module('platformWebApp')
                 template: '$(Platform)/Scripts/app/security/widgets/accountSignInLogWidget.html',
                 permission: 'platform:security:sign_in_log:read'
             }, 'accountDetail');
+
+            signInMethodService.onSignInMethodsLoaded(function (signInMethods) {
+                _.each(signInMethods, function (signInMethod) {
+                    switch (signInMethod.kind) {
+                        case 'External':
+                            signInMethodService.extendSignInMethod(signInMethod.name, {
+                                keyTemplateUrl: '$(Platform)/Scripts/app/userProfile/templates/external-sign-in-key.html',
+                                signIn: function () {
+                                    externalSignInStorage.set({ providerType: signInMethod.name });
+                                    $window.location.href = 'externalsignin?authenticationType=' + signInMethod.name;
+                                }
+                            });
+
+                            break;
+                        case 'Password':
+                            signInMethodService.extendSignInMethod(signInMethod.name, {
+                                keyTemplateUrl: '$(Platform)/Scripts/app/userProfile/templates/password-sign-in-key.html',
+                                noKeysTitle: 'platform.blades.sign-in-methods-list.labels.password-not-set',
+                                createKey: function () {
+                                    const dialog = {
+                                        id: 'changePasswordDialog',
+                                        requireCurrentPassword: false
+                                    };
+
+                                    dialogService.showDialog(dialog, '$(Platform)/Scripts/app/security/dialogs/changePasswordDialog.tpl.html', 'platformWebApp.changePasswordDialog');
+
+                                    return dialog.instance.result;
+                                }
+                            });
+
+                            break;
+                    }
+                });
+            });
 
 
             $transitions.onBefore({ to: 'workspace.**' }, function (transition) {
