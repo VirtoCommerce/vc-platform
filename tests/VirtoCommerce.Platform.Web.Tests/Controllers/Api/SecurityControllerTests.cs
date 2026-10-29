@@ -48,6 +48,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IUserSignInLogSearchService> _userSignInLogSearchServiceMock;
         private readonly Mock<ITwoFactorSignInService> _twoFactorSignInServiceMock;
         private readonly Mock<ISignInMethodService> _signInMethodServiceMock;
+        private readonly Mock<IAdminUIAppService> _adminUIAppServiceMock = new();
 
         private const string Password = "right";
         private const string TwoFactorStoreId = "mfa-store";
@@ -175,7 +176,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 _adminUIAccessPolicyMock.Object,
                 _userSignInLogSearchServiceMock.Object,
                 _twoFactorSignInServiceMock.Object,
-                _signInMethodServiceMock.Object);
+                _signInMethodServiceMock.Object,
+                _adminUIAppServiceMock.Object);
 
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
             controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
@@ -1185,5 +1187,40 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             };
 
         #endregion
+
+        [Theory]
+        [InlineData(null, "", "https://admin.example.com/#!/resetpassword/user-reset/token-1")]
+        [InlineData("/", "", "https://admin.example.com/#!/resetpassword/user-reset/token-1")]
+        [InlineData("/apps/platform/", "", "https://admin.example.com/apps/platform/#!/resetpassword/user-reset/token-1")]
+        [InlineData("/apps/platform/", "/vc", "https://admin.example.com/vc/apps/platform/#!/resetpassword/user-reset/token-1")]
+        public async Task RequestPasswordReset_LinkOpensTheAngularJsAdminWhereverItIs(string angularJsAdminUrl, string pathBase, string expectedLink)
+        {
+            // Arrange
+            var user = new ApplicationUser { Id = "user-reset", UserName = "reset@test.com", Email = "reset@test.com" };
+            _userManagerMock.Setup(x => x.FindByNameAsync("reset@test.com")).ReturnsAsync(user);
+            _userManagerMock.Setup(x => x.GeneratePasswordResetTokenAsync(user)).ReturnsAsync("token-1");
+            _userManagerMock.Setup(x => x.UpdateAsync(user)).ReturnsAsync(IdentityResult.Success);
+            _adminUIAppServiceMock.Setup(x => x.GetAdminUIs()).Returns(angularJsAdminUrl == null
+                ? [new AdminUIApp { Id = "admin-shell", Url = "/" }]
+                : [new AdminUIApp { Id = "platform", Url = angularJsAdminUrl }]);
+
+            UserRequestPasswordResetEvent published = null;
+            _eventPublisherMock
+                .Setup(x => x.Publish(It.IsAny<UserRequestPasswordResetEvent>(), It.IsAny<CancellationToken>()))
+                .Callback((UserRequestPasswordResetEvent e, CancellationToken _) => published = e)
+                .Returns(Task.CompletedTask);
+
+            var controller = CreateSecurityController();
+            controller.ControllerContext.HttpContext.Request.Scheme = "https";
+            controller.ControllerContext.HttpContext.Request.Host = new HostString("admin.example.com");
+            controller.ControllerContext.HttpContext.Request.PathBase = pathBase;
+
+            // Act
+            await controller.RequestPasswordReset("reset@test.com");
+
+            // Assert
+            published.Should().NotBeNull();
+            published.CallbackUrl.Should().Be(expectedLink);
+        }
     }
 }
