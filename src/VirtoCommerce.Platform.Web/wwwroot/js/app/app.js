@@ -418,6 +418,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 return !!(target && target.data && target.data.allowAnonymous);
             }
 
+            function isWorkspaceHash() {
+                return ($window.location.hash || '').indexOf('#!/workspace/') === 0;
+            }
+
             var homeMenuItem = {
                 path: 'home',
                 title: 'platform.menu.home',
@@ -492,6 +496,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 //timeout need because $state not fully loading in run method and need to wait little time
                 $timeout(function () {
                     var currentState = $state.current;
+                    var pendingState = $state.transition && $state.transition.to();
                     if (!authContext.isAuthenticated) {
                         // currentuser is [AllowAnonymous] and answers 200 with an empty body, so an
                         // anonymous visitor lands here on every bootstrap - including one who followed
