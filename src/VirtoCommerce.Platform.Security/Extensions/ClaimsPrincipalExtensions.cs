@@ -1,15 +1,23 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 
 namespace VirtoCommerce.Platform.Security.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {
+        [Obsolete("Use IsPasswordSignIn() instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static bool IsExternalSignIn(this ClaimsPrincipal claimsPrincipal)
         {
-            return claimsPrincipal?.GetAuthenticationMethod() != null;
+            return claimsPrincipal != null && !claimsPrincipal.IsPasswordSignIn();
+        }
+
+        public static bool IsPasswordSignIn(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal?.GetAuthenticationMethod() == SignInType.Password;
         }
 
         public static string GetAuthenticationMethod(this ClaimsPrincipal claimsPrincipal)

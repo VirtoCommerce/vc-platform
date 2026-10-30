@@ -28,6 +28,7 @@ namespace VirtoCommerce.Platform.Tests.Security;
 public class GrantTypeHandlerBaseTests
 {
     private const string _grantType = "test_grant";
+    private const string _signInType = "TestSignIn";
     private const string _backOfficeScheme = "Identity.Application";
     private const string _tokenScheme = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme;
     private const string _noRole = null;
@@ -222,7 +223,7 @@ public class GrantTypeHandlerBaseTests
 
         var signInResult = actionResult.Should().BeOfType<SignInResult>().Subject;
         signInResult.Principal.Should().NotBeNull();
-        signInResult.Principal.FindFirst(ClaimTypes.AuthenticationMethod).Should().BeNull();
+        signInResult.Principal.FindFirstValue(ClaimTypes.AuthenticationMethod).Should().Be(_signInType);
         context.RequestContext.User.LastLoginDate.Should().NotBeNull();
         context.UserManager.Verify(x => x.UpdateAsync(It.Is<ApplicationUser>(u => u.Id == user.Id)), Times.Once);
         context.EventPublisher.Verify(x => x.Publish(It.IsAny<BeforeUserLoginEvent>()), Times.Once);
@@ -305,7 +306,7 @@ public class GrantTypeHandlerBaseTests
         context.EventPublisher.Verify(x => x.Publish(It.Is<UserSignInAttemptEvent>(e =>
             e.Succeeded == succeeded &&
             e.FailureReason == failureReason &&
-            e.SignInType == _grantType)), Times.Once);
+            e.SignInType == _signInType)), Times.Once);
     }
 
     private static ITokenRequestValidator CreateRejectingValidator(int priority, TokenResponse error)
@@ -424,7 +425,7 @@ public class GrantTypeHandlerBaseTests
 
         public override string GrantType => _grantType;
 
-        protected override string SignInType => _grantType;
+        protected override string SignInType => _signInType;
 
         protected override Task<GrantValidationResult> ValidateGrantAsync(TokenRequestContext context)
         {
