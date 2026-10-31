@@ -96,6 +96,11 @@ namespace VirtoCommerce.Platform.Core.Common
             return string.IsNullOrEmpty(a) ? null : a;
         }
 
+        public static string WhiteSpaceToNull(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? null : value;
+        }
+
         public static bool EqualsOrNullEmpty(this string str1, string str2, StringComparison comparisonType)
         {
             return string.Compare(str1 ?? "", str2 ?? "", comparisonType) == 0;

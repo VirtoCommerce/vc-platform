@@ -6,11 +6,13 @@ using EntityFrameworkCore.Triggers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Security.Model;
-using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.SignInLog;
 using static VirtoCommerce.Platform.Data.Infrastructure.DbContextBase;
 
@@ -28,6 +30,27 @@ namespace VirtoCommerce.Platform.Security.Repositories
         {
         }
 
+        public static void ConfigureIdentityOptions(IdentityOptions options)
+        {
+            options.Stores.MaxLengthForKeys = 128;
+            options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            // The base context reads IdentityOptions from the application service provider, which design-time factories do not set
+            if (optionsBuilder.Options.FindExtension<CoreOptionsExtension>()?.ApplicationServiceProvider == null)
+            {
+                var serviceProvider = new ServiceCollection()
+                    .Configure<IdentityOptions>(ConfigureIdentityOptions)
+                    .BuildServiceProvider();
+
+                optionsBuilder.UseApplicationServiceProvider(serviceProvider);
+            }
+        }
+
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             base.ConfigureConventions(configurationBuilder);
@@ -38,6 +61,12 @@ namespace VirtoCommerce.Platform.Security.Repositories
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.UseOpenIddict<VirtoOpenIddictEntityFrameworkCoreApplication,
+                VirtoOpenIddictEntityFrameworkCoreAuthorization,
+                VirtoOpenIddictEntityFrameworkCoreScope,
+                VirtoOpenIddictEntityFrameworkCoreToken,
+                string>();
 
             builder.Entity<UserApiKeyEntity>().ToAuditableEntityTable("UserApiKey");
             builder.Entity<UserApiKeyEntity>().Property(x => x.ApiKey).HasMaxLength(Length128);

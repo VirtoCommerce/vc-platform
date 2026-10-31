@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace VirtoCommerce.Platform.Security.OpenIddict
@@ -11,6 +14,23 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
             Code = nameof(LoginFailed).ToSnakeCase(),
             ErrorDescription = "Login attempt failed. Please check your credentials."
         };
+
+        public static TokenResponse GetLockoutError(ApplicationUser user)
+        {
+            return user.LockoutEnd == DateTime.MaxValue.ToUniversalTime()
+                ? UserIsLockedOut()
+                : UserIsTemporaryLockedOut();
+        }
+
+        public static TokenResponse MissingParameters(IEnumerable<string> parameters)
+        {
+            return new TokenResponse
+            {
+                Error = Errors.InvalidRequest,
+                Code = nameof(MissingParameters).ToSnakeCase(),
+                ErrorDescription = $"Missing required parameters: {string.Join(", ", parameters)}.",
+            };
+        }
 
         public static TokenResponse UserIsLockedOut() => new()
         {

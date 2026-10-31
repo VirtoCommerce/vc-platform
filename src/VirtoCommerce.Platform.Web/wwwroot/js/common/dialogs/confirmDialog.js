@@ -70,6 +70,8 @@ angular.module('platformWebApp')
             );
 
             dialogService.dialogs.push(dlg);
+        } else {
+            dialog.instance = dlg.instance;
         }
     };
 

@@ -772,6 +772,17 @@
           "user-agent": "ユーザーエージェント"
         }
       },
+      "sign-in-methods-list": {
+        "title": "サインイン方法",
+        "labels": {
+          "no-keys": "キーがありません",
+          "unnamed-key": "名前のないキー",
+          "password-set": "パスワードは設定されています",
+          "password-not-set": "パスワードは設定されていません",
+          "linked-account": "リンクされたアカウント",
+          "changed": "変更日"
+        }
+      },
       "sign-in-log": {
         "title": "サインインログ",
         "subtitle": "サインイン試行と代理サインイン",
@@ -939,6 +950,9 @@
       },
       "sign-in-log": {
         "title": "サインインログ"
+      },
+      "sign-in-methods": {
+        "title": "サインイン方法"
       }
     },
     "dialogs": {
@@ -1073,6 +1087,13 @@
       "sessions-terminate-all": {
         "title": "すべて終了",
         "message": "すべてのユーザーセッションを終了してもよろしいですか？"
+      },
+      "sign-in-key-delete": {
+        "title": "キーを削除",
+        "message": "このキーを削除してもよろしいですか？"
+      },
+      "set-password": {
+        "title": "パスワードを設定"
       },
       "delete-confirm": {
         "warning": "警告: この変更は永久的で、元に戻すことはできません。この変更を適用すると、データが失われる可能性があります。",

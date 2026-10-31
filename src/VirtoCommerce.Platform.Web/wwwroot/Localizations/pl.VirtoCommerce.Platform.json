@@ -772,6 +772,17 @@
           "user-agent": "Agent użytkownika"
         }
       },
+      "sign-in-methods-list": {
+        "title": "Metody logowania",
+        "labels": {
+          "no-keys": "Brak kluczy",
+          "unnamed-key": "Klucz bez nazwy",
+          "password-set": "Hasło jest ustawione",
+          "password-not-set": "Hasło nie jest ustawione",
+          "linked-account": "Połączone konto",
+          "changed": "Zmieniono"
+        }
+      },
       "sign-in-log": {
         "title": "Dziennik logowań",
         "subtitle": "Próby logowania i logowanie w imieniu",
@@ -939,6 +950,9 @@
       },
       "sign-in-log": {
         "title": "Dziennik logowań"
+      },
+      "sign-in-methods": {
+        "title": "Metody logowania"
       }
     },
     "dialogs": {
@@ -1073,6 +1087,13 @@
       "sessions-terminate-all": {
         "title": "Zakończ wszystkie",
         "message": "Czy na pewno chcesz zakończyć wszystkie sesje użytkowników?"
+      },
+      "sign-in-key-delete": {
+        "title": "Usuń klucz",
+        "message": "Czy na pewno chcesz usunąć ten klucz?"
+      },
+      "set-password": {
+        "title": "Ustaw hasło"
       },
       "delete-confirm": {
         "warning": "OSTRZEŻENIE: Ta zmiana jest trwała i nie można jej cofnąć. Zastosowanie tej zmiany może spowodować utratę danych.",

@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .directive('vaHeaderUserProfileWidget', [
-        '$document', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.login', 'platformWebApp.userProfileIconService',
-        function ($document, $state, authService, dialogService, loginResources, userProfileIconService) {
+        '$document', '$state', 'platformWebApp.authService', 'platformWebApp.userProfileIconService',
+        function ($document, $state, authService, userProfileIconService) {
 
             return {
                 restrict: 'E',
@@ -10,25 +10,11 @@ angular.module('platformWebApp')
                 scope: {},
                 templateUrl: '$(Platform)/Scripts/app/security/login/headerUserProfileWidget.tpl.html',
                 link: function (scope) {
-
-                    loginResources.getLoginTypes().$promise.then(function (loginTypes) {
-                        loginTypes = _.filter(loginTypes, function (loginTypeFilter) {
-                            return loginTypeFilter.authenticationType === "Password";
-                        });
-
-                        let loginType = _.first(_.sortBy(loginTypes, function (loginTypeSort) {
-                            return loginTypeSort.priority;
-                        }));
-
-                        scope.isPasswordLoginEnabled = loginType.enabled;
-                    });
-
                     scope.dropDownOpened = false;
                     scope.userLogin = '';
                     scope.fullName = '';
                     scope.userType = '';
                     scope.isAdministrator = false;
-                    scope.isSsoAuthenticationMethod = false;
                     scope.userIconUrl = userProfileIconService.getUserIconUrl();
 
                     function handleClickEvent(event) {
@@ -46,13 +32,6 @@ angular.module('platformWebApp')
                         authService.logout();
                     };
 
-                    scope.changePassword = () => {
-                        var dialog = {
-                            id: "changePasswordDialog"
-                        };
-                        dialogService.showDialog(dialog, '$(Platform)/Scripts/app/security/dialogs/changePasswordDialog.tpl.html', 'platformWebApp.changePasswordDialog');
-                    };
-
                     scope.manageProfile = function () {
                         $state.go('workspace.userProfile');
                     };
@@ -68,7 +47,6 @@ angular.module('platformWebApp')
                         scope.fullName = authService.fullName;
                         scope.userType = authService.userType;
                         scope.isAdministrator = authService.isAdministrator;
-                        scope.isSsoAuthenticationMethod = authService.isSsoAuthenticationMethod;
                     });
 
                     scope.$watch(function () {

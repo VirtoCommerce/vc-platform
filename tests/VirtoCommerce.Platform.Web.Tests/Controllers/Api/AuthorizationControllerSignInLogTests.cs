@@ -93,6 +93,10 @@ public class AuthorizationControllerSignInLogTests
         _userManager = new Mock<UserManager<ApplicationUser>>(
             Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null);
 
+        _userManager
+            .Setup(x => x.IsLockedOutAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync((ApplicationUser u) => u.LockoutEnabled && u.LockoutEnd >= DateTimeOffset.UtcNow);
+
         _signInManager = new Mock<SignInManager<ApplicationUser>>(
             _userManager.Object,
             Mock.Of<IHttpContextAccessor>(),
@@ -286,6 +290,34 @@ public class AuthorizationControllerSignInLogTests
         var attempt = _published.Should().ContainSingle().Subject;
         attempt.Succeeded.Should().BeFalse();
         attempt.FailureReason.Should().Be(SignInFailureReason.NotAllowed);
+        attempt.UserId.Should().Be("user-1");
+        attempt.OperatorUserId.Should().Be("op-1");
+    }
+
+    [Fact]
+    public async Task Exchange_ImpersonateGrant_TargetLockedOut_PublishesLockedOut()
+    {
+        var operatorUser = new ApplicationUser { Id = "op-1", UserName = "support@virtocommerce.com" };
+
+        var target = new ApplicationUser
+        {
+            Id = "user-1",
+            UserName = "b2badmin@test.com",
+            LockoutEnabled = true,
+            LockoutEnd = DateTime.MaxValue.ToUniversalTime(),
+        };
+
+        var controller = CreateController(operatorUser, permitted: true, targetUserId: "user-1", target: target);
+
+        var result = await controller.Exchange();
+
+        result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.Value.Should().BeOfType<TokenResponse>()
+            .Which.Code.Should().Be("user_is_locked_out");
+
+        var attempt = _published.Should().ContainSingle().Subject;
+        attempt.Succeeded.Should().BeFalse();
+        attempt.FailureReason.Should().Be(SignInFailureReason.LockedOut);
         attempt.UserId.Should().Be("user-1");
         attempt.OperatorUserId.Should().Be("op-1");
     }
@@ -486,8 +518,7 @@ public class AuthorizationControllerSignInLogTests
     {
         // Arrange
         var handler = CreateTwoFactorSignInHandler(new BadRequestResult());
-        var controller = BuildController(PasswordRequest(_twoFactorBuyer, password: "wrong"),
-            validators: [new BaseUserSignInValidator()], twoFactorSignInHandlers: [handler.Object]);
+        var controller = BuildController(PasswordRequest(_twoFactorBuyer, password: "wrong"), twoFactorSignInHandlers: [handler.Object]);
 
         // Act
         var actionResult = await controller.Exchange();
@@ -539,6 +570,40 @@ public class AuthorizationControllerSignInLogTests
         await controller.Exchange();
 
         // Ordinary token rotation is high volume and low value - deliberately not audited.
+        _published.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Exchange_RefreshToken_LockedOutUser_ReturnsTemporaryLockoutError()
+    {
+        var user = new ApplicationUser
+        {
+            Id = "user-1",
+            UserName = "b2badmin@test.com",
+            LockoutEnabled = true,
+            LockoutEnd = DateTimeOffset.UtcNow.AddMinutes(15),
+        };
+
+        var controller = BuildRefreshController(user, operatorUserId: null, operatorUserName: null);
+
+        var result = await controller.Exchange();
+
+        result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.Value.Should().BeOfType<TokenResponse>()
+            .Which.Code.Should().Be("user_is_temporary_locked_out");
+    }
+
+    [Fact]
+    public async Task SignIn_EmptyBody_ReturnsBadRequest()
+    {
+        // Arrange
+        var controller = BuildController(new OpenIddictRequest());
+
+        // Act
+        var result = await controller.SignIn(parameters: null);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
         _published.Should().BeEmpty();
     }
 
