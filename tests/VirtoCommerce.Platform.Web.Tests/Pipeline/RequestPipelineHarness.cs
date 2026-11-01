@@ -63,7 +63,7 @@ internal sealed class RequestPipelineHarness : IAsyncDisposable
     public static async Task<RequestPipelineHarness> StartAsync()
     {
         var contentRoot = Path.Combine(Path.GetTempPath(), "vc-pipeline-harness-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(Path.Combine(contentRoot, "js"));
+        Directory.CreateDirectory(contentRoot);
 
         var previousBootstrapper = ModuleBootstrapper.Instance;
         var bootstrapper = new ModuleBootstrapper(NullLoggerFactory.Instance, new LocalStorageModuleCatalogOptions());
