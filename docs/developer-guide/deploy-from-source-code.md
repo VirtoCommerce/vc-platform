@@ -32,30 +32,13 @@ Or use Visual Studio
 * Open VirtoCommerce.Platform.sln in Visual Studio
 * Build Solution
 
-### Build Frontend 
+### Admin UI
 
-!!! note
-    While building the solution the first time from the Visual Studio, npm references should be installed and webpack should be built automatically. This would be done if Web project have this nuget package added - [VirtoCommerce.BuildWebpack](https://www.nuget.org/packages/VirtoCommerce.BuildWebpack/). It adds webpack build target to the project, which create frontend bundles on initial build._
-    In case of changing frontend part, explicit local build would be required to pack style/script bundles._
-
-
-#### To make a local build:
-1. Open console
-    ```console
-    cd src\VirtoCommerce.Platform.Web
-    ```
-2. Install the dependencies
-    ```console
-    npm ci
-    ```
-3. Build frontend application
-    ```console
-    npm run webpack:build
-    ```
-4. Watch changes
-    ```console
-    npm run webpack:watch
-    ```
+The platform is API only and has no frontend build. The back office comes from admin UI modules, installed like any
+other module: [VirtoCommerce.AdminAngularJs](https://github.com/VirtoCommerce/vc-module-admin-angular-js) (the AngularJS
+admin, Commerce Manager) and [VirtoCommerce.AdminShell](https://github.com/VirtoCommerce/vc-module-admin-shell) (the Vue
+admin). Without them, the site root shows a short notice with links to the API documentation and the health check.
+See [Admin UI](./admin-ui.md).
 
 ## Initial Configuration 
 

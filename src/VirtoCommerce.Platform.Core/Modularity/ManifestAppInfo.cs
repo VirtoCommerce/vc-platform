@@ -22,6 +22,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Placement = item.Placement
                         ?? (item.SupportEmbeddedMode ? AppPlacement.MainMenu : AppPlacement.AppMenu);
             PluginsDiscoveryFolder = item.PluginsDiscoveryFolder;
+            AdminUI = item.AdminUI;
         }
 
         public string Id { get; set; }
@@ -54,5 +55,10 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// targeting this app. Defaults to <c>plugins</c> when null/empty.
         /// </summary>
         public string PluginsDiscoveryFolder { get; set; }
+
+        /// <summary>
+        /// Set when the app is an admin UI that can own the site root.
+        /// </summary>
+        public ManifestAppAdminUI AdminUI { get; set; }
     }
 }

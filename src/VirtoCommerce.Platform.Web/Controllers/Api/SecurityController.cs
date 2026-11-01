@@ -22,6 +22,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Core.Security.SignInMethods;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
@@ -55,6 +56,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserSessionsService _userSessionsService;
         private readonly IUserSignInLogSearchService _userSignInLogSearchService;
         private readonly IAdminUIAccessPolicy _adminUIAccessPolicy;
+        private readonly IAdminUIAppService _adminUIAppService;
         private readonly ITwoFactorSignInService _twoFactorSignInService;
         private readonly ISignInMethodService _signInMethodService;
 
@@ -78,8 +80,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IAdminUIAccessPolicy adminUIAccessPolicy,
             IUserSignInLogSearchService userSignInLogSearchService,
             ITwoFactorSignInService twoFactorSignInService,
-            ISignInMethodService signInMethodService)
+            ISignInMethodService signInMethodService,
+            IAdminUIAppService adminUIAppService)
         {
+            _adminUIAppService = adminUIAppService;
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
             _userOptionsExtended = userOptionsExtended.Value;
@@ -833,7 +837,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // ASP.NET Core has OOTB protection from Host Header Injection Attacks: AllowedHosts configuration option
                 // More information https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/host-filtering
                 // Also it can be additionally configured at load-balancer and firewall level. 
-                var callbackUrl = $"{Request.Scheme}://{Request.Host}/#!/resetpassword/{user.Id}/{token}";
+                var callbackUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{GetPasswordResetPagePath()}#!/resetpassword/{user.Id}/{token}";
 
                 var requestPasswordResetEvent = new UserRequestPasswordResetEvent(user, callbackUrl);
 
@@ -1375,6 +1379,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             return UserManager.FindByNameAsync(User.Identity.Name);
+        }
+
+        /// <summary>
+        /// The reset link opens the AngularJS admin's reset page, wherever that admin is: the site root or /apps/platform/
+        /// (VirtoCommerce:PlatformUI:RootApp). Without the AngularJS admin, the admin UI at the site root, or else the first
+        /// installed one: Admin Shell takes the same link.
+        /// </summary>
+        private string GetPasswordResetPagePath()
+        {
+            var adminUIs = _adminUIAppService.GetAdminUIs();
+
+            var adminUI = adminUIs.FirstOrDefault(x => x.Id.EqualsIgnoreCase(AppManifestService.PlatformAppId))
+                ?? adminUIs.FirstOrDefault(x => x.IsRoot)
+                ?? adminUIs.FirstOrDefault();
+
+            return adminUI?.Url ?? "/";
         }
 
         private bool IsUserEditable(string userName)
