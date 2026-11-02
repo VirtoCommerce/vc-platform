@@ -75,6 +75,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     if (existsEntity != null)
                     {
                         modifiedEntity.Patch(existsEntity);
+                        pkMap.AddSavedPair(operation, existsEntity);
                     }
                     else
                     {
@@ -82,6 +83,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
+                pkMap.ResolvePrimaryKeys();
                 Reset();
             }
         }

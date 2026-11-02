@@ -238,6 +238,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         {
                             auditableOriginalEntity.ModifiedDate = DateTime.UtcNow;
                         }
+                        if (originalEntity is AuditableEntity savedEntity)
+                        {
+                            pkMap.AddSavedPair(model, savedEntity);
+                        }
                         changedEntities.Add(originalEntity);
                     }
                     else
