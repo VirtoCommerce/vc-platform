@@ -236,6 +236,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(user, context);
+                ticket.Principal.SetAuthenticationMethod(SignInType.Password, [Destinations.AccessToken]);
 
                 try
                 {
@@ -792,7 +793,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var user = await _userManager.GetUserAsync(principal);
-            if (user == null || user.PasswordExpired || !await _signInManager.CanSignInAsync(user) || await _userManager.IsLockedOutAsync(user))
+            if (user == null || (user.PasswordExpired && principal.IsPasswordSignIn()) || !await _signInManager.CanSignInAsync(user) || await _userManager.IsLockedOutAsync(user))
             {
                 return null;
             }
