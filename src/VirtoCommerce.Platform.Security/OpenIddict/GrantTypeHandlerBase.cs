@@ -105,6 +105,24 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
     /// </summary>
     protected abstract Task<GrantValidationResult> ValidateGrantAsync(TokenRequestContext context);
 
+    protected virtual string GetRequiredParameter(OpenIddictRequest request, string name, List<string> missingParameters)
+    {
+        var value = (string)request.GetParameter(name);
+        if (string.IsNullOrEmpty(value))
+        {
+            missingParameters.Add(name);
+        }
+
+        return value;
+    }
+
+    protected virtual TokenResponse BuildErrorResponse(TokenRequestContext context, List<string> missingParameters)
+    {
+        context.FailureReason = SignInFailureReason.MissingParameter;
+
+        return SecurityErrorDescriber.MissingParameters(missingParameters);
+    }
+
     protected virtual async Task<bool> CanSignInAsync(TokenRequestContext context)
     {
         var canSignIn = await _signInManager.CanSignInAsync(context.User);

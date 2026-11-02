@@ -8,6 +8,7 @@ public static class SignInFailureReason
 {
     public const string UserNotFound = "UserNotFound";
     public const string InvalidPassword = "InvalidPassword";
+    public const string MissingParameter = "MissingParameter";
     public const string LockedOut = "LockedOut";
     public const string NotAllowed = "NotAllowed";
     public const string RequiresTwoFactor = "RequiresTwoFactor";
