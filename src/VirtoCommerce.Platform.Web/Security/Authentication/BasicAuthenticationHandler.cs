@@ -8,7 +8,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
 {
@@ -67,6 +69,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             }
 
             var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
+            claimsPrincipal.SetAuthenticationMethod(SignInType.Password, []);
             var ticket = new AuthenticationTicket(claimsPrincipal, Options.Scheme);
 
             return AuthenticateResult.Success(ticket);
