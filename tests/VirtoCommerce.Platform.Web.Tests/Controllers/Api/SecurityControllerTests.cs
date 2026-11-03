@@ -1025,6 +1025,36 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _userManagerMock.Verify(x => x.ChangePasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public async Task ChangePassword_UserWithPasswordAndNoOldPassword_ReturnsBadRequest(string oldPassword)
+        {
+            // Arrange
+            var user = new ApplicationUser { Id = "user-id", UserName = "user" };
+
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(user.UserName))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.HasPasswordAsync(user))
+                .ReturnsAsync(true);
+
+            _controller = CreateSecurityController(securityOptions: CreateSecurityOptions());
+
+            SetCurrentUser(new ApplicationUser { Id = "admin-id", UserName = "operator" });
+
+            // Act
+            var actual = await _controller.ChangePassword(user.UserName, new ChangePasswordRequest { OldPassword = oldPassword, NewPassword = "new" });
+
+            // Assert
+            var result = actual.Result.Should().BeOfType<BadRequestObjectResult>().Which.Value.Should().BeOfType<SecurityResult>().Subject;
+            result.Errors.Should().ContainSingle().Which.Should().Be("Current password is required.");
+            _userManagerMock.Verify(x => x.ChangePasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _userManagerMock.Verify(x => x.AccessFailedAsync(It.IsAny<ApplicationUser>()), Times.Never);
+        }
+
         #endregion
 
         #region SignInKeys
