@@ -648,21 +648,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ? await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword)
                 : await UserManager.AddPasswordAsync(user, changePassword.NewPassword);
 
-            if (result.Succeeded && user.PasswordExpired)
+            if (result.Succeeded)
             {
-                user.PasswordExpired = false;
-                await UserManager.UpdateAsync(user);
+                if (user.PasswordExpired)
+                {
+                    user.PasswordExpired = false;
+                    await UserManager.UpdateAsync(user);
+                }
+
                 await UserManager.ResetAccessFailedCountAsync(user);
+                await TryTerminateUserSessions(currentUser, user);
             }
             else
             {
                 // Register failed attempt
                 await UserManager.AccessFailedAsync(user);
-            }
-
-            if (result.Succeeded)
-            {
-                await TryTerminateUserSessions(currentUser, user);
             }
 
             return Ok(result.ToSecurityResult());
