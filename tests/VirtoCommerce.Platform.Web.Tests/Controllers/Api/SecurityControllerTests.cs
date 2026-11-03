@@ -1025,6 +1025,81 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _userManagerMock.Verify(x => x.ChangePasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
+        [Fact]
+        public async Task ChangePassword_Succeeded_PasswordNotExpired_DoesNotRegisterFailedAttempt()
+        {
+            // Arrange
+            var user = new ApplicationUser { Id = "user-id", UserName = "user", PasswordExpired = false };
+            SetupChangePassword(user, IdentityResult.Success);
+
+            // Act
+            var actual = await _controller.ChangePassword(user.UserName, new ChangePasswordRequest { OldPassword = "old", NewPassword = "new" });
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeTrue();
+            _userManagerMock.Verify(x => x.AccessFailedAsync(It.IsAny<ApplicationUser>()), Times.Never);
+            _userManagerMock.Verify(x => x.ResetAccessFailedCountAsync(user), Times.Once);
+            _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task ChangePassword_Succeeded_PasswordExpired_ClearsPasswordExpired()
+        {
+            // Arrange
+            var user = new ApplicationUser { Id = "user-id", UserName = "user", PasswordExpired = true };
+            SetupChangePassword(user, IdentityResult.Success);
+
+            // Act
+            var actual = await _controller.ChangePassword(user.UserName, new ChangePasswordRequest { OldPassword = "old", NewPassword = "new" });
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeTrue();
+            user.PasswordExpired.Should().BeFalse();
+            _userManagerMock.Verify(x => x.UpdateAsync(user), Times.Once);
+            _userManagerMock.Verify(x => x.ResetAccessFailedCountAsync(user), Times.Once);
+            _userManagerMock.Verify(x => x.AccessFailedAsync(It.IsAny<ApplicationUser>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task ChangePassword_Failed_RegistersFailedAttempt()
+        {
+            // Arrange
+            var user = new ApplicationUser { Id = "user-id", UserName = "user", PasswordExpired = true };
+            SetupChangePassword(user, IdentityResult.Failed(new IdentityError { Code = "PasswordMismatch" }));
+
+            // Act
+            var actual = await _controller.ChangePassword(user.UserName, new ChangePasswordRequest { OldPassword = "wrong", NewPassword = "new" });
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeFalse();
+            user.PasswordExpired.Should().BeTrue();
+            _userManagerMock.Verify(x => x.AccessFailedAsync(user), Times.Once);
+            _userManagerMock.Verify(x => x.ResetAccessFailedCountAsync(It.IsAny<ApplicationUser>()), Times.Never);
+            _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
+        }
+
+        private void SetupChangePassword(ApplicationUser user, IdentityResult changePasswordResult)
+        {
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(user.UserName))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.HasPasswordAsync(user))
+                .ReturnsAsync(true);
+
+            _userManagerMock
+                .Setup(x => x.ChangePasswordAsync(user, It.IsAny<string>(), "new"))
+                .ReturnsAsync(changePasswordResult);
+
+            _controller = CreateSecurityController(securityOptions: CreateSecurityOptions());
+
+            SetCurrentUser(new ApplicationUser { Id = "admin-id", UserName = "operator" });
+        }
+
         #endregion
 
         #region SignInKeys
