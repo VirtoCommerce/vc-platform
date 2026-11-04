@@ -644,7 +644,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest(new SecurityResult { Errors = ["Your account is locked."] });
             }
 
-            var result = await UserManager.HasPasswordAsync(user)
+            var hasPassword = await UserManager.HasPasswordAsync(user);
+            if (hasPassword && string.IsNullOrEmpty(changePassword.OldPassword))
+            {
+                return BadRequest(new SecurityResult { Errors = ["Current password is required."] });
+            }
+
+            var result = hasPassword
                 ? await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword)
                 : await UserManager.AddPasswordAsync(user, changePassword.NewPassword);
 
