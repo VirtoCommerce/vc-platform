@@ -20,13 +20,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -73,6 +73,8 @@ using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
+using VirtoCommerce.Platform.Web.Infrastructure;
+using VirtoCommerce.Platform.Web.Infrastructure.AdminUI;
 using VirtoCommerce.Platform.Web.Infrastructure.ExportImport;
 using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
 using VirtoCommerce.Platform.Web.Jobs;
@@ -720,6 +722,13 @@ namespace VirtoCommerce.Platform.Web
             // Platform UI options
             services.AddOptions<PlatformUIOptions>().Bind(Configuration.GetSection("VirtoCommerce:PlatformUI"));
 
+            // Server-side values for the admin UI module that hosts the back office (the platform itself is API only).
+            services.TryAddSingleton<IAdminUIContextProvider, AdminUIContextProvider>();
+
+            // The installed admin UIs and the one served at the site root (VirtoCommerce:PlatformUI:RootApp)
+            services.TryAddSingleton<IAdminUIAppService, AdminUIAppService>();
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<MatcherPolicy, AdminUIMatcherPolicy>());
+
             // Decides whether an authenticated user may enter the admin UI (VirtoCommerce:PlatformUI:Access).
             // TryAdd so a module can supply its own policy: module ConfigureServices runs before this,
             // and an unconditional AddSingleton here would always override it.
@@ -749,6 +758,10 @@ namespace VirtoCommerce.Platform.Web
         {
             // Wrap module middleware and error handling so all downstream cache lookups belong to this request.
             app.UseMiddleware<CacheMetricsMiddleware>();
+
+            // Picks the admin UI for "/" and serves endpoint-hosted admin UIs at /apps/{appId}/ by rewriting the path. First, so
+            // everything after it - module hooks, no-cache for /api, error handling, static files, routing - sees the rewritten path.
+            app.UseMiddleware<AdminUIMiddleware>();
 
             // Let IPlatformStartup implementations add early middleware (e.g., config refresh)
             ModuleBootstrapper.Instance.RunConfigure(app, Configuration);
@@ -891,14 +904,6 @@ namespace VirtoCommerce.Platform.Web
             app.UseRouting();
             app.UseCookiePolicy();
 
-            //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(webHostEnvironment.MapPath("~/js")),
-                RequestPath = new PathString("/$(Platform)/Scripts"),
-                OnPrepareResponse = context => context.SetCacheControlNoCache(),
-            });
-
             // Enables static file serving with the module and apps options
             app.UseModulesAndAppsFiles();
 
@@ -932,6 +937,9 @@ namespace VirtoCommerce.Platform.Web
         private static void SetupEndpoints(IEndpointRouteBuilder endpoints)
         {
             endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            // Answers "/" only when no admin UI module maps a page there
+            endpoints.MapPlatformLandingPage();
 
             //Setup SignalR hub
             endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");

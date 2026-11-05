@@ -1,7 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Web.Model.Modularity;
 
 
@@ -9,7 +13,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api;
 
 [Route("api/platform/apps")]
 [ApiController]
-public class AppsController(IModuleService moduleService) : ControllerBase
+public class AppsController(IModuleService moduleService, IAdminUIAppService adminUIAppService) : ControllerBase
 {
     /// <summary>
     ///  Gets the list of available apps, filtered by user permissions.
@@ -18,24 +22,27 @@ public class AppsController(IModuleService moduleService) : ControllerBase
     [HttpGet]
     public IEnumerable<AppDescriptor> GetApps()
     {
-        var apps = moduleService.GetInstalledModules()
+        // An admin UI opens at the site root when it owns it, so its link follows VirtoCommerce:PlatformUI:RootApp
+        var adminUIs = adminUIAppService.GetAdminUIs()
+            .GroupBy(x => x.Id, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(x => x.Key, x => x.First(), StringComparer.OrdinalIgnoreCase);
+
+        return moduleService.GetInstalledModules()
             .SelectMany(x => x.Apps)
-            .Select(x => new AppDescriptor(x))
-            .OrderBy(x => x.Title)
-            .ToList();
-
-        apps.Insert(0, // Add Commerce Manager by Default
-            new AppDescriptor
+            .Select(x =>
             {
-                Id = "platform",
-                Title = "Commerce Manager",
-                Description = "Virto Commerce Platform",
-                RelativeUrl = "/",
-                IconUrl = "/images/platform_app.svg",
-                Placement = AppPlacement.AppMenu,
-            });
+                var app = new AppDescriptor(x);
 
-        return apps;
+                if (adminUIs.TryGetValue(x.Id, out var adminUI))
+                {
+                    app.RelativeUrl = adminUI.IsRoot ? adminUI.Url : adminUI.Path;
+                }
 
+                return app;
+            })
+            // "platform", the AngularJS admin (Commerce Manager), keeps its place at the top
+            .OrderBy(x => !x.Id.EqualsIgnoreCase(AppManifestService.PlatformAppId))
+            .ThenBy(x => x.Title)
+            .ToList();
     }
 }

@@ -22,6 +22,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Core.Security.SignInMethods;
+using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
@@ -55,6 +56,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserSessionsService _userSessionsService;
         private readonly IUserSignInLogSearchService _userSignInLogSearchService;
         private readonly IAdminUIAccessPolicy _adminUIAccessPolicy;
+        private readonly IAdminUIAppService _adminUIAppService;
         private readonly ITwoFactorSignInService _twoFactorSignInService;
         private readonly ISignInMethodService _signInMethodService;
 
@@ -78,8 +80,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IAdminUIAccessPolicy adminUIAccessPolicy,
             IUserSignInLogSearchService userSignInLogSearchService,
             ITwoFactorSignInService twoFactorSignInService,
-            ISignInMethodService signInMethodService)
+            ISignInMethodService signInMethodService,
+            IAdminUIAppService adminUIAppService)
         {
+            _adminUIAppService = adminUIAppService;
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
             _userOptionsExtended = userOptionsExtended.Value;
@@ -226,6 +230,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Ok(SignInResult.Failed);
             }
 
+            // PasswordSignInAsync takes no authentication method, so the cookie is reissued with it
+            await _signInManager.SignInAsync(user, request.RememberMe, SignInType.Password);
+
             await SetLastLoginDate(user);
             await _eventPublisher.Publish(new UserLoginEvent(user));
             await PublishSignInAttempt(request.UserName, user, succeeded: true, failureReason: null);
@@ -295,19 +302,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = new UserDetail
             {
                 Id = user.Id,
-                isAdministrator = user.IsAdministrator,
+                IsAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
                 DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
                 Permissions = permissions,
                 AuthenticationMethod = HttpContext.User.GetAuthenticationMethod(),
-                IsSsoAuthenticationMethod = HttpContext.User.IsExternalSignIn(),
+                IsPasswordSignIn = HttpContext.User.IsPasswordSignIn(),
                 MemberId = user.MemberId,
                 CanAccessAdminUI = adminUIAccess.IsAllowed,
             };
 
-            // Password never expired with SSO
-            if (result.IsSsoAuthenticationMethod)
+            if (!result.IsPasswordSignIn)
             {
                 result.PasswordExpired = false;
                 result.DaysTillPasswordExpiry = -1;
@@ -638,7 +644,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest(new SecurityResult { Errors = ["Your account is locked."] });
             }
 
-            var result = await UserManager.HasPasswordAsync(user)
+            var hasPassword = await UserManager.HasPasswordAsync(user);
+            if (hasPassword && string.IsNullOrEmpty(changePassword.OldPassword))
+            {
+                return BadRequest(new SecurityResult { Errors = ["Current password is required."] });
+            }
+
+            var result = hasPassword
                 ? await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword)
                 : await UserManager.AddPasswordAsync(user, changePassword.NewPassword);
 
@@ -833,7 +845,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // ASP.NET Core has OOTB protection from Host Header Injection Attacks: AllowedHosts configuration option
                 // More information https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/host-filtering
                 // Also it can be additionally configured at load-balancer and firewall level. 
-                var callbackUrl = $"{Request.Scheme}://{Request.Host}/#!/resetpassword/{user.Id}/{token}";
+                var callbackUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{GetPasswordResetPagePath()}#!/resetpassword/{user.Id}/{token}";
 
                 var requestPasswordResetEvent = new UserRequestPasswordResetEvent(user, callbackUrl);
 
@@ -1377,6 +1389,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return UserManager.FindByNameAsync(User.Identity.Name);
         }
 
+        /// <summary>
+        /// The reset link opens the AngularJS admin's reset page, wherever that admin is: the site root or /apps/platform/
+        /// (VirtoCommerce:PlatformUI:RootApp). Without the AngularJS admin, the admin UI at the site root, or else the first
+        /// installed one: Admin Shell takes the same link.
+        /// </summary>
+        private string GetPasswordResetPagePath()
+        {
+            var adminUIs = _adminUIAppService.GetAdminUIs();
+
+            var adminUI = adminUIs.FirstOrDefault(x => x.Id.EqualsIgnoreCase(AppManifestService.PlatformAppId))
+                ?? adminUIs.FirstOrDefault(x => x.IsRoot)
+                ?? adminUIs.FirstOrDefault();
+
+            return adminUI?.Url ?? "/";
+        }
+
         private bool IsUserEditable(string userName)
         {
             return _securityOptions.NonEditableUsers?.FirstOrDefault(x => x.EqualsIgnoreCase(userName)) == null;
@@ -1513,14 +1541,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             try
             {
-                // try to clear user tokens for the user 
+                // try to clear user tokens for the user
                 var terminateSessionsRequest = new TerminateUserSessionsRequest
                 {
                     UserId = sourceUser.Id,
                 };
 
                 // except the current session if password change was requested by the current user
-                // if current user is not passed then we remove all sessions 
+                // if current user is not passed then we remove all sessions
                 if (currentUser != null && sourceUser.Id.EqualsIgnoreCase(currentUser.Id))
                 {
                     var session = User.FindFirstValue(Claims.Private.AuthorizationId);

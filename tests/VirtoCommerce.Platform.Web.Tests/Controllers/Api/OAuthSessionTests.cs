@@ -14,6 +14,8 @@ using Moq;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.SignInLog;
+using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using Xunit;
 
@@ -143,8 +145,17 @@ public class OAuthSessionTests : IDisposable
     public async Task CreateSession_ExpiredPassword_Rejects()
     {
         _user.PasswordExpired = true;
+        _principal.SetAuthenticationMethod(SignInType.Password, [OpenIddictConstants.Destinations.AccessToken]);
         Assert.IsType<UnauthorizedResult>(await _controller.CreateSession(_returnUrl));
         Assert.Null(_cookieProperties);
+    }
+
+    [Fact]
+    public async Task CreateSession_ExpiredPasswordWithoutPasswordSignIn_CreatesSession()
+    {
+        _user.PasswordExpired = true;
+        _principal.SetAuthenticationMethod(SignInType.External, [OpenIddictConstants.Destinations.AccessToken]);
+        Assert.IsType<NoContentResult>(await _controller.CreateSession(_returnUrl));
     }
 
     [Fact]

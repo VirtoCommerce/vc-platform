@@ -67,24 +67,13 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 
 echo Handling .NET Web Application deployment.
 
-:: 1. Build Web Scripts
-IF /I "%DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web\package.json" NEQ "" (
-
-  pushd "%DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web"
-  call :ExecuteCmd call npm ci
-  call :ExecuteCmd call npm run webpack:build
-  popd
-
-  IF !ERRORLEVEL! NEQ 0 goto error
-)
-
-:: 2. Restore NuGet packages
+:: 1. Restore NuGet packages
 IF /I "VirtoCommerce.Platform.sln" NEQ "" (
   call :ExecuteCmd dotnet restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.Platform.sln"
   IF !ERRORLEVEL! NEQ 0 goto error
 )
 
-:: 3. Publish
+:: 2. Publish
 IF /I "VirtoCommerce.Platform.sln" NEQ "" (
   call :ExecuteCmd dotnet publish "%DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" --output "%DEPLOYMENT_TEMP%" --configuration Release
   IF !ERRORLEVEL! NEQ 0 goto error

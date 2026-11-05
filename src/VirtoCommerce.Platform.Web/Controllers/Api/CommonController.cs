@@ -16,12 +16,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly ICountriesService _countriesService;
         private readonly LoginPageUIOptions _loginPageOptions;
+        private readonly PlatformUIOptions _platformUIOptions;
+        private readonly IAdminUIContextProvider _adminUIContextProvider;
 
         public CommonController(ICountriesService countriesService,
-            IOptions<LoginPageUIOptions> loginPageOptions)
+            IOptions<LoginPageUIOptions> loginPageOptions,
+            IOptions<PlatformUIOptions> platformUIOptions,
+            IAdminUIContextProvider adminUIContextProvider)
         {
             _countriesService = countriesService;
             _loginPageOptions = loginPageOptions.Value;
+            _platformUIOptions = platformUIOptions.Value;
+            _adminUIContextProvider = adminUIContextProvider;
         }
 
 
@@ -39,6 +45,24 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var results = await _countriesService.GetCountryRegionsAsync(countryCode);
             return Ok(results);
+        }
+
+        /// <summary>
+        /// Get the server-side values an admin UI needs before sign-in: platform version, license,
+        /// environment banner, whether modules can be installed, and so on.
+        /// The admin UI itself is delivered by a module; this endpoint lets any admin UI host read them.
+        /// </summary>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ui/context")]
+        public async Task<ActionResult<AdminUIContext>> GetAdminUIContext()
+        {
+            if (!_platformUIOptions.Enable)
+            {
+                return NotFound();
+            }
+
+            return Ok(await _adminUIContextProvider.GetContextAsync(HttpContext.RequestAborted));
         }
 
         /// <summary>
