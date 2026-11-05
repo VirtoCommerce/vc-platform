@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Web.Model.Security;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -19,23 +22,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class OAuthAppsController : Controller
     {
         private readonly OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> _manager;
+        private readonly IEnumerable<IOAuthResourceProvider> _resourceProviders;
+        private readonly Core.Security.AuthorizationOptions _authorizationOptions;
 
-        private readonly ISet<string> _defaultPermissions = new HashSet<string>
-        {
-            OpenIddictConstants.Permissions.Endpoints.Authorization,
-            OpenIddictConstants.Permissions.Endpoints.EndSession,
-            OpenIddictConstants.Permissions.Endpoints.Token,
-            OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
-            OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
-            OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
-            OpenIddictConstants.Permissions.ResponseTypes.Code,
-            OpenIddictConstants.Permissions.Scopes.Email,
-            OpenIddictConstants.Permissions.Scopes.Profile,
-        };
-
-        public OAuthAppsController(OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> manager)
+        public OAuthAppsController(
+            OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> manager,
+            IEnumerable<IOAuthResourceProvider> resourceProviders,
+            IOptions<Core.Security.AuthorizationOptions> authorizationOptions)
         {
             _manager = manager;
+            _resourceProviders = resourceProviders;
+            _authorizationOptions = authorizationOptions.Value;
         }
 
         [HttpGet]
@@ -49,38 +46,116 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ClientId = Guid.NewGuid().ToString(),
                 ClientSecret = Guid.NewGuid().ToString(),
                 ClientType = OpenIddictConstants.ClientTypes.Confidential,
+                ApplicationType = OpenIddictConstants.ApplicationTypes.Web,
+                ConsentType = OpenIddictConstants.ConsentTypes.Explicit,
             };
 
-            app.Permissions.AddRange(_defaultPermissions);
+            OAuthAppRules.AddDefaultPermissions(app);
             return app;
         }
 
+        /// <summary>
+        /// The resources applications can be allowed to request tokens for: those the modules serve, such as MCP
+        /// endpoints, and those listed in Authorization:Resources.
+        /// </summary>
+        [HttpGet]
+        [Route("resources")]
+        [Authorize(Permissions.SecurityOAuthApplicationsRead)]
+        public async Task<ActionResult<OAuthResourceInfo[]>> GetResourcesAsync()
+        {
+            var registered = new HashSet<string>(_authorizationOptions.Resources ?? [], StringComparer.Ordinal);
+            var result = new Dictionary<string, OAuthResourceInfo>(StringComparer.Ordinal);
+
+            foreach (var provider in _resourceProviders)
+            {
+                foreach (var resource in await provider.GetResourcesAsync(HttpContext) ?? [])
+                {
+                    if (!string.IsNullOrEmpty(resource?.Uri))
+                    {
+                        result.TryAdd(resource.Uri, new OAuthResourceInfo
+                        {
+                            Uri = resource.Uri,
+                            Title = resource.Title,
+                            Kind = resource.Kind,
+                            Description = resource.Description,
+                            IsRegistered = registered.Contains(resource.Uri),
+                        });
+                    }
+                }
+            }
+
+            foreach (var uri in registered.Where(x => !string.IsNullOrEmpty(x)))
+            {
+                result.TryAdd(uri, new OAuthResourceInfo { Uri = uri, IsRegistered = true });
+            }
+
+            return Ok(result.Values.ToArray());
+        }
+
+        [HttpGet]
+        [Route("{clientId}")]
+        [Authorize(Permissions.SecurityOAuthApplicationsRead)]
+        public async Task<ActionResult<OpenIddictApplicationDescriptor>> GetAsync([FromRoute] string clientId)
+        {
+            var app = await _manager.FindByClientIdAsync(clientId);
+            if (app == null)
+            {
+                return NotFound();
+            }
+
+            return await ToDescriptorAsync(app);
+        }
+
+        /// <summary>
+        /// Creates or updates the application with the client id. The application keeps the permissions it is saved
+        /// with; the endpoint permissions follow from its grant types, and an application that names no grant type
+        /// gets the platform defaults. The client secret can't be changed and is never returned.
+        /// </summary>
         [HttpPost]
         [Route("")]
         [Authorize(Permissions.SecurityOAuthApplicationsUpdate)]
         public async Task<ActionResult<OpenIddictApplicationDescriptor>> SaveAsync(OpenIddictApplicationDescriptor descriptor)
         {
-            descriptor.Permissions.RemoveWhere(permission => !permission.StartsWith(OpenIddictConstants.Permissions.Prefixes.Resource, StringComparison.Ordinal));
-            descriptor.Permissions.AddRange(_defaultPermissions);
+            var app = string.IsNullOrWhiteSpace(descriptor.ClientId) ? null : await _manager.FindByClientIdAsync(descriptor.ClientId);
+            var stored = app == null ? null : await ToDescriptorAsync(app);
 
-            var app = await _manager.FindByClientIdAsync(descriptor.ClientId);
+            descriptor.ClientType ??= stored?.ClientType ?? (string.IsNullOrEmpty(descriptor.ClientSecret)
+                ? OpenIddictConstants.ClientTypes.Public
+                : OpenIddictConstants.ClientTypes.Confidential);
 
-            if (app == null)
-            {// create
-                app = await _manager.CreateAsync(descriptor);
-                await _manager.PopulateAsync(descriptor, app);
-            }
-            else
-            {// update
-                //prevent changing client secret
-                descriptor.ClientSecret = app.ClientSecret;
-
-                await _manager.PopulateAsync(app, descriptor);
-                await _manager.UpdateAsync(app);
+            if (stored != null)
+            {
+                // the secret can't be changed: the stored (hashed) one is kept, and the search never returns it
+                descriptor.ClientSecret = null;
             }
 
-            descriptor.ClientSecret = app.ClientSecret;
-            return descriptor;
+            var errors = OAuthAppRules.Validate(descriptor, stored);
+            if (errors.Count > 0)
+            {
+                return BadRequest(new SecurityResult { Errors = errors });
+            }
+
+            OAuthAppRules.NormalizePermissions(descriptor);
+
+            try
+            {
+                if (app == null)
+                {
+                    app = await _manager.CreateAsync(descriptor);
+                }
+                else
+                {
+                    descriptor.ClientSecret = app.ClientSecret;
+                    await _manager.PopulateAsync(app, descriptor);
+                    await _manager.UpdateAsync(app);
+                }
+            }
+            catch (OpenIddictExceptions.ValidationException ex)
+            {
+                return BadRequest(new SecurityResult { Errors = ex.Results.Select(x => x.ErrorMessage).ToList() });
+            }
+
+            return await ToDescriptorAsync(app);
         }
 
         [HttpDelete]
@@ -110,13 +185,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var apps = _manager.ListAsync(x => x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take));
 
-            var appsTasks = await apps.Select(async x =>
-                {
-                    var descriptor = new OpenIddictApplicationDescriptor();
-                    await _manager.PopulateAsync(descriptor, x);
-                    descriptor.ClientSecret = "";
-                    return descriptor;
-                }).ToListAsync();
+            var appsTasks = await apps.Select(x => ToDescriptorAsync(x)).ToListAsync();
 
             var result = new OAuthAppSearchResult
             {
@@ -125,6 +194,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
 
             return result;
+        }
+
+        private async Task<OpenIddictApplicationDescriptor> ToDescriptorAsync(VirtoOpenIddictEntityFrameworkCoreApplication app)
+        {
+            var descriptor = new OpenIddictApplicationDescriptor();
+            await _manager.PopulateAsync(descriptor, app);
+            descriptor.ClientSecret = "";
+            return descriptor;
         }
     }
 }
