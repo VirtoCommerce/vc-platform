@@ -8,35 +8,24 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 namespace VirtoCommerce.Platform.Security.OpenIddict;
 
 /// <summary>
-/// What the platform checks and derives when an OAuth application is saved: the permissions that follow from the
-/// grant types, the defaults of a request that names no grant type, and the rules of client types and redirect URIs.
+/// The platform's rules of OAuth applications: the permissions that follow from the grant types, the defaults of a
+/// request that names no grant type, and the rules of client types and redirect URIs.
 /// </summary>
-public static class OAuthAppRules
+public class OAuthAppRules : IOAuthAppRules
 {
-    public static IReadOnlyCollection<string> ConsentTypeValues { get; } = [ConsentTypes.Explicit, ConsentTypes.Implicit, ConsentTypes.Systematic, ConsentTypes.External];
-
-    // Granted to a client that names no grant type, as the API always did
-    private static readonly string[] _defaultGrantTypes = [Permissions.GrantTypes.AuthorizationCode, Permissions.GrantTypes.ClientCredentials, Permissions.GrantTypes.RefreshToken];
-    private static readonly string[] _defaultScopes = [Permissions.Scopes.Email, Permissions.Scopes.Profile];
-
     // Follow from the grant types; any other endpoint or response type permission is kept as it is
     private static readonly string[] _derivedPermissions = [Permissions.Endpoints.Authorization, Permissions.Endpoints.EndSession, Permissions.Endpoints.Token, Permissions.ResponseTypes.Code];
 
-    /// <summary>
-    /// The permissions of a new application with the platform defaults.
-    /// </summary>
-    public static void AddDefaultPermissions(OpenIddictApplicationDescriptor descriptor)
+    public virtual IReadOnlyCollection<string> ConsentTypeValues { get; } = [ConsentTypes.Explicit, ConsentTypes.Implicit, ConsentTypes.Systematic, ConsentTypes.External];
+
+    public virtual void AddDefaultPermissions(OpenIddictApplicationDescriptor descriptor)
     {
         descriptor.Permissions.AddRange(GetDefaultGrantTypes(descriptor.ClientType));
-        descriptor.Permissions.AddRange(_defaultScopes);
+        descriptor.Permissions.AddRange(GetDefaultScopes());
         NormalizePermissions(descriptor);
     }
 
-    /// <summary>
-    /// Keeps the permissions the client asked for and sets the endpoint and response type permissions that its
-    /// grant types need. A client that names no grant type gets the platform defaults.
-    /// </summary>
-    public static void NormalizePermissions(OpenIddictApplicationDescriptor descriptor)
+    public virtual void NormalizePermissions(OpenIddictApplicationDescriptor descriptor)
     {
         var permissions = descriptor.Permissions;
         permissions.RemoveWhere(string.IsNullOrWhiteSpace);
@@ -44,7 +33,7 @@ public static class OAuthAppRules
         if (!permissions.Any(IsGrantType))
         {
             permissions.AddRange(GetDefaultGrantTypes(descriptor.ClientType));
-            permissions.AddRange(_defaultScopes);
+            permissions.AddRange(GetDefaultScopes());
         }
 
         permissions.ExceptWith(_derivedPermissions);
@@ -67,10 +56,9 @@ public static class OAuthAppRules
     }
 
     /// <summary>
-    /// The reasons the application can't be saved. <paramref name="stored"/> is the saved state of an existing
-    /// application, or null for a new one. A redirect URI the application already had is not checked again.
+    /// A redirect URI the application already had is not checked again, so existing applications still save.
     /// </summary>
-    public static IList<string> Validate(OpenIddictApplicationDescriptor descriptor, OpenIddictApplicationDescriptor stored)
+    public virtual IList<string> Validate(OpenIddictApplicationDescriptor descriptor, OpenIddictApplicationDescriptor stored)
     {
         var errors = new List<string>();
 
@@ -113,10 +101,10 @@ public static class OAuthAppRules
     }
 
     /// <summary>
-    /// Why a redirect URI can't be used, or null: it must be absolute, without a fragment, and use HTTPS unless it
-    /// points to the device the client runs on (a loopback address, RFC 8252).
+    /// A redirect URI must be absolute, without a fragment, and use HTTPS unless it points to the device the client
+    /// runs on (a loopback address, RFC 8252).
     /// </summary>
-    public static string GetRedirectUriError(string uri)
+    public virtual string GetRedirectUriError(string uri)
     {
         if (!Uri.TryCreate(uri, UriKind.Absolute, out var value) || value.IsFile)
         {
@@ -136,7 +124,28 @@ public static class OAuthAppRules
         return null;
     }
 
-    private static IEnumerable<string> GetRedirectUriErrors(IEnumerable<Uri> uris, IEnumerable<Uri> storedUris)
+    /// <summary>
+    /// Granted to a client that names no grant type, as the API always did. A public client holds no secret, so it
+    /// can't use the client credentials grant.
+    /// </summary>
+    protected virtual IEnumerable<string> GetDefaultGrantTypes(string clientType)
+    {
+        yield return Permissions.GrantTypes.AuthorizationCode;
+
+        if (clientType != ClientTypes.Public)
+        {
+            yield return Permissions.GrantTypes.ClientCredentials;
+        }
+
+        yield return Permissions.GrantTypes.RefreshToken;
+    }
+
+    protected virtual IEnumerable<string> GetDefaultScopes()
+    {
+        return [Permissions.Scopes.Email, Permissions.Scopes.Profile];
+    }
+
+    private IEnumerable<string> GetRedirectUriErrors(IEnumerable<Uri> uris, IEnumerable<Uri> storedUris)
     {
         var stored = storedUris?.ToHashSet() ?? [];
 
@@ -144,14 +153,6 @@ public static class OAuthAppRules
             .Where(x => !stored.Contains(x))
             .Select(x => GetRedirectUriError(x.OriginalString))
             .Where(x => x != null);
-    }
-
-    private static IEnumerable<string> GetDefaultGrantTypes(string clientType)
-    {
-        // A public client holds no secret, so it can't use the client credentials grant
-        return clientType == ClientTypes.Public
-            ? _defaultGrantTypes.Where(x => x != Permissions.GrantTypes.ClientCredentials)
-            : _defaultGrantTypes;
     }
 
     private static bool IsGrantType(string permission)

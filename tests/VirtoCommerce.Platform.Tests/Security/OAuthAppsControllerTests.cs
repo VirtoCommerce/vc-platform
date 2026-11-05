@@ -334,14 +334,14 @@ public class OAuthAppsControllerTests
     [InlineData("/callback", false)]
     public void GetRedirectUriError_AllowsHttpOnlyForLoopback(string uri, bool isValid)
     {
-        (OAuthAppRules.GetRedirectUriError(uri) == null).Should().Be(isValid);
+        (new OAuthAppRules().GetRedirectUriError(uri) == null).Should().Be(isValid);
     }
 
     private OAuthAppsController CreateController(string[] registeredResources = null, params IOAuthResourceProvider[] providers)
     {
         var options = Options.Create(new AuthorizationOptions { Resources = registeredResources ?? [] });
 
-        return new OAuthAppsController(_manager, providers, options)
+        return new OAuthAppsController(_manager, providers, new OAuthAppRules(), options)
         {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
         };

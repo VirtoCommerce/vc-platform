@@ -23,15 +23,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> _manager;
         private readonly IEnumerable<IOAuthResourceProvider> _resourceProviders;
+        private readonly IOAuthAppRules _rules;
         private readonly Core.Security.AuthorizationOptions _authorizationOptions;
 
         public OAuthAppsController(
             OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> manager,
             IEnumerable<IOAuthResourceProvider> resourceProviders,
+            IOAuthAppRules rules,
             IOptions<Core.Security.AuthorizationOptions> authorizationOptions)
         {
             _manager = manager;
             _resourceProviders = resourceProviders;
+            _rules = rules;
             _authorizationOptions = authorizationOptions.Value;
         }
 
@@ -50,7 +53,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ConsentType = OpenIddictConstants.ConsentTypes.Explicit,
             };
 
-            OAuthAppRules.AddDefaultPermissions(app);
+            _rules.AddDefaultPermissions(app);
             return app;
         }
 
@@ -129,13 +132,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 descriptor.ClientSecret = null;
             }
 
-            var errors = OAuthAppRules.Validate(descriptor, stored);
+            var errors = _rules.Validate(descriptor, stored);
             if (errors.Count > 0)
             {
                 return BadRequest(new SecurityResult { Errors = errors });
             }
 
-            OAuthAppRules.NormalizePermissions(descriptor);
+            _rules.NormalizePermissions(descriptor);
 
             try
             {
