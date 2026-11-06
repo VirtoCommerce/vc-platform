@@ -1,0 +1,63 @@
+# osv-scanner exceptions for npm-shrinkwrap.json (osv-scanner reads this file only from the lockfile's directory).
+# Keep in sync with .nsprc (better-npm-audit).
+
+# AngularJS 1.8.3 is EOL, no upstream fix will ship. Admin-only UI. Migration tracked separately.
+[[IgnoredVulns]]
+id = "GHSA-2qqx-w9hr-q5gx"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: ReDoS via $resource. Admin-only UI."
+
+[[IgnoredVulns]]
+id = "GHSA-2vrf-hf26-jrp5"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: ReDoS via angular.copy(). Admin-only UI."
+
+[[IgnoredVulns]]
+id = "GHSA-4w4v-5hc9-xrr2"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: super-linear runtime via backtracking. Admin-only UI, no upstream fix."
+
+[[IgnoredVulns]]
+id = "GHSA-7x27-g8rg-x87w"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: XSS in deprecated angular package. Admin-only UI, no upstream fix."
+
+[[IgnoredVulns]]
+id = "GHSA-j58c-ww9w-pwp5"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: improper SVG element sanitization. Admin-only UI."
+
+[[IgnoredVulns]]
+id = "GHSA-m2h2-264f-f486"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: ReDoS. Admin-only UI, trusted operator input."
+
+[[IgnoredVulns]]
+id = "GHSA-m9gf-397r-hwpg"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: image-source restriction bypass. Admin-only UI."
+
+[[IgnoredVulns]]
+id = "GHSA-mqm9-c95h-x2p6"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: image-source restriction bypass. Admin-only UI."
+
+[[IgnoredVulns]]
+id = "GHSA-prc3-vjfx-vhm9"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: XSS in deprecated angular package. Admin-only UI."
+
+[[IgnoredVulns]]
+id = "GHSA-qwqh-hm9m-p5hr"
+ignoreUntil = 2027-07-16
+reason = "AngularJS 1.8 EOL: ReDoS via <input type=url>. Admin-only UI."
+
+[[IgnoredVulns]]
+id = "GHSA-7h4w-6p98-r3wx"
+ignoreUntil = 2027-07-16
+reason = "textAngular 1.5.16 XSS: unmaintained, no upstream fix. Mitigate with a strict Content Security Policy."
+
+[[IgnoredVulns]]
+id = "GHSA-rf66-hmqf-q3fc"
+ignoreUntil = 2027-07-16
+reason = "select2 3.4.5 XSS is in select2.js; only select2/select2.css is bundled (vendor.js). Fix requires breaking select2 4.x."

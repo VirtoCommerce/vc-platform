@@ -73,6 +73,9 @@
     "yaml": "^2.5.1"
   },
   "overrides": {
+    "angular-translate": {
+      "angular": "$angular"
+    },
     "serialize-javascript": "^7.0.3",
     "bootstrap": "^5.3.3"
   },
