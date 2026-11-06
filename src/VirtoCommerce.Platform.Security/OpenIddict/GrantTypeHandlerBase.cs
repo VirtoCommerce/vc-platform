@@ -14,6 +14,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Exceptions;
+using VirtoCommerce.Platform.Security.Extensions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using static VirtoCommerce.Platform.Core.PlatformConstants.Security.SystemRoles;
 using MvcSignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
@@ -200,6 +201,7 @@ public abstract class GrantTypeHandlerBase : IGrantTypeHandler
         SetTicketScopes(context, principal);
         principal.SetResources("resource_server");
         SetClaimDestinations(principal);
+        principal.SetAuthenticationMethod(SignInType, [Destinations.AccessToken]);
 
         foreach (var claimProvider in _claimProviders)
         {

@@ -230,6 +230,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Ok(SignInResult.Failed);
             }
 
+            // PasswordSignInAsync takes no authentication method, so the cookie is reissued with it
+            await _signInManager.SignInAsync(user, request.RememberMe, SignInType.Password);
+
             await SetLastLoginDate(user);
             await _eventPublisher.Publish(new UserLoginEvent(user));
             await PublishSignInAttempt(request.UserName, user, succeeded: true, failureReason: null);
@@ -299,19 +302,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = new UserDetail
             {
                 Id = user.Id,
-                isAdministrator = user.IsAdministrator,
+                IsAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
                 DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
                 Permissions = permissions,
                 AuthenticationMethod = HttpContext.User.GetAuthenticationMethod(),
-                IsSsoAuthenticationMethod = HttpContext.User.IsExternalSignIn(),
+                IsPasswordSignIn = HttpContext.User.IsPasswordSignIn(),
                 MemberId = user.MemberId,
                 CanAccessAdminUI = adminUIAccess.IsAllowed,
             };
 
-            // Password never expired with SSO
-            if (result.IsSsoAuthenticationMethod)
+            if (!result.IsPasswordSignIn)
             {
                 result.PasswordExpired = false;
                 result.DaysTillPasswordExpiry = -1;
@@ -642,7 +644,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest(new SecurityResult { Errors = ["Your account is locked."] });
             }
 
-            var result = await UserManager.HasPasswordAsync(user)
+            var hasPassword = await UserManager.HasPasswordAsync(user);
+            if (hasPassword && string.IsNullOrEmpty(changePassword.OldPassword))
+            {
+                return BadRequest(new SecurityResult { Errors = ["Current password is required."] });
+            }
+
+            var result = hasPassword
                 ? await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword)
                 : await UserManager.AddPasswordAsync(user, changePassword.NewPassword);
 
@@ -1533,14 +1541,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             try
             {
-                // try to clear user tokens for the user 
+                // try to clear user tokens for the user
                 var terminateSessionsRequest = new TerminateUserSessionsRequest
                 {
                     UserId = sourceUser.Id,
                 };
 
                 // except the current session if password change was requested by the current user
-                // if current user is not passed then we remove all sessions 
+                // if current user is not passed then we remove all sessions
                 if (currentUser != null && sourceUser.Id.EqualsIgnoreCase(currentUser.Id))
                 {
                     var session = User.FindFirstValue(Claims.Private.AuthorizationId);
