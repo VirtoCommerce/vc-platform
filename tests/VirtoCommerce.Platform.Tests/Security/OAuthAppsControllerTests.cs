@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -15,9 +16,10 @@ using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Security;
-using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Web.Security;
 using Xunit;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -237,7 +239,64 @@ public class OAuthAppsControllerTests
     {
         var result = await CreateController().SaveAsync(new OpenIddictApplicationDescriptor { ClientId = "app", ClientType = ClientTypes.Confidential });
 
-        GetErrors(result).Should().ContainSingle().Which.Should().Contain("needs a client secret");
+        GetErrors(result).Should().NotBeEmpty();
+        _apps.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Save_TypesInAnyCase_AreStoredInLowerCase()
+    {
+        var descriptor = new OpenIddictApplicationDescriptor
+        {
+            ClientId = "integration",
+            ClientSecret = "secret",
+            ClientType = "Confidential",
+            ApplicationType = " Native ",
+            ConsentType = "Explicit",
+            Permissions = { Permissions.GrantTypes.ClientCredentials },
+        };
+
+        var saved = GetValue(await CreateController().SaveAsync(descriptor));
+
+        (saved.ClientType, saved.ApplicationType, saved.ConsentType).Should().Be((ClientTypes.Confidential, ApplicationTypes.Native, ConsentTypes.Explicit));
+    }
+
+    [Theory]
+    [InlineData(null, "secret", ClientTypes.Confidential)]
+    [InlineData(null, null, ClientTypes.Public)]
+    [InlineData("", null, ClientTypes.Public)]
+    public async Task Save_NewClientWithoutClientType_GetsItFromTheSecret(string clientType, string secret, string expected)
+    {
+        var descriptor = CreateAgentClient();
+        descriptor.ClientType = clientType;
+        descriptor.ClientSecret = secret;
+
+        var saved = GetValue(await CreateController().SaveAsync(descriptor));
+
+        saved.ClientType.Should().Be(expected);
+    }
+
+    [Fact]
+    public async Task Save_ExistingClientWithoutClientType_KeepsTheStoredOne()
+    {
+        var controller = CreateController();
+        await controller.SaveAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "integration",
+            ClientSecret = "secret",
+            ClientType = ClientTypes.Confidential,
+            Permissions = { Permissions.GrantTypes.ClientCredentials },
+        });
+
+        var saved = GetValue(await controller.SaveAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "integration",
+            DisplayName = "Integration",
+            Permissions = { Permissions.GrantTypes.ClientCredentials },
+        }));
+
+        saved.ClientType.Should().Be(ClientTypes.Confidential);
+        saved.DisplayName.Should().Be("Integration");
     }
 
     [Fact]
@@ -283,6 +342,43 @@ public class OAuthAppsControllerTests
         saved.RedirectUris.Should().Contain(new Uri("http://intranet.example.com/callback"));
     }
 
+    [Theory]
+    [InlineData("javascript:alert(1)")]
+    [InlineData("http://agent.example.com/signed-out")]
+    public async Task Save_InvalidPostLogoutRedirectUri_ReturnsBadRequest(string uri)
+    {
+        var descriptor = CreateAgentClient();
+        descriptor.PostLogoutRedirectUris.Add(new Uri(uri));
+
+        var result = await CreateController().SaveAsync(descriptor);
+
+        GetErrors(result).Should().ContainSingle().Which.Should().Contain(uri);
+    }
+
+    [Fact]
+    public async Task Save_RedirectUriOnlyOpenIddictRefuses_ReturnsBadRequest()
+    {
+        // the iss parameter is reserved (RFC 9207): OpenIddict refuses it when the application is created
+        var descriptor = CreateAgentClient();
+        descriptor.RedirectUris.Add(new Uri("https://agent.example.com/callback?iss=https://evil.example.com"));
+
+        var result = await CreateController().SaveAsync(descriptor);
+
+        GetErrors(result).Should().NotBeEmpty();
+        _apps.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Save_InvalidApplicationType_ReturnsBadRequest()
+    {
+        var descriptor = CreateAgentClient();
+        descriptor.ApplicationType = "desktop";
+
+        var result = await CreateController().SaveAsync(descriptor);
+
+        GetErrors(result).Should().ContainSingle().Which.Should().Contain("application type");
+    }
+
     [Fact]
     public async Task Save_InvalidConsentType_ReturnsBadRequest()
     {
@@ -307,7 +403,7 @@ public class OAuthAppsControllerTests
     {
         var provider = new Mock<IOAuthResourceProvider>();
         provider
-            .Setup(x => x.GetResourcesAsync(It.IsAny<HttpContext>()))
+            .Setup(x => x.GetResourcesAsync(It.Is<OAuthResourceContext>(c => c.HttpContext != null), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<OAuthResource>
             {
                 new() { Uri = "https://platform.example.com/admin/mcp", Title = "Back office", Kind = "mcp" },
@@ -316,12 +412,80 @@ public class OAuthAppsControllerTests
             });
         var controller = CreateController(["https://platform.example.com/admin/mcp", "https://api.example.com"], provider.Object);
 
-        var resources = GetValue(await controller.GetResourcesAsync());
+        var resources = GetValue(await controller.GetResourcesAsync(TestContext.Current.CancellationToken));
 
         resources.Select(x => (x.Uri, x.Title, x.IsRegistered)).Should().Equal(
             ("https://platform.example.com/admin/mcp", "Back office", true),
             ("https://platform.example.com/ucp/mcp", "Shopping", false),
             ("https://api.example.com", null, true));
+    }
+
+    [Fact]
+    public async Task GetResources_ProviderThatFailsOrAnswersNull_IsSkipped()
+    {
+        var failing = new Mock<IOAuthResourceProvider>();
+        failing
+            .Setup(x => x.GetResourcesAsync(It.IsAny<OAuthResourceContext>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("The module is not configured."));
+        var empty = new Mock<IOAuthResourceProvider>();
+        empty
+            .Setup(x => x.GetResourcesAsync(It.IsAny<OAuthResourceContext>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((IList<OAuthResource>)null);
+        var working = new Mock<IOAuthResourceProvider>();
+        working
+            .Setup(x => x.GetResourcesAsync(It.IsAny<OAuthResourceContext>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync([new OAuthResource { Uri = "https://platform.example.com/admin/mcp", Title = "Back office" }]);
+        var controller = CreateController(["https://api.example.com"], failing.Object, empty.Object, working.Object);
+
+        var resources = GetValue(await controller.GetResourcesAsync(TestContext.Current.CancellationToken));
+
+        resources.Select(x => x.Uri).Should().Equal("https://platform.example.com/admin/mcp", "https://api.example.com");
+    }
+
+    [Theory]
+    [InlineData(Permissions.GrantTypes.Implicit, new[] { Permissions.Endpoints.Authorization, Permissions.Endpoints.EndSession })]
+    [InlineData(Permissions.Prefixes.GrantType + "impersonate", new[] { Permissions.Endpoints.Token })]
+    [InlineData(Permissions.GrantTypes.Password, new[] { Permissions.Endpoints.Token })]
+    public void Normalize_DerivesTheEndpointsOfTheGrantType(string grantType, string[] endpoints)
+    {
+        var descriptor = new OpenIddictApplicationDescriptor { ClientType = ClientTypes.Public, Permissions = { grantType } };
+
+        new OAuthAppRules().Normalize(descriptor, stored: null);
+
+        descriptor.Permissions.Should().BeEquivalentTo([grantType, .. endpoints]);
+    }
+
+    [Fact]
+    public void New_UsesTheDefaultsOfDerivedRules()
+    {
+        var controller = new OAuthAppsController(_manager, [], new RolesScopeRules(), Options.Create(new AuthorizationOptions()), NullLogger<OAuthAppsController>.Instance);
+
+        var descriptor = controller.New().Value!;
+
+        descriptor.Permissions.Should().Contain(Permissions.Scopes.Roles).And.NotContain(Permissions.Scopes.Email);
+    }
+
+    [Fact]
+    public void AddSecurityServices_KeepsRulesRegisteredBefore()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton<IOAuthAppRules, RolesScopeRules>();
+
+        services.AddSecurityServices();
+
+        services.Where(x => x.ServiceType == typeof(IOAuthAppRules)).Should().ContainSingle()
+            .Which.ImplementationType.Should().Be<RolesScopeRules>();
+    }
+
+    [Fact]
+    public void AddSecurityServices_RegistersTheRules()
+    {
+        var services = new ServiceCollection();
+
+        services.AddSecurityServices();
+
+        services.Where(x => x.ServiceType == typeof(IOAuthAppRules)).Should().ContainSingle()
+            .Which.ImplementationType.Should().Be<OAuthAppRules>();
     }
 
     [Theory]
@@ -332,6 +496,8 @@ public class OAuthAppsControllerTests
     [InlineData("cursor://anysphere.cursor-retrieval/oauth/callback", true)]
     [InlineData("http://agent.example.com/callback", false)]
     [InlineData("/callback", false)]
+    [InlineData("javascript:alert(1)", false)]
+    [InlineData("data:text/html,x", false)]
     public void GetRedirectUriError_AllowsHttpOnlyForLoopback(string uri, bool isValid)
     {
         (new OAuthAppRules().GetRedirectUriError(uri) == null).Should().Be(isValid);
@@ -341,7 +507,7 @@ public class OAuthAppsControllerTests
     {
         var options = Options.Create(new AuthorizationOptions { Resources = registeredResources ?? [] });
 
-        return new OAuthAppsController(_manager, providers, new OAuthAppRules(), options)
+        return new OAuthAppsController(_manager, providers, new OAuthAppRules(), options, NullLogger<OAuthAppsController>.Instance)
         {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
         };
@@ -376,5 +542,13 @@ public class OAuthAppsControllerTests
     private static IEnumerable<string> GetErrors<T>(ActionResult<T> result)
     {
         return result.Result.Should().BeOfType<BadRequestObjectResult>().Which.Value.Should().BeOfType<SecurityResult>().Subject.Errors;
+    }
+
+    private sealed class RolesScopeRules : OAuthAppRules
+    {
+        protected override IEnumerable<string> GetDefaultScopes()
+        {
+            return [Permissions.Scopes.Profile, Permissions.Scopes.Roles];
+        }
     }
 }

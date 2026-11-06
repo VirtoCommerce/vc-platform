@@ -15,10 +15,13 @@ public interface IOAuthAppRules
     void AddDefaultPermissions(OpenIddictApplicationDescriptor descriptor);
 
     /// <summary>
-    /// Keeps the permissions the client asked for and sets the endpoint and response type permissions that its
-    /// grant types need. A client that names no grant type gets the platform defaults.
+    /// Brings an application to be saved to its canonical form: the client, application and consent types in lower
+    /// case, the client type of a new application inferred when it is missing (the stored one for an existing
+    /// application), and the endpoint and response type permissions its grant types need. A client that names no
+    /// grant type gets the platform defaults. <paramref name="stored"/> is the saved state of an existing
+    /// application, or null for a new one.
     /// </summary>
-    void NormalizePermissions(OpenIddictApplicationDescriptor descriptor);
+    void Normalize(OpenIddictApplicationDescriptor descriptor, OpenIddictApplicationDescriptor stored);
 
     /// <summary>
     /// The reasons the application can't be saved. <paramref name="stored"/> is the saved state of an existing

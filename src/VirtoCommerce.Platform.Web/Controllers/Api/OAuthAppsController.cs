@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
-using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Web.Model.Security;
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -25,17 +27,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEnumerable<IOAuthResourceProvider> _resourceProviders;
         private readonly IOAuthAppRules _rules;
         private readonly Core.Security.AuthorizationOptions _authorizationOptions;
+        private readonly ILogger<OAuthAppsController> _logger;
 
         public OAuthAppsController(
             OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> manager,
             IEnumerable<IOAuthResourceProvider> resourceProviders,
             IOAuthAppRules rules,
-            IOptions<Core.Security.AuthorizationOptions> authorizationOptions)
+            IOptions<Core.Security.AuthorizationOptions> authorizationOptions,
+            ILogger<OAuthAppsController> logger)
         {
             _manager = manager;
             _resourceProviders = resourceProviders;
             _rules = rules;
             _authorizationOptions = authorizationOptions.Value;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -64,26 +69,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("resources")]
         [Authorize(Permissions.SecurityOAuthApplicationsRead)]
-        public async Task<ActionResult<OAuthResourceInfo[]>> GetResourcesAsync()
+        public async Task<ActionResult<OAuthResourceInfo[]>> GetResourcesAsync(CancellationToken cancellationToken)
         {
             var registered = new HashSet<string>(_authorizationOptions.Resources ?? [], StringComparer.Ordinal);
             var result = new Dictionary<string, OAuthResourceInfo>(StringComparer.Ordinal);
+            var context = new OAuthResourceContext { HttpContext = HttpContext };
 
             foreach (var provider in _resourceProviders)
             {
-                foreach (var resource in await provider.GetResourcesAsync(HttpContext) ?? [])
+                var resources = await GetProviderResourcesAsync(provider, context, cancellationToken);
+
+                foreach (var resource in resources.Where(x => !string.IsNullOrEmpty(x?.Uri)))
                 {
-                    if (!string.IsNullOrEmpty(resource?.Uri))
+                    result.TryAdd(resource.Uri, new OAuthResourceInfo
                     {
-                        result.TryAdd(resource.Uri, new OAuthResourceInfo
-                        {
-                            Uri = resource.Uri,
-                            Title = resource.Title,
-                            Kind = resource.Kind,
-                            Description = resource.Description,
-                            IsRegistered = registered.Contains(resource.Uri),
-                        });
-                    }
+                        Uri = resource.Uri,
+                        Title = resource.Title,
+                        Kind = resource.Kind,
+                        Description = resource.Description,
+                        IsRegistered = registered.Contains(resource.Uri),
+                    });
                 }
             }
 
@@ -122,9 +127,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var app = string.IsNullOrWhiteSpace(descriptor.ClientId) ? null : await _manager.FindByClientIdAsync(descriptor.ClientId);
             var stored = app == null ? null : await ToDescriptorAsync(app);
 
-            descriptor.ClientType ??= stored?.ClientType ?? (string.IsNullOrEmpty(descriptor.ClientSecret)
-                ? OpenIddictConstants.ClientTypes.Public
-                : OpenIddictConstants.ClientTypes.Confidential);
+            _rules.Normalize(descriptor, stored);
 
             if (stored != null)
             {
@@ -137,8 +140,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return BadRequest(new SecurityResult { Errors = errors });
             }
-
-            _rules.NormalizePermissions(descriptor);
 
             try
             {
@@ -197,6 +198,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
 
             return result;
+        }
+
+        // A module whose provider fails must not take the resources of the others away
+        private async Task<IList<OAuthResource>> GetProviderResourcesAsync(IOAuthResourceProvider provider, OAuthResourceContext context, CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await provider.GetResourcesAsync(context, cancellationToken) ?? [];
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                _logger.LogWarning(ex, "The OAuth resource provider {Provider} failed; its resources are not listed.", provider.GetType().FullName);
+                return [];
+            }
         }
 
         private async Task<OpenIddictApplicationDescriptor> ToDescriptorAsync(VirtoOpenIddictEntityFrameworkCoreApplication app)
