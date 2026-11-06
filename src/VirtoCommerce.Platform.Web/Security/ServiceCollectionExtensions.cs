@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Core.Security.SignInMethods;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Handlers;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Security.SignInLog;
@@ -48,6 +49,8 @@ namespace VirtoCommerce.Platform.Web.Security
 
             services.AddScoped<IUserNameResolver, HttpContextUserResolver>();
             services.AddSingleton<IPermissionsRegistrar, DefaultPermissionProvider>();
+            // TryAdd so a module can replace the rules from IPlatformStartup.ConfigureServices too, which runs before this
+            services.TryAddSingleton<IOAuthAppRules, OAuthAppRules>();
             services.AddScoped<IRoleSearchService, RoleSearchService>();
 
             //Register as singleton because this abstraction can be used as dependency in singleton services
