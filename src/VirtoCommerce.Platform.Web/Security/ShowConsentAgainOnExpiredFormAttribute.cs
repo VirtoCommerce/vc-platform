@@ -38,20 +38,43 @@ public sealed class ShowConsentAgainOnExpiredFormAttribute : Attribute, IAsyncAl
             httpContext.RequestServices.GetService<ILogger<ShowConsentAgainOnExpiredFormAttribute>>()?
                 .LogWarning("The OAuth consent form was submitted with an invalid antiforgery token, so it is shown again");
 
-            httpContext.Response.Cookies.Append(CookieName, "1", new CookieOptions
-            {
-                Path = request.PathBase + request.Path,
-                HttpOnly = true,
-                Secure = request.IsHttps,
-                SameSite = SameSiteMode.Lax,
-                MaxAge = TimeSpan.FromMinutes(5),
-                // Part of signing in, not tracking: the platform's cookie policy drops other cookies until consent
-                IsEssential = true,
-            });
+            var options = CreateCookieOptions(request);
+            options.MaxAge = TimeSpan.FromMinutes(5);
+            httpContext.Response.Cookies.Append(CookieName, "1", options);
 
             context.Result = new LocalRedirectResult(request.PathBase + request.Path + QueryString.Create(parameters));
         }
 
         return next();
+    }
+
+    /// <summary>
+    /// Whether a submit of the consent form of this authorization request was refused. The mark is removed, so the
+    /// consent page shows its notice once.
+    /// </summary>
+    public static bool TakeMark(HttpContext httpContext)
+    {
+        if (!httpContext.Request.Cookies.ContainsKey(CookieName))
+        {
+            return false;
+        }
+
+        httpContext.Response.Cookies.Delete(CookieName, CreateCookieOptions(httpContext.Request));
+
+        return true;
+    }
+
+    private static CookieOptions CreateCookieOptions(HttpRequest request)
+    {
+        return new CookieOptions
+        {
+            Path = request.PathBase + request.Path,
+            HttpOnly = true,
+            // As the platform's sign-in cookie: browsers keep a secure cookie for http://localhost too
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+            // Part of signing in, not tracking: the platform's cookie policy drops other cookies until consent
+            IsEssential = true,
+        };
     }
 }

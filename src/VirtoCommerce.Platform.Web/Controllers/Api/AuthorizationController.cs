@@ -861,12 +861,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             HttpContext.OverrideScpFormActionUri(request.RedirectUri);
             HttpContext.DenyFraming();
 
-            // Set by ShowConsentAgainOnExpiredFormAttribute when a submit of this form was refused
-            var expired = Request.Cookies.ContainsKey(ShowConsentAgainOnExpiredFormAttribute.CookieName);
-            if (expired)
-            {
-                Response.Cookies.Delete(ShowConsentAgainOnExpiredFormAttribute.CookieName, new CookieOptions { Path = Request.PathBase + Request.Path });
-            }
+            var expired = ShowConsentAgainOnExpiredFormAttribute.TakeMark(HttpContext);
 
             var scopes = request.GetScopes().ToList();
             var resources = request.GetResources().ToList();

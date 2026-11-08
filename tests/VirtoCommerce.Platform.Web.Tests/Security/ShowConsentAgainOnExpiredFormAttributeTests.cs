@@ -42,6 +42,7 @@ public class ShowConsentAgainOnExpiredFormAttributeTests
         Assert.StartsWith(ShowConsentAgainOnExpiredFormAttribute.CookieName + "=1", cookie);
         Assert.Contains("path=/connect/authorize", cookie);
         Assert.Contains("httponly", cookie);
+        Assert.Contains("secure", cookie);
     }
 
     [Fact]
@@ -70,6 +71,28 @@ public class ShowConsentAgainOnExpiredFormAttributeTests
         public void Delete(string key) => Options.Remove(key);
 
         public void Delete(string key, CookieOptions options) => Options.Remove(key);
+    }
+
+    [Fact]
+    public void TakeMark_MarkedRequest_IsMarkedOnce()
+    {
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Path = "/connect/authorize";
+        httpContext.Request.Headers.Cookie = ShowConsentAgainOnExpiredFormAttribute.CookieName + "=1";
+
+        Assert.True(ShowConsentAgainOnExpiredFormAttribute.TakeMark(httpContext));
+        var deleted = httpContext.Response.Headers.SetCookie.ToString();
+        Assert.StartsWith(ShowConsentAgainOnExpiredFormAttribute.CookieName + "=;", deleted);
+        Assert.Contains("expires=Thu, 01 Jan 1970", deleted);
+    }
+
+    [Fact]
+    public void TakeMark_UnmarkedRequest_IsNotMarked()
+    {
+        var httpContext = new DefaultHttpContext();
+
+        Assert.False(ShowConsentAgainOnExpiredFormAttribute.TakeMark(httpContext));
+        Assert.Equal(0, httpContext.Response.Headers.SetCookie.Count);
     }
 
     [Fact]
