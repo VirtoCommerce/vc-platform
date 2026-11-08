@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
@@ -726,34 +727,31 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 // In every other case, render the consent form.
                 default:
-                    HttpContext.OverrideScpFormActionUri(request.RedirectUri);
-
-                    return View(new AuthorizeViewModel
-                    {
-                        ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
-                        Scope = request.Scope
-                    });
+                    return await ConsentFormAsync(request, user, application, expired: false);
             }
         }
 
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Deny")]
-        [ValidateAntiForgeryToken]
+        [IgnoreAntiforgeryToken]
         [Authorize]
         [AllowAnonymous]
         // Notify OpenIddict that the authorization grant has been denied by the resource owner
         // to redirect the user agent to the client application using the appropriate response_mode.
-        public IActionResult Deny()
+        public async Task<IActionResult> Deny([FromServices] IAntiforgery antiforgery, [FromServices] ILogger<AuthorizationController> logger)
         {
+            // Denied even when the token is invalid: nothing is shared either way, which is what the user asked for
+            await IsConsentFormValidAsync(antiforgery, logger);
+
             return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Accept")]
-        [ValidateAntiForgeryToken]
+        [IgnoreAntiforgeryToken]
         [Authorize]
         [AllowAnonymous]
-        public async Task<IActionResult> Accept()
+        public async Task<IActionResult> Accept([FromServices] IAntiforgery antiforgery, [FromServices] ILogger<AuthorizationController> logger)
         {
             var request = GetOpenIddictServerRequest();
 
@@ -764,6 +762,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
+
+            // The antiforgery check is made here rather than by a filter, so a page that was open too long, or whose
+            // cookie the browser replaced, is shown again with a fresh token instead of an empty 400
+            if (!await IsConsentFormValidAsync(antiforgery, logger))
+            {
+                return await ConsentFormAsync(request, user, application, expired: true);
+            }
 
             // Note: the same check is already made in the other action but is repeated
             // here to ensure a malicious user can't abuse this POST-only endpoint and
@@ -858,6 +863,60 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// means the built-in Platform login page, which does not bind the session to one request.
         /// </summary>
         private Task<string> GetOAuthLoginPathAsync() => _oauthLoginPathProvider.GetLoginPathAsync(Request.Host.Host);
+
+        private async Task<IActionResult> ConsentFormAsync(OpenIddictRequest request, ApplicationUser user,
+            VirtoOpenIddictEntityFrameworkCoreApplication application, bool expired)
+        {
+            HttpContext.OverrideScpFormActionUri(request.RedirectUri);
+            HttpContext.DenyFraming();
+
+            var scopes = request.GetScopes().ToList();
+            var resources = request.GetResources().ToList();
+            var redirect = ConsentDescriptions.GetRedirect(request.RedirectUri, Request.Host.Host);
+
+            var model = new AuthorizeViewModel
+            {
+                ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
+                ClientId = request.ClientId,
+                Scope = request.Scope,
+                UserName = user.UserName,
+                Email = user.Email,
+                Resources = resources,
+                Permissions = ConsentDescriptions.GetPermissions(scopes, resources, user.Email),
+                RedirectUri = request.RedirectUri,
+                RedirectHost = redirect.Host,
+                RedirectIsLocal = redirect.IsLocal,
+                RedirectIsElsewhere = redirect.IsElsewhere,
+                Expired = expired,
+            };
+
+            foreach (var name in scopes.Except(ConsentDescriptions.StandardScopes))
+            {
+                var scope = await _scopeManager.FindByNameAsync(name);
+                model.Permissions.Add(new AuthorizePermission
+                {
+                    Icon = "key",
+                    Title = (scope != null ? await _scopeManager.GetDisplayNameAsync(scope) : null) ?? $"Use \"{name}\"",
+                    Details = scope != null ? await _scopeManager.GetDescriptionAsync(scope) : null,
+                });
+            }
+
+            return View(nameof(Authorize), model);
+        }
+
+        private async Task<bool> IsConsentFormValidAsync(IAntiforgery antiforgery, ILogger logger)
+        {
+            try
+            {
+                await antiforgery.ValidateRequestAsync(HttpContext);
+                return true;
+            }
+            catch (AntiforgeryValidationException ex)
+            {
+                logger.LogWarning(ex, "The OAuth consent form was submitted with an invalid antiforgery token");
+                return false;
+            }
+        }
 
         private bool IsLocalAuthorizationReturnUrl(string returnUrl)
         {

@@ -27,6 +27,7 @@ namespace VirtoCommerce.Platform.Web.Security
     public static class ServiceCollectionExtensions
     {
         private const string _scpFormActionUriKey = "Content-Security-Policy-Form-Action-Uri";
+        private const string _denyFramingKey = "Security-Headers-Deny-Framing";
         private static readonly ConcurrentDictionary<string, HeaderPolicyCollection> _policyCache = new();
 
         public static IServiceCollection AddSecurityServices(this IServiceCollection services, Action<AuthorizationOptions> setupAction = null)
@@ -156,15 +157,21 @@ namespace VirtoCommerce.Platform.Web.Security
                 {
                     var options = context.HttpContext.RequestServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
                     var formActionUri = context.HttpContext.GetScpFormActionUri() ?? string.Empty;
+                    var denyFraming = context.HttpContext.Items.ContainsKey(_denyFramingKey);
+                    var cacheKey = denyFraming ? $"{formActionUri} deny-framing" : formActionUri;
 
-                    if (_policyCache.TryGetValue(formActionUri, out var policies))
+                    if (_policyCache.TryGetValue(cacheKey, out var policies))
                     {
                         return policies;
                     }
 
                     policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
 
-                    if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
+                    if (denyFraming)
+                    {
+                        policies.AddFrameOptionsDeny();
+                    }
+                    else if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
                     {
                         policies.AddFrameOptionsSameOrigin();
                     }
@@ -182,7 +189,7 @@ namespace VirtoCommerce.Platform.Web.Security
                         builder.AddObjectSrc().None();
                         builder.AddFormAction().Self().Uri(formActionUri);
 
-                        if (options.FrameAncestors.EqualsIgnoreCase("None"))
+                        if (denyFraming || options.FrameAncestors.EqualsIgnoreCase("None"))
                         {
                             builder.AddFrameAncestors().None();
                         }
@@ -196,7 +203,7 @@ namespace VirtoCommerce.Platform.Web.Security
                         }
                     });
 
-                    _policyCache.AddOrUpdate(formActionUri, policies, (_, _) => policies);
+                    _policyCache.AddOrUpdate(cacheKey, policies, (_, _) => policies);
 
                     return policies;
                 });
@@ -206,6 +213,15 @@ namespace VirtoCommerce.Platform.Web.Security
         public static void OverrideScpFormActionUri(this HttpContext httpContext, string uri)
         {
             httpContext.Items[_scpFormActionUriKey] = uri;
+        }
+
+        /// <summary>
+        /// The response can't be shown in a frame on any site, whatever the SecurityHeaders settings allow: a page
+        /// where the user grants access, which another site could otherwise overlay to trick them into a click.
+        /// </summary>
+        public static void DenyFraming(this HttpContext httpContext)
+        {
+            httpContext.Items[_denyFramingKey] = true;
         }
 
         public static string GetScpFormActionUri(this HttpContext httpContext)

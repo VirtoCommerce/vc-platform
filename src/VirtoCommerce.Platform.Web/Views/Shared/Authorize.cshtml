@@ -2,127 +2,469 @@
 @model VirtoCommerce.Platform.Web.Model.AuthorizeViewModel
 @{
     Layout = null;
+    var applicationInitial = string.IsNullOrEmpty(Model.ApplicationName) ? "?" : Model.ApplicationName.Substring(0, 1).ToUpperInvariant();
+    var userName = Model.UserName ?? User.Identity?.Name;
+    var userInitials = string.IsNullOrEmpty(userName) ? "?" : userName.Substring(0, Math.Min(2, userName.Length)).ToUpperInvariant();
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consent Form</title>
+    <meta name="referrer" content="no-referrer">
+    <title>Allow @Model.ApplicationName</title>
     <style>
+        :root {
+            --bg: #f1f3f6;
+            --card: #ffffff;
+            --ink: #1f2933;
+            --sub: #5a6472;
+            --line: #e2e6ec;
+            --soft: #eef5fa;
+            --accent: #146c99;
+            --accent-hover: #0f5a80;
+            --accent-ink: #ffffff;
+            --button-line: #c5ccd6;
+            --button-hover: #f4f6f9;
+            --notice-bg: #fff6e0;
+            --notice-line: #f0d48a;
+            --notice-ink: #6b4800;
+            --app: #3d3a36;
+            --focus: #f6b81c;
+        }
+
+        @@media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #12161c;
+                --card: #1a2029;
+                --ink: #e6eaf0;
+                --sub: #a2abb9;
+                --line: #2c3440;
+                --soft: #1f2c38;
+                --accent: #4fa8d8;
+                --accent-hover: #6cb8e0;
+                --accent-ink: #0b1620;
+                --button-line: #3a4452;
+                --button-hover: #222a35;
+                --notice-bg: #2b2412;
+                --notice-line: #5c4a1c;
+                --notice-ink: #f0d48a;
+                --app: #5a5650;
+                color-scheme: dark;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 16px/1.5 Roboto, "Segoe UI", Arial, sans-serif;
+        }
+
+        main {
+            max-width: 460px;
+            margin: 0 auto;
+            padding: 48px 24px;
+            display: grid;
+            gap: 22px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.35rem;
+            line-height: 1.3;
+            font-weight: 400;
+            text-align: center;
+            text-wrap: balance;
+            overflow-wrap: anywhere;
+        }
+
+            h1 b {
+                font-weight: 700;
+            }
+
+        .pair {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            gap: 14px;
+        }
+
+            .pair span {
+                width: 56px;
+                height: 56px;
+                border-radius: 14px;
+                display: grid;
+                place-items: center;
+                font-size: 1.5rem;
+                font-weight: 700;
+            }
+
+            .pair .application {
+                background: var(--app);
+                color: #ffffff;
+            }
+
+            .pair .dots {
+                width: 56px;
+                height: 2px;
+                border-radius: 0;
+                background: repeating-linear-gradient(90deg, var(--sub) 0 6px, transparent 6px 12px);
+            }
+
+            .pair .account {
+                background: var(--soft);
+                color: var(--accent);
+            }
+
+            .pair svg {
+                width: 28px;
+                height: 28px;
+            }
+
+        .notice {
             margin: 0;
-            background-color: #f7f7f7;
-        }
-
-        .consent-form {
-            width: 400px;
-            background: #fff;
+            padding: 12px 14px;
             border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
+            border: 1px solid var(--notice-line);
+            background: var(--notice-bg);
+            color: var(--notice-ink);
+            font-size: 0.95rem;
         }
 
-            .consent-form h2 {
+        .account-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--card);
+        }
+
+            .account-box .avatar {
+                width: 36px;
+                height: 36px;
+                flex: none;
+                border-radius: 50%;
+                background: var(--soft);
+                color: var(--accent);
+                display: grid;
+                place-items: center;
+                font-size: 0.85rem;
+                font-weight: 700;
+            }
+
+            .account-box div {
+                min-width: 0;
+            }
+
+            .account-box b {
+                display: block;
+                font-weight: 500;
+                overflow-wrap: anywhere;
+            }
+
+            .account-box small {
+                display: block;
+                color: var(--sub);
+                font-size: 0.85rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        .access {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 18px;
+            display: grid;
+            gap: 16px;
+        }
+
+            .access h2 {
                 margin: 0;
-                font-size: 1.4em;
-                color: #262626;
+                font-size: 0.95rem;
+                font-weight: 500;
+                color: var(--sub);
             }
-
-            .consent-form p {
-                font-size: 0.9em;
-                color: #777;
-            }
-
-                .consent-form p .username {
-                    color: #626C87;
-                    font-weight: bold;
-                }
 
         .permissions {
-            text-align: left;
-            margin: 20px 0;
-            color: #666;
-            font-size: 0.9em;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            gap: 14px;
         }
 
-            .permissions label {
-                display: flex;
-                align-items: center;
-                margin: 10px 0;
+            .permissions li {
+                display: grid;
+                grid-template-columns: 24px minmax(0, 1fr);
+                gap: 12px;
             }
 
-                .permissions label input {
-                    margin-right: 10px;
-                }
-
-        .submit-button {
-            background-color: #43b0e6;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-            .submit-button:hover {
-                background-color: #319ed4;
+            .permissions svg {
+                width: 22px;
+                height: 22px;
+                margin-top: 1px;
+                color: var(--accent);
             }
 
-        .cancel-button {
-            margin-top: 10px;
-            font-size: 0.9em;
-            color: #888;
-            background-color: #fff;
-            cursor: pointer;
-            border: none;
+            .permissions b {
+                display: block;
+                font-weight: 500;
+            }
+
+            .permissions small {
+                display: block;
+                color: var(--sub);
+                font-size: 0.875rem;
+                overflow-wrap: anywhere;
+            }
+
+        .destination {
+            display: grid;
+            grid-template-columns: 24px minmax(0, 1fr);
+            gap: 12px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+            color: var(--sub);
+            font-size: 0.9rem;
         }
 
-        .footer-text {
-            font-size: 0.8em;
-            color: #999;
-            margin-top: 20px;
+            .destination svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .destination b {
+                color: var(--ink);
+                font-weight: 500;
+                overflow-wrap: anywhere;
+            }
+
+            .destination.elsewhere {
+                margin: 0 -18px -18px;
+                padding: 14px 18px;
+                border-top-color: var(--notice-line);
+                border-radius: 0 0 10px 10px;
+                background: var(--notice-bg);
+                color: var(--notice-ink);
+            }
+
+        details {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card);
+            font-size: 0.875rem;
+        }
+
+        summary {
+            cursor: pointer;
+            padding: 10px 14px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        dl {
+            margin: 0;
+            padding: 0 14px 14px;
+            display: grid;
+            gap: 8px;
+        }
+
+        dt {
+            color: var(--sub);
+        }
+
+        dd {
+            margin: 0;
+            font-family: Consolas, "SFMono-Regular", Menlo, monospace;
+            overflow-wrap: anywhere;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        button {
+            min-height: 46px;
+            padding: 0 22px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            font: 500 1rem/1 Roboto, "Segoe UI", Arial, sans-serif;
+            cursor: pointer;
+        }
+
+            button:focus-visible, summary:focus-visible {
+                outline: 3px solid var(--focus);
+                outline-offset: 2px;
+            }
+
+        .allow {
+            background: var(--accent);
+            color: var(--accent-ink);
+        }
+
+            .allow:hover {
+                background: var(--accent-hover);
+            }
+
+        .cancel {
+            background: var(--card);
+            color: var(--ink);
+            border-color: var(--button-line);
+        }
+
+            .cancel:hover {
+                background: var(--button-hover);
+            }
+
+        .footnote {
+            margin: 0;
+            text-align: center;
+            color: var(--sub);
+            font-size: 0.85rem;
+        }
+
+        @@media (max-width: 520px) {
+            main {
+                padding: 24px 16px;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            .actions {
+                grid-template-columns: 1fr;
+            }
+
+            .allow {
+                order: -1;
+            }
         }
     </style>
 </head>
 <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="icon-work" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16v12H4zM9 7V5h6v2M4 12h16" /></symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5" /></symbol>
+        <symbol id="icon-mail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M3 6h18v12H3zM3 7l9 6 9-6" /></symbol>
+        <symbol id="icon-clock" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2" /></symbol>
+        <symbol id="icon-key" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 10a4 4 0 1 0-3.5 4L12 15.5V18h2.5v2.5H17V18l-3.2-4.5A4 4 0 0 0 14 10z" /></symbol>
+        <symbol id="icon-out" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6" /></symbol>
+    </svg>
     <form asp-controller="Authorization" asp-action="Authorize" method="post">
-        <div class="consent-form">
-            <h2>@Model.ApplicationName</h2>
-            <p>@Model.ApplicationName wants to access your account: <span class="username">@User.Identity?.Name</span></p>
-            <p>The following permissions are requested by the above app. Please review these and consent if it is OK.</p>
-            <div class="permissions">
-                @foreach (var scope in Model.Scope.Split(' '))
-                {
-                    <label>
-                        <input type="checkbox" checked disabled>@scope
-                    </label>
-                }
+        <main>
+            <div class="pair" aria-hidden="true">
+                <span class="application">@applicationInitial</span>
+                <span class="dots"></span>
+                <span class="account"><svg><use href="#icon-user" /></svg></span>
             </div>
-            @* Flow the request parameters so they can be received by the Accept/Reject actions: *@
+
+            <h1><b>@Model.ApplicationName</b> wants to access your account</h1>
+
+            @if (Model.Expired)
+            {
+                <p class="notice" role="alert">This page expired, so nothing was allowed yet. Review the access and choose again.</p>
+            }
+
+            <div class="account-box">
+                <span class="avatar" aria-hidden="true">@userInitials</span>
+                <div>
+                    <b>@userName</b>
+                    @if (!string.IsNullOrEmpty(Model.Email) && !string.Equals(Model.Email, userName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <small>@Model.Email</small>
+                    }
+                </div>
+            </div>
+
+            <section class="access" aria-labelledby="access-title">
+                <h2 id="access-title">It will be able to:</h2>
+                <ul class="permissions">
+                    @foreach (var permission in Model.Permissions)
+                    {
+                        <li>
+                            <svg aria-hidden="true"><use href="#icon-@permission.Icon" /></svg>
+                            <span>
+                                <b>@permission.Title</b>
+                                @if (!string.IsNullOrEmpty(permission.Details))
+                                {
+                                    <small>@permission.Details</small>
+                                }
+                            </span>
+                        </li>
+                    }
+                </ul>
+                @if (!string.IsNullOrEmpty(Model.RedirectHost))
+                {
+                    <div class="destination @(Model.RedirectIsElsewhere ? "elsewhere" : null)">
+                        <svg aria-hidden="true"><use href="#icon-out" /></svg>
+                        @if (Model.RedirectIsLocal)
+                        {
+                            <span>After you allow, you go back to <b>@Model.RedirectHost</b>, an app on this computer.</span>
+                        }
+                        else if (Model.RedirectIsElsewhere)
+                        {
+                            <span>After you allow, you go to <b>@Model.RedirectHost</b>. Allow only if you started this from that site.</span>
+                        }
+                        else
+                        {
+                            <span>After you allow, you go back to <b>@Model.RedirectHost</b>.</span>
+                        }
+                    </div>
+                }
+            </section>
+
+            <details>
+                <summary>Technical details</summary>
+                <dl>
+                    <dt>Client ID</dt>
+                    <dd>@Model.ClientId</dd>
+                    @if (Model.Resources.Count > 0)
+                    {
+                        <dt>@(Model.Resources.Count == 1 ? "Resource" : "Resources")</dt>
+                        <dd>@string.Join(" ", Model.Resources)</dd>
+                    }
+                    <dt>Redirect URI</dt>
+                    <dd>@Model.RedirectUri</dd>
+                    <dt>Scopes</dt>
+                    <dd>@Model.Scope</dd>
+                </dl>
+            </details>
+
+            @* Flow the request parameters so they can be received by the Accept/Reject actions; not the token and the
+               button of a submit that is shown again, which the form renders anew *@
             @foreach (var parameter in Context.Request.HasFormContentType ?
             (IEnumerable<KeyValuePair<string, StringValues>>)Context.Request.Form : Context.Request.Query)
             {
+                if (parameter.Key == "__RequestVerificationToken" || parameter.Key.StartsWith("submit.", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
                 @foreach (var value in parameter.Value)
                 {
                     <input type="hidden" name="@parameter.Key" value="@value" />
                 }
             }
-            <input type="submit" class="submit-button" name="submit.Accept" value="Submit Consent" />
-            <input type="submit" class="cancel-button" name="submit.Deny" value="Cancel" />
-            <p class="footer-text">
-                Your consent to provide access is required. If you do not approve, click Cancel, in which case no information will be shared with the app.
-            </p>
-        </div>
+
+            <div class="actions">
+                <button type="submit" class="cancel" name="submit.Deny" value="Cancel">Cancel</button>
+                <button type="submit" class="allow" name="submit.Accept" value="Allow">Allow</button>
+            </div>
+
+            <p class="footnote">If you cancel, nothing is shared with the app.</p>
+        </main>
     </form>
 </body>
 </html>
