@@ -16,6 +16,7 @@ using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security.Extensions;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using Xunit;
 
@@ -54,7 +55,7 @@ public class OAuthSessionTests : IDisposable
         httpContext.Request.Host = new HostString("shop.example");
         httpContext.Request.Headers.Origin = "https://shop.example";
         _controller = new AuthorizationController(null, Options.Create(new IdentityOptions()), _signInManager.Object,
-            Options.Create(new PasswordLoginOptions()), null, [], [], [], [], null, null, null, null, null, null, Options.Create(_options))
+            Options.Create(new PasswordLoginOptions()), null, [], [], [], [], null, null, null, null, null, null, new OAuthLoginPathProvider(Options.Create(_options)))
         {
             ControllerContext = new ControllerContext { HttpContext = httpContext },
             Url = new UrlHelper(new ActionContext(httpContext, new RouteData(), new ActionDescriptor())),

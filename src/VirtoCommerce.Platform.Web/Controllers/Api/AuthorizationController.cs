@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IExternalSignInService _externalSignInService;
         private readonly IOpenIddictAuthorizationManager _authorizationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
-        private readonly Core.Security.AuthorizationOptions _authorizationOptions;
+        private readonly IOAuthLoginPathProvider _oauthLoginPathProvider;
 
         public AuthorizationController(
             OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> applicationManager,
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IExternalSignInService externalSignInService,
             IOpenIddictAuthorizationManager authorizationManager,
             IOpenIddictScopeManager scopeManager,
-            IOptions<Core.Security.AuthorizationOptions> authorizationOptions)
+            IOAuthLoginPathProvider oauthLoginPathProvider)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalSignInService = externalSignInService;
             _authorizationManager = authorizationManager;
             _scopeManager = scopeManager;
-            _authorizationOptions = authorizationOptions.Value;
+            _oauthLoginPathProvider = oauthLoginPathProvider;
         }
 
         [HttpPost("~/revoke/token")]
@@ -123,7 +123,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            if (!string.IsNullOrEmpty(OAuthLoginPath))
+            if (await GetOAuthLoginPathAsync() != null)
             {
                 await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             }
@@ -621,9 +621,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet("~/connect/session")]
         [AllowAnonymous]
-        public IActionResult GetSessionToken([FromServices] IAntiforgery antiforgery)
+        public async Task<IActionResult> GetSessionToken([FromServices] IAntiforgery antiforgery)
         {
-            if (string.IsNullOrEmpty(OAuthLoginPath))
+            if (await GetOAuthLoginPathAsync() == null)
             {
                 return NotFound();
             }
@@ -636,7 +636,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<IActionResult> CreateSession([FromQuery] string returnUrl)
         {
-            if (string.IsNullOrEmpty(OAuthLoginPath))
+            if (await GetOAuthLoginPathAsync() == null)
             {
                 return NotFound();
             }
@@ -687,12 +687,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
             var returnUrl = Request.PathBase + Request.Path + QueryString.Create(
                 Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList());
-            var useStorefrontLogin = !string.IsNullOrEmpty(OAuthLoginPath);
+            var loginPath = await GetOAuthLoginPathAsync();
+            var useStorefrontLogin = loginPath != null;
 
             if (!result.Succeeded || RequestHasExpired(request, result) ||
                 (useStorefrontLogin && result.Properties?.RedirectUri != returnUrl))
             {
-                return ChallengeLogin(request, returnUrl);
+                return ChallengeLogin(request, returnUrl, loginPath);
             }
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
@@ -853,10 +854,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         /// <summary>
         /// The login path configured for the host this request arrived on: the redirect to it is
-        /// relative, so a deployment with several front-ends needs the one that exists here. Empty
+        /// relative, so a deployment with several front-ends needs the one that exists here. Null
         /// means the built-in Platform login page, which does not bind the session to one request.
         /// </summary>
-        private string OAuthLoginPath => _authorizationOptions.GetOAuthLoginPath(Request.Host.Host);
+        private Task<string> GetOAuthLoginPathAsync() => _oauthLoginPathProvider.GetLoginPathAsync(Request.Host.Host);
 
         private bool IsLocalAuthorizationReturnUrl(string returnUrl)
         {
@@ -881,7 +882,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return user;
         }
 
-        private IActionResult ChallengeLogin(OpenIddictRequest request, string returnUrl)
+        private IActionResult ChallengeLogin(OpenIddictRequest request, string returnUrl, string loginPath)
         {
             if (request.HasPromptValue(PromptValues.None))
             {
@@ -894,9 +895,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }));
             }
 
-            if (!string.IsNullOrEmpty(OAuthLoginPath))
+            if (loginPath != null)
             {
-                return LocalRedirect(OAuthLoginPath + QueryString.Create("returnUrl", returnUrl));
+                return LocalRedirect(loginPath + QueryString.Create("returnUrl", returnUrl));
             }
 
             return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, IdentityConstants.ApplicationScheme);

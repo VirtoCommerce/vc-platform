@@ -70,7 +70,7 @@ public class AuthorizationControllerGrantTypeHandlerTests
             externalSignInService: null,
             authorizationManager: null,
             scopeManager: null,
-            authorizationOptions: Options.Create(new AuthorizationOptions()));
+            oauthLoginPathProvider: new OAuthLoginPathProvider(Options.Create(new AuthorizationOptions())));
 
         var httpContext = new DefaultHttpContext();
 

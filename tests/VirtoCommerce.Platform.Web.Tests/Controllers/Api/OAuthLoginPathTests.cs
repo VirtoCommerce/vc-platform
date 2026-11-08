@@ -14,6 +14,7 @@ using Moq;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using Xunit;
 
@@ -37,7 +38,7 @@ public class OAuthLoginPathTests : IDisposable
     private readonly AuthorizationOptions _options = new()
     {
         OAuthLoginPath = "/oauth/authorize",
-        BuiltInLoginHosts = ["platform.example"],
+        OAuthLoginPaths = new() { ["platform.example"] = "" },
     };
 
     public OAuthLoginPathTests()
@@ -55,7 +56,7 @@ public class OAuthLoginPathTests : IDisposable
         _httpContext = new DefaultHttpContext { RequestServices = _services };
         _httpContext.Request.Scheme = "https";
         _controller = new AuthorizationController(null, Options.Create(new IdentityOptions()), _signInManager.Object,
-            Options.Create(new PasswordLoginOptions()), null, [], [], [], [], null, null, null, null, null, null, Options.Create(_options))
+            Options.Create(new PasswordLoginOptions()), null, [], [], [], [], null, null, null, null, null, null, new OAuthLoginPathProvider(Options.Create(_options)))
         {
             ControllerContext = new ControllerContext { HttpContext = _httpContext },
             Url = new UrlHelper(new ActionContext(_httpContext, new RouteData(), new ActionDescriptor())),

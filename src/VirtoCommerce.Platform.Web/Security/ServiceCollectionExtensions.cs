@@ -51,6 +51,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<IPermissionsRegistrar, DefaultPermissionProvider>();
             // TryAdd so a module can replace the rules from IPlatformStartup.ConfigureServices too, which runs before this
             services.TryAddSingleton<IOAuthAppRules, OAuthAppRules>();
+            services.TryAddSingleton<IOAuthLoginPathProvider, OAuthLoginPathProvider>();
             services.AddScoped<IRoleSearchService, RoleSearchService>();
 
             //Register as singleton because this abstraction can be used as dependency in singleton services
