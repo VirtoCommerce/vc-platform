@@ -16,8 +16,18 @@ namespace VirtoCommerce.Platform.Core.Security
 
         /// <summary>
         /// Local storefront path that establishes the browser session for OAuth consent. Disabled by default.
+        /// Used on every host that <see cref="OAuthLoginPaths"/> does not list.
         /// </summary>
         public string OAuthLoginPath { get; set; }
+
+        /// <summary>
+        /// The login path per host, for a Platform that serves several front-ends: storefronts on their own hosts
+        /// and the Admin application on the Platform host. The path is redirected to relatively, so it has to exist
+        /// on the host the authorization request arrives on. A host without a path uses the built-in Platform login
+        /// page. A list rather than a map by host, so that no host is part of an environment variable's name:
+        /// Authorization__OAuthLoginPaths__0__Host=admin.example.com.
+        /// </summary>
+        public IList<OAuthHostLoginPath> OAuthLoginPaths { get; set; } = [];
 
         /// <summary>
         /// Interval after which the authentication cookie's security stamp is re-validated

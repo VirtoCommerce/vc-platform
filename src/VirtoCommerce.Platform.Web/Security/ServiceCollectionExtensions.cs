@@ -27,6 +27,7 @@ namespace VirtoCommerce.Platform.Web.Security
     public static class ServiceCollectionExtensions
     {
         private const string _scpFormActionUriKey = "Content-Security-Policy-Form-Action-Uri";
+        private const string _denyFramingKey = "Security-Headers-Deny-Framing";
         private static readonly ConcurrentDictionary<string, HeaderPolicyCollection> _policyCache = new();
 
         public static IServiceCollection AddSecurityServices(this IServiceCollection services, Action<AuthorizationOptions> setupAction = null)
@@ -51,6 +52,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<IPermissionsRegistrar, DefaultPermissionProvider>();
             // TryAdd so a module can replace the rules from IPlatformStartup.ConfigureServices too, which runs before this
             services.TryAddSingleton<IOAuthAppRules, OAuthAppRules>();
+            services.TryAddSingleton<IOAuthLoginPathProvider, OAuthLoginPathProvider>();
             services.AddScoped<IRoleSearchService, RoleSearchService>();
 
             //Register as singleton because this abstraction can be used as dependency in singleton services
@@ -155,56 +157,69 @@ namespace VirtoCommerce.Platform.Web.Security
                 {
                     var options = context.HttpContext.RequestServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
                     var formActionUri = context.HttpContext.GetScpFormActionUri() ?? string.Empty;
+                    var denyFraming = context.HttpContext.Items.ContainsKey(_denyFramingKey);
+                    var cacheKey = denyFraming ? $"{formActionUri} deny-framing" : formActionUri;
 
-                    if (_policyCache.TryGetValue(formActionUri, out var policies))
-                    {
-                        return policies;
-                    }
-
-                    policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
-
-                    if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
-                    {
-                        policies.AddFrameOptionsSameOrigin();
-                    }
-                    else if (options.FrameOptions.EqualsIgnoreCase("Deny"))
-                    {
-                        policies.AddFrameOptionsDeny();
-                    }
-                    else if (!string.IsNullOrEmpty(options.FrameOptions))
-                    {
-                        policies.AddFrameOptionsSameOrigin(options.FrameOptions);
-                    }
-
-                    policies.AddContentSecurityPolicy(builder =>
-                    {
-                        builder.AddObjectSrc().None();
-                        builder.AddFormAction().Self().Uri(formActionUri);
-
-                        if (options.FrameAncestors.EqualsIgnoreCase("None"))
-                        {
-                            builder.AddFrameAncestors().None();
-                        }
-                        else if (options.FrameAncestors.EqualsIgnoreCase("Self"))
-                        {
-                            builder.AddFrameAncestors().Self();
-                        }
-                        else if (!string.IsNullOrEmpty(options.FrameAncestors))
-                        {
-                            builder.AddFrameAncestors().From(options.FrameAncestors);
-                        }
-                    });
-
-                    _policyCache.AddOrUpdate(formActionUri, policies, (_, _) => policies);
-
-                    return policies;
+                    return _policyCache.GetOrAdd(cacheKey, _ => CreateSecurityHeaderPolicies(options, formActionUri, denyFraming));
                 });
             });
+        }
+
+        private static HeaderPolicyCollection CreateSecurityHeaderPolicies(SecurityHeadersOptions options, string formActionUri, bool denyFraming)
+        {
+            var policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
+
+            if (denyFraming || options.FrameOptions.EqualsIgnoreCase("Deny"))
+            {
+                policies.AddFrameOptionsDeny();
+            }
+            else if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
+            {
+                policies.AddFrameOptionsSameOrigin();
+            }
+            else if (!string.IsNullOrEmpty(options.FrameOptions))
+            {
+                policies.AddFrameOptionsSameOrigin(options.FrameOptions);
+            }
+
+            policies.AddContentSecurityPolicy(builder =>
+            {
+                builder.AddObjectSrc().None();
+                builder.AddFormAction().Self().Uri(formActionUri);
+                AddFrameAncestors(builder, options, denyFraming);
+            });
+
+            return policies;
+        }
+
+        private static void AddFrameAncestors(CspBuilder builder, SecurityHeadersOptions options, bool denyFraming)
+        {
+            if (denyFraming || options.FrameAncestors.EqualsIgnoreCase("None"))
+            {
+                builder.AddFrameAncestors().None();
+            }
+            else if (options.FrameAncestors.EqualsIgnoreCase("Self"))
+            {
+                builder.AddFrameAncestors().Self();
+            }
+            else if (!string.IsNullOrEmpty(options.FrameAncestors))
+            {
+                builder.AddFrameAncestors().From(options.FrameAncestors);
+            }
         }
 
         public static void OverrideScpFormActionUri(this HttpContext httpContext, string uri)
         {
             httpContext.Items[_scpFormActionUriKey] = uri;
+        }
+
+        /// <summary>
+        /// The response can't be shown in a frame on any site, whatever the SecurityHeaders settings allow: a page
+        /// where the user grants access, which another site could otherwise overlay to trick them into a click.
+        /// </summary>
+        public static void DenyFraming(this HttpContext httpContext)
+        {
+            httpContext.Items[_denyFramingKey] = true;
         }
 
         public static string GetScpFormActionUri(this HttpContext httpContext)

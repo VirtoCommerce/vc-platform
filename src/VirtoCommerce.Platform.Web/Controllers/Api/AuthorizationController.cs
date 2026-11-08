@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IExternalSignInService _externalSignInService;
         private readonly IOpenIddictAuthorizationManager _authorizationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
-        private readonly Core.Security.AuthorizationOptions _authorizationOptions;
+        private readonly IOAuthLoginPathProvider _oauthLoginPathProvider;
 
         public AuthorizationController(
             OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> applicationManager,
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IExternalSignInService externalSignInService,
             IOpenIddictAuthorizationManager authorizationManager,
             IOpenIddictScopeManager scopeManager,
-            IOptions<Core.Security.AuthorizationOptions> authorizationOptions)
+            IOAuthLoginPathProvider oauthLoginPathProvider)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalSignInService = externalSignInService;
             _authorizationManager = authorizationManager;
             _scopeManager = scopeManager;
-            _authorizationOptions = authorizationOptions.Value;
+            _oauthLoginPathProvider = oauthLoginPathProvider;
         }
 
         [HttpPost("~/revoke/token")]
@@ -123,7 +123,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            if (!string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            if (await GetOAuthLoginPathAsync() != null)
             {
                 await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             }
@@ -621,9 +621,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet("~/connect/session")]
         [AllowAnonymous]
-        public IActionResult GetSessionToken([FromServices] IAntiforgery antiforgery)
+        public async Task<IActionResult> GetSessionToken([FromServices] IAntiforgery antiforgery)
         {
-            if (string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            if (await GetOAuthLoginPathAsync() == null)
             {
                 return NotFound();
             }
@@ -636,7 +636,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<IActionResult> CreateSession([FromQuery] string returnUrl)
         {
-            if (string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            if (await GetOAuthLoginPathAsync() == null)
             {
                 return NotFound();
             }
@@ -687,12 +687,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
             var returnUrl = Request.PathBase + Request.Path + QueryString.Create(
                 Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList());
-            var useStorefrontLogin = !string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath);
+            var loginPath = await GetOAuthLoginPathAsync();
+            var useStorefrontLogin = loginPath != null;
 
             if (!result.Succeeded || RequestHasExpired(request, result) ||
                 (useStorefrontLogin && result.Properties?.RedirectUri != returnUrl))
             {
-                return ChallengeLogin(request, returnUrl);
+                return ChallengeLogin(request, returnUrl, loginPath);
             }
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
@@ -725,19 +726,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 // In every other case, render the consent form.
                 default:
-                    HttpContext.OverrideScpFormActionUri(request.RedirectUri);
-
-                    return View(new AuthorizeViewModel
-                    {
-                        ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
-                        Scope = request.Scope
-                    });
+                    return await ConsentFormAsync(request, user, application);
             }
         }
 
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Deny")]
         [ValidateAntiForgeryToken]
+        [ShowConsentAgainOnExpiredForm]
         [Authorize]
         [AllowAnonymous]
         // Notify OpenIddict that the authorization grant has been denied by the resource owner
@@ -750,6 +746,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost("~/connect/authorize")]
         [HasFormValue("submit.Accept")]
         [ValidateAntiForgeryToken]
+        [ShowConsentAgainOnExpiredForm]
         [Authorize]
         [AllowAnonymous]
         public async Task<IActionResult> Accept()
@@ -851,6 +848,55 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             target.SetClaimWithDestinations(claimType, value, destinations);
         }
 
+        /// <summary>
+        /// The login path configured for the host this request arrived on: the redirect to it is
+        /// relative, so a deployment with several front-ends needs the one that exists here. Null
+        /// means the built-in Platform login page, which does not bind the session to one request.
+        /// </summary>
+        private Task<string> GetOAuthLoginPathAsync() => _oauthLoginPathProvider.GetLoginPathAsync(Request.Host.Host);
+
+        private async Task<IActionResult> ConsentFormAsync(OpenIddictRequest request, ApplicationUser user,
+            VirtoOpenIddictEntityFrameworkCoreApplication application)
+        {
+            HttpContext.OverrideScpFormActionUri(request.RedirectUri);
+            HttpContext.DenyFraming();
+
+            var expired = ShowConsentAgainOnExpiredFormAttribute.TakeMark(HttpContext);
+
+            var scopes = request.GetScopes().ToList();
+            var resources = request.GetResources().ToList();
+            var redirect = ConsentDescriptions.GetRedirect(request.RedirectUri, Request.Host.Host);
+
+            var model = new AuthorizeViewModel
+            {
+                ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
+                ClientId = request.ClientId,
+                Scope = request.Scope,
+                UserName = user.UserName,
+                Email = user.Email,
+                Resources = resources,
+                Permissions = ConsentDescriptions.GetPermissions(scopes, resources, user.Email),
+                RedirectUri = request.RedirectUri,
+                RedirectHost = redirect.Host,
+                RedirectIsLocal = redirect.IsLocal,
+                RedirectIsElsewhere = redirect.IsElsewhere,
+                Expired = expired,
+            };
+
+            foreach (var name in scopes.Except(ConsentDescriptions.StandardScopes))
+            {
+                var scope = await _scopeManager.FindByNameAsync(name);
+                model.Permissions.Add(new AuthorizePermission
+                {
+                    Icon = "key",
+                    Title = (scope != null ? await _scopeManager.GetDisplayNameAsync(scope) : null) ?? $"Use \"{name}\"",
+                    Details = scope != null ? await _scopeManager.GetDescriptionAsync(scope) : null,
+                });
+            }
+
+            return View(nameof(Authorize), model);
+        }
+
         private bool IsLocalAuthorizationReturnUrl(string returnUrl)
         {
             return Url.IsLocalUrl(returnUrl) &&
@@ -874,7 +920,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return user;
         }
 
-        private IActionResult ChallengeLogin(OpenIddictRequest request, string returnUrl)
+        private IActionResult ChallengeLogin(OpenIddictRequest request, string returnUrl, string loginPath)
         {
             if (request.HasPromptValue(PromptValues.None))
             {
@@ -887,9 +933,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }));
             }
 
-            if (!string.IsNullOrEmpty(_authorizationOptions.OAuthLoginPath))
+            if (loginPath != null)
             {
-                return LocalRedirect(_authorizationOptions.OAuthLoginPath + QueryString.Create("returnUrl", returnUrl));
+                return LocalRedirect(loginPath + QueryString.Create("returnUrl", returnUrl));
             }
 
             return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, IdentityConstants.ApplicationScheme);
