@@ -19,11 +19,13 @@ public class OAuthLoginPathProviderTests
     private readonly OAuthLoginPathProvider _provider = new(Options.Create(new AuthorizationOptions
     {
         OAuthLoginPath = "/oauth/authorize",
-        OAuthLoginPaths = new Dictionary<string, string>
-        {
-            ["platform.example"] = "",
-            ["vendors.example"] = "/vendor/sign-in",
-        },
+        OAuthLoginPaths =
+        [
+            new OAuthHostLoginPath { Host = "platform.example" },
+            new OAuthHostLoginPath { Host = "vendors.example", Path = "/vendor/sign-in" },
+            new OAuthHostLoginPath { Host = "legacy.example", Path = "" },
+            new OAuthHostLoginPath { Host = "vendors.example", Path = "/ignored" },
+        ],
     }));
 
     [Fact]
@@ -33,13 +35,19 @@ public class OAuthLoginPathProviderTests
     }
 
     [Fact]
-    public async Task GetLoginPathAsync_HostWithAnEmptyPath_SelectsTheBuiltInLoginPage()
+    public async Task GetLoginPathAsync_HostWithoutAPath_SelectsTheBuiltInLoginPage()
     {
         Assert.Null(await _provider.GetLoginPathAsync("platform.example"));
     }
 
     [Fact]
-    public async Task GetLoginPathAsync_HostWithItsOwnPath_UsesIt()
+    public async Task GetLoginPathAsync_HostWithAnEmptyPath_SelectsTheBuiltInLoginPage()
+    {
+        Assert.Null(await _provider.GetLoginPathAsync("legacy.example"));
+    }
+
+    [Fact]
+    public async Task GetLoginPathAsync_HostWithItsOwnPath_UsesTheFirstEntry()
     {
         Assert.Equal("/vendor/sign-in", await _provider.GetLoginPathAsync("vendors.example"));
     }
@@ -72,21 +80,24 @@ public class OAuthLoginPathProviderTests
         Assert.Equal("/oauth/authorize", await provider.GetLoginPathAsync("platform.example"));
     }
 
-    // An environment variable such as Authorization__OAuthLoginPaths__platform.example with an empty value
+    // Environment variables such as Authorization__OAuthLoginPaths__0__Host=Platform.Example: no host in a variable's name
     [Fact]
-    public async Task GetLoginPathAsync_EmptyPathFromTheConfiguration_SelectsTheBuiltInLoginPage()
+    public async Task GetLoginPathAsync_HostsFromTheConfiguration_AreBoundInOrder()
     {
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
                 ["Authorization:OAuthLoginPath"] = "/oauth/authorize",
-                ["Authorization:OAuthLoginPaths:Platform.Example"] = "",
+                ["Authorization:OAuthLoginPaths:0:Host"] = "Platform.Example",
+                ["Authorization:OAuthLoginPaths:1:Host"] = "vendors.example",
+                ["Authorization:OAuthLoginPaths:1:Path"] = "/vendor/sign-in",
             })
             .Build();
         var options = configuration.GetSection("Authorization").Get<AuthorizationOptions>();
         var provider = new OAuthLoginPathProvider(Options.Create(options));
 
         Assert.Null(await provider.GetLoginPathAsync("platform.example"));
+        Assert.Equal("/vendor/sign-in", await provider.GetLoginPathAsync("vendors.example"));
         Assert.Equal("/oauth/authorize", await provider.GetLoginPathAsync("store.example"));
     }
 

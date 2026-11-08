@@ -21,14 +21,8 @@ public class OAuthLoginPathProvider : IOAuthLoginPathProvider
 
     public virtual Task<string> GetLoginPathAsync(string host)
     {
-        var path = _options.OAuthLoginPath;
-
-        // Matched ignoring case here, since a dictionary bound from the configuration may not keep its comparer
-        var listed = host == null ? null : _options.OAuthLoginPaths?.Keys.FirstOrDefault(x => string.Equals(x, host, StringComparison.OrdinalIgnoreCase));
-        if (listed != null)
-        {
-            path = _options.OAuthLoginPaths[listed];
-        }
+        var listed = host == null ? null : _options.OAuthLoginPaths?.FirstOrDefault(x => string.Equals(x?.Host, host, StringComparison.OrdinalIgnoreCase));
+        var path = listed != null ? listed.Path : _options.OAuthLoginPath;
 
         return Task.FromResult(string.IsNullOrEmpty(path) ? null : path);
     }

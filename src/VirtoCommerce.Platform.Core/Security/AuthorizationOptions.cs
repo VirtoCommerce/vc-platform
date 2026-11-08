@@ -23,9 +23,11 @@ namespace VirtoCommerce.Platform.Core.Security
         /// <summary>
         /// The login path per host, for a Platform that serves several front-ends: storefronts on their own hosts
         /// and the Admin application on the Platform host. The path is redirected to relatively, so it has to exist
-        /// on the host the authorization request arrives on. An empty path selects the built-in Platform login page.
+        /// on the host the authorization request arrives on. A host without a path uses the built-in Platform login
+        /// page. A list rather than a map by host, so that no host is part of an environment variable's name:
+        /// Authorization__OAuthLoginPaths__0__Host=admin.example.com.
         /// </summary>
-        public Dictionary<string, string> OAuthLoginPaths { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+        public IList<OAuthHostLoginPath> OAuthLoginPaths { get; set; } = [];
 
         /// <summary>
         /// Interval after which the authentication cookie's security stamp is re-validated

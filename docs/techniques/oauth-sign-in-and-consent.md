@@ -29,29 +29,35 @@ front-ends — storefronts on their own hosts and the back office on the platfor
 ```json
 "Authorization": {
   "OAuthLoginPath": "/oauth/authorize",
-  "OAuthLoginPaths": {
-    "admin.example.com": ""
-  }
+  "OAuthLoginPaths": [
+    { "Host": "admin.example.com" },
+    { "Host": "vendors.example.com", "Path": "/vendor/sign-in" }
+  ]
 }
 ```
 
 * `OAuthLoginPath` is the path for every host that `OAuthLoginPaths` does not list. Without it, every host uses the
   built-in login page.
-* `OAuthLoginPaths` maps a host to its path. An empty path selects the built-in login page. Hosts are matched
-  ignoring case and without the port.
+* `OAuthLoginPaths` lists the hosts that use another page: their own `Path`, or the built-in login page when the
+  entry has no `Path`. Hosts are matched ignoring case and without the port; the first entry of a host wins.
 
-As environment variables:
+As environment variables, one index per host:
 
 ```
 Authorization__OAuthLoginPath=/oauth/authorize
-Authorization__OAuthLoginPaths__admin.example.com=
+Authorization__OAuthLoginPaths__0__Host=admin.example.com
+Authorization__OAuthLoginPaths__1__Host=vendors.example.com
+Authorization__OAuthLoginPaths__1__Path=/vendor/sign-in
 ```
+
+The host is a value, not a part of the variable's name, because some hosting environments, Virto Cloud among them,
+drop variables whose names contain dots.
 
 !!! note
     A platform that sets `OAuthLoginPath` for its storefront and also lets agents sign in to the back office, for
-    example to the `/admin/mcp` endpoint of the MCP module, must list the platform host in `OAuthLoginPaths`.
-    Otherwise the platform sends the back-office user to `https://<platform host>/oauth/authorize`, a page that only
-    the storefront has, and the user sees a 404.
+    example to the `/admin/mcp` endpoint of the MCP module, must list the platform host in `OAuthLoginPaths` without
+    a path. Otherwise the platform sends the back-office user to `https://<platform host>/oauth/authorize`, a page
+    that only the storefront has, and the user sees a 404.
 
 ### Choose the sign-in page in code
 
@@ -159,7 +165,7 @@ platform. Another site therefore can't overlay the page to trick the user into a
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| A 404 at `https://<platform host>/oauth/authorize?returnUrl=/connect/authorize…` | `OAuthLoginPath` is set, and the platform host is not listed in `OAuthLoginPaths` | List the platform host with an empty path |
+| A 404 at `https://<platform host>/oauth/authorize?returnUrl=/connect/authorize…` | `OAuthLoginPath` is set, and the platform host is not listed in `OAuthLoginPaths` | List the platform host without a path |
 | The token request fails with `invalid_target` | The `resource` is not in `Authorization:Resources`, or the client has no permission for it | Add the resource to the setting and tick it for the client in **OAuth applications** |
 | `POST /connect/session` answers `400` with an empty body | No `Origin`, another origin, a `returnUrl` that is not `/connect/authorize`, or an antiforgery token taken without the user's token | Send the headers of step 2; take the request token with the `Authorization` header |
 | `POST /connect/session` answers `404` | The host uses the built-in login page | The front-end's sign-in page is not used on this host; see *Where the user signs in* |
