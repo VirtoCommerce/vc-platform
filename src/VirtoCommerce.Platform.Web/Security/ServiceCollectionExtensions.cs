@@ -160,54 +160,52 @@ namespace VirtoCommerce.Platform.Web.Security
                     var denyFraming = context.HttpContext.Items.ContainsKey(_denyFramingKey);
                     var cacheKey = denyFraming ? $"{formActionUri} deny-framing" : formActionUri;
 
-                    if (_policyCache.TryGetValue(cacheKey, out var policies))
-                    {
-                        return policies;
-                    }
-
-                    policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
-
-                    if (denyFraming)
-                    {
-                        policies.AddFrameOptionsDeny();
-                    }
-                    else if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
-                    {
-                        policies.AddFrameOptionsSameOrigin();
-                    }
-                    else if (options.FrameOptions.EqualsIgnoreCase("Deny"))
-                    {
-                        policies.AddFrameOptionsDeny();
-                    }
-                    else if (!string.IsNullOrEmpty(options.FrameOptions))
-                    {
-                        policies.AddFrameOptionsSameOrigin(options.FrameOptions);
-                    }
-
-                    policies.AddContentSecurityPolicy(builder =>
-                    {
-                        builder.AddObjectSrc().None();
-                        builder.AddFormAction().Self().Uri(formActionUri);
-
-                        if (denyFraming || options.FrameAncestors.EqualsIgnoreCase("None"))
-                        {
-                            builder.AddFrameAncestors().None();
-                        }
-                        else if (options.FrameAncestors.EqualsIgnoreCase("Self"))
-                        {
-                            builder.AddFrameAncestors().Self();
-                        }
-                        else if (!string.IsNullOrEmpty(options.FrameAncestors))
-                        {
-                            builder.AddFrameAncestors().From(options.FrameAncestors);
-                        }
-                    });
-
-                    _policyCache.AddOrUpdate(cacheKey, policies, (_, _) => policies);
-
-                    return policies;
+                    return _policyCache.GetOrAdd(cacheKey, _ => CreateSecurityHeaderPolicies(options, formActionUri, denyFraming));
                 });
             });
+        }
+
+        private static HeaderPolicyCollection CreateSecurityHeaderPolicies(SecurityHeadersOptions options, string formActionUri, bool denyFraming)
+        {
+            var policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
+
+            if (denyFraming || options.FrameOptions.EqualsIgnoreCase("Deny"))
+            {
+                policies.AddFrameOptionsDeny();
+            }
+            else if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
+            {
+                policies.AddFrameOptionsSameOrigin();
+            }
+            else if (!string.IsNullOrEmpty(options.FrameOptions))
+            {
+                policies.AddFrameOptionsSameOrigin(options.FrameOptions);
+            }
+
+            policies.AddContentSecurityPolicy(builder =>
+            {
+                builder.AddObjectSrc().None();
+                builder.AddFormAction().Self().Uri(formActionUri);
+                AddFrameAncestors(builder, options, denyFraming);
+            });
+
+            return policies;
+        }
+
+        private static void AddFrameAncestors(CspBuilder builder, SecurityHeadersOptions options, bool denyFraming)
+        {
+            if (denyFraming || options.FrameAncestors.EqualsIgnoreCase("None"))
+            {
+                builder.AddFrameAncestors().None();
+            }
+            else if (options.FrameAncestors.EqualsIgnoreCase("Self"))
+            {
+                builder.AddFrameAncestors().Self();
+            }
+            else if (!string.IsNullOrEmpty(options.FrameAncestors))
+            {
+                builder.AddFrameAncestors().From(options.FrameAncestors);
+            }
         }
 
         public static void OverrideScpFormActionUri(this HttpContext httpContext, string uri)
