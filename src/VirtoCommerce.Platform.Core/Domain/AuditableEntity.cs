@@ -15,6 +15,21 @@ namespace VirtoCommerce.Platform.Core.Common
         public string ModifiedBy { get; set; }
         #endregion
 
+        /// <summary>
+        /// Copies what the save generated from this persisted entity to its model: the audit fields by default.
+        /// Override to sync more, such as values the database generates.
+        /// </summary>
+        public virtual void SyncGeneratedValues(IEntity model)
+        {
+            if (model is IAuditable auditableModel)
+            {
+                auditableModel.CreatedDate = CreatedDate;
+                auditableModel.CreatedBy = CreatedBy;
+                auditableModel.ModifiedDate = ModifiedDate;
+                auditableModel.ModifiedBy = ModifiedBy;
+            }
+        }
+
         #region Conditional JSON serialization for properties declared in base type
         [JsonIgnore]
         public virtual bool ShouldSerializeAuditableProperties { get; } = true;

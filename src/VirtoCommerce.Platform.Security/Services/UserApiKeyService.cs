@@ -140,6 +140,7 @@ namespace VirtoCommerce.Platform.Security.Services
                     if (originalEntity != null)
                     {
                         modifiedEntity.Patch(originalEntity);
+                        pkMap.AddSavedPair(apiKey, originalEntity);
                     }
                     else
                     {
