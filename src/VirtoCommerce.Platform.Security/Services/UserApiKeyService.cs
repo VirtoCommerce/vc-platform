@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -128,6 +129,7 @@ namespace VirtoCommerce.Platform.Security.Services
             }
 
             var pkMap = new PrimaryKeyResolvingMap();
+            var savedEntities = new List<UserApiKeyEntity>();
             using (var repository = _repositoryFactory())
             {
                 var ids = apiKeys.Where(x => !x.IsTransient()).Select(x => x.Id).Distinct().ToArray();
@@ -140,17 +142,33 @@ namespace VirtoCommerce.Platform.Security.Services
                     if (originalEntity != null)
                     {
                         modifiedEntity.Patch(originalEntity);
+                        savedEntities.Add(originalEntity);
                     }
                     else
                     {
                         repository.Add(modifiedEntity);
+                        savedEntities.Add(modifiedEntity);
                     }
                 }
                 repository.UnitOfWork.Commit();
                 pkMap.ResolvePrimaryKeys();
+
+                for (var i = 0; i < apiKeys.Length; i++)
+                {
+                    SyncGeneratedValues(savedEntities[i], apiKeys[i]);
+                }
+
                 ApiKeyCacheRegion.ExpireRegion();
             }
             return apiKeys;
+        }
+
+        protected virtual void SyncGeneratedValues(UserApiKeyEntity entity, UserApiKey model)
+        {
+            model.CreatedDate = entity.CreatedDate;
+            model.CreatedBy = entity.CreatedBy;
+            model.ModifiedDate = entity.ModifiedDate;
+            model.ModifiedBy = entity.ModifiedBy;
         }
 
         public async Task DeleteApiKeysAsync(string[] ids)
