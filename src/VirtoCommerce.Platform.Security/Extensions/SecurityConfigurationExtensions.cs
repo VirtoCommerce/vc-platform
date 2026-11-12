@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 
 namespace VirtoCommerce.Platform.Security.Extensions;
@@ -36,22 +37,13 @@ public static class SecurityConfigurationExtensions
         var obsoleteAuthConnectionString = configuration[AuthConnectionStringKey];
 #pragma warning restore VC0016
 
-        return GetFirstNotEmpty(
+        string[] connectionStrings =
+        [
             configuration.GetConnectionString(AuthConnectionStringName),
             obsoleteAuthConnectionString,
-            configuration.GetConnectionString(PlatformConnectionStringName));
-    }
+            configuration.GetConnectionString(PlatformConnectionStringName),
+        ];
 
-    private static string GetFirstNotEmpty(params string[] values)
-    {
-        foreach (var value in values)
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                return value;
-            }
-        }
-
-        return null;
+        return connectionStrings.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
     }
 }
