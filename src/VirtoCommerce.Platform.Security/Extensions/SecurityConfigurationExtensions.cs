@@ -8,7 +8,7 @@ public static class SecurityConfigurationExtensions
     /// <summary>
     /// The name of the connection string of the security (authorization) database.
     /// </summary>
-    public const string AuthConnectionStringName = "Auth";
+    public const string AuthConnectionStringName = "VirtoCommerce.Auth";
 
     /// <summary>
     /// The name of the connection string of the main platform database.
@@ -18,14 +18,14 @@ public static class SecurityConfigurationExtensions
     /// <summary>
     /// The obsolete location of the security database connection string.
     /// </summary>
-    [Obsolete("Use the Auth connection string (ConnectionStrings:Auth) instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+    [Obsolete("Use the VirtoCommerce.Auth connection string (ConnectionStrings:VirtoCommerce.Auth) instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public const string AuthConnectionStringKey = "Auth:ConnectionString";
 
     /// <summary>
     /// Returns the connection string of the security (authorization) database.
     /// The value is resolved in the following order:
     /// <list type="number">
-    /// <item><description>ConnectionStrings:Auth</description></item>
+    /// <item><description>ConnectionStrings:VirtoCommerce.Auth</description></item>
     /// <item><description>Auth:ConnectionString (obsolete, kept for backward compatibility)</description></item>
     /// <item><description>ConnectionStrings:VirtoCommerce</description></item>
     /// </list>
