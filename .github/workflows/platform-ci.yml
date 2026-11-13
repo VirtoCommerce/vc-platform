@@ -141,6 +141,21 @@ jobs:
     - name: SonarCloud Begin
       uses: VirtoCommerce/.github/actions/sonar-scanner-begin@VCST-6129-dotnet11-rollforward
 
+    # TEMP diagnostics for the .NET 11 runner image (VCST-6129), remove before merge
+    - name: "TEMP: dotnet --info"
+      continue-on-error: true
+      run: dotnet --info
+
+    - name: "TEMP: dotnet restore without DOTNET_ROLL_FORWARD"
+      continue-on-error: true
+      run: env -u DOTNET_ROLL_FORWARD dotnet restore VirtoCommerce.Platform.sln -v n --force
+      shell: bash
+
+    - name: "TEMP: dotnet restore with DOTNET_ROLL_FORWARD=Major"
+      continue-on-error: true
+      run: echo "DOTNET_ROLL_FORWARD=$DOTNET_ROLL_FORWARD" && dotnet restore VirtoCommerce.Platform.sln -v n --force
+      shell: bash
+
     - name: Build
       run: vc-build Compile
 
