@@ -21,13 +21,13 @@ jobs:
     steps: 
 
     - name: Read deployment config
-      uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
+      uses: VirtoCommerce/.github/actions/get-deploy-param@v3.1000.9
       id: deployConfig
       with:
         envName: ${{ github.event.inputs.deployBranch }}
 
     - name: Start deployment
-      uses: bobheadxi/deployments@master
+      uses: bobheadxi/deployments@a3240c495b599dc16f99f6816a6f1ea8d10dc07b # master
       id: deployment
       with:
         step: start
@@ -36,7 +36,7 @@ jobs:
         no_override: false
 
     - name: Update deployment-cm
-      uses: VirtoCommerce/vc-github-actions/create-deploy-pr@master
+      uses: VirtoCommerce/.github/actions/create-deploy-pr@v3.1000.9
       with:
         deployRepo: ${{ steps.deployConfig.outputs.deployRepo }}
         deployBranch: ${{ steps.deployConfig.outputs.deployBranch }}
@@ -69,7 +69,7 @@ jobs:
       run: echo "BUILD_STATE=failed"  >> $GITHUB_ENV
 
     - name: Update GitHub deployment status
-      uses: bobheadxi/deployments@master
+      uses: bobheadxi/deployments@a3240c495b599dc16f99f6816a6f1ea8d10dc07b # master
       if: always()
       with:
         step: finish
