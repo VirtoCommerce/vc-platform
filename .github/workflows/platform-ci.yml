@@ -141,39 +141,13 @@ jobs:
     - name: SonarCloud Begin
       uses: VirtoCommerce/.github/actions/sonar-scanner-begin@VCST-6129-dotnet11-rollforward
 
-    # TEMP diagnostics for the .NET 11 runner image (VCST-6129), remove before merge
-    - name: "TEMP: dotnet --info"
-      continue-on-error: true
-      run: dotnet --info
-
-    # Hypothesis: MSBuildLocator in vc-build (runtime 10) registers SDK 10 and sets
-    # MSBUILD_EXE_PATH / MSBuildExtensionsPath / MSBuildSDKsPath; the child
-    # `dotnet restore` resolves SDK 11 and inherits them. Reproduce that by hand.
-    - name: "TEMP: dotnet restore on SDK 11 with SDK 10 MSBuild env (repro)"
+    # TEMP check for VCST-6129 (SDK pinned by setup-vcbuild), remove before merge
+    - name: "TEMP: show selected SDK"
       continue-on-error: true
       run: |
-        SDK10_VER=$(dotnet --list-sdks | awk '/^10\./{v=$1} END{print v}')
-        SDK10="/usr/share/dotnet/sdk/$SDK10_VER"
-        echo "SDK 10 dir: $SDK10"
-        export MSBUILD_EXE_PATH="$SDK10/MSBuild.dll"
-        export MSBuildExtensionsPath="$SDK10/"
-        export MSBuildSDKsPath="$SDK10/Sdks"
+        cat "$GITHUB_WORKSPACE/../global.json" || true
         dotnet --version
-        dotnet restore VirtoCommerce.Platform.sln -v n --force
-      shell: bash
-
-    - name: "TEMP: control - same restore without the MSBuild env"
-      continue-on-error: true
-      run: dotnet restore VirtoCommerce.Platform.sln -v n --force
-      shell: bash
-
-    # Candidate fix: pin SDK 10 via global.json outside the repo, so the child
-    # dotnet matches the MSBuild that vc-build registered. Build below must pass.
-    - name: "TEMP: pin SDK 10 with global.json in the parent directory"
-      run: |
-        printf '{ "sdk": { "version": "10.0.100", "rollForward": "latestFeature" } }\n' > "$GITHUB_WORKSPACE/../global.json"
-        cat "$GITHUB_WORKSPACE/../global.json"
-        dotnet --version
+        dotnet --list-sdks
       shell: bash
 
     - name: Build
