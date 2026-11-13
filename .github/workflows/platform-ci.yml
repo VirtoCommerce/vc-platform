@@ -141,15 +141,6 @@ jobs:
     - name: SonarCloud Begin
       uses: VirtoCommerce/.github/actions/sonar-scanner-begin@VCST-6129-dotnet11-rollforward
 
-    # TEMP check for VCST-6129 (SDK pinned by setup-vcbuild), remove before merge
-    - name: "TEMP: show selected SDK"
-      continue-on-error: true
-      run: |
-        cat "$GITHUB_WORKSPACE/../global.json" || true
-        dotnet --version
-        dotnet --list-sdks
-      shell: bash
-
     - name: Build
       run: vc-build Compile
 
