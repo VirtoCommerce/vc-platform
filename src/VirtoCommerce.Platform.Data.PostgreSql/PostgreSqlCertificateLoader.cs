@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Extensions;
 
 namespace VirtoCommerce.Platform.Data.PostgreSql
 {
@@ -16,9 +17,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql
 
         protected virtual string GetConnectionString()
         {
-            return _configuration["Auth:ConnectionString"] ??
-                _configuration.GetConnectionString("VirtoCommerce") ??
-                string.Empty;
+            return _configuration.GetAuthConnectionString() ?? string.Empty;
         }
 
         /// <summary>

@@ -71,6 +71,7 @@ using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.Local;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
+using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -224,8 +225,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
-                var connectionString = Configuration["Auth:ConnectionString"] ??
-                    Configuration.GetConnectionString("VirtoCommerce");
+                var connectionString = Configuration.GetAuthConnectionString();
 
                 switch (databaseProvider)
                 {
@@ -352,8 +352,8 @@ namespace VirtoCommerce.Platform.Web
                 options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
                 options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
 
-                ClaimsPrincipalExtensions.UserIdClaimTypes = [options.ClaimsIdentity.UserIdClaimType, ClaimTypes.NameIdentifier];
-                ClaimsPrincipalExtensions.UserNameClaimTypes = [options.ClaimsIdentity.UserNameClaimType];
+                Core.Security.ClaimsPrincipalExtensions.UserIdClaimTypes = [options.ClaimsIdentity.UserIdClaimType, ClaimTypes.NameIdentifier];
+                Core.Security.ClaimsPrincipalExtensions.UserNameClaimTypes = [options.ClaimsIdentity.UserNameClaimType];
             });
 
             services.ConfigureOptions<ConfigureSecurityStampValidatorOptions>();
