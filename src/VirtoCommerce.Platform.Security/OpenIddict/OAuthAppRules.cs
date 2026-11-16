@@ -165,19 +165,12 @@ public class OAuthAppRules : IOAuthAppRules
     }
 
     /// <summary>
-    /// Granted to a client that names no grant type, as the API always did. A public client holds no secret, so it
-    /// can't use the client credentials grant.
+    /// Granted to a client that names no grant type: the user's sign-in only. A client that gets tokens without a
+    /// user names the client credentials grant itself.
     /// </summary>
     protected virtual IEnumerable<string> GetDefaultGrantTypes(string clientType)
     {
-        yield return Permissions.GrantTypes.AuthorizationCode;
-
-        if (clientType != ClientTypes.Public)
-        {
-            yield return Permissions.GrantTypes.ClientCredentials;
-        }
-
-        yield return Permissions.GrantTypes.RefreshToken;
+        return [Permissions.GrantTypes.AuthorizationCode, Permissions.GrantTypes.RefreshToken];
     }
 
     protected virtual IEnumerable<string> GetDefaultScopes()

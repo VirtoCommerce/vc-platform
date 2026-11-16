@@ -87,7 +87,6 @@ public class OAuthAppsControllerTests
         descriptor.ClientSecret.Should().NotBeNullOrEmpty();
         descriptor.Permissions.Should().BeEquivalentTo(
             Permissions.GrantTypes.AuthorizationCode,
-            Permissions.GrantTypes.ClientCredentials,
             Permissions.GrantTypes.RefreshToken,
             Permissions.Scopes.Email,
             Permissions.Scopes.Profile,
@@ -174,6 +173,27 @@ public class OAuthAppsControllerTests
             Permissions.Endpoints.EndSession,
             Permissions.Endpoints.Token,
             Permissions.ResponseTypes.Code);
+    }
+
+    [Fact]
+    public async Task Save_ConfidentialClientWithoutGrantTypes_GetsNoClientCredentials()
+    {
+        // Arrange
+        var descriptor = new OpenIddictApplicationDescriptor
+        {
+            ClientId = "integration",
+            ClientSecret = "secret",
+            ClientType = ClientTypes.Confidential,
+            RedirectUris = { new Uri("https://integration.example.com/callback") },
+        };
+
+        // Act
+        var saved = GetValue(await CreateController().SaveAsync(descriptor));
+
+        // Assert
+        saved.Permissions.Should().NotContain(Permissions.GrantTypes.ClientCredentials,
+            "a token without the user's sign-in acts as an administrator, so a client names that grant itself");
+        saved.Permissions.Should().Contain([Permissions.GrantTypes.AuthorizationCode, Permissions.GrantTypes.RefreshToken]);
     }
 
     [Fact]
