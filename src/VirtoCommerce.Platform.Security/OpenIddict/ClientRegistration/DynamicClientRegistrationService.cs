@@ -42,7 +42,10 @@ public class DynamicClientRegistrationService : IDynamicClientRegistrationServic
         await _applicationManager.CreateAsync(descriptor, cancellationToken);
 
         var clientName = descriptor.DisplayName;
-        _logger.LogInformation("The OAuth client {ClientId} ({ClientName}) registered itself", clientId, clientName);
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            _logger.LogInformation("The OAuth client {ClientId} ({ClientName}) registered itself", clientId, clientName);
+        }
 
         return new DynamicClientRegistrationResult
         {
