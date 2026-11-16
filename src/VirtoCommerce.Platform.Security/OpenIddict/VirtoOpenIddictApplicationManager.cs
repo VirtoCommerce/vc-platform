@@ -142,11 +142,7 @@ public class VirtoOpenIddictApplicationManager : OpenIddictApplicationManager<Vi
         var current = new OpenIddictApplicationDescriptor();
         await PopulateAsync(current, stored, cancellationToken);
 
-        if (current.DisplayName == descriptor.DisplayName &&
-            current.ApplicationType == descriptor.ApplicationType &&
-            current.RedirectUris.SetEquals(descriptor.RedirectUris) &&
-            current.Permissions.SetEquals(descriptor.Permissions) &&
-            current.Requirements.SetEquals(descriptor.Requirements))
+        if (IsUpToDate(current, descriptor))
         {
             return stored;
         }
@@ -168,6 +164,15 @@ public class VirtoOpenIddictApplicationManager : OpenIddictApplicationManager<Vi
         }
 
         return stored;
+    }
+
+    protected virtual bool IsUpToDate(OpenIddictApplicationDescriptor current, OpenIddictApplicationDescriptor descriptor)
+    {
+        return current.DisplayName == descriptor.DisplayName &&
+            current.ApplicationType == descriptor.ApplicationType &&
+            current.RedirectUris.SetEquals(descriptor.RedirectUris) &&
+            current.Permissions.SetEquals(descriptor.Permissions) &&
+            current.Requirements.SetEquals(descriptor.Requirements);
     }
 
     protected virtual async Task RevokeConsentsAsync(VirtoOpenIddictEntityFrameworkCoreApplication application, CancellationToken cancellationToken)

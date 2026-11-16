@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -25,6 +26,15 @@ namespace VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolver, IDisposable
 {
     private const string _cacheKeyPrefix = "OAuthClientIdMetadataDocument:";
+
+    private static readonly HashSet<HttpStatusCode> _redirectStatusCodes =
+    [
+        HttpStatusCode.MovedPermanently,
+        HttpStatusCode.Found,
+        HttpStatusCode.SeeOther,
+        HttpStatusCode.TemporaryRedirect,
+        HttpStatusCode.PermanentRedirect,
+    ];
 
     private readonly HttpClient _httpClient;
     private readonly IMemoryCache _memoryCache;
@@ -148,7 +158,7 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
         OAuthClientIdMetadataDocumentOptions options, CancellationToken cancellationToken)
     {
         // The document must be served at the client id itself
-        if (IsRedirect(response.StatusCode))
+        if (_redirectStatusCodes.Contains(response.StatusCode))
         {
             return ClientIdMetadataDocumentResult.Fail("The client metadata document is redirected; redirects are not followed.");
         }
@@ -156,7 +166,7 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
         if (response.StatusCode != HttpStatusCode.OK)
         {
             return ClientIdMetadataDocumentResult.Fail($"The client metadata document can't be fetched: HTTP {(int)response.StatusCode}.",
-                isTransient: (int)response.StatusCode >= 500);
+                isTransient: response.StatusCode >= HttpStatusCode.InternalServerError);
         }
 
         var json = await ReadContentAsync(response.Content, options.MaxDocumentSize, cancellationToken);
@@ -185,19 +195,29 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
 
     protected static TimeSpan GetLifetime(CacheControlHeaderValue cacheControl, OAuthClientIdMetadataDocumentOptions options)
     {
-        var lifetime = cacheControl?.NoStore == true || cacheControl?.NoCache == true
-            ? options.MinCacheLifetime
-            : cacheControl?.MaxAge ?? options.MaxCacheLifetime;
+        var lifetime = GetRequestedLifetime(cacheControl, options);
 
-        return lifetime < options.MinCacheLifetime ? options.MinCacheLifetime
-            : lifetime > options.MaxCacheLifetime ? options.MaxCacheLifetime
-            : lifetime;
+        if (lifetime < options.MinCacheLifetime)
+        {
+            return options.MinCacheLifetime;
+        }
+
+        return lifetime > options.MaxCacheLifetime ? options.MaxCacheLifetime : lifetime;
     }
 
-    private static bool IsRedirect(HttpStatusCode statusCode)
+    private static TimeSpan GetRequestedLifetime(CacheControlHeaderValue cacheControl, OAuthClientIdMetadataDocumentOptions options)
     {
-        return statusCode is HttpStatusCode.MovedPermanently or HttpStatusCode.Found or HttpStatusCode.SeeOther
-            or HttpStatusCode.TemporaryRedirect or HttpStatusCode.PermanentRedirect;
+        if (cacheControl == null)
+        {
+            return options.MaxCacheLifetime;
+        }
+
+        if (cacheControl.NoStore || cacheControl.NoCache)
+        {
+            return options.MinCacheLifetime;
+        }
+
+        return cacheControl.MaxAge ?? options.MaxCacheLifetime;
     }
 
     // Null when the content is larger than the limit

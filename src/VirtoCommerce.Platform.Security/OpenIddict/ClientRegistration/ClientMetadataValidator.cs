@@ -10,6 +10,8 @@ public class ClientMetadataValidator : IClientMetadataValidator
 {
     private const string HttpsScheme = "https://";
 
+    private static readonly HashSet<string> _dotSegments = new(StringComparer.OrdinalIgnoreCase) { ".", "..", "%2e", "%2e%2e", ".%2e", "%2e." };
+
     private readonly IOAuthAppRules _appRules;
 
     public ClientMetadataValidator(IOAuthAppRules appRules)
@@ -22,19 +24,17 @@ public class ClientMetadataValidator : IClientMetadataValidator
     /// </summary>
     public virtual bool IsClientIdUrl(string clientId)
     {
-        if (string.IsNullOrEmpty(clientId) || !clientId.StartsWith(HttpsScheme, StringComparison.OrdinalIgnoreCase) ||
-            clientId.Contains('#') || !Uri.TryCreate(clientId, UriKind.Absolute, out var uri) ||
-            !string.IsNullOrEmpty(uri.UserInfo) || uri.AbsolutePath.Length <= 1)
+        if (string.IsNullOrEmpty(clientId) || !clientId.StartsWith(HttpsScheme, StringComparison.OrdinalIgnoreCase) || clientId.Contains('#'))
         {
             return false;
         }
 
-        // Uri removes dot segments, so they are looked for in the client id as it is
-        var pathStart = clientId.IndexOf('/', HttpsScheme.Length);
-        var queryStart = clientId.IndexOf('?');
-        var path = queryStart > pathStart ? clientId[pathStart..queryStart] : clientId[pathStart..];
+        if (!Uri.TryCreate(clientId, UriKind.Absolute, out var uri) || !string.IsNullOrEmpty(uri.UserInfo) || uri.AbsolutePath.Length <= 1)
+        {
+            return false;
+        }
 
-        return !path.Split('/').Any(IsDotSegment);
+        return !HasDotSegment(clientId);
     }
 
     /// <summary>
@@ -54,13 +54,13 @@ public class ClientMetadataValidator : IClientMetadataValidator
                 $"Only public clients may register themselves: the token_endpoint_auth_method must be '{ClientAuthenticationMethods.None}'.");
         }
 
-        if (!TryGetStrings(metadata, ClientMetadata.Names.GrantTypes, out var grantTypes) || (grantTypes != null && !grantTypes.Contains(GrantTypes.AuthorizationCode)))
+        if (!IncludesWhenGiven(metadata, ClientMetadata.Names.GrantTypes, GrantTypes.AuthorizationCode))
         {
             return ClientMetadataResult.Fail(ClientMetadata.Errors.InvalidClientMetadata,
                 $"The grant_types must be a list that includes '{GrantTypes.AuthorizationCode}'.");
         }
 
-        if (!TryGetStrings(metadata, ClientMetadata.Names.ResponseTypes, out var responseTypes) || (responseTypes != null && !responseTypes.Contains(ResponseTypes.Code)))
+        if (!IncludesWhenGiven(metadata, ClientMetadata.Names.ResponseTypes, ResponseTypes.Code))
         {
             return ClientMetadataResult.Fail(ClientMetadata.Errors.InvalidClientMetadata,
                 $"The response_types must be a list that includes '{ResponseTypes.Code}'.");
@@ -77,11 +77,9 @@ public class ClientMetadataValidator : IClientMetadataValidator
             return ClientMetadataResult.Fail(ClientMetadata.Errors.InvalidRedirectUri, redirectUriError);
         }
 
-        var clientName = GetString(metadata, ClientMetadata.Names.ClientName)?.Trim();
-
         return ClientMetadataResult.Success(new ClientMetadata
         {
-            ClientName = string.IsNullOrEmpty(clientName) ? null : clientName[..Math.Min(clientName.Length, ClientMetadata.MaxClientNameLength)],
+            ClientName = GetClientName(metadata),
             RedirectUris = redirectUris.Distinct(StringComparer.Ordinal).ToList(),
         });
     }
@@ -165,12 +163,28 @@ public class ClientMetadataValidator : IClientMetadataValidator
         return true;
     }
 
-    private static bool IsDotSegment(string segment)
+    /// <summary>
+    /// A missing list is valid; a given one must include the value.
+    /// </summary>
+    protected static bool IncludesWhenGiven(JsonElement metadata, string name, string value)
     {
-        return segment is "." or ".." ||
-            segment.Equals("%2e", StringComparison.OrdinalIgnoreCase) ||
-            segment.Equals("%2e%2e", StringComparison.OrdinalIgnoreCase) ||
-            segment.Equals(".%2e", StringComparison.OrdinalIgnoreCase) ||
-            segment.Equals("%2e.", StringComparison.OrdinalIgnoreCase);
+        return TryGetStrings(metadata, name, out var values) && (values == null || values.Contains(value));
+    }
+
+    private static string GetClientName(JsonElement metadata)
+    {
+        var clientName = GetString(metadata, ClientMetadata.Names.ClientName)?.Trim();
+
+        return string.IsNullOrEmpty(clientName) ? null : clientName[..Math.Min(clientName.Length, ClientMetadata.MaxClientNameLength)];
+    }
+
+    // Uri removes dot segments, so they are looked for in the client id as it is
+    private static bool HasDotSegment(string clientId)
+    {
+        var pathStart = clientId.IndexOf('/', HttpsScheme.Length);
+        var queryStart = clientId.IndexOf('?');
+        var path = queryStart > pathStart ? clientId[pathStart..queryStart] : clientId[pathStart..];
+
+        return path.Split('/').Any(_dotSegments.Contains);
     }
 }

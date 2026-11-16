@@ -34,8 +34,6 @@ public static class SelfRegisteredClientExtensions
 
     public static async ValueTask EnsureCreatedAsync(this IOpenIddictApplicationManager manager, object application, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(application);
-
         var id = await manager.GetIdAsync(application, cancellationToken);
         if (await manager.FindByIdAsync(id, cancellationToken) == null)
         {

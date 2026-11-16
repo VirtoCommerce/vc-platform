@@ -15,7 +15,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api;
 /// Dynamic client registration (RFC 7591), off unless Authorization:ClientRegistration:DynamicRegistration:Enabled is true.
 /// </summary>
 [AllowAnonymous]
-[IgnoreAntiforgeryToken]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public class ClientRegistrationController : Controller
 {

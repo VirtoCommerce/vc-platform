@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using OpenIddict.Abstractions;
@@ -29,8 +28,6 @@ public class ValidateSelfRegisteredClientAuthorizationRequest : IOpenIddictServe
 
     public virtual async ValueTask HandleAsync(ValidateAuthorizationRequestContext context)
     {
-        ArgumentNullException.ThrowIfNull(context);
-
         var application = await _applicationManager.FindByClientIdAsync(context.ClientId);
         if (!await _applicationManager.IsSelfRegisteredAsync(application))
         {
