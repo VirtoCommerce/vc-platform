@@ -30,6 +30,8 @@ public static class IPAddressExtensions
         IPNetwork.Parse("224.0.0.0/4"),
         IPNetwork.Parse("240.0.0.0/4"),
         IPNetwork.Parse("::/96"),
+        IPNetwork.Parse("64:ff9b:1::/48"),
+        IPNetwork.Parse("100::/64"),
         IPNetwork.Parse("2001::/32"),
         IPNetwork.Parse("2001:db8::/32"),
         IPNetwork.Parse("fc00::/7"),

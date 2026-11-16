@@ -103,6 +103,22 @@ public class AuthorizationControllerSelfRegisteredClientTests
     }
 
     [Fact]
+    public async Task Authorize_HostWithLookalikeLetters_ShowsItsPunycode()
+    {
+        // Arrange
+        const string lookalike = "https://\u0441laude.ai/oauth/client";
+        _context.SetDocument(lookalike, "Claude Code", "http://localhost/callback");
+        var controller = CreateController(SelfRegisteredClientTestContext.McpResource, lookalike);
+
+        // Act
+        var result = await controller.Authorize();
+
+        // Assert
+        var model = result.Should().BeOfType<ViewResult>().Subject.Model.Should().BeOfType<AuthorizeViewModel>().Subject;
+        model.ClientHost.Should().Be("xn--laude-0ye.ai");
+    }
+
+    [Fact]
     public async Task Accept_FirstTime_StoresTheClientAndTheConsentToTheResource()
     {
         // Arrange

@@ -12,7 +12,7 @@ public class OAuthAppsSelfRegisteredFilterTests
     private readonly VirtoOpenIddictEntityFrameworkCoreApplication[] _apps =
     [
         new() { ClientId = "admin-app" },
-        new() { ClientId = "admin-app-with-properties", Properties = "{\"note\":\"vc_registration in a value\"}" },
+        new() { ClientId = "admin-app-with-properties", Properties = "{\"note\":\"vc_registration\"}" },
         new() { ClientId = "https://claude.ai/oauth/client", Properties = "{\"vc_registration\":\"client_id_metadata_document\"}" },
         new() { ClientId = "dcr-client", Properties = "{\"vc_registration\":\"dynamic_registration\"}" },
     ];

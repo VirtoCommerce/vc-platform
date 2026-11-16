@@ -32,12 +32,34 @@ public static class SelfRegisteredClientExtensions
         return await manager.GetRegistrationTypeAsync(application, cancellationToken) != null;
     }
 
-    public static async ValueTask EnsureCreatedAsync(this IOpenIddictApplicationManager manager, object application, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// The stored application: the given one, or the one another consent stored at the same time.
+    /// </summary>
+    public static async ValueTask<TApplication> EnsureCreatedAsync<TApplication>(this IOpenIddictApplicationManager manager, TApplication application,
+        CancellationToken cancellationToken = default)
+        where TApplication : class
     {
         var id = await manager.GetIdAsync(application, cancellationToken);
-        if (await manager.FindByIdAsync(id, cancellationToken) == null)
+        if (await manager.FindByIdAsync(id, cancellationToken) != null)
+        {
+            return application;
+        }
+
+        var clientId = await manager.GetClientIdAsync(application, cancellationToken);
+
+        try
         {
             await manager.CreateAsync(application, cancellationToken);
+            return application;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            if (await manager.FindByClientIdAsync(clientId, cancellationToken) is TApplication stored)
+            {
+                return stored;
+            }
+
+            throw;
         }
     }
 
@@ -54,6 +76,13 @@ public static class SelfRegisteredClientExtensions
             .Where(x => x.ValueKind == JsonValueKind.String)
             .Select(x => x.GetString())
             .ToList();
+    }
+
+    public static async ValueTask<bool> HasResourcePermissionsAsync(this IOpenIddictApplicationManager manager, object application,
+        IEnumerable<string> resources, CancellationToken cancellationToken = default)
+    {
+        return await resources.ToAsyncEnumerable().AllAsync(async (resource, token) =>
+            await manager.HasPermissionAsync(application, OpenIddictConstants.Permissions.Prefixes.Resource + resource, token), cancellationToken);
     }
 
     public static bool CoversResources(ICollection<string> consented, IEnumerable<string> requested)

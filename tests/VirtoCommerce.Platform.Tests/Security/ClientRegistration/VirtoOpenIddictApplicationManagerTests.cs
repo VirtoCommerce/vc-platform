@@ -303,6 +303,58 @@ public class VirtoOpenIddictApplicationManagerTests
         application.Should().BeNull();
     }
 
+    [Fact]
+    public async Task FindByClientId_StoredClientWhoseUpdateFails_Refused()
+    {
+        // Arrange
+        var stored = await StoreClientAsync("Claude", "https://claude.ai/api/mcp/auth_callback");
+        _context.SetDocument(ClientId, "Claude", "https://evil.example.com/callback");
+        _context.FailUpdates = true;
+        var manager = _context.CreateManager();
+
+        // Act
+        var application = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Assert
+        application.Should().BeNull("the application in memory has redirect URIs the users didn't consent to");
+        _context.AuthorizationManager.Verify(x => x.RevokeByApplicationIdAsync(stored.Id, It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task EnsureCreated_AnotherConsentStoredTheClientMeanwhile_ReturnsTheStoredOne()
+    {
+        // Arrange
+        _context.SetDocument(ClientId, "Claude Code", "https://claude.ai/api/mcp/auth_callback");
+        var manager = _context.CreateManager();
+        var application = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
+        var otherManager = _context.CreateManager();
+        var other = await otherManager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
+        await otherManager.EnsureCreatedAsync(other, TestContext.Current.CancellationToken);
+
+        // Act
+        var stored = await manager.EnsureCreatedAsync(application, TestContext.Current.CancellationToken);
+
+        // Assert
+        stored.Should().BeSameAs(other);
+        _context.Stored.Should().ContainSingle().Which.Value.Should().BeSameAs(other);
+    }
+
+    [Fact]
+    public async Task HasResourcePermissions_ResourceNoLongerAllowed_False()
+    {
+        // Arrange
+        await StoreClientAsync("Claude", "https://claude.ai/api/mcp/auth_callback");
+        _context.Resources.Single(x => x.Uri == SelfRegisteredClientTestContext.McpResource).AllowSelfRegisteredClients = false;
+        var manager = _context.CreateManager();
+        var application = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Act
+        var allowed = await manager.HasResourcePermissionsAsync(application, [SelfRegisteredClientTestContext.McpResource], TestContext.Current.CancellationToken);
+
+        // Assert
+        allowed.Should().BeFalse("a refresh token must not keep a resource that no longer allows self-registered clients");
+    }
+
     private async Task<VirtoOpenIddictEntityFrameworkCoreApplication> StoreClientAsync(string clientName, params string[] redirectUris)
     {
         _context.SetDocument(ClientId, clientName, redirectUris);

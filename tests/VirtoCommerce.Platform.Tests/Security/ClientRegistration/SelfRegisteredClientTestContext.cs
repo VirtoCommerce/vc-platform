@@ -40,6 +40,8 @@ public class SelfRegisteredClientTestContext
 
     public int Updates { get; private set; }
 
+    public bool FailUpdates { get; set; }
+
     public Mock<IClientIdMetadataDocumentResolver> Resolver { get; } = new();
 
     public Mock<IOpenIddictAuthorizationManager> AuthorizationManager { get; } = new();
@@ -85,13 +87,23 @@ public class SelfRegisteredClientTestContext
             .Setup(x => x.CreateAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
             .Returns((VirtoOpenIddictEntityFrameworkCoreApplication app, CancellationToken _) =>
             {
-                Stored[app.ClientId!] = app;
+                // The client id is unique, as in the database
+                if (!Stored.TryAdd(app.ClientId!, app))
+                {
+                    throw new InvalidOperationException($"The client {app.ClientId} is already stored.");
+                }
+
                 return ValueTask.CompletedTask;
             });
         store
             .Setup(x => x.UpdateAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
             .Returns(() =>
             {
+                if (FailUpdates)
+                {
+                    throw new InvalidOperationException("The database is not available.");
+                }
+
                 Updates++;
                 return ValueTask.CompletedTask;
             });

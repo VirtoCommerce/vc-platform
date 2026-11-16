@@ -232,7 +232,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         protected static IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> Filter(IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> query,
             OAuthAppSearchCriteria criteria)
         {
-            var registration = $"\"{SelfRegisteredClientConstants.RegistrationProperty}\"";
+            var registration = $"\"{SelfRegisteredClientConstants.RegistrationProperty}\":";
 
             return criteria.SelfRegistered switch
             {

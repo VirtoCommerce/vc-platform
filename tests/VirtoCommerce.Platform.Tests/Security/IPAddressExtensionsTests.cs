@@ -46,6 +46,8 @@ public class IPAddressExtensionsTests
     [InlineData("fd12:3456::1")]
     [InlineData("ff02::1")]
     [InlineData("2001:db8::1")]
+    [InlineData("64:ff9b:1::a00:1")]
+    [InlineData("100::1")]
     [InlineData("2001:0::1")]
     [InlineData("::ffff:127.0.0.1")]
     [InlineData("::ffff:169.254.169.254")]

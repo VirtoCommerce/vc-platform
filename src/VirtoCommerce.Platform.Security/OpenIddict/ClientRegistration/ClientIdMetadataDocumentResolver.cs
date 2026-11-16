@@ -81,24 +81,28 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
             return ClientIdMetadataDocumentResult.Fail("The client id is not a client metadata document URL.");
         }
 
-        var cacheKey = _cacheKeyPrefix + clientId;
-        if (_memoryCache.TryGetValue(cacheKey, out ClientIdMetadataDocumentResult cached))
+        ClientIdMetadataDocumentResult failure = null;
+
+        var document = await _memoryCache.GetOrCreateExclusiveAsync(_cacheKeyPrefix + clientId, async options =>
         {
-            return cached;
+            var (result, lifetime) = await FetchAsync(clientId, cancellationToken);
+            if (result.Document == null)
+            {
+                failure = result;
+                return null;
+            }
+
+            options.AbsoluteExpirationRelativeToNow = lifetime;
+            return result;
+        }, cacheNullValue: false);
+
+        if (document != null)
+        {
+            return document;
         }
 
-        var (result, lifetime) = await FetchAsync(clientId, cancellationToken);
-
-        if (result.Document == null)
-        {
-            _logger.LogWarning("The client metadata document {ClientId} can't be used: {Error}", clientId, result.Error);
-        }
-        else
-        {
-            _memoryCache.Set(cacheKey, result, lifetime);
-        }
-
-        return result;
+        _logger.LogWarning("The client metadata document {ClientId} can't be used: {Error}", clientId, failure.Error);
+        return failure;
     }
 
     /// <summary>

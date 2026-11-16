@@ -321,6 +321,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     return BadRequest(SecurityErrorDescriber.InvalidTarget());
                 }
 
+                if (openIdConnectRequest.IsRefreshTokenGrantType() && !await AreResourcesStillAllowedAsync(openIdConnectRequest, info.Principal))
+                {
+                    return BadRequest(SecurityErrorDescriber.ResourceNotAllowed());
+                }
+
                 // Retrieve the user profile corresponding to the authorization code/refresh token.
                 // Note: if you want to automatically invalidate the authorization code/refresh token
                 // when the user password/roles change, use _signInManager.ValidateSecurityStampAsync(info.Principal) instead.
@@ -875,7 +880,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
                 RegistrationType = registrationType,
-                ClientHost = registrationType == SelfRegisteredClientConstants.ClientIdMetadataDocument ? new Uri(request.ClientId).Host : null,
+                ClientHost = registrationType == SelfRegisteredClientConstants.ClientIdMetadataDocument ? new Uri(request.ClientId).IdnHost : null,
                 ClientId = request.ClientId,
                 Scope = request.Scope,
                 UserName = user.UserName,
@@ -1165,7 +1170,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (await _applicationManager.IsSelfRegisteredAsync(application))
             {
-                await _applicationManager.EnsureCreatedAsync(application);
+                application = await _applicationManager.EnsureCreatedAsync(application);
             }
 
             // Automatically create a permanent authorization to avoid requiring explicit consent
@@ -1182,6 +1187,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+
+        /// <summary>
+        /// A refresh token keeps the resources it was issued for, so a self-registered client would keep a resource
+        /// after the module that serves it stopped allowing such clients.
+        /// </summary>
+        private async Task<bool> AreResourcesStillAllowedAsync(OpenIddictRequest request, ClaimsPrincipal principal)
+        {
+            var application = string.IsNullOrEmpty(request.ClientId) ? null : await _applicationManager.FindByClientIdAsync(request.ClientId);
+            if (!await _applicationManager.IsSelfRegisteredAsync(application))
+            {
+                return true;
+            }
+
+            var resources = request.GetResources().Any() ? request.GetResources() : principal.GetResources();
+
+            return await _applicationManager.HasResourcePermissionsAsync(application, resources);
         }
 
         private async Task<object> CreatePermanentAuthorizationAsync(ClaimsPrincipal principal, ApplicationUser user,

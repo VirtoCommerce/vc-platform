@@ -89,6 +89,24 @@ public class VirtoOpenIddictApplicationManager : OpenIddictApplicationManager<Vi
         return base.FindByClientIdAsync(identifier, cancellationToken);
     }
 
+    public override async ValueTask CreateAsync(VirtoOpenIddictEntityFrameworkCoreApplication application, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await base.CreateAsync(application, cancellationToken);
+        }
+        catch
+        {
+            // The client wasn't stored, so it is looked up in the store again, which may have one stored meanwhile
+            if (application?.ClientId != null)
+            {
+                _selfRegistered.Remove(application.ClientId);
+            }
+
+            throw;
+        }
+    }
+
     protected virtual async Task<VirtoOpenIddictEntityFrameworkCoreApplication> ResolveClientIdMetadataDocumentAsync(string clientId,
         VirtoOpenIddictEntityFrameworkCoreApplication stored, CancellationToken cancellationToken)
     {
@@ -153,8 +171,9 @@ public class VirtoOpenIddictApplicationManager : OpenIddictApplicationManager<Vi
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
+            // The application in memory already has the new redirect URIs, which the users didn't consent to
             Logger.LogWarning(ex, "The self-registered client {ClientId} could not be updated", current.ClientId);
-            return stored;
+            return null;
         }
 
         // The users consented to the codes going to the old redirect URIs
