@@ -41,13 +41,14 @@ public class DynamicClientRegistrationService : IDynamicClientRegistrationServic
             result.Metadata.ClientName ?? DefaultClientName, result.Metadata.RedirectUris, cancellationToken);
         await _applicationManager.CreateAsync(descriptor, cancellationToken);
 
-        _logger.LogInformation("The OAuth client {ClientId} ({ClientName}) registered itself", clientId, descriptor.DisplayName);
+        var clientName = descriptor.DisplayName;
+        _logger.LogInformation("The OAuth client {ClientId} ({ClientName}) registered itself", clientId, clientName);
 
         return new DynamicClientRegistrationResult
         {
             ClientId = clientId,
             IssuedAt = DateTimeOffset.UtcNow,
-            ClientName = descriptor.DisplayName,
+            ClientName = clientName,
             RedirectUris = result.Metadata.RedirectUris,
         };
     }

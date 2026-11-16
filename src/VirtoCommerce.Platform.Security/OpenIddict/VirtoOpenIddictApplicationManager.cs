@@ -183,11 +183,12 @@ public class VirtoOpenIddictApplicationManager : OpenIddictApplicationManager<Vi
     protected virtual async Task RevokeConsentsAsync(VirtoOpenIddictEntityFrameworkCoreApplication application, CancellationToken cancellationToken)
     {
         var id = await GetIdAsync(application, cancellationToken);
+        var clientId = application.ClientId;
 
         var authorizations = await _authorizationManager.RevokeByApplicationIdAsync(id, cancellationToken);
         var tokens = await _tokenManager.RevokeByApplicationIdAsync(id, cancellationToken);
 
         Logger.LogInformation("The redirect URIs of the self-registered client {ClientId} changed: {Authorizations} consents and {Tokens} tokens are revoked",
-            application.ClientId, authorizations, tokens);
+            clientId, authorizations, tokens);
     }
 }

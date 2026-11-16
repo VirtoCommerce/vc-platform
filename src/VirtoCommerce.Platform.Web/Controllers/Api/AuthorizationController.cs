@@ -1116,30 +1116,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                               throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
             // Retrieve the permanent authorizations associated with the user and the calling client application.
-            var authorizations = await _authorizationManager.FindAsync(
+            var authorizations = _authorizationManager.FindAsync(
                 subject: await _userManager.GetUserIdAsync(user),
                 client: await _applicationManager.GetIdAsync(application),
                 status: Statuses.Valid,
                 type: AuthorizationTypes.Permanent,
-                scopes: request.GetScopes()).ToListAsync();
+                scopes: request.GetScopes());
 
             if (await _applicationManager.IsSelfRegisteredAsync(application))
             {
                 var requestedResources = request.GetResources();
-                var covering = new List<object>();
-
-                foreach (var authorization in authorizations)
-                {
-                    if (SelfRegisteredClientExtensions.CoversResources(await _authorizationManager.GetConsentedResourcesAsync(authorization), requestedResources))
-                    {
-                        covering.Add(authorization);
-                    }
-                }
-
-                authorizations = covering;
+                authorizations = authorizations.Where(async (authorization, cancellationToken) =>
+                    SelfRegisteredClientExtensions.CoversResources(
+                        await _authorizationManager.GetConsentedResourcesAsync(authorization, cancellationToken), requestedResources));
             }
 
-            return (user, application, authorizations);
+            return (user, application, await authorizations.ToListAsync());
         }
 
         private ForbidResult ConsentNotGiven()
