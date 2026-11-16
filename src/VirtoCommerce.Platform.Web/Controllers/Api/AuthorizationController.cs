@@ -1189,10 +1189,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
-        /// <summary>
-        /// A refresh token keeps the resources it was issued for, so a self-registered client would keep a resource
-        /// after the module that serves it stopped allowing such clients.
-        /// </summary>
         private async Task<bool> AreResourcesStillAllowedAsync(OpenIddictRequest request, ClaimsPrincipal principal)
         {
             var application = string.IsNullOrEmpty(request.ClientId) ? null : await _applicationManager.FindByClientIdAsync(request.ClientId);

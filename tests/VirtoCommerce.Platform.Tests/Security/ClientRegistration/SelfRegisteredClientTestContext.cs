@@ -87,7 +87,6 @@ public class SelfRegisteredClientTestContext
             .Setup(x => x.CreateAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
             .Returns((VirtoOpenIddictEntityFrameworkCoreApplication app, CancellationToken _) =>
             {
-                // The client id is unique, as in the database
                 if (!Stored.TryAdd(app.ClientId!, app))
                 {
                     throw new InvalidOperationException($"The client {app.ClientId} is already stored.");

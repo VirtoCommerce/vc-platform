@@ -32,9 +32,6 @@ public static class SelfRegisteredClientExtensions
         return await manager.GetRegistrationTypeAsync(application, cancellationToken) != null;
     }
 
-    /// <summary>
-    /// The stored application: the given one, or the one another consent stored at the same time.
-    /// </summary>
     public static async ValueTask<TApplication> EnsureCreatedAsync<TApplication>(this IOpenIddictApplicationManager manager, TApplication application,
         CancellationToken cancellationToken = default)
         where TApplication : class
