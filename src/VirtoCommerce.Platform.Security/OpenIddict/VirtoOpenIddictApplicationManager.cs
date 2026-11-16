@@ -170,7 +170,12 @@ public class VirtoOpenIddictApplicationManager : OpenIddictApplicationManager<Vi
     {
         return current.DisplayName == descriptor.DisplayName &&
             current.ApplicationType == descriptor.ApplicationType &&
-            current.RedirectUris.SetEquals(descriptor.RedirectUris) &&
+            HasSameUrisAndPermissions(current, descriptor);
+    }
+
+    private static bool HasSameUrisAndPermissions(OpenIddictApplicationDescriptor current, OpenIddictApplicationDescriptor descriptor)
+    {
+        return current.RedirectUris.SetEquals(descriptor.RedirectUris) &&
             current.Permissions.SetEquals(descriptor.Permissions) &&
             current.Requirements.SetEquals(descriptor.Requirements);
     }

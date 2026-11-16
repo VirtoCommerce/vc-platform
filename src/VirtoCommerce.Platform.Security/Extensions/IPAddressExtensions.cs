@@ -7,6 +7,11 @@ namespace VirtoCommerce.Platform.Security.Extensions;
 
 public static class IPAddressExtensions
 {
+    private const int IPv4AddressLength = 4;
+
+    // 2002:AABB:CCDD::/48 carries AA.BB.CC.DD
+    private const int SixToFourIPv4Offset = 2;
+
     private static readonly IPNetwork[] _nonPublicNetworks =
     [
         IPNetwork.Parse("0.0.0.0/8"),
@@ -48,12 +53,12 @@ public static class IPAddressExtensions
 
         if (_nat64Network.Contains(address))
         {
-            return new IPAddress(address.GetAddressBytes()[^4..]).IsPublic();
+            return new IPAddress(address.GetAddressBytes()[^IPv4AddressLength..]).IsPublic();
         }
 
         if (_6to4Network.Contains(address))
         {
-            return new IPAddress(address.GetAddressBytes()[2..6]).IsPublic();
+            return new IPAddress(address.GetAddressBytes()[SixToFourIPv4Offset..(SixToFourIPv4Offset + IPv4AddressLength)]).IsPublic();
         }
 
         return address.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6 &&

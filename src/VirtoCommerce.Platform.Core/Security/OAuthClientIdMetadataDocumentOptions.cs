@@ -8,6 +8,8 @@ namespace VirtoCommerce.Platform.Core.Security;
 /// </summary>
 public class OAuthClientIdMetadataDocumentOptions
 {
+    private const int DefaultMaxDocumentSize = 5120;
+
     /// <summary>
     /// Accept an HTTPS URL as the client id. By default, true.
     /// </summary>
@@ -37,7 +39,7 @@ public class OAuthClientIdMetadataDocumentOptions
     /// <summary>
     /// The largest document, in bytes. By default, 5 KB.
     /// </summary>
-    public int MaxDocumentSize { get; set; } = 5 * 1024;
+    public int MaxDocumentSize { get; set; } = DefaultMaxDocumentSize;
 
     /// <summary>
     /// Fetch documents from this computer too (localhost, 127.0.0.1, [::1]), to try a client during development.

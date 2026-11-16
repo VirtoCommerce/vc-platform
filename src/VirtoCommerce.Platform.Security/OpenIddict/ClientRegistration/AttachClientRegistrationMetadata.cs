@@ -11,6 +11,8 @@ public class AttachClientRegistrationMetadata : IOpenIddictServerHandler<HandleC
 {
     public const string RegistrationEndpointPath = "connect/register";
 
+    private const int OrderAfterAdditionalMetadata = 1000;
+
     private readonly IOptionsMonitor<AuthorizationOptions> _options;
 
     public AttachClientRegistrationMetadata(IOptionsMonitor<AuthorizationOptions> options)
@@ -21,7 +23,7 @@ public class AttachClientRegistrationMetadata : IOpenIddictServerHandler<HandleC
     public static OpenIddictServerHandlerDescriptor Descriptor { get; } = OpenIddictServerHandlerDescriptor
         .CreateBuilder<HandleConfigurationRequestContext>()
         .UseSingletonHandler<AttachClientRegistrationMetadata>()
-        .SetOrder(OpenIddictServerHandlers.Discovery.AttachAdditionalMetadata.Descriptor.Order + 1000)
+        .SetOrder(OpenIddictServerHandlers.Discovery.AttachAdditionalMetadata.Descriptor.Order + OrderAfterAdditionalMetadata)
         .SetType(OpenIddictServerHandlerType.Custom)
         .Build();
 

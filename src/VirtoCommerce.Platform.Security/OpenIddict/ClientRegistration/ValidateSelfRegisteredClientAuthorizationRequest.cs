@@ -12,6 +12,8 @@ namespace VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 /// </summary>
 public class ValidateSelfRegisteredClientAuthorizationRequest : IOpenIddictServerHandler<ValidateAuthorizationRequestContext>
 {
+    private const int OrderAfterPkceValidation = 500;
+
     private readonly IOpenIddictApplicationManager _applicationManager;
 
     public ValidateSelfRegisteredClientAuthorizationRequest(IOpenIddictApplicationManager applicationManager)
@@ -22,7 +24,7 @@ public class ValidateSelfRegisteredClientAuthorizationRequest : IOpenIddictServe
     public static OpenIddictServerHandlerDescriptor Descriptor { get; } = OpenIddictServerHandlerDescriptor
         .CreateBuilder<ValidateAuthorizationRequestContext>()
         .UseScopedHandler<ValidateSelfRegisteredClientAuthorizationRequest>()
-        .SetOrder(OpenIddictServerHandlers.Authentication.ValidateProofKeyForCodeExchangeRequirement.Descriptor.Order + 500)
+        .SetOrder(OpenIddictServerHandlers.Authentication.ValidateProofKeyForCodeExchangeRequirement.Descriptor.Order + OrderAfterPkceValidation)
         .SetType(OpenIddictServerHandlerType.Custom)
         .Build();
 
