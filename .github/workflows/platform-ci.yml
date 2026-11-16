@@ -103,7 +103,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.9
+      uses: VirtoCommerce/.github/actions/setup-vcbuild@8c987e8498dc19d50c2985d414781a9a62fcca0d # vc-build 3.1002.0-alpha.301, test only
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
@@ -328,7 +328,7 @@ jobs:
       PACKAGE_SERVER: 'ghcr.io'
     steps:
       - name: Install VirtoCommerce.GlobalTool
-        uses: VirtoCommerce/.github/actions/setup-vcbuild@v3.1000.9
+        uses: VirtoCommerce/.github/actions/setup-vcbuild@8c987e8498dc19d50c2985d414781a9a62fcca0d # vc-build 3.1002.0-alpha.301, test only
 
       - name: Swagger validation
         uses: VirtoCommerce/.github/actions/docker-env@v3.1000.9
