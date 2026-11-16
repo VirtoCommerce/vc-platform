@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -51,8 +52,8 @@ public class AuthorizationControllerSignInLogTests
 
     public AuthorizationControllerSignInLogTests()
     {
-        // Only FindByClientIdAsync and GetIdAsync are exercised, and both are overridden below, so the
-        // cache and store are never reached - they exist because the base constructor rejects nulls.
+        // Only FindByClientIdAsync, GetIdAsync and GetPropertiesAsync are exercised, and all are overridden below, so
+        // the cache and store are never reached - they exist because the base constructor rejects nulls.
         _applicationManager = new Mock<OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>>(
             Mock.Of<IOpenIddictApplicationCache<VirtoOpenIddictEntityFrameworkCoreApplication>>(),
             NullLogger<OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>>.Instance,
@@ -73,6 +74,9 @@ public class AuthorizationControllerSignInLogTests
         _applicationManager
             .Setup(x => x.GetIdAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("app-1");
+        _applicationManager
+            .Setup(x => x.GetPropertiesAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ImmutableDictionary<string, JsonElement>.Empty);
 
         var authorization = new object();
 

@@ -22,9 +22,11 @@ public static class SelfRegisteredClientExtensions
 
         var properties = await manager.GetPropertiesAsync(application, cancellationToken);
 
-        return properties.TryGetValue(SelfRegisteredClientConstants.RegistrationProperty, out var value) && value.ValueKind == JsonValueKind.String
+        var registrationType = properties.TryGetValue(SelfRegisteredClientConstants.RegistrationProperty, out var value) && value.ValueKind == JsonValueKind.String
             ? value.GetString()
             : null;
+
+        return string.IsNullOrEmpty(registrationType) ? null : registrationType;
     }
 
     public static async ValueTask<bool> IsSelfRegisteredAsync(this IOpenIddictApplicationManager manager, object application, CancellationToken cancellationToken = default)
