@@ -513,6 +513,26 @@ public class OAuthAppsControllerTests
         };
     }
 
+    [Theory]
+    [InlineData("https:%2F%2Fagent.example.com%2Fclient.json")]
+    [InlineData("https:%2f%2fagent.example.com%2fclient.json")]
+    public async Task Get_ClientIdWithEncodedSlashes_FindsTheApplication(string routeValue)
+    {
+        // Arrange
+        // The route value of a client id that is a URL, as ASP.NET Core leaves it: decoded but for the slashes
+        var controller = CreateController();
+        var descriptor = CreateAgentClient();
+        descriptor.ClientId = "https://agent.example.com/client.json";
+        await controller.SaveAsync(descriptor);
+
+        // Act
+        var result = await controller.GetAsync(routeValue);
+
+        // Assert
+        var loaded = GetValue(result);
+        loaded.ClientId.Should().Be("https://agent.example.com/client.json");
+    }
+
     private static OpenIddictApplicationDescriptor CreateAgentClient()
     {
         return new OpenIddictApplicationDescriptor

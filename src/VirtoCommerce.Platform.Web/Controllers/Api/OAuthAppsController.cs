@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 using VirtoCommerce.Platform.Web.Model.Security;
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
@@ -23,6 +24,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class OAuthAppsController : Controller
     {
+        private const string SelfRegisteredAppError = "The application registered itself, so it follows its client metadata document or registration and can't be changed. Delete it to disconnect the client.";
+
         private readonly OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> _manager;
         private readonly IEnumerable<IOAuthResourceProvider> _resourceProviders;
         private readonly IOAuthAppRules _rules;
@@ -75,21 +78,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = new Dictionary<string, OAuthResourceInfo>(StringComparer.Ordinal);
             var context = new OAuthResourceContext { HttpContext = HttpContext };
 
-            foreach (var provider in _resourceProviders)
+            foreach (var resource in await _resourceProviders.GetAllResourcesAsync(context, _logger, cancellationToken))
             {
-                var resources = await GetProviderResourcesAsync(provider, context, cancellationToken);
-
-                foreach (var resource in resources.Where(x => !string.IsNullOrEmpty(x?.Uri)))
+                result.TryAdd(resource.Uri, new OAuthResourceInfo
                 {
-                    result.TryAdd(resource.Uri, new OAuthResourceInfo
-                    {
-                        Uri = resource.Uri,
-                        Title = resource.Title,
-                        Kind = resource.Kind,
-                        Description = resource.Description,
-                        IsRegistered = registered.Contains(resource.Uri),
-                    });
-                }
+                    Uri = resource.Uri,
+                    Title = resource.Title,
+                    Kind = resource.Kind,
+                    Description = resource.Description,
+                    IsRegistered = registered.Contains(resource.Uri),
+                });
             }
 
             foreach (var uri in registered.Where(x => !string.IsNullOrEmpty(x)))
@@ -105,7 +103,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(Permissions.SecurityOAuthApplicationsRead)]
         public async Task<ActionResult<OpenIddictApplicationDescriptor>> GetAsync([FromRoute] string clientId)
         {
-            var app = await _manager.FindByClientIdAsync(clientId);
+            var app = await FindStoredByClientIdAsync(DecodeRouteValue(clientId));
             if (app == null)
             {
                 return NotFound();
@@ -117,14 +115,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Creates or updates the application with the client id. The application keeps the permissions it is saved
         /// with; the endpoint permissions follow from its grant types, and an application that names no grant type
-        /// gets the platform defaults. The client secret can't be changed and is never returned.
+        /// gets the platform defaults. The client secret can't be changed and is never returned. The application of a
+        /// self-registered client can't be changed: it follows its client metadata document or registration.
         /// </summary>
         [HttpPost]
         [Route("")]
         [Authorize(Permissions.SecurityOAuthApplicationsUpdate)]
         public async Task<ActionResult<OpenIddictApplicationDescriptor>> SaveAsync(OpenIddictApplicationDescriptor descriptor)
         {
-            var app = string.IsNullOrWhiteSpace(descriptor.ClientId) ? null : await _manager.FindByClientIdAsync(descriptor.ClientId);
+            var app = string.IsNullOrWhiteSpace(descriptor.ClientId) ? null : await FindStoredByClientIdAsync(descriptor.ClientId);
+
+            if (await _manager.IsSelfRegisteredAsync(app))
+            {
+                return BadRequest(new SecurityResult { Errors = [SelfRegisteredAppError] });
+            }
+
+            descriptor.Properties.Remove(SelfRegisteredClientConstants.RegistrationProperty);
+
             var stored = app == null ? null : await ToDescriptorAsync(app);
 
             _rules.Normalize(descriptor, stored);
@@ -187,31 +194,52 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 criteria.Sort = "DisplayName:ASC";
             }
 
-            var apps = _manager.ListAsync(x => x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take));
+            var apps = _manager.ListAsync(x => Filter(x, criteria).OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take));
 
             var appsTasks = await apps.Select(x => ToDescriptorAsync(x)).ToListAsync();
 
             var result = new OAuthAppSearchResult
             {
                 Results = await Task.WhenAll(appsTasks),
-                TotalCount = (int)await _manager.CountAsync()
+                TotalCount = (int)await _manager.CountAsync(x => Filter(x, criteria))
             };
 
             return result;
         }
 
-        // A module whose provider fails must not take the resources of the others away
-        private async Task<IList<OAuthResource>> GetProviderResourcesAsync(IOAuthResourceProvider provider, OAuthResourceContext context, CancellationToken cancellationToken)
+        /// <summary>
+        /// Without resolving a self-registered client, so it opens even when its document is gone or its way of
+        /// registration is turned off.
+        /// </summary>
+        protected virtual async Task<VirtoOpenIddictEntityFrameworkCoreApplication> FindStoredByClientIdAsync(string clientId)
         {
-            try
+            return _manager is VirtoOpenIddictApplicationManager manager
+                ? await manager.FindStoredByClientIdAsync(clientId)
+                : await _manager.FindByClientIdAsync(clientId);
+        }
+
+        /// <summary>
+        /// ASP.NET Core decodes a route value except for an encoded slash, which a client id that is a URL has.
+        /// </summary>
+        protected static string DecodeRouteValue(string value)
+        {
+            return value?.Replace("%2F", "/", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// OpenIddict stores the properties as a JSON object, so the registration property is looked for as a name in it.
+        /// </summary>
+        protected static IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> Filter(IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> query,
+            OAuthAppSearchCriteria criteria)
+        {
+            var registration = $"\"{SelfRegisteredClientConstants.RegistrationProperty}\"";
+
+            return criteria.SelfRegistered switch
             {
-                return await provider.GetResourcesAsync(context, cancellationToken) ?? [];
-            }
-            catch (Exception ex) when (ex is not OperationCanceledException)
-            {
-                _logger.LogWarning(ex, "The OAuth resource provider {Provider} failed; its resources are not listed.", provider.GetType().FullName);
-                return [];
-            }
+                true => query.Where(x => x.Properties != null && x.Properties.Contains(registration)),
+                false => query.Where(x => x.Properties == null || !x.Properties.Contains(registration)),
+                _ => query,
+            };
         }
 
         private async Task<OpenIddictApplicationDescriptor> ToDescriptorAsync(VirtoOpenIddictEntityFrameworkCoreApplication app)

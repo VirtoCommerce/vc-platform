@@ -372,6 +372,29 @@
 
             <h1><b>@Model.ApplicationName</b> wants to access your account</h1>
 
+            @if (Model.WarnAboutLocalApp)
+            {
+                <p class="notice" role="alert">
+                    @if (!string.IsNullOrEmpty(Model.ClientHost))
+                    {
+                        <span>@Model.ApplicationName registered itself from <b>@Model.ClientHost</b>, not through your administrator, and returns to an app on this computer.</span>
+                    }
+                    else
+                    {
+                        <span>This app registered itself, not through your administrator, and returns to an app on this computer.</span>
+                    }
+                    Any app on this computer can use the name @Model.ApplicationName: allow only if you started this sign-in yourself, just now.
+                </p>
+            }
+            else if (!string.IsNullOrEmpty(Model.ClientHost))
+            {
+                <p class="notice">@Model.ApplicationName registered itself from <b>@Model.ClientHost</b>, not through your administrator. Allow only if you are connecting an app from that site.</p>
+            }
+            else if (!string.IsNullOrEmpty(Model.RegistrationType))
+            {
+                <p class="notice">This app registered itself, not through your administrator, so its name is not verified. Allow only if you have just connected it.</p>
+            }
+
             @if (Model.Expired)
             {
                 <p class="notice" role="alert">This page expired, so nothing was allowed yet. Review the access and choose again.</p>

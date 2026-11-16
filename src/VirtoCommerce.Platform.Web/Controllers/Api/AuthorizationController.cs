@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Antiforgery;
@@ -28,6 +29,7 @@ using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 using VirtoCommerce.Platform.Web.ActionConstraints;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model;
@@ -867,9 +869,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var resources = request.GetResources().ToList();
             var redirect = ConsentDescriptions.GetRedirect(request.RedirectUri, Request.Host.Host);
 
+            var registrationType = await _applicationManager.GetRegistrationTypeAsync(application);
+
             var model = new AuthorizeViewModel
             {
                 ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
+                RegistrationType = registrationType,
+                ClientHost = registrationType == SelfRegisteredClientConstants.ClientIdMetadataDocument ? new Uri(request.ClientId).Host : null,
                 ClientId = request.ClientId,
                 Scope = request.Scope,
                 UserName = user.UserName,
@@ -1117,6 +1123,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 type: AuthorizationTypes.Permanent,
                 scopes: request.GetScopes()).ToListAsync();
 
+            if (await _applicationManager.IsSelfRegisteredAsync(application))
+            {
+                var requestedResources = request.GetResources();
+                var covering = new List<object>();
+
+                foreach (var authorization in authorizations)
+                {
+                    if (SelfRegisteredClientExtensions.CoversResources(await _authorizationManager.GetConsentedResourcesAsync(authorization), requestedResources))
+                    {
+                        covering.Add(authorization);
+                    }
+                }
+
+                authorizations = covering;
+            }
+
             return (user, application, authorizations);
         }
 
@@ -1149,15 +1171,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ? requestedResources
                 : await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
 
+            if (await _applicationManager.IsSelfRegisteredAsync(application))
+            {
+                await _applicationManager.EnsureCreatedAsync(application);
+            }
+
             // Automatically create a permanent authorization to avoid requiring explicit consent
             // for future authorization or token requests containing the same scopes.
             var authorization = authorizations.LastOrDefault() ??
-                                await _authorizationManager.CreateAsync(
-                                    principal: principal,
-                                    subject: await _userManager.GetUserIdAsync(user),
-                                    client: await _applicationManager.GetIdAsync(application),
-                                    type: AuthorizationTypes.Permanent,
-                                    scopes: principal.GetScopes());
+                await CreatePermanentAuthorizationAsync(principal, user, application);
 
             principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
 
@@ -1168,6 +1190,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+
+        private async Task<object> CreatePermanentAuthorizationAsync(ClaimsPrincipal principal, ApplicationUser user,
+            VirtoOpenIddictEntityFrameworkCoreApplication application)
+        {
+            var descriptor = new OpenIddictAuthorizationDescriptor
+            {
+                ApplicationId = await _applicationManager.GetIdAsync(application),
+                CreationDate = DateTimeOffset.UtcNow,
+                Principal = principal,
+                Status = Statuses.Valid,
+                Subject = await _userManager.GetUserIdAsync(user),
+                Type = AuthorizationTypes.Permanent,
+            };
+
+            descriptor.Scopes.UnionWith(principal.GetScopes());
+            descriptor.Properties[SelfRegisteredClientConstants.ResourcesProperty] = JsonSerializer.SerializeToElement(principal.GetResources());
+
+            return await _authorizationManager.CreateAsync(descriptor);
         }
 
         private static IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
