@@ -1,7 +1,9 @@
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Moq;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
@@ -130,6 +132,40 @@ public class ValidateSelfRegisteredClientTokenAudienceTests
         context.ErrorDescription.Should().Contain("not available");
     }
 
+    [Fact]
+    public async Task Handle_SelfRegisteredClientWhoseDocumentIsNoLongerAvailable_NotRejectedWithoutResolvingIt()
+    {
+        // Arrange
+        await StoreSelfRegisteredClientAsync();
+        _context.Documents.Clear();
+        _context.Resolver.Invocations.Clear();
+        var context = CreateContext(ClientId, SelfRegisteredClientTestContext.McpResource);
+
+        // Act
+        await CreateHandler(ResourcePath).HandleAsync(context);
+
+        // Assert
+        context.IsRejected.Should().BeFalse();
+        _context.Resolver.Verify(x => x.ResolveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Theory]
+    [InlineData("https://platform.example.com")]
+    [InlineData("https://platform.example.com/")]
+    public async Task Handle_SelfRegisteredClientTokenForRootResource_Rejected(string resource)
+    {
+        // Arrange
+        await StoreSelfRegisteredClientAsync();
+        var context = CreateContext(ClientId, resource);
+
+        // Act
+        await CreateHandler("/api/platform/security/users").HandleAsync(context);
+
+        // Assert
+        context.IsRejected.Should().BeTrue();
+        context.Error.Should().Be(Errors.InvalidToken);
+    }
+
     private async Task StoreSelfRegisteredClientAsync()
     {
         _context.SetDocument(ClientId, "Claude Code", "https://claude.ai/api/mcp/auth_callback");
@@ -143,7 +179,7 @@ public class ValidateSelfRegisteredClientTokenAudienceTests
         httpContext.Request.PathBase = pathBase;
         httpContext.Request.Path = path;
 
-        return new ValidateSelfRegisteredClientTokenAudience(_manager, new HttpContextAccessor { HttpContext = httpContext });
+        return new ValidateSelfRegisteredClientTokenAudience(_context.CreateManager(), new HttpContextAccessor { HttpContext = httpContext });
     }
 
     private static ProcessAuthenticationContext CreateContext(string clientId, params string[] audiences)

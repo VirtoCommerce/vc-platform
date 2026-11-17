@@ -47,7 +47,7 @@ public class ValidateSelfRegisteredClientTokenAudience : IOpenIddictValidationHa
             return;
         }
 
-        var application = await _applicationManager.FindByClientIdAsync(clientId);
+        var application = await FindStoredByClientIdAsync(clientId);
         if (application == null)
         {
             context.Reject(Errors.InvalidToken, "The client application of the access token is not available.");
@@ -60,6 +60,13 @@ public class ValidateSelfRegisteredClientTokenAudience : IOpenIddictValidationHa
         }
     }
 
+    protected virtual async Task<object> FindStoredByClientIdAsync(string clientId)
+    {
+        return _applicationManager is VirtoOpenIddictApplicationManager manager
+            ? await manager.FindStoredByClientIdAsync(clientId)
+            : await _applicationManager.FindByClientIdAsync(clientId);
+    }
+
     protected virtual bool IsRequestToResource(Uri resource)
     {
         var request = _httpContextAccessor.HttpContext?.Request;
@@ -70,6 +77,10 @@ public class ValidateSelfRegisteredClientTokenAudience : IOpenIddictValidationHa
 
         var path = (request.PathBase + request.Path).Value?.TrimEnd('/') ?? string.Empty;
         var resourcePath = resource.AbsolutePath.TrimEnd('/');
+        if (resourcePath.Length == 0)
+        {
+            return false;
+        }
 
         return path.Equals(resourcePath, StringComparison.OrdinalIgnoreCase) ||
             path.StartsWith(resourcePath + "/", StringComparison.OrdinalIgnoreCase);

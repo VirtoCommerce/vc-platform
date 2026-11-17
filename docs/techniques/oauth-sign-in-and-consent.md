@@ -217,7 +217,8 @@ error or an invalid document is not cached, so the next authorization request fe
 in **OAuth applications** when a user first consents to it, never before, and it follows its document when it is
 fetched again: a new name applies at once, and new redirect URIs revoke every user's consent and the client's tokens,
 so the users consent again to where the codes now go. A document that can't be fetched for a while, because of a
-timeout or a server error, doesn't stop a stored client; a document that became invalid does.
+timeout or a server error, doesn't stop a stored client; a document that became invalid does, at the next sign-in or
+token refresh. An access token issued before keeps working at its resource until it expires.
 
 **OAuth applications** in the back office marks such a client *Self-registered* and filters the list by how the
 clients registered; the API takes `selfRegistered` in `POST /api/platform/oauthapps/search`, and the application's
@@ -234,7 +235,8 @@ request for a confidential client, or for grant or response types without the au
 `invalid_client_metadata`; invalid redirect URIs answer `invalid_redirect_uri`.
 
 Anyone can register a client, so turn this on only for agents that can't use a client ID metadata document. Turning
-either way off stops the clients that registered that way too: they are refused until it is on again.
+either way off stops the clients that registered that way too: they can't sign in or refresh their tokens until it is
+on again, and their access tokens issued before keep working at their resource until they expire.
 
 ### Settings
 
