@@ -705,7 +705,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
 
-            var askConsentEveryTime = await _applicationManager.IsSelfRegisteredAsync(application) && IsLoopback(request.RedirectUri);
+            var askConsentEveryTime = await AsksConsentEveryTimeAsync(application, request.RedirectUri);
 
             switch (await _applicationManager.GetConsentTypeAsync(application))
             {
@@ -1191,9 +1191,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
-        private static bool IsLoopback(string redirectUri)
+        private async Task<bool> AsksConsentEveryTimeAsync(object application, string redirectUri)
         {
-            return Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri) && uri.IsLoopback;
+            return Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri) && uri.IsLoopback &&
+                await _applicationManager.IsSelfRegisteredAsync(application);
         }
 
         private async Task<bool> AreResourcesStillAllowedAsync(OpenIddictRequest request, ClaimsPrincipal principal)
