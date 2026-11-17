@@ -629,8 +629,7 @@ public class AuthorizationControllerSignInLogTests
         result.Should().BeOfType<BadRequestObjectResult>()
             .Which.Value.Should().BeOfType<TokenResponse>()
             .Which.Code.Should().Be("resource_not_allowed");
-        _applicationManager.Verify(x => x.HasPermissionAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(),
-            OpenIddictConstants.Permissions.Prefixes.Resource + McpResource, It.IsAny<CancellationToken>()), Times.Once);
+        _applicationManager.Verify(x => x.GetPermissionsAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -651,9 +650,6 @@ public class AuthorizationControllerSignInLogTests
     public async Task Exchange_RefreshTokenOfAdminRegisteredClient_ResourcesAreNotChecked()
     {
         // Arrange
-        _applicationManager
-            .Setup(x => x.HasPermissionAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
         var controller = BuildRefreshController(_buyer, operatorUserId: null, operatorUserName: null, tokenResources: [McpResource], requestResources: [McpResource]);
 
         // Act
@@ -661,8 +657,7 @@ public class AuthorizationControllerSignInLogTests
 
         // Assert
         result.Should().BeOfType<Microsoft.AspNetCore.Mvc.SignInResult>();
-        _applicationManager.Verify(x => x.HasPermissionAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<string>(),
-            It.IsAny<CancellationToken>()), Times.Never);
+        _applicationManager.Verify(x => x.GetPermissionsAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -708,9 +703,8 @@ public class AuthorizationControllerSignInLogTests
             .ReturnsAsync(ImmutableDictionary<string, JsonElement>.Empty.Add(SelfRegisteredClientConstants.RegistrationProperty,
                 JsonSerializer.SerializeToElement(SelfRegisteredClientConstants.ClientIdMetadataDocument)));
         _applicationManager
-            .Setup(x => x.HasPermissionAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(),
-                OpenIddictConstants.Permissions.Prefixes.Resource + McpResource, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(hasResourcePermission);
+            .Setup(x => x.GetPermissionsAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(hasResourcePermission ? [OpenIddictConstants.Permissions.Prefixes.Resource + McpResource] : []);
     }
 
     private AuthorizationController BuildRefreshController(ApplicationUser user, string operatorUserId, string operatorUserName,

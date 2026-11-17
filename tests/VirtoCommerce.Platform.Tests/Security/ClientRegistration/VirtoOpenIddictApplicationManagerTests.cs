@@ -121,7 +121,7 @@ public class VirtoOpenIddictApplicationManagerTests
 
         // Assert
         application.Should().BeNull();
-        _context.Resolver.Invocations.Where(x => x.Method.Name == "ResolveAsync").Should().BeEmpty();
+        _context.Resolver.Verify(x => x.ResolveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -283,7 +283,7 @@ public class VirtoOpenIddictApplicationManagerTests
         // Assert
         (await manager.GetRedirectUrisAsync(application, TestContext.Current.CancellationToken)).Should().BeEquivalentTo("https://agent.example.com/callback");
         (await manager.HasPermissionAsync(application, Permissions.Prefixes.Resource + "https://platform.example.com/vendor/mcp", TestContext.Current.CancellationToken)).Should().BeTrue();
-        _context.Resolver.Invocations.Where(x => x.Method.Name == "ResolveAsync").Should().BeEmpty();
+        _context.Resolver.Verify(x => x.ResolveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]

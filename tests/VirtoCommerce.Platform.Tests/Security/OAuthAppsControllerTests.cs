@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using OpenIddict.Abstractions;
-using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Tests.Security.ClientRegistration;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
@@ -28,39 +25,12 @@ public class OAuthAppsControllerTests
 {
     private const string McpResource = "rsrc:https://platform.example.com/admin/mcp";
 
-    // The applications of the store, by client id: the real OpenIddict manager and EF Core store logic over a dictionary
-    private readonly Dictionary<string, VirtoOpenIddictEntityFrameworkCoreApplication> _apps = new(StringComparer.Ordinal);
-    private readonly OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> _manager;
+    private readonly SelfRegisteredClientTestContext _context = new();
+    private readonly VirtoOpenIddictApplicationManager _manager;
 
     public OAuthAppsControllerTests()
     {
-        var store = new Mock<OpenIddictEntityFrameworkCoreApplicationStore<VirtoOpenIddictEntityFrameworkCoreApplication, VirtoOpenIddictEntityFrameworkCoreAuthorization, VirtoOpenIddictEntityFrameworkCoreToken, string>>(
-            new MemoryCache(new MemoryCacheOptions()),
-            Mock.Of<IOpenIddictEntityFrameworkCoreContext>(),
-            Mock.Of<IOptionsMonitor<OpenIddictEntityFrameworkCoreOptions>>(x => x.CurrentValue == new OpenIddictEntityFrameworkCoreOptions()))
-        {
-            CallBase = true,
-        };
-
-        store
-            .Setup(x => x.FindByClientIdAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .Returns((string clientId, CancellationToken _) => ValueTask.FromResult(_apps.GetValueOrDefault(clientId)));
-        store
-            .Setup(x => x.CreateAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
-            .Returns((VirtoOpenIddictEntityFrameworkCoreApplication app, CancellationToken _) =>
-            {
-                _apps[app.ClientId!] = app;
-                return ValueTask.CompletedTask;
-            });
-        store
-            .Setup(x => x.UpdateAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
-            .Returns(() => ValueTask.CompletedTask);
-
-        _manager = new OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>(
-            Mock.Of<IOpenIddictApplicationCache<VirtoOpenIddictEntityFrameworkCoreApplication>>(),
-            NullLogger<OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>>.Instance,
-            Mock.Of<IOptionsMonitor<OpenIddictCoreOptions>>(x => x.CurrentValue == new OpenIddictCoreOptions { DisableEntityCaching = true }),
-            store.Object);
+        _manager = _context.CreateManager();
     }
 
     [Fact]
@@ -238,7 +208,7 @@ public class OAuthAppsControllerTests
         saved.DisplayName.Should().Be("Storefront");
         saved.Permissions.Should().BeEquivalentTo(created.Permissions);
         saved.Permissions.Should().Contain([Permissions.GrantTypes.Password, Permissions.Endpoints.Introspection, Permissions.Prefixes.Scope + "custom", McpResource]);
-        (await _manager.ValidateClientSecretAsync(_apps["storefront"], "s3cret", TestContext.Current.CancellationToken)).Should().BeTrue();
+        (await _manager.ValidateClientSecretAsync(_context.Stored["storefront"], "s3cret", TestContext.Current.CancellationToken)).Should().BeTrue();
     }
 
     [Fact]
@@ -250,7 +220,7 @@ public class OAuthAppsControllerTests
         var result = await CreateController().SaveAsync(descriptor);
 
         GetErrors(result).Should().ContainSingle().Which.Should().Contain("public client can't have a client secret");
-        _apps.Should().BeEmpty();
+        _context.Stored.Should().BeEmpty();
     }
 
     [Fact]
@@ -259,7 +229,7 @@ public class OAuthAppsControllerTests
         var result = await CreateController().SaveAsync(new OpenIddictApplicationDescriptor { ClientId = "app", ClientType = ClientTypes.Confidential });
 
         GetErrors(result).Should().NotBeEmpty();
-        _apps.Should().BeEmpty();
+        _context.Stored.Should().BeEmpty();
     }
 
     [Fact]
@@ -384,7 +354,7 @@ public class OAuthAppsControllerTests
         var result = await CreateController().SaveAsync(descriptor);
 
         GetErrors(result).Should().NotBeEmpty();
-        _apps.Should().BeEmpty();
+        _context.Stored.Should().BeEmpty();
     }
 
     [Fact]

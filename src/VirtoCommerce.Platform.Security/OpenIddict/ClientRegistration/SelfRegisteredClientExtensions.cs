@@ -81,8 +81,9 @@ public static class SelfRegisteredClientExtensions
     public static async ValueTask<bool> HasResourcePermissionsAsync(this IOpenIddictApplicationManager manager, object application,
         IEnumerable<string> resources, CancellationToken cancellationToken = default)
     {
-        return await resources.ToAsyncEnumerable().AllAsync(async (resource, token) =>
-            await manager.HasPermissionAsync(application, OpenIddictConstants.Permissions.Prefixes.Resource + resource, token), cancellationToken);
+        var permissions = await manager.GetPermissionsAsync(application, cancellationToken);
+
+        return resources.All(x => permissions.Contains(OpenIddictConstants.Permissions.Prefixes.Resource + x, StringComparer.Ordinal));
     }
 
     public static bool CoversResources(ICollection<string> consented, IEnumerable<string> requested)

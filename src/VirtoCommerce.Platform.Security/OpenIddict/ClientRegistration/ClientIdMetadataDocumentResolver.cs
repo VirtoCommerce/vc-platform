@@ -26,8 +26,6 @@ namespace VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 /// </summary>
 public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolver, IDisposable
 {
-    private const string _cacheKeyPrefix = "OAuthClientIdMetadataDocument:";
-
     private static readonly HashSet<HttpStatusCode> _transientStatusCodes = [HttpStatusCode.RequestTimeout, HttpStatusCode.TooManyRequests];
 
     private static readonly HashSet<HttpStatusCode> _redirectStatusCodes =
@@ -92,7 +90,7 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
 
         ClientIdMetadataDocumentResult failure = null;
 
-        var cacheKey = _cacheKeyPrefix + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(clientId)));
+        var cacheKey = CacheKey.With(GetType(), nameof(ResolveAsync), Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(clientId))));
 
         var document = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async options =>
         {
@@ -152,20 +150,25 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
-            return (ClientIdMetadataDocumentResult.Fail("The client metadata document can't be fetched in time.", isTransient: true), TimeSpan.Zero);
+            return Fail("The client metadata document can't be fetched in time.", isTransient: true);
         }
         catch (HttpRequestException ex) when (FindInnerException<NonPublicAddressException>(ex) is { } nonPublic)
         {
-            return (ClientIdMetadataDocumentResult.Fail(nonPublic.Message), TimeSpan.Zero);
+            return Fail(nonPublic.Message);
         }
         catch (HttpRequestException ex)
         {
-            return (ClientIdMetadataDocumentResult.Fail($"The client metadata document can't be fetched: {ex.Message}", isTransient: true), TimeSpan.Zero);
+            return Fail($"The client metadata document can't be fetched: {ex.Message}", isTransient: true);
         }
         catch (IOException ex)
         {
-            return (ClientIdMetadataDocumentResult.Fail($"The client metadata document can't be read: {ex.Message}", isTransient: true), TimeSpan.Zero);
+            return Fail($"The client metadata document can't be read: {ex.Message}", isTransient: true);
         }
+    }
+
+    private static (ClientIdMetadataDocumentResult Result, TimeSpan Lifetime) Fail(string error, bool isTransient = false)
+    {
+        return (ClientIdMetadataDocumentResult.Fail(error, isTransient), TimeSpan.Zero);
     }
 
     protected virtual async Task<ClientIdMetadataDocumentResult> ReadDocumentAsync(string clientId, HttpResponseMessage response,
