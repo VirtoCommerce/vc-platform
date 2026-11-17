@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OpenIddict.Abstractions;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 
@@ -53,6 +56,8 @@ public class DynamicClientRegistrationService : IDynamicClientRegistrationServic
             IssuedAt = DateTimeOffset.UtcNow,
             ClientName = clientName,
             RedirectUris = result.Metadata.RedirectUris,
+            GrantTypes = GetPermissionValues(descriptor, Permissions.Prefixes.GrantType),
+            ResponseTypes = GetPermissionValues(descriptor, Permissions.Prefixes.ResponseType),
         };
     }
 
@@ -62,5 +67,10 @@ public class DynamicClientRegistrationService : IDynamicClientRegistrationServic
     protected virtual string CreateClientId()
     {
         return Guid.NewGuid().ToString("N");
+    }
+
+    private static List<string> GetPermissionValues(OpenIddictApplicationDescriptor descriptor, string prefix)
+    {
+        return descriptor.Permissions.Where(x => x.StartsWith(prefix, StringComparison.Ordinal)).Select(x => x[prefix.Length..]).ToList();
     }
 }

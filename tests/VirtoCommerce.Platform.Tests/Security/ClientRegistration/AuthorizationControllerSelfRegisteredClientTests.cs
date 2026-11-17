@@ -92,7 +92,7 @@ public class AuthorizationControllerSelfRegisteredClientTests
         var result = await controller.Authorize();
 
         // Assert
-        var model =result.Should().BeOfType<ViewResult>().Subject.Model.Should().BeOfType<AuthorizeViewModel>().Subject;
+        var model = result.Should().BeOfType<ViewResult>().Subject.Model.Should().BeOfType<AuthorizeViewModel>().Subject;
         model.ApplicationName.Should().Be("Claude Code");
         model.ClientHost.Should().Be("claude.ai");
         model.RegistrationType.Should().Be(SelfRegisteredClientConstants.ClientIdMetadataDocument);
@@ -136,11 +136,28 @@ public class AuthorizationControllerSelfRegisteredClientTests
     }
 
     [Fact]
-    public async Task Authorize_ConsentedResource_SignsInWithoutAsking()
+    public async Task Authorize_ConsentedLoopbackClient_AsksEveryTime()
     {
         // Arrange
         await CreateController(SelfRegisteredClientTestContext.McpResource).Accept();
         var controller = CreateController(SelfRegisteredClientTestContext.McpResource);
+
+        // Act
+        var result = await controller.Authorize();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>("any app on the computer can use the client id of an app that returns to a loopback address");
+        _authorizations.Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task Authorize_ConsentedResourceOfAWebClient_SignsInWithoutAsking()
+    {
+        // Arrange
+        const string redirectUri = "https://claude.ai/api/mcp/auth_callback";
+        _context.SetDocument(ClientId, "Claude Code", redirectUri);
+        await CreateController(SelfRegisteredClientTestContext.McpResource, redirectUri: redirectUri).Accept();
+        var controller = CreateController(SelfRegisteredClientTestContext.McpResource, redirectUri: redirectUri);
 
         // Act
         var result = await controller.Authorize();
@@ -184,13 +201,13 @@ public class AuthorizationControllerSelfRegisteredClientTests
         result.Should().BeOfType<SignInResult>();
     }
 
-    private AuthorizationController CreateController(string resource, string clientId = ClientId)
+    private AuthorizationController CreateController(string resource, string clientId = ClientId, string redirectUri = "http://localhost:51234/callback")
     {
         var request = new OpenIddictRequest
         {
             ClientId = clientId,
             ResponseType = ResponseTypes.Code,
-            RedirectUri = "http://localhost:51234/callback",
+            RedirectUri = redirectUri,
             Scope = "openid profile offline_access",
             Resources = [resource],
             CodeChallengeMethod = CodeChallengeMethods.Sha256,

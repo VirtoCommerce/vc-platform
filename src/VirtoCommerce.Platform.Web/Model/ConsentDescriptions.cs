@@ -87,6 +87,6 @@ public static class ConsentDescriptions
 
     private static string GetHost(Uri uri)
     {
-        return uri.IsDefaultPort ? uri.Host : $"{uri.Host}:{uri.Port}";
+        return uri.IsDefaultPort ? uri.IdnHost : $"{uri.IdnHost}:{uri.Port}";
     }
 }

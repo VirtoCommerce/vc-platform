@@ -705,6 +705,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
 
+            var askConsentEveryTime = await _applicationManager.IsSelfRegisteredAsync(application) && IsLoopback(request.RedirectUri);
+
             switch (await _applicationManager.GetConsentTypeAsync(application))
             {
                 // If the consent is external (e.g. when authorizations are granted by a sysadmin),
@@ -716,10 +718,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // return an authorization response without displaying the consent form.
                 case ConsentTypes.Implicit:
                 case ConsentTypes.External when authorizations.Count != 0:
-                case ConsentTypes.Explicit when authorizations.Count != 0 && !request.HasPromptValue(PromptValues.Consent):
+                case ConsentTypes.Explicit when authorizations.Count != 0 && !request.HasPromptValue(PromptValues.Consent) && !askConsentEveryTime:
                     return await SignInAsync(request, user, application, authorizations);
 
-                // At this point, no authorization was found in the database and an error must be returned
+                // At this point, the consent form must be displayed and an error must be returned
                 // if the client application specified prompt=none in the authorization request.
                 case ConsentTypes.Explicit when request.HasPromptValue(PromptValues.None):
                 case ConsentTypes.Systematic when request.HasPromptValue(PromptValues.None):
@@ -1187,6 +1189,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+
+        private static bool IsLoopback(string redirectUri)
+        {
+            return Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri) && uri.IsLoopback;
         }
 
         private async Task<bool> AreResourcesStillAllowedAsync(OpenIddictRequest request, ClaimsPrincipal principal)

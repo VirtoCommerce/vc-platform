@@ -53,7 +53,8 @@ public static class SelfRegisteredClientExtensions
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            if (await manager.FindByClientIdAsync(clientId, cancellationToken) is TApplication stored)
+            if (await manager.FindByClientIdAsync(clientId, cancellationToken) is TApplication stored &&
+                await manager.FindByIdAsync(await manager.GetIdAsync(stored, cancellationToken), cancellationToken) != null)
             {
                 return stored;
             }

@@ -1,5 +1,7 @@
 using System.Linq;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Security;
@@ -27,15 +29,15 @@ public class OAuthAppsSelfRegisteredFilterTests
         var criteria = new OAuthAppSearchCriteria { SelfRegistered = selfRegistered };
 
         // Act
-        var result = TestController.ApplyFilter(_apps.AsQueryable(), criteria);
+        var result = new TestController().ApplyFilter(_apps.AsQueryable(), criteria);
 
         // Assert
         result.Select(x => x.ClientId).Should().BeEquivalentTo(expected);
     }
 
-    private sealed class TestController() : OAuthAppsController(null, null, null, null, null)
+    private sealed class TestController() : OAuthAppsController(null, null, null, Options.Create(new AuthorizationOptions()), null)
     {
-        public static IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> ApplyFilter(
+        public IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> ApplyFilter(
             IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> query, OAuthAppSearchCriteria criteria) => Filter(query, criteria);
     }
 }

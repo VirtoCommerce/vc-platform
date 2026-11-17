@@ -36,6 +36,8 @@ public class ClientMetadataValidatorTests
     [InlineData("https://agent.example.com/oauth/../client.json")]
     [InlineData("https://agent.example.com/oauth/./client.json")]
     [InlineData("https://agent.example.com/oauth/%2e%2e/client.json")]
+    [InlineData(@"https://agent.example.com/oauth\client.json")]
+    [InlineData(@"https://agent.example.com\oauth/client.json")]
     public void IsClientIdUrl_NotAMetadataDocumentUrl_False(string clientId)
     {
         // Act
@@ -43,6 +45,22 @@ public class ClientMetadataValidatorTests
 
         // Assert
         result.Should().BeFalse();
+    }
+
+    [Fact]
+    public void IsClientIdUrl_LongerThanTheLimit_False()
+    {
+        // Arrange
+        const string prefix = "https://agent.example.com/";
+        var longest = prefix + new string('a', ClientMetadata.MaxClientIdLength - prefix.Length);
+
+        // Act
+        var longestResult = _validator.IsClientIdUrl(longest);
+        var longerResult = _validator.IsClientIdUrl(longest + "a");
+
+        // Assert
+        longestResult.Should().BeTrue();
+        longerResult.Should().BeFalse("the applications table can't store a longer client id");
     }
 
     [Fact]
@@ -88,6 +106,42 @@ public class ClientMetadataValidatorTests
 
         // Assert
         document.ClientName.Should().HaveLength(ClientMetadata.MaxClientNameLength);
+    }
+
+    [Theory]
+    [InlineData(@"Agent\u202Egnp.exe", "Agentgnp.exe")]
+    [InlineData(@"Age\u200Bnt\u0007", "Agent")]
+    [InlineData(@" \u0000Agent\n", "Agent")]
+    public void Parse_ClientNameWithControlOrFormatCharacters_TheyAreDropped(string clientName, string expected)
+    {
+        // Act
+        var (document, _) = Parse(Document(extra: $"\"client_name\": \"{clientName}\","));
+
+        // Assert
+        document.ClientName.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Parse_ClientNameOfFormatCharactersOnly_NameIsNull()
+    {
+        // Act
+        var (document, _) = Parse(Document(extra: "\"client_name\": \"\\u202E\\u200B\","));
+
+        // Assert
+        document.ClientName.Should().BeNull();
+    }
+
+    [Fact]
+    public void Parse_LongClientNameCutInASurrogatePair_PairIsNotSplit()
+    {
+        // Arrange
+        var clientName = new string('a', ClientMetadata.MaxClientNameLength - 1) + @"\uD83D\uDE00bbb";
+
+        // Act
+        var (document, _) = Parse(Document(extra: $"\"client_name\": \"{clientName}\","));
+
+        // Assert
+        document.ClientName.Should().Be(new string('a', ClientMetadata.MaxClientNameLength - 1));
     }
 
     [Theory]

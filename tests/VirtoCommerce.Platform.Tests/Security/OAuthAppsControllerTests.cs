@@ -18,7 +18,6 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Controllers.Api;
-using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -424,12 +423,12 @@ public class OAuthAppsControllerTests
         var provider = new Mock<IOAuthResourceProvider>();
         provider
             .Setup(x => x.GetResourcesAsync(It.Is<OAuthResourceContext>(c => c.HttpContext != null), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<OAuthResource>
-            {
+            .ReturnsAsync(
+            [
                 new() { Uri = "https://platform.example.com/admin/mcp", Title = "Back office", Kind = "mcp" },
                 new() { Uri = "https://platform.example.com/ucp/mcp", Title = "Shopping", Kind = "mcp" },
                 new() { Uri = "" },
-            });
+            ]);
         var controller = CreateController(["https://platform.example.com/admin/mcp", "https://api.example.com"], provider.Object);
 
         var resources = GetValue(await controller.GetResourcesAsync(TestContext.Current.CancellationToken));

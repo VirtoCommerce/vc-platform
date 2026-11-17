@@ -55,7 +55,7 @@ public class ClientRegistrationControllerTests
             """);
 
         // Assert
-        var created =result.Should().BeOfType<ObjectResult>().Subject;
+        var created = result.Should().BeOfType<ObjectResult>().Subject;
         created.StatusCode.Should().Be(StatusCodes.Status201Created);
         var body = created.Value.Should().BeAssignableTo<IDictionary<string, object>>().Subject;
         var clientId = (string)body[Parameters.ClientId];

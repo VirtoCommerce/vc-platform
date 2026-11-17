@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 using Xunit;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace VirtoCommerce.Platform.Tests.Security.ClientRegistration;
 
@@ -41,6 +42,20 @@ public class DynamicClientRegistrationServiceTests
         // Assert
         result.ClientName.Should().Be(DynamicClientRegistrationService.DefaultClientName);
         result.ClientId.Should().NotStartWith("https://");
+    }
+
+    [Fact]
+    public async Task Register_ValidMetadata_ListsTheGrantAndResponseTypesOfTheClient()
+    {
+        // Arrange
+        var service = CreateService(new ClientMetadataValidator(new OAuthAppRules()));
+
+        // Act
+        var result = await service.RegisterAsync(Json("""{ "redirect_uris": ["https://agent.example.com/callback"] }"""), TestContext.Current.CancellationToken);
+
+        // Assert
+        result.GrantTypes.Should().BeEquivalentTo(GrantTypes.AuthorizationCode, GrantTypes.RefreshToken);
+        result.ResponseTypes.Should().BeEquivalentTo(ResponseTypes.Code);
     }
 
     private DynamicClientRegistrationService CreateService(IClientMetadataValidator validator)

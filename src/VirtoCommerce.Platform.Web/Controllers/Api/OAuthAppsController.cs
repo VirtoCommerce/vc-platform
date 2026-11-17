@@ -229,7 +229,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// OpenIddict stores the properties as a JSON object, so the registration property is looked for as a name in it.
         /// </summary>
-        protected static IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> Filter(IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> query,
+        protected virtual IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> Filter(IQueryable<VirtoOpenIddictEntityFrameworkCoreApplication> query,
             OAuthAppSearchCriteria criteria)
         {
             var registration = $"\"{SelfRegisteredClientConstants.RegistrationProperty}\":";

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -24,7 +25,12 @@ public class ClientMetadataValidator : IClientMetadataValidator
     /// </summary>
     public virtual bool IsClientIdUrl(string clientId)
     {
-        if (string.IsNullOrEmpty(clientId) || !clientId.StartsWith(HttpsScheme, StringComparison.OrdinalIgnoreCase) || clientId.Contains('#'))
+        if (string.IsNullOrEmpty(clientId) || clientId.Length > ClientMetadata.MaxClientIdLength || !clientId.StartsWith(HttpsScheme, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (clientId.Contains('#') || clientId.Contains('\\'))
         {
             return false;
         }
@@ -173,9 +179,29 @@ public class ClientMetadataValidator : IClientMetadataValidator
 
     private static string GetClientName(JsonElement metadata)
     {
-        var clientName = GetString(metadata, ClientMetadata.Names.ClientName)?.Trim();
+        var name = GetString(metadata, ClientMetadata.Names.ClientName);
+        var clientName = name == null ? null : new string(name.Where(IsPrintable).ToArray()).Trim();
 
-        return string.IsNullOrEmpty(clientName) ? null : clientName[..Math.Min(clientName.Length, ClientMetadata.MaxClientNameLength)];
+        if (string.IsNullOrEmpty(clientName))
+        {
+            return null;
+        }
+
+        if (clientName.Length <= ClientMetadata.MaxClientNameLength)
+        {
+            return clientName;
+        }
+
+        var length = char.IsHighSurrogate(clientName[ClientMetadata.MaxClientNameLength - 1])
+            ? ClientMetadata.MaxClientNameLength - 1
+            : ClientMetadata.MaxClientNameLength;
+
+        return clientName[..length];
+    }
+
+    private static bool IsPrintable(char value)
+    {
+        return !char.IsControl(value) && CharUnicodeInfo.GetUnicodeCategory(value) != UnicodeCategory.Format;
     }
 
     // Uri removes dot segments, so they are looked for in the client id as it is

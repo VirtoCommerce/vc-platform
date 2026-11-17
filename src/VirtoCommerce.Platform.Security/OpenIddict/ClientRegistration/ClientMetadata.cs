@@ -9,6 +9,8 @@ public class ClientMetadata
 {
     public const int MaxClientNameLength = 100;
 
+    public const int MaxClientIdLength = 100;
+
     public string ClientName { get; init; }
 
     public IList<string> RedirectUris { get; init; } = [];

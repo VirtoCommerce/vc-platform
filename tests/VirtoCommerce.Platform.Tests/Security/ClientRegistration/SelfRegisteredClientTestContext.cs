@@ -42,6 +42,8 @@ public class SelfRegisteredClientTestContext
 
     public bool FailUpdates { get; set; }
 
+    public bool FailCreates { get; set; }
+
     public Mock<IClientIdMetadataDocumentResolver> Resolver { get; } = new();
 
     public Mock<IOpenIddictAuthorizationManager> AuthorizationManager { get; } = new();
@@ -87,6 +89,11 @@ public class SelfRegisteredClientTestContext
             .Setup(x => x.CreateAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
             .Returns((VirtoOpenIddictEntityFrameworkCoreApplication app, CancellationToken _) =>
             {
+                if (FailCreates)
+                {
+                    throw new InvalidOperationException("The database is not available.");
+                }
+
                 if (!Stored.TryAdd(app.ClientId!, app))
                 {
                     throw new InvalidOperationException($"The client {app.ClientId} is already stored.");

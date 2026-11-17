@@ -163,6 +163,10 @@ public class VirtoOpenIddictApplicationManager : OpenIddictApplicationManager<Vi
         {
             return stored;
         }
+        if (!current.RedirectUris.SetEquals(descriptor.RedirectUris))
+        {
+            await RevokeConsentsAsync(stored, CancellationToken.None);
+        }
 
         try
         {
@@ -172,12 +176,6 @@ public class VirtoOpenIddictApplicationManager : OpenIddictApplicationManager<Vi
         {
             Logger.LogWarning(ex, "The self-registered client {ClientId} could not be updated", current.ClientId);
             return null;
-        }
-
-        // The users consented to the codes going to the old redirect URIs
-        if (!current.RedirectUris.SetEquals(descriptor.RedirectUris))
-        {
-            await RevokeConsentsAsync(stored, cancellationToken);
         }
 
         return stored;

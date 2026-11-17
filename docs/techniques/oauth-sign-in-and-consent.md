@@ -182,19 +182,23 @@ Either way, the client gets the least it needs, whatever it asks for:
 
 * A public client: no secret, PKCE with `S256` required.
 * The *Explicit* consent type: the user consents once per client and resource. Consent to `/admin/mcp` is not consent
-  to `/vendor/mcp`; the client asks again for another resource.
+  to `/vendor/mcp`; the client asks again for another resource. A client that returns to a loopback address, an app on
+  the user's computer, gets the consent page at every sign-in, since any app on the computer can use its client id.
 * The *Authorization code* and *Refresh token* grants and the `profile` scope; `openid` and `offline_access` are always
   allowed.
 * The resources that allow self-registered clients: the module that serves a resource decides, with
   `OAuthResource.AllowSelfRegisteredClients` in its `IOAuthResourceProvider`, and documents how to configure it. An
-  authorization request without `resource` is refused with `invalid_target`, so the token works only at the resource it
-  names. The resource must also be in `Authorization:Resources`, as for any client.
+  authorization request without `resource` is refused with `invalid_target`. The resource must also be in
+  `Authorization:Resources`, as for any client.
+* The token works only at the resource it names: the platform accepts it only on the path of that resource, for
+  example `/admin/mcp`, and refuses it with `invalid_token` anywhere else, such as the REST API.
 
 ### Client ID metadata documents
 
 At the authorization request, the platform fetches the document at the client id and checks that:
 
-* The client id is an HTTPS URL with a path, without a fragment, user info or dot segments.
+* The client id is an HTTPS URL of at most 100 characters with a path, without a fragment, user info, backslashes or
+  dot segments.
 * The document is a JSON object of at most `MaxDocumentSize` bytes, its `client_id` is the URL exactly, it lists
   `redirect_uris`, its `token_endpoint_auth_method` is `none`, it has no client secret, and its `grant_types` and
   `response_types`, when present, include `authorization_code` and `code`.
@@ -292,7 +296,9 @@ the platform's network to anyone who can send a client id.
 A user's consent is stored as a permanent authorization; revoke it in the MCP module's *Connected agents*, or delete
 the client in **OAuth applications** to revoke it for everyone. A client registered with a metadata document registers
 again at its next authorization request, and the user is asked to consent again. To refuse such clients, turn the
-documents off or list the allowed hosts.
+documents off or list the allowed hosts. To block one client, delete it and register an application with the
+same client id and no redirect URI in **OAuth applications**: an application an administrator registered takes
+precedence over the document, and without a redirect URI it can't sign anyone in.
 
 ## Troubleshooting
 

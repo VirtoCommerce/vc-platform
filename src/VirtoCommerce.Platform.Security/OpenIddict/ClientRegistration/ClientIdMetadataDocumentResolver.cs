@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,8 @@ namespace VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolver, IDisposable
 {
     private const string _cacheKeyPrefix = "OAuthClientIdMetadataDocument:";
+
+    private static readonly HashSet<HttpStatusCode> _transientStatusCodes = [HttpStatusCode.RequestTimeout, HttpStatusCode.TooManyRequests];
 
     private static readonly HashSet<HttpStatusCode> _redirectStatusCodes =
     [
@@ -81,9 +84,17 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
             return ClientIdMetadataDocumentResult.Fail("The client id is not a client metadata document URL.");
         }
 
+        var host = new Uri(clientId).Host;
+        if (!IsAllowedHost(host, Options))
+        {
+            return ClientIdMetadataDocumentResult.Fail($"The host '{host}' is not allowed to serve client metadata documents.");
+        }
+
         ClientIdMetadataDocumentResult failure = null;
 
-        var document = await _memoryCache.GetOrCreateExclusiveAsync(_cacheKeyPrefix + clientId, async options =>
+        var cacheKey = _cacheKeyPrefix + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(clientId)));
+
+        var document = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async options =>
         {
             var (result, lifetime) = await FetchAsync(clientId, cancellationToken);
             if (result.Document == null)
@@ -127,11 +138,6 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
         var options = Options;
         var uri = new Uri(clientId);
 
-        if (!IsAllowedHost(uri.Host, options))
-        {
-            return (ClientIdMetadataDocumentResult.Fail($"The host '{uri.Host}' is not allowed to serve client metadata documents."), TimeSpan.Zero);
-        }
-
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeout.CancelAfter(options.Timeout);
 
@@ -156,6 +162,10 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
         {
             return (ClientIdMetadataDocumentResult.Fail($"The client metadata document can't be fetched: {ex.Message}", isTransient: true), TimeSpan.Zero);
         }
+        catch (IOException ex)
+        {
+            return (ClientIdMetadataDocumentResult.Fail($"The client metadata document can't be read: {ex.Message}", isTransient: true), TimeSpan.Zero);
+        }
     }
 
     protected virtual async Task<ClientIdMetadataDocumentResult> ReadDocumentAsync(string clientId, HttpResponseMessage response,
@@ -170,7 +180,7 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
         if (response.StatusCode != HttpStatusCode.OK)
         {
             return ClientIdMetadataDocumentResult.Fail($"The client metadata document can't be fetched: HTTP {(int)response.StatusCode}.",
-                isTransient: response.StatusCode >= HttpStatusCode.InternalServerError);
+                isTransient: _transientStatusCodes.Contains(response.StatusCode) || response.StatusCode >= HttpStatusCode.InternalServerError);
         }
 
         var json = await ReadContentAsync(response.Content, options.MaxDocumentSize, cancellationToken);
@@ -182,7 +192,7 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
         return _validator.ParseDocument(clientId, json);
     }
 
-    protected static bool IsAllowedHost(string host, OAuthClientIdMetadataDocumentOptions options)
+    protected virtual bool IsAllowedHost(string host, OAuthClientIdMetadataDocumentOptions options)
     {
         if (options.AllowedHosts == null || options.AllowedHosts.Count == 0)
         {
@@ -197,7 +207,7 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
                 : string.Equals(host, x, StringComparison.OrdinalIgnoreCase));
     }
 
-    protected static TimeSpan GetLifetime(CacheControlHeaderValue cacheControl, OAuthClientIdMetadataDocumentOptions options)
+    protected virtual TimeSpan GetLifetime(CacheControlHeaderValue cacheControl, OAuthClientIdMetadataDocumentOptions options)
     {
         var lifetime = GetRequestedLifetime(cacheControl, options);
 
@@ -247,7 +257,7 @@ public class ClientIdMetadataDocumentResolver : IClientIdMetadataDocumentResolve
             buffer.Write(chunk, 0, read);
         }
 
-        return Encoding.UTF8.GetString(buffer.GetBuffer(), 0, (int)buffer.Length);
+        return Encoding.UTF8.GetString(buffer.GetBuffer(), 0, (int)buffer.Length).TrimStart('\uFEFF');
     }
 
     private static async ValueTask<Stream> ConnectToPublicAddressAsync(SocketsHttpConnectionContext context, bool allowLoopback, CancellationToken cancellationToken)

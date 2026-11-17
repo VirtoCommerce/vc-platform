@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +13,6 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 using VirtoCommerce.Platform.Web.Controllers.Api;
-using VirtoCommerce.Platform.Web.Model.Security;
 using Xunit;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -101,7 +99,7 @@ public class OAuthAppsSelfRegisteredAppTests
 
     private OAuthAppsController CreateController()
     {
-        return new OAuthAppsController(_manager, new List<IOAuthResourceProvider>(), new OAuthAppRules(),
+        return new OAuthAppsController(_manager, [], new OAuthAppRules(),
             Options.Create(new AuthorizationOptions()), NullLogger<OAuthAppsController>.Instance)
         {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },

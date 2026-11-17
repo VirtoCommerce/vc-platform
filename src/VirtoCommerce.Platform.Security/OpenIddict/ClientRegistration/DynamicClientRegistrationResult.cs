@@ -13,6 +13,10 @@ public class DynamicClientRegistrationResult
 
     public IList<string> RedirectUris { get; init; } = [];
 
+    public IList<string> GrantTypes { get; init; } = [];
+
+    public IList<string> ResponseTypes { get; init; } = [];
+
     public string Error { get; init; }
 
     public string ErrorDescription { get; init; }

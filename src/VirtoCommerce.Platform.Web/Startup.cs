@@ -518,6 +518,8 @@ namespace VirtoCommerce.Platform.Web
                     // Register the ASP.NET Core host.
                     validationBuilder.UseAspNetCore();
 
+                    validationBuilder.AddEventHandler(ValidateSelfRegisteredClientTokenAudience.Descriptor);
+
                     if (authorizationOptions != null && authorizationOptions.EnablePersistentStorageTokenValidation)
                     {
                         // invalidate token immediately

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -118,6 +120,74 @@ public class ClientIdMetadataDocumentResolverTests
     }
 
     [Fact]
+    public async Task Resolve_CachedClientOfAHostNoLongerAllowed_Refused()
+    {
+        // Arrange
+        _handler.Respond(ClientId, Json(Document()));
+        var resolver = CreateResolver();
+        await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+        _options.ClientRegistration.ClientIdMetadataDocuments.AllowedHosts = ["claude.ai"];
+
+        // Act
+        var result = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Document.Should().BeNull("the allowed hosts are checked before the cache");
+        result.Error.Should().Contain("not allowed");
+    }
+
+    [Fact]
+    public async Task Resolve_ClientIdsDifferingInCase_DoNotShareACachedDocument()
+    {
+        // Arrange
+        const string upperCaseClientId = "https://agent.example.com/oauth/Client.json";
+        _handler.Respond(ClientId, Json(Document()));
+        _handler.Respond(upperCaseClientId, Json(Document(clientId: upperCaseClientId)));
+        var resolver = CreateResolver();
+
+        // Act
+        var lower = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+        var upper = await resolver.ResolveAsync(upperCaseClientId, TestContext.Current.CancellationToken);
+
+        // Assert
+        lower.Document.ClientId.Should().Be(ClientId);
+        upper.Document.Should().NotBeNull();
+        upper.Document.ClientId.Should().Be(upperCaseClientId);
+        _handler.Requests.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Resolve_DocumentWithByteOrderMark_Accepted()
+    {
+        // Arrange
+        var bytes = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes(Document())).ToArray();
+        _handler.Respond(ClientId, () => new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(bytes) });
+        var resolver = CreateResolver();
+
+        // Act
+        var result = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Error.Should().BeNull();
+        result.Document.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task Resolve_ConnectionBrokenWhileReading_FailsAsTransient()
+    {
+        // Arrange
+        _handler.Respond(ClientId, () => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StreamContent(new BrokenStream()) });
+        var resolver = CreateResolver();
+
+        // Act
+        var result = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Document.Should().BeNull();
+        result.IsTransient.Should().BeTrue();
+    }
+
+    [Fact]
     public async Task Resolve_LargerThanTheLimit_Refused()
     {
         // Arrange
@@ -140,7 +210,7 @@ public class ClientIdMetadataDocumentResolverTests
         _options.ClientRegistration.ClientIdMetadataDocuments.MaxDocumentSize = 100;
         _handler.Respond(ClientId, () => new HttpResponseMessage(HttpStatusCode.OK)
         {
-            Content = new StreamContent(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(new string(' ', 1000) + Document()))),
+            Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(new string(' ', 1000) + Document()))),
         });
         var resolver = CreateResolver();
 
@@ -188,6 +258,8 @@ public class ClientIdMetadataDocumentResolverTests
 
     [Theory]
     [InlineData(HttpStatusCode.NotFound, false)]
+    [InlineData(HttpStatusCode.RequestTimeout, true)]
+    [InlineData(HttpStatusCode.TooManyRequests, true)]
     [InlineData(HttpStatusCode.ServiceUnavailable, true)]
     public async Task Resolve_ErrorStatus_Fails(HttpStatusCode statusCode, bool transient)
     {
@@ -289,7 +361,7 @@ public class ClientIdMetadataDocumentResolverTests
         var header = cacheControl == null ? null : CacheControlHeaderValue.Parse(cacheControl);
 
         // Act
-        var lifetime = TestResolver.Lifetime(header, _options.ClientRegistration.ClientIdMetadataDocuments);
+        var lifetime = CreateResolver().Lifetime(header, _options.ClientRegistration.ClientIdMetadataDocuments);
 
         // Assert
         lifetime.Should().Be(TimeSpan.FromSeconds(expectedSeconds));
@@ -333,7 +405,18 @@ public class ClientIdMetadataDocumentResolverTests
     private sealed class TestResolver(HttpMessageHandler handler, IMemoryCache cache, IOptionsMonitor<AuthorizationOptions> options)
         : ClientIdMetadataDocumentResolver(handler, cache, options, new ClientMetadataValidator(new OAuthAppRules()), NullLogger<ClientIdMetadataDocumentResolver>.Instance)
     {
-        public static TimeSpan Lifetime(CacheControlHeaderValue cacheControl, OAuthClientIdMetadataDocumentOptions options) => GetLifetime(cacheControl, options);
+        public TimeSpan Lifetime(CacheControlHeaderValue cacheControl, OAuthClientIdMetadataDocumentOptions options) => GetLifetime(cacheControl, options);
+    }
+
+    private sealed class BrokenStream : MemoryStream
+    {
+        public override int Read(byte[] buffer, int offset, int count) => throw new IOException("The connection was reset.");
+
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
+            throw new IOException("The connection was reset.");
+
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
+            throw new IOException("The connection was reset.");
     }
 
     private sealed class FakeHandler : HttpMessageHandler

@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
-using Moq;
 using Xunit;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -317,7 +317,8 @@ public class VirtoOpenIddictApplicationManagerTests
 
         // Assert
         application.Should().BeNull("the application in memory has redirect URIs the users didn't consent to");
-        _context.AuthorizationManager.Verify(x => x.RevokeByApplicationIdAsync(stored.Id, It.IsAny<CancellationToken>()), Times.Never);
+        _context.AuthorizationManager.Verify(x => x.RevokeByApplicationIdAsync(stored.Id, It.IsAny<CancellationToken>()), Times.Once,
+            "the consents to the old redirect URIs are revoked before the update, so its failure can't keep them");
     }
 
     [Fact]
@@ -337,6 +338,23 @@ public class VirtoOpenIddictApplicationManagerTests
         // Assert
         stored.Should().BeSameAs(other);
         _context.Stored.Should().ContainSingle().Which.Value.Should().BeSameAs(other);
+    }
+
+    [Fact]
+    public async Task EnsureCreated_CreateFailsAndNothingIsStored_Throws()
+    {
+        // Arrange
+        _context.SetDocument(ClientId, "Claude Code", "https://claude.ai/api/mcp/auth_callback");
+        var manager = _context.CreateManager();
+        var application = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
+        _context.FailCreates = true;
+
+        // Act
+        var act = async () => await manager.EnsureCreatedAsync(application, TestContext.Current.CancellationToken);
+
+        // Assert
+        await act.Should().ThrowAsync<InvalidOperationException>("the client found again is only in memory, not stored");
+        _context.Stored.Should().BeEmpty();
     }
 
     [Fact]

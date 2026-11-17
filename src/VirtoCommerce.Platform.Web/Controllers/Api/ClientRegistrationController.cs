@@ -76,8 +76,8 @@ public class ClientRegistrationController : Controller
             [ClientMetadata.Names.ClientIdIssuedAt] = result.IssuedAt.ToUnixTimeSeconds(),
             [ClientMetadata.Names.ClientName] = result.ClientName,
             [ClientMetadata.Names.RedirectUris] = result.RedirectUris,
-            [ClientMetadata.Names.GrantTypes] = new[] { GrantTypes.AuthorizationCode, GrantTypes.RefreshToken },
-            [ClientMetadata.Names.ResponseTypes] = new[] { ResponseTypes.Code },
+            [ClientMetadata.Names.GrantTypes] = result.GrantTypes,
+            [ClientMetadata.Names.ResponseTypes] = result.ResponseTypes,
             [ClientMetadata.Names.TokenEndpointAuthMethod] = ClientAuthenticationMethods.None,
         });
     }
