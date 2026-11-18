@@ -72,6 +72,16 @@ public class ConsentDescriptionsTests
     }
 
     [Fact]
+    public void GetRedirect_HostWithLookalikeLetters_IsShownInPunycode()
+    {
+        // Act
+        var redirect = ConsentDescriptions.GetRedirect("https://\u0441laude.ai/cb", "platform.example.com");
+
+        // Assert
+        Assert.Equal("xn--laude-0ye.ai", redirect.Host);
+    }
+
+    [Fact]
     public void GetResourceName_NotAUri_IsShownAsItIs()
     {
         Assert.Equal("resource_server", ConsentDescriptions.GetResourceName("resource_server"));

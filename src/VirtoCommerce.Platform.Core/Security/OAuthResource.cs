@@ -18,4 +18,9 @@ public class OAuthResource
     public string Kind { get; set; }
 
     public string Description { get; set; }
+
+    /// <summary>
+    /// Self-registered clients may request tokens for it. False by default: the module that serves it opts it in.
+    /// </summary>
+    public bool AllowSelfRegisteredClients { get; set; }
 }

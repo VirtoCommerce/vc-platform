@@ -11,8 +11,9 @@ client ◄── access token (and refresh token) ◄── /connect/token ◄�
 ```
 
 This article covers where the user signs in, what the consent page shows, how a front-end hosts the sign-in page,
-and how to extend the choice of the sign-in page. Registering the client itself is done in
-**Security → OAuth applications**.
+and how to extend the choice of the sign-in page. An administrator registers a client in
+**Security → OAuth applications**, or the client registers itself: see
+[Clients that register themselves](#clients-that-register-themselves).
 
 ## Where the user signs in
 
@@ -125,7 +126,10 @@ Whether the platform asks depends on the client's consent type in **OAuth applic
 
 The page shows:
 
-* **Who asks**: the client's display name from **OAuth applications**, with its first letter as the icon.
+* **Who asks**: the client's display name from **OAuth applications**, with its first letter as the icon. For a client
+  that registered itself, a notice says so and names the site of its metadata document, such as *claude.ai*. When such
+  a client returns to an app on this computer, the notice is a warning instead: any app on the computer can give the
+  client id of a known app, so the user allows only if they started the sign-in themselves, just now.
 * **For which account**: the user name and email of the signed-in user.
 * **What the client will be able to do**, in plain words:
 
@@ -161,6 +165,145 @@ The consent page can't be shown in a frame on any site: it is sent with `X-Frame
 `Content-Security-Policy: frame-ancestors 'none'`, whatever the `SecurityHeaders` settings allow for the rest of the
 platform. Another site therefore can't overlay the page to trick the user into a click.
 
+## Clients that register themselves
+
+An AI agent connects to an MCP endpoint with the endpoint's URL only, without a client an administrator registered
+first, in one of two ways that the MCP authorization specification describes:
+
+| Way | The client id | Setting |
+| --- | --- | --- |
+| Client ID metadata document | The HTTPS URL of a JSON document the client publishes, such as `https://claude.ai/oauth/claude-code-client-metadata` | On by default |
+| Dynamic client registration (RFC 7591) | Issued by `POST /connect/register` | Off by default |
+
+The authorization server metadata (`/.well-known/oauth-authorization-server`, `/.well-known/openid-configuration`)
+tells clients which ways are on: `client_id_metadata_document_supported: true`, and `registration_endpoint`. While
+either is on, `token_endpoint_auth_methods_supported` includes `none`, since self-registered clients are public; Claude
+uses a client ID metadata document only when the server advertises both.
+
+Either way, the client gets the least it needs, whatever it asks for:
+
+* A public client: no secret, PKCE with `S256` required.
+* The *Explicit* consent type: the user consents once per client and resource. Consent to `/admin/mcp` is not consent
+  to `/vendor/mcp`; the client asks again for another resource. A client that returns to a loopback address, an app on
+  the user's computer, gets the consent page at every sign-in, since any app on the computer can use its client id.
+* The *Authorization code* and *Refresh token* grants and the `profile` scope; `openid` and `offline_access` are always
+  allowed.
+* The resources that allow self-registered clients: the module that serves a resource decides, with
+  `OAuthResource.AllowSelfRegisteredClients` in its `IOAuthResourceProvider`, and documents how to configure it. An
+  authorization request without `resource` is refused with `invalid_target`. The resource must also be in
+  `Authorization:Resources`, as for any client.
+* The token works only at the resource it names: the platform accepts it only on the path of that resource, for
+  example `/admin/mcp`, and refuses it with `invalid_token` anywhere else, such as the REST API.
+
+### Client ID metadata documents
+
+At the authorization request, the platform fetches the document at the client id and checks that:
+
+* The client id is an HTTPS URL of at most 100 characters with a path, without a fragment, user info, backslashes or
+  dot segments.
+* The document is a JSON object of at most `MaxDocumentSize` bytes, its `client_id` is the URL exactly, it lists
+  `redirect_uris`, its `token_endpoint_auth_method` is `none` or absent, it has no client secret, and its
+  `grant_types` and `response_types`, when present, include `authorization_code` and `code`.
+* The redirect URI of the request is one of the document's, compared exactly. A loopback redirect URI without a port,
+  such as `http://localhost/callback`, accepts any port, as RFC 8252 describes for apps on the user's computer.
+
+The platform fetches the document only from a public address: over HTTPS, without a proxy, not from a private,
+loopback, link-local or other reserved address (the host's address is checked when the connection is made, so a host
+that resolves to another address later can't be used to reach the platform's network), within `Timeout`. Only a `200`
+answer counts: a redirect is not followed, so the document must be served at its client id itself. `AllowedHosts`
+limits the sites further. To try a client on a developer's computer, `AllowLoopbackInDevelopment` lets the platform
+fetch documents from `localhost` too, in the Development environment only; private network addresses stay refused.
+
+A valid document is cached as its `Cache-Control` header says, between `MinCacheLifetime` and `MaxCacheLifetime`. An
+error or an invalid document is not cached, so the next authorization request fetches it again. The client is stored
+in **OAuth applications** when a user first consents to it, never before, and it follows its document when it is
+fetched again: a new name applies at once, and new redirect URIs revoke every user's consent and the client's tokens,
+so the users consent again to where the codes now go. A document that can't be fetched for a while, because of a
+timeout or a server error, doesn't stop a stored client; a document that became invalid does, at the next sign-in or
+token refresh. An access token issued before keeps working at its resource until it expires.
+
+**OAuth applications** in the back office marks such a client *Self-registered* and filters the list by how the
+clients registered; the API takes `selfRegistered` in `POST /api/platform/oauthapps/search`, and the application's
+`properties` carry `vc_registration`: `client_id_metadata_document` or `dynamic_registration`. An administrator can
+open and delete such a client but not change it, since it follows its document or registration: saving it returns
+400. Opening it shows the stored client without fetching its document, so it opens even when the document is gone or
+the way it registered is turned off.
+
+### Dynamic client registration
+
+`POST /connect/register` with the client's metadata as JSON registers a public client and answers `201` with its
+`client_id` and the metadata it got. Only `redirect_uris` (required) and `client_name` are taken from the request. A
+request for a confidential client, or for grant or response types without the authorization code, answers `400` with
+`invalid_client_metadata`; invalid redirect URIs answer `invalid_redirect_uri`.
+
+Anyone can register a client, so turn this on only for agents that can't use a client ID metadata document. Turning
+either way off stops the clients that registered that way too: they can't sign in or refresh their tokens until it is
+on again, and their access tokens issued before keep working at their resource until they expire.
+
+### Settings
+
+```json
+"Authorization": {
+  "ClientRegistration": {
+    "ClientIdMetadataDocuments": {
+      "Enabled": true,
+      "AllowedHosts": [],
+      "MaxCacheLifetime": "01:00:00",
+      "MinCacheLifetime": "00:05:00",
+      "Timeout": "00:00:05",
+      "MaxDocumentSize": 5120,
+      "AllowLoopbackInDevelopment": false
+    },
+    "DynamicRegistration": {
+      "Enabled": false
+    }
+  }
+}
+```
+
+The values above are the defaults. `AllowedHosts` lists hosts such as `claude.ai`, or `*.example.com` for the
+subdomains of `example.com`; empty allows any public host.
+
+### Change the rules in code
+
+The services below are registered with `TryAdd`, so a module that registers its own in `Initialize` replaces them.
+Their methods are virtual, so a module can also derive from the platform's class and change one rule.
+
+| Service | Decides |
+| --- | --- |
+| `IClientMetadataValidator` (`ClientMetadataValidator`) | Which metadata a self-registered client may give: the form of a client id URL, the authentication method, the grant and response types, the redirect URIs |
+| `ISelfRegisteredClientFactory` (`SelfRegisteredClientFactory`) | The application a self-registered client gets: its type, permissions and requirements |
+| `IClientIdMetadataDocumentResolver` (`ClientIdMetadataDocumentResolver`) | How a metadata document is fetched and cached |
+| `IDynamicClientRegistrationService` (`DynamicClientRegistrationService`) | How a dynamic registration request becomes a client |
+
+```csharp
+// Registers only the clients that give their name
+public class NamedClientsOnlyValidator(IOAuthAppRules appRules) : ClientMetadataValidator(appRules)
+{
+    public override ClientMetadataResult Validate(JsonElement metadata)
+    {
+        return GetString(metadata, ClientMetadata.Names.ClientName) == null
+            ? ClientMetadataResult.Fail(ClientMetadata.Errors.InvalidClientMetadata, "The client_name is required.")
+            : base.Validate(metadata);
+    }
+}
+
+// Module.Initialize
+serviceCollection.AddSingleton<IClientMetadataValidator, NamedClientsOnlyValidator>();
+```
+
+The check that a document is fetched only from a public address is not a service on purpose: replacing it would open
+the platform's network to anyone who can send a client id.
+
+### Revoke a client
+
+A user's consent is stored as a permanent authorization; revoke it in the MCP module's *Connected agents*, or delete
+the client in **OAuth applications** to revoke it for everyone. A client registered with a metadata document registers
+again at its next authorization request, and the user is asked to consent again. To refuse such clients, turn the
+documents off or list the allowed hosts. To block one client, delete it and register an application with the
+same client id and no redirect URI in **OAuth applications**: an application an administrator registered takes
+precedence over the document, and without a redirect URI it can't sign anyone in.
+
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
@@ -170,4 +313,7 @@ platform. Another site therefore can't overlay the page to trick the user into a
 | `POST /connect/session` answers `400` with an empty body | No `Origin`, another origin, a `returnUrl` that is not `/connect/authorize`, or an antiforgery token taken without the user's token | Send the headers of step 2; take the request token with the `Authorization` header |
 | `POST /connect/session` answers `404` | The host uses the built-in login page | The front-end's sign-in page is not used on this host; see *Where the user signs in* |
 | After the session, the browser lands on the sign-in page again | `returnUrl` was re-encoded, or the 5-minute session expired | Pass `returnUrl` as received; create the session right before navigating |
+| An agent that names a client id URL gets `invalid_request` with *The specified 'client_id' is invalid* | The metadata document can't be used | The platform logs why at Warning: `The client metadata document … can't be used: …` |
+| A self-registered client gets `invalid_target` at the authorization request | The request has no `resource` | Connect with the URL of the resource, such as an MCP endpoint |
+| A self-registered client gets `invalid_request`, *This client application is not allowed to use the specified resource(s)* | The resource doesn't allow self-registered clients | Use a resource whose module allows self-registered clients, or register a client for the agent in **OAuth applications** |
 | *This page expired* on the consent page | The form was open too long, or the cookie was replaced | Choose again; the Warning and the antiforgery log tell the reason |

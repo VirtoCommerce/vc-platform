@@ -30,6 +30,11 @@ namespace VirtoCommerce.Platform.Core.Security
         public IList<OAuthHostLoginPath> OAuthLoginPaths { get; set; } = [];
 
         /// <summary>
+        /// OAuth clients that register themselves, without an administrator.
+        /// </summary>
+        public OAuthClientRegistrationOptions ClientRegistration { get; set; } = new();
+
+        /// <summary>
         /// Interval after which the authentication cookie's security stamp is re-validated
         /// against the store. Lower values reject stale or replayed cookies faster at the cost
         /// of more frequent database calls. By default, 5 minutes.

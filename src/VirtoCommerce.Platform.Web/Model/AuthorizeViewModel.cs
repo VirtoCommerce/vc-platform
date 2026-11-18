@@ -17,6 +17,16 @@ public class AuthorizeViewModel
 
     public string ClientId { get; set; }
 
+    /// <summary>
+    /// Null for an application an administrator registered.
+    /// </summary>
+    public string RegistrationType { get; set; }
+
+    /// <summary>
+    /// The host of the client's metadata document: the site that vouches for the application.
+    /// </summary>
+    public string ClientHost { get; set; }
+
     public string UserName { get; set; }
 
     public string Email { get; set; }
@@ -47,6 +57,12 @@ public class AuthorizeViewModel
     /// The user returns to another site than this one, so the page asks them to check it.
     /// </summary>
     public bool RedirectIsElsewhere { get; set; }
+
+    /// <summary>
+    /// Any app on the user's computer could give the client id of a self-registered application that returns to a
+    /// loopback address.
+    /// </summary>
+    public bool WarnAboutLocalApp => !string.IsNullOrEmpty(RegistrationType) && RedirectIsLocal;
 
     /// <summary>
     /// The previous submit was refused: the page was open too long, or the browser lost its cookie.

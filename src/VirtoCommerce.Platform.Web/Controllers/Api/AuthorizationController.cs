@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Antiforgery;
@@ -28,6 +29,7 @@ using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 using VirtoCommerce.Platform.Web.ActionConstraints;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model;
@@ -317,6 +319,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 if (openIdConnectRequest.GetResources().Except(info.Principal.GetResources(), StringComparer.Ordinal).Any())
                 {
                     return BadRequest(SecurityErrorDescriber.InvalidTarget());
+                }
+
+                if (openIdConnectRequest.IsRefreshTokenGrantType() && !await AreResourcesStillAllowedAsync(openIdConnectRequest, info.Principal))
+                {
+                    return BadRequest(SecurityErrorDescriber.ResourceNotAllowed());
                 }
 
                 // Retrieve the user profile corresponding to the authorization code/refresh token.
@@ -698,6 +705,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var (user, application, authorizations) = await GetUserApplicationAuthorizationsAsync(request, result.Principal);
 
+            var askConsentEveryTime = await AsksConsentEveryTimeAsync(application, request.RedirectUri);
+
             switch (await _applicationManager.GetConsentTypeAsync(application))
             {
                 // If the consent is external (e.g. when authorizations are granted by a sysadmin),
@@ -709,10 +718,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // return an authorization response without displaying the consent form.
                 case ConsentTypes.Implicit:
                 case ConsentTypes.External when authorizations.Count != 0:
-                case ConsentTypes.Explicit when authorizations.Count != 0 && !request.HasPromptValue(PromptValues.Consent):
+                case ConsentTypes.Explicit when authorizations.Count != 0 && !request.HasPromptValue(PromptValues.Consent) && !askConsentEveryTime:
                     return await SignInAsync(request, user, application, authorizations);
 
-                // At this point, no authorization was found in the database and an error must be returned
+                // At this point, the consent form must be displayed and an error must be returned
                 // if the client application specified prompt=none in the authorization request.
                 case ConsentTypes.Explicit when request.HasPromptValue(PromptValues.None):
                 case ConsentTypes.Systematic when request.HasPromptValue(PromptValues.None):
@@ -867,9 +876,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var resources = request.GetResources().ToList();
             var redirect = ConsentDescriptions.GetRedirect(request.RedirectUri, Request.Host.Host);
 
+            var registrationType = await _applicationManager.GetRegistrationTypeAsync(application);
+
             var model = new AuthorizeViewModel
             {
                 ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
+                RegistrationType = registrationType,
+                ClientHost = registrationType == SelfRegisteredClientConstants.ClientIdMetadataDocument ? new Uri(request.ClientId).IdnHost : null,
                 ClientId = request.ClientId,
                 Scope = request.Scope,
                 UserName = user.UserName,
@@ -1110,14 +1123,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                               throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
             // Retrieve the permanent authorizations associated with the user and the calling client application.
-            var authorizations = await _authorizationManager.FindAsync(
+            var authorizations = _authorizationManager.FindAsync(
                 subject: await _userManager.GetUserIdAsync(user),
                 client: await _applicationManager.GetIdAsync(application),
                 status: Statuses.Valid,
                 type: AuthorizationTypes.Permanent,
-                scopes: request.GetScopes()).ToListAsync();
+                scopes: request.GetScopes());
 
-            return (user, application, authorizations);
+            if (await _applicationManager.IsSelfRegisteredAsync(application))
+            {
+                var requestedResources = request.GetResources();
+                authorizations = authorizations.Where(async (authorization, cancellationToken) =>
+                    SelfRegisteredClientExtensions.CoversResources(
+                        await _authorizationManager.GetConsentedResourcesAsync(authorization, cancellationToken), requestedResources));
+            }
+
+            return (user, application, await authorizations.ToListAsync());
         }
 
         private ForbidResult ConsentNotGiven()
@@ -1149,15 +1170,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ? requestedResources
                 : await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
 
+            if (await _applicationManager.IsSelfRegisteredAsync(application))
+            {
+                application = await _applicationManager.EnsureCreatedAsync(application);
+            }
+
             // Automatically create a permanent authorization to avoid requiring explicit consent
             // for future authorization or token requests containing the same scopes.
             var authorization = authorizations.LastOrDefault() ??
-                                await _authorizationManager.CreateAsync(
-                                    principal: principal,
-                                    subject: await _userManager.GetUserIdAsync(user),
-                                    client: await _applicationManager.GetIdAsync(application),
-                                    type: AuthorizationTypes.Permanent,
-                                    scopes: principal.GetScopes());
+                await CreatePermanentAuthorizationAsync(principal, user, application);
 
             principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
 
@@ -1168,6 +1189,44 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+
+        private async Task<bool> AsksConsentEveryTimeAsync(object application, string redirectUri)
+        {
+            return Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri) && uri.IsLoopback &&
+                await _applicationManager.IsSelfRegisteredAsync(application);
+        }
+
+        private async Task<bool> AreResourcesStillAllowedAsync(OpenIddictRequest request, ClaimsPrincipal principal)
+        {
+            var application = string.IsNullOrEmpty(request.ClientId) ? null : await _applicationManager.FindByClientIdAsync(request.ClientId);
+            if (!await _applicationManager.IsSelfRegisteredAsync(application))
+            {
+                return true;
+            }
+
+            var resources = request.GetResources().Any() ? request.GetResources() : principal.GetResources();
+
+            return await _applicationManager.HasResourcePermissionsAsync(application, resources);
+        }
+
+        private async Task<object> CreatePermanentAuthorizationAsync(ClaimsPrincipal principal, ApplicationUser user,
+            VirtoOpenIddictEntityFrameworkCoreApplication application)
+        {
+            var descriptor = new OpenIddictAuthorizationDescriptor
+            {
+                ApplicationId = await _applicationManager.GetIdAsync(application),
+                CreationDate = DateTimeOffset.UtcNow,
+                Principal = principal,
+                Status = Statuses.Valid,
+                Subject = await _userManager.GetUserIdAsync(user),
+                Type = AuthorizationTypes.Permanent,
+            };
+
+            descriptor.Scopes.UnionWith(principal.GetScopes());
+            descriptor.Properties[SelfRegisteredClientConstants.ResourcesProperty] = JsonSerializer.SerializeToElement(principal.GetResources());
+
+            return await _authorizationManager.CreateAsync(descriptor);
         }
 
         private static IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)

@@ -95,6 +95,13 @@ namespace VirtoCommerce.Platform.Security.OpenIddict
             ErrorDescription = "The requested resource was not granted by the original authorization.",
         };
 
+        public static TokenResponse ResourceNotAllowed() => new()
+        {
+            Error = Errors.InvalidGrant,
+            Code = nameof(ResourceNotAllowed).ToSnakeCase(),
+            ErrorDescription = "The client is no longer allowed to use the resource of this token.",
+        };
+
         public static TokenResponse UnsupportedGrantType() => new()
         {
             Error = Errors.UnsupportedGrantType,

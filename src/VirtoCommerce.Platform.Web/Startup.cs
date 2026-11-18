@@ -20,7 +20,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
@@ -71,6 +70,7 @@ using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
@@ -201,6 +201,8 @@ namespace VirtoCommerce.Platform.Web
                 //Next line allow to use polymorphic types as parameters in API controller methods
                 options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
+                // The properties of OpenIddict descriptors are JSON elements
+                options.SerializerSettings.Converters.Add(new JsonElementJsonConverter());
                 options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
@@ -428,6 +430,7 @@ namespace VirtoCommerce.Platform.Web
                         }
                     });
 
+                    coreBuilder.ReplaceApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication, VirtoOpenIddictApplicationManager>();
                 });
 
                 openIddictBuilder.AddServer(serverBuilder =>
@@ -482,6 +485,9 @@ namespace VirtoCommerce.Platform.Web
 
                     serverBuilder.RegisterResources(authorizationOptions?.Resources ?? []);
 
+                    serverBuilder.AddEventHandler(ValidateSelfRegisteredClientAuthorizationRequest.Descriptor);
+                    serverBuilder.AddEventHandler(AttachClientRegistrationMetadata.Descriptor);
+
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
                     serverBuilder.DisableAccessTokenEncryption();
@@ -511,6 +517,8 @@ namespace VirtoCommerce.Platform.Web
 
                     // Register the ASP.NET Core host.
                     validationBuilder.UseAspNetCore();
+
+                    validationBuilder.AddEventHandler(ValidateSelfRegisteredClientTokenAudience.Descriptor);
 
                     if (authorizationOptions != null && authorizationOptions.EnablePersistentStorageTokenValidation)
                     {

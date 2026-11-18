@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -27,6 +28,7 @@ using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using Xunit;
 
@@ -43,6 +45,7 @@ public class AuthorizationControllerSignInLogTests
     private readonly Mock<UserManager<ApplicationUser>> _userManager;
     private readonly Mock<SignInManager<ApplicationUser>> _signInManager;
     private const string Password = "secret";
+    private const string McpResource = "https://platform.example.com/admin/mcp";
     private readonly ApplicationUser _buyer = new() { Id = "user-1", UserName = "buyer@test.com", StoreId = "B2B-store" };
     private readonly ApplicationUser _twoFactorBuyer = new() { Id = "user-2", UserName = "mfa-buyer@test.com", StoreId = "B2B-store", TwoFactorEnabled = true };
     private readonly Mock<IAuthorizationService> _authorizationService = new();
@@ -51,8 +54,8 @@ public class AuthorizationControllerSignInLogTests
 
     public AuthorizationControllerSignInLogTests()
     {
-        // Only FindByClientIdAsync and GetIdAsync are exercised, and both are overridden below, so the
-        // cache and store are never reached - they exist because the base constructor rejects nulls.
+        // Only FindByClientIdAsync, GetIdAsync and GetPropertiesAsync are exercised, and all are overridden below, so
+        // the cache and store are never reached - they exist because the base constructor rejects nulls.
         _applicationManager = new Mock<OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>>(
             Mock.Of<IOpenIddictApplicationCache<VirtoOpenIddictEntityFrameworkCoreApplication>>(),
             NullLogger<OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication>>.Instance,
@@ -73,6 +76,9 @@ public class AuthorizationControllerSignInLogTests
         _applicationManager
             .Setup(x => x.GetIdAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("app-1");
+        _applicationManager
+            .Setup(x => x.GetPropertiesAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ImmutableDictionary<string, JsonElement>.Empty);
 
         var authorization = new object();
 
@@ -594,6 +600,67 @@ public class AuthorizationControllerSignInLogTests
     }
 
     [Fact]
+    public async Task Exchange_RefreshTokenOfSelfRegisteredClientForResourceNoLongerAllowed_ReturnsResourceNotAllowed()
+    {
+        // Arrange
+        SetUpSelfRegisteredApplication(hasResourcePermission: false);
+        var controller = BuildRefreshController(_buyer, operatorUserId: null, operatorUserName: null, tokenResources: [McpResource], requestResources: [McpResource]);
+
+        // Act
+        var result = await controller.Exchange();
+
+        // Assert
+        var response = result.Should().BeOfType<BadRequestObjectResult>().Which.Value.Should().BeOfType<TokenResponse>().Subject;
+        response.Error.Should().Be(OpenIddictConstants.Errors.InvalidGrant);
+        response.Code.Should().Be("resource_not_allowed");
+    }
+
+    [Fact]
+    public async Task Exchange_RefreshTokenOfSelfRegisteredClientWithoutRequestedResource_ChecksResourcesOfToken()
+    {
+        // Arrange
+        SetUpSelfRegisteredApplication(hasResourcePermission: false);
+        var controller = BuildRefreshController(_buyer, operatorUserId: null, operatorUserName: null, tokenResources: [McpResource]);
+
+        // Act
+        var result = await controller.Exchange();
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.Value.Should().BeOfType<TokenResponse>()
+            .Which.Code.Should().Be("resource_not_allowed");
+        _applicationManager.Verify(x => x.GetPermissionsAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Exchange_RefreshTokenOfSelfRegisteredClientForAllowedResource_SignsIn()
+    {
+        // Arrange
+        SetUpSelfRegisteredApplication(hasResourcePermission: true);
+        var controller = BuildRefreshController(_buyer, operatorUserId: null, operatorUserName: null, tokenResources: [McpResource], requestResources: [McpResource]);
+
+        // Act
+        var result = await controller.Exchange();
+
+        // Assert
+        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.SignInResult>();
+    }
+
+    [Fact]
+    public async Task Exchange_RefreshTokenOfAdminRegisteredClient_ResourcesAreNotChecked()
+    {
+        // Arrange
+        var controller = BuildRefreshController(_buyer, operatorUserId: null, operatorUserName: null, tokenResources: [McpResource], requestResources: [McpResource]);
+
+        // Act
+        var result = await controller.Exchange();
+
+        // Assert
+        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.SignInResult>();
+        _applicationManager.Verify(x => x.GetPermissionsAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
     public async Task SignIn_EmptyBody_ReturnsBadRequest()
     {
         // Arrange
@@ -629,7 +696,19 @@ public class AuthorizationControllerSignInLogTests
         return handler;
     }
 
-    private AuthorizationController BuildRefreshController(ApplicationUser user, string operatorUserId, string operatorUserName)
+    private void SetUpSelfRegisteredApplication(bool hasResourcePermission)
+    {
+        _applicationManager
+            .Setup(x => x.GetPropertiesAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ImmutableDictionary<string, JsonElement>.Empty.Add(SelfRegisteredClientConstants.RegistrationProperty,
+                JsonSerializer.SerializeToElement(SelfRegisteredClientConstants.ClientIdMetadataDocument)));
+        _applicationManager
+            .Setup(x => x.GetPermissionsAsync(It.IsAny<VirtoOpenIddictEntityFrameworkCoreApplication>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(hasResourcePermission ? [OpenIddictConstants.Permissions.Prefixes.Resource + McpResource] : []);
+    }
+
+    private AuthorizationController BuildRefreshController(ApplicationUser user, string operatorUserId, string operatorUserName,
+        string[] tokenResources = null, string[] requestResources = null)
     {
         _userManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(user);
         _signInManager.Setup(x => x.CanSignInAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(true);
@@ -642,6 +721,10 @@ public class AuthorizationControllerSignInLogTests
         }
 
         var refreshPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "test"));
+        if (tokenResources != null)
+        {
+            refreshPrincipal.SetResources(tokenResources);
+        }
 
         var authService = new Mock<IAuthenticationService>();
         authService
@@ -656,6 +739,7 @@ public class AuthorizationControllerSignInLogTests
         {
             GrantType = OpenIddictConstants.GrantTypes.RefreshToken,
             ClientId = "frontend",
+            Resources = requestResources?.ToImmutableArray(),
         });
 
         controller.ControllerContext.HttpContext.RequestServices = services.BuildServiceProvider();

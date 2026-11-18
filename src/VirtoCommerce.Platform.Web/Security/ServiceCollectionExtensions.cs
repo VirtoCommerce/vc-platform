@@ -17,6 +17,7 @@ using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.OpenIddict;
+using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Security.SignInLog;
@@ -53,6 +54,10 @@ namespace VirtoCommerce.Platform.Web.Security
             // TryAdd so a module can replace the rules from IPlatformStartup.ConfigureServices too, which runs before this
             services.TryAddSingleton<IOAuthAppRules, OAuthAppRules>();
             services.TryAddSingleton<IOAuthLoginPathProvider, OAuthLoginPathProvider>();
+            services.TryAddSingleton<IClientMetadataValidator, ClientMetadataValidator>();
+            services.TryAddSingleton<IClientIdMetadataDocumentResolver, ClientIdMetadataDocumentResolver>();
+            services.TryAddScoped<ISelfRegisteredClientFactory, SelfRegisteredClientFactory>();
+            services.TryAddScoped<IDynamicClientRegistrationService, DynamicClientRegistrationService>();
             services.AddScoped<IRoleSearchService, RoleSearchService>();
 
             //Register as singleton because this abstraction can be used as dependency in singleton services
