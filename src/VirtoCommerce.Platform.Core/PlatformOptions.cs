@@ -31,6 +31,10 @@ namespace VirtoCommerce.Platform.Core
         public string CountriesFilePath { get; set; } = "localization/common/countries.json";
         public string CountryRegionsFilePath { get; set; } = "localization/common/countriesRegions.json";
 
+        // Local paths for the regional formats and time zones users pick in their profile
+        public string RegionalFormatsFilePath { get; set; } = "localization/common/regionalFormats.json";
+        public string TimeZonesFilePath { get; set; } = "localization/common/timeZones.json";
+
         // URL for discovery sample data for initial installation
         // e.g. http://virtocommerce.blob.core.windows.net/sample-data
         // [Url] Remove validation attribute to allow set empty strings in the option

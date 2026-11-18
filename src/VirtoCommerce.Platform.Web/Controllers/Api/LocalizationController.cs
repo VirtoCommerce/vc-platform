@@ -1,12 +1,9 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Localizations;
-using VirtoCommerce.Platform.Web.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -15,16 +12,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [ApiExplorerSettings(IgnoreApi = true)]
     public class LocalizationController : Controller
     {
-        private const string InternationalizationFilesFormat = ".js";
-        private static readonly string InternationalizationFilesFolder = $"js{Path.DirectorySeparatorChar}i18n{Path.DirectorySeparatorChar}angular";
-
-        private readonly IWebHostEnvironment _hostingEnv;
         private readonly ITranslationService _translationService;
+        private readonly IRegionalSettingsService _regionalSettingsService;
 
-        public LocalizationController(IWebHostEnvironment hostingEnv, ITranslationService translationService)
+        public LocalizationController(ITranslationService translationService, IRegionalSettingsService regionalSettingsService)
         {
-            _hostingEnv = hostingEnv;
             _translationService = translationService;
+            _regionalSettingsService = regionalSettingsService;
         }
 
         /// <summary>
@@ -64,41 +58,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("regionalformats")]
         [AllowAnonymous]
-        public ActionResult<string[]> GetRegionalFormats()
+        public async Task<ActionResult<IList<string>>> GetRegionalFormats()
         {
-            var files = GetAllInternationalizationFiles("*" + InternationalizationFilesFormat, InternationalizationFilesFolder);
-            var formats = files
-                .Select(Path.GetFileName)
-                .Select(x =>
-                {
-                    var startIndexOfCode = x.IndexOf("_") + 1;
-                    var endIndexOfCode = x.IndexOf(".");
-                    return x.Substring(startIndexOfCode, endIndexOfCode - startIndexOfCode);
-                }).Distinct().ToArray();
+            var formats = await _regionalSettingsService.GetRegionalFormatsAsync();
 
             return Ok(formats);
         }
 
-
-        private string[] GetAllInternationalizationFiles(string searchPattern, string internationalizationsFolder)
+        /// <summary>
+        /// Return all available time zones (IANA ids)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("timezones")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IList<string>>> GetTimeZones()
         {
-            var files = new List<string>();
+            var timeZones = await _regionalSettingsService.GetTimeZonesAsync();
 
-            // Get platform internationalization files
-            var platformPath = _hostingEnv.MapPath("~/");
-            var platformFileNames = GetFilesByPath(platformPath, searchPattern, internationalizationsFolder);
-            files.AddRange(platformFileNames);
-
-            return files.ToArray();
-        }
-
-        private string[] GetFilesByPath(string path, string searchPattern, string subfolder)
-        {
-            var sourceDirectoryPath = Path.Combine(path, subfolder);
-
-            return Directory.Exists(sourceDirectoryPath)
-                ? Directory.EnumerateFiles(sourceDirectoryPath, searchPattern, SearchOption.AllDirectories).ToArray()
-                : new string[0];
+            return Ok(timeZones);
         }
     }
 }
