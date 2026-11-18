@@ -616,7 +616,7 @@ public class AuthorizationControllerSignInLogTests
     }
 
     [Fact]
-    public async Task Exchange_RefreshTokenOfSelfRegisteredClientWithoutRequestedResource_ChecksTheResourcesOfTheToken()
+    public async Task Exchange_RefreshTokenOfSelfRegisteredClientWithoutRequestedResource_ChecksResourcesOfToken()
     {
         // Arrange
         SetUpSelfRegisteredApplication(hasResourcePermission: false);

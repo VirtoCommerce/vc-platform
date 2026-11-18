@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using OpenIddict.Server;
 using VirtoCommerce.Platform.Core.Security;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Server.OpenIddictServerEvents;
 
 namespace VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
@@ -41,6 +42,11 @@ public class AttachClientRegistrationMetadata : IOpenIddictServerHandler<HandleC
         if (options.DynamicRegistration.Enabled && context.BaseUri != null)
         {
             context.Metadata["registration_endpoint"] = new Uri(context.BaseUri, RegistrationEndpointPath).AbsoluteUri;
+        }
+
+        if (options.ClientIdMetadataDocuments.Enabled || options.DynamicRegistration.Enabled)
+        {
+            context.TokenEndpointAuthenticationMethods.Add(ClientAuthenticationMethods.None);
         }
 
         return ValueTask.CompletedTask;

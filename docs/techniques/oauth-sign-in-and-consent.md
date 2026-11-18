@@ -176,7 +176,9 @@ first, in one of two ways that the MCP authorization specification describes:
 | Dynamic client registration (RFC 7591) | Issued by `POST /connect/register` | Off by default |
 
 The authorization server metadata (`/.well-known/oauth-authorization-server`, `/.well-known/openid-configuration`)
-tells clients which ways are on: `client_id_metadata_document_supported: true`, and `registration_endpoint`.
+tells clients which ways are on: `client_id_metadata_document_supported: true`, and `registration_endpoint`. While
+either is on, `token_endpoint_auth_methods_supported` includes `none`, since self-registered clients are public; Claude
+uses a client ID metadata document only when the server advertises both.
 
 Either way, the client gets the least it needs, whatever it asks for:
 
@@ -200,8 +202,8 @@ At the authorization request, the platform fetches the document at the client id
 * The client id is an HTTPS URL of at most 100 characters with a path, without a fragment, user info, backslashes or
   dot segments.
 * The document is a JSON object of at most `MaxDocumentSize` bytes, its `client_id` is the URL exactly, it lists
-  `redirect_uris`, its `token_endpoint_auth_method` is `none`, it has no client secret, and its `grant_types` and
-  `response_types`, when present, include `authorization_code` and `code`.
+  `redirect_uris`, its `token_endpoint_auth_method` is `none` or absent, it has no client secret, and its
+  `grant_types` and `response_types`, when present, include `authorization_code` and `code`.
 * The redirect URI of the request is one of the document's, compared exactly. A loopback redirect URI without a port,
   such as `http://localhost/callback`, accepts any port, as RFC 8252 describes for apps on the user's computer.
 

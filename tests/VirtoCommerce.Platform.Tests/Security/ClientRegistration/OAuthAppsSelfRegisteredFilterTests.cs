@@ -23,7 +23,7 @@ public class OAuthAppsSelfRegisteredFilterTests
     [InlineData(true, "https://claude.ai/oauth/client", "dcr-client")]
     [InlineData(false, "admin-app", "admin-app-with-properties")]
     [InlineData(null, "admin-app", "admin-app-with-properties", "https://claude.ai/oauth/client", "dcr-client")]
-    public void Filter_SelfRegistered_SelectsByTheRegistrationProperty(bool? selfRegistered, params string[] expected)
+    public void Filter_SelfRegistered_SelectsByRegistrationProperty(bool? selfRegistered, params string[] expected)
     {
         // Arrange
         var criteria = new OAuthAppSearchCriteria { SelfRegistered = selfRegistered };

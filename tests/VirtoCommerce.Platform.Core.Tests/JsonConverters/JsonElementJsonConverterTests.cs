@@ -23,18 +23,36 @@ public class JsonElementJsonConverterTests
     [InlineData("[\"a\",\"b\"]")]
     [InlineData("{\"nested\":{\"value\":1}}")]
     [InlineData("\"2026-11-11T10:00:00Z\"")]
-    public void RoundTrip_KeepsTheJson(string json)
+    public void Write_JsonElement_WritesItsJson(string json)
     {
         // Arrange
         var properties = new Dictionary<string, JsonElement> { ["value"] = JsonDocument.Parse(json).RootElement.Clone() };
 
         // Act
-        var serialized = JsonConvert.SerializeObject(properties, _settings);
-        var deserialized = JsonConvert.DeserializeObject<Dictionary<string, JsonElement>>(serialized, _settings);
+        var result = JsonConvert.SerializeObject(properties, _settings);
 
         // Assert
-        serialized.Should().Be($"{{\"value\":{json}}}");
-        deserialized["value"].GetRawText().Should().Be(json);
+        result.Should().Be($"{{\"value\":{json}}}");
+    }
+
+    [Theory]
+    [InlineData("\"client_id_metadata_document\"")]
+    [InlineData("42")]
+    [InlineData("true")]
+    [InlineData("null")]
+    [InlineData("[\"a\",\"b\"]")]
+    [InlineData("{\"nested\":{\"value\":1}}")]
+    [InlineData("\"2026-11-11T10:00:00Z\"")]
+    public void Read_Json_ReadsItAsJsonElement(string json)
+    {
+        // Arrange
+        var serialized = $"{{\"value\":{json}}}";
+
+        // Act
+        var result = JsonConvert.DeserializeObject<Dictionary<string, JsonElement>>(serialized, _settings);
+
+        // Assert
+        result["value"].GetRawText().Should().Be(json);
     }
 
     [Fact]

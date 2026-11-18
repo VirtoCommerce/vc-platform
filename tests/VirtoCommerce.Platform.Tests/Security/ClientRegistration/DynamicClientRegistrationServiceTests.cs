@@ -14,20 +14,32 @@ public class DynamicClientRegistrationServiceTests
     private readonly SelfRegisteredClientTestContext _context = new();
 
     [Fact]
-    public async Task Register_ValidatorOfAProject_ItsRulesApply()
+    public async Task Register_ValidatorOfProject_RefusesWhatItsRulesForbid()
     {
         // Arrange
         var service = CreateService(new NamedClientsOnlyValidator());
 
         // Act
-        var unnamed = await service.RegisterAsync(Json("""{ "redirect_uris": ["https://agent.example.com/callback"] }"""), TestContext.Current.CancellationToken);
-        var named = await service.RegisterAsync(Json("""{ "client_name": "Agent", "redirect_uris": ["https://agent.example.com/callback"] }"""),
+        var result = await service.RegisterAsync(Json("""{ "redirect_uris": ["https://agent.example.com/callback"] }"""), TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Error.Should().Be(ClientMetadata.Errors.InvalidClientMetadata);
+        _context.Stored.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Register_ValidatorOfProject_RegistersWhatItsRulesAllow()
+    {
+        // Arrange
+        var service = CreateService(new NamedClientsOnlyValidator());
+
+        // Act
+        var result = await service.RegisterAsync(Json("""{ "client_name": "Agent", "redirect_uris": ["https://agent.example.com/callback"] }"""),
             TestContext.Current.CancellationToken);
 
         // Assert
-        unnamed.Error.Should().Be(ClientMetadata.Errors.InvalidClientMetadata);
-        named.Error.Should().BeNull();
-        _context.Stored.Should().ContainSingle().Which.Key.Should().Be(named.ClientId);
+        result.Error.Should().BeNull();
+        _context.Stored.Should().ContainSingle().Which.Key.Should().Be(result.ClientId);
     }
 
     [Fact]
@@ -45,7 +57,7 @@ public class DynamicClientRegistrationServiceTests
     }
 
     [Fact]
-    public async Task Register_ValidMetadata_ListsTheGrantAndResponseTypesOfTheClient()
+    public async Task Register_ValidMetadata_ListsGrantAndResponseTypesOfClient()
     {
         // Arrange
         var service = CreateService(new ClientMetadataValidator(new OAuthAppRules()));

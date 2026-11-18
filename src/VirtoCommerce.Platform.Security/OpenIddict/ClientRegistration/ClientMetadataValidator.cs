@@ -121,13 +121,6 @@ public class ClientMetadataValidator : IClientMetadataValidator
                 return ClientIdMetadataDocumentResult.Fail("The client metadata document can't contain a client secret.");
             }
 
-            // Without a method, a client would authenticate with a secret (RFC 7591), which a document can't hold
-            if (GetString(root, ClientMetadata.Names.TokenEndpointAuthMethod) == null)
-            {
-                return ClientIdMetadataDocumentResult.Fail(
-                    $"The token_endpoint_auth_method of the client metadata document must be '{ClientAuthenticationMethods.None}'.");
-            }
-
             var result = Validate(root);
             if (result.Metadata == null)
             {

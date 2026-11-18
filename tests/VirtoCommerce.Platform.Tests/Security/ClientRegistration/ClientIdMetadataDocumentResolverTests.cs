@@ -31,26 +31,38 @@ public class ClientIdMetadataDocumentResolverTests
     private readonly MemoryCache _cache = new(new MemoryCacheOptions());
 
     [Fact]
-    public async Task Resolve_ValidDocument_ReturnsItAndCachesIt()
+    public async Task Resolve_ValidDocument_ReturnsIt()
     {
         // Arrange
         _handler.Respond(ClientId, Json(Document()));
         var resolver = CreateResolver();
 
         // Act
-        var first = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
-        var second = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+        var result = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
 
         // Assert
-        first.Document.Should().NotBeNull();
-        first.Document.RedirectUris.Should().Equal("https://agent.example.com/callback");
-        second.Should().BeSameAs(first);
-        _handler.Requests.Should().HaveCount(1);
-        _handler.Requests[0].Headers.Accept.ToString().Should().Contain("application/json");
+        result.Document.RedirectUris.Should().Equal("https://agent.example.com/callback");
+        _handler.Requests.Should().ContainSingle().Which.Headers.Accept.ToString().Should().Contain("application/json");
     }
 
     [Fact]
-    public async Task Resolve_InvalidDocument_FailsAndIsNotCached()
+    public async Task Resolve_ResolvedDocument_Cached()
+    {
+        // Arrange
+        _handler.Respond(ClientId, Json(Document()));
+        var resolver = CreateResolver();
+        var first = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Act
+        var result = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Should().BeSameAs(first);
+        _handler.Requests.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task Resolve_InvalidDocument_FailsAsNotTransient()
     {
         // Arrange
         _handler.Respond(ClientId, Json(Document(clientId: "https://other.example.com/client.json")));
@@ -58,18 +70,31 @@ public class ClientIdMetadataDocumentResolverTests
 
         // Act
         var result = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
-        _handler.Respond(ClientId, Json(Document()));
-        var fixedResult = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
 
         // Assert
         result.Document.Should().BeNull();
         result.IsTransient.Should().BeFalse();
-        fixedResult.Document.Should().NotBeNull("an invalid document is fetched again, not cached");
+    }
+
+    [Fact]
+    public async Task Resolve_DocumentFixedAfterBeingInvalid_FetchedAgain()
+    {
+        // Arrange
+        _handler.Respond(ClientId, Json(Document(clientId: "https://other.example.com/client.json")));
+        var resolver = CreateResolver();
+        await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+        _handler.Respond(ClientId, Json(Document()));
+
+        // Act
+        var result = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Document.Should().NotBeNull();
         _handler.Requests.Should().HaveCount(2);
     }
 
     [Fact]
-    public async Task Resolve_NotAClientIdUrl_NotFetched()
+    public async Task Resolve_NotClientIdUrl_NotFetched()
     {
         // Arrange
         var resolver = CreateResolver();
@@ -90,13 +115,25 @@ public class ClientIdMetadataDocumentResolverTests
         var resolver = CreateResolver();
 
         // Act
-        var isClientIdUrl = resolver.IsClientIdUrl(ClientId);
         var result = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
 
         // Assert
-        isClientIdUrl.Should().BeFalse();
         result.Document.Should().BeNull();
         _handler.Requests.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void IsClientIdUrl_Disabled_False()
+    {
+        // Arrange
+        _options.ClientRegistration.ClientIdMetadataDocuments.Enabled = false;
+        var resolver = CreateResolver();
+
+        // Act
+        var result = resolver.IsClientIdUrl(ClientId);
+
+        // Assert
+        result.Should().BeFalse();
     }
 
     [Theory]
@@ -120,7 +157,7 @@ public class ClientIdMetadataDocumentResolverTests
     }
 
     [Fact]
-    public async Task Resolve_CachedClientOfAHostNoLongerAllowed_Refused()
+    public async Task Resolve_CachedClientOfHostNoLongerAllowed_Refused()
     {
         // Arrange
         _handler.Respond(ClientId, Json(Document()));
@@ -137,22 +174,20 @@ public class ClientIdMetadataDocumentResolverTests
     }
 
     [Fact]
-    public async Task Resolve_ClientIdsDifferingInCase_DoNotShareACachedDocument()
+    public async Task Resolve_ClientIdsDifferingInCase_DoNotShareCachedDocument()
     {
         // Arrange
         const string upperCaseClientId = "https://agent.example.com/oauth/Client.json";
         _handler.Respond(ClientId, Json(Document()));
         _handler.Respond(upperCaseClientId, Json(Document(clientId: upperCaseClientId)));
         var resolver = CreateResolver();
+        await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
 
         // Act
-        var lower = await resolver.ResolveAsync(ClientId, TestContext.Current.CancellationToken);
-        var upper = await resolver.ResolveAsync(upperCaseClientId, TestContext.Current.CancellationToken);
+        var result = await resolver.ResolveAsync(upperCaseClientId, TestContext.Current.CancellationToken);
 
         // Assert
-        lower.Document.ClientId.Should().Be(ClientId);
-        upper.Document.Should().NotBeNull();
-        upper.Document.ClientId.Should().Be(upperCaseClientId);
+        result.Document.ClientId.Should().Be(upperCaseClientId);
         _handler.Requests.Should().HaveCount(2);
     }
 
@@ -188,7 +223,7 @@ public class ClientIdMetadataDocumentResolverTests
     }
 
     [Fact]
-    public async Task Resolve_LargerThanTheLimit_Refused()
+    public async Task Resolve_LargerThanLimit_Refused()
     {
         // Arrange
         _options.ClientRegistration.ClientIdMetadataDocuments.MaxDocumentSize = 100;
@@ -204,7 +239,7 @@ public class ClientIdMetadataDocumentResolverTests
     }
 
     [Fact]
-    public async Task Resolve_LargerThanTheLimitWithoutContentLength_Refused()
+    public async Task Resolve_LargerThanLimitWithoutContentLength_Refused()
     {
         // Arrange
         _options.ClientRegistration.ClientIdMetadataDocuments.MaxDocumentSize = 100;
@@ -240,6 +275,16 @@ public class ClientIdMetadataDocumentResolverTests
         result.Document.Should().BeNull();
         result.Error.Should().Contain("redirect");
         _handler.Requests.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void CreateHandler_DoesNotFollowRedirects()
+    {
+        // Act
+        using var handler = ClientIdMetadataDocumentResolver.CreateHandler();
+
+        // Assert
+        handler.AllowAutoRedirect.Should().BeFalse();
     }
 
     [Fact]
@@ -301,7 +346,7 @@ public class ClientIdMetadataDocumentResolverTests
     [InlineData("https://169.254.169.254/latest/meta-data")]
     [InlineData("https://[::1]/client.json")]
     [InlineData("https://10.0.0.1:8443/client.json")]
-    public async Task Resolve_WithThePlatformHandler_PrivateAddressIsNotConnectedTo(string clientId)
+    public async Task Resolve_WithPlatformHandler_PrivateAddressIsNotConnectedTo(string clientId)
     {
         // Arrange
         using var resolver = CreatePlatformResolver(Environments.Production);
@@ -319,7 +364,7 @@ public class ClientIdMetadataDocumentResolverTests
     [InlineData("Development", true, true)]
     [InlineData("Development", false, false)]
     [InlineData("Production", true, false)]
-    public async Task Resolve_WithThePlatformHandler_LoopbackOnlyWhenAllowedInDevelopment(string environment, bool allowLoopback, bool connects)
+    public async Task Resolve_WithPlatformHandler_LoopbackOnlyWhenAllowedInDevelopment(string environment, bool allowLoopback, bool connects)
     {
         // Arrange
         _options.ClientRegistration.ClientIdMetadataDocuments.AllowLoopbackInDevelopment = allowLoopback;
@@ -336,7 +381,7 @@ public class ClientIdMetadataDocumentResolverTests
     }
 
     [Fact]
-    public async Task Resolve_WithThePlatformHandlerAllowingLoopback_PrivateNetworkStillRefused()
+    public async Task Resolve_WithPlatformHandlerAllowingLoopback_PrivateNetworkStillRefused()
     {
         // Arrange
         _options.ClientRegistration.ClientIdMetadataDocuments.AllowLoopbackInDevelopment = true;
@@ -355,7 +400,7 @@ public class ClientIdMetadataDocumentResolverTests
     [InlineData("max-age=10", 300)]
     [InlineData("max-age=86400", 3600)]
     [InlineData("no-store", 300)]
-    public void GetLifetime_FollowsCacheControlWithinTheLimits(string cacheControl, int expectedSeconds)
+    public void GetLifetime_FollowsCacheControlWithinLimits(string cacheControl, int expectedSeconds)
     {
         // Arrange
         var header = cacheControl == null ? null : CacheControlHeaderValue.Parse(cacheControl);

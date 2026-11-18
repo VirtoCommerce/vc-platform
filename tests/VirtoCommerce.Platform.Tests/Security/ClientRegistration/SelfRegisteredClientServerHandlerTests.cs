@@ -58,7 +58,7 @@ public class SelfRegisteredClientServerHandlerTests
     }
 
     [Fact]
-    public async Task AuthorizationRequest_ClientOfAnAdministrator_Unchanged()
+    public async Task AuthorizationRequest_ClientOfAdministrator_Unchanged()
     {
         // Arrange
         _context.Stored["agent"] = new() { ClientId = "agent" };
@@ -74,13 +74,16 @@ public class SelfRegisteredClientServerHandlerTests
     [InlineData(true, false)]
     [InlineData(false, true)]
     [InlineData(true, true)]
-    public async Task ConfigurationRequest_AdvertisesTheWaysToRegister(bool metadataDocuments, bool dynamicRegistration)
+    [InlineData(false, false)]
+    public async Task ConfigurationRequest_AdvertisesWaysToRegister(bool metadataDocuments, bool dynamicRegistration)
     {
         // Arrange
         _context.Options.ClientRegistration.ClientIdMetadataDocuments.Enabled = metadataDocuments;
         _context.Options.ClientRegistration.DynamicRegistration.Enabled = dynamicRegistration;
-        var context = new HandleConfigurationRequestContext(CreateTransaction(new OpenIddictRequest()));
-        context.BaseUri = new Uri("https://platform.example.com/");
+        var context = new HandleConfigurationRequestContext(CreateTransaction(new OpenIddictRequest()))
+        {
+            BaseUri = new Uri("https://platform.example.com/")
+        };
         var handler = new AttachClientRegistrationMetadata(Mock.Of<IOptionsMonitor<AuthorizationOptions>>(x => x.CurrentValue == _context.Options));
 
         // Act
@@ -96,6 +99,7 @@ public class SelfRegisteredClientServerHandlerTests
         {
             context.Metadata.Should().NotContainKey("registration_endpoint");
         }
+        context.TokenEndpointAuthenticationMethods.Contains(ClientAuthenticationMethods.None).Should().Be(metadataDocuments || dynamicRegistration);
     }
 
     private async Task<ValidateAuthorizationRequestContext> ValidateAsync(string clientId, string resource, string codeChallengeMethod)

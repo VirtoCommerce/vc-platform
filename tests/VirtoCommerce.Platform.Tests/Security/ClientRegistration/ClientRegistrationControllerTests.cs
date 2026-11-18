@@ -41,7 +41,7 @@ public class ClientRegistrationControllerTests
     }
 
     [Fact]
-    public async Task Register_PublicClient_StoresTheLeastItNeedsAndTellsTheClient()
+    public async Task Register_PublicClient_StoresLeastItNeedsAndTellsClient()
     {
         // Act
         var result = await RegisterAsync("""
@@ -72,7 +72,7 @@ public class ClientRegistrationControllerTests
     }
 
     [Fact]
-    public async Task Register_NoAuthMethod_RegisteredAsAPublicClient()
+    public async Task Register_NoAuthMethod_RegisteredAsPublicClient()
     {
         // Act
         var result = await RegisterAsync("""{ "redirect_uris": ["https://agent.example.com/callback"] }""");
@@ -80,7 +80,9 @@ public class ClientRegistrationControllerTests
         // Assert
         var body = (IDictionary<string, object>)((ObjectResult)result).Value;
         body["token_endpoint_auth_method"].Should().Be(ClientAuthenticationMethods.None);
-        body["client_name"].Should().Be("Unnamed client");
+        var manager = _context.CreateManager();
+        var application = await manager.FindByClientIdAsync((string)body[Parameters.ClientId], TestContext.Current.CancellationToken);
+        (await manager.HasClientTypeAsync(application, ClientTypes.Public, TestContext.Current.CancellationToken)).Should().BeTrue();
     }
 
     [Theory]
@@ -93,7 +95,7 @@ public class ClientRegistrationControllerTests
     [InlineData("""{ "redirect_uris": ["javascript:alert(1)"] }""", "invalid_redirect_uri")]
     [InlineData("""[]""", "invalid_client_metadata")]
     [InlineData("""not json""", "invalid_client_metadata")]
-    public async Task Register_InvalidMetadata_RefusedWithTheError(string json, string error)
+    public async Task Register_InvalidMetadata_RefusedWithError(string json, string error)
     {
         // Act
         var result = await RegisterAsync(json);

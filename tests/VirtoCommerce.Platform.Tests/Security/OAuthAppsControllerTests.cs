@@ -505,7 +505,7 @@ public class OAuthAppsControllerTests
     [Theory]
     [InlineData("https:%2F%2Fagent.example.com%2Fclient.json")]
     [InlineData("https:%2f%2fagent.example.com%2fclient.json")]
-    public async Task Get_ClientIdWithEncodedSlashes_FindsTheApplication(string routeValue)
+    public async Task Get_ClientIdWithEncodedSlashes_FindsApplication(string routeValue)
     {
         // Arrange
         // The route value of a client id that is a URL, as ASP.NET Core leaves it: decoded but for the slashes

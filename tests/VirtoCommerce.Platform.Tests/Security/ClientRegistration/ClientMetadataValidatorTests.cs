@@ -38,7 +38,7 @@ public class ClientMetadataValidatorTests
     [InlineData("https://agent.example.com/oauth/%2e%2e/client.json")]
     [InlineData(@"https://agent.example.com/oauth\client.json")]
     [InlineData(@"https://agent.example.com\oauth/client.json")]
-    public void IsClientIdUrl_NotAMetadataDocumentUrl_False(string clientId)
+    public void IsClientIdUrl_NotMetadataDocumentUrl_False(string clientId)
     {
         // Act
         var result = _validator.IsClientIdUrl(clientId);
@@ -48,23 +48,33 @@ public class ClientMetadataValidatorTests
     }
 
     [Fact]
-    public void IsClientIdUrl_LongerThanTheLimit_False()
+    public void IsClientIdUrl_LongestAllowed_True()
     {
         // Arrange
-        const string prefix = "https://agent.example.com/";
-        var longest = prefix + new string('a', ClientMetadata.MaxClientIdLength - prefix.Length);
+        var clientId = ClientIdOfLength(ClientMetadata.MaxClientIdLength);
 
         // Act
-        var longestResult = _validator.IsClientIdUrl(longest);
-        var longerResult = _validator.IsClientIdUrl(longest + "a");
+        var result = _validator.IsClientIdUrl(clientId);
 
         // Assert
-        longestResult.Should().BeTrue();
-        longerResult.Should().BeFalse("the applications table can't store a longer client id");
+        result.Should().BeTrue();
     }
 
     [Fact]
-    public void Parse_ValidDocument_ReturnsTheClient()
+    public void IsClientIdUrl_LongerThanLimit_False()
+    {
+        // Arrange
+        var clientId = ClientIdOfLength(ClientMetadata.MaxClientIdLength + 1);
+
+        // Act
+        var result = _validator.IsClientIdUrl(clientId);
+
+        // Assert
+        result.Should().BeFalse("the applications table can't store a longer client id");
+    }
+
+    [Fact]
+    public void Parse_ValidDocument_ReturnsClient()
     {
         // Arrange
         var json = $$"""
@@ -132,7 +142,7 @@ public class ClientMetadataValidatorTests
     }
 
     [Fact]
-    public void Parse_LongClientNameCutInASurrogatePair_PairIsNotSplit()
+    public void Parse_LongClientNameCutInSurrogatePair_PairIsNotSplit()
     {
         // Arrange
         var clientName = new string('a', ClientMetadata.MaxClientNameLength - 1) + @"\uD83D\uDE00bbb";
@@ -147,7 +157,7 @@ public class ClientMetadataValidatorTests
     [Theory]
     [InlineData("not json")]
     [InlineData("[]")]
-    public void Parse_NotAJsonObject_Refused(string json)
+    public void Parse_NotJsonObject_Refused(string json)
     {
         // Act
         var result = Parse(json);
@@ -173,7 +183,7 @@ public class ClientMetadataValidatorTests
     [InlineData("\"grant_types\": [\"client_credentials\"],")]
     [InlineData("\"grant_types\": \"authorization_code\",")]
     [InlineData("\"response_types\": [\"token\"],")]
-    public void Parse_NotAPublicCodeClient_Refused(string extra)
+    public void Parse_NotPublicCodeClient_Refused(string extra)
     {
         // Arrange
         var json = Document(extra: extra, authMethod: extra.Contains("token_endpoint_auth_method") ? null : "none");
@@ -186,13 +196,14 @@ public class ClientMetadataValidatorTests
     }
 
     [Fact]
-    public void Parse_NoTokenEndpointAuthMethod_Refused()
+    public void Parse_NoTokenEndpointAuthMethod_ReturnsClient()
     {
         // Act
         var result = Parse(Document(authMethod: null));
 
         // Assert
-        result.Error.Should().Contain("token_endpoint_auth_method");
+        result.Error.Should().BeNull();
+        result.Document.Should().NotBeNull();
     }
 
     [Theory]
@@ -208,6 +219,12 @@ public class ClientMetadataValidatorTests
 
         // Assert
         result.Error.Should().NotBeNull();
+    }
+
+    private static string ClientIdOfLength(int length)
+    {
+        const string prefix = "https://agent.example.com/";
+        return prefix + new string('a', length - prefix.Length);
     }
 
     private (ClientIdMetadataDocument Document, string Error) Parse(string json)

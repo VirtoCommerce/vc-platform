@@ -19,7 +19,7 @@ public class VirtoOpenIddictApplicationManagerTests
     private readonly SelfRegisteredClientTestContext _context = new();
 
     [Fact]
-    public async Task FindByClientId_MetadataDocumentUrl_PublicClientWithTheLeastItNeeds()
+    public async Task FindByClientId_MetadataDocumentUrl_PublicClientWithLeastItNeeds()
     {
         // Arrange
         _context.SetDocument(ClientId, "Claude Code", "http://localhost/callback", "https://claude.ai/api/mcp/auth_callback");
@@ -57,20 +57,45 @@ public class VirtoOpenIddictApplicationManagerTests
         var manager = _context.CreateManager();
 
         // Act
-        var first = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
-        var second = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
-        var storedBeforeConsent = _context.Stored.ToList();
-        await manager.EnsureCreatedAsync(first, TestContext.Current.CancellationToken);
-        await manager.EnsureCreatedAsync(first, TestContext.Current.CancellationToken);
+        await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
 
         // Assert
-        storedBeforeConsent.Should().BeEmpty();
-        second.Should().BeSameAs(first, "the application keeps its id until the consent stores it");
-        _context.Stored.Should().ContainKey(ClientId).WhoseValue.Should().BeSameAs(first);
+        _context.Stored.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task FindByClientId_NoClientName_NamedByTheHost()
+    public async Task FindByClientId_UnstoredClientFoundAgain_SameApplication()
+    {
+        // Arrange
+        _context.SetDocument(ClientId, "Claude Code", "https://claude.ai/api/mcp/auth_callback");
+        var manager = _context.CreateManager();
+        var first = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Act
+        var result = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
+
+        // Assert
+        result.Should().BeSameAs(first, "the application keeps its id until the consent stores it");
+    }
+
+    [Fact]
+    public async Task EnsureCreated_ClientAlreadyStored_StoresItOnce()
+    {
+        // Arrange
+        _context.SetDocument(ClientId, "Claude Code", "https://claude.ai/api/mcp/auth_callback");
+        var manager = _context.CreateManager();
+        var application = await manager.FindByClientIdAsync(ClientId, TestContext.Current.CancellationToken);
+        await manager.EnsureCreatedAsync(application, TestContext.Current.CancellationToken);
+
+        // Act
+        await manager.EnsureCreatedAsync(application, TestContext.Current.CancellationToken);
+
+        // Assert
+        _context.Stored.Should().ContainSingle().Which.Value.Should().BeSameAs(application);
+    }
+
+    [Fact]
+    public async Task FindByClientId_NoClientName_NamedByHost()
     {
         // Arrange
         _context.SetDocument(ClientId, null, "https://claude.ai/api/mcp/auth_callback");
@@ -111,7 +136,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task FindByClientId_UnknownClientIdThatIsNotAUrl_NoApplication()
+    public async Task FindByClientId_UnknownClientIdThatIsNotUrl_NoApplication()
     {
         // Arrange
         var manager = _context.CreateManager();
@@ -125,7 +150,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task FindByClientId_ApplicationOfAnAdministrator_Unchanged()
+    public async Task FindByClientId_ApplicationOfAdministrator_Unchanged()
     {
         // Arrange
         var application = new VirtoOpenIddictEntityFrameworkCoreApplication { ClientId = ClientId, DisplayName = "Registered by hand" };
@@ -143,7 +168,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task FindByClientId_StoredClientWhoseDocumentChanged_FollowsTheDocument()
+    public async Task FindByClientId_StoredClientWhoseDocumentChanged_FollowsDocument()
     {
         // Arrange
         var stored = await StoreClientAsync("Claude", "https://claude.ai/api/mcp/auth_callback");
@@ -161,7 +186,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task FindByClientId_StoredClientWithNewRedirectUris_RevokesTheConsentsAndTokens()
+    public async Task FindByClientId_StoredClientWithNewRedirectUris_RevokesConsentsAndTokens()
     {
         // Arrange
         var stored = await StoreClientAsync("Claude", "https://claude.ai/api/mcp/auth_callback");
@@ -177,7 +202,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task FindByClientId_StoredClientWithNewName_KeepsTheConsents()
+    public async Task FindByClientId_StoredClientWithNewName_KeepsConsentsAndTokens()
     {
         // Arrange
         await StoreClientAsync("Claude", "https://claude.ai/api/mcp/auth_callback");
@@ -190,10 +215,11 @@ public class VirtoOpenIddictApplicationManagerTests
         // Assert
         _context.Updates.Should().Be(1);
         _context.AuthorizationManager.Invocations.Should().BeEmpty();
+        _context.TokenManager.Invocations.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task FindByClientId_StoredClientWhoseDocumentIsTheSame_NotUpdated()
+    public async Task FindByClientId_StoredClientWhoseDocumentIsUnchanged_NotUpdated()
     {
         // Arrange
         await StoreClientAsync("Claude", "https://claude.ai/api/mcp/auth_callback");
@@ -207,7 +233,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task FindByClientId_StoredClientWhenAModuleServesANewResource_GetsIt()
+    public async Task FindByClientId_StoredClientWhenModuleServesNewResource_GetsIt()
     {
         // Arrange
         await StoreClientAsync("Claude", "https://claude.ai/api/mcp/auth_callback");
@@ -222,7 +248,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task FindByClientId_StoredClientWhoseDocumentCannotBeFetchedForAWhile_StillWorks()
+    public async Task FindByClientId_StoredClientWhoseDocumentIsTemporarilyUnavailable_StillWorks()
     {
         // Arrange
         var stored = await StoreClientAsync("Claude", "https://claude.ai/api/mcp/auth_callback");
@@ -267,7 +293,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task FindByClientId_DynamicallyRegisteredClient_KeepsItsRedirectUrisAndFollowsTheResources()
+    public async Task FindByClientId_DynamicallyRegisteredClient_KeepsItsRedirectUrisAndFollowsResources()
     {
         // Arrange
         _context.Options.ClientRegistration.DynamicRegistration.Enabled = true;
@@ -322,7 +348,7 @@ public class VirtoOpenIddictApplicationManagerTests
     }
 
     [Fact]
-    public async Task EnsureCreated_AnotherConsentStoredTheClientMeanwhile_ReturnsTheStoredOne()
+    public async Task EnsureCreated_AnotherConsentStoredClientMeanwhile_ReturnsStoredOne()
     {
         // Arrange
         _context.SetDocument(ClientId, "Claude Code", "https://claude.ai/api/mcp/auth_callback");

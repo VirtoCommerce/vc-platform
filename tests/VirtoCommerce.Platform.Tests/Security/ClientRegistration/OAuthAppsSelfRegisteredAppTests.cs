@@ -31,7 +31,7 @@ public class OAuthAppsSelfRegisteredAppTests
     }
 
     [Fact]
-    public async Task Get_SelfRegisteredApp_IsTheStoredOneWithoutFetchingItsDocument()
+    public async Task Get_SelfRegisteredApp_IsStoredOneWithoutFetchingItsDocument()
     {
         // Arrange
         await StoreSelfRegisteredAppAsync();
@@ -67,7 +67,7 @@ public class OAuthAppsSelfRegisteredAppTests
     }
 
     [Fact]
-    public async Task Save_NewAppWithTheRegistrationProperty_IsNotMarkedSelfRegistered()
+    public async Task Save_NewAppWithRegistrationProperty_IsNotMarkedSelfRegistered()
     {
         // Arrange
         var descriptor = new OpenIddictApplicationDescriptor

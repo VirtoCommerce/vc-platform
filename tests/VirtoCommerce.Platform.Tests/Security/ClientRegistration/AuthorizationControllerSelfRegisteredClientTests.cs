@@ -83,7 +83,7 @@ public class AuthorizationControllerSelfRegisteredClientTests
     }
 
     [Fact]
-    public async Task Authorize_FirstTime_ShowsTheConsentPageAndStoresNothing()
+    public async Task Authorize_FirstTime_ShowsConsentPageAndStoresNothing()
     {
         // Arrange
         var controller = CreateController(SelfRegisteredClientTestContext.McpResource);
@@ -119,7 +119,7 @@ public class AuthorizationControllerSelfRegisteredClientTests
     }
 
     [Fact]
-    public async Task Accept_FirstTime_StoresTheClientAndTheConsentToTheResource()
+    public async Task Accept_FirstTime_StoresClientAndConsentToResource()
     {
         // Arrange
         var controller = CreateController(SelfRegisteredClientTestContext.McpResource);
@@ -151,7 +151,7 @@ public class AuthorizationControllerSelfRegisteredClientTests
     }
 
     [Fact]
-    public async Task Authorize_ConsentedResourceOfAWebClient_SignsInWithoutAsking()
+    public async Task Authorize_ConsentedResourceOfWebClient_SignsInWithoutAsking()
     {
         // Arrange
         const string redirectUri = "https://claude.ai/api/mcp/auth_callback";
@@ -171,8 +171,10 @@ public class AuthorizationControllerSelfRegisteredClientTests
     public async Task Authorize_AnotherResource_AsksAgain()
     {
         // Arrange
-        await CreateController(SelfRegisteredClientTestContext.McpResource).Accept();
-        var controller = CreateController(VendorResource);
+        const string redirectUri = "https://claude.ai/api/mcp/auth_callback";
+        _context.SetDocument(ClientId, "Claude Code", redirectUri);
+        await CreateController(SelfRegisteredClientTestContext.McpResource, redirectUri: redirectUri).Accept();
+        var controller = CreateController(VendorResource, redirectUri: redirectUri);
 
         // Act
         var result = await controller.Authorize();
@@ -182,7 +184,7 @@ public class AuthorizationControllerSelfRegisteredClientTests
     }
 
     [Fact]
-    public async Task Authorize_ClientOfAnAdministrator_AuthorizationWithoutResourcesStillCounts()
+    public async Task Authorize_ClientOfAdministrator_AuthorizationWithoutResourcesStillCounts()
     {
         // Arrange
         var application = new VirtoOpenIddictEntityFrameworkCoreApplication
