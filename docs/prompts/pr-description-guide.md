@@ -36,8 +36,8 @@ body by hand.
 
 ## Three mechanics, without which the skeleton is decoration
 
-**Write `None` explicitly; never drop a section.** «None — this PR adds no query or mutation» is a
-claim that the author checked. A missing section is indistinguishable from an author who never
+**Write `None` explicitly; never drop a section.** A bare `None`, with nothing after it, is a claim
+that the author checked. A missing section is indistinguishable from an author who never
 considered it. On one x-catalog PR four of the seven sections came back `None`, and being forced to
 answer them is exactly what surfaced the one fact a consumer needed.
 
