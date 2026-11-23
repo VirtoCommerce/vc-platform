@@ -317,7 +317,8 @@
           "status-all": "Все",
           "status-installed": "Установленные",
           "status-not-installed": "Неустановленные",
-          "status-updates": "Обновления"
+          "status-updates": "Обновления",
+          "status-with-errors": "Ошибки"
         }
       },
       "history": {

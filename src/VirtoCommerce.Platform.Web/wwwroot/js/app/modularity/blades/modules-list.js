@@ -24,8 +24,10 @@ function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleH
     // Pre-select the status filter based on the mode passed from modules-main
     switch (blade.mode) {
         case 'installed':
-        case 'withErrors':
             filter.status = 'installed';
+            break;
+        case 'withErrors':
+            filter.status = 'withErrors';
             break;
         case 'update':
             filter.status = 'updates';
@@ -190,6 +192,9 @@ function ($scope, bladeNavigationService, uiGridConstants, uiGridHelper, moduleH
                     break;
                 case 'updates':
                     statusMatch = row.entity.isInstalled && !!row.entity.$alternativeVersion;
+                    break;
+                case 'withErrors':
+                    statusMatch = row.entity.isInstalled && _.any(row.entity.validationErrors);
                     break;
             }
 

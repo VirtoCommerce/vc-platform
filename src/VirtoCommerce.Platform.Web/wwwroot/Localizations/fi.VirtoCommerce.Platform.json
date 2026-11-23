@@ -316,7 +316,8 @@
           "status-all": "Kaikki",
           "status-installed": "Asennetut",
           "status-not-installed": "Asentamattomat",
-          "status-updates": "Päivitykset"
+          "status-updates": "Päivitykset",
+          "status-with-errors": "Virheet"
         }
       },
       "history": {
