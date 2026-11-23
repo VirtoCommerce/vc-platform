@@ -315,7 +315,8 @@
           "status-all": "Tutti",
           "status-installed": "Installati",
           "status-not-installed": "Non installati",
-          "status-updates": "Aggiornamenti"
+          "status-updates": "Aggiornamenti",
+          "status-with-errors": "Errori"
         }
       },
       "history": {

@@ -316,7 +316,8 @@
           "status-all": "Alla",
           "status-installed": "Installerade",
           "status-not-installed": "Ej installerade",
-          "status-updates": "Uppdateringar"
+          "status-updates": "Uppdateringar",
+          "status-with-errors": "Fel"
         }
       },
       "history": {
