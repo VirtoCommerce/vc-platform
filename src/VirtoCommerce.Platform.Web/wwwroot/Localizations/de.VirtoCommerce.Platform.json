@@ -269,7 +269,8 @@
           "status-all": "Alle",
           "status-installed": "Installiert",
           "status-not-installed": "Nicht installiert",
-          "status-updates": "Aktualisierungen"
+          "status-updates": "Aktualisierungen",
+          "status-with-errors": "Fehler"
         }
       },
       "history": {

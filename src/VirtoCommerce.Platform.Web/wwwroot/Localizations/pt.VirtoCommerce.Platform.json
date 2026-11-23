@@ -267,7 +267,8 @@
           "status-all": "Todos",
           "status-installed": "Instalados",
           "status-not-installed": "Não instalados",
-          "status-updates": "Atualizações"
+          "status-updates": "Atualizações",
+          "status-with-errors": "Erros"
         }
       },
       "history": {
