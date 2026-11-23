@@ -101,12 +101,6 @@ angular.module('platformWebApp')
                 template: '$(Platform)/Scripts/app/modularity/blades/modules-list.tpl.html'
             };
 
-            if (data.mode === 'withErrors') {
-                angular.extend(newBlade, {
-                    mode: 'installed'
-                });
-            }
-
             if (data.mode === 'advanced') {
                 angular.extend(newBlade, {
                     controller: 'platformWebApp.moduleDetailController',

@@ -268,7 +268,8 @@
           "status-all": "Alle",
           "status-installed": "Installerte",
           "status-not-installed": "Ikke installerte",
-          "status-updates": "Oppdateringer"
+          "status-updates": "Oppdateringer",
+          "status-with-errors": "Feil"
         }
       },
       "history": {
