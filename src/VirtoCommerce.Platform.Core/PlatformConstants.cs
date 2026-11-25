@@ -103,6 +103,12 @@ namespace VirtoCommerce.Platform.Core
 
                 public const string BackgroundJobsManage = "background_jobs:manage";
 
+                /// <summary>
+                /// Receive every push notification broadcast on the hub, whoever created it. Needed by the user whose api key
+                /// the push notification synchronizer of a scaled-out platform connects with.
+                /// </summary>
+                public const string PushNotificationsReadAll = "platform:push_notifications:read_all";
+
                 [Obsolete("Backup/restore moved to the VirtoCommerce.BackupRestore module, which registers this permission. Use VirtoCommerce.BackupRestore.Core.ModuleConstants.Security.Permissions.Access. The constant is kept (with its original value) for backward compatibility.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
                 public const string PlatformExportImportAccess = "platform:exportImport:access";
                 [Obsolete("Backup/restore moved to the VirtoCommerce.BackupRestore module, which registers this permission. Use VirtoCommerce.BackupRestore.Core.ModuleConstants.Security.Permissions.Import. The constant is kept (with its original value) for backward compatibility.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
@@ -122,6 +128,7 @@ namespace VirtoCommerce.Platform.Core
                     SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken, SecurityRevokeToken, SecuritySignInLogRead,
                     SecurityOAuthApplicationsCreate, SecurityOAuthApplicationsRead, SecurityOAuthApplicationsUpdate, SecurityOAuthApplicationsDelete,
                     BackgroundJobsManage,
+                    PushNotificationsReadAll,
                     // platform:export / platform:import / platform:exportImport:access are now registered
                     // by the VirtoCommerce.BackupRestore module (same string values) — see ModuleConstants there.
                 ];

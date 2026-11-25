@@ -33,7 +33,10 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             if (_hubContext != null && notification.Creator != null)
             {
                 await _hubContext.Clients.User(notification.Creator).SendAsync("Send", notification);
-                await _hubContext.Clients.All.SendAsync("SendSystemEvents", notification);
+                // Not to all clients: only to those allowed to read every notification and those the creator's group admits
+                await _hubContext.Clients
+                    .Groups(PushNotificationHub.SystemEventsGroupName, PushNotificationHub.GetCreatorGroupName(notification.Creator))
+                    .SendAsync("SendSystemEvents", notification);
             }
         }
     }
