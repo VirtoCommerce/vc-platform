@@ -11,4 +11,11 @@ namespace VirtoCommerce.Platform.Core.Jobs;
 public interface IJobProgress
 {
     Task Report(JobProgressInfo progress, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Reports how the job ended. Called by the job engine, possibly more than once; the default does nothing, and a
+    /// reporter that wraps another one must forward it.
+    /// </summary>
+    Task Complete(JobOutcome outcome, string? error = null, CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
 }
