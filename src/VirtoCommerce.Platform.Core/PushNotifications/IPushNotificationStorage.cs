@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,5 +28,22 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         /// Returns the notifications created by <paramref name="userId"/> (the user name) that match <paramref name="criteria"/>.
         /// </summary>
         Task<PushNotificationSearchResult> SearchPushNotificationsAsync(string userId, PushNotificationSearchCriteria criteria, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Marks the new notifications of <paramref name="userId"/> (the user name) as read and returns them.
+        /// The default implementation saves each of them again.
+        /// </summary>
+        async Task<IList<PushNotification>> MarkAllAsReadAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            var result = await SearchPushNotificationsAsync(userId, new PushNotificationSearchCriteria { OnlyNew = true, Take = int.MaxValue }, cancellationToken);
+
+            foreach (var notification in result.NotifyEvents)
+            {
+                notification.IsNew = false;
+                await SavePushNotificationAsync(notification);
+            }
+
+            return result.NotifyEvents;
+        }
     }
 }

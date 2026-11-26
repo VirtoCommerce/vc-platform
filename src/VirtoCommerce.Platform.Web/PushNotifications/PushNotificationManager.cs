@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -24,6 +25,14 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         public virtual Task<PushNotificationSearchResult> SearchNotifiesAsync(string userId, PushNotificationSearchCriteria criteria, CancellationToken cancellationToken = default)
         {
             return _storage.SearchPushNotificationsAsync(userId, criteria, cancellationToken);
+        }
+
+        /// <summary>
+        /// Marks the user's new notifications as read in the storage, without sending them to the hub again.
+        /// </summary>
+        public virtual Task<IList<PushNotification>> MarkAllAsReadAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            return _storage.MarkAllAsReadAsync(userId, cancellationToken);
         }
 
         public virtual void Send(PushNotification notification)

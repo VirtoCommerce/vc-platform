@@ -35,6 +35,20 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
             Assert.Equal(pushNotification, pushNotificationManager.SearchNotifies(null, new PushNotificationSearchCriteria()).NotifyEvents.Single());
         }
 
+        [Fact]
+        public async System.Threading.Tasks.Task MarkAllAsRead_UpdatesStorageWithoutSendingToHub()
+        {
+            var storage = new Mock<IPushNotificationStorage>();
+            storage.Setup(x => x.MarkAllAsReadAsync("alice", It.IsAny<System.Threading.CancellationToken>())).ReturnsAsync([new PushNotificationStub("alice") { IsNew = false }]);
+            var hubContext = new Mock<IHubContext<PushNotificationHub>>(MockBehavior.Strict);
+            var manager = new PushNotificationManager(storage.Object, hubContext.Object);
+
+            var marked = await manager.MarkAllAsReadAsync("alice", TestContext.Current.CancellationToken);
+
+            Assert.Single(marked);
+            hubContext.VerifyNoOtherCalls();
+        }
+
         public ILogger<T> GetLogger<T>()
         {
             return new Mock<ILogger<T>>().Object;

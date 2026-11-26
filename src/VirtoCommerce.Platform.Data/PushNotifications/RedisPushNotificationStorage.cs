@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -20,14 +21,6 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
     /// </summary>
     public class RedisPushNotificationStorage : IPushNotificationStorage
     {
-        // KEYS: index, data. ARGV: id. Returns the user's last notification, or nil when the id is already stored or the user has none.
-        private const string GetLastUnlessStoredScript = """
-            if redis.call('HEXISTS', KEYS[2], ARGV[1]) == 1 then return false end
-            local last = redis.call('ZREVRANGE', KEYS[1], 0, 0)
-            if #last == 0 then return false end
-            return redis.call('HGET', KEYS[2], last[1])
-            """;
-
         // KEYS: index, data. ARGV: id, score, value, min score to keep ('' keeps all), max count (0 keeps all), ttl seconds (0 = none).
         private const string SaveScript = """
             redis.call('ZADD', KEYS[1], ARGV[2], ARGV[1])
@@ -61,6 +54,19 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
             return redis.call('HMGET', KEYS[2], unpack(ids))
             """;
 
+        // KEYS: data. ARGV: triples of id, value read, value marked as read. Replaces a value only if it is still the one read, so a
+        // notification saved meanwhile (a job's newer progress) is not overwritten. Returns the ids it replaced.
+        private const string MarkAsReadScript = """
+            local updated = {}
+            for i = 1, #ARGV, 3 do
+              if redis.call('HGET', KEYS[1], ARGV[i]) == ARGV[i + 1] then
+                redis.call('HSET', KEYS[1], ARGV[i], ARGV[i + 2])
+                table.insert(updated, ARGV[i])
+              end
+            end
+            return updated
+            """;
+
         private readonly IConnectionMultiplexer _redis;
         private readonly PushNotificationOptions _options;
         private readonly TimeProvider _timeProvider;
@@ -89,24 +95,14 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
         {
             ArgumentNullException.ThrowIfNull(notification);
 
-            var db = _redis.GetDatabase();
-            RedisKey[] keys = [GetIndexKey(notification.Creator), GetDataKey(notification.Creator)];
-
-            var toSave = notification;
-            var last = Deserialize((RedisValue)await db.ScriptEvaluateAsync(GetLastUnlessStoredScript, keys, [notification.Id]));
-            if (PushNotificationStorageRules.TryCountRepeat(last, notification, _timeProvider))
-            {
-                toSave = last;
-            }
-
             var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
             var ttlSeconds = _options.RetentionPeriod > TimeSpan.Zero ? (long)Math.Ceiling(_options.RetentionPeriod.TotalSeconds) : 0;
 
-            await db.ScriptEvaluateAsync(SaveScript, keys,
+            await _redis.GetDatabase().ScriptEvaluateAsync(SaveScript, [GetIndexKey(notification.Creator), GetDataKey(notification.Creator)],
             [
-                toSave.Id,
-                ToScore(toSave.Created),
-                PushNotificationJsonSerializer.Serialize(toSave),
+                notification.Id,
+                ToScore(notification.Created),
+                PushNotificationJsonSerializer.Serialize(notification),
                 expiredBefore == null ? string.Empty : ToScore(expiredBefore.Value).ToString(CultureInfo.InvariantCulture),
                 PushNotificationStorageRules.GetMaxPerUser(_options),
                 ttlSeconds,
@@ -115,24 +111,32 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 
         public virtual async Task<PushNotificationSearchResult> SearchPushNotificationsAsync(string userId, PushNotificationSearchCriteria criteria, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            var stored = await ReadAsync(userId, cancellationToken);
 
-            var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
-            var minScore = expiredBefore == null ? "-inf" : ToScore(expiredBefore.Value).ToString(CultureInfo.InvariantCulture);
+            return PushNotificationSearch.Search(stored.Select(x => x.Notification), criteria);
+        }
 
-            var values = (RedisValue[])await _redis.GetDatabase().ScriptEvaluateAsync(SearchScript, [GetIndexKey(userId), GetDataKey(userId)], [minScore]);
+        public virtual async Task<IList<PushNotification>> MarkAllAsReadAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            var stored = await ReadAsync(userId, cancellationToken);
 
-            var notifications = new List<PushNotification>(values.Length);
-            foreach (var value in values)
+            var values = new List<RedisValue>();
+            var unread = new Dictionary<string, PushNotification>();
+            foreach (var (value, notification) in stored.Where(x => x.Notification.IsNew))
             {
-                var notification = Deserialize(value);
-                if (notification != null)
-                {
-                    notifications.Add(notification);
-                }
+                notification.IsNew = false;
+                values.AddRange([notification.Id, value, PushNotificationJsonSerializer.Serialize(notification)]);
+                unread[notification.Id] = notification;
             }
 
-            return PushNotificationSearch.Search(notifications, criteria);
+            if (unread.Count == 0)
+            {
+                return [];
+            }
+
+            var updatedIds = (string[])await _redis.GetDatabase().ScriptEvaluateAsync(MarkAsReadScript, [GetDataKey(userId)], [.. values]);
+
+            return updatedIds.Select(id => unread[id]).ToList();
         }
 
         protected virtual RedisKey GetIndexKey(string creator) => GetKey(creator, "index");
@@ -141,6 +145,29 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 
         // The braces are a Redis Cluster hash tag: both keys of a user land in one slot, as the scripts require.
         private RedisKey GetKey(string creator, string suffix) => $"{KeyPrefix}:{{{creator}}}:{suffix}";
+
+        // The user's notifications within the retention period, oldest first, with the stored value each was read from.
+        private async Task<List<(RedisValue Value, PushNotification Notification)>> ReadAsync(string userId, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
+            var minScore = expiredBefore == null ? "-inf" : ToScore(expiredBefore.Value).ToString(CultureInfo.InvariantCulture);
+
+            var values = (RedisValue[])await _redis.GetDatabase().ScriptEvaluateAsync(SearchScript, [GetIndexKey(userId), GetDataKey(userId)], [minScore]);
+
+            var result = new List<(RedisValue, PushNotification)>(values.Length);
+            foreach (var value in values)
+            {
+                var notification = Deserialize(value);
+                if (notification != null)
+                {
+                    result.Add((value, notification));
+                }
+            }
+
+            return result;
+        }
 
         private PushNotification Deserialize(RedisValue value)
         {

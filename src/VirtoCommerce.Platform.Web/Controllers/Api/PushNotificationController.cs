@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,28 +39,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("markAllAsRead")]
         public async Task<ActionResult<PushNotificationSearchResult>> MarkAllAsRead()
         {
-            PushNotificationSearchResult result;
-            var newNotifications = new List<PushNotification>();
+            var notifications = await _pushNotifier.MarkAllAsReadAsync(User.Identity?.Name, HttpContext.RequestAborted);
 
-            var criteria = AbstractTypeFactory<PushNotificationSearchCriteria>.TryCreateInstance();
-            criteria.OnlyNew = true;
-
-            do
-            {
-                result = await _pushNotifier.SearchNotifiesAsync(User.Identity?.Name, criteria, HttpContext.RequestAborted);
-                newNotifications.AddRange(result.NotifyEvents);
-
-                foreach (var notifyEvent in result.NotifyEvents)
-                {
-                    notifyEvent.IsNew = false;
-                    await _pushNotifier.SendAsync(notifyEvent);
-                }
-            }
-            while (result.TotalCount > 0);
-
-            result.NotifyEvents = newNotifications;
-            result.NewCount = newNotifications.Count;
-            result.TotalCount = newNotifications.Count;
+            var result = AbstractTypeFactory<PushNotificationSearchResult>.TryCreateInstance();
+            result.NotifyEvents = notifications.ToList();
+            result.NewCount = result.NotifyEvents.Count;
+            result.TotalCount = result.NotifyEvents.Count;
 
             return Ok(result);
         }

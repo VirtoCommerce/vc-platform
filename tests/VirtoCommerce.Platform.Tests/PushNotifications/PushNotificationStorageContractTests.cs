@@ -87,24 +87,37 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
         }
 
         [Fact]
-        public async Task Save_RepeatOfSameUsersLastNotification_IncreasesRepeatCount()
+        public async Task Save_SameContentTwice_KeepsBoth()
         {
             var storage = CreateStorage();
             await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "Same") { Description = "d" });
             await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "Same") { Description = "d" });
 
-            Search(storage, "admin").NotifyEvents.Should().ContainSingle().Which.RepeatCount.Should().Be(1);
+            var notifications = Search(storage, "admin").NotifyEvents;
+            notifications.Should().HaveCount(2);
+            notifications.Should().OnlyContain(x => x.RepeatCount == 0);
         }
 
         [Fact]
-        public async Task Save_SameContentFromAnotherUser_IsNotCountedAsRepeat()
+        public async Task MarkAllAsRead_MarksOnlyTheUsersNewNotificationsAndReturnsThem()
         {
             var storage = CreateStorage();
-            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "Same") { Description = "d" });
-            await storage.SavePushNotificationAsync(new StorageTestNotification("manager", "Same") { Description = "d" });
+            var first = new StorageTestNotification("admin", "first");
+            var second = new StorageTestNotification("admin", "second");
+            await storage.SavePushNotificationAsync(first);
+            await storage.SavePushNotificationAsync(second);
+            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "read") { IsNew = false });
+            await storage.SavePushNotificationAsync(new StorageTestNotification("manager", "other"));
 
-            Search(storage, "admin").NotifyEvents.Should().ContainSingle().Which.RepeatCount.Should().Be(0);
-            Search(storage, "manager").NotifyEvents.Should().ContainSingle().Which.RepeatCount.Should().Be(0);
+            var marked = await storage.MarkAllAsReadAsync("admin", TestContext.Current.CancellationToken);
+
+            marked.Select(x => x.Id).Should().BeEquivalentTo([first.Id, second.Id]);
+            marked.Should().OnlyContain(x => !x.IsNew);
+            var admin = Search(storage, "admin");
+            admin.TotalCount.Should().Be(3);
+            admin.NewCount.Should().Be(0);
+            Search(storage, "manager").NewCount.Should().Be(1);
+            (await storage.MarkAllAsReadAsync("admin", TestContext.Current.CancellationToken)).Should().BeEmpty();
         }
 
         [Fact]

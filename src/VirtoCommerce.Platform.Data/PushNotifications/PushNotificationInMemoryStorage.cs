@@ -38,11 +38,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
                 }
                 else
                 {
-                    var last = _storage.Where(x => x.Creator == notification.Creator).MaxBy(x => x.Created);
-                    if (!PushNotificationStorageRules.TryCountRepeat(last, notification, _timeProvider))
-                    {
-                        _storage.Add(notification);
-                    }
+                    _storage.Add(notification);
                 }
 
                 RemoveExpired();
@@ -62,6 +58,23 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
             }
 
             return Task.FromResult(PushNotificationSearch.Search(userNotifications, criteria));
+        }
+
+        public virtual Task<IList<PushNotification>> MarkAllAsReadAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            IList<PushNotification> unread;
+            lock (_lock)
+            {
+                var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
+                unread = _storage.Where(x => x.Creator == userId && x.IsNew && (expiredBefore == null || x.Created >= expiredBefore)).ToList();
+
+                foreach (var notification in unread)
+                {
+                    notification.IsNew = false;
+                }
+            }
+
+            return Task.FromResult(unread);
         }
 
         /// <summary>
