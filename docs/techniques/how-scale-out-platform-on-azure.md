@@ -71,15 +71,16 @@ Here is the example of how to configure scaling for push notifications with usin
 "PushNotifications": {
         //Possible values: RedisBackplane | AzureSignalRService | None
         "ScalabilityMode": "RedisBackplane",
-        //The URL is used to connect the platform SignalR /pushNotificationHub hub as client to be able sync the local notifications storage with notifications that are produced by other platform instances
-        //Need to replace this value to a full URL to  /pushNotificationHub on the production server e.g https://your-app-name.azurewebsites.net/pushNotificationHub?api_key={your-vc-api-key}
-        "HubUrl": "https://{your-app-name}.azurewebsites.net/pushNotificationHub?api_key={your-vc-api-key}",      
         "RedisBackplane": {
             "ChannelName": "VirtoCommerceChannel"
         }
     }
 ...
 ```
+
+With `RedisConnectionString` set, the notification history is kept in Redis and shared by all platform instances, so a restarted or new instance shows the same notifications and no instance connects to its own hub with an api key. Each user keeps at most `PushNotifications:MaxNotificationsPerUser` notifications (20 by default) for `PushNotifications:RetentionPeriod` (24 hours by default). The keys start with `{ChannelName}:PushNotifications`, so environments that share one Redis must use different `RedisBackplane:ChannelName` values.
+
+> `PushNotifications:HubUrl` (the hub URL with an `api_key`) is used only in the `AzureSignalRService` mode without `RedisConnectionString`, for compatibility. With Redis configured, it is ignored and can be removed.
 
 ## Configure the Hangfire server to processing background jobs into another process
 It is very important for an overall application reliability to process all background tasks on the separate platform instance (process) to avoid the problem when your background processing consumes too much CPU or other resources, and this decreases main application’s performance. We strongly recommend to use separate platform instance for processing background jobs.
@@ -125,7 +126,6 @@ Platform : 64 bit
          ...
    "PushNotifications": {
         "ScalabilityMode": "RedisBackplane",     
-        "HubUrl": "https://vc-admin.azurewebsites.net/pushNotificationHub?api_key=9fde4353-9a4a-4fe3-9a03-a0c80b4220ff",      
         "RedisBackplane": {
             "ChannelName": "VirtoCommerceChannel"
         }

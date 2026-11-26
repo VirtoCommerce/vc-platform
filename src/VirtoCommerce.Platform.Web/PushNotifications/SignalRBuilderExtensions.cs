@@ -16,14 +16,26 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         public static ISignalRServerBuilder AddPushNotifications(this ISignalRServerBuilder builder, IConfiguration configuration)
         {
             builder.Services.AddSingleton<IUserIdProvider, PushNotificationUserIdProvider>();
-            builder.Services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
 
             var scalabilityMode = configuration["PushNotifications:ScalabilityMode"];
+            var isScaledOut = scalabilityMode != null && !scalabilityMode.EqualsIgnoreCase("None");
+
+            // Scaled out with Redis: all instances share the notifications in Redis and keep them across restarts.
+            // A single instance (ScalabilityMode None), or no Redis: the instance keeps them in memory. Both apply PushNotificationStorageRules.
+            var useRedisStorage = isScaledOut && !string.IsNullOrEmpty(configuration.GetConnectionString("RedisConnectionString"));
+            if (useRedisStorage)
+            {
+                builder.Services.AddSingleton<IPushNotificationStorage, RedisPushNotificationStorage>();
+            }
+            else
+            {
+                builder.Services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
+            }
 
             builder.Services.AddOptions<PushNotificationOptions>().Bind(configuration.GetSection("PushNotifications")).ValidateDataAnnotations();
 
             // SignalR scalability configuration.
-            if (scalabilityMode != null && !scalabilityMode.EqualsIgnoreCase("None"))
+            if (isScaledOut)
             {
 
                 // Store full type information in JSON to deserialize push notifications on other instances
@@ -34,7 +46,13 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 });
 
                 builder.Services.AddSingleton<IPushNotificationManager, ScalablePushNotificationManager>();
-                builder.Services.AddHostedService<PushNotificationSynchronizerTask>();
+
+                // Legacy: copy other instances' notifications into the in-memory storage through the hub (PushNotifications:HubUrl with an api key).
+                // Not needed with the Redis storage.
+                if (!useRedisStorage && !string.IsNullOrEmpty(configuration["PushNotifications:HubUrl"]))
+                {
+                    builder.Services.AddHostedService<PushNotificationSynchronizerTask>();
+                }
 
                 if (scalabilityMode.EqualsIgnoreCase("AzureSignalRService"))
                 {

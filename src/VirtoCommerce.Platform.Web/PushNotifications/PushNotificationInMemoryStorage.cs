@@ -2,16 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Common;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications
 {
+    /// <summary>
+    /// Keeps notifications in process memory, by the same <see cref="PushNotificationStorageRules"/> as <see cref="RedisPushNotificationStorage"/>.
+    /// Used by a single platform instance, or when no Redis is configured; the notifications are lost on restart.
+    /// </summary>
     public class PushNotificationInMemoryStorage : IPushNotificationStorage
     {
         private readonly object _lockObject = new object();
 
         private readonly List<PushNotification> _storage = new List<PushNotification>();
+
+        private readonly PushNotificationOptions _options;
+
+        public PushNotificationInMemoryStorage()
+            : this(Options.Create(new PushNotificationOptions()))
+        {
+        }
+
+        public PushNotificationInMemoryStorage(IOptions<PushNotificationOptions> options)
+        {
+            _options = options?.Value ?? new PushNotificationOptions();
+        }
 
         public virtual void SavePushNotification(PushNotification notification)
         {
@@ -35,57 +51,67 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 }
                 else
                 {
-                    var lastEvent = _storage.OrderByDescending(x => x.Created).FirstOrDefault();
-                    if (lastEvent != null && lastEvent.ItHasSameContent(notification))
-                    {
-                        lastEvent.IsNew = true;
-                        lastEvent.RepeatCount++;
-                        lastEvent.Created = DateTime.UtcNow;
-                    }
-                    else
+                    var lastEvent = _storage.Where(x => x.Creator == notification.Creator).OrderByDescending(x => x.Created).FirstOrDefault();
+                    if (!PushNotificationStorageRules.TryCountRepeat(lastEvent, notification))
                     {
                         _storage.Add(notification);
                     }
                 }
+
+                RemoveExpired();
+                RemoveOverLimit(notification.Creator);
             }
+
             return Task.CompletedTask;
         }
 
-
         public virtual PushNotificationSearchResult SearchPushNotifications(string userId, PushNotificationSearchCriteria criteria)
         {
-            var query = _storage.OrderByDescending(x => x.Created).Where(x => x.Creator == userId).AsQueryable();
-            if (criteria.Ids != null && criteria.Ids.Any())
+            List<PushNotification> userNotifications;
+            lock (_lockObject)
             {
-                query = query.Where(x => criteria.Ids.Contains(x.Id));
-            }
-            if (criteria.OnlyNew)
-            {
-                query = query.Where(x => x.IsNew);
-            }
-            if (criteria.StartDate != null)
-            {
-                query = query.Where(x => x.Created >= criteria.StartDate);
-            }
-            if (criteria.EndDate != null)
-            {
-                query = query.Where(x => x.Created <= criteria.EndDate);
+                var expiredBefore = GetExpiredBefore();
+                userNotifications = _storage.Where(x => x.Creator == userId && (expiredBefore == null || x.Created >= expiredBefore)).ToList();
             }
 
-            var sortInfos = criteria.SortInfos;
-            if (sortInfos.IsNullOrEmpty())
-            {
-                sortInfos = new[] { new SortInfo { SortColumn = ReflectionUtility.GetPropertyName<PushNotification>(x => x.Created), SortDirection = SortDirection.Descending } };
-            }
-
-            var retVal = new PushNotificationSearchResult
-            {
-                TotalCount = query.Count(),
-                NewCount = query.Count(x => x.IsNew),
-                NotifyEvents = query.OrderBySortInfos(sortInfos).Skip(criteria.Skip).Take(criteria.Take).ToList()
-            };
-
-            return retVal;
+            return PushNotificationSearch.Search(userNotifications, criteria);
         }
+
+        /// <summary>
+        /// Removes the notifications older than <see cref="PushNotificationOptions.RetentionPeriod"/>. Called under the storage lock.
+        /// </summary>
+        protected virtual void RemoveExpired()
+        {
+            var expiredBefore = GetExpiredBefore();
+            if (expiredBefore != null)
+            {
+                _storage.RemoveAll(x => x.Created < expiredBefore);
+            }
+        }
+
+        /// <summary>
+        /// Keeps only the newest <see cref="PushNotificationOptions.MaxNotificationsPerUser"/> notifications of the creator. Called under the storage lock.
+        /// </summary>
+        protected virtual void RemoveOverLimit(string creator)
+        {
+            var maxPerUser = PushNotificationStorageRules.GetMaxPerUser(_options);
+            if (maxPerUser == 0)
+            {
+                return;
+            }
+
+            var overLimit = _storage
+                .Where(x => x.Creator == creator)
+                .OrderByDescending(x => x.Created)
+                .Skip(maxPerUser)
+                .ToHashSet();
+
+            if (overLimit.Count > 0)
+            {
+                _storage.RemoveAll(overLimit.Contains);
+            }
+        }
+
+        private DateTime? GetExpiredBefore() => PushNotificationStorageRules.GetExpiredBefore(_options);
     }
 }
