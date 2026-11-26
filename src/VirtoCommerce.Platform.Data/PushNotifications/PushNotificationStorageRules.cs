@@ -1,7 +1,7 @@
 using System;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.Platform.Web.PushNotifications
+namespace VirtoCommerce.Platform.Data.PushNotifications
 {
     /// <summary>
     /// The rules every <see cref="IPushNotificationStorage"/> of the platform applies, so notifications behave the same in memory and in Redis:
@@ -15,12 +15,12 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
     public static class PushNotificationStorageRules
     {
         /// <summary>
-        /// The creation time before which notifications are expired, or null when they are kept until removed by the limit.
+        /// The creation time before which notifications are expired, or null when the retention is off.
         /// </summary>
-        public static DateTime? GetExpiredBefore(PushNotificationOptions options)
+        public static DateTime? GetExpiredBefore(PushNotificationOptions options, TimeProvider timeProvider)
         {
             return options.RetentionPeriod > TimeSpan.Zero
-                ? DateTime.UtcNow - options.RetentionPeriod
+                ? timeProvider.GetUtcNow().UtcDateTime - options.RetentionPeriod
                 : null;
         }
 
@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         /// When <paramref name="notification"/> repeats the user's <paramref name="last"/> notification, counts the repeat on <paramref name="last"/>
         /// and returns true; the caller then saves <paramref name="last"/> instead of <paramref name="notification"/>.
         /// </summary>
-        public static bool TryCountRepeat(PushNotification last, PushNotification notification)
+        public static bool TryCountRepeat(PushNotification last, PushNotification notification, TimeProvider timeProvider)
         {
             if (last == null || last.Id == notification.Id || last.Creator != notification.Creator || !last.ItHasSameContent(notification))
             {
@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
 
             last.IsNew = true;
             last.RepeatCount++;
-            last.Created = DateTime.UtcNow;
+            last.Created = timeProvider.GetUtcNow().UtcDateTime;
 
             return true;
         }

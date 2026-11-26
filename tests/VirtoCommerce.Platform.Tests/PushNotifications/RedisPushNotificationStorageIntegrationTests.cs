@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.PushNotifications;
-using VirtoCommerce.Platform.Web.PushNotifications;
+using VirtoCommerce.Platform.Data.PushNotifications;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.PushNotifications;
@@ -65,13 +64,14 @@ public sealed class RedisPushNotificationStorageIntegrationTests : PushNotificat
         var connection = ConnectionMultiplexer.Connect(ConnectionString);
         _connections.Add(connection);
 
-        var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string> { ["PushNotifications:RedisBackplane:ChannelName"] = _channelName })
-            .Build();
+        var options = new PushNotificationOptions
+        {
+            MaxNotificationsPerUser = maxPerUser,
+            RetentionPeriod = retention ?? TimeSpan.FromHours(24),
+            RedisBackplane = new PushNotificationRedisOptions { ChannelName = _channelName },
+        };
 
-        var options = new PushNotificationOptions { MaxNotificationsPerUser = maxPerUser, RetentionPeriod = retention ?? TimeSpan.FromHours(24) };
-
-        return new RedisPushNotificationStorage(connection, Options.Create(options), configuration, NullLogger<RedisPushNotificationStorage>.Instance);
+        return new RedisPushNotificationStorage(connection, Options.Create(options), NullLogger<RedisPushNotificationStorage>.Instance);
     }
 
     [Fact]

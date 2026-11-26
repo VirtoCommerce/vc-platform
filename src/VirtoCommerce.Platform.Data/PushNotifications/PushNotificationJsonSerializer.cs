@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.Platform.Web.PushNotifications
+namespace VirtoCommerce.Platform.Data.PushNotifications
 {
     /// <summary>
     /// Stores a notification with its concrete type, and restores only <see cref="PushNotification"/> types.

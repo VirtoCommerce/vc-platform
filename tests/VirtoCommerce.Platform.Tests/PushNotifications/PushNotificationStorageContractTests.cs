@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.PushNotifications;
-using VirtoCommerce.Platform.Web.PushNotifications;
+using VirtoCommerce.Platform.Data.PushNotifications;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.PushNotifications
@@ -122,7 +122,7 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
 
         protected static PushNotificationSearchResult Search(IPushNotificationStorage storage, string user)
         {
-            return storage.SearchPushNotifications(user, new PushNotificationSearchCriteria { Take = 100 });
+            return storage.SearchPushNotificationsAsync(user, new PushNotificationSearchCriteria { Take = 100 }, TestContext.Current.CancellationToken).GetAwaiter().GetResult();
         }
     }
 

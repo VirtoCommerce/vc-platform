@@ -1,8 +1,10 @@
 using System.Linq;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Platform.Data.PushNotifications;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using Xunit;
 
@@ -40,7 +42,7 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
 
         public PushNotificationManager GetPushNotificationsManager()
         {
-            return new PushNotificationManager(new PushNotificationInMemoryStorage(), _hubContextMock.Object);
+            return new PushNotificationManager(new PushNotificationInMemoryStorage(Options.Create(new PushNotificationOptions())), _hubContextMock.Object);
         }
 
         private class PushNotificationStub: PushNotification

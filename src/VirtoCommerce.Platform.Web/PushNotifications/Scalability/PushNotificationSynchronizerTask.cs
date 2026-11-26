@@ -15,6 +15,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
     /// This background task connects to the signalR hub (push notifications) to be able to receive the notifications from other platform instances and actualize them
     /// into the local notifications storage   
     /// </summary>
+    [Obsolete("Not used. Platform instances share the notification history through Redis (ConnectionStrings:RedisConnectionString).", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
     public class PushNotificationSynchronizerTask : BackgroundService
     {
         private readonly IPushNotificationStorage _storage;

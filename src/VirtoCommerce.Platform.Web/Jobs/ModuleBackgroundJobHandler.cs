@@ -44,7 +44,7 @@ namespace VirtoCommerce.Platform.Web.Jobs
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
         }
 
-        public Task Execute(ModuleBackgroundJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
+        public async Task Execute(ModuleBackgroundJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
             // Reconstruct the same notification SUBTYPE the controller created under this id: the bootstrap
             // auto-install flow uses ModuleAutoInstallPushNotification (the setup wizard dispatches on that notify
@@ -79,12 +79,13 @@ namespace VirtoCommerce.Platform.Web.Jobs
                     _ => "Starting uninstall...",
                 };
                 notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Info, Message = notification.Description });
-                _pushNotifier.Send(notification);
+                await _pushNotifier.SendAsync(notification);
 
                 if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
                 {
                     var reportProgress = new Progress<ProgressMessage>(x =>
                     {
+                        // A progress callback is synchronous and runs under a lock, so it cannot await SendAsync.
                         lock (_lockObject)
                         {
                             notification.Description = x.Message;
@@ -115,7 +116,7 @@ namespace VirtoCommerce.Platform.Web.Jobs
                         Level = ProgressMessageLevel.Error,
                         Message = notification.Description,
                     });
-                    _pushNotifier.Send(notification);
+                    await _pushNotifier.SendAsync(notification);
                 }
             }
             catch (Exception ex)
@@ -159,10 +160,8 @@ namespace VirtoCommerce.Platform.Web.Jobs
                     });
                 }
 
-                _pushNotifier.Send(notification);
+                await _pushNotifier.SendAsync(notification);
             }
-
-            return Task.CompletedTask;
         }
     }
 }

@@ -1,29 +1,36 @@
-using System;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using StackExchange.Redis;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
-using VirtoCommerce.Platform.Web.PushNotifications.Scalability;
+using VirtoCommerce.Platform.Data.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications
 {
     public static class SignalRBuilderExtensions
     {
+        /// <summary>
+        /// Registers push notifications. The configuration decides the mode, with no switch of its own:
+        /// <list type="bullet">
+        /// <item>with <c>ConnectionStrings:RedisConnectionString</c>, the notification history is kept in Redis, shared by all instances;
+        /// without it, each instance keeps its own in memory;</item>
+        /// <item>with <c>PushNotifications:AzureSignalRService:ConnectionString</c>, the hub runs on Azure SignalR Service;
+        /// otherwise, with Redis, instances deliver each other's messages through the Redis backplane.</item>
+        /// </list>
+        /// </summary>
         public static ISignalRServerBuilder AddPushNotifications(this ISignalRServerBuilder builder, IConfiguration configuration)
         {
+            var section = configuration.GetSection("PushNotifications");
+            var options = section.Get<PushNotificationOptions>() ?? new PushNotificationOptions();
+            var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
+            var hasRedis = !string.IsNullOrEmpty(redisConnectionString);
+
+            builder.Services.AddOptions<PushNotificationOptions>().Bind(section);
             builder.Services.AddSingleton<IUserIdProvider, PushNotificationUserIdProvider>();
+            builder.Services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
 
-            var scalabilityMode = configuration["PushNotifications:ScalabilityMode"];
-            var isScaledOut = scalabilityMode != null && !scalabilityMode.EqualsIgnoreCase("None");
-
-            // Scaled out with Redis: all instances share the notifications in Redis and keep them across restarts.
-            // A single instance (ScalabilityMode None), or no Redis: the instance keeps them in memory. Both apply PushNotificationStorageRules.
-            var useRedisStorage = isScaledOut && !string.IsNullOrEmpty(configuration.GetConnectionString("RedisConnectionString"));
-            if (useRedisStorage)
+            if (hasRedis)
             {
                 builder.Services.AddSingleton<IPushNotificationStorage, RedisPushNotificationStorage>();
             }
@@ -32,58 +39,25 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 builder.Services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
             }
 
-            builder.Services.AddOptions<PushNotificationOptions>().Bind(configuration.GetSection("PushNotifications")).ValidateDataAnnotations();
-
-            // SignalR scalability configuration.
-            if (isScaledOut)
+            var azureSignalRConnectionString = options.AzureSignalRService?.ConnectionString;
+            if (IsConfigured(azureSignalRConnectionString))
             {
-
-                // Store full type information in JSON to deserialize push notifications on other instances
-                builder.AddNewtonsoftJsonProtocol(jsonOptions =>
-                {
-                    jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
-                    jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
-                });
-
-                builder.Services.AddSingleton<IPushNotificationManager, ScalablePushNotificationManager>();
-
-                // Legacy: copy other instances' notifications into the in-memory storage through the hub (PushNotifications:HubUrl with an api key).
-                // Not needed with the Redis storage.
-                if (!useRedisStorage && !string.IsNullOrEmpty(configuration["PushNotifications:HubUrl"]))
-                {
-                    builder.Services.AddHostedService<PushNotificationSynchronizerTask>();
-                }
-
-                if (scalabilityMode.EqualsIgnoreCase("AzureSignalRService"))
-                {
-                    var azureSignalRConnectionString = configuration["PushNotifications:AzureSignalRService:ConnectionString"];
-                    if (string.IsNullOrEmpty(azureSignalRConnectionString))
-                    {
-                        throw new InvalidOperationException("PushNotifications:AzureSignalRService:ConnectionString must be set");
-                    }
-                    builder.AddAzureSignalR(o =>
-                    {
-                        o.Endpoints = [new ServiceEndpoint(azureSignalRConnectionString)];
-                    });
-                }
-                else
-                {
-                    var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
-                    if (string.IsNullOrEmpty(redisConnectionString))
-                    {
-                        throw new InvalidOperationException("RedisConnectionString must be set");
-                    }
-
-                    var redisChannelName = configuration["PushNotifications:RedisBackplane:ChannelName"].EmptyToNull() ?? "VirtoCommerceChannel";
-                    builder.AddStackExchangeRedis(redisConnectionString, o => o.Configuration.ChannelPrefix = RedisChannel.Literal(redisChannelName));
-                }
+                builder.AddAzureSignalR(o => o.Endpoints = [new ServiceEndpoint(azureSignalRConnectionString)]);
             }
-            else
+            else if (hasRedis)
             {
-                builder.Services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
+                var channelName = options.RedisBackplane?.ChannelName ?? new PushNotificationRedisOptions().ChannelName;
+                builder.AddStackExchangeRedis(redisConnectionString, o => o.Configuration.ChannelPrefix = RedisChannel.Literal(channelName));
             }
 
             return builder;
+        }
+
+        // Earlier appsettings.json shipped a placeholder ("Endpoint=https://{app name}.service.signalr.net;...") that was ignored
+        // unless ScalabilityMode selected Azure. A copy of it must not switch the hub to Azure SignalR Service now.
+        private static bool IsConfigured(string connectionString)
+        {
+            return !string.IsNullOrWhiteSpace(connectionString) && !connectionString.Contains('{');
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.Platform.Web.PushNotifications
+namespace VirtoCommerce.Platform.Data.PushNotifications
 {
     /// <summary>
     /// Applies <see cref="PushNotificationSearchCriteria"/> to the notifications of one user, for any <see cref="IPushNotificationStorage"/>.

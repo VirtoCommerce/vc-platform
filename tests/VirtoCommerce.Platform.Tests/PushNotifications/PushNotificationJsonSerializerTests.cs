@@ -1,7 +1,7 @@
 using System;
 using FluentAssertions;
 using Newtonsoft.Json;
-using VirtoCommerce.Platform.Web.PushNotifications;
+using VirtoCommerce.Platform.Data.PushNotifications;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.PushNotifications

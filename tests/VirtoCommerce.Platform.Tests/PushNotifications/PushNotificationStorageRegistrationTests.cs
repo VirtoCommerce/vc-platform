@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Platform.Data.PushNotifications;
 using VirtoCommerce.Platform.Web.PushNotifications;
-using VirtoCommerce.Platform.Web.PushNotifications.Scalability;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.PushNotifications
@@ -15,49 +16,54 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
     public class PushNotificationStorageRegistrationTests
     {
         private const string Redis = "127.0.0.1:6379";
-        private const string HubUrl = "https://localhost/pushNotificationHub?api_key=key";
+        private const string Azure = "Endpoint=https://test.service.signalr.net;AccessKey=a2V5;Version=1.0;";
 
         [Theory]
-        [InlineData(null, null, null, typeof(PushNotificationInMemoryStorage))]
-        [InlineData("None", null, null, typeof(PushNotificationInMemoryStorage))]
-        [InlineData("None", Redis, null, typeof(PushNotificationInMemoryStorage))]
-        [InlineData("RedisBackplane", Redis, null, typeof(RedisPushNotificationStorage))]
-        [InlineData("RedisBackplane", Redis, HubUrl, typeof(RedisPushNotificationStorage))]
-        [InlineData("AzureSignalRService", Redis, null, typeof(RedisPushNotificationStorage))]
-        [InlineData("AzureSignalRService", null, HubUrl, typeof(PushNotificationInMemoryStorage))]
-        [InlineData("AzureSignalRService", null, null, typeof(PushNotificationInMemoryStorage))]
-        public void Storage_DependsOnScaleOutAndRedis(string scalabilityMode, string redis, string hubUrl, System.Type expected)
+        [InlineData(null, null, typeof(PushNotificationInMemoryStorage), null)]
+        [InlineData(Redis, null, typeof(RedisPushNotificationStorage), "RedisHubLifetimeManager")]
+        [InlineData(Redis, Azure, typeof(RedisPushNotificationStorage), "ServiceLifetimeManager")]
+        [InlineData(null, Azure, typeof(PushNotificationInMemoryStorage), "ServiceLifetimeManager")]
+        [InlineData(Redis, "Endpoint=https://{app name}.service.signalr.net;AccessKey={access key};Version=1.0;", typeof(RedisPushNotificationStorage), "RedisHubLifetimeManager")]
+        [InlineData(null, "Endpoint=https://{app name}.service.signalr.net;AccessKey={access key};Version=1.0;", typeof(PushNotificationInMemoryStorage), null)]
+        public void Mode_FollowsConfiguredConnectionStrings(string redis, string azure, System.Type expectedStorage, string expectedLifetimeManager)
         {
-            var services = AddPushNotifications(scalabilityMode, redis, hubUrl);
+            var services = AddPushNotifications(new()
+            {
+                ["ConnectionStrings:RedisConnectionString"] = redis,
+                ["PushNotifications:AzureSignalRService:ConnectionString"] = azure,
+            });
 
-            services.Single(x => x.ServiceType == typeof(IPushNotificationStorage)).ImplementationType.Should().Be(expected);
+            services.Single(x => x.ServiceType == typeof(IPushNotificationStorage)).ImplementationType.Should().Be(expectedStorage);
+            services.Single(x => x.ServiceType == typeof(IPushNotificationManager)).ImplementationType.Should().Be<PushNotificationManager>();
+
+            var lifetimeManager = services.Last(x => x.ServiceType == typeof(HubLifetimeManager<>)).ImplementationType.Name;
+            if (expectedLifetimeManager == null)
+            {
+                lifetimeManager.Should().StartWith("DefaultHubLifetimeManager");
+            }
+            else
+            {
+                lifetimeManager.Should().StartWith(expectedLifetimeManager);
+            }
         }
 
-        [Theory]
-        [InlineData("AzureSignalRService", null, HubUrl, true)]
-        [InlineData("AzureSignalRService", null, null, false)]
-        [InlineData("AzureSignalRService", Redis, HubUrl, false)]
-        [InlineData("RedisBackplane", Redis, HubUrl, false)]
-        [InlineData("None", null, HubUrl, false)]
-        public void LegacyHubSynchronizer_OnlyForScaledOutInMemoryStorageWithHubUrl(string scalabilityMode, string redis, string hubUrl, bool expected)
+        [Fact]
+        public void ObsoleteScalabilityModeAndHubUrl_AreIgnored()
         {
-            var services = AddPushNotifications(scalabilityMode, redis, hubUrl);
+            var services = AddPushNotifications(new()
+            {
+                ["PushNotifications:ScalabilityMode"] = "RedisBackplane",
+                ["PushNotifications:HubUrl"] = "https://localhost/pushNotificationHub?api_key=key",
+            });
 
-            services.Any(x => x.ServiceType == typeof(IHostedService) && x.ImplementationType == typeof(PushNotificationSynchronizerTask))
-                .Should().Be(expected);
+            services.Single(x => x.ServiceType == typeof(IPushNotificationStorage)).ImplementationType.Should().Be<PushNotificationInMemoryStorage>();
+            services.Should().NotContain(x => x.ServiceType == typeof(IHostedService));
+            services.Last(x => x.ServiceType == typeof(HubLifetimeManager<>)).ImplementationType.Name.Should().StartWith("DefaultHubLifetimeManager");
         }
 
-        private static ServiceCollection AddPushNotifications(string scalabilityMode, string redis, string hubUrl)
+        private static ServiceCollection AddPushNotifications(Dictionary<string, string> settings)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>
-                {
-                    ["PushNotifications:ScalabilityMode"] = scalabilityMode,
-                    ["PushNotifications:HubUrl"] = hubUrl,
-                    ["PushNotifications:AzureSignalRService:ConnectionString"] = "Endpoint=https://test.service.signalr.net;AccessKey=a2V5;Version=1.0;",
-                    ["ConnectionStrings:RedisConnectionString"] = redis,
-                })
-                .Build();
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection(settings).Build();
 
             var services = new ServiceCollection();
             services.AddSignalR().AddPushNotifications(configuration);

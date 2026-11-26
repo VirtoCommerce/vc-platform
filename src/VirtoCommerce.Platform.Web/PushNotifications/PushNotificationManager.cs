@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using VirtoCommerce.Platform.Core.PushNotifications;
@@ -17,8 +18,12 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
 
         public virtual PushNotificationSearchResult SearchNotifies(string userId, PushNotificationSearchCriteria criteria)
         {
-            var retVal = _storage.SearchPushNotifications(userId, criteria);
-            return retVal;
+            return SearchNotifiesAsync(userId, criteria).GetAwaiter().GetResult();
+        }
+
+        public virtual Task<PushNotificationSearchResult> SearchNotifiesAsync(string userId, PushNotificationSearchCriteria criteria, CancellationToken cancellationToken = default)
+        {
+            return _storage.SearchPushNotificationsAsync(userId, criteria, cancellationToken);
         }
 
         public virtual void Send(PushNotification notification)

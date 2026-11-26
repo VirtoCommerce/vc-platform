@@ -25,9 +25,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public ActionResult<PushNotificationSearchResult> SearchPushNotification([FromBody] PushNotificationSearchCriteria criteria)
+        public async Task<ActionResult<PushNotificationSearchResult>> SearchPushNotification([FromBody] PushNotificationSearchCriteria criteria)
         {
-            var retVal = _pushNotifier.SearchNotifies(User.Identity?.Name, criteria);
+            var retVal = await _pushNotifier.SearchNotifiesAsync(User.Identity?.Name, criteria, HttpContext.RequestAborted);
             return Ok(retVal);
         }
 
@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             do
             {
-                result = _pushNotifier.SearchNotifies(User.Identity?.Name, criteria);
+                result = await _pushNotifier.SearchNotifiesAsync(User.Identity?.Name, criteria, HttpContext.RequestAborted);
                 newNotifications.AddRange(result.NotifyEvents);
 
                 foreach (var notifyEvent in result.NotifyEvents)
