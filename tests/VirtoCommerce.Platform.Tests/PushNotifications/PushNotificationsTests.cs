@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
             var userProxy = new Mock<IClientProxy>();
             var clients = new Mock<IHubClients>();
             clients.Setup(x => x.User("alice")).Returns(userProxy.Object);
-            clients.Setup(x => x.All).Returns(new Mock<IClientProxy>().Object);
+            clients.Setup(x => x.Group(PushNotificationHub.GetCreatorGroupName("alice"))).Returns(new Mock<IClientProxy>().Object);
             var hubContext = new Mock<IHubContext<PushNotificationHub>>();
             hubContext.Setup(x => x.Clients).Returns(clients.Object);
             var manager = new PushNotificationManager(storage.Object, hubContext.Object, GetLogger<PushNotificationManager>());

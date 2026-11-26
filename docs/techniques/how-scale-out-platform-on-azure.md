@@ -70,6 +70,8 @@ Each user keeps at most `PushNotifications:MaxNotificationsPerUser` notification
 
 > `PushNotifications:ScalabilityMode` and `PushNotifications:HubUrl` are obsolete and ignored. Instances no longer connect to their own hub with an api key.
 
+Each user receives only their own notifications, live and in the history. For notifications that belong to a group of users (for example, a seller in the marketplace vendor portal), see [Push notifications](../fundamentals/push-notifications.md).
+
 Here is the example of how to configure scaling for push notifications with the **Redis backplane**.
 *appsettings.json*
 ```json
