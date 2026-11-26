@@ -81,7 +81,7 @@ Here is the example of how to configure scaling for push notifications with usin
 ...
 ```
 
-> The user of the api key in `HubUrl` must be an administrator or have the `platform:push_notifications:read_all` permission. The hub broadcasts a notification only to the users allowed to read it, so the synchronizer of a user without this permission receives only that user's own notifications.
+> The hub broadcasts a notification only to its creator, administrators included, so the synchronizer receives only the notifications of the api key's own user: each instance's notification history holds the notifications created on that instance.
 
 ## Configure the Hangfire server to processing background jobs into another process
 It is very important for an overall application reliability to process all background tasks on the separate platform instance (process) to avoid the problem when your background processing consumes too much CPU or other resources, and this decreases main application’s performance. We strongly recommend to use separate platform instance for processing background jobs.
