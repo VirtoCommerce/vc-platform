@@ -91,10 +91,15 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
         /// </summary>
         public string KeyPrefix { get; }
 
-        public virtual async Task SavePushNotificationAsync(PushNotification notification)
+        public virtual Task SavePushNotificationAsync(PushNotification notification)
         {
             ArgumentNullException.ThrowIfNull(notification);
 
+            return SaveAsync(notification);
+        }
+
+        private async Task SaveAsync(PushNotification notification)
+        {
             var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
             var ttlSeconds = _options.RetentionPeriod > TimeSpan.Zero ? (long)Math.Ceiling(_options.RetentionPeriod.TotalSeconds) : 0;
 

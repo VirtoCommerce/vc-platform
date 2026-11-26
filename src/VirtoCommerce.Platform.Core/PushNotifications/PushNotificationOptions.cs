@@ -9,10 +9,12 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
     /// </summary>
     public class PushNotificationOptions
     {
-        [Obsolete("Not used. The scale-out mode follows the configuration: Azure SignalR Service when PushNotifications:AzureSignalRService:ConnectionString is set, otherwise the Redis backplane when ConnectionStrings:RedisConnectionString is set.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Not used. The scale-out mode follows the configuration: Azure SignalR Service when PushNotifications:AzureSignalRService:ConnectionString is set, " +
+            "otherwise the Redis backplane when ConnectionStrings:RedisConnectionString is set.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public string ScalabilityMode { get; set; } = "None";
 
-        [Obsolete("Not used. Platform instances share the notification history through Redis (ConnectionStrings:RedisConnectionString) instead of a hub client with an api key.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Not used. Platform instances share the notification history through Redis (ConnectionStrings:RedisConnectionString) " +
+            "instead of a hub client with an api key.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public string HubUrl { get; set; }
 
         /// <summary>

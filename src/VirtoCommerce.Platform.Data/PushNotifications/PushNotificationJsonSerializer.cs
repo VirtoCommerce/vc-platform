@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
     public static class PushNotificationJsonSerializer
     {
         private static readonly JsonSerializerSettings _settings = new() { TypeNameHandling = TypeNameHandling.None };
-        private static readonly ISerializationBinder _binder = new DefaultSerializationBinder();
+        private static readonly DefaultSerializationBinder _binder = new DefaultSerializationBinder();
 
         public static string Serialize(PushNotification notification)
         {

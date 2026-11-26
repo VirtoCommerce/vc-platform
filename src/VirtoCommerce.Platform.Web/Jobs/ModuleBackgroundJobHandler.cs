@@ -46,17 +46,7 @@ namespace VirtoCommerce.Platform.Web.Jobs
 
         public async Task Execute(ModuleBackgroundJobPayload payload, IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
-            // Reconstruct the same notification SUBTYPE the controller created under this id: the bootstrap
-            // auto-install flow uses ModuleAutoInstallPushNotification (the setup wizard dispatches on that notify
-            // type), everything else uses the plain ModulePushNotification.
-            ModulePushNotification notification = payload.AutoInstall
-                ? new ModuleAutoInstallPushNotification(payload.Creator ?? "system")
-                : new ModulePushNotification(payload.Creator ?? "system");
-
-            notification.Id = payload.NotificationId;
-            notification.Title = payload.Title;
-            notification.TotalCount = payload.TotalCount;
-
+            var notification = CreateNotification(payload);
             var options = new ModuleBackgroundJobOptions
             {
                 Action = payload.Action,
@@ -83,28 +73,7 @@ namespace VirtoCommerce.Platform.Web.Jobs
 
                 if (_localStorageModuleCatalogOptions.RefreshProbingFolderOnStart)
                 {
-                    var reportProgress = new Progress<ProgressMessage>(x =>
-                    {
-                        // A progress callback is synchronous and runs under a lock, so it cannot await SendAsync.
-                        lock (_lockObject)
-                        {
-                            notification.Description = x.Message;
-                            notification.ProgressLog.Add(x);
-                            _pushNotifier.Send(notification);
-                        }
-                    });
-
-                    switch (options.Action)
-                    {
-                        case ModuleAction.Install:
-                        case ModuleAction.Update:
-                            _moduleManagementService.InstallModules(options.Modules, reportProgress);
-                            break;
-                        case ModuleAction.Uninstall:
-                            _moduleManagementService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
-                            break;
-                    }
-
+                    RunAction(options, notification);
                     completedSuccessfully = true;
                 }
                 else
@@ -146,22 +115,68 @@ namespace VirtoCommerce.Platform.Web.Jobs
                 // management is disabled, the description/error already recorded above is preserved.
                 if (completedSuccessfully)
                 {
-                    notification.Description = options.Action switch
-                    {
-                        ModuleAction.Install => "Installation finished.",
-                        ModuleAction.Update => "Updating finished.",
-                        _ => "Uninstalling finished."
-                    };
-
-                    notification.ProgressLog.Add(new ProgressMessage
-                    {
-                        Level = ProgressMessageLevel.Info,
-                        Message = notification.Description,
-                    });
+                    ReportSuccess(options, notification);
                 }
 
                 await _pushNotifier.SendAsync(notification);
             }
+        }
+
+        // Reconstruct the same notification SUBTYPE the controller created under this id: the bootstrap
+        // auto-install flow uses ModuleAutoInstallPushNotification (the setup wizard dispatches on that notify
+        // type), everything else uses the plain ModulePushNotification.
+        private static ModulePushNotification CreateNotification(ModuleBackgroundJobPayload payload)
+        {
+            var notification = payload.AutoInstall
+                ? new ModuleAutoInstallPushNotification(payload.Creator ?? "system")
+                : new ModulePushNotification(payload.Creator ?? "system");
+
+            notification.Id = payload.NotificationId;
+            notification.Title = payload.Title;
+            notification.TotalCount = payload.TotalCount;
+
+            return notification;
+        }
+
+        private void RunAction(ModuleBackgroundJobOptions options, ModulePushNotification notification)
+        {
+            var reportProgress = new Progress<ProgressMessage>(x =>
+            {
+                // A progress callback is synchronous and runs under a lock, so it cannot await SendAsync.
+                lock (_lockObject)
+                {
+                    notification.Description = x.Message;
+                    notification.ProgressLog.Add(x);
+                    _pushNotifier.Send(notification);
+                }
+            });
+
+            switch (options.Action)
+            {
+                case ModuleAction.Install:
+                case ModuleAction.Update:
+                    _moduleManagementService.InstallModules(options.Modules, reportProgress);
+                    break;
+                case ModuleAction.Uninstall:
+                    _moduleManagementService.UninstallModules(options.Modules.Select(x => x.Id).ToList(), reportProgress);
+                    break;
+            }
+        }
+
+        private static void ReportSuccess(ModuleBackgroundJobOptions options, ModulePushNotification notification)
+        {
+            notification.Description = options.Action switch
+            {
+                ModuleAction.Install => "Installation finished.",
+                ModuleAction.Update => "Updating finished.",
+                _ => "Uninstalling finished."
+            };
+
+            notification.ProgressLog.Add(new ProgressMessage
+            {
+                Level = ProgressMessageLevel.Info,
+                Message = notification.Description,
+            });
         }
     }
 }

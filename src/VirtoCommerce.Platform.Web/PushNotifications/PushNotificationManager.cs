@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -17,6 +18,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             _storage = storage;
         }
 
+        [SuppressMessage("Reliability", "S4462", Justification = "A synchronous method kept for existing callers; it blocks on the asynchronous one by design.")]
         public virtual PushNotificationSearchResult SearchNotifies(string userId, PushNotificationSearchCriteria criteria)
         {
             return SearchNotifiesAsync(userId, criteria).GetAwaiter().GetResult();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
     public interface IPushNotificationStorage
     {
         [Obsolete("Use SavePushNotificationAsync() instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [SuppressMessage("Reliability", "S4462", Justification = "A synchronous method kept for existing callers; it blocks on the asynchronous one by design.")]
         void SavePushNotification(PushNotification notification)
         {
             SavePushNotificationAsync(notification).GetAwaiter().GetResult();
@@ -19,6 +21,7 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         Task SavePushNotificationAsync(PushNotification notification);
 
         [Obsolete("Use SearchPushNotificationsAsync() instead.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [SuppressMessage("Reliability", "S4462", Justification = "A synchronous method kept for existing callers; it blocks on the asynchronous one by design.")]
         PushNotificationSearchResult SearchPushNotifications(string userId, PushNotificationSearchCriteria criteria)
         {
             return SearchPushNotificationsAsync(userId, criteria).GetAwaiter().GetResult();

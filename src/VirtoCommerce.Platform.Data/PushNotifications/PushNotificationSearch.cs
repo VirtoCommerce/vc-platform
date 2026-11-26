@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
         public static PushNotificationSearchResult Search(IEnumerable<PushNotification> notifications, PushNotificationSearchCriteria criteria)
         {
             var query = notifications.OrderByDescending(x => x.Created).AsQueryable();
-            if (criteria.Ids != null && criteria.Ids.Any())
+            if (criteria.Ids != null && criteria.Ids.Length > 0)
             {
                 query = query.Where(x => criteria.Ids.Contains(x.Id));
             }
