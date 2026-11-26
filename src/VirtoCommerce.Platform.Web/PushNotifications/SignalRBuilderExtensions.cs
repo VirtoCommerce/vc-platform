@@ -46,7 +46,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             }
             else if (hasRedis)
             {
-                var channelName = options.RedisBackplane?.ChannelName ?? new PushNotificationRedisOptions().ChannelName;
+                var channelName = PushNotificationRedisOptions.GetChannelName(options.RedisBackplane);
                 builder.AddStackExchangeRedis(redisConnectionString, o => o.Configuration.ChannelPrefix = RedisChannel.Literal(channelName));
             }
 

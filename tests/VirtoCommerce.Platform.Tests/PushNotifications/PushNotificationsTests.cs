@@ -49,6 +49,25 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
             hubContext.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async System.Threading.Tasks.Task SendAsync_HistoryWriteFails_StillSendsToHub()
+        {
+            var storage = new Mock<IPushNotificationStorage>();
+            storage.Setup(x => x.SavePushNotificationAsync(It.IsAny<PushNotification>())).ThrowsAsync(new System.InvalidOperationException("Redis timeout"));
+            var userProxy = new Mock<IClientProxy>();
+            var clients = new Mock<IHubClients>();
+            clients.Setup(x => x.User("alice")).Returns(userProxy.Object);
+            clients.Setup(x => x.All).Returns(new Mock<IClientProxy>().Object);
+            var hubContext = new Mock<IHubContext<PushNotificationHub>>();
+            hubContext.Setup(x => x.Clients).Returns(clients.Object);
+            var manager = new PushNotificationManager(storage.Object, hubContext.Object, GetLogger<PushNotificationManager>());
+            var notification = new PushNotificationStub("alice");
+
+            await manager.SendAsync(notification);
+
+            userProxy.Verify(x => x.SendCoreAsync("Send", It.Is<object[]>(a => ReferenceEquals(a[0], notification)), It.IsAny<System.Threading.CancellationToken>()), Times.Once);
+        }
+
         public ILogger<T> GetLogger<T>()
         {
             return new Mock<ILogger<T>>().Object;

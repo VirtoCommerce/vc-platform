@@ -83,7 +83,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
             _logger = logger;
             _timeProvider = timeProvider ?? TimeProvider.System;
 
-            KeyPrefix = $"{_options.RedisBackplane?.ChannelName ?? new PushNotificationRedisOptions().ChannelName}:PushNotifications";
+            KeyPrefix = $"{PushNotificationRedisOptions.GetChannelName(_options.RedisBackplane)}:PushNotifications";
         }
 
         /// <summary>
@@ -148,8 +148,12 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 
         protected virtual RedisKey GetDataKey(string creator) => GetKey(creator, "data");
 
-        // The braces are a Redis Cluster hash tag: both keys of a user land in one slot, as the scripts require.
-        private RedisKey GetKey(string creator, string suffix) => $"{KeyPrefix}:{{{creator}}}:{suffix}";
+        // The braces are a Redis Cluster hash tag: both keys of a user land in one slot, as the scripts require. An empty tag ("{}")
+        // would hash the whole key and split the two keys across slots, so a notification without a creator gets a placeholder that
+        // the default user name rules do not allow.
+        private RedisKey GetKey(string creator, string suffix) => $"{KeyPrefix}:{{{(string.IsNullOrEmpty(creator) ? NoCreatorTag : creator)}}}:{suffix}";
+
+        private const string NoCreatorTag = "(none)";
 
         // The user's notifications within the retention period, oldest first, with the stored value each was read from.
         private async Task<List<(RedisValue Value, PushNotification Notification)>> ReadAsync(string userId, CancellationToken cancellationToken)

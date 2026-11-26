@@ -166,7 +166,7 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
         public StorageTestNotification(string creator, string title) : base(creator)
         {
             Title = title;
-            // Different descriptions keep the repeat count of identical consecutive notifications out of the tests that do not test it.
+            // A unique description per notification, so tests never depend on two notifications having the same content.
             Description = Guid.NewGuid().ToString();
         }
 

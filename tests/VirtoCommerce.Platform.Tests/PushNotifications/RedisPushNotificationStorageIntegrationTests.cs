@@ -102,6 +102,19 @@ public sealed class RedisPushNotificationStorageIntegrationTests : PushNotificat
         (await Database.KeyTimeToLiveAsync(Key("admin", "data"))).Should().BeCloseTo(TimeSpan.FromHours(24), TimeSpan.FromMinutes(1));
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task Notification_WithoutCreator_KeepsBothKeysUnderOneHashTag(string creator)
+    {
+        var storage = CreateStorage();
+        await storage.SavePushNotificationAsync(new StorageTestNotification(creator, "system"));
+
+        Search(storage, creator).NotifyEvents.Select(x => x.Title).Should().Equal("system");
+        (await Database.KeyExistsAsync(Key("(none)", "index"))).Should().BeTrue();
+        (await Database.KeyExistsAsync(Key("(none)", "data"))).Should().BeTrue();
+    }
+
     [Fact]
     public async Task Search_SkipsEntriesThatCannotBeRead()
     {

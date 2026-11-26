@@ -40,10 +40,21 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
 
     public class PushNotificationRedisOptions
     {
+        public const string DefaultChannelName = "VirtoCommerceChannel";
+
         /// <summary>
         /// The prefix of the backplane channels and of the notification history keys. Environments that share one Redis must use different names.
+        /// An empty value means <see cref="DefaultChannelName"/>.
         /// </summary>
-        public string ChannelName { get; set; } = "VirtoCommerceChannel";
+        public string ChannelName { get; set; } = DefaultChannelName;
+
+        /// <summary>
+        /// <see cref="ChannelName"/>, or <see cref="DefaultChannelName"/> when it is empty.
+        /// </summary>
+        public static string GetChannelName(PushNotificationRedisOptions options)
+        {
+            return string.IsNullOrWhiteSpace(options?.ChannelName) ? DefaultChannelName : options.ChannelName;
+        }
     }
 
     public class PushNotificationAzureSignalROptions

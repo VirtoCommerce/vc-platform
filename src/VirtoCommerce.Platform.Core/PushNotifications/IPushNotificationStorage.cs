@@ -29,8 +29,15 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
 
         /// <summary>
         /// Returns the notifications created by <paramref name="userId"/> (the user name) that match <paramref name="criteria"/>.
+        /// The default implementation calls <see cref="SearchPushNotifications"/>, so an implementation built against an earlier version keeps
+        /// loading and working. An implementation must override at least one of the two.
         /// </summary>
-        Task<PushNotificationSearchResult> SearchPushNotificationsAsync(string userId, PushNotificationSearchCriteria criteria, CancellationToken cancellationToken = default);
+        Task<PushNotificationSearchResult> SearchPushNotificationsAsync(string userId, PushNotificationSearchCriteria criteria, CancellationToken cancellationToken = default)
+        {
+#pragma warning disable VC0016 // Fallback for implementations that only have the synchronous method
+            return Task.FromResult(SearchPushNotifications(userId, criteria));
+#pragma warning restore VC0016
+        }
 
         /// <summary>
         /// Marks the new notifications of <paramref name="userId"/> (the user name) as read and returns them.
