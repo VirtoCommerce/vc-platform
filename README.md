@@ -15,7 +15,7 @@
 
 [![Latest release](https://img.shields.io/github/release/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/releases/latest) [![Total downloads](https://img.shields.io/github/downloads/VirtoCommerce/vc-platform/total.svg?colorB=007ec6)](https://github.com/VirtoCommerce/vc-platform/releases) [![License](https://img.shields.io/badge/license-VC%20OSL-blue.svg)](https://virtocommerce.com/open-source-license)
 
-Virto Commerce is an open-source platform for building extensible ecommerce applications. This includes complex digital commerce solutions for B2B, B2C, or B2B2C businesses, [marketplaces](https://virtocommerce.com/solutions/marketplace), and derived SaaS commerce platforms.
+Virto Commerce is a source-available platform for building extensible ecommerce applications. This includes complex digital commerce solutions for B2B, B2C, or B2B2C businesses,  [marketplaces](https://virtocommerce.com/solutions/marketplace), and derived SaaS commerce platforms.
 
 Virto Commerce architecture is based on such principles as Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
