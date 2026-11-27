@@ -48,7 +48,11 @@ namespace VirtoCommerce.Platform.Data.Localizations
                 }
 
                 // A pattern can carry a directory part ("../x.json") that moves the search out of the folder
-                var folder = Path.TrimEndingDirectorySeparator(Path.GetFullPath(discoveryFolder)) + Path.DirectorySeparatorChar;
+                var folder = Path.GetFullPath(discoveryFolder);
+                if (!Path.EndsInDirectorySeparator(folder))
+                {
+                    folder += Path.DirectorySeparatorChar;
+                }
 
                 foreach (var file in Directory.EnumerateFiles(discoveryFolder, pattern, SearchOption.AllDirectories)
                     .Where(x => Path.GetFullPath(x).StartsWith(folder, StringComparison.OrdinalIgnoreCase)))
