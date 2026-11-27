@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -552,6 +552,14 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<string>("ApiKeyHash")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("ApiKeyHint")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
@@ -580,6 +588,10 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
                     b.HasIndex("ApiKey")
                         .IsUnique()
                         .HasFilter("[ApiKey] IS NOT NULL");
+
+                    b.HasIndex("ApiKeyHash")
+                        .IsUnique()
+                        .HasFilter("[ApiKeyHash] IS NOT NULL");
 
                     b.ToTable("UserApiKey", (string)null);
                 });

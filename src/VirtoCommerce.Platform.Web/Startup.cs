@@ -300,9 +300,9 @@ namespace VirtoCommerce.Platform.Web
                             }
                         }
 
-                        // 2) API key: header or query string.
+                        // 2) API key: header, or query string where allowed.
                         var apiKeyOptions = context.RequestServices.GetRequiredService<IOptions<ApiKeyAuthenticationOptions>>().Value;
-                        if (context.Request.Query.ContainsKey(apiKeyOptions.ApiKeyParamName) ||
+                        if ((apiKeyOptions.AllowQueryString && context.Request.Query.ContainsKey(apiKeyOptions.ApiKeyParamName)) ||
                             context.Request.Headers.ContainsKey(apiKeyOptions.ApiKeyParamName))
                         {
                             return ApiKeyAuthenticationOptions.DefaultScheme;
@@ -576,6 +576,9 @@ namespace VirtoCommerce.Platform.Web
                 .WithEnabled(lockoutOptions.AutoAccountsLockoutJobEnabled));
 
             services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
+            // Unnamed for the scheme selector above, named for the API key handler.
+            services.Configure<ApiKeyAuthenticationOptions>(Configuration.GetSection("ApiKeyAuthentication"));
+            services.Configure<ApiKeyAuthenticationOptions>(ApiKeyAuthenticationOptions.DefaultScheme, Configuration.GetSection("ApiKeyAuthentication"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
             services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
             services.Configure<FixedSettings>(Configuration.GetSection("PlatformSettings"));

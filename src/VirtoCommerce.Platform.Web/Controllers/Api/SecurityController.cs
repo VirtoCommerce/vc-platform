@@ -1077,16 +1077,84 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<UserApiKey[]>> GetUserApiKeys([FromRoute] string id)
         {
             var result = await _userApiKeyService.GetAllUserApiKeysAsync(id);
-            return Ok(result);
+            return Ok(result?.Select(ToApiKeyResponse).ToArray() ?? []);
         }
 
+        /// <summary>
+        /// Creates or updates a key. Send no <c>apiKey</c> on a new key to have the platform generate it; the response
+        /// is the only place the generated key is ever returned. On an existing key, send no <c>apiKey</c> (or the
+        /// hint shown for it) to keep it.
+        /// </summary>
         [HttpPost]
         [Route("users/apikeys")]
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<UserApiKey[]>> SaveUserApiKey([FromBody] UserApiKey userApiKey)
         {
-            await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
-            return Ok();
+            if (userApiKey == null)
+            {
+                return BadRequest();
+            }
+
+            // An existing key stays with its owner: the body cannot move it to another user.
+            var storedApiKey = userApiKey.IsTransient() ? null : await _userApiKeyService.GetApiKeyByIdAsync(userApiKey.Id);
+            if (storedApiKey != null)
+            {
+                if (!string.IsNullOrEmpty(userApiKey.UserId) && userApiKey.UserId != storedApiKey.UserId)
+                {
+                    return BadRequest("An API key cannot be moved to another user.");
+                }
+
+                userApiKey.UserId = storedApiKey.UserId;
+            }
+
+            var (owner, denied) = await AuthorizeApiKeyOwnerAsync(userApiKey.UserId);
+            if (denied != null)
+            {
+                return denied;
+            }
+
+            userApiKey.UserName = owner.UserName;
+
+            try
+            {
+                var result = await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
+                return Ok(result.Select(ToApiKeyResponse).ToArray());
+            }
+            catch (ApiKeyValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Replaces the key's value with a new generated key, returned in the response and never again.
+        /// </summary>
+        [HttpPost]
+        [Route("users/apikeys/{keyId}/regenerate")]
+        [Authorize(PlatformPermissions.SecurityUpdate)]
+        public async Task<ActionResult<UserApiKey>> RegenerateUserApiKey([FromRoute] string keyId, [FromServices] IApiKeyGenerator apiKeyGenerator)
+        {
+            var storedApiKey = await _userApiKeyService.GetApiKeyByIdAsync(keyId);
+            if (storedApiKey == null)
+            {
+                return NotFound();
+            }
+
+            var (_, denied) = await AuthorizeApiKeyOwnerAsync(storedApiKey.UserId);
+            if (denied != null)
+            {
+                return denied;
+            }
+
+            var apiKey = AbstractTypeFactory<UserApiKey>.TryCreateInstance();
+            apiKey.Id = storedApiKey.Id;
+            apiKey.UserId = storedApiKey.UserId;
+            apiKey.UserName = storedApiKey.UserName;
+            apiKey.IsActive = storedApiKey.IsActive;
+            apiKey.ApiKey = apiKeyGenerator.Generate();
+
+            var result = await _userApiKeyService.SaveApiKeysAsync([apiKey]);
+            return Ok(ToApiKeyResponse(result[0]));
         }
 
         [HttpPut]
@@ -1102,8 +1170,50 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityDelete)]
         public async Task<ActionResult<UserApiKey[]>> DeleteUserApiKeys([FromQuery] string[] ids)
         {
-            await _userApiKeyService.DeleteApiKeysAsync(ids);
+            var storedApiKeys = await _userApiKeyService.GetApiKeysByIdsAsync(ids ?? []);
+
+            foreach (var ownerId in storedApiKeys.Select(x => x.UserId).Distinct())
+            {
+                var (_, denied) = await AuthorizeApiKeyOwnerAsync(ownerId);
+                if (denied != null)
+                {
+                    return denied;
+                }
+            }
+
+            // Only keys that exist: deleting an unknown id would fail the whole batch in the repository.
+            await _userApiKeyService.DeleteApiKeysAsync(storedApiKeys.Select(x => x.Id).ToArray());
             return Ok();
+        }
+
+        /// <summary>
+        /// Whether the current user may create, change or delete keys of the given user. An administrator's key passes
+        /// every permission policy, so only another administrator may manage one; users listed as non-editable are
+        /// refused like everywhere else in this controller.
+        /// </summary>
+        private async Task<(ApplicationUser Owner, ActionResult Denied)> AuthorizeApiKeyOwnerAsync(string userId)
+        {
+            var owner = string.IsNullOrEmpty(userId) ? null : await UserManager.FindByIdAsync(userId);
+            if (owner == null)
+            {
+                LogUserNotFound(userId);
+                return (null, BadRequest(IdentityResult.Failed(CommonErrorDescriber.UserNotFound()).ToSecurityResult()));
+            }
+
+            if (!IsUserEditable(owner.UserName))
+            {
+                LogUserForbiddenToEdit(owner.UserName);
+                return (owner, Forbid());
+            }
+
+            if (owner.IsAdministrator && (await GetCurrentUserAsync())?.IsAdministrator != true)
+            {
+                _logger.LogWarning("User {CurrentUser} was refused access to the API keys of administrator {UserId}.",
+                    UserManager.SanitizeUserName(User.Identity?.Name), owner.Id);
+                return (owner, Forbid());
+            }
+
+            return (owner, null);
         }
 
         /// <summary>
@@ -1403,6 +1513,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ?? adminUIs.FirstOrDefault();
 
             return adminUI?.Url ?? "/";
+        }
+
+        /// <summary>
+        /// What a client sees of a key: its value only right after this request created it, otherwise the hint in its
+        /// place, so clients that display <c>apiKey</c> show the hint. The hash stays on the server. A copy, because
+        /// the service's instances are cached.
+        /// </summary>
+        private static UserApiKey ToApiKeyResponse(UserApiKey apiKey)
+        {
+            var result = AbstractTypeFactory<UserApiKey>.TryCreateInstance();
+            result.Id = apiKey.Id;
+            result.UserId = apiKey.UserId;
+            result.UserName = apiKey.UserName;
+            result.IsActive = apiKey.IsActive;
+            result.CreatedDate = apiKey.CreatedDate;
+            result.CreatedBy = apiKey.CreatedBy;
+            result.ModifiedDate = apiKey.ModifiedDate;
+            result.ModifiedBy = apiKey.ModifiedBy;
+            result.ApiKeyHint = apiKey.ApiKeyHint;
+            // A hashed key carries its value only from the save that set it. A row from before key hashing that is
+            // not hashed yet carries its plaintext from storage, and that is never returned.
+            result.ApiKey = apiKey.ApiKeyHash != null && apiKey.ApiKey != null ? apiKey.ApiKey : apiKey.ApiKeyHint;
+            return result;
         }
 
         private bool IsUserEditable(string userName)

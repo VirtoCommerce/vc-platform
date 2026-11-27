@@ -36,6 +36,9 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddTransient<ISecurityRepository, SecurityRepository>();
             services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<ISecurityRepository>());
 
+            // TryAdd so a project can register its own key format or hash before the platform does.
+            services.TryAddSingleton<IApiKeyHasher, Sha256ApiKeyHasher>();
+            services.TryAddSingleton<IApiKeyGenerator, DefaultApiKeyGenerator>();
             services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
             services.AddSingleton<IUserSignInLogService, UserSignInLogService>();
             services.AddSingleton<IUserSignInLogSearchService, UserSignInLogSearchService>();

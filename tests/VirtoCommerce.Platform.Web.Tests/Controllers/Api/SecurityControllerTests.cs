@@ -1279,5 +1279,256 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             // Assert
             published.CallbackUrl.Should().Be("https://admin.example.com/apps/admin-shell/#!/resetpassword/user-reset/token-1");
         }
+
+        #region API keys
+
+        private readonly ApplicationUser _apiKeyOwner = new() { Id = "owner", UserName = "owner" };
+        private readonly ApplicationUser _administrator = new() { Id = "admin-id", UserName = "admin", IsAdministrator = true };
+
+        private void SetupApiKeyUsers(ApplicationUser currentUser)
+        {
+            SetCurrentUser(currentUser);
+            _userManagerMock.Setup(x => x.FindByIdAsync(_apiKeyOwner.Id)).ReturnsAsync(_apiKeyOwner);
+            _userManagerMock.Setup(x => x.FindByIdAsync(_administrator.Id)).ReturnsAsync(_administrator);
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .ReturnsAsync((UserApiKey[] keys) => keys);
+        }
+
+        private static ApplicationUser SecurityManager() => new() { Id = "manager-id", UserName = "manager" };
+
+        [Fact]
+        public async Task SaveUserApiKey_NonAdministratorCreatingAnAdministratorsKey_IsForbidden()
+        {
+            SetupApiKeyUsers(SecurityManager());
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = _administrator.Id });
+
+            result.Result.Should().BeOfType<ForbidResult>();
+            _userApiKeyServiceMock.Verify(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_AdministratorCreatingAnAdministratorsKey_IsSaved()
+        {
+            SetupApiKeyUsers(new ApplicationUser { Id = "other-admin", UserName = "other-admin", IsAdministrator = true });
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = _administrator.Id });
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_ExistingKeySentWithAnotherUserId_IsRefusedAndNotMoved()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock.Setup(x => x.GetApiKeyByIdAsync("key-1")).ReturnsAsync(new UserApiKey { Id = "key-1", UserId = _apiKeyOwner.Id });
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { Id = "key-1", UserId = _administrator.Id, ApiKey = "" });
+
+            result.Result.Should().BeOfType<BadRequestObjectResult>();
+            _userApiKeyServiceMock.Verify(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_ExistingKeyWithoutUserId_StaysWithItsOwner()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock.Setup(x => x.GetApiKeyByIdAsync("key-1")).ReturnsAsync(new UserApiKey { Id = "key-1", UserId = _apiKeyOwner.Id });
+            UserApiKey saved = null;
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .Callback((UserApiKey[] keys) => saved = keys[0])
+                .ReturnsAsync((UserApiKey[] keys) => keys);
+
+            await _controller.SaveUserApiKey(new UserApiKey { Id = "key-1", IsActive = false });
+
+            saved.UserId.Should().Be(_apiKeyOwner.Id);
+            saved.UserName.Should().Be(_apiKeyOwner.UserName);
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_UnknownOwner_IsBadRequest()
+        {
+            SetupApiKeyUsers(SecurityManager());
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = "nobody" });
+
+            result.Result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public async Task RegenerateUserApiKey_NonAdministratorOnAnAdministratorsKey_IsForbidden()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock.Setup(x => x.GetApiKeyByIdAsync("admin-key")).ReturnsAsync(new UserApiKey { Id = "admin-key", UserId = _administrator.Id });
+
+            var result = await _controller.RegenerateUserApiKey("admin-key", Mock.Of<IApiKeyGenerator>());
+
+            result.Result.Should().BeOfType<ForbidResult>();
+            _userApiKeyServiceMock.Verify(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteUserApiKeys_NonAdministratorDeletingAnAdministratorsKey_IsForbiddenAndDeletesNothing()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock.Setup(x => x.GetApiKeysByIdsAsync(It.IsAny<string[]>()))
+                .ReturnsAsync([new UserApiKey { Id = "own-key", UserId = _apiKeyOwner.Id }, new UserApiKey { Id = "admin-key", UserId = _administrator.Id }]);
+
+            var result = await _controller.DeleteUserApiKeys(["own-key", "admin-key"]);
+
+            result.Result.Should().BeOfType<ForbidResult>();
+            _userApiKeyServiceMock.Verify(x => x.DeleteApiKeysAsync(It.IsAny<string[]>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteUserApiKeys_DeletesOnlyKeysThatExist()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock.Setup(x => x.GetApiKeysByIdsAsync(It.IsAny<string[]>()))
+                .ReturnsAsync([new UserApiKey { Id = "own-key", UserId = _apiKeyOwner.Id }]);
+
+            await _controller.DeleteUserApiKeys(["own-key", "missing"]);
+
+            _userApiKeyServiceMock.Verify(x => x.DeleteApiKeysAsync(It.Is<string[]>(ids => ids.SequenceEqual(new[] { "own-key" }))), Times.Once);
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_NonEditableOwner_IsForbidden()
+        {
+            _controller = CreateSecurityController(securityOptions: CreateSecurityOptions(_apiKeyOwner.UserName));
+            SetupApiKeyUsers(new ApplicationUser { Id = "other-admin", UserName = "other-admin", IsAdministrator = true });
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = _apiKeyOwner.Id });
+
+            result.Result.Should().BeOfType<ForbidResult>();
+        }
+
+        [Fact]
+        public async Task GetUserApiKeys_ShowsTheHintInPlaceOfTheKeyAndKeepsTheHashOnTheServer()
+        {
+            var stored = new UserApiKey { Id = "key-1", UserId = "owner", ApiKeyHash = "abc123", ApiKeyHint = "vc_A…WXYZ", IsActive = true };
+            _userApiKeyServiceMock.Setup(x => x.GetAllUserApiKeysAsync("owner")).ReturnsAsync([stored]);
+
+            var result = await _controller.GetUserApiKeys("owner");
+
+            var key = ((UserApiKey[])((OkObjectResult)result.Result).Value).Single();
+            key.ApiKey.Should().Be("vc_A…WXYZ");
+            key.ApiKeyHint.Should().Be("vc_A…WXYZ");
+            key.ApiKeyHash.Should().BeNull();
+            key.IsActive.Should().BeTrue();
+            stored.ApiKeyHash.Should().Be("abc123", "the service's instance is cached and must stay as it is");
+        }
+
+        [Fact]
+        public async Task GetUserApiKeys_KeyNotHashedYet_NeverReturnsItsPlaintext()
+        {
+            var stored = new UserApiKey { Id = "key-1", UserId = "owner", ApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110", ApiKeyHint = "0f1e…2110" };
+            _userApiKeyServiceMock.Setup(x => x.GetAllUserApiKeysAsync("owner")).ReturnsAsync([stored]);
+
+            var result = await _controller.GetUserApiKeys("owner");
+
+            ((UserApiKey[])((OkObjectResult)result.Result).Value).Single().ApiKey.Should().Be("0f1e…2110");
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_ReturnsTheKeyTheSaveSet_AndNoHash()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .ReturnsAsync((UserApiKey[] keys) =>
+                {
+                    keys[0].ApiKey = "vc_generated-key-value";
+                    keys[0].ApiKeyHash = "hash";
+                    keys[0].ApiKeyHint = "vc_g…alue";
+                    return keys;
+                });
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = "owner" });
+
+            var key = ((UserApiKey[])((OkObjectResult)result.Result).Value).Single();
+            key.ApiKey.Should().Be("vc_generated-key-value");
+            key.ApiKeyHash.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_KeyKept_ReturnsTheHint()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .ReturnsAsync((UserApiKey[] keys) =>
+                {
+                    keys[0].ApiKey = null;
+                    keys[0].ApiKeyHash = "hash";
+                    keys[0].ApiKeyHint = "vc_A…WXYZ";
+                    return keys;
+                });
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { Id = "key-1", UserId = "owner", ApiKey = "vc_A…WXYZ", IsActive = false });
+
+            ((UserApiKey[])((OkObjectResult)result.Result).Value).Single().ApiKey.Should().Be("vc_A…WXYZ");
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_ValueRefusedAsMasked_IsBadRequest()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .ThrowsAsync(new ApiKeyValidationException("The API key looks masked."));
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { Id = "key-1", UserId = "owner", ApiKey = "abcd…wxyz" });
+
+            result.Result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_NullBody_IsBadRequest()
+        {
+            var result = await _controller.SaveUserApiKey(null);
+
+            result.Result.Should().BeOfType<BadRequestResult>();
+            _userApiKeyServiceMock.Verify(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task RegenerateUserApiKey_SavesANewGeneratedValueAndReturnsIt()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock.Setup(x => x.GetApiKeyByIdAsync("key-1"))
+                .ReturnsAsync(new UserApiKey { Id = "key-1", UserId = "owner", UserName = "owner", IsActive = true, ApiKeyHash = "old" });
+            UserApiKey saved = null;
+            string sentHash = "unset";
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .Callback((UserApiKey[] keys) => { saved = keys[0]; sentHash = keys[0].ApiKeyHash; })
+                .ReturnsAsync((UserApiKey[] keys) =>
+                {
+                    keys[0].ApiKeyHash = "new";
+                    return keys;
+                });
+            var generator = new Mock<IApiKeyGenerator>();
+            generator.Setup(x => x.Generate()).Returns("vc_regenerated-value");
+
+            var result = await _controller.RegenerateUserApiKey("key-1", generator.Object);
+
+            saved.Id.Should().Be("key-1");
+            saved.ApiKey.Should().Be("vc_regenerated-value");
+            sentHash.Should().BeNull("the old hash must not be sent back as the one to keep");
+            ((UserApiKey)((OkObjectResult)result.Result).Value).ApiKey.Should().Be("vc_regenerated-value");
+        }
+
+        [Fact]
+        public async Task RegenerateUserApiKey_UnknownKey_IsNotFound()
+        {
+            var result = await _controller.RegenerateUserApiKey("missing", Mock.Of<IApiKeyGenerator>());
+
+            result.Result.Should().BeOfType<NotFoundResult>();
+        }
+
+        #endregion
     }
 }

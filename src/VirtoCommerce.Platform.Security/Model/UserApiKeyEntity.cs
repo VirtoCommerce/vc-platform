@@ -7,7 +7,17 @@ namespace VirtoCommerce.Platform.Security.Model
     public class UserApiKeyEntity : AuditableEntity
     {
         public string UserName { get; set; }
+
+        /// <summary>
+        /// Plaintext of a key from before key hashing. The AddUserApiKeyHash migration hashes and clears it; only a key
+        /// the migration could not hash, or one an older instance saved during a rolling upgrade, keeps it until its
+        /// first use. New keys never set it.
+        /// </summary>
         public string ApiKey { get; set; }
+
+        public string ApiKeyHash { get; set; }
+
+        public string ApiKeyHint { get; set; }
 
         public string UserId { get; set; }
         public bool IsActive { get; set; }
@@ -22,6 +32,8 @@ namespace VirtoCommerce.Platform.Security.Model
 
             Id = apiKey.Id;
             ApiKey = apiKey.ApiKey;
+            ApiKeyHash = apiKey.ApiKeyHash;
+            ApiKeyHint = apiKey.ApiKeyHint;
             UserName = apiKey.UserName;
             UserId = apiKey.UserId;
             IsActive = apiKey.IsActive;
@@ -35,7 +47,14 @@ namespace VirtoCommerce.Platform.Security.Model
                 throw new ArgumentNullException(nameof(apiKey));
 
             apiKey.Id = Id;
-            apiKey.ApiKey = ApiKey;
+            apiKey.CreatedDate = CreatedDate;
+            apiKey.CreatedBy = CreatedBy;
+            apiKey.ModifiedDate = ModifiedDate;
+            apiKey.ModifiedBy = ModifiedBy;
+            // A hashed key has no secret to hand out; only a row not hashed yet still has its plaintext.
+            apiKey.ApiKey = ApiKeyHash == null ? ApiKey : null;
+            apiKey.ApiKeyHash = ApiKeyHash;
+            apiKey.ApiKeyHint = ApiKeyHint;
             apiKey.UserName = UserName;
             apiKey.UserId = UserId;
             apiKey.IsActive = IsActive;
@@ -47,6 +66,8 @@ namespace VirtoCommerce.Platform.Security.Model
         {
             target.UserName = UserName;
             target.ApiKey = ApiKey;
+            target.ApiKeyHash = ApiKeyHash;
+            target.ApiKeyHint = ApiKeyHint;
             target.IsActive = IsActive;
            
         }

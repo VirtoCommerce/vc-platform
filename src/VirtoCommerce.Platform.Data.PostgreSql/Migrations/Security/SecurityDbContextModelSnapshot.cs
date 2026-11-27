@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Security
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -550,6 +550,14 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Security
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
+                    b.Property<string>("ApiKeyHash")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("ApiKeyHint")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
@@ -576,6 +584,9 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Security
                     b.HasKey("Id");
 
                     b.HasIndex("ApiKey")
+                        .IsUnique();
+
+                    b.HasIndex("ApiKeyHash")
                         .IsUnique();
 
                     b.ToTable("UserApiKey", (string)null);
