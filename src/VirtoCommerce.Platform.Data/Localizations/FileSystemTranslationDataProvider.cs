@@ -42,18 +42,18 @@ namespace VirtoCommerce.Platform.Data.Localizations
             foreach (var discoveryFolder in DiscoveryFolders ?? Array.Empty<string>())
             {
                 //Return resource files for platform project
-                if (Directory.Exists(discoveryFolder))
+                if (!Directory.Exists(discoveryFolder))
                 {
-                    // A pattern can carry a directory part ("../x.json") that moves the search out of the folder
-                    var folder = Path.TrimEndingDirectorySeparator(Path.GetFullPath(discoveryFolder)) + Path.DirectorySeparatorChar;
+                    continue;
+                }
 
-                    foreach (var file in Directory.EnumerateFiles(discoveryFolder, pattern, SearchOption.AllDirectories))
-                    {
-                        if (Path.GetFullPath(file).StartsWith(folder, StringComparison.OrdinalIgnoreCase))
-                        {
-                            yield return file;
-                        }
-                    }
+                // A pattern can carry a directory part ("../x.json") that moves the search out of the folder
+                var folder = Path.TrimEndingDirectorySeparator(Path.GetFullPath(discoveryFolder)) + Path.DirectorySeparatorChar;
+
+                foreach (var file in Directory.EnumerateFiles(discoveryFolder, pattern, SearchOption.AllDirectories)
+                    .Where(x => Path.GetFullPath(x).StartsWith(folder, StringComparison.OrdinalIgnoreCase)))
+                {
+                    yield return file;
                 }
             }
         }
