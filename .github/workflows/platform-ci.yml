@@ -119,19 +119,25 @@ jobs:
     # A manual run on a feature branch gets the branch name in its version (fullSuffix).
     # A manual run on master/main builds the release itself: no suffix, as on push.
     - name: Set VERSION_SUFFIX variable
+      env:
+        IMAGE_SUFFIX: ${{ steps.image.outputs.suffix }}
+        IMAGE_FULL_SUFFIX: ${{ steps.image.outputs.fullSuffix }}
       run: |
-        if [ '${{ github.event_name }}' = 'workflow_dispatch' ] && [ '${{ github.ref }}' != 'refs/heads/master' ] && [ '${{ github.ref }}' != 'refs/heads/main' ]; then
-          echo "VERSION_SUFFIX=${{ steps.image.outputs.fullSuffix }}" >> $GITHUB_ENV
+        if [ "$GITHUB_EVENT_NAME" = 'workflow_dispatch' ] && [ "$GITHUB_REF" != 'refs/heads/master' ] && [ "$GITHUB_REF" != 'refs/heads/main' ]; then
+          echo "VERSION_SUFFIX=$IMAGE_FULL_SUFFIX" >> $GITHUB_ENV
         else
-          echo "VERSION_SUFFIX=${{ steps.image.outputs.suffix }}" >> $GITHUB_ENV
+          echo "VERSION_SUFFIX=$IMAGE_SUFFIX" >> $GITHUB_ENV
         fi;
 
     - name: Set DOCKER_TAG variable
+      env:
+        IMAGE_SHORT_VERSION: ${{ steps.image.outputs.shortVersion }}
+        IMAGE_TAGGED_VERSION: ${{ steps.image.outputs.taggedVersion }}
       run: |
-        if [ '${{ github.ref }}' = 'refs/heads/master' ] || [ '${{ github.ref }}' = 'refs/heads/main' ]; then
-          echo "DOCKER_TAG=${{ steps.image.outputs.shortVersion }}" >> $GITHUB_ENV
+        if [ "$GITHUB_REF" = 'refs/heads/master' ] || [ "$GITHUB_REF" = 'refs/heads/main' ]; then
+          echo "DOCKER_TAG=$IMAGE_SHORT_VERSION" >> $GITHUB_ENV
         else
-          echo "DOCKER_TAG=${{ steps.image.outputs.taggedVersion }}" >> $GITHUB_ENV
+          echo "DOCKER_TAG=$IMAGE_TAGGED_VERSION" >> $GITHUB_ENV
         fi;
 
     - name: Add version suffix
