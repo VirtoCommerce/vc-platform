@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
@@ -79,7 +80,18 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
 
             // Same check as the token and login endpoints: counts the failure and locks the account
             // after Lockout:MaxFailedAccessAttempts, and refuses users that cannot sign in or are locked out.
-            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
+            SignInResult signInResult;
+            try
+            {
+                signInResult = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
+            }
+            catch (DuplicateEmailException)
+            {
+                // Saving the failure count validates the user, and that throws when another user has the same email.
+                // Fail like any other wrong attempt instead of returning 500, as the token endpoint does.
+                return await FailAsync(delayedResponse, userName, user, SignInFailureReason.DuplicateEmail);
+            }
+
             if (!signInResult.Succeeded)
             {
                 return await FailAsync(delayedResponse, userName, user, ToFailureReason(signInResult));

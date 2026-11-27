@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.SignInLog;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using Xunit;
 
@@ -28,6 +29,8 @@ public class BasicAuthenticationHandlerTests
     private readonly ApplicationUser _admin = new() { Id = "user-1", UserName = "admin" };
     private readonly ApplicationUser _twoFactorAdmin = new() { Id = "user-2", UserName = "mfa-admin", TwoFactorEnabled = true };
     private readonly ApplicationUser _administrator = new() { Id = "user-3", UserName = "administrator", IsAdministrator = true };
+    private readonly ApplicationUser _notAllowedUser = new() { Id = "user-4", UserName = "not-confirmed" };
+    private readonly ApplicationUser _duplicateEmailUser = new() { Id = "user-5", UserName = "duplicate", Email = "shared@example.test" };
     private readonly Mock<IEventPublisher> _eventPublisher = new();
     private readonly PasswordLoginOptions _passwordLoginOptions = new();
     private readonly Mock<UserManager<ApplicationUser>> _userManager = new(Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null);
@@ -49,20 +52,22 @@ public class BasicAuthenticationHandlerTests
         // Answers come from the test users: their name, the password and their own two-factor flag.
         _userManager
             .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
-            .ReturnsAsync((string userName) => new[] { _admin, _twoFactorAdmin, _administrator }.FirstOrDefault(x => x.UserName == userName));
-        _userManager
-            .Setup(x => x.CheckPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
-            .ReturnsAsync((ApplicationUser _, string password) => password == Password);
-        _userManager
-            .SetupGet(x => x.SupportsUserLockout)
-            .Returns(true);
-        _userManager
-            .Setup(x => x.IsLockedOutAsync(It.IsAny<ApplicationUser>()))
-            .ReturnsAsync(() => _accessFailedCount >= MaxFailedAccessAttempts);
+            .ReturnsAsync((string userName) => new[] { _admin, _twoFactorAdmin, _administrator, _notAllowedUser, _duplicateEmailUser }.FirstOrDefault(x => x.UserName == userName));
         _signInManager
             .Setup(x => x.CheckPasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>()))
-            .ReturnsAsync((ApplicationUser _, string password, bool lockoutOnFailure) =>
+            .ReturnsAsync((ApplicationUser user, string password, bool lockoutOnFailure) =>
             {
+                if (user == _notAllowedUser)
+                {
+                    return SignInResult.NotAllowed;
+                }
+
+                // Saving the failure count validates the user, and the platform's FindByEmailAsync throws for a duplicated email.
+                if (user == _duplicateEmailUser && password != Password && lockoutOnFailure)
+                {
+                    throw new DuplicateEmailException(user.Email);
+                }
+
                 if (_accessFailedCount >= MaxFailedAccessAttempts)
                 {
                     return SignInResult.LockedOut;
@@ -81,9 +86,6 @@ public class BasicAuthenticationHandlerTests
 
                 return SignInResult.Failed;
             });
-        _signInManager
-            .Setup(x => x.CanSignInAsync(It.IsAny<ApplicationUser>()))
-            .ReturnsAsync(true);
         _signInManager
             .Setup(x => x.CreateUserPrincipalAsync(It.IsAny<ApplicationUser>()))
             .ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity("test")));
@@ -117,6 +119,7 @@ public class BasicAuthenticationHandlerTests
         // Assert
         result.Succeeded.Should().BeFalse();
         result.Failure.Message.Should().Contain("Two-factor authentication is required");
+        VerifyFailedAttemptPublished(_twoFactorAdmin.UserName, _twoFactorAdmin.Id, SignInFailureReason.RequiresTwoFactor);
     }
 
     [Fact]
@@ -149,9 +152,13 @@ public class BasicAuthenticationHandlerTests
         var result = await handler.AuthenticateAsync();
 
         // Assert
-        _accessFailedCount.Should().Be(MaxFailedAccessAttempts);
         result.Succeeded.Should().BeFalse();
         result.Failure.Message.Should().Be("Invalid user name or password.");
+        _signInManager.Verify(x => x.CheckPasswordSignInAsync(_admin, It.IsAny<string>(), true), Times.Exactly(MaxFailedAccessAttempts + 1));
+        _signInManager.Verify(x => x.CheckPasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), false), Times.Never);
+        // The last wrong password locks the account, and the correct password is then refused as locked out.
+        VerifyFailedAttemptPublished(_admin.UserName, _admin.Id, SignInFailureReason.InvalidPassword, Times.Exactly(MaxFailedAccessAttempts - 1));
+        VerifyFailedAttemptPublished(_admin.UserName, _admin.Id, SignInFailureReason.LockedOut, Times.Exactly(2));
     }
 
     [Fact]
@@ -161,10 +168,42 @@ public class BasicAuthenticationHandlerTests
         var handler = await CreateHandlerAsync(_admin.UserName, "wrong");
 
         // Act
-        await handler.AuthenticateAsync();
+        var result = await handler.AuthenticateAsync();
 
         // Assert
+        result.Failure.Message.Should().Be("Invalid user name or password.");
         VerifyFailedAttemptPublished(_admin.UserName, _admin.Id, SignInFailureReason.InvalidPassword);
+    }
+
+    [Fact]
+    public async Task AuthenticateAsync_NotAllowed_PublishesNotAllowed()
+    {
+        // Arrange
+        var handler = await CreateHandlerAsync(_notAllowedUser.UserName, Password);
+
+        // Act
+        var result = await handler.AuthenticateAsync();
+
+        // Assert
+        result.Succeeded.Should().BeFalse();
+        result.Failure.Message.Should().Be("Invalid user name or password.");
+        VerifyFailedAttemptPublished(_notAllowedUser.UserName, _notAllowedUser.Id, SignInFailureReason.NotAllowed);
+    }
+
+    [Fact]
+    public async Task AuthenticateAsync_DuplicateEmail_FailsInsteadOfThrowing()
+    {
+        // Arrange
+        var handler = await CreateHandlerAsync(_duplicateEmailUser.UserName, "wrong");
+
+        // Act
+        var result = await handler.AuthenticateAsync();
+
+        // Assert
+        result.Succeeded.Should().BeFalse();
+        result.Failure.Should().NotBeOfType<DuplicateEmailException>();
+        result.Failure.Message.Should().Be("Invalid user name or password.");
+        VerifyFailedAttemptPublished(_duplicateEmailUser.UserName, _duplicateEmailUser.Id, SignInFailureReason.DuplicateEmail);
     }
 
     [Fact]
@@ -222,6 +261,7 @@ public class BasicAuthenticationHandlerTests
 
         // Assert
         result.Succeeded.Should().BeFalse();
+        result.Failure.Message.Should().Be("Invalid user name or password.");
         VerifyFailedAttemptPublished(_admin.UserName, _admin.Id, SignInFailureReason.PasswordLoginDisabled);
         _signInManager.Verify(x => x.CheckPasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Never);
     }
@@ -240,7 +280,7 @@ public class BasicAuthenticationHandlerTests
         result.Succeeded.Should().BeTrue();
     }
 
-    private void VerifyFailedAttemptPublished(string userName, string userId, string failureReason)
+    private void VerifyFailedAttemptPublished(string userName, string userId, string failureReason, Times? times = null)
     {
         _eventPublisher.Verify(x => x.Publish(
             It.Is<UserSignInAttemptEvent>(e =>
@@ -248,8 +288,9 @@ public class BasicAuthenticationHandlerTests
                 e.UserId == userId &&
                 !e.Succeeded &&
                 e.FailureReason == failureReason &&
-                e.SignInType == SignInType.Password),
-            It.IsAny<CancellationToken>()), Times.Once);
+                e.SignInType == SignInType.Password &&
+                e.Provider == BasicAuthenticationOptions.DefaultScheme),
+            It.IsAny<CancellationToken>()), times ?? Times.Once());
     }
 
     private async Task<BasicAuthenticationHandler> CreateHandlerAsync(string userName, string password)
