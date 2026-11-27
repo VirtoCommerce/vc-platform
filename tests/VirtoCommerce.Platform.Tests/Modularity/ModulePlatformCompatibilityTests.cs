@@ -172,6 +172,54 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         }
 
 
+        [Theory]
+        [InlineData("3.100.0", true)]
+        [InlineData("3.200.0", false)]
+        [InlineData("3.500.0", false)]
+        [InlineData("2.500.0", true)]
+        [InlineData("4.200.0", true)]
+        public void ValidateModules_OptionalDependencyVersionCheck(string installedVersion, bool hasError)
+        {
+            // Arrange
+            var platformVersion = SemanticVersion.Parse("3.800.0");
+            var module = CreateModule("A", "1.0.0", "3.800.0", CreateDependency("B", "3.200.0", isOptional: true));
+            var dependency = CreateModule("B", installedVersion, "3.800.0");
+
+            // Act
+            _bootstrapper.ValidateDependenciesInternal([module, dependency], platformVersion);
+
+            // Assert
+            Assert.Empty(dependency.Errors);
+            if (hasError)
+            {
+                Assert.Equal([$"Module dependency B 3.200.0 is incompatible with installed {installedVersion}"], module.Errors);
+            }
+            else
+            {
+                Assert.Empty(module.Errors);
+            }
+        }
+
+        [Fact]
+        public void ValidateModules_IncompatibleOptionalDependency_CascadesToRequiredDependents()
+        {
+            // Arrange
+            var platformVersion = SemanticVersion.Parse("3.800.0");
+            var moduleA = CreateModule("A", "1.0.0", "3.800.0", CreateDependency("B", "3.200.0", isOptional: true));
+            var moduleB = CreateModule("B", "3.100.0", "3.800.0");
+            var moduleC = CreateModule("C", "1.0.0", "3.800.0", CreateDependency("A", "1.0.0"));
+            var moduleD = CreateModule("D", "1.0.0", "3.800.0", CreateDependency("A", "1.0.0", isOptional: true));
+
+            // Act
+            _bootstrapper.ValidateDependenciesInternal([moduleC, moduleD, moduleA, moduleB], platformVersion);
+
+            // Assert
+            Assert.Equal(["Module dependency B 3.200.0 is incompatible with installed 3.100.0"], moduleA.Errors);
+            Assert.Empty(moduleB.Errors);
+            Assert.Equal(["Module skipped because its dependency 'A' has errors"], moduleC.Errors);
+            Assert.Empty(moduleD.Errors);
+        }
+
         private static ManifestModuleInfo CreateModule(string id, string version, string platformVersion, ManifestDependency dependency = null)
         {
             var manifest = new ModuleManifest
