@@ -24,14 +24,14 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         public bool ForceWebSockets { get; set; }
 
         /// <summary>
-        /// The maximum number of notifications kept for one user; older ones are removed first. 0 or less keeps all.
+        /// The maximum number of notifications kept for one user; the least recently saved are removed first. 0 or less keeps all.
         /// </summary>
-        public int MaxNotificationsPerUser { get; set; } = 20;
+        public int MaxNotificationsPerUser { get; set; } = 100;
 
         /// <summary>
-        /// How long a notification is kept after it was created. <see cref="TimeSpan.Zero"/> or less turns the retention off.
+        /// How long a notification is kept after it was last saved. <see cref="TimeSpan.Zero"/> or less turns the retention off.
         /// </summary>
-        public TimeSpan RetentionPeriod { get; set; } = TimeSpan.FromHours(24);
+        public TimeSpan RetentionPeriod { get; set; } = TimeSpan.FromDays(7);
 
         public PushNotificationRedisOptions RedisBackplane { get; set; } = new();
 

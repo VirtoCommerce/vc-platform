@@ -106,7 +106,9 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
             await _redis.GetDatabase().ScriptEvaluateAsync(SaveScript, [GetIndexKey(notification.Creator), GetDataKey(notification.Creator)],
             [
                 notification.Id,
-                ToScore(notification.Created),
+                // Scored by the save time, not Created: a job keeps its Created across progress saves, and must stay in the history
+                // while it keeps reporting. Display order is by Created and does not depend on the score.
+                ToScore(_timeProvider.GetUtcNow().UtcDateTime),
                 PushNotificationJsonSerializer.Serialize(notification),
                 expiredBefore == null ? string.Empty : ToScore(expiredBefore.Value).ToString(CultureInfo.InvariantCulture),
                 PushNotificationStorageRules.GetMaxPerUser(_options),

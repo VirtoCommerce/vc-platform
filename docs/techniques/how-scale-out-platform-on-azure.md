@@ -66,7 +66,7 @@ The scale-out mode follows the configuration, with no switch of its own:
 | `PushNotifications:AzureSignalRService:ConnectionString` only | Azure SignalR Service | Each instance keeps its own in memory |
 | Neither | None: a single instance | In memory |
 
-Each user keeps at most `PushNotifications:MaxNotificationsPerUser` notifications (20 by default) for `PushNotifications:RetentionPeriod` (24 hours by default). The Redis keys and backplane channels start with `PushNotifications:RedisBackplane:ChannelName`, so environments that share one Redis must use different channel names.
+Each user keeps at most `PushNotifications:MaxNotificationsPerUser` notifications (100 by default) for `PushNotifications:RetentionPeriod` (7 days by default), both counted from the last save of a notification. The Redis keys and backplane channels start with `PushNotifications:RedisBackplane:ChannelName`, so environments that share one Redis must use different channel names.
 
 > `PushNotifications:ScalabilityMode` and `PushNotifications:HubUrl` are obsolete and ignored. Instances no longer connect to their own hub with an api key.
 

@@ -15,7 +15,9 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
     public class PushNotificationInMemoryStorage : IPushNotificationStorage
     {
         private readonly Lock _lock = new();
-        private readonly List<PushNotification> _storage = [];
+
+        // In save order: a save of a known id moves the notification to the end, so the end holds the most recently saved.
+        private readonly List<StoredNotification> _storage = [];
         private readonly PushNotificationOptions _options;
         private readonly TimeProvider _timeProvider;
 
@@ -31,15 +33,8 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 
             lock (_lock)
             {
-                var index = _storage.FindIndex(x => x.Id == notification.Id);
-                if (index >= 0)
-                {
-                    _storage[index] = notification;
-                }
-                else
-                {
-                    _storage.Add(notification);
-                }
+                _storage.RemoveAll(x => x.Notification.Id == notification.Id);
+                _storage.Add(new StoredNotification(notification, _timeProvider.GetUtcNow().UtcDateTime));
 
                 RemoveExpired();
                 RemoveOverLimit(notification.Creator);
@@ -53,8 +48,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
             List<PushNotification> userNotifications;
             lock (_lock)
             {
-                var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
-                userNotifications = _storage.Where(x => x.Creator == userId && (expiredBefore == null || x.Created >= expiredBefore)).ToList();
+                userNotifications = GetStored(userId).ToList();
             }
 
             return Task.FromResult(PushNotificationSearch.Search(userNotifications, criteria));
@@ -65,8 +59,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
             IList<PushNotification> unread;
             lock (_lock)
             {
-                var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
-                unread = _storage.Where(x => x.Creator == userId && x.IsNew && (expiredBefore == null || x.Created >= expiredBefore)).ToList();
+                unread = GetStored(userId).Where(x => x.IsNew).ToList();
 
                 foreach (var notification in unread)
                 {
@@ -78,19 +71,20 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
         }
 
         /// <summary>
-        /// Removes the notifications older than <see cref="PushNotificationOptions.RetentionPeriod"/>. Called under the storage lock.
+        /// Removes the notifications last saved more than <see cref="PushNotificationOptions.RetentionPeriod"/> ago. Called under the storage lock.
         /// </summary>
         protected virtual void RemoveExpired()
         {
             var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
             if (expiredBefore != null)
             {
-                _storage.RemoveAll(x => x.Created < expiredBefore);
+                _storage.RemoveAll(x => x.SavedAt < expiredBefore);
             }
         }
 
         /// <summary>
-        /// Keeps only the newest <see cref="PushNotificationOptions.MaxNotificationsPerUser"/> notifications of the creator. Called under the storage lock.
+        /// Keeps only the <see cref="PushNotificationOptions.MaxNotificationsPerUser"/> most recently saved notifications of the creator.
+        /// Called under the storage lock.
         /// </summary>
         protected virtual void RemoveOverLimit(string creator)
         {
@@ -100,16 +94,25 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
                 return;
             }
 
-            var overLimit = _storage
-                .Where(x => x.Creator == creator)
-                .OrderByDescending(x => x.Created)
-                .Skip(maxPerUser)
-                .ToHashSet();
+            var creatorNotifications = _storage.Where(x => x.Notification.Creator == creator).ToList();
+            var overLimit = creatorNotifications.Take(creatorNotifications.Count - maxPerUser).ToHashSet();
 
             if (overLimit.Count > 0)
             {
                 _storage.RemoveAll(overLimit.Contains);
             }
         }
+
+        // The creator's notifications saved within the retention period. Called under the storage lock.
+        private IEnumerable<PushNotification> GetStored(string creator)
+        {
+            var expiredBefore = PushNotificationStorageRules.GetExpiredBefore(_options, _timeProvider);
+
+            return _storage
+                .Where(x => x.Notification.Creator == creator && (expiredBefore == null || x.SavedAt >= expiredBefore))
+                .Select(x => x.Notification);
+        }
+
+        private sealed record StoredNotification(PushNotification Notification, DateTime SavedAt);
     }
 }

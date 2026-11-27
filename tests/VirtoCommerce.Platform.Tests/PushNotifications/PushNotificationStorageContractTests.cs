@@ -15,16 +15,22 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
     /// </summary>
     public abstract class PushNotificationStorageContractTests
     {
+        /// <summary>
+        /// The time every storage of a test sees; tests move it instead of waiting or backdating <see cref="PushNotification.Created"/>.
+        /// </summary>
+        protected ManualTimeProvider Clock { get; } = new(DateTimeOffset.UtcNow);
+
         protected abstract IPushNotificationStorage CreateStorage(int maxPerUser = 20, TimeSpan? retention = null);
 
         [Fact]
-        public async Task Save_MoreThanLimit_KeepsNewestOfThatUserOnly()
+        public async Task Save_MoreThanLimit_KeepsTheMostRecentlySavedOfThatUserOnly()
         {
             var storage = CreateStorage(maxPerUser: 20);
             await storage.SavePushNotificationAsync(new StorageTestNotification("manager", "other"));
             for (var i = 0; i < 25; i++)
             {
-                await storage.SavePushNotificationAsync(new StorageTestNotification("admin", $"n{i}") { Created = DateTime.UtcNow.AddSeconds(i) });
+                Clock.Advance(TimeSpan.FromSeconds(1));
+                await storage.SavePushNotificationAsync(new StorageTestNotification("admin", $"n{i}"));
             }
 
             var admin = Search(storage, "admin");
@@ -46,10 +52,11 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
         }
 
         [Fact]
-        public async Task Save_RemovesNotificationsOlderThanRetention()
+        public async Task Save_RemovesNotificationsNotSavedWithinRetention()
         {
             var storage = CreateStorage(retention: TimeSpan.FromHours(24));
-            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "old") { Created = DateTime.UtcNow.AddHours(-25) });
+            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "old"));
+            Clock.Advance(TimeSpan.FromHours(25));
             await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "fresh"));
 
             Search(storage, "admin").NotifyEvents.Select(x => x.Title).Should().Equal("fresh");
@@ -58,16 +65,59 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
         [Fact]
         public async Task Search_HidesNotificationsThatExpiredAfterTheLastSave()
         {
-            var retention = TimeSpan.FromHours(24);
-            var storage = CreateStorage(retention: retention);
-            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "expiring") { Created = DateTime.UtcNow - retention + TimeSpan.FromMilliseconds(200) });
+            var storage = CreateStorage(retention: TimeSpan.FromHours(24));
+            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "expiring"));
+            Clock.Advance(TimeSpan.FromHours(23));
             Search(storage, "admin").TotalCount.Should().Be(1);
 
-            await Task.Delay(400, TestContext.Current.CancellationToken);
+            Clock.Advance(TimeSpan.FromHours(2));
 
             var result = Search(storage, "admin");
             result.TotalCount.Should().Be(0);
             result.NewCount.Should().Be(0);
+        }
+
+        [Fact]
+        public async Task Job_OvertakenByNewerNotifications_StaysWhileItReportsAndAfterItEnds()
+        {
+            var storage = CreateStorage(maxPerUser: 2);
+            var job = new StorageTestNotification("admin", "Import") { ProcessedCount = 1 };
+            await storage.SavePushNotificationAsync(job);
+            Clock.Advance(TimeSpan.FromMinutes(1));
+            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "a"));
+            Clock.Advance(TimeSpan.FromMinutes(1));
+            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "b"));
+
+            Clock.Advance(TimeSpan.FromMinutes(1));
+            job.ProcessedCount = 50;
+            await storage.SavePushNotificationAsync(job);
+            Search(storage, "admin").NotifyEvents.Select(x => x.Title).Should().Contain("Import", "a progress report keeps the job in the history");
+
+            Clock.Advance(TimeSpan.FromMinutes(1));
+            job.ProcessedCount = 100;
+            job.Description = "Failed";
+            await storage.SavePushNotificationAsync(job);
+
+            var stored = Search(storage, "admin").NotifyEvents.OfType<StorageTestNotification>().Single(x => x.Id == job.Id);
+            stored.ProcessedCount.Should().Be(100);
+            stored.Description.Should().Be("Failed");
+            stored.Created.Should().BeCloseTo(job.Created, TimeSpan.FromMilliseconds(1), "Created stays the start of the job");
+        }
+
+        [Fact]
+        public async Task Job_RunningLongerThanRetention_StaysWhileItReports()
+        {
+            var storage = CreateStorage(retention: TimeSpan.FromHours(24));
+            var job = new StorageTestNotification("admin", "Reindex") { ProcessedCount = 1 };
+            await storage.SavePushNotificationAsync(job);
+
+            Clock.Advance(TimeSpan.FromHours(20));
+            job.ProcessedCount = 2;
+            await storage.SavePushNotificationAsync(job);
+            Clock.Advance(TimeSpan.FromHours(20));
+
+            Search(storage, "admin").NotifyEvents.Should().ContainSingle()
+                .Which.Should().BeOfType<StorageTestNotification>().Which.ProcessedCount.Should().Be(2);
         }
 
         [Fact]
@@ -77,9 +127,11 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
             var progress = new StorageTestNotification("admin", "Export") { ProcessedCount = 1 };
             await storage.SavePushNotificationAsync(progress);
 
+            Clock.Advance(TimeSpan.FromSeconds(1));
             var update = new StorageTestNotification("admin", "Export") { Id = progress.Id, Created = progress.Created, ProcessedCount = 100 };
             await storage.SavePushNotificationAsync(update);
-            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "other") { Created = DateTime.UtcNow.AddSeconds(1) });
+            Clock.Advance(TimeSpan.FromSeconds(1));
+            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "other"));
 
             var notifications = Search(storage, "admin").NotifyEvents;
             notifications.Select(x => x.Title).Should().BeEquivalentTo("Export", "other");
@@ -124,7 +176,8 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
         public async Task Save_ZeroLimitsKeepEverything()
         {
             var storage = CreateStorage(maxPerUser: 0, retention: TimeSpan.Zero);
-            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "old") { Created = DateTime.UtcNow.AddDays(-30) });
+            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "old"));
+            Clock.Advance(TimeSpan.FromDays(30));
             for (var i = 0; i < 30; i++)
             {
                 await storage.SavePushNotificationAsync(new StorageTestNotification("admin", $"n{i}"));
@@ -148,17 +201,29 @@ namespace VirtoCommerce.Platform.Tests.PushNotifications
             {
                 MaxNotificationsPerUser = maxPerUser,
                 RetentionPeriod = retention ?? TimeSpan.FromHours(24),
-            }));
+            }), Clock);
         }
 
         [Fact]
-        public void DefaultOptions_Are20PerUserFor24Hours()
+        public void DefaultOptions_Are100PerUserFor7Days()
         {
             var options = new PushNotificationOptions();
 
-            options.MaxNotificationsPerUser.Should().Be(20);
-            options.RetentionPeriod.Should().Be(TimeSpan.FromHours(24));
+            options.MaxNotificationsPerUser.Should().Be(100);
+            options.RetentionPeriod.Should().Be(TimeSpan.FromDays(7));
         }
+    }
+
+    /// <summary>
+    /// A clock that moves only when a test advances it.
+    /// </summary>
+    public sealed class ManualTimeProvider(DateTimeOffset now) : TimeProvider
+    {
+        private DateTimeOffset _now = now;
+
+        public override DateTimeOffset GetUtcNow() => _now;
+
+        public void Advance(TimeSpan by) => _now += by;
     }
 
     public class StorageTestNotification : PushNotification

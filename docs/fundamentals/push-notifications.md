@@ -70,7 +70,7 @@ Every operator of the seller now receives the seller's notifications live, and u
 ## Notification history
 
 - With `ConnectionStrings:RedisConnectionString`, the history is kept in Redis and shared by all platform instances; without Redis, each instance keeps its own in memory.
-- A user keeps at most `PushNotifications:MaxNotificationsPerUser` notifications (20 by default) for `PushNotifications:RetentionPeriod` (24 hours by default).
+- A user keeps at most `PushNotifications:MaxNotificationsPerUser` notifications (100 by default) for `PushNotifications:RetentionPeriod` (7 days by default). Both count from the last save, not from `Created`: a job that keeps reporting progress stays in the history, and its final result is kept for the full period.
 - A notification with a known id replaces the stored one, so a job that reports progress updates one notification.
 - `POST api/platform/pushnotifications/markAllAsRead` marks the user's new notifications as read in the history without sending them again.
 

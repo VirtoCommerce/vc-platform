@@ -71,7 +71,7 @@ public sealed class RedisPushNotificationStorageIntegrationTests : PushNotificat
             RedisBackplane = new PushNotificationRedisOptions { ChannelName = _channelName },
         };
 
-        return new RedisPushNotificationStorage(connection, Options.Create(options), NullLogger<RedisPushNotificationStorage>.Instance);
+        return new RedisPushNotificationStorage(connection, Options.Create(options), NullLogger<RedisPushNotificationStorage>.Instance, Clock);
     }
 
     [Fact]
@@ -90,10 +90,12 @@ public sealed class RedisPushNotificationStorageIntegrationTests : PushNotificat
     public async Task Save_TrimsTheHashAndSetsKeyLifetime()
     {
         var storage = CreateStorage(maxPerUser: 3);
-        await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "old") { Created = DateTime.UtcNow.AddHours(-25) });
+        await storage.SavePushNotificationAsync(new StorageTestNotification("admin", "old"));
+        Clock.Advance(TimeSpan.FromHours(25));
         for (var i = 0; i < 5; i++)
         {
-            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", $"n{i}") { Created = DateTime.UtcNow.AddSeconds(i) });
+            Clock.Advance(TimeSpan.FromSeconds(1));
+            await storage.SavePushNotificationAsync(new StorageTestNotification("admin", $"n{i}"));
         }
 
         (await Database.SortedSetLengthAsync(Key("admin", "index"))).Should().Be(3);
