@@ -65,6 +65,24 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             Assert.Contains("en", result);
         }
 
+        [Theory]
+        [InlineData("../../appsettings")]
+        [InlineData("..\\..\\appsettings")]
+        [InlineData("*")]
+        public void GetTranslationDataForLanguage_InvalidLanguage_ReturnsFallbackWithoutQueryingProviders(string lang)
+        {
+            //Arrange
+            var fallback = JObject.FromObject(new { platform = new { title = "English" } });
+            _translationDataProviderMock.Setup(x => x.GetTranslationDataForLanguage("en")).Returns(fallback);
+
+            //Act
+            var result = _translationService.GetTranslationDataForLanguage(lang);
+
+            //Assert
+            Assert.Equal("English", result.SelectToken("platform.title")?.ToString());
+            _translationDataProviderMock.Verify(x => x.GetTranslationDataForLanguage(lang), Times.Never);
+        }
+
         private static IPlatformMemoryCache GetCache()
         {
             return MemoryCacheMockHelper.GetPlatformMemoryCache(new CachingOptions { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });

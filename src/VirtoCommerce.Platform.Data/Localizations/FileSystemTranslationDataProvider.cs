@@ -19,7 +19,11 @@ namespace VirtoCommerce.Platform.Data.Localizations
             {
                 throw new ArgumentException($"{nameof(lang)} must be set");
             }
-            //Add cache  expiration token
+            if (!TranslationLanguage.IsValid(lang))
+            {
+                return new JObject();
+            }
+
             var files = GetAllTranslationFiles($"{lang}.*.json");
             return ReadTranslationJson(files);
         }
@@ -40,9 +44,15 @@ namespace VirtoCommerce.Platform.Data.Localizations
                 //Return resource files for platform project
                 if (Directory.Exists(discoveryFolder))
                 {
+                    // A pattern can carry a directory part ("../x.json") that moves the search out of the folder
+                    var folder = Path.TrimEndingDirectorySeparator(Path.GetFullPath(discoveryFolder)) + Path.DirectorySeparatorChar;
+
                     foreach (var file in Directory.EnumerateFiles(discoveryFolder, pattern, SearchOption.AllDirectories))
                     {
-                        yield return file;
+                        if (Path.GetFullPath(file).StartsWith(folder, StringComparison.OrdinalIgnoreCase))
+                        {
+                            yield return file;
+                        }
                     }
                 }
             }

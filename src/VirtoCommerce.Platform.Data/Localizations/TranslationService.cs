@@ -33,7 +33,8 @@ namespace VirtoCommerce.Platform.Data.Localizations
                 return InnerGetTranslationData(_options.FallbackLanguage);
             });
 
-            if (lang != null && !lang.EqualsIgnoreCase(_options.FallbackLanguage))
+            // An unknown-format language gets the fallback translations and no cache entry of its own
+            if (TranslationLanguage.IsValid(lang) && !lang.EqualsIgnoreCase(_options.FallbackLanguage))
             {
                 var cacheKey = CacheKey.With(GetType(), "RequestedLanguageJson", lang);
                 result = _memoryCache.GetOrCreateExclusive(cacheKey, cacheEntry =>
