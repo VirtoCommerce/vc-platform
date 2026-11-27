@@ -94,7 +94,7 @@ jobs:
         echo "RELEASE_STATUS=true" >> $GITHUB_ENV
 
     - name: Set BUILD_DOCKER
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main') }}
+      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main') }}
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
@@ -116,9 +116,11 @@ jobs:
       id: changelog
       uses: VirtoCommerce/.github/actions/changelog-generator@v3.1000.11
 
+    # A manual run on a feature branch gets the branch name in its version (fullSuffix).
+    # A manual run on master/main builds the release itself: no suffix, as on push.
     - name: Set VERSION_SUFFIX variable
       run: |
-        if [ '${{ github.event_name }}' = 'workflow_dispatch' ]; then
+        if [ '${{ github.event_name }}' = 'workflow_dispatch' ] && [ '${{ github.ref }}' != 'refs/heads/master' ] && [ '${{ github.ref }}' != 'refs/heads/main' ]; then
           echo "VERSION_SUFFIX=${{ steps.image.outputs.fullSuffix }}" >> $GITHUB_ENV
         else
           echo "VERSION_SUFFIX=${{ steps.image.outputs.suffix }}" >> $GITHUB_ENV
@@ -133,7 +135,7 @@ jobs:
         fi;
 
     - name: Add version suffix
-      if: ${{ github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main' }}
+      if: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
       uses: VirtoCommerce/.github/actions/add-version-suffix@v3.1000.11
       with:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
@@ -195,7 +197,7 @@ jobs:
         NUGET_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
 
     - name: Publish to Blob
-      if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && (github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main')) }}
+      if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main') }}
       id: blobRelease
       uses: VirtoCommerce/.github/actions/publish-blob-release@v3.1000.11
       with:
