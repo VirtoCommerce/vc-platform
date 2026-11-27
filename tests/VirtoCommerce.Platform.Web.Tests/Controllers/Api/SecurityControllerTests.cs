@@ -1279,5 +1279,81 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             // Assert
             published.CallbackUrl.Should().Be("https://admin.example.com/apps/admin-shell/#!/resetpassword/user-reset/token-1");
         }
+
+        #region API keys
+
+        private const string StoredApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110";
+        private const string MaskedApiKey = "0f1e********";
+
+        private UserApiKey SetupStoredApiKey(ApplicationUser owner)
+        {
+            var apiKey = new UserApiKey { Id = "key-1", UserId = owner.Id, UserName = owner.UserName, ApiKey = StoredApiKey, IsActive = true };
+            _userApiKeyServiceMock.Setup(x => x.GetAllUserApiKeysAsync(owner.Id)).ReturnsAsync([apiKey]);
+            _userApiKeyServiceMock.Setup(x => x.GetApiKeyByIdAsync(apiKey.Id)).ReturnsAsync(apiKey);
+            _userManagerMock.Setup(x => x.FindByIdAsync(owner.Id)).ReturnsAsync(owner);
+            return apiKey;
+        }
+
+        [Fact]
+        public async Task GetUserApiKeys_MasksTheValue_AndLeavesTheServiceInstanceAsItIs()
+        {
+            var owner = new ApplicationUser { Id = "owner-id", UserName = "owner" };
+            var stored = SetupStoredApiKey(owner);
+
+            var result = await _controller.GetUserApiKeys(owner.Id);
+
+            var keys = (UserApiKey[])((OkObjectResult)result.Result).Value;
+            keys.Should().ContainSingle();
+            keys[0].ApiKey.Should().Be(MaskedApiKey);
+            keys[0].Id.Should().Be(stored.Id);
+            keys[0].IsActive.Should().BeTrue();
+            stored.ApiKey.Should().Be(StoredApiKey);
+        }
+
+        [Theory]
+        [InlineData(MaskedApiKey)]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task SaveUserApiKey_MaskedOrEmptyValue_KeepsTheStoredValue(string sentValue)
+        {
+            var owner = new ApplicationUser { Id = "owner-id", UserName = "owner" };
+            SetupStoredApiKey(owner);
+            UserApiKey saved = null;
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .Callback((UserApiKey[] keys) => saved = keys.Single())
+                .ReturnsAsync((UserApiKey[] keys) => keys);
+
+            await _controller.SaveUserApiKey(new UserApiKey { Id = "key-1", UserId = owner.Id, ApiKey = sentValue, IsActive = false });
+
+            saved.ApiKey.Should().Be(StoredApiKey);
+            saved.IsActive.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_NewValue_ReplacesTheStoredValue()
+        {
+            var owner = new ApplicationUser { Id = "owner-id", UserName = "owner" };
+            SetupStoredApiKey(owner);
+            UserApiKey saved = null;
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .Callback((UserApiKey[] keys) => saved = keys.Single())
+                .ReturnsAsync((UserApiKey[] keys) => keys);
+
+            await _controller.SaveUserApiKey(new UserApiKey { Id = "key-1", UserId = owner.Id, ApiKey = "a-brand-new-key-value", IsActive = true });
+
+            saved.ApiKey.Should().Be("a-brand-new-key-value");
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_NullBody_IsBadRequest()
+        {
+            var result = await _controller.SaveUserApiKey(null);
+
+            result.Result.Should().BeOfType<BadRequestResult>();
+        }
+
+        #endregion
     }
 }

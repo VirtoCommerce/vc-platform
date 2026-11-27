@@ -1076,8 +1076,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityQuery)]
         public async Task<ActionResult<UserApiKey[]>> GetUserApiKeys([FromRoute] string id)
         {
+            // An API key signs its owner in, so no read hands it out: the value is masked, and the only place a
+            // client sees it is the request that created it.
             var result = await _userApiKeyService.GetAllUserApiKeysAsync(id);
-            return Ok(result);
+            return Ok(result?.Select(MaskApiKey).ToArray() ?? []);
         }
 
         [HttpPost]
@@ -1085,6 +1087,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<UserApiKey[]>> SaveUserApiKey([FromBody] UserApiKey userApiKey)
         {
+            if (userApiKey == null)
+            {
+                return BadRequest();
+            }
+
+            // A client edits what GetUserApiKeys gave it, so a save may carry the mask back: it keeps the stored value.
+            if (!userApiKey.IsTransient())
+            {
+                var storedApiKey = await _userApiKeyService.GetApiKeyByIdAsync(userApiKey.Id);
+                if (storedApiKey != null &&
+                    (string.IsNullOrEmpty(userApiKey.ApiKey) || userApiKey.ApiKey == MaskApiKeyValue(storedApiKey.ApiKey)))
+                {
+                    userApiKey.ApiKey = storedApiKey.ApiKey;
+                }
+            }
+
             await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
             return Ok();
         }
@@ -1403,6 +1421,35 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ?? adminUIs.FirstOrDefault();
 
             return adminUI?.Url ?? "/";
+        }
+
+        private const int ApiKeyVisiblePrefixLength = 4;
+        private const string ApiKeyMask = "********";
+
+        /// <summary>
+        /// A copy of the key with its value masked; the service's instance is cached and must stay as it is.
+        /// </summary>
+        private static UserApiKey MaskApiKey(UserApiKey apiKey)
+        {
+            var result = AbstractTypeFactory<UserApiKey>.TryCreateInstance();
+            result.Id = apiKey.Id;
+            result.UserId = apiKey.UserId;
+            result.UserName = apiKey.UserName;
+            result.IsActive = apiKey.IsActive;
+            result.CreatedDate = apiKey.CreatedDate;
+            result.CreatedBy = apiKey.CreatedBy;
+            result.ModifiedDate = apiKey.ModifiedDate;
+            result.ModifiedBy = apiKey.ModifiedBy;
+            result.ApiKey = MaskApiKeyValue(apiKey.ApiKey);
+            return result;
+        }
+
+        private static string MaskApiKeyValue(string apiKey)
+        {
+            // A short key keeps nothing: four characters of eight would be half of it.
+            return apiKey?.Length > ApiKeyVisiblePrefixLength * 2
+                ? apiKey[..ApiKeyVisiblePrefixLength] + ApiKeyMask
+                : ApiKeyMask;
         }
 
         private bool IsUserEditable(string userName)
