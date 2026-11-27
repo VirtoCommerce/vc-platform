@@ -33,6 +33,10 @@ namespace VirtoCommerce.Platform.Data.Localizations
                 return InnerGetTranslationData(_options.FallbackLanguage);
             });
 
+            // A language that is not installed gets the fallback translations and no cache entry of its own,
+            // so the number of cached translation trees never exceeds the number of installed languages
+            lang = GetInstalledLanguage(lang);
+
             if (lang != null && !lang.EqualsIgnoreCase(_options.FallbackLanguage))
             {
                 var cacheKey = CacheKey.With(GetType(), "RequestedLanguageJson", lang);
@@ -62,6 +66,13 @@ namespace VirtoCommerce.Platform.Data.Localizations
             return result;
         }
 
+
+        private string GetInstalledLanguage(string lang)
+        {
+            return TranslationLanguage.IsValid(lang)
+                ? GetListOfInstalledLanguages().FirstOrDefault(x => x.EqualsIgnoreCase(lang))
+                : null;
+        }
 
         protected JObject InnerGetTranslationData(string language)
         {
