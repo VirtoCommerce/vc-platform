@@ -1106,11 +1106,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/apikeys")]
         [Authorize(PlatformPermissions.SecurityUpdate)]
+        [ProducesResponseType(typeof(UserApiKey[]), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserApiKey[]>> SaveUserApiKey([FromBody] UserApiKey userApiKey)
         {
             if (userApiKey == null)
             {
-                return BadRequest();
+                return ApiKeyBadRequest("The request has no API key.");
             }
 
             // An existing key stays with its owner: the body cannot move it to another user.
@@ -1119,7 +1121,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 if (!string.IsNullOrEmpty(userApiKey.UserId) && userApiKey.UserId != storedApiKey.UserId)
                 {
-                    return BadRequest("An API key cannot be moved to another user.");
+                    return ApiKeyBadRequest("An API key cannot be moved to another user.");
                 }
 
                 userApiKey.UserId = storedApiKey.UserId;
@@ -1145,7 +1147,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var validationError = ValidateClientApiKey(userApiKey.ApiKey, storedApiKey);
             if (validationError != null)
             {
-                return BadRequest(validationError);
+                return ApiKeyBadRequest(validationError);
             }
 
             try
@@ -1156,7 +1158,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             catch (ApiKeyConflictException ex)
             {
                 // The same answer as for any other refused value: it says neither whose key this is nor its hash.
-                return BadRequest(ex.Message);
+                return ApiKeyBadRequest(ex.Message);
             }
         }
 
@@ -1197,12 +1199,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/apikeys/{keyId}/regenerate")]
         [Authorize(PlatformPermissions.SecurityUpdate)]
+        [ProducesResponseType(typeof(UserApiKey), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserApiKey>> RegenerateUserApiKey([FromRoute] string keyId, [FromServices] IApiKeyGenerator apiKeyGenerator)
         {
             var storedApiKey = await _userApiKeyService.GetApiKeyByIdAsync(keyId);
             if (storedApiKey == null)
             {
-                return NotFound();
+                return NotFound(ApiKeyProblem(StatusCodes.Status404NotFound, "The API key was not found.", $"There is no API key with id '{keyId}'."));
             }
 
             var (_, denied) = await AuthorizeApiKeyOwnerAsync(storedApiKey.UserId);
@@ -1225,15 +1230,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("users/apikeys")]
         [Authorize(PlatformPermissions.SecurityUpdate)]
+        [ProducesResponseType(typeof(UserApiKey[]), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         public Task<ActionResult<UserApiKey[]>> UpdateUserApiKey([FromBody] UserApiKey userApiKey)
         {
             return SaveUserApiKey(userApiKey);
         }
 
+        /// <summary>
+        /// Deletes the keys that exist among <paramref name="ids"/>; unknown ids are skipped. Answers 200 with no body.
+        /// </summary>
         [HttpDelete]
         [Route("users/apikeys")]
         [Authorize(PlatformPermissions.SecurityDelete)]
-        public async Task<ActionResult<UserApiKey[]>> DeleteUserApiKeys([FromQuery] string[] ids)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> DeleteUserApiKeys([FromQuery] string[] ids)
         {
             var storedApiKeys = await _userApiKeyService.GetApiKeysByIdsAsync(ids ?? []);
 
@@ -1262,7 +1274,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (owner == null)
             {
                 LogUserNotFound(userId);
-                return (null, BadRequest(IdentityResult.Failed(CommonErrorDescriber.UserNotFound()).ToSecurityResult()));
+                return (null, ApiKeyBadRequest(CommonErrorDescriber.UserNotFound().Description));
             }
 
             if (!IsUserEditable(owner.UserName))
@@ -1279,6 +1291,33 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             return (owner, null);
+        }
+
+        /// <summary>
+        /// A 400 of the API key endpoints, as RFC 9457 problem details.
+        /// </summary>
+        private BadRequestObjectResult ApiKeyBadRequest(string detail)
+        {
+            return BadRequest(ApiKeyProblem(StatusCodes.Status400BadRequest, "The API key request is not valid.", detail));
+        }
+
+        /// <summary>
+        /// RFC 9457 problem details. <c>message</c> repeats <c>detail</c> for clients of the platform's other error
+        /// responses, which carry the text in <c>message</c>.
+        /// </summary>
+        private static ProblemDetails ApiKeyProblem(int status, string title, string detail)
+        {
+            var problem = new ProblemDetails
+            {
+                Type = status == StatusCodes.Status404NotFound
+                    ? "https://tools.ietf.org/html/rfc9110#section-15.5.5"
+                    : "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Title = title,
+                Status = status,
+                Detail = detail,
+            };
+            problem.Extensions["message"] = detail;
+            return problem;
         }
 
         /// <summary>

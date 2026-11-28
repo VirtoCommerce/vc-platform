@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
@@ -12,7 +13,10 @@ namespace VirtoCommerce.Platform.Core.Security
 
         /// <summary>
         /// The key as hashed by the registered IApiKeyHasher (SHA-256, lowercase hex, by default). Carried by backups so a restore keeps the keys working.
+        /// The REST API never returns it: it is left out of the API schema, and out of the JSON while it is empty.
         /// </summary>
+        [SwaggerIgnore]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ApiKeyHash { get; set; }
 
         /// <summary>

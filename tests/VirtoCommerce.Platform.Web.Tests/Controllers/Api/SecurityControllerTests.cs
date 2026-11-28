@@ -1378,7 +1378,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             var result = await _controller.DeleteUserApiKeys(["own-key", "admin-key"]);
 
-            result.Result.Should().BeOfType<ForbidResult>();
+            result.Should().BeOfType<ForbidResult>();
             _userApiKeyServiceMock.Verify(x => x.DeleteApiKeysAsync(It.IsAny<string[]>()), Times.Never);
         }
 
@@ -1491,7 +1491,10 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var existing = await _controller.SaveUserApiKey(new UserApiKey { Id = "key-1", ApiKey = sentValue });
             var created = await _controller.SaveUserApiKey(new UserApiKey { UserId = _apiKeyOwner.Id, ApiKey = sentValue });
 
-            ((string)existing.Result.Should().BeOfType<BadRequestObjectResult>().Subject.Value).Should().Match(expectedMessage);
+            var problem = existing.Result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<ProblemDetails>().Subject;
+            problem.Status.Should().Be(StatusCodes.Status400BadRequest);
+            problem.Detail.Should().Match(expectedMessage);
+            problem.Extensions["message"].Should().Be(problem.Detail);
             created.Result.Should().BeOfType<BadRequestObjectResult>();
             _userApiKeyServiceMock.Verify(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()), Times.Never);
         }
@@ -1560,7 +1563,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = _apiKeyOwner.Id, ApiKey = "vc_someone-elses-key-0123456789abcdef" });
 
             var badRequest = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
-            badRequest.Value.Should().Be(ApiKeyConflictException.DefaultMessage);
+            badRequest.Value.Should().BeOfType<ProblemDetails>().Which.Detail.Should().Be(ApiKeyConflictException.DefaultMessage);
         }
 
         [Fact]
@@ -1615,7 +1618,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             var result = await _controller.DeleteUserApiKeys(["key-1"]);
 
-            result.Result.Should().BeOfType<ForbidResult>();
+            result.Should().BeOfType<ForbidResult>();
             _userApiKeyServiceMock.Verify(x => x.DeleteApiKeysAsync(It.IsAny<string[]>()), Times.Never);
         }
 
@@ -1624,7 +1627,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         {
             var result = await _controller.SaveUserApiKey(null);
 
-            result.Result.Should().BeOfType<BadRequestResult>();
+            result.Result.Should().BeOfType<BadRequestObjectResult>().Which.Value.Should().BeOfType<ProblemDetails>();
             _userApiKeyServiceMock.Verify(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()), Times.Never);
         }
 
@@ -1660,7 +1663,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         {
             var result = await _controller.RegenerateUserApiKey("missing", Mock.Of<IApiKeyGenerator>());
 
-            result.Result.Should().BeOfType<NotFoundResult>();
+            result.Result.Should().BeOfType<NotFoundObjectResult>().Which.Value.Should().BeOfType<ProblemDetails>();
         }
 
         #endregion

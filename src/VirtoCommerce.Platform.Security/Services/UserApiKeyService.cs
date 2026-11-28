@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -179,6 +180,7 @@ namespace VirtoCommerce.Platform.Security.Services
                     throw new ApiKeyConflictException();
                 }
 
+                var savedEntities = new List<(UserApiKey Model, UserApiKeyEntity Entity)>();
                 foreach (var apiKey in apiKeys)
                 {
                     var originalEntity = apiKeysEntities.FirstOrDefault(x => x.Id == apiKey.Id);
@@ -195,6 +197,8 @@ namespace VirtoCommerce.Platform.Security.Services
                     {
                         repository.Add(modifiedEntity);
                     }
+
+                    savedEntities.Add((apiKey, originalEntity ?? modifiedEntity));
                 }
                 try
                 {
@@ -214,6 +218,15 @@ namespace VirtoCommerce.Platform.Security.Services
 
                 pkMap.ResolvePrimaryKeys();
                 ApiKeyCacheRegion.ExpireRegion();
+
+                // The keys returned carry what was stored, audit fields included, not what the caller sent.
+                foreach (var (model, entity) in savedEntities)
+                {
+                    model.CreatedDate = entity.CreatedDate;
+                    model.CreatedBy = entity.CreatedBy;
+                    model.ModifiedDate = entity.ModifiedDate;
+                    model.ModifiedBy = entity.ModifiedBy;
+                }
             }
             return apiKeys;
         }

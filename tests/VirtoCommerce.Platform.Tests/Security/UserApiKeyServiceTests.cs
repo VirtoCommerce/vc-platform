@@ -329,6 +329,39 @@ public class UserApiKeyServiceTests
     }
 
     [Fact]
+    public async Task SaveApiKeysAsync_ReturnsTheStoredAuditFields_NotTheOnesSent()
+    {
+        var created = new DateTime(2026, 11, 28, 10, 0, 0, DateTimeKind.Utc);
+        var existing = HashedRow("existing", "vc_existing-key-0123456789abcdefghij");
+        existing.CreatedDate = created.AddDays(-1);
+        existing.CreatedBy = "creator";
+        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out var added, existing);
+        unitOfWork.Setup(x => x.Commit()).Callback(() =>
+        {
+            // What the auditing in the data layer does on save.
+            foreach (var entity in added)
+            {
+                entity.CreatedDate = created;
+                entity.CreatedBy = "admin";
+            }
+            existing.ModifiedDate = created;
+            existing.ModifiedBy = "admin";
+        });
+
+        var result = await service.SaveApiKeysAsync([
+            new UserApiKey { UserId = "the-user" },
+            new UserApiKey { Id = "existing", IsActive = false },
+        ]);
+
+        result[0].CreatedDate.Should().Be(created);
+        result[0].CreatedBy.Should().Be("admin");
+        result[1].CreatedDate.Should().Be(created.AddDays(-1));
+        result[1].CreatedBy.Should().Be("creator");
+        result[1].ModifiedDate.Should().Be(created);
+        result[1].ModifiedBy.Should().Be("admin");
+    }
+
+    [Fact]
     public async Task SaveApiKeysAsync_UuidKeyFromAnOlderAdminUi_IsAccepted()
     {
         var service = CreateService(new RecordingPlatformMemoryCache(), out _, out var added);
@@ -351,6 +384,17 @@ public class UserApiKeyServiceTests
         firstPage.TotalCount.Should().Be(3);
         firstPage.Results.Select(x => x.Id).Should().Equal("a", "b");
         secondPage.Results.Select(x => x.Id).Should().Equal("c");
+    }
+
+    [Fact]
+    public void UserApiKeyJson_LeavesOutAnEmptyHash_AndKeepsAStoredOne()
+    {
+        // The REST API never fills the hash; a backup does, and must keep it so restored keys work.
+        var apiResponse = Newtonsoft.Json.JsonConvert.SerializeObject(new UserApiKey { Id = "key", ApiKey = "vc_A…WXYZ" });
+        var backupEntry = Newtonsoft.Json.JsonConvert.SerializeObject(new UserApiKey { Id = "key", ApiKeyHash = "abc123" });
+
+        apiResponse.Should().NotContain("ApiKeyHash");
+        backupEntry.Should().Contain("\"ApiKeyHash\":\"abc123\"");
     }
 
     #region Hasher and generator
