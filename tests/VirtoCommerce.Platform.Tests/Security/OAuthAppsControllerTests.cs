@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using OpenIddict.Abstractions;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Tests.Security.ClientRegistration;
@@ -18,6 +20,7 @@ using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
 namespace VirtoCommerce.Platform.Tests.Security;
 
@@ -399,7 +402,7 @@ public class OAuthAppsControllerTests
                 new() { Uri = "https://platform.example.com/ucp/mcp", Title = "Shopping", Kind = "mcp" },
                 new() { Uri = "" },
             ]);
-        var controller = CreateController(["https://platform.example.com/admin/mcp", "https://api.example.com"], provider.Object);
+        var controller = CreateController(["https://platform.example.com/admin/mcp", "https://api.example.com"], null, provider.Object);
 
         var resources = GetValue(await controller.GetResourcesAsync(TestContext.Current.CancellationToken));
 
@@ -424,7 +427,7 @@ public class OAuthAppsControllerTests
         working
             .Setup(x => x.GetResourcesAsync(It.IsAny<OAuthResourceContext>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([new OAuthResource { Uri = "https://platform.example.com/admin/mcp", Title = "Back office" }]);
-        var controller = CreateController(["https://api.example.com"], failing.Object, empty.Object, working.Object);
+        var controller = CreateController(["https://api.example.com"], null, failing.Object, empty.Object, working.Object);
 
         var resources = GetValue(await controller.GetResourcesAsync(TestContext.Current.CancellationToken));
 
@@ -492,14 +495,179 @@ public class OAuthAppsControllerTests
         (new OAuthAppRules().GetRedirectUriError(uri) == null).Should().Be(isValid);
     }
 
-    private OAuthAppsController CreateController(string[] registeredResources = null, params IOAuthResourceProvider[] providers)
+    [Fact]
+    public async Task Save_NewClientCredentialsApp_ByNonAdministrator_IsForbidden()
+    {
+        // Arrange
+        // PLATFORM-07: a token of the client credentials grant acts as an administrator
+        var controller = CreateController(user: CreateUser(PlatformPermissions.SecurityOAuthApplicationsCreate, PlatformPermissions.SecurityOAuthApplicationsUpdate));
+        var descriptor = new OpenIddictApplicationDescriptor
+        {
+            ClientId = "x",
+            ClientSecret = "secret",
+            ClientType = ClientTypes.Confidential,
+            Permissions = { Permissions.GrantTypes.ClientCredentials },
+        };
+
+        // Act
+        var result = await controller.SaveAsync(descriptor);
+
+        // Assert
+        GetForbiddenErrors(result).Should().ContainSingle().Which.Should().Contain("administrator");
+        _context.Stored.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Save_ClientCredentialsAddedToExistingApp_ByNonAdministrator_IsForbidden()
+    {
+        // Arrange
+        await CreateController().SaveAsync(CreateConfidentialClient(Permissions.GrantTypes.AuthorizationCode));
+        var controller = CreateController(user: CreateUser(PlatformPermissions.SecurityOAuthApplicationsUpdate));
+        var descriptor = GetValue(await controller.GetAsync("integration"));
+        descriptor.Permissions.Add(Permissions.GrantTypes.ClientCredentials);
+
+        // Act
+        var result = await controller.SaveAsync(descriptor);
+
+        // Assert
+        GetForbiddenErrors(result).Should().ContainSingle();
+        GetValue(await controller.GetAsync("integration")).Permissions.Should().NotContain(Permissions.GrantTypes.ClientCredentials);
+    }
+
+    [Fact]
+    public async Task Save_ExistingClientCredentialsApp_ByNonAdministrator_IsForbidden()
+    {
+        // Arrange
+        // a redirect URI or a key set added to the application would let the caller act as the client
+        await CreateController().SaveAsync(CreateConfidentialClient(Permissions.GrantTypes.ClientCredentials));
+        var controller = CreateController(user: CreateUser(PlatformPermissions.SecurityOAuthApplicationsUpdate));
+        var descriptor = GetValue(await controller.GetAsync("integration"));
+        descriptor.RedirectUris.Add(new Uri("https://attacker.example.com/callback"));
+        descriptor.Permissions.Add(Permissions.GrantTypes.AuthorizationCode);
+
+        // Act
+        var result = await controller.SaveAsync(descriptor);
+
+        // Assert
+        GetForbiddenErrors(result).Should().ContainSingle();
+        GetValue(await controller.GetAsync("integration")).RedirectUris.Should().NotContain(new Uri("https://attacker.example.com/callback"));
+    }
+
+    [Fact]
+    public async Task Save_ClientCredentialsRemovedFromExistingApp_ByNonAdministrator_IsForbidden()
+    {
+        // Arrange
+        await CreateController().SaveAsync(CreateConfidentialClient(Permissions.GrantTypes.ClientCredentials));
+        var controller = CreateController(user: CreateUser(PlatformPermissions.SecurityOAuthApplicationsUpdate));
+        var descriptor = GetValue(await controller.GetAsync("integration"));
+        descriptor.Permissions.Remove(Permissions.GrantTypes.ClientCredentials);
+        descriptor.Permissions.Add(Permissions.GrantTypes.AuthorizationCode);
+
+        // Act
+        var result = await controller.SaveAsync(descriptor);
+
+        // Assert
+        GetForbiddenErrors(result).Should().ContainSingle();
+        GetValue(await controller.GetAsync("integration")).Permissions.Should().Contain(Permissions.GrantTypes.ClientCredentials);
+    }
+
+    [Fact]
+    public async Task Save_ClientCredentialsApp_ByAdministrator_IsSaved()
+    {
+        // Arrange
+        var controller = CreateController(user: CreateAdministrator());
+
+        // Act
+        var saved = GetValue(await controller.SaveAsync(CreateConfidentialClient(Permissions.GrantTypes.ClientCredentials)));
+
+        // Assert
+        saved.Permissions.Should().Contain(Permissions.GrantTypes.ClientCredentials);
+    }
+
+    [Fact]
+    public async Task Save_UserSignInApp_ByNonAdministratorWithPermissions_IsSaved()
+    {
+        // Arrange
+        // AI agent and other clients that get tokens for a signed-in user stay open to delegated managers
+        var controller = CreateController(user: CreateUser(PlatformPermissions.SecurityOAuthApplicationsCreate, PlatformPermissions.SecurityOAuthApplicationsUpdate));
+
+        // Act
+        var saved = GetValue(await controller.SaveAsync(CreateAgentClient()));
+        saved.DisplayName = "Renamed";
+        var updated = GetValue(await controller.SaveAsync(saved));
+
+        // Assert
+        updated.DisplayName.Should().Be("Renamed");
+    }
+
+    [Fact]
+    public async Task Save_NewApp_WithoutCreatePermission_IsForbidden()
+    {
+        // Arrange
+        var controller = CreateController(user: CreateUser(PlatformPermissions.SecurityOAuthApplicationsUpdate));
+
+        // Act
+        var result = await controller.SaveAsync(CreateAgentClient());
+
+        // Assert
+        result.Result.Should().BeOfType<ForbidResult>();
+        _context.Stored.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Save_ExistingApp_WithUpdatePermissionOnly_IsSaved()
+    {
+        // Arrange
+        await CreateController().SaveAsync(CreateAgentClient());
+        var controller = CreateController(user: CreateUser(PlatformPermissions.SecurityOAuthApplicationsUpdate));
+        var descriptor = GetValue(await controller.GetAsync("agent"));
+        descriptor.DisplayName = "Renamed";
+
+        // Act
+        var saved = GetValue(await controller.SaveAsync(descriptor));
+
+        // Assert
+        saved.DisplayName.Should().Be("Renamed");
+    }
+
+    private OAuthAppsController CreateController(string[] registeredResources = null, ClaimsPrincipal user = null, params IOAuthResourceProvider[] providers)
     {
         var options = Options.Create(new AuthorizationOptions { Resources = registeredResources ?? [] });
 
         return new OAuthAppsController(_manager, providers, new OAuthAppRules(), options, NullLogger<OAuthAppsController>.Instance)
         {
-            ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
+            ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = user ?? CreateAdministrator() } },
         };
+    }
+
+    private static ClaimsPrincipal CreateAdministrator()
+    {
+        return new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Role, PlatformConstants.Security.SystemRoles.Administrator)], "test"));
+    }
+
+    private static ClaimsPrincipal CreateUser(params string[] permissions)
+    {
+        var claims = permissions.Select(x => new Claim(PlatformConstants.Security.Claims.PermissionClaimType, x));
+        return new ClaimsPrincipal(new ClaimsIdentity(claims, "test"));
+    }
+
+    private static OpenIddictApplicationDescriptor CreateConfidentialClient(string grantType)
+    {
+        return new OpenIddictApplicationDescriptor
+        {
+            ClientId = "integration",
+            ClientSecret = "secret",
+            ClientType = ClientTypes.Confidential,
+            RedirectUris = { new Uri("https://integration.example.com/callback") },
+            Permissions = { grantType },
+        };
+    }
+
+    private static IEnumerable<string> GetForbiddenErrors<T>(ActionResult<T> result)
+    {
+        var forbidden = result.Result.Should().BeOfType<ObjectResult>().Subject;
+        forbidden.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
+        return forbidden.Value.Should().BeOfType<SecurityResult>().Subject.Errors;
     }
 
     [Theory]
