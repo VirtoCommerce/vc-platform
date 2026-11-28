@@ -757,7 +757,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             identity.SetClaim(Claims.Name, application.DisplayName);
 
-            // all clients act as administrator
+            // all clients act as administrator, so only an administrator can save an application with this grant (OAuthAppsController)
             identity.SetClaim(Claims.Role, PlatformConstants.Security.SystemRoles.Administrator);
 
             var principal = new ClaimsPrincipal(identity);
