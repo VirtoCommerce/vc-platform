@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
@@ -20,26 +22,17 @@ namespace VirtoCommerce.Platform.Security.Services
     /// </summary>
     public class UserApiKeyService : IUserApiKeyService
     {
-        /// <summary>
-        /// The mask the API keys endpoint used before key hashing.
-        /// </summary>
-        private const string LegacyMask = "********";
-
         private static readonly TimeSpan _missingApiKeyExpiration = TimeSpan.FromSeconds(30);
-
-        /// <summary>
-        /// The shortest key a client may choose. A UUID, which older admin UIs generate, is 36 characters; keys the
-        /// platform generates are 46.
-        /// </summary>
-        protected virtual int MinimumApiKeyLength => 32;
 
         private readonly Func<ISecurityRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly IApiKeyHasher _hasher;
         private readonly IApiKeyGenerator _generator;
+        private readonly ILogger _logger;
 
+        [Obsolete("Use the constructor that takes IApiKeyHasher, IApiKeyGenerator and ILogger: this one ignores the hasher and generator registered in DI.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public UserApiKeyService(Func<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
-            : this(repositoryFactory, memoryCache, new Sha256ApiKeyHasher(), new DefaultApiKeyGenerator())
+            : this(repositoryFactory, memoryCache, new Sha256ApiKeyHasher(), new DefaultApiKeyGenerator(), NullLogger<UserApiKeyService>.Instance)
         {
         }
 
@@ -47,12 +40,14 @@ namespace VirtoCommerce.Platform.Security.Services
             Func<ISecurityRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IApiKeyHasher hasher,
-            IApiKeyGenerator generator)
+            IApiKeyGenerator generator,
+            ILogger<UserApiKeyService> logger)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
             _hasher = hasher;
             _generator = generator;
+            _logger = logger;
         }
 
         public async Task<UserApiKey> GetApiKeyByKeyAsync(string apiKey)
@@ -105,16 +100,32 @@ namespace VirtoCommerce.Platform.Security.Services
         /// </summary>
         private async Task<UserApiKeyEntity> HashLegacyKeyAsync(ISecurityRepository repository, string apiKey, string apiKeyHash)
         {
-            var entity = await repository.UserApiKeys
+            // The database compares with its collation, which on SQL Server and on MySQL ignores case and trailing
+            // spaces. Only the exact key may match: hashing a variant would lock the client's real key out.
+            var candidates = await repository.UserApiKeys
                 .Where(x => x.ApiKey == apiKey)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
 
-            if (entity != null)
+            var entity = candidates.FirstOrDefault(x => string.Equals(x.ApiKey, apiKey, StringComparison.Ordinal));
+            if (entity == null)
             {
-                entity.ApiKeyHash = apiKeyHash;
-                entity.ApiKeyHint = _hasher.GetHint(apiKey);
-                entity.ApiKey = null;
+                return null;
+            }
+
+            entity.ApiKeyHash = apiKeyHash;
+            entity.ApiKeyHint = _hasher.GetHint(apiKey);
+            entity.ApiKey = null;
+
+            try
+            {
                 await repository.UnitOfWork.CommitAsync();
+                ApiKeyCacheRegion.ExpireRegion();
+            }
+            catch (Exception ex)
+            {
+                // The key is valid either way. A failed write (a deadlock, a read-only replica, another instance
+                // hashing the same row) must not fail the request; the next use tries again.
+                _logger.LogWarning(ex, "Could not hash the plaintext of API key {ApiKeyId}.", entity.Id);
             }
 
             return entity;
@@ -184,11 +195,12 @@ namespace VirtoCommerce.Platform.Security.Services
         /// <item>empty, with <see cref="UserApiKey.ApiKeyHash"/> (a backup restore): that hash is stored;</item>
         /// <item>empty, or the key's own hint, on an existing key: the stored key is kept;</item>
         /// <item>empty, on a new key: the platform generates the key;</item>
-        /// <item>any other value: it becomes the key, unless it looks masked, which is refused.</item>
+        /// <item>any other value: it becomes the key.</item>
         /// </list>
+        /// The service accepts any value, so a backup from before key hashing restores whatever its keys are; the
+        /// REST API checks what clients send before it gets here.
         /// On return, <see cref="UserApiKey.ApiKey"/> holds the key only where this save set it.
         /// </summary>
-        /// <exception cref="ApiKeyValidationException">A key value that looks masked but is not the key's own hint, or is too short.</exception>
         public async Task<UserApiKey[]> SaveApiKeysAsync(UserApiKey[] apiKeys)
         {
             if (apiKeys == null)
@@ -203,7 +215,7 @@ namespace VirtoCommerce.Platform.Security.Services
                 var apiKeysEntities = await repository.UserApiKeys.Where(x => ids.Contains(x.Id))
                                                                   .ToArrayAsync();
 
-                // All keys are checked before any is changed, so a refused key leaves the whole batch unsaved.
+                // All hashes are set before any entity is changed, so an override that throws leaves the batch unsaved.
                 foreach (var apiKey in apiKeys)
                 {
                     SetKeyHash(apiKey, apiKeysEntities.FirstOrDefault(x => x.Id == apiKey.Id));
@@ -249,7 +261,8 @@ namespace VirtoCommerce.Platform.Security.Services
                     return;
                 }
 
-                if (originalEntity != null)
+                // A stored row with neither a hash nor a key has nothing to keep: it gets a key like a new one.
+                if (originalEntity != null && HasStoredKey(originalEntity))
                 {
                     KeepStoredKey(apiKey, originalEntity);
                     return;
@@ -263,18 +276,14 @@ namespace VirtoCommerce.Platform.Security.Services
                 KeepStoredKey(apiKey, originalEntity);
                 return;
             }
-            else if (LooksMasked(value))
-            {
-                // Saved, the mask would become a real key, readable by everyone who can read the key list.
-                throw new ApiKeyValidationException("The API key looks masked. Send an empty value to keep the stored key, or a new key to replace it.");
-            }
-            else if (value.Length < MinimumApiKeyLength)
-            {
-                throw new ApiKeyValidationException($"The API key must be at least {MinimumApiKeyLength} characters long. Send an empty value to have the platform generate one.");
-            }
 
             apiKey.ApiKeyHash = _hasher.Hash(value);
             apiKey.ApiKeyHint = _hasher.GetHint(value);
+        }
+
+        private static bool HasStoredKey(UserApiKeyEntity entity)
+        {
+            return !string.IsNullOrEmpty(entity.ApiKeyHash) || !string.IsNullOrEmpty(entity.ApiKey);
         }
 
         private void KeepStoredKey(UserApiKey apiKey, UserApiKeyEntity originalEntity)
@@ -296,11 +305,6 @@ namespace VirtoCommerce.Platform.Security.Services
             }
 
             return entity.ApiKey != null && (value == entity.ApiKey || value == _hasher.GetHint(entity.ApiKey));
-        }
-
-        private static bool LooksMasked(string value)
-        {
-            return value.Contains(Sha256ApiKeyHasher.HintSeparator) || value.Contains(LegacyMask);
         }
 
         public async Task DeleteApiKeysAsync(string[] ids)

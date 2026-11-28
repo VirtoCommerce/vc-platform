@@ -27,6 +27,7 @@ using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -109,6 +110,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
         private const int MaxSignInLogPageSize = 10000;
+
+        /// <summary>
+        /// The shortest key a client may choose. A UUID, which older admin UIs generate, is 36 characters; keys the
+        /// platform generates are 46.
+        /// </summary>
+        private const int MinimumClientApiKeyLength = 32;
 
         [HttpPost]
         [Route("users/{userId}/sessions/search")]
@@ -1115,15 +1122,45 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             userApiKey.UserName = owner.UserName;
 
-            try
+            // The hash and hint are the platform's to set. A stored hash is how a backup restore keeps a key, and that
+            // goes through the service, not through this endpoint.
+            userApiKey.ApiKeyHash = null;
+            userApiKey.ApiKeyHint = null;
+
+            var validationError = ValidateClientApiKey(userApiKey.ApiKey, storedApiKey);
+            if (validationError != null)
             {
-                var result = await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
-                return Ok(result.Select(ToApiKeyResponse).ToArray());
+                return BadRequest(validationError);
             }
-            catch (ApiKeyValidationException ex)
+
+            var result = await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
+            return Ok(result.Select(ToApiKeyResponse).ToArray());
+        }
+
+        /// <summary>
+        /// Checks a key value a client chose. Empty (keep or generate) and the value the client was shown for the
+        /// stored key (keep) pass; anything else becomes the key, so it must not look masked and must be long enough.
+        /// </summary>
+        private static string ValidateClientApiKey(string value, UserApiKey storedApiKey)
+        {
+            if (string.IsNullOrEmpty(value) ||
+                storedApiKey != null && (value == storedApiKey.ApiKeyHint || value == storedApiKey.ApiKey))
             {
-                return BadRequest(ex.Message);
+                return null;
             }
+
+            if (value.Contains(Sha256ApiKeyHasher.HintSeparator))
+            {
+                // Saved, the mask would become a real key, readable by everyone who can read the key list.
+                return "The API key looks masked. Send an empty value to keep the stored key, or a new key to replace it.";
+            }
+
+            if (value.Length < MinimumClientApiKeyLength)
+            {
+                return $"The API key must be at least {MinimumClientApiKeyLength} characters long. Send an empty value to have the platform generate one.";
+            }
+
+            return null;
         }
 
         /// <summary>

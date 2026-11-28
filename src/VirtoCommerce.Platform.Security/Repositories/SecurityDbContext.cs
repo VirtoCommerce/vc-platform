@@ -71,8 +71,8 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<UserApiKeyEntity>().ToAuditableEntityTable("UserApiKey");
             builder.Entity<UserApiKeyEntity>().Property(x => x.ApiKey).HasMaxLength(Length128);
             builder.Entity<UserApiKeyEntity>().HasIndex(x => new { x.ApiKey }).IsUnique();
-            builder.Entity<UserApiKeyEntity>().Property(x => x.ApiKeyHash).HasMaxLength(256);
-            builder.Entity<UserApiKeyEntity>().Property(x => x.ApiKeyHint).HasMaxLength(32);
+            builder.Entity<UserApiKeyEntity>().Property(x => x.ApiKeyHash).HasMaxLength(Length256);
+            builder.Entity<UserApiKeyEntity>().Property(x => x.ApiKeyHint).HasMaxLength(Length32);
             builder.Entity<UserApiKeyEntity>().HasIndex(x => new { x.ApiKeyHash }).IsUnique();
 
             builder.Entity<UserPasswordHistoryEntity>().ToAuditableEntityTable("AspNetUserPasswordsHistory");

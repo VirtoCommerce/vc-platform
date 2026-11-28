@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using MockQueryable;
 using Moq;
@@ -14,6 +15,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Security.Caching;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
@@ -58,6 +60,31 @@ public class UserApiKeyServiceTests
         row.ApiKeyHint.Should().Be("0f1e…2110");
         row.ApiKey.Should().BeNull("no usable key is left once it is hashed");
         unitOfWork.Verify(x => x.CommitAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetApiKeyByKeyAsync_KeyNotHashedByTheMigration_ExpiresTheApiKeyCacheOnceHashed()
+    {
+        var row = new UserApiKeyEntity { Id = "legacy-row", ApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110", UserId = "the-user", IsActive = true };
+        var service = CreateService(new RecordingPlatformMemoryCache(), out _, out _, row);
+        var token = ApiKeyCacheRegion.CreateChangeToken();
+
+        await service.GetApiKeyByKeyAsync("0f1e2d3c-4b5a-4968-8776-655443322110");
+
+        token.HasChanged.Should().BeTrue("cached key lists still hold the row with its plaintext");
+    }
+
+    [Fact]
+    public async Task GetApiKeyByKeyAsync_HashingTheLegacyKeyFails_StillReturnsTheKey()
+    {
+        var row = new UserApiKeyEntity { Id = "legacy-row", ApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110", UserId = "the-user", IsActive = true };
+        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out _, row);
+        unitOfWork.Setup(x => x.CommitAsync()).ThrowsAsync(new InvalidOperationException("deadlock"));
+
+        var result = await service.GetApiKeyByKeyAsync("0f1e2d3c-4b5a-4968-8776-655443322110");
+
+        result.Should().NotBeNull("the key is valid; only storing its hash failed");
+        result.Id.Should().Be("legacy-row");
     }
 
     [Fact]
@@ -222,22 +249,32 @@ public class UserApiKeyServiceTests
     }
 
     [Theory]
+    [InlineData("short-key")]
     [InlineData("vc_Z…0000")]
-    [InlineData("abcd********")]
-    public async Task SaveApiKeysAsync_MaskedValueThatIsNotTheKeysOwnHint_IsRefusedAndNothingIsSaved(string sentValue)
+    public async Task SaveApiKeysAsync_AnyValue_IsStoredAsGiven_SoAnOldBackupRestoresEveryKey(string restoredValue)
     {
-        var row = HashedRow("the-row", "vc_ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        var storedHash = row.ApiKeyHash;
-        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out var added, row);
+        // Backup restore saves through the service with the plaintext of keys from before key hashing, whatever their
+        // length or shape. The REST API checks what clients choose before it calls the service.
+        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out var added);
 
-        var existing = () => service.SaveApiKeysAsync([new UserApiKey { Id = "the-row", ApiKey = sentValue }]);
-        var created = () => service.SaveApiKeysAsync([new UserApiKey { UserId = "u", ApiKey = sentValue }]);
+        await service.SaveApiKeysAsync([new UserApiKey { Id = "restored", UserId = "the-user", ApiKey = restoredValue }]);
 
-        await existing.Should().ThrowAsync<ApiKeyValidationException>();
-        await created.Should().ThrowAsync<ApiKeyValidationException>();
-        row.ApiKeyHash.Should().Be(storedHash);
-        added.Should().BeEmpty();
-        unitOfWork.Verify(x => x.Commit(), Times.Never);
+        added.Should().ContainSingle();
+        added[0].ApiKey.Should().BeNull();
+        added[0].ApiKeyHash.Should().Be(_hasher.Hash(restoredValue));
+        unitOfWork.Verify(x => x.Commit(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SaveApiKeysAsync_ExistingRowWithNeitherHashNorKey_GetsAGeneratedKey()
+    {
+        var row = new UserApiKeyEntity { Id = "empty-row", UserId = "the-user" };
+        var service = CreateService(new RecordingPlatformMemoryCache(), out _, out _, row);
+
+        var result = await service.SaveApiKeysAsync([new UserApiKey { Id = "empty-row", IsActive = true }]);
+
+        result[0].ApiKey.Should().StartWith(DefaultApiKeyGenerator.Prefix);
+        row.ApiKeyHash.Should().Be(_hasher.Hash(result[0].ApiKey));
     }
 
     [Fact]
@@ -254,20 +291,6 @@ public class UserApiKeyServiceTests
     }
 
     #endregion
-
-    [Theory]
-    [InlineData("short-key")]
-    [InlineData("0123456789abcdef0123456789abcde")]
-    public async Task SaveApiKeysAsync_ClientChosenKeyShorterThan32Characters_IsRefused(string sentValue)
-    {
-        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out var added);
-
-        var save = () => service.SaveApiKeysAsync([new UserApiKey { UserId = "the-user", ApiKey = sentValue }]);
-
-        await save.Should().ThrowAsync<ApiKeyValidationException>().WithMessage("*at least 32 characters*");
-        added.Should().BeEmpty();
-        unitOfWork.Verify(x => x.Commit(), Times.Never);
-    }
 
     [Fact]
     public async Task SaveApiKeysAsync_UuidKeyFromAnOlderAdminUi_IsAccepted()
@@ -286,7 +309,7 @@ public class UserApiKeyServiceTests
         // by an older instance during a rolling upgrade may be, is matched by its plaintext.
         var row = new UserApiKeyEntity { Id = "migrated", ApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110", ApiKeyHash = "sha256-from-the-migration" };
         var repository = CreateRepository(out var unitOfWork, out _, row);
-        var service = new UserApiKeyService(() => repository.Object, new RecordingPlatformMemoryCache(), new ReversingHasher(), new DefaultApiKeyGenerator());
+        var service = new UserApiKeyService(() => repository.Object, new RecordingPlatformMemoryCache(), new ReversingHasher(), new DefaultApiKeyGenerator(), NullLogger<UserApiKeyService>.Instance);
 
         var result = await service.GetApiKeyByKeyAsync("0f1e2d3c-4b5a-4968-8776-655443322110");
 
@@ -301,6 +324,21 @@ public class UserApiKeyServiceTests
         public string Hash(string apiKey) => new(apiKey.Reverse().ToArray());
 
         public string GetHint(string apiKey) => "custom";
+    }
+
+    [Fact]
+    public async Task UserApiKeySearchService_WithoutSortInfos_PagesInIdOrder()
+    {
+        var repository = CreateRepository(out _, out _,
+            HashedRow("c", "vc_key-c"), HashedRow("a", "vc_key-a"), HashedRow("b", "vc_key-b"));
+        var searchService = new UserApiKeySearchService(() => repository.Object);
+
+        var firstPage = await searchService.SearchAsync(new Core.Security.Search.UserApiKeySearchCriteria { Skip = 0, Take = 2 });
+        var secondPage = await searchService.SearchAsync(new Core.Security.Search.UserApiKeySearchCriteria { Skip = 2, Take = 2 });
+
+        firstPage.TotalCount.Should().Be(3);
+        firstPage.Results.Select(x => x.Id).Should().Equal("a", "b");
+        secondPage.Results.Select(x => x.Id).Should().Equal("c");
     }
 
     #region Hasher and generator
@@ -355,7 +393,7 @@ public class UserApiKeyServiceTests
     private static UserApiKeyService CreateService(IPlatformMemoryCache cache, out Mock<IUnitOfWork> unitOfWork, out List<UserApiKeyEntity> added, params UserApiKeyEntity[] rows)
     {
         var repository = CreateRepository(out unitOfWork, out added, rows);
-        return new UserApiKeyService(() => repository.Object, cache, _hasher, new DefaultApiKeyGenerator());
+        return new UserApiKeyService(() => repository.Object, cache, _hasher, new DefaultApiKeyGenerator(), NullLogger<UserApiKeyService>.Instance);
     }
 
     private static Mock<ISecurityRepository> CreateRepository(out Mock<IUnitOfWork> unitOfWork, out List<UserApiKeyEntity> added, params UserApiKeyEntity[] rows)

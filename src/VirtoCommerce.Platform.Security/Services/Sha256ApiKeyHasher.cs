@@ -15,6 +15,11 @@ namespace VirtoCommerce.Platform.Security.Services
 
         private const int HintPartLength = 4;
 
+        /// <summary>
+        /// Eight characters of a shorter key would give away half of it or more.
+        /// </summary>
+        private const int ShortestKeyWithHint = 16;
+
         public virtual string Hash(string apiKey)
         {
             ArgumentNullException.ThrowIfNull(apiKey);
@@ -25,8 +30,7 @@ namespace VirtoCommerce.Platform.Security.Services
 
         public virtual string GetHint(string apiKey)
         {
-            // Eight characters of a key shorter than 16 would give away half of it or more.
-            if (string.IsNullOrEmpty(apiKey) || apiKey.Length < HintPartLength * 4)
+            if (string.IsNullOrEmpty(apiKey) || apiKey.Length < ShortestKeyWithHint)
             {
                 return HintSeparator;
             }
