@@ -1153,15 +1153,13 @@ public class ModuleBootstrapper : IModuleService
             {
                 foreach (var dependency in module.Dependencies)
                 {
-                    if (dependency.Optional)
-                    {
-                        continue;
-                    }
-
                     var installedDependency = modules.FirstOrDefault(x => x.Id.EqualsIgnoreCase(dependency.Id));
                     if (installedDependency == null)
                     {
-                        module.Errors.Add($"Module dependency {dependency.Id} {dependency.Version} is not installed");
+                        if (!dependency.Optional)
+                        {
+                            module.Errors.Add($"Module dependency {dependency.Id} {dependency.Version} is not installed");
+                        }
                     }
                     else if (!dependency.Version.IsCompatibleWithBySemVer(installedDependency.Version))
                     {
