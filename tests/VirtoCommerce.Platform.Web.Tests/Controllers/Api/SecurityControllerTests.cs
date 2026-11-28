@@ -1279,5 +1279,434 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             // Assert
             published.CallbackUrl.Should().Be("https://admin.example.com/apps/admin-shell/#!/resetpassword/user-reset/token-1");
         }
+
+        #region Administrators and roles
+
+        private const string SecurityUpdate = PlatformConstants.Security.Permissions.SecurityUpdate;
+        private const string ManageAdministrators = PlatformConstants.Security.Permissions.SecurityManageAdministrators;
+        private const string ManageRoles = PlatformConstants.Security.Permissions.SecurityManageRoles;
+        private const string ChangesDisabledError = "Changing the administrator flag through the API is disabled";
+        private const string ManageAdministratorsError = "Managing administrators requires";
+        private const string ManageRolesError = "Managing roles requires";
+
+        /// <summary>
+        /// A controller with the Authorization:AllowAdministratorChangesViaApi kill switch on.
+        /// </summary>
+        private SecurityController CreateControllerWithAdministratorChanges()
+        {
+            var securityOptions = new Mock<IOptions<Core.Security.AuthorizationOptions>>();
+            securityOptions.Setup(x => x.Value).Returns(new Core.Security.AuthorizationOptions { AllowAdministratorChangesViaApi = true });
+
+            return CreateSecurityController(securityOptions: securityOptions);
+        }
+
+        private SecurityController CreatePasswordLoginController()
+        {
+            var passwordLoginOptions = new Mock<IOptions<PasswordLoginOptions>>();
+            passwordLoginOptions.Setup(x => x.Value).Returns(new PasswordLoginOptions { Enabled = true });
+
+            return CreateSecurityController(passwordLoginOptions: passwordLoginOptions);
+        }
+
+        /// <summary>
+        /// Signs in an administrator, or a non-administrator that holds the given permissions.
+        /// </summary>
+        private ApplicationUser SetCaller(SecurityController controller, bool isAdministrator, params string[] permissions)
+        {
+            var caller = isAdministrator
+                ? new ApplicationUser { Id = "caller-admin", UserName = "caller-admin@test.com", IsAdministrator = true }
+                : new ApplicationUser { Id = "caller-manager", UserName = "caller-manager@test.com" };
+
+            var claims = new List<Claim> { new("name", caller.UserName) };
+            if (isAdministrator)
+            {
+                claims.Add(new Claim("role", PlatformConstants.Security.SystemRoles.Administrator));
+            }
+            claims.AddRange(permissions.Select(x => new Claim(PlatformConstants.Security.Claims.PermissionClaimType, x)));
+
+            controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "authentication_type", "name", "role"));
+            _userManagerMock.Setup(x => x.FindByNameAsync(caller.UserName)).ReturnsAsync(caller);
+            _userManagerMock.Setup(x => x.FindByIdAsync(caller.Id)).ReturnsAsync(caller);
+
+            return caller;
+        }
+
+        private ApplicationUser AddStoredUser(string id, bool isAdministrator = false, params string[] roleNames)
+        {
+            var user = new ApplicationUser { Id = id, UserName = $"{id}@test.com", Email = $"{id}@test.com", IsAdministrator = isAdministrator };
+            _userManagerMock.Setup(x => x.FindByIdAsync(id)).ReturnsAsync(user);
+            _userManagerMock.Setup(x => x.FindByNameAsync(user.UserName)).ReturnsAsync(user);
+            _userManagerMock.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(roleNames.ToList());
+            _userManagerMock.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+            return user;
+        }
+
+        private static ApplicationUser Edit(ApplicationUser user, Action<ApplicationUser> change)
+        {
+            var result = (ApplicationUser)user.Clone();
+            change(result);
+            return result;
+        }
+
+        private static void ShouldBeForbidden(Microsoft.AspNetCore.Mvc.Infrastructure.IConvertToActionResult result, string expectedError)
+        {
+            ShouldBeForbidden(result.Convert(), expectedError);
+        }
+
+        private static void ShouldBeForbidden(IActionResult result, string expectedError)
+        {
+            var objectResult = result.Should().BeOfType<ObjectResult>().Subject;
+            objectResult.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
+            objectResult.Value.Should().BeOfType<SecurityResult>()
+                .Which.Errors.Should().ContainSingle()
+                .Which.Should().StartWith(expectedError);
+        }
+
+        private void VerifyNotSaved()
+        {
+            _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
+            _userManagerMock.Verify(x => x.CreateAsync(It.IsAny<ApplicationUser>()), Times.Never);
+            _userManagerMock.Verify(x => x.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public void ManagePermissions_AreRegisteredPlatformPermissions()
+        {
+            PlatformConstants.Security.Permissions.AllPermissions.Should().Contain(new[] { ManageAdministrators, ManageRoles });
+        }
+
+        // Kill switch
+
+        [Fact]
+        public async Task Update_GrantAdministratorFlag_KillSwitchOff_ForbiddenEvenForAdministrator()
+        {
+            SetCaller(_controller, isAdministrator: true);
+            var target = AddStoredUser("regular");
+
+            var result = await _controller.Update(Edit(target, x => x.IsAdministrator = true));
+
+            ShouldBeForbidden(result, ChangesDisabledError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Update_RevokeAdministratorFlag_KillSwitchOff_ForbiddenEvenForAdministrator()
+        {
+            SetCaller(_controller, isAdministrator: true);
+            var target = AddStoredUser("admin", isAdministrator: true);
+
+            var result = await _controller.Update(Edit(target, x => x.IsAdministrator = false));
+
+            ShouldBeForbidden(result, ChangesDisabledError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Update_GrantAdministratorFlagToSelf_KillSwitchOff_Forbidden()
+        {
+            var caller = SetCaller(_controller, isAdministrator: false, SecurityUpdate);
+
+            var result = await _controller.Update(Edit(caller, x => x.IsAdministrator = true));
+
+            ShouldBeForbidden(result, ChangesDisabledError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Create_Administrator_KillSwitchOff_ForbiddenEvenForAdministrator()
+        {
+            SetCaller(_controller, isAdministrator: true);
+
+            var result = await _controller.Create(new ApplicationUser { UserName = "new@test.com", Password = "Pass#word1", IsAdministrator = true });
+
+            ShouldBeForbidden(result, ChangesDisabledError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Update_GrantAdministratorFlag_KillSwitchOn_Administrator_Saved()
+        {
+            var controller = CreateControllerWithAdministratorChanges();
+            SetCaller(controller, isAdministrator: true);
+            var target = AddStoredUser("regular");
+
+            var result = await controller.Update(Edit(target, x => x.IsAdministrator = true));
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.UpdateAsync(It.Is<ApplicationUser>(u => u.IsAdministrator)), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_GrantAdministratorFlag_KillSwitchOn_WithoutManageAdministrators_Forbidden()
+        {
+            var controller = CreateControllerWithAdministratorChanges();
+            SetCaller(controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("regular");
+
+            var result = await controller.Update(Edit(target, x => x.IsAdministrator = true));
+
+            ShouldBeForbidden(result, ManageAdministratorsError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Update_GrantAdministratorFlag_KillSwitchOn_WithManageAdministrators_Saved()
+        {
+            var controller = CreateControllerWithAdministratorChanges();
+            SetCaller(controller, isAdministrator: false, SecurityUpdate, ManageAdministrators);
+            var target = AddStoredUser("regular");
+
+            var result = await controller.Update(Edit(target, x => x.IsAdministrator = true));
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.UpdateAsync(It.Is<ApplicationUser>(u => u.IsAdministrator)), Times.Once);
+        }
+
+        [Fact]
+        public async Task Create_Administrator_KillSwitchOn_Administrator_Created()
+        {
+            var controller = CreateControllerWithAdministratorChanges();
+            SetCaller(controller, isAdministrator: true);
+            _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+            var newUser = new ApplicationUser { UserName = "new@test.com", IsAdministrator = true };
+
+            var result = await controller.Create(newUser);
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.CreateAsync(newUser), Times.Once);
+        }
+
+        // Administrator accounts
+
+        [Fact]
+        public async Task Update_AdministratorAccount_WithoutManageAdministrators_Forbidden()
+        {
+            SetCaller(_controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("admin", isAdministrator: true);
+
+            var result = await _controller.Update(Edit(target, x => x.Email = "other@test.com"));
+
+            ShouldBeForbidden(result, ManageAdministratorsError);
+            _userManagerMock.Verify(x => x.SetEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Update_AdministratorAccount_WithManageAdministrators_Saved()
+        {
+            SetCaller(_controller, isAdministrator: false, SecurityUpdate, ManageAdministrators);
+            var target = AddStoredUser("admin", isAdministrator: true);
+
+            var result = await _controller.Update(Edit(target, x => x.PhoneNumber = "+100500"));
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_RegularUserProfile_WithSecurityUpdateOnly_Saved()
+        {
+            SetCaller(_controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("regular", isAdministrator: false, "editor");
+
+            var result = await _controller.Update(Edit(target, x =>
+            {
+                x.PhoneNumber = "+100500";
+                x.Roles = [new Role { Name = "editor" }];
+            }));
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_UnknownUser_UserNotFound()
+        {
+            SetCaller(_controller, isAdministrator: true);
+
+            var result = await _controller.Update(new ApplicationUser { Id = "missing", UserName = "missing@test.com" });
+
+            result.Result.Should().BeOfType<OkObjectResult>()
+                .Which.Value.Should().BeOfType<SecurityResult>()
+                .Which.Succeeded.Should().BeFalse();
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task ResetPassword_AdministratorAccount_WithoutManageAdministrators_Forbidden()
+        {
+            var controller = CreatePasswordLoginController();
+            SetCaller(controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("admin", isAdministrator: true);
+
+            var result = await controller.ResetPassword(target.UserName, new ResetPasswordRequest { NewPassword = "Pass#word1" });
+
+            ShouldBeForbidden(result, ManageAdministratorsError);
+            _userManagerMock.Verify(x => x.ResetPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task ResetPassword_AdministratorAccount_WithManageAdministrators_Reset()
+        {
+            var controller = CreatePasswordLoginController();
+            SetCaller(controller, isAdministrator: false, SecurityUpdate, ManageAdministrators);
+            var target = AddStoredUser("admin", isAdministrator: true);
+            _userManagerMock.Setup(x => x.GeneratePasswordResetTokenAsync(target)).ReturnsAsync("token");
+            _userManagerMock.Setup(x => x.ResetPasswordAsync(target, "token", "Pass#word1")).ReturnsAsync(IdentityResult.Success);
+
+            var result = await controller.ResetPassword(target.UserName, new ResetPasswordRequest { NewPassword = "Pass#word1" });
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.ResetPasswordAsync(target, "token", "Pass#word1"), Times.Once);
+        }
+
+        [Fact]
+        public async Task ChangePassword_AdministratorAccount_WithoutManageAdministrators_Forbidden()
+        {
+            var controller = CreatePasswordLoginController();
+            SetCaller(controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("admin", isAdministrator: true);
+
+            var result = await controller.ChangePassword(target.UserName, new ChangePasswordRequest { OldPassword = "old", NewPassword = "Pass#word1" });
+
+            ShouldBeForbidden(result, ManageAdministratorsError);
+            _userManagerMock.Verify(x => x.ChangePasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _userManagerMock.Verify(x => x.AddPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task LockUser_AdministratorAccount_WithoutManageAdministrators_Forbidden()
+        {
+            SetCaller(_controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("admin", isAdministrator: true);
+
+            var result = await _controller.LockUser(target.Id);
+
+            ShouldBeForbidden(result, ManageAdministratorsError);
+            _userManagerMock.Verify(x => x.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task UnlockUser_AdministratorAccount_WithoutManageAdministrators_Forbidden()
+        {
+            SetCaller(_controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("admin", isAdministrator: true);
+
+            var result = await _controller.UnlockUser(target.Id);
+
+            ShouldBeForbidden(result, ManageAdministratorsError);
+            _userManagerMock.Verify(x => x.SetLockoutEndDateAsync(It.IsAny<ApplicationUser>(), It.IsAny<DateTimeOffset?>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Delete_AdministratorAmongOthers_WithoutManageAdministrators_NothingDeleted()
+        {
+            SetCaller(_controller, isAdministrator: false, PlatformConstants.Security.Permissions.SecurityDelete);
+            var regular = AddStoredUser("regular");
+            var admin = AddStoredUser("admin", isAdministrator: true);
+
+            var result = await _controller.Delete([regular.UserName, admin.UserName]);
+
+            ShouldBeForbidden(result, ManageAdministratorsError);
+            _userManagerMock.Verify(x => x.DeleteAsync(It.IsAny<ApplicationUser>()), Times.Never);
+        }
+
+        // Roles
+
+        [Fact]
+        public void UpdateRole_RequiresManageRolesPermission()
+        {
+            var method = typeof(SecurityController).GetMethod(nameof(SecurityController.UpdateRole));
+
+            method.GetCustomAttributes(typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute), inherit: true)
+                .Cast<Microsoft.AspNetCore.Authorization.AuthorizeAttribute>()
+                .Select(x => x.Policy)
+                .Should().Equal(ManageRoles);
+        }
+
+        [Fact]
+        public async Task Update_AddRole_WithoutManageRoles_Forbidden()
+        {
+            SetCaller(_controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("regular", isAdministrator: false, "editor");
+
+            var result = await _controller.Update(Edit(target, x => x.Roles = [new Role { Name = "editor" }, new Role { Name = "module-admin" }]));
+
+            ShouldBeForbidden(result, ManageRolesError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Update_RemoveRole_WithoutManageRoles_Forbidden()
+        {
+            SetCaller(_controller, isAdministrator: false, SecurityUpdate);
+            var target = AddStoredUser("regular", isAdministrator: false, "editor", "auditor");
+
+            var result = await _controller.Update(Edit(target, x => x.Roles = [new Role { Name = "editor" }]));
+
+            ShouldBeForbidden(result, ManageRolesError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Update_AddRoleToSelf_WithoutManageRoles_Forbidden()
+        {
+            var caller = SetCaller(_controller, isAdministrator: false, SecurityUpdate);
+            _userManagerMock.Setup(x => x.GetRolesAsync(caller)).ReturnsAsync(new List<string>());
+
+            var result = await _controller.Update(Edit(caller, x => x.Roles = [new Role { Name = "module-admin" }]));
+
+            ShouldBeForbidden(result, ManageRolesError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Update_AddRole_WithManageRoles_Saved()
+        {
+            SetCaller(_controller, isAdministrator: false, SecurityUpdate, ManageRoles);
+            var target = AddStoredUser("regular");
+
+            var result = await _controller.Update(Edit(target, x => x.Roles = [new Role { Name = "module-admin" }]));
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Create_WithRoles_WithoutManageRoles_Forbidden()
+        {
+            SetCaller(_controller, isAdministrator: false, PlatformConstants.Security.Permissions.SecurityCreate);
+
+            var result = await _controller.Create(new ApplicationUser { UserName = "new@test.com", Roles = [new Role { Name = "module-admin" }] });
+
+            ShouldBeForbidden(result, ManageRolesError);
+            VerifyNotSaved();
+        }
+
+        [Fact]
+        public async Task Create_WithRoles_WithManageRoles_Created()
+        {
+            SetCaller(_controller, isAdministrator: false, PlatformConstants.Security.Permissions.SecurityCreate, ManageRoles);
+            _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+
+            var result = await _controller.Create(new ApplicationUser { UserName = "new@test.com", Roles = [new Role { Name = "module-admin" }] });
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.CreateAsync(It.IsAny<ApplicationUser>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Create_WithoutRoles_WithSecurityCreateOnly_Created()
+        {
+            SetCaller(_controller, isAdministrator: false, PlatformConstants.Security.Permissions.SecurityCreate);
+            _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+
+            var result = await _controller.Create(new ApplicationUser { UserName = "new@test.com" });
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            _userManagerMock.Verify(x => x.CreateAsync(It.IsAny<ApplicationUser>()), Times.Once);
+        }
+
+        #endregion
     }
 }
