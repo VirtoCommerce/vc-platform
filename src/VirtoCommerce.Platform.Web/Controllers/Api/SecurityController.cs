@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -116,6 +117,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// platform generates are 46.
         /// </summary>
         private const int MinimumClientApiKeyLength = 32;
+
+        /// <summary>
+        /// The longest key a client may choose: the column that held keys before key hashing.
+        /// </summary>
+        private const int MaximumClientApiKeyLength = 128;
+
+        /// <summary>
+        /// Visible ASCII only, the characters an HTTP header carries unchanged: no spaces, no control characters.
+        /// </summary>
+        private static readonly Regex _clientApiKeyPattern = new(@"^[!-~]+$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
         [HttpPost]
         [Route("users/{userId}/sessions/search")]
@@ -1127,14 +1138,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             userApiKey.ApiKeyHash = null;
             userApiKey.ApiKeyHint = null;
 
+            // HTTP trims header values, so a key with leading or trailing spaces could never sign in through the
+            // api_key header. The value is stored as the client will send it.
+            userApiKey.ApiKey = userApiKey.ApiKey?.Trim();
+
             var validationError = ValidateClientApiKey(userApiKey.ApiKey, storedApiKey);
             if (validationError != null)
             {
                 return BadRequest(validationError);
             }
 
-            var result = await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
-            return Ok(result.Select(ToApiKeyResponse).ToArray());
+            try
+            {
+                var result = await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
+                return Ok(result.Select(ToApiKeyResponse).ToArray());
+            }
+            catch (ApiKeyConflictException ex)
+            {
+                // The same answer as for any other refused value: it says neither whose key this is nor its hash.
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -1155,9 +1178,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return "The API key looks masked. Send an empty value to keep the stored key, or a new key to replace it.";
             }
 
-            if (value.Length < MinimumClientApiKeyLength)
+            if (value.Length < MinimumClientApiKeyLength || value.Length > MaximumClientApiKeyLength)
             {
-                return $"The API key must be at least {MinimumClientApiKeyLength} characters long. Send an empty value to have the platform generate one.";
+                return $"The API key must be {MinimumClientApiKeyLength} to {MaximumClientApiKeyLength} characters long. Send an empty value to have the platform generate one.";
+            }
+
+            if (!_clientApiKeyPattern.IsMatch(value))
+            {
+                return "The API key may contain only visible ASCII characters, without spaces. Send an empty value to have the platform generate one.";
             }
 
             return null;

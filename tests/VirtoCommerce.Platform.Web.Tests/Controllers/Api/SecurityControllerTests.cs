@@ -1476,8 +1476,12 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
         [Theory]
         [InlineData("vc_Z…0000", "*looks masked*")]
-        [InlineData("short-key", "*at least 32 characters*")]
-        [InlineData("0123456789abcdef0123456789abcde", "*at least 32 characters*")]
+        [InlineData("short-key", "*32 to 128 characters*")]
+        [InlineData("0123456789abcdef0123456789abcde", "*32 to 128 characters*")]
+        [InlineData("vc_0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd", "*32 to 128 characters*")]
+        [InlineData("vc_a key with spaces inside-0123456789abcdef", "*visible ASCII*")]
+        [InlineData("vc_ключ-0123456789abcdefghijklmnop", "*visible ASCII*")]
+        [InlineData("vc_tab	inside-0123456789abcdefghijklmnop", "*visible ASCII*")]
         public async Task SaveUserApiKey_MaskedOrShortValue_IsBadRequestAndNotSaved(string sentValue, string expectedMessage)
         {
             SetupApiKeyUsers(SecurityManager());
@@ -1515,6 +1519,48 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var result = await _controller.SaveUserApiKey(new UserApiKey { Id = "legacy", ApiKey = "old-short-key", IsActive = false });
 
             result.Result.Should().BeOfType<OkObjectResult>();
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_ValueWithSurroundingSpaces_IsSavedTrimmed()
+        {
+            // HTTP trims header values, so the key is stored as a client will send it in the api_key header.
+            SetupApiKeyUsers(SecurityManager());
+            UserApiKey saved = null;
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .Callback((UserApiKey[] keys) => saved = keys[0])
+                .ReturnsAsync((UserApiKey[] keys) => keys);
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = _apiKeyOwner.Id, ApiKey = "  vc_client-chosen-key-0123456789abcdef \t" });
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            saved.ApiKey.Should().Be("vc_client-chosen-key-0123456789abcdef");
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_ValueShorterThan32OnceTrimmed_IsBadRequest()
+        {
+            SetupApiKeyUsers(SecurityManager());
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = _apiKeyOwner.Id, ApiKey = "short-key" + new string(' ', 30) });
+
+            result.Result.Should().BeOfType<BadRequestObjectResult>();
+            _userApiKeyServiceMock.Verify(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task SaveUserApiKey_ValueThatIsAlreadyAKey_IsBadRequestWithAGenericMessage()
+        {
+            SetupApiKeyUsers(SecurityManager());
+            _userApiKeyServiceMock
+                .Setup(x => x.SaveApiKeysAsync(It.IsAny<UserApiKey[]>()))
+                .ThrowsAsync(new ApiKeyConflictException());
+
+            var result = await _controller.SaveUserApiKey(new UserApiKey { UserId = _apiKeyOwner.Id, ApiKey = "vc_someone-elses-key-0123456789abcdef" });
+
+            var badRequest = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
+            badRequest.Value.Should().Be(ApiKeyConflictException.DefaultMessage);
         }
 
         [Fact]

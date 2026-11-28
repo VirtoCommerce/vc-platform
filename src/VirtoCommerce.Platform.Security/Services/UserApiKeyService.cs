@@ -150,6 +150,8 @@ namespace VirtoCommerce.Platform.Security.Services
         /// REST API checks what clients send before it gets here.
         /// On return, <see cref="UserApiKey.ApiKey"/> holds the key only where this save set it.
         /// </summary>
+        /// <exception cref="ApiKeyConflictException">Two keys in the batch, or a key in the batch and another stored key,
+        /// would have the same value. Nothing is saved.</exception>
         public async Task<UserApiKey[]> SaveApiKeysAsync(UserApiKey[] apiKeys)
         {
             if (apiKeys == null)
@@ -170,6 +172,13 @@ namespace VirtoCommerce.Platform.Security.Services
                     SetKeyHash(apiKey, apiKeysEntities.FirstOrDefault(x => x.Id == apiKey.Id));
                 }
 
+                // The unique index would refuse it too, but with the hash in a database error the API would pass on.
+                var hashes = apiKeys.Select(x => x.ApiKeyHash).ToArray();
+                if (hashes.Distinct().Count() != hashes.Length || await IsAnyHashTakenAsync(repository, hashes, ids))
+                {
+                    throw new ApiKeyConflictException();
+                }
+
                 foreach (var apiKey in apiKeys)
                 {
                     var originalEntity = apiKeysEntities.FirstOrDefault(x => x.Id == apiKey.Id);
@@ -187,11 +196,34 @@ namespace VirtoCommerce.Platform.Security.Services
                         repository.Add(modifiedEntity);
                     }
                 }
-                repository.UnitOfWork.Commit();
+                try
+                {
+                    repository.UnitOfWork.Commit();
+                }
+                catch (DbUpdateException ex)
+                {
+                    // Another save took one of these values between the check above and this commit.
+                    using var checkRepository = _repositoryFactory();
+                    if (await IsAnyHashTakenAsync(checkRepository, hashes, ids))
+                    {
+                        throw new ApiKeyConflictException(ex);
+                    }
+
+                    throw;
+                }
+
                 pkMap.ResolvePrimaryKeys();
                 ApiKeyCacheRegion.ExpireRegion();
             }
             return apiKeys;
+        }
+
+        /// <summary>
+        /// Whether a key other than the ones being saved already has one of these hashes.
+        /// </summary>
+        private static Task<bool> IsAnyHashTakenAsync(ISecurityRepository repository, string[] hashes, string[] savedIds)
+        {
+            return repository.UserApiKeys.AnyAsync(x => hashes.Contains(x.ApiKeyHash) && !savedIds.Contains(x.Id));
         }
 
         /// <summary>

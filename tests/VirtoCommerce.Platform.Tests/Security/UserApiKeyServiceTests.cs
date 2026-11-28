@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -247,6 +248,85 @@ public class UserApiKeyServiceTests
     }
 
     #endregion
+
+    [Fact]
+    public async Task SaveApiKeysAsync_ValueThatIsAnotherStoredKey_IsRefusedWithoutItsHashAndNothingIsSaved()
+    {
+        const string value = "vc_someone-elses-key-0123456789abcdef";
+        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out var added, HashedRow("other-row", value, "another-user"));
+
+        var save = () => service.SaveApiKeysAsync([new UserApiKey { UserId = "the-user", ApiKey = value }]);
+
+        var thrown = await save.Should().ThrowAsync<ApiKeyConflictException>();
+        thrown.Which.Message.Should().NotContain(_hasher.Hash(value)).And.NotContain("another-user");
+        added.Should().BeEmpty();
+        unitOfWork.Verify(x => x.Commit(), Times.Never);
+    }
+
+    [Fact]
+    public async Task SaveApiKeysAsync_TwoKeysInOneBatchWithTheSameValue_AreRefused()
+    {
+        const string value = "vc_the-same-value-twice-0123456789abc";
+        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out var added);
+
+        var save = () => service.SaveApiKeysAsync([
+            new UserApiKey { UserId = "first-user", ApiKey = value },
+            new UserApiKey { UserId = "second-user", ApiKey = value },
+        ]);
+
+        await save.Should().ThrowAsync<ApiKeyConflictException>();
+        added.Should().BeEmpty();
+        unitOfWork.Verify(x => x.Commit(), Times.Never);
+    }
+
+    [Fact]
+    public async Task SaveApiKeysAsync_SameBackupRestoredTwice_KeepsItsOwnHash()
+    {
+        var row = HashedRow("restored", "vc_restored-key-0123456789abcdef");
+        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out _, row);
+
+        await service.SaveApiKeysAsync([new UserApiKey { Id = "restored", UserId = "the-user", ApiKeyHash = row.ApiKeyHash, ApiKeyHint = row.ApiKeyHint }]);
+
+        unitOfWork.Verify(x => x.Commit(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SaveApiKeysAsync_ValueTakenByAnotherSaveBeforeTheCommit_IsRefusedAsAConflict()
+    {
+        const string value = "vc_raced-value-0123456789abcdefghij";
+        var stored = new List<UserApiKeyEntity>();
+        var repository = CreateRepositoryOver(stored, out var unitOfWork);
+        unitOfWork.Setup(x => x.Commit())
+            .Callback(() => stored.Add(HashedRow("raced", value, "another-user")))
+            .Throws(new DbUpdateException("Cannot insert duplicate key row ... IX_UserApiKey_ApiKeyHash"));
+        var service = new UserApiKeyService(() => repository.Object, new RecordingPlatformMemoryCache(), _hasher, new DefaultApiKeyGenerator());
+
+        var save = () => service.SaveApiKeysAsync([new UserApiKey { UserId = "the-user", ApiKey = value }]);
+
+        var thrown = await save.Should().ThrowAsync<ApiKeyConflictException>();
+        thrown.Which.Message.Should().NotContain("IX_UserApiKey_ApiKeyHash");
+    }
+
+    [Fact]
+    public async Task SaveApiKeysAsync_CommitFailingForAnotherReason_IsNotReportedAsAConflict()
+    {
+        var repository = CreateRepositoryOver([], out var unitOfWork);
+        unitOfWork.Setup(x => x.Commit()).Throws(new DbUpdateException("deadlock"));
+        var service = new UserApiKeyService(() => repository.Object, new RecordingPlatformMemoryCache(), _hasher, new DefaultApiKeyGenerator());
+
+        var save = () => service.SaveApiKeysAsync([new UserApiKey { UserId = "the-user" }]);
+
+        await save.Should().ThrowAsync<DbUpdateException>().WithMessage("deadlock");
+    }
+
+    private static Mock<ISecurityRepository> CreateRepositoryOver(List<UserApiKeyEntity> stored, out Mock<IUnitOfWork> unitOfWork)
+    {
+        unitOfWork = new Mock<IUnitOfWork>();
+        var repository = new Mock<ISecurityRepository>();
+        repository.Setup(x => x.UserApiKeys).Returns(() => new List<UserApiKeyEntity>(stored).BuildMock());
+        repository.Setup(x => x.UnitOfWork).Returns(unitOfWork.Object);
+        return repository;
+    }
 
     [Fact]
     public async Task SaveApiKeysAsync_UuidKeyFromAnOlderAdminUi_IsAccepted()
