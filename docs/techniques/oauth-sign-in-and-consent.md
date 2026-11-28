@@ -11,9 +11,10 @@ client ◄── access token (and refresh token) ◄── /connect/token ◄�
 ```
 
 This article covers where the user signs in, what the consent page shows, how a front-end hosts the sign-in page,
-and how to extend the choice of the sign-in page. An administrator registers a client in
-**Security → OAuth applications**, or the client registers itself: see
-[Clients that register themselves](#clients-that-register-themselves).
+and how to extend the choice of the sign-in page. An administrator, or a user with the OAuth applications permissions,
+registers a client in **Security → OAuth applications**, or the client registers itself: see
+[Clients that register themselves](#clients-that-register-themselves). Only an administrator can save a client with the
+client credentials grant, because its tokens act as an administrator.
 
 ## Where the user signs in
 

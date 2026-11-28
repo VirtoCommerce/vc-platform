@@ -62,6 +62,8 @@ namespace VirtoCommerce.Platform.Core
             {
                 public const string ResetCache = "cache:reset";
 
+                public const string ChangesRead = "platform:changes:read";
+
                 public const string AssetAccess = "platform:asset:access";
                 public const string AssetDelete = "platform:asset:delete";
                 public const string AssetUpdate = "platform:asset:update";
@@ -113,6 +115,7 @@ namespace VirtoCommerce.Platform.Core
                 public static string[] AllPermissions { get; } =
                 [
                     ResetCache,
+                    ChangesRead,
                     AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead,
                     ModuleQuery, ModuleAccess, ModuleManage,
                     SettingQuery, SettingAccess, SettingUpdate,
