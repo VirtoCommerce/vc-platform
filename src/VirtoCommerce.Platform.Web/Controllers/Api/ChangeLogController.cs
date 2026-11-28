@@ -61,7 +61,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("~/api/changes/lastmodifieddate")]
-        [AllowAnonymous]
+        [Authorize(PlatformConstants.Security.Permissions.ChangesRead)]
         [ProducesResponseType<LastModifiedResponse>(StatusCodes.Status200OK)]
         public ActionResult<LastModifiedResponse> GetLastModifiedDate([FromQuery] string scope = null)
         {

@@ -9,7 +9,7 @@ switch (args.Length > 0 ? args[0] : null)
         LastChangesRegression.Run();
         return;
     case "lastchanges-retained":
-        LastChangesRetainedMemory.Run(args[1], int.Parse(args[2]));
+        LastChangesRetainedMemory.Run(args[1], int.Parse(args[2]), args.Length > 3 ? args[3] : "read");
         return;
 }
 

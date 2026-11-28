@@ -168,6 +168,70 @@ namespace VirtoCommerce.Platform.Caching.Tests
             Assert.True(service.GetLastModifiedDate(name) > initial);
         }
 
+        [Fact]
+        public void Reset_MoreNamesThanTheLimit_KeepsStoredNamesBoundedAndMovesEveryDateForward()
+        {
+            // Arrange
+            using var service = new LastChangesService(GetPlatformMemoryCache());
+            var prefix = NewPrefix();
+            var unknownName = $"{prefix}unknown";
+            var initialUnknown = service.GetLastModifiedDate(unknownName);
+            WaitForClockTick();
+
+            // Act
+            for (var i = 0; i <= LastChangesService.MaxResetNames; i++)
+            {
+                service.Reset($"{prefix}{i}");
+            }
+
+            // Assert
+            Assert.True(CountStoredResetNames(service) <= LastChangesService.MaxResetNames);
+            Assert.True(service.GetLastModifiedDate(unknownName) > initialUnknown);
+            Assert.True(service.GetLastModifiedDate($"{prefix}{LastChangesService.MaxResetNames}") > initialUnknown);
+        }
+
+        [Fact]
+        public void Reset_SameNameManyTimes_StoresOneName()
+        {
+            // Arrange
+            using var service = new LastChangesService(GetPlatformMemoryCache());
+            var name = $"{NewPrefix()}same";
+
+            // Act
+            for (var i = 0; i <= LastChangesService.MaxResetNames; i++)
+            {
+                service.Reset(name);
+            }
+
+            // Assert
+            Assert.Equal(1, CountStoredResetNames(service));
+        }
+
+        [Fact]
+        public void Dispose_StopsTakingResetsFromOtherInstances()
+        {
+            // Arrange
+            var service = new LastChangesService(GetPlatformMemoryCache());
+            var name = $"{NewPrefix()}remote";
+            var initial = service.GetLastModifiedDate(name);
+
+            // Act
+            service.Dispose();
+            WaitForClockTick();
+            CancellableCacheRegion.CancelForKey(LastChangesCacheRegion.GenerateRegionTokenKey(name), propagate: false);
+
+            // Assert
+            Assert.Equal(initial, service.GetLastModifiedDate(name));
+        }
+
+        private static int CountStoredResetNames(LastChangesService service)
+        {
+            var state = typeof(LastChangesService).GetField("_state", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(service);
+            var resetDates = (ConcurrentDictionary<string, DateTimeOffset>)state!.GetType().GetProperty("ResetDates")!.GetValue(state);
+
+            return resetDates!.Count;
+        }
+
         private static string NewPrefix()
         {
             return $"VCST-7077-{Guid.NewGuid():N}-";

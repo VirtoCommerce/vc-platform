@@ -16,10 +16,12 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
     {
         private readonly Mock<ILastChangesService> _lastChangesServiceMock = new();
 
-        [Fact]
-        public void GetChangedEntities_RequiresChangesReadPermission()
+        [Theory]
+        [InlineData(nameof(ChangeLogController.GetChangedEntities))]
+        [InlineData(nameof(ChangeLogController.GetLastModifiedDate))]
+        public void Action_RequiresChangesReadPermission(string actionName)
         {
-            var method = typeof(ChangeLogController).GetMethod(nameof(ChangeLogController.GetChangedEntities));
+            var method = typeof(ChangeLogController).GetMethod(actionName);
 
             Assert.Empty(method!.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: true));
             var policies = method.GetCustomAttributes(typeof(AuthorizeAttribute), inherit: true).Cast<AuthorizeAttribute>().Select(x => x.Policy);

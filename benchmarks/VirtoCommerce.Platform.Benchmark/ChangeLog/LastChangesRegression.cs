@@ -103,6 +103,19 @@ public static class LastChangesRegression
 
                 return s.KeyTokenCount() == before;
             }),
+            new("Resets of more names than the limit still move every reset name forward", s =>
+            {
+                var prefix = $"overflow-{Guid.NewGuid():N}";
+                var names = LastChangesSubject.UniqueNames(prefix, 20_000);
+                var before = s.Service.GetLastModifiedDate(names[0]);
+                LastChangesSubject.WaitForClockTick();
+                foreach (var name in names)
+                {
+                    s.Service.Reset(name);
+                }
+
+                return s.Service.GetLastModifiedDate(names[0]) > before && s.Service.GetLastModifiedDate(names[^1]) > before;
+            }),
         };
 
         Console.WriteLine($"| Scenario | {LastChangesSubject.Legacy} | {LastChangesSubject.Current} |");

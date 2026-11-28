@@ -3,14 +3,16 @@ using System.Diagnostics;
 
 namespace VirtoCommerce.Platform.Benchmark.ChangeLog;
 
-// Simulates the PLATFORM-04 attack in-process: N reads of unique names, as the changed-entities endpoint does.
+// Simulates the PLATFORM-04 attack in-process: N reads of unique names, as the changed-entities endpoint does,
+// or N resets of unique names, as POST /api/changes/changed-entities/reset does.
 // Run each implementation in its own process so static state does not mix:
-//   dotnet run -c Release -- lastchanges-retained Legacy 1000000
-//   dotnet run -c Release -- lastchanges-retained Current 1000000
+//   dotnet run -c Release -- lastchanges-retained Legacy 1000000 [read|reset]
+//   dotnet run -c Release -- lastchanges-retained Current 1000000 [read|reset]
 public static class LastChangesRetainedMemory
 {
-    public static void Run(string implementation, int count)
+    public static void Run(string implementation, int count, string mode = "read")
     {
+        var reset = mode == "reset";
         var subject = LastChangesSubject.Create(implementation);
 
         // Warm up JIT and the type initializers outside the measurement
@@ -32,7 +34,14 @@ public static class LastChangesRetainedMemory
 
         foreach (var name in names)
         {
-            subject.Service.GetLastModifiedDate(name);
+            if (reset)
+            {
+                subject.Service.Reset(name);
+            }
+            else
+            {
+                subject.Service.GetLastModifiedDate(name);
+            }
         }
 
         stopwatch.Stop();
@@ -50,7 +59,7 @@ public static class LastChangesRetainedMemory
 
         GC.KeepAlive(names);
 
-        Console.WriteLine($"| {implementation} | {count:N0} | {stopwatch.Elapsed.TotalMilliseconds:N0} ms | {cpu.TotalMilliseconds:N0} ms | {allocated / 1024.0 / 1024.0:N1} MB | {retainedAfterReads / 1024.0 / 1024.0:N1} MB | {cacheEntries:N0} | {keyTokens:N0} | {retainedAfterEviction / 1024.0 / 1024.0:N1} MB | {keyTokensAfterEviction:N0} |");
+        Console.WriteLine($"| {implementation} | {mode} | {count:N0} | {stopwatch.Elapsed.TotalMilliseconds:N0} ms | {cpu.TotalMilliseconds:N0} ms | {allocated / 1024.0 / 1024.0:N1} MB | {retainedAfterReads / 1024.0 / 1024.0:N1} MB | {cacheEntries:N0} | {keyTokens:N0} | {retainedAfterEviction / 1024.0 / 1024.0:N1} MB | {keyTokensAfterEviction:N0} |");
     }
 
     private static long Managed()
