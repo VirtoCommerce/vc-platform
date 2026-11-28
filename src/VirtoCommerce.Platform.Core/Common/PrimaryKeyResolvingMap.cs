@@ -9,10 +9,20 @@ namespace VirtoCommerce.Platform.Core.Common
     public class PrimaryKeyResolvingMap
     {
         private readonly Dictionary<IEntity, IEntity> _resolvingMap = new Dictionary<IEntity, IEntity>();
+        private readonly List<(IEntity Model, AuditableEntity SavedEntity)> _savedPairs = new List<(IEntity Model, AuditableEntity SavedEntity)>();
 
         public void AddPair(IEntity transientEntity, IEntity persistentEntity)
         {
             _resolvingMap[transientEntity] = persistentEntity;
+        }
+
+        /// <summary>
+        /// Registers an updated model with the entity that was saved for it (the tracked one, not the FromModel copy),
+        /// so that ResolvePrimaryKeys syncs the values the save generated to the model.
+        /// </summary>
+        public void AddSavedPair(IEntity model, AuditableEntity savedEntity)
+        {
+            _savedPairs.Add((model, savedEntity));
         }
 
         public void ResolvePrimaryKeys()
@@ -23,14 +33,16 @@ namespace VirtoCommerce.Platform.Core.Common
                 {
                     pair.Key.Id = pair.Value.Id;
 
-                    if (pair.Key is IAuditable transientAuditable && pair.Value is IAuditable persistentAuditable)
+                    if (pair.Value is AuditableEntity persistentEntity)
                     {
-                        transientAuditable.CreatedBy = persistentAuditable.CreatedBy;
-                        transientAuditable.CreatedDate = persistentAuditable.CreatedDate;
-                        transientAuditable.ModifiedBy = persistentAuditable.ModifiedBy;
-                        transientAuditable.ModifiedDate = persistentAuditable.ModifiedDate;
+                        persistentEntity.SyncGeneratedValues(pair.Key);
                     }
                 }
+            }
+
+            foreach (var (model, savedEntity) in _savedPairs)
+            {
+                savedEntity.SyncGeneratedValues(model);
             }
         }
     }

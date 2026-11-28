@@ -78,6 +78,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                     if (originalEntity != null)
                     {
                         modifiedEntity.Patch(originalEntity);
+                        pkMap.AddSavedPair(property, originalEntity);
                     }
                     else
                     {
