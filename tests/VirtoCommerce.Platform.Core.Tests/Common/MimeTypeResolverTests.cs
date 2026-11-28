@@ -77,7 +77,6 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             public IEnumerator<object[]> GetEnumerator()
             {
                 yield return new object[] { ".bmp", "image/bmp" };
-                yield return new object[] { ".bmp", "image/bmp" };
                 yield return new object[] { ".gif", "image/gif" };
                 yield return new object[] { ".ico", "image/x-icon" };
                 yield return new object[] { ".jpe", "image/jpeg" };
