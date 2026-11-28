@@ -38,7 +38,8 @@ In our platform we use JWT tokens mechanism by using OAuth2 protocol. Password, 
 ## How to add new client
 In order to authorize client applications (for example, Storefront), it is possible to use the **Client credential flow** mechanism of  OAuth2 protocol.
 - Go to blade **OAuth applications** in **Security** menu and create new application using **Add** button. This will automatically generate **Client Id** and **Client secret**, which should be saved, as system will not allow you to view already saved **Client secret**. Once all fields are filled in you should click **Ok** and a new OAuth2 client will be created.<br>
-**Note:** You can change **Client Id** and **Client secret** only in the process of creation of new application (you will not be able to change them in future). You can also specify **Display Name** for more information.
+**Note:** You can change **Client Id** and **Client secret** only in the process of creation of new application (you will not be able to change them in future). You can also specify **Display Name** for more information.<br>
+**Note:** A token of the client credentials flow acts as an administrator. Only an administrator can create an application with the client credentials grant, add the grant to an application, or change an application that has it. Other users with the OAuth applications permissions get `403 Forbidden`. In this version every application gets the client credentials grant, so only an administrator can create or change OAuth applications.
 
 - Then the client application will be able to authorize requests to the Api using the previously created **Client Id** and **Client secret**.
 For example, in Storefront, all you need to do is specify the **Client Id**, **Client secret** created earlier, and also specify the **authorization server** in the **Endpoint** section of the **appsettings.json** file.
