@@ -255,6 +255,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             pkMap.ResolvePrimaryKeys();
 
+            // Not from the key map's pairs: for an update they hold the detached FromModel copy, which the triggers never stamp
+            for (var i = 0; i < models.Count; i++)
+            {
+                SyncGeneratedValues(changedEntities[i], models[i]);
+            }
+
             ClearCache(originalModels);
             ClearCache(models);
 
@@ -285,6 +291,21 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual async Task CommitAsync(IRepository repository)
         {
             await repository.UnitOfWork.CommitAsync();
+        }
+
+        /// <summary>
+        /// Copies what the save generated from the saved entity to the caller's model: the audit fields by default.
+        /// Override to sync more, such as values the database generates.
+        /// </summary>
+        protected virtual void SyncGeneratedValues(TEntity entity, TModel model)
+        {
+            if (entity is IAuditable auditableEntity && model is IAuditable auditableModel)
+            {
+                auditableModel.CreatedDate = auditableEntity.CreatedDate;
+                auditableModel.CreatedBy = auditableEntity.CreatedBy;
+                auditableModel.ModifiedDate = auditableEntity.ModifiedDate;
+                auditableModel.ModifiedBy = auditableEntity.ModifiedBy;
+            }
         }
 
         protected virtual bool IsTransient(IEntity entity)
