@@ -1,10 +1,12 @@
 using System.Linq;
 using System.Text.Encodings.Web;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
@@ -14,6 +16,8 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
     /// </summary>
     public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
     {
+        private static int _queryStringUseLogged;
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserApiKeyService _userApiKeyService;
@@ -47,9 +51,17 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                 return AuthenticateResult.Success(new AuthenticationTicket(Context.User, "context.User"));
             }
 
-            if (!Request.Query.TryGetValue(Options.ApiKeyParamName, out var apiKeyValues) && !Request.Headers.TryGetValue(Options.ApiKeyParamName, out apiKeyValues))
+            StringValues apiKeyValues = default;
+            var fromQuery = Options.AllowQueryString && Request.Query.TryGetValue(Options.ApiKeyParamName, out apiKeyValues);
+            if (!fromQuery && !Request.Headers.TryGetValue(Options.ApiKeyParamName, out apiKeyValues))
             {
                 return AuthenticateResult.NoResult();
+            }
+
+            if (fromQuery && Interlocked.Exchange(ref _queryStringUseLogged, 1) == 0)
+            {
+                // Once per process: the warning is for the operator, and every request would flood the log.
+                Logger.LogWarning("An API key was sent in the query string. Keys in URLs end up in access and proxy logs; send it in the '{Header}' header and set ApiKeyAuthentication:AllowQueryString to false.", Options.ApiKeyParamName);
             }
 
             var providedApiKey = apiKeyValues.FirstOrDefault();

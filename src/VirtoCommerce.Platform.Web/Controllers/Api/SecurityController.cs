@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -27,6 +28,7 @@ using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -109,6 +111,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
         private const int MaxSignInLogPageSize = 10000;
+
+        /// <summary>
+        /// The shortest key a client may choose. A UUID, which older admin UIs generate, is 36 characters; keys the
+        /// platform generates are 46.
+        /// </summary>
+        private const int MinimumClientApiKeyLength = 32;
+
+        /// <summary>
+        /// The longest key a client may choose: the column that held keys before key hashing.
+        /// </summary>
+        private const int MaximumClientApiKeyLength = 128;
+
+        /// <summary>
+        /// Visible ASCII only, the characters an HTTP header carries unchanged: no spaces, no control characters.
+        /// </summary>
+        private static readonly Regex _clientApiKeyPattern = new(@"^[!-~]+$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
         [HttpPost]
         [Route("users/{userId}/sessions/search")]
@@ -1077,33 +1095,229 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<UserApiKey[]>> GetUserApiKeys([FromRoute] string id)
         {
             var result = await _userApiKeyService.GetAllUserApiKeysAsync(id);
-            return Ok(result);
+            return Ok(result?.Select(ToApiKeyResponse).ToArray() ?? []);
         }
 
+        /// <summary>
+        /// Creates or updates a key. Send no <c>apiKey</c> on a new key to have the platform generate it; the response
+        /// is the only place the generated key is ever returned. On an existing key, send no <c>apiKey</c> (or the
+        /// hint shown for it) to keep it.
+        /// </summary>
         [HttpPost]
         [Route("users/apikeys")]
         [Authorize(PlatformPermissions.SecurityUpdate)]
+        [ProducesResponseType(typeof(UserApiKey[]), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserApiKey[]>> SaveUserApiKey([FromBody] UserApiKey userApiKey)
         {
-            await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
-            return Ok();
+            if (userApiKey == null)
+            {
+                return ApiKeyBadRequest("The request has no API key.");
+            }
+
+            // An existing key stays with its owner: the body cannot move it to another user.
+            var storedApiKey = userApiKey.IsTransient() ? null : await _userApiKeyService.GetApiKeyByIdAsync(userApiKey.Id);
+            if (storedApiKey != null)
+            {
+                if (!string.IsNullOrEmpty(userApiKey.UserId) && userApiKey.UserId != storedApiKey.UserId)
+                {
+                    return ApiKeyBadRequest("An API key cannot be moved to another user.");
+                }
+
+                userApiKey.UserId = storedApiKey.UserId;
+            }
+
+            var (owner, denied) = await AuthorizeApiKeyOwnerAsync(userApiKey.UserId);
+            if (denied != null)
+            {
+                return denied;
+            }
+
+            userApiKey.UserName = owner.UserName;
+
+            // The hash and hint are the platform's to set. A stored hash is how a backup restore keeps a key, and that
+            // goes through the service, not through this endpoint.
+            userApiKey.ApiKeyHash = null;
+            userApiKey.ApiKeyHint = null;
+
+            // HTTP trims header values, so a key with leading or trailing spaces could never sign in through the
+            // api_key header. The value is stored as the client will send it.
+            userApiKey.ApiKey = userApiKey.ApiKey?.Trim();
+
+            var validationError = ValidateClientApiKey(userApiKey.ApiKey, storedApiKey);
+            if (validationError != null)
+            {
+                return ApiKeyBadRequest(validationError);
+            }
+
+            try
+            {
+                var result = await _userApiKeyService.SaveApiKeysAsync([userApiKey]);
+                return Ok(result.Select(ToApiKeyResponse).ToArray());
+            }
+            catch (ApiKeyConflictException ex)
+            {
+                // The same answer as for any other refused value: it says neither whose key this is nor its hash.
+                return ApiKeyBadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Checks a key value a client chose. Empty (keep or generate) and the value the client was shown for the
+        /// stored key (keep) pass; anything else becomes the key, so it must not look masked and must be long enough.
+        /// </summary>
+        private static string ValidateClientApiKey(string value, UserApiKey storedApiKey)
+        {
+            if (string.IsNullOrEmpty(value) ||
+                storedApiKey != null && (value == storedApiKey.ApiKeyHint || value == storedApiKey.ApiKey))
+            {
+                return null;
+            }
+
+            if (value.Contains(Sha256ApiKeyHasher.HintSeparator))
+            {
+                // Saved, the mask would become a real key, readable by everyone who can read the key list.
+                return "The API key looks masked. Send an empty value to keep the stored key, or a new key to replace it.";
+            }
+
+            if (value.Length < MinimumClientApiKeyLength || value.Length > MaximumClientApiKeyLength)
+            {
+                return $"The API key must be {MinimumClientApiKeyLength} to {MaximumClientApiKeyLength} characters long. Send an empty value to have the platform generate one.";
+            }
+
+            if (!_clientApiKeyPattern.IsMatch(value))
+            {
+                return "The API key may contain only visible ASCII characters, without spaces. Send an empty value to have the platform generate one.";
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Replaces the key's value with a new generated key, returned in the response and never again.
+        /// </summary>
+        [HttpPost]
+        [Route("users/apikeys/{keyId}/regenerate")]
+        [Authorize(PlatformPermissions.SecurityUpdate)]
+        [ProducesResponseType(typeof(UserApiKey), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<UserApiKey>> RegenerateUserApiKey([FromRoute] string keyId, [FromServices] IApiKeyGenerator apiKeyGenerator)
+        {
+            var storedApiKey = await _userApiKeyService.GetApiKeyByIdAsync(keyId);
+            if (storedApiKey == null)
+            {
+                return NotFound(ApiKeyProblem(StatusCodes.Status404NotFound, "The API key was not found.", $"There is no API key with id '{keyId}'."));
+            }
+
+            var (_, denied) = await AuthorizeApiKeyOwnerAsync(storedApiKey.UserId);
+            if (denied != null)
+            {
+                return denied;
+            }
+
+            var apiKey = AbstractTypeFactory<UserApiKey>.TryCreateInstance();
+            apiKey.Id = storedApiKey.Id;
+            apiKey.UserId = storedApiKey.UserId;
+            apiKey.UserName = storedApiKey.UserName;
+            apiKey.IsActive = storedApiKey.IsActive;
+            apiKey.ApiKey = apiKeyGenerator.Generate();
+
+            var result = await _userApiKeyService.SaveApiKeysAsync([apiKey]);
+            return Ok(ToApiKeyResponse(result[0]));
         }
 
         [HttpPut]
         [Route("users/apikeys")]
         [Authorize(PlatformPermissions.SecurityUpdate)]
+        [ProducesResponseType(typeof(UserApiKey[]), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         public Task<ActionResult<UserApiKey[]>> UpdateUserApiKey([FromBody] UserApiKey userApiKey)
         {
             return SaveUserApiKey(userApiKey);
         }
 
+        /// <summary>
+        /// Deletes the keys that exist among <paramref name="ids"/>; unknown ids are skipped. Answers 200 with no body.
+        /// </summary>
         [HttpDelete]
         [Route("users/apikeys")]
         [Authorize(PlatformPermissions.SecurityDelete)]
-        public async Task<ActionResult<UserApiKey[]>> DeleteUserApiKeys([FromQuery] string[] ids)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> DeleteUserApiKeys([FromQuery] string[] ids)
         {
-            await _userApiKeyService.DeleteApiKeysAsync(ids);
+            var storedApiKeys = await _userApiKeyService.GetApiKeysByIdsAsync(ids ?? []);
+
+            foreach (var ownerId in storedApiKeys.Select(x => x.UserId).Distinct())
+            {
+                var (_, denied) = await AuthorizeApiKeyOwnerAsync(ownerId);
+                if (denied != null)
+                {
+                    return denied;
+                }
+            }
+
+            // Only keys that exist: deleting an unknown id would fail the whole batch in the repository.
+            await _userApiKeyService.DeleteApiKeysAsync(storedApiKeys.Select(x => x.Id).ToArray());
             return Ok();
+        }
+
+        /// <summary>
+        /// Whether the current user may create, change or delete keys of the given user. An administrator's key passes
+        /// every permission policy, so only another administrator may manage one; users listed as non-editable are
+        /// refused like everywhere else in this controller.
+        /// </summary>
+        private async Task<(ApplicationUser Owner, ActionResult Denied)> AuthorizeApiKeyOwnerAsync(string userId)
+        {
+            var owner = string.IsNullOrEmpty(userId) ? null : await UserManager.FindByIdAsync(userId);
+            if (owner == null)
+            {
+                LogUserNotFound(userId);
+                return (null, ApiKeyBadRequest(CommonErrorDescriber.UserNotFound().Description));
+            }
+
+            if (!IsUserEditable(owner.UserName))
+            {
+                LogUserForbiddenToEdit(owner.UserName);
+                return (owner, Forbid());
+            }
+
+            if (owner.IsAdministrator && (await GetCurrentUserAsync())?.IsAdministrator != true)
+            {
+                _logger.LogWarning("User {CurrentUser} was refused access to the API keys of administrator {UserId}.",
+                    UserManager.SanitizeUserName(User.Identity?.Name), owner.Id);
+                return (owner, Forbid());
+            }
+
+            return (owner, null);
+        }
+
+        /// <summary>
+        /// A 400 of the API key endpoints, as RFC 9457 problem details.
+        /// </summary>
+        private BadRequestObjectResult ApiKeyBadRequest(string detail)
+        {
+            return BadRequest(ApiKeyProblem(StatusCodes.Status400BadRequest, "The API key request is not valid.", detail));
+        }
+
+        /// <summary>
+        /// RFC 9457 problem details. <c>message</c> repeats <c>detail</c> for clients of the platform's other error
+        /// responses, which carry the text in <c>message</c>.
+        /// </summary>
+        private static ProblemDetails ApiKeyProblem(int status, string title, string detail)
+        {
+            var problem = new ProblemDetails
+            {
+                Type = status == StatusCodes.Status404NotFound
+                    ? "https://tools.ietf.org/html/rfc9110#section-15.5.5"
+                    : "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Title = title,
+                Status = status,
+                Detail = detail,
+            };
+            problem.Extensions["message"] = detail;
+            return problem;
         }
 
         /// <summary>
@@ -1403,6 +1617,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 ?? adminUIs.FirstOrDefault();
 
             return adminUI?.Url ?? "/";
+        }
+
+        /// <summary>
+        /// What a client sees of a key: its value only right after this request created it, otherwise the hint in its
+        /// place, so clients that display <c>apiKey</c> show the hint. The hash stays on the server. A copy, because
+        /// the service's instances are cached.
+        /// </summary>
+        private static UserApiKey ToApiKeyResponse(UserApiKey apiKey)
+        {
+            var result = AbstractTypeFactory<UserApiKey>.TryCreateInstance();
+            result.Id = apiKey.Id;
+            result.UserId = apiKey.UserId;
+            result.UserName = apiKey.UserName;
+            result.IsActive = apiKey.IsActive;
+            result.CreatedDate = apiKey.CreatedDate;
+            result.CreatedBy = apiKey.CreatedBy;
+            result.ModifiedDate = apiKey.ModifiedDate;
+            result.ModifiedBy = apiKey.ModifiedBy;
+            result.ApiKeyHint = apiKey.ApiKeyHint;
+            // A hashed key carries its value only from the save that set it. A row from before key hashing that is
+            // not hashed yet carries its plaintext from storage, and that is never returned.
+            result.ApiKey = apiKey.ApiKeyHash != null && apiKey.ApiKey != null ? apiKey.ApiKey : apiKey.ApiKeyHint;
+            return result;
         }
 
         private bool IsUserEditable(string userName)

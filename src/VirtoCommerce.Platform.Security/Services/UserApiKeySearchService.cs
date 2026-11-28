@@ -35,7 +35,9 @@ namespace VirtoCommerce.Platform.Security.Services
                 var sortInfos = criteria.SortInfos;
                 if (sortInfos.IsNullOrEmpty())
                 {
-                    sortInfos = new[] { new SortInfo { SortColumn = ReflectionUtility.GetPropertyName<UserApiKey>(x => x.ApiKey), SortDirection = SortDirection.Ascending } };
+                    // By Id: hashed keys have no ApiKey, and paging (backup export) over an all-null column
+                    // has no stable order.
+                    sortInfos = new[] { new SortInfo { SortColumn = ReflectionUtility.GetPropertyName<UserApiKey>(x => x.Id), SortDirection = SortDirection.Ascending } };
                 }
                 var apiKeysEntities = await query.OrderBySortInfos(sortInfos).Skip(criteria.Skip).Take(criteria.Take).ToArrayAsync();
                 result.Results = apiKeysEntities.Select(x => x.ToModel(AbstractTypeFactory<UserApiKey>.TryCreateInstance())).ToArray();

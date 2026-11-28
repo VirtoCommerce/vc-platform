@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -547,6 +547,14 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
 
+                    b.Property<string>("ApiKeyHash")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("ApiKeyHint")
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)");
+
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(64)
                         .HasColumnType("varchar(64)");
@@ -573,6 +581,9 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                     b.HasKey("Id");
 
                     b.HasIndex("ApiKey")
+                        .IsUnique();
+
+                    b.HasIndex("ApiKeyHash")
                         .IsUnique();
 
                     b.ToTable("UserApiKey", (string)null);
