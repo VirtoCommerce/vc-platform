@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.ChangeLog;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Web.Model;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -60,32 +61,53 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("~/api/changes/lastmodifieddate")]
-        [AllowAnonymous]
+        [Authorize(PlatformConstants.Security.Permissions.ChangesRead)]
+        [ProducesResponseType<LastModifiedResponse>(StatusCodes.Status200OK)]
         public ActionResult<LastModifiedResponse> GetLastModifiedDate([FromQuery] string scope = null)
         {
-            var result = new LastModifiedResponse
-            {
-                Scope = scope,
-                LastModifiedDate = _lastModifiedDateTime.LastModified.UtcDateTime
-            };
+            var result = AbstractTypeFactory<LastModifiedResponse>.TryCreateInstance();
+            result.Scope = scope;
+            result.LastModifiedDate = _lastModifiedDateTime.LastModified.UtcDateTime;
 
-            return Ok(result);
+            return result;
         }
 
+        /// <summary>
+        /// Get the entity names changed since the given date.
+        /// Used for cache invalidation in external platform clients.
+        /// </summary>
         [HttpPost]
         [Route("~/api/changes/changed-entities")]
-        [AllowAnonymous]
+        [Authorize(PlatformConstants.Security.Permissions.ChangesRead)]
+        [ProducesResponseType<ChangedEntitiesResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<ChangedEntitiesResponse> GetChangedEntities([FromBody] ChangedEntitiesRequest changedEntitiesRequest)
         {
-            var result = new ChangedEntitiesResponse()
+            if (changedEntitiesRequest is null)
             {
-                Entities = changedEntitiesRequest.EntityNames
-                    .Select(x => new ChangedEntity { Name = x, ModifiedDate = _lastChangesService.GetLastModifiedDate(x).UtcDateTime })
-                    .Where(x => x.ModifiedDate >= changedEntitiesRequest.ModifiedSince)
-                    .ToList(),
-            };
+                return BadRequest("The request body is required.");
+            }
 
-            return Ok(result);
+            var modifiedSince = changedEntitiesRequest.ModifiedSince;
+
+            var result = AbstractTypeFactory<ChangedEntitiesResponse>.TryCreateInstance();
+            result.Entities = (changedEntitiesRequest.EntityNames ?? [])
+                .OfType<string>()
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(CreateChangedEntity)
+                .Where(x => x.ModifiedDate >= modifiedSince)
+                .ToList();
+
+            return result;
+        }
+
+        private ChangedEntity CreateChangedEntity(string entityName)
+        {
+            var changedEntity = AbstractTypeFactory<ChangedEntity>.TryCreateInstance();
+            changedEntity.Name = entityName;
+            changedEntity.ModifiedDate = _lastChangesService.GetLastModifiedDate(entityName).UtcDateTime;
+
+            return changedEntity;
         }
 
         [HttpPost]
