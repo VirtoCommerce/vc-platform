@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using MockQueryable;
 using Moq;
@@ -14,8 +13,6 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data.Infrastructure;
-using VirtoCommerce.Platform.Security.Caching;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
@@ -47,58 +44,17 @@ public class UserApiKeyServiceTests
     }
 
     [Fact]
-    public async Task GetApiKeyByKeyAsync_KeyNotHashedByTheMigration_IsFoundByPlaintextHashedAndCleared()
+    public async Task GetApiKeyByKeyAsync_RowStillHoldingPlaintext_IsNotFoundByIt()
     {
+        // The AddUserApiKeyHash migration hashes every key and clears its plaintext; the lookup goes by hash only.
         var row = new UserApiKeyEntity { Id = "legacy-row", ApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110", UserId = "the-user", IsActive = true };
         var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out _, row);
 
         var result = await service.GetApiKeyByKeyAsync("0f1e2d3c-4b5a-4968-8776-655443322110");
-
-        result.Should().NotBeNull();
-        result.Id.Should().Be("legacy-row");
-        row.ApiKeyHash.Should().Be(_hasher.Hash("0f1e2d3c-4b5a-4968-8776-655443322110"));
-        row.ApiKeyHint.Should().Be("0f1e…2110");
-        row.ApiKey.Should().BeNull("no usable key is left once it is hashed");
-        unitOfWork.Verify(x => x.CommitAsync(), Times.Once);
-    }
-
-    [Fact]
-    public async Task GetApiKeyByKeyAsync_KeyNotHashedByTheMigration_ExpiresTheApiKeyCacheOnceHashed()
-    {
-        var row = new UserApiKeyEntity { Id = "legacy-row", ApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110", UserId = "the-user", IsActive = true };
-        var service = CreateService(new RecordingPlatformMemoryCache(), out _, out _, row);
-        var token = ApiKeyCacheRegion.CreateChangeToken();
-
-        await service.GetApiKeyByKeyAsync("0f1e2d3c-4b5a-4968-8776-655443322110");
-
-        token.HasChanged.Should().BeTrue("cached key lists still hold the row with its plaintext");
-    }
-
-    [Fact]
-    public async Task GetApiKeyByKeyAsync_HashingTheLegacyKeyFails_StillReturnsTheKey()
-    {
-        var row = new UserApiKeyEntity { Id = "legacy-row", ApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110", UserId = "the-user", IsActive = true };
-        var service = CreateService(new RecordingPlatformMemoryCache(), out var unitOfWork, out _, row);
-        unitOfWork.Setup(x => x.CommitAsync()).ThrowsAsync(new InvalidOperationException("deadlock"));
-
-        var result = await service.GetApiKeyByKeyAsync("0f1e2d3c-4b5a-4968-8776-655443322110");
-
-        result.Should().NotBeNull("the key is valid; only storing its hash failed");
-        result.Id.Should().Be("legacy-row");
-    }
-
-    [Fact]
-    public async Task GetApiKeyByKeyAsync_CandidateLongerThanTheColumn_IsNotLookedUpAsPlaintext()
-    {
-        var candidate = new string('k', DbContextBase.Length128 + 1);
-        var cache = new RecordingPlatformMemoryCache();
-        var service = CreateService(cache, out var unitOfWork, out _, new UserApiKeyEntity { Id = "the-row", ApiKey = candidate });
-
-        var result = await service.GetApiKeyByKeyAsync(candidate);
 
         result.Should().BeNull();
+        row.ApiKey.Should().Be("0f1e2d3c-4b5a-4968-8776-655443322110", "the lookup writes nothing");
         unitOfWork.Verify(x => x.CommitAsync(), Times.Never);
-        cache.Keys[0].Should().NotContain(candidate);
     }
 
     [Theory]
@@ -303,30 +259,6 @@ public class UserApiKeyServiceTests
     }
 
     [Fact]
-    public async Task GetApiKeyByKeyAsync_RowWithPlaintextAndAnotherHash_IsRehashedWithTheRegisteredHasherAndCleared()
-    {
-        // A row that still has its plaintext but a hash the registered hasher does not produce, as a key saved
-        // by an older instance during a rolling upgrade may be, is matched by its plaintext.
-        var row = new UserApiKeyEntity { Id = "migrated", ApiKey = "0f1e2d3c-4b5a-4968-8776-655443322110", ApiKeyHash = "sha256-from-the-migration" };
-        var repository = CreateRepository(out var unitOfWork, out _, row);
-        var service = new UserApiKeyService(() => repository.Object, new RecordingPlatformMemoryCache(), new ReversingHasher(), new DefaultApiKeyGenerator(), NullLogger<UserApiKeyService>.Instance);
-
-        var result = await service.GetApiKeyByKeyAsync("0f1e2d3c-4b5a-4968-8776-655443322110");
-
-        result.Should().NotBeNull();
-        row.ApiKeyHash.Should().Be(new ReversingHasher().Hash("0f1e2d3c-4b5a-4968-8776-655443322110"));
-        row.ApiKey.Should().BeNull();
-        unitOfWork.Verify(x => x.CommitAsync(), Times.Once);
-    }
-
-    private sealed class ReversingHasher : IApiKeyHasher
-    {
-        public string Hash(string apiKey) => new(apiKey.Reverse().ToArray());
-
-        public string GetHint(string apiKey) => "custom";
-    }
-
-    [Fact]
     public async Task UserApiKeySearchService_WithoutSortInfos_PagesInIdOrder()
     {
         var repository = CreateRepository(out _, out _,
@@ -393,7 +325,7 @@ public class UserApiKeyServiceTests
     private static UserApiKeyService CreateService(IPlatformMemoryCache cache, out Mock<IUnitOfWork> unitOfWork, out List<UserApiKeyEntity> added, params UserApiKeyEntity[] rows)
     {
         var repository = CreateRepository(out unitOfWork, out added, rows);
-        return new UserApiKeyService(() => repository.Object, cache, _hasher, new DefaultApiKeyGenerator(), NullLogger<UserApiKeyService>.Instance);
+        return new UserApiKeyService(() => repository.Object, cache, _hasher, new DefaultApiKeyGenerator());
     }
 
     private static Mock<ISecurityRepository> CreateRepository(out Mock<IUnitOfWork> unitOfWork, out List<UserApiKeyEntity> added, params UserApiKeyEntity[] rows)

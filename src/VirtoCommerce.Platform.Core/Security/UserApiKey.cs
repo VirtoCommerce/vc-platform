@@ -6,8 +6,7 @@ namespace VirtoCommerce.Platform.Core.Security
     {
         /// <summary>
         /// The key itself. Set it to create or replace a key; leave it empty to keep the stored one.
-        /// The platform stores only <see cref="ApiKeyHash"/>, so a key read back is empty, except in the
-        /// response that created it and on a row from before key hashing that is not hashed yet.
+        /// The platform stores only <see cref="ApiKeyHash"/>, so a key read back is empty, except in the response that created it.
         /// </summary>
         public string ApiKey { get; set; }
 

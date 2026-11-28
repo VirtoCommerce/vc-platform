@@ -3,12 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Security.Caching;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -17,8 +14,7 @@ namespace VirtoCommerce.Platform.Security.Services
 {
     /// <summary>
     /// Stores API keys as hashes. A key's value leaves the platform once, in the result of the save that created
-    /// it. Keys from before key hashing are hashed by the AddUserApiKeyHash migration; any the migration could not
-    /// hash are hashed on first use.
+    /// it. Keys from before key hashing are hashed by the AddUserApiKeyHash migration, which clears their plaintext.
     /// </summary>
     public class UserApiKeyService : IUserApiKeyService
     {
@@ -28,11 +24,10 @@ namespace VirtoCommerce.Platform.Security.Services
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly IApiKeyHasher _hasher;
         private readonly IApiKeyGenerator _generator;
-        private readonly ILogger _logger;
 
-        [Obsolete("Use the constructor that takes IApiKeyHasher, IApiKeyGenerator and ILogger: this one ignores the hasher and generator registered in DI.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use the constructor that takes IApiKeyHasher and IApiKeyGenerator: this one ignores the hasher and generator registered in DI.", DiagnosticId = "VC0016", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public UserApiKeyService(Func<ISecurityRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
-            : this(repositoryFactory, memoryCache, new Sha256ApiKeyHasher(), new DefaultApiKeyGenerator(), NullLogger<UserApiKeyService>.Instance)
+            : this(repositoryFactory, memoryCache, new Sha256ApiKeyHasher(), new DefaultApiKeyGenerator())
         {
         }
 
@@ -40,14 +35,12 @@ namespace VirtoCommerce.Platform.Security.Services
             Func<ISecurityRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
             IApiKeyHasher hasher,
-            IApiKeyGenerator generator,
-            ILogger<UserApiKeyService> logger)
+            IApiKeyGenerator generator)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
             _hasher = hasher;
             _generator = generator;
-            _logger = logger;
         }
 
         public async Task<UserApiKey> GetApiKeyByKeyAsync(string apiKey)
@@ -72,12 +65,6 @@ namespace VirtoCommerce.Platform.Security.Services
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
 
-                // Longer than the column: no row from before key hashing can hold it.
-                if (entity == null && apiKey.Length <= DbContextBase.Length128)
-                {
-                    entity = await HashLegacyKeyAsync(repository, apiKey, apiKeyHash);
-                }
-
                 if (entity == null)
                 {
                     // A miss is keyed on a string the caller chooses, so its entry must not be renewable
@@ -91,44 +78,6 @@ namespace VirtoCommerce.Platform.Security.Services
 
                 return entity == null ? null : ToModel(entity);
             });
-        }
-
-        /// <summary>
-        /// A key that still has its plaintext is found by it, hashed and its plaintext cleared there and then: a key
-        /// the migration did not hash (SQL Server hashes only ASCII keys in SQL) or one an older instance saved
-        /// during a rolling upgrade.
-        /// </summary>
-        private async Task<UserApiKeyEntity> HashLegacyKeyAsync(ISecurityRepository repository, string apiKey, string apiKeyHash)
-        {
-            // The database compares with its collation, which on SQL Server and on MySQL ignores case and trailing
-            // spaces. Only the exact key may match: hashing a variant would lock the client's real key out.
-            var candidates = await repository.UserApiKeys
-                .Where(x => x.ApiKey == apiKey)
-                .ToListAsync();
-
-            var entity = candidates.FirstOrDefault(x => string.Equals(x.ApiKey, apiKey, StringComparison.Ordinal));
-            if (entity == null)
-            {
-                return null;
-            }
-
-            entity.ApiKeyHash = apiKeyHash;
-            entity.ApiKeyHint = _hasher.GetHint(apiKey);
-            entity.ApiKey = null;
-
-            try
-            {
-                await repository.UnitOfWork.CommitAsync();
-                ApiKeyCacheRegion.ExpireRegion();
-            }
-            catch (Exception ex)
-            {
-                // The key is valid either way. A failed write (a deadlock, a read-only replica, another instance
-                // hashing the same row) must not fail the request; the next use tries again.
-                _logger.LogWarning(ex, "Could not hash the plaintext of API key {ApiKeyId}.", entity.Id);
-            }
-
-            return entity;
         }
 
         /// <summary>

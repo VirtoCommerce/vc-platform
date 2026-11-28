@@ -35,15 +35,14 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Security
             // lowercase hex, and a hint of the first and last four characters for keys of 16 characters or more, and
             // clear their plaintext, so no usable key is left in the database. Back up before upgrading: a downgrade
             // finds no plaintext keys. A project that registers its own IApiKeyHasher has to reissue its keys.
-            // HASHBYTES on nvarchar would hash UTF-16, so the key is cast to varchar, which is UTF-8 for ASCII. Keys with
-            // other characters are left to the application, which hashes them on first use.
+            // HASHBYTES on nvarchar would hash UTF-16, so the key is cast to varchar with a UTF-8 collation (SQL Server
+            // 2019 and later), which gives its UTF-8 bytes; varchar(512) holds 128 characters of up to 4 bytes each.
             migrationBuilder.Sql(@"
 UPDATE [UserApiKey]
-SET [ApiKeyHash] = LOWER(CONVERT(varchar(64), HASHBYTES('SHA2_256', CAST([ApiKey] AS varchar(128))), 2)),
+SET [ApiKeyHash] = LOWER(CONVERT(varchar(64), HASHBYTES('SHA2_256', CAST([ApiKey] COLLATE Latin1_General_100_BIN2_UTF8 AS varchar(512))), 2)),
     [ApiKeyHint] = CASE WHEN LEN([ApiKey] + N'x') - 1 >= 16 THEN LEFT([ApiKey], 4) + N'…' + RIGHT([ApiKey], 4) ELSE N'…' END,
     [ApiKey] = NULL
-WHERE [ApiKey] IS NOT NULL AND [ApiKeyHash] IS NULL
-  AND PATINDEX(N'%[^ -~]%' COLLATE Latin1_General_BIN, [ApiKey]) = 0;");
+WHERE [ApiKey] IS NOT NULL AND [ApiKeyHash] IS NULL;");
         }
 
         /// <inheritdoc />

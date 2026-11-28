@@ -9,9 +9,8 @@ namespace VirtoCommerce.Platform.Security.Model
         public string UserName { get; set; }
 
         /// <summary>
-        /// Plaintext of a key from before key hashing. The AddUserApiKeyHash migration hashes and clears it; only a key
-        /// the migration could not hash, or one an older instance saved during a rolling upgrade, keeps it until its
-        /// first use. New keys never set it.
+        /// Plaintext of a key from before key hashing. The AddUserApiKeyHash migration hashes and clears it, and new
+        /// keys never set it. Kept so the migration's Down step and older platform versions still map the column.
         /// </summary>
         public string ApiKey { get; set; }
 
