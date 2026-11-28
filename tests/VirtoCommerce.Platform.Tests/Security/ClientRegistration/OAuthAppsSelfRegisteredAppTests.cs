@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using OpenIddict.Abstractions;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.OpenIddict.ClientRegistration;
@@ -102,7 +104,13 @@ public class OAuthAppsSelfRegisteredAppTests
         return new OAuthAppsController(_manager, [], new OAuthAppRules(),
             Options.Create(new AuthorizationOptions()), NullLogger<OAuthAppsController>.Instance)
         {
-            ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Role, PlatformConstants.Security.SystemRoles.Administrator)], "test")),
+                },
+            },
         };
     }
 }

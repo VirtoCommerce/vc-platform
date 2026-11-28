@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model.OpenIddict;
@@ -25,6 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class OAuthAppsController : Controller
     {
         private const string SelfRegisteredAppError = "The application registered itself, so it follows its client metadata document or registration and can't be changed. Delete it to disconnect the client.";
+        private const string AdministratorOnlyAppError = "Only an administrator can save an application with the client credentials grant: its tokens act as an administrator.";
 
         private readonly OpenIddictApplicationManager<VirtoOpenIddictEntityFrameworkCoreApplication> _manager;
         private readonly IEnumerable<IOAuthResourceProvider> _resourceProviders;
@@ -117,6 +120,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// with; the endpoint permissions follow from its grant types, and an application that names no grant type
         /// gets the platform defaults. The client secret can't be changed and is never returned. The application of a
         /// self-registered client can't be changed: it follows its client metadata document or registration.
+        /// A new application also needs the create permission. Only an administrator can save an application that
+        /// has or gets the client credentials grant, because its tokens act as an administrator.
         /// </summary>
         [HttpPost]
         [Route("")]
@@ -124,6 +129,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<OpenIddictApplicationDescriptor>> SaveAsync(OpenIddictApplicationDescriptor descriptor)
         {
             var app = string.IsNullOrWhiteSpace(descriptor.ClientId) ? null : await FindStoredByClientIdAsync(descriptor.ClientId);
+
+            if (app == null && !User.HasGlobalPermission(Permissions.SecurityOAuthApplicationsCreate))
+            {
+                return Forbid();
+            }
 
             if (await _manager.IsSelfRegisteredAsync(app))
             {
@@ -135,6 +145,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var stored = app == null ? null : await ToDescriptorAsync(app);
 
             _rules.Normalize(descriptor, stored);
+
+            if (RequiresAdministrator(descriptor, stored) && !User.IsInRole(PlatformConstants.Security.SystemRoles.Administrator))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new SecurityResult { Errors = [AdministratorOnlyAppError] });
+            }
 
             if (stored != null)
             {
@@ -205,6 +220,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
 
             return result;
+        }
+
+        /// <summary>
+        /// A token of the client credentials grant acts as an administrator, so only an administrator can create such
+        /// an application or change one: a redirect URI or a key set added to it would let the caller act as the client.
+        /// </summary>
+        protected virtual bool RequiresAdministrator(OpenIddictApplicationDescriptor descriptor, OpenIddictApplicationDescriptor stored)
+        {
+            return descriptor.Permissions.Contains(OpenIddictConstants.Permissions.GrantTypes.ClientCredentials) ||
+                   stored?.Permissions.Contains(OpenIddictConstants.Permissions.GrantTypes.ClientCredentials) == true;
         }
 
         /// <summary>
