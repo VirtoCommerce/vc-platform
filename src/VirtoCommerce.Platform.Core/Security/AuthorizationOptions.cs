@@ -86,5 +86,12 @@ namespace VirtoCommerce.Platform.Core.Security
         /// this endpoint. By default, false.
         /// </summary>
         public bool AllowUpdateProtectedUserFields { get; set; }
+
+        /// <summary>
+        /// Kill switch for the administrator flag. When false, the security API refuses to create an administrator
+        /// or to grant or revoke the administrator flag, for every caller, administrators included.
+        /// When true, callers that hold platform:security:manageAdministrators can change the flag. By default, false.
+        /// </summary>
+        public bool AllowAdministratorChangesViaApi { get; set; }
     }
 }

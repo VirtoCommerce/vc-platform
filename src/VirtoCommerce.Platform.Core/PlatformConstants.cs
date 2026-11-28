@@ -103,6 +103,19 @@ namespace VirtoCommerce.Platform.Core
                 public const string SecurityOAuthApplicationsUpdate = "platform:security:oauth_applications:update";
                 public const string SecurityOAuthApplicationsDelete = "platform:security:oauth_applications:delete";
 
+                /// <summary>
+                /// Manage administrator accounts: update them, change or reset their passwords, lock, unlock or delete them,
+                /// and change the administrator flag (also requires Authorization:AllowAdministratorChangesViaApi).
+                /// Equivalent to administrator rights: grant it only to administrators you trust.
+                /// </summary>
+                public const string SecurityManageAdministrators = "platform:security:manageAdministrators";
+
+                /// <summary>
+                /// Create and edit roles and their permissions, and assign roles to users or remove them.
+                /// Equivalent to administrator rights: the holder can give any permission to any user, including themselves.
+                /// </summary>
+                public const string SecurityManageRoles = "platform:security:manageRoles";
+
                 public const string BackgroundJobsManage = "background_jobs:manage";
 
                 [Obsolete("Backup/restore moved to the VirtoCommerce.BackupRestore module, which registers this permission. Use VirtoCommerce.BackupRestore.Core.ModuleConstants.Security.Permissions.Access. The constant is kept (with its original value) for backward compatibility.", DiagnosticId = "VC0015", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
@@ -124,6 +137,7 @@ namespace VirtoCommerce.Platform.Core
                     SecurityQuery, SecurityCreate, SecurityAccess, SecurityUpdate, SecurityDelete,
                     SecurityLoginOnBehalf, SecurityVerifyEmail, SecurityConfirmEmail, SecurityGenerateToken, SecurityVerifyToken, SecurityRevokeToken, SecuritySignInLogRead,
                     SecurityOAuthApplicationsCreate, SecurityOAuthApplicationsRead, SecurityOAuthApplicationsUpdate, SecurityOAuthApplicationsDelete,
+                    SecurityManageAdministrators, SecurityManageRoles,
                     BackgroundJobsManage,
                     // platform:export / platform:import / platform:exportImport:access are now registered
                     // by the VirtoCommerce.BackupRestore module (same string values) — see ModuleConstants there.

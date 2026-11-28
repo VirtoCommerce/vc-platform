@@ -437,7 +437,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="role"></param>
         [HttpPut]
         [Route("roles")]
-        [Authorize(PlatformPermissions.SecurityUpdate)]
+        [Authorize(PlatformPermissions.SecurityManageRoles)]
         public async Task<ActionResult<SecurityResult>> UpdateRole([FromBody] Role role)
         {
             var roleExists = string.IsNullOrEmpty(role.Id)
@@ -566,6 +566,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityCreate)]
         public async Task<ActionResult<SecurityResult>> Create([FromBody] ApplicationUser newUser)
         {
+            if (newUser.IsAdministrator && GetAdministratorFlagChangeRefusal() is { } refusal)
+            {
+                return refusal;
+            }
+
+            if (newUser.Roles?.Count > 0 && !CanManageRoles())
+            {
+                return Forbidden(ManageRolesRequiredError);
+            }
+
             var identityResult = string.IsNullOrEmpty(newUser.Password)
                 ? await UserManager.CreateAsync(newUser)
                 : await UserManager.CreateAsync(newUser, newUser.Password);
@@ -637,6 +647,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 LogUserNotFound(userName);
                 return Ok(IdentityResult.Failed(CommonErrorDescriber.UserNotFound()).ToSecurityResult());
+            }
+
+            if (!CanManageUser(user))
+            {
+                return Forbidden(ManageAdministratorsRequiredError);
             }
 
             if (await UserManager.IsLockedOutAsync(user))
@@ -712,6 +727,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 LogUserForbiddenToEdit(userName);
                 return Ok(IdentityResult.Failed(CommonErrorDescriber.UserNotEditable()).ToSecurityResult());
+            }
+
+            if (!CanManageUser(user))
+            {
+                return Forbidden(ManageAdministratorsRequiredError);
             }
 
             var token = await UserManager.GeneratePasswordResetTokenAsync(user);
@@ -917,6 +937,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var applicationUser = await UserManager.FindByIdAsync(user.Id);
+            if (applicationUser == null)
+            {
+                LogUserNotFound(user.Id);
+                return Ok(IdentityResult.Failed(CommonErrorDescriber.UserNotFound()).ToSecurityResult());
+            }
+
+            if (!CanManageUser(applicationUser))
+            {
+                return Forbidden(ManageAdministratorsRequiredError);
+            }
+
+            if (user.IsAdministrator != applicationUser.IsAdministrator && GetAdministratorFlagChangeRefusal() is { } refusal)
+            {
+                return refusal;
+            }
+
+            if (user.Roles != null && !CanManageRoles() && await RolesChangeAsync(applicationUser, user.Roles))
+            {
+                return Forbidden(ManageRolesRequiredError);
+            }
+
             if (applicationUser.EmailConfirmed != user.EmailConfirmed
                 && !Request.HttpContext.User.HasGlobalPermission(PlatformPermissions.SecurityVerifyEmail))
             {
@@ -975,16 +1016,28 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest(CommonErrorDescriber.UserNotEditable());
             }
 
+            var users = new List<ApplicationUser>();
             foreach (var userName in names)
             {
                 var user = await UserManager.FindByNameAsync(userName);
                 if (user != null)
                 {
-                    var result = await UserManager.DeleteAsync(user);
-                    if (!result.Succeeded)
-                    {
-                        return BadRequest(result);
-                    }
+                    users.Add(user);
+                }
+            }
+
+            // All or nothing: no user is deleted when the caller can't delete one of them
+            if (!users.All(CanManageUser))
+            {
+                return Forbidden(ManageAdministratorsRequiredError);
+            }
+
+            foreach (var user in users)
+            {
+                var result = await UserManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result);
                 }
             }
 
@@ -1043,6 +1096,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await UserManager.FindByIdAsync(id);
             if (user != null)
             {
+                if (!CanManageUser(user))
+                {
+                    return Forbidden(ManageAdministratorsRequiredError);
+                }
+
                 var result = await UserManager.SetLockoutEndDateAsync(user, DateTime.MaxValue.ToUniversalTime());
                 return Ok(result.ToSecurityResult());
             }
@@ -1063,6 +1121,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await UserManager.FindByIdAsync(id);
             if (user != null)
             {
+                if (!CanManageUser(user))
+                {
+                    return Forbidden(ManageAdministratorsRequiredError);
+                }
+
                 await UserManager.ResetAccessFailedCountAsync(user);
                 var result = await UserManager.SetLockoutEndDateAsync(user, DateTimeOffset.MinValue.ToUniversalTime());
                 return Ok(result.ToSecurityResult());
@@ -1409,6 +1472,61 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             return _securityOptions.NonEditableUsers?.FirstOrDefault(x => x.EqualsIgnoreCase(userName)) == null;
         }
+
+        #region Administrators and roles
+
+        private const string AdministratorChangesDisabledError = "Changing the administrator flag through the API is disabled. Set Authorization:AllowAdministratorChangesViaApi to true to allow it.";
+        private const string ManageAdministratorsRequiredError = $"Managing administrators requires the {PlatformPermissions.SecurityManageAdministrators} permission.";
+        private const string ManageRolesRequiredError = $"Managing roles requires the {PlatformPermissions.SecurityManageRoles} permission.";
+
+        private bool CanManageAdministrators()
+        {
+            return User.HasGlobalPermission(PlatformPermissions.SecurityManageAdministrators);
+        }
+
+        private bool CanManageRoles()
+        {
+            return User.HasGlobalPermission(PlatformPermissions.SecurityManageRoles);
+        }
+
+        /// <summary>
+        /// An administrator account and its password can be changed only with the manageAdministrators permission.
+        /// </summary>
+        private bool CanManageUser(ApplicationUser user)
+        {
+            return user?.IsAdministrator != true || CanManageAdministrators();
+        }
+
+        /// <summary>
+        /// Returns the refusal for creating an administrator or changing the administrator flag, or null when it is allowed.
+        /// </summary>
+        private ObjectResult GetAdministratorFlagChangeRefusal()
+        {
+            if (!_securityOptions.AllowAdministratorChangesViaApi)
+            {
+                return Forbidden(AdministratorChangesDisabledError);
+            }
+
+            return CanManageAdministrators() ? null : Forbidden(ManageAdministratorsRequiredError);
+        }
+
+        /// <summary>
+        /// Whether saving the user would add or remove a role, compared the way the user manager compares them.
+        /// </summary>
+        private async Task<bool> RolesChangeAsync(ApplicationUser storedUser, IEnumerable<Role> requestedRoles)
+        {
+            var storedRoleNames = await UserManager.GetRolesAsync(storedUser) ?? [];
+            var requestedRoleNames = requestedRoles.Select(x => x?.Name).ToList();
+
+            return requestedRoleNames.Except(storedRoleNames).Any() || storedRoleNames.Except(requestedRoleNames).Any();
+        }
+
+        private ObjectResult Forbidden(string error)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new SecurityResult { Errors = [error] });
+        }
+
+        #endregion
 
         private void LogUserNotFound(string idOrName)
         {
