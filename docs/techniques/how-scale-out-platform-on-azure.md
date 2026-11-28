@@ -57,25 +57,46 @@ When SignalR is running on a server farm (multiple servers), "sticky sessions" m
 
 > "ARR Affinity" setting must be enabled for all Azure apps services where users work with platform  manager UI.
 
-Here is the example of how to configure scaling for push notifications with using **Redis backplane** mode. 
+The scale-out mode follows the configuration, with no switch of its own:
+
+| Configured | Live notifications between instances | Notification history |
+|---|---|---|
+| `ConnectionStrings:RedisConnectionString` | Redis backplane | Redis, shared by all instances and kept across restarts |
+| `PushNotifications:AzureSignalRService:ConnectionString` and `RedisConnectionString` | Azure SignalR Service | Redis |
+| `PushNotifications:AzureSignalRService:ConnectionString` only | Azure SignalR Service | Each instance keeps its own in memory |
+| Neither | None: a single instance | In memory |
+
+Each user keeps at most `PushNotifications:MaxNotificationsPerUser` notifications (100 by default) for `PushNotifications:RetentionPeriod` (7 days by default), both counted from the last save of a notification. The Redis keys and backplane channels start with `PushNotifications:RedisBackplane:ChannelName`, so environments that share one Redis must use different channel names.
+
+> `PushNotifications:ScalabilityMode` and `PushNotifications:HubUrl` are obsolete and ignored. Instances no longer connect to their own hub with an api key.
+
+Each user receives only their own notifications, live and in the history. For notifications that belong to a group of users (for example, a seller in the marketplace vendor portal), see [Push notifications](../fundamentals/push-notifications.md).
+
+Here is the example of how to configure scaling for push notifications with the **Redis backplane**.
 *appsettings.json*
 ```json
 ...
 "ConnectionStrings": {
         ...
-        //Add RedisConnectionString value to start using Redis server as backplane for memory cache synchronization
         "RedisConnectionString": "vc.redis.cache.windows.net:6380,password={password}=,ssl=True,abortConnect=False"
         ...
     },
 ...
 "PushNotifications": {
-        //Possible values: RedisBackplane | AzureSignalRService | None
-        "ScalabilityMode": "RedisBackplane",
-        //The URL is used to connect the platform SignalR /pushNotificationHub hub as client to be able sync the local notifications storage with notifications that are produced by other platform instances
-        //Need to replace this value to a full URL to  /pushNotificationHub on the production server e.g https://your-app-name.azurewebsites.net/pushNotificationHub?api_key={your-vc-api-key}
-        "HubUrl": "https://{your-app-name}.azurewebsites.net/pushNotificationHub?api_key={your-vc-api-key}",      
         "RedisBackplane": {
             "ChannelName": "VirtoCommerceChannel"
+        }
+    }
+...
+```
+
+Here is the example with **Azure SignalR Service**; keep `RedisConnectionString` to share the notification history between instances.
+*appsettings.json*
+```json
+...
+"PushNotifications": {
+        "AzureSignalRService": {
+            "ConnectionString": "Endpoint=https://{app name}.service.signalr.net;AccessKey={access key};Version=1.0;"
         }
     }
 ...
@@ -124,8 +145,6 @@ Platform : 64 bit
          }
          ...
    "PushNotifications": {
-        "ScalabilityMode": "RedisBackplane",     
-        "HubUrl": "https://vc-admin.azurewebsites.net/pushNotificationHub?api_key=9fde4353-9a4a-4fe3-9a03-a0c80b4220ff",      
         "RedisBackplane": {
             "ChannelName": "VirtoCommerceChannel"
         }
@@ -157,10 +176,6 @@ Platform : 64 bit
                ...
          }
          ...
-     "PushNotifications": {
-        //These instances aren't produced any push notifications and don't use for work directly through the platform manager web interface. Therefore, we don't need to use scaling mode for push notifications 
-        "ScalabilityMode": "None"
-    }
         ...
 
 ```

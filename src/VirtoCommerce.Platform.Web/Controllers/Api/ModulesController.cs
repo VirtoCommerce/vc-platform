@@ -479,7 +479,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             notification.TotalCount = options.Modules?.Length ?? 0;
 
-            _pushNotifier.Send(notification);
+            await _pushNotifier.SendAsync(notification);
 
             var payload = new ModuleBackgroundJobPayload
             {
@@ -501,7 +501,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 notification.Finished = DateTime.UtcNow;
                 notification.Description = message;
                 notification.ProgressLog.Add(new ProgressMessage { Level = ProgressMessageLevel.Error, Message = message });
-                _pushNotifier.Send(notification);
+                await _pushNotifier.SendAsync(notification);
             }
             else
             {
